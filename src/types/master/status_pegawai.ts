@@ -8,9 +8,11 @@ export interface StatusPegawai {
 
 export const StatusPegawaiSchema = z.object({
 	id: z.number(),
-	nama: z.string({
-		required_error: "Nama wajib diisi",
-	}),
+	nama: z
+		.string({
+			required_error: "Nama wajib diisi",
+		})
+		.min(3, { message: "Nama wajib diisi" }),
 })
 
 export type StatusPegawaiSchema = z.infer<typeof StatusPegawaiSchema>

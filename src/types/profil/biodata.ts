@@ -27,18 +27,18 @@ export interface Biodata extends BiodataMini {
 }
 
 export const BiodataSchema = z.object({
-	nik: z.string({ message: "NIK harus diisi" }),
-	nama: z.string({ message: "Nama harus diisi" }),
-	jenisKelamin: z.string({ message: "Jenis Kelamin harus diisi" }),
-	tempatLahir: z.string({ message: "Tempat Lahir harus diisi" }),
-	tanggalLahir: z.string({ message: "Tanggal Lahir harus diisi" }),
-	alamat: z.string({ message: "Alamat harus diisi" }),
+	nik: z.string({ message: "NIK wajib diisi" }),
+	nama: z.string({ message: "Nama wajib diisi" }),
+	jenisKelamin: z.string({ message: "Jenis Kelamin wajib diisi" }),
+	tempatLahir: z.string({ message: "Tempat Lahir wajib diisi" }),
+	tanggalLahir: z.string({ message: "Tanggal Lahir wajib diisi" }),
+	alamat: z.string({ message: "Alamat wajib diisi" }),
 	telp: z.string().optional(),
 	agama: z.number(),
-	ibuKandung: z.string({ message: "Ibu Kandung harus diisi" }),
+	ibuKandung: z.string({ message: "Ibu Kandung wajib diisi" }),
 	pendidikanTerakhir: z
 		.number()
-		.min(1, { message: "Pendidikan Terakhir harus diisi" }),
+		.min(1, { message: "Pendidikan Terakhir wajib diisi" }),
 	golonganDarah: z.string().optional(),
 	statusKawin: z.string(),
 	notes: z.string(),
