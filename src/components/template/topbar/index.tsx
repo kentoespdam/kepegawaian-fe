@@ -4,6 +4,7 @@ import { Avatar } from "@components/ui/avatar";
 import Image from "next/image";
 import LoadingProfile from "./profil/loading";
 import ProfileComponent from "./profil";
+import logo from "@public/images/logo_pdam_40x40.png"
 
 const TopBarComponent = () => {
     return (
@@ -13,7 +14,7 @@ const TopBarComponent = () => {
                 <Avatar className="h-10 w-12">
                     <Image
                         alt="Logo Perumdam Tirta Satria"
-                        src="/images/logo_pdam_40x40.png"
+                        src={logo}
                         fill
                         loading="lazy"
                         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

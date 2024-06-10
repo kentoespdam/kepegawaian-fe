@@ -21,6 +21,14 @@ export const BaseDelete = z.object({
 	}),
 })
 
+export interface BaseResult<TData> {
+	status: number
+	statusText: string
+	message: string
+	data: TData
+	timestamp: string
+}
+
 export type BaseDelete = z.infer<typeof BaseDelete>
 
 export interface PageableSort {
