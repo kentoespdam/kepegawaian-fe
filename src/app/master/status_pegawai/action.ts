@@ -1,68 +1,12 @@
 "use server"
 
-import { BaseResult, DeleteSchema, Pageable } from "@_types/index"
-import {
-	StatusPegawai,
-	StatusPegawaiSchema,
-} from "@_types/master/status_pegawai"
+import { StatusPegawaiSchema } from "@_types/master/status_pegawai"
 import { setAuthorizeHeader } from "@helpers/index"
 import { API_URL } from "@lib/utils"
 import axios from "axios"
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 import { redirect } from "next/navigation"
-
-/**
- * Retrieves data for a pageable list of StatusPegawai.
- * @param searchParams - The URL search parameters for filtering the data.
- * @returns A Promise that resolves to a Pageable<StatusPegawai> object containing the data.
- * @throws An error if the API request is unsuccessful.
- */
-export const getDataStatusPegawai = async (
-	searchParams: string,
-): Promise<Pageable<StatusPegawai>> => {
-	revalidatePath("/master/status_pegawai")
-	revalidateTag("status_pegawai")
-	const url = `${API_URL}/master/status-pegawai?${searchParams}`
-	const headers = setAuthorizeHeader(cookies())
-
-	try {
-		const response = await fetch(url, { headers })
-		if (!response.ok) {
-			throw new Error(await response.text())
-		}
-
-		const result: BaseResult<Pageable<StatusPegawai>> =
-			await response.json()
-
-		return result.data
-	} catch (error) {
-		console.error(error)
-		throw error
-	}
-}
-
-/**
- * Retrieves a StatusPegawai object by its ID.
- * @param id - The ID of the StatusPegawai object to retrieve.
- * @returns A Promise that resolves to the StatusPegawai object with the specified ID.
- * @throws An error if the API request is unsuccessful.
- */
-export const getStatusPegawaiById = async (
-	id: number,
-): Promise<StatusPegawai> => {
-	try {
-		const headers = setAuthorizeHeader(cookies())
-		const { data } = await axios.get<BaseResult<StatusPegawai>>(
-			`${API_URL}/master/status-pegawai/${id}`,
-			{ headers },
-		)
-		return data.data
-	} catch (err) {
-		console.error(err)
-		throw err
-	}
-}
 
 /**
  * Saves a StatusPegawai object to the API.
@@ -115,35 +59,14 @@ export const saveStatusPegawai = async (
  * @returns A Promise that resolves to an object with a success property and an optional error property.
  */
 export const hapus = async (_prevState: unknown, formData: FormData) => {
-	const cookieList = cookies()
-	const headers = setAuthorizeHeader(cookieList)
+	const id = Number(formData.get("deleteRef")?.slice(7) || 0)
+	if (id <= 0) return { success: false, error: { message: "invalid data" } }
 
 	try {
-		const validate = DeleteSchema.safeParse({
-			deleteRef: formData.get("deleteRef"),
-		})
-
-		if (!validate.success)
-			return {
-				success: validate.success,
-				error: {
-					message: validate.error.message,
-				},
-			}
-
-		const id = Number(validate.data.deleteRef.substr("DELETE-".length))
-		if (id <= 0)
-			return {
-				success: false,
-				error: { message: "invalid data" },
-			}
-
 		await axios.delete(`${API_URL}/master/status-pegawai/${id}`, {
-			headers: headers,
+			headers: setAuthorizeHeader(cookies()),
 		})
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (err: any) {
-		console.log(err.response?.data)
 		return {
 			success: false,
 			error: {

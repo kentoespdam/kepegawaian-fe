@@ -1,18 +1,22 @@
-import { statusPegawaiTableColumns } from "@_types/master/status_pegawai";
+import { StatusPegawai, statusPegawaiTableColumns } from "@_types/master/status_pegawai";
+import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import PaginationBuilder from "@components/builder/table/pagination";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Table } from "@components/ui/table";
+import { getPageMasterData } from "@helpers/action";
 import { CirclePlus } from "lucide-react";
 import Link from "next/link";
-import { getDataStatusPegawai } from "./action";
 import StatusPegawaiTableBody from "./body";
 
 const StatusPegawaiPage = async ({ searchParams }: { searchParams: Record<string, string> }) => {
     const urlSearchParams = new URLSearchParams(searchParams)
-    const data = await getDataStatusPegawai(urlSearchParams.toString())
+    const data = await getPageMasterData<StatusPegawai>({
+        path: "status-pegawai",
+        searchParams: urlSearchParams.toString(),
+    })
 
     return (
         <Card>
@@ -31,7 +35,7 @@ const StatusPegawaiPage = async ({ searchParams }: { searchParams: Record<string
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                {/* <SearchBuilder columns={statusPegawaiTableColumns} /> */}
+                <SearchBuilder searchParams={searchParams} columns={statusPegawaiTableColumns} />
                 <div className="rounded-md border">
                     <Table>
                         <TableHeadBuilder columns={statusPegawaiTableColumns} />
