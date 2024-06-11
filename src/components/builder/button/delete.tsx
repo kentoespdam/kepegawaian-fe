@@ -19,7 +19,6 @@ import { useSearchParams } from "next/navigation";
 import React, { useState } from "react";
 import { LoadingButtonClient } from "../loading-button-client";
 import TooltipBuilder from "../tooltip";
-import type { SaveErrorStatus } from "@_types/index";
 
 type ButtonDeleteBuilderProps = {
     id: number;
@@ -27,13 +26,23 @@ type ButtonDeleteBuilderProps = {
     tag: string;
     action: (
         formData: FormData,
-    ) => Promise<SaveErrorStatus>;
+    ) => Promise<{
+        success: boolean;
+        error?: {
+            message: string;
+        };
+    }>;
 };
 
 const deleteText = "DELETE-";
 const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
     const { action } = props
-    const [state, setState] = useState<SaveErrorStatus>({ success: false })
+    const [state, setState] = useState<{
+        success: boolean;
+        error?: {
+            message: string;
+        };
+    } | null>(null)
     const [open, setOpen] = React.useState(false);
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams)
@@ -48,9 +57,14 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
                 return
             }
         },
-        onError: (err) => setState(err as unknown as SaveErrorStatus),
-        onSuccess: (result) => {
-            setState(result as unknown as SaveErrorStatus)
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        onError: (err: any) => {
+            setState(err)
+        },
+        // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+        onSuccess: (result: any) => {
+            console.log(result)
+            setState(result)
             setOpen(false)
             client.invalidateQueries({
                 queryKey: [props.tag, search.toString()],
@@ -97,9 +111,9 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
                                 autoComplete="off"
                             />
                         </AlertDialogDescription>
-                        {!state.success && state.error ? (
+                        {state && !state.success ? (
                             <Alert variant="destructive" className="mt-2 p-2">
-                                <AlertDescription>{state.error.message}</AlertDescription>
+                                <AlertDescription>{state.error?.message}</AlertDescription>
                             </Alert>
                         ) : null}
                     </AlertDialogHeader>

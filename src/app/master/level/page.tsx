@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
 import LevelTable from "./table";
+import ButtonAddBuilder from "@components/builder/button/add";
 
 export const metadata = {
     title: "Master Level",
@@ -16,17 +17,10 @@ const LevelPage = () => {
         <Card>
             <CardHeader>
                 <CardTitle className="text-bold text-md flex flex-row justify-between items-center">
-                    <span>Master Level</span>
-                    <TooltipBuilder text="Add Level" className="bg-primary">
-                        <Link href="/master/level/add">
-                            <Button
-                                variant="ghost"
-                                className="p-0 w-6 h-6 rounded-full text-primary hover:bg-primary hover:text-primary-foreground"
-                            >
-                                <CirclePlusIcon />
-                            </Button>
-                        </Link>
-                    </TooltipBuilder>
+                    <span>{metadata.title}</span>
+                    <ButtonAddBuilder
+                        href="/master/level/add"
+                        msg="Tambah Level" />
                 </CardTitle>
             </CardHeader>
             <CardContent>

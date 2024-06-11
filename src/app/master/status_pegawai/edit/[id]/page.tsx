@@ -1,4 +1,4 @@
-import { StatusPegawai } from "@_types/master/status_pegawai";
+import type { StatusPegawai } from "@_types/master/status_pegawai";
 import FormCard from "@components/form/card";
 import { getMasterById } from "@helpers/action";
 import StatusPegawaiForm from "../../form";

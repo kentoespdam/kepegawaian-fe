@@ -94,5 +94,5 @@ export const DeleteSchema = z.object({
 
 export interface SaveErrorStatus {
 	success: boolean;
-	error?: Record<string, string[]>;
+	error?: Record<string, string[]> | Record<string, string>;
 }

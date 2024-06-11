@@ -6,22 +6,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { CirclePlus } from "lucide-react";
 import Link from "next/link";
 import StatusPegawaiTable from "./table";
+import ButtonAddBuilder from "@components/builder/button/add";
 
+export const metadata = {
+    title: "Master Status Pegawai",
+}
 const StatusPegawaiPage = () => {
     return (
         <Card>
             <CardHeader>
                 <CardTitle className="text-bold text-md flex flex-row justify-between items-center">
-                    <span className="font-bold">Status Pegawai</span>
-                    <div>
-                        <TooltipBuilder text="Add Status pegawai" className="bg-primary">
-                            <Link href="/master/status_pegawai/add">
-                                <Button variant="ghost" className="p-0 w-6 h-6 rounded-full text-primary hover:bg-primary hover:text-primary-foreground" >
-                                    <CirclePlus />
-                                </Button>
-                            </Link>
-                        </TooltipBuilder>
-                    </div>
+                    <span>{metadata.title}</span>
+                    <ButtonAddBuilder
+                        href="/master/status_pegawai/add"
+                        msg="Tambah Status Pegawai" />
                 </CardTitle>
             </CardHeader>
             <CardContent>
