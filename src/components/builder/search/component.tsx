@@ -1,22 +1,26 @@
+"use client"
 import { CustomColumnDef } from "@_types/index";
+import { useSearchParams } from "next/navigation";
 import InputSearchComponent from "./input";
 
 export interface BaseSearchProps {
-    col: CustomColumnDef, value: string
+    col: CustomColumnDef, val: string
 }
 
 
 type SearchComponentProps = {
-    searchParams: Record<string, string>,
     col: CustomColumnDef
 }
-const SearchComponent = ({ searchParams, col }: SearchComponentProps) => {
-    const search = new URLSearchParams(searchParams)
+const SearchComponent = ({ col }: SearchComponentProps) => {
+    const searchParams = useSearchParams()
     if (!col.search) return null
-    const value = search.get(col.id) || ""
+
+    const colValue = searchParams.get(col.id)
+    const value = !colValue ? "" : colValue
+
     switch (col.search) {
         default:
-            return <InputSearchComponent col={col} value={value} />
+            return <InputSearchComponent col={col} val={value} />
     }
 }
 

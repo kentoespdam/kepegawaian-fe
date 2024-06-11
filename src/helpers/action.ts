@@ -10,6 +10,7 @@ interface baseProps {
 }
 interface getPageMasterDataProps extends baseProps {
 	searchParams?: string
+	retry?: number
 }
 /**
  * Retrieves data for a pageable list of TData.
@@ -18,14 +19,16 @@ interface getPageMasterDataProps extends baseProps {
  * @throws An error if the API request is unsuccessful.
  */
 export const getPageMasterData = async <TData extends unknown>(
-	props: getPageMasterDataProps,
+	props: getPageMasterDataProps
 ): Promise<Pageable<TData>> => {
-	revalidatePath(`/master/${props.path}`)
-	revalidateTag(props.path)
-	const url = `${API_URL}/master/${props.path}?${props.searchParams}`
+	// revalidatePath(`/master/${props.path}`)
+	// revalidateTag(props.path)
+	const url = `${API_URL}/master/${props.path.replace("_", "-")}?${props.searchParams}`
 	const headers = setAuthorizeHeader(cookies())
 	const controller = new AbortController()
 	const timeoutId = setTimeout(() => controller.abort(), 5000)
+
+	let retry = props.retry ?? 0
 
 	try {
 		const response = await fetch(url, {
@@ -41,10 +44,21 @@ export const getPageMasterData = async <TData extends unknown>(
 		const result: BaseResult<Pageable<TData>> = await response.json()
 		return result.data
 	} catch (error: any) {
-		if(error.status === 401)
-			await getPageMasterData(props)
+		if (error.status === 401)
+			return await getPageMasterData({ ...props, retry: retry + 1 })
 		console.error(error)
-		throw error as Error
+		return {
+			content: [],
+			totalPages: 0,
+			totalElements: 0,
+			last: true,
+			size: 10,
+			number: 0,
+			sort: { sorted: false, unsorted: false, empty: true },
+			numberOfElements: 0,
+			first: true,
+			empty: true,
+		}
 	} finally {
 		clearTimeout(timeoutId)
 	}
@@ -60,10 +74,10 @@ interface getMasterByIdProps extends baseProps {
  * @throws An error if the API request is unsuccessful.
  */
 export const getMasterById = async <TData extends unknown>(
-	props: getMasterByIdProps,
+	props: getMasterByIdProps
 ): Promise<TData> => {
-	revalidatePath(`/master/${props.path}`)
-	revalidateTag(props.path)
+	// revalidatePath(`/master/${props.path.replace("_", "-")}`)
+	// revalidateTag(props.path)
 	const url = `${API_URL}/master/${props.path.replace("_", "-")}/${props.id}`
 	const headers = setAuthorizeHeader(cookies())
 	const controller = new AbortController()
@@ -99,7 +113,7 @@ interface getMasterListProps extends baseProps {
  * @throws An error if the API request is unsuccessful.
  */
 export const getMasterList = async <TData extends unknown>(
-	props: getMasterListProps,
+	props: getMasterListProps
 ): Promise<TData[]> => {
 	revalidatePath(`/master/${props.path}`)
 	revalidateTag(props.path)

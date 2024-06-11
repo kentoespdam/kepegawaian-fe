@@ -5,12 +5,14 @@ import { appwriteHeader, getExpToken, newHostname } from "@helpers/index"
 import { appwriteKey, baseAuthUrl, projectId, sessionNames } from "@lib/utils"
 import { useSessionStore } from "@store/session"
 import axios, { type AxiosError } from "axios"
+import { revalidatePath } from "next/cache"
 import type {
 	RequestCookie,
 	RequestCookies,
 } from "next/dist/compiled/@edge-runtime/cookies"
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers"
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
+import { cookies } from "next/headers"
 
 const axiosConfig = {
 	headers: {
@@ -25,7 +27,7 @@ export const getUserByNipam = async (nipam: string) => {
 	try {
 		const { data } = await axios.get(
 			`${baseAuthUrl}/users/${nipam.split("@")[0]}`,
-			axiosConfig,
+			axiosConfig
 		)
 		return data
 	} catch (e) {
@@ -33,7 +35,7 @@ export const getUserByNipam = async (nipam: string) => {
 		console.log(
 			"lib.appwrite.user.getUserByNipam",
 			new Date().toISOString(),
-			err.response?.data,
+			err.response?.data
 		)
 		return null
 	}
@@ -41,7 +43,7 @@ export const getUserByNipam = async (nipam: string) => {
 
 export const createJwtToken = async (
 	xFallback: string,
-	headerList: ReadonlyHeaders,
+	headerList: ReadonlyHeaders
 ) => {
 	const host = headerList.get("host")?.split(":")[0] ?? ""
 	try {
@@ -54,7 +56,7 @@ export const createJwtToken = async (
 					...axiosConfig.headers,
 					"X-Fallback-Cookies": xFallback,
 				},
-			},
+			}
 		)
 		const expires = getExpToken(data.jwt)
 		return {
@@ -76,11 +78,10 @@ export const createJwtToken = async (
 	}
 }
 
-export const getCurrentUser = async (
-	cookies: RequestCookies | ReadonlyRequestCookies,
-): Promise<User> => {
-	const token = cookies.get(sessionNames[2])?.value
-	const headers = appwriteHeader(cookies, token)
+export const getCurrentUser = async (): Promise<User> => {
+	const cookieList = cookies()
+	const token = cookieList.get(sessionNames[2])?.value
+	const headers = appwriteHeader(cookieList, token)
 	try {
 		const { data } = await axios.get(`${baseAuthUrl}/account`, { headers })
 		useSessionStore.setState({ user: data })
@@ -90,14 +91,14 @@ export const getCurrentUser = async (
 		console.log(
 			"lib.appwrite.user.getCurrentAccount",
 			new Date().toISOString(),
-			err.response?.data,
+			err.response?.data
 		)
 		throw new Error(err.response?.data as string)
 	}
 }
 
 export const getCurrentSession = async (
-	cookies: RequestCookies | ReadonlyRequestCookies,
+	cookies: RequestCookies | ReadonlyRequestCookies
 ) => {
 	const token = cookies.get(sessionNames[2])?.value
 	const headers = appwriteHeader(cookies, token)
@@ -106,7 +107,7 @@ export const getCurrentSession = async (
 			`${baseAuthUrl}/account/session/current`,
 			{
 				headers,
-			},
+			}
 		)
 		return data
 	} catch (e) {
@@ -114,20 +115,20 @@ export const getCurrentSession = async (
 		console.log(
 			"lib.appwrite.user.getCurrentSession",
 			new Date().toISOString(),
-			err.response?.data,
+			err.response?.data
 		)
 		return null
 	}
 }
 
 export const deleteCurrentSession = async (
-	cookies: RequestCookies | ReadonlyRequestCookies,
+	cookies: RequestCookies | ReadonlyRequestCookies
 ) => {
 	const headers = appwriteHeader(cookies)
 	try {
 		const { data } = await axios.delete(
 			`${baseAuthUrl}/account/sessions/current`,
-			{ headers },
+			{ headers }
 		)
 		console.log(data)
 	} catch (e) {
@@ -135,7 +136,7 @@ export const deleteCurrentSession = async (
 		console.log(
 			"lib.appwrite.user.deleteCurrentSession",
 			new Date().toISOString(),
-			err.response?.data,
+			err.response?.data
 		)
 	}
 }

@@ -24,7 +24,7 @@ import {
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type PaginationBuilderProps = {
-    data: Pageable<unknown> | null;
+    data?: Pageable<unknown>;
 };
 
 const PaginationBuilder = ({ data }: PaginationBuilderProps) => {

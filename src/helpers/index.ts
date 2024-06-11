@@ -6,12 +6,13 @@ import type {
 import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers"
 import type { ReadonlyRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies"
 import { cookies } from "next/headers"
+import { renewToken } from "../middleware"
 
 export const isValidIpAddress = (ipAddress?: string) => {
 	if (
 		ipAddress &&
 		/^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/.test(
-			ipAddress,
+			ipAddress
 		)
 	) {
 		return true
@@ -31,7 +32,7 @@ export const newSetCookies = (cookieString: string, hostname?: string) =>
 	cookieString.split(`.${authHostname}`).join(newHostname(hostname))
 
 export const xFallbackFromCookie = (
-	cookies: RequestCookies | ReadonlyRequestCookies,
+	cookies: RequestCookies | ReadonlyRequestCookies
 ) => {
 	const currentCookie =
 		`${cookies.get(sessionNames[0])?.value}` ||
@@ -46,16 +47,23 @@ export const isHasSessionCookie = (cookies: RequestCookies) => {
 }
 
 export const isHasTokenCookie = (
-	cookies: RequestCookies | ReadonlyRequestCookies,
-) => cookies.has(sessionNames[2])
+	cookies: RequestCookies | ReadonlyRequestCookies
+) => {
+	if (!cookies.has(sessionNames[2])) return false
+	const tokenCookie = cookies.get(sessionNames[2])
+	if (!tokenCookie) return false
+	const expired = getExpToken(tokenCookie.value)
+	if (expired === 0) return false
+	return true
+}
 
 export const getCookieToken = (
-	cookies: RequestCookies | ReadonlyRequestCookies,
+	cookies: RequestCookies | ReadonlyRequestCookies
 ) => cookies.get(sessionNames[2])?.value
 
 export const cookieStringToObject = (
 	cookieString: string,
-	headers: ReadonlyHeaders,
+	headers: ReadonlyHeaders
 ): RequestCookie => {
 	const host = headers.get("host") ? headers.get("host")?.split(":")[0] : ""
 	const arrCookie = cookieString.split(";")
@@ -100,7 +108,7 @@ export const cookieStringToObject = (
 
 export const setAuthCookieHeader = (
 	cookieString: string[],
-	headers?: ReadonlyHeaders,
+	headers?: ReadonlyHeaders
 ) => {
 	const cookieFromReq = cookieString[0].trim().split(";")
 	cookies().set("asdf-session", cookieString[0].split("=")[1], {})
@@ -112,17 +120,20 @@ export const extractTokenData = (token: string, part?: number) => {
 	return JSON.parse(atob(tokenParts[part ? part : 1]))
 }
 
-export const getExpToken = (token: string) => {
+export const getExpToken = (token: string): number => {
 	if (!token) return 0
-	const tokenBody = extractTokenData(token)
-	return tokenBody.exp * 1000
-	// return tokenBody.exp;
+	try {
+		const tokenBody = extractTokenData(token)
+		return tokenBody.exp * 1000
+	} catch (e) {
+		return 0
+	}
 }
 
 export const appwriteHeader = (
 	sessCookie: string | RequestCookies | ReadonlyRequestCookies,
 	token?: string,
-	contentType?: string,
+	contentType?: string
 ) => {
 	const headers = {
 		"Content-Type": contentType ? contentType : "application/json",
@@ -167,6 +178,7 @@ export const setAuthorizeHeader = (
 	sessCookie: RequestCookies | ReadonlyRequestCookies,
 	token?: string,
 	contentType?: string,
+	host?: string
 ) => {
 	const headers = {
 		"Content-Type": contentType ? contentType : "application/json",
@@ -177,6 +189,9 @@ export const setAuthorizeHeader = (
 		})
 		return headers
 	}
+
+	// const expired = getExpToken(sessCookie.get(sessionNames[2])!.value)
+	// if (expired === 0) await renewToken(sessCookie, host)
 
 	Object.assign(headers, {
 		Authorization: `Bearer ${sessCookie.get(sessionNames[2])?.value}`,

@@ -5,7 +5,7 @@ import { ChangeEvent } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import { BaseSearchProps } from "./component"
 
-const InputSearchComponent = ({ col, value }: BaseSearchProps) => {
+const InputSearchComponent = ({ col, val }: BaseSearchProps) => {
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams)
     const { replace } = useRouter()
@@ -18,10 +18,10 @@ const InputSearchComponent = ({ col, value }: BaseSearchProps) => {
     if (!col.search) return null
     return <Input
         type="text"
-        placeholder="Cari..."
-        className="w-full"
+        placeholder={`Cari ${col.label}`}
         name={col.id}
         onChange={doChange}
+        defaultValue={val}
     />
 }
 

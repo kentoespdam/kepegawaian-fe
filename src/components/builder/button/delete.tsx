@@ -13,40 +13,72 @@ import {
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
 import { DeleteIcon } from "lucide-react";
-import React from "react";
-import { useFormState } from "react-dom";
-
-import TooltipBuilder from "../tooltip";
+import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { LoadingButton } from "../loading-button";
+import TooltipBuilder from "../tooltip";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { queryClient } from "@components/providers/query";
 
 type ButtonDeleteBuilderProps = {
     id: number;
     href: string;
     msg: string;
     action: (
-        _prevState: unknown,
         formData: FormData,
     ) => Promise<{
         success: boolean;
-        error: {
+        error?: {
             message: string;
         };
     }>;
+    tag?: string;
 };
 
 const deleteText = "DELETE-";
 const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
+    const { action } = props
+    const [state, setState] = useState<any>(null)
     const [open, setOpen] = React.useState(false);
-    const [state, action] = useFormState(props.action, null);
+    const { refresh } = useRouter()
 
+    const client = useQueryClient(queryClient)
+
+    const mutation = useMutation({
+        mutationFn: async (formData: FormData) => {
+            const result = await action(formData)
+            if (result.success === false) {
+                setState(result)
+                return
+            }
+            // setOpen(false);
+            // refresh()
+            // return result
+        },
+        onError: (err: any) => {
+            setState(err)
+        },
+        onSuccess: (result: any) => {
+            setState(result)
+            setOpen(false)
+            client.invalidateQueries({
+                queryKey: [props.tag]
+            })
+        }
+    })
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutation.mutate(new FormData(e.currentTarget))
+    }
     return (
-        <AlertDialog open={open} onOpenChange={setOpen}>
+        <AlertDialog key={props.id} open={open} onOpenChange={setOpen}>
             <TooltipBuilder
                 text={props.msg}
                 className="bg-destructive text-destructive-foreground"
             >
-                <AlertDialogTrigger asChild>
-                    <Button variant="ghost" size="icon" className="p-0 h-7 w-7">
+                <AlertDialogTrigger id={String(props.id)} asChild>
+                    <Button id={String(props.id)} variant="ghost" size="icon" className="p-0 h-7 w-7">
                         <DeleteIcon
                             className="h-5 w-5 text-destructive"
                             aria-hidden="true"
@@ -55,8 +87,7 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
                 </AlertDialogTrigger>
             </TooltipBuilder>
             <AlertDialogContent>
-                <form action={action}>
-                    {/* onSubmit={form.handleSubmit(doDelete)}> */}
+                <form onSubmit={handleSubmit}>
                     <AlertDialogHeader>
                         <AlertDialogTitle>Yakin akan menghapus data?</AlertDialogTitle>
                         <AlertDialogDescription>
