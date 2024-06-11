@@ -7,7 +7,7 @@ import {
     CommandList,
 } from "@components/ui/command";
 import { SheetClose } from "@components/ui/sheet";
-import { IMenu, menus } from "@lib/index";
+import { menus, type IMenu } from "@lib/index";
 import Link from "next/link";
 
 type MenuListBuilderProps = {

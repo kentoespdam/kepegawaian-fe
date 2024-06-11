@@ -1,5 +1,5 @@
 "use client"
-import { CustomColumnDef } from "@_types/index";
+import type { CustomColumnDef } from "@_types/index";
 import { useSearchParams } from "next/navigation";
 import InputSearchComponent from "./input";
 

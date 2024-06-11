@@ -1,5 +1,5 @@
 "use client"
-import { StatusPegawai } from "@_types/master/status_pegawai";
+import type { StatusPegawai } from "@_types/master/status_pegawai";
 import AlertBuilder from "@components/builder/alert";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";

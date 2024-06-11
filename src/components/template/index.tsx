@@ -1,4 +1,4 @@
-import { ChildrenNode } from "@lib/index";
+import type { ChildrenNode } from "@lib/index";
 import TopBarComponent from "./topbar";
 
 const MainTemplate = ({ children }: ChildrenNode) => {

@@ -1,7 +1,4 @@
-import { metadata } from "@app/layout";
-import StatusPegawaiForm from "@app/master/status_pegawai/form";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { ChildrenNode } from "@lib/index";
 
 type FormCardProps = {
     metadata: { title: string }

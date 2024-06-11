@@ -1,5 +1,5 @@
 "use client"
-import { ChildrenNode } from "@lib/index";
+import type { ChildrenNode } from "@lib/index";
 
 const SearchFormComponent = ({ children }: ChildrenNode) => {
     return (

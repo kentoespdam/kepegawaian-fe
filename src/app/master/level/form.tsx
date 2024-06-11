@@ -1,6 +1,6 @@
 "use client";
-import { SaveErrorStatus } from "@_types/index";
-import { Level } from "@_types/master/level";
+import type { SaveErrorStatus } from "@_types/index";
+import type { Level } from "@_types/master/level";
 import AlertBuilder from "@components/builder/alert";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";

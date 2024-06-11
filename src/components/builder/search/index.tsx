@@ -1,7 +1,7 @@
-import { CustomColumnDef } from "@_types/index";
+import type { CustomColumnDef } from "@_types/index";
 import SearchComponent from "./component";
-import ResetSearchComponent from "./reset-button";
 import SearchFormComponent from "./form";
+import ResetSearchComponent from "./reset-button";
 
 type SearchBuilderProps = {
     columns: CustomColumnDef[]

@@ -1,9 +1,9 @@
 "use client"
 import { Input } from "@components/ui/input"
 import { useRouter, useSearchParams } from "next/navigation"
-import { ChangeEvent } from "react"
+import type { ChangeEvent } from "react"
 import { useDebouncedCallback } from "use-debounce"
-import { BaseSearchProps } from "./component"
+import type { BaseSearchProps } from "./component"
 
 const InputSearchComponent = ({ col, val }: BaseSearchProps) => {
     const searchParams = useSearchParams()

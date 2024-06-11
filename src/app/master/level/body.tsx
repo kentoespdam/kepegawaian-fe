@@ -1,5 +1,5 @@
-import { Pageable } from "@_types/index";
-import { Level } from "@_types/master/level";
+import type { Pageable } from "@_types/index";
+import type { Level } from "@_types/master/level";
 import ButtonDeleteBuilder from "@components/builder/button/delete";
 import ButtonEditBuilder from "@components/builder/button/edit";
 import { TableBody, TableRow, TableCell } from "@components/ui/table";

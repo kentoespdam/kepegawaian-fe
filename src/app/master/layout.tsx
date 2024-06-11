@@ -1,5 +1,5 @@
 import MainTemplate from "@components/template";
-import { ChildrenNode } from "@lib/index";
+import type { ChildrenNode } from "@lib/index";
 
 const MasterLayout = ({ children }: ChildrenNode) => {
     return (

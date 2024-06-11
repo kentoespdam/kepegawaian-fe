@@ -1,9 +1,9 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface Level {
-	id: number
-	nama: string
+	id: number;
+	nama: string;
 }
 
 export const LevelSchema = z.object({
@@ -11,7 +11,7 @@ export const LevelSchema = z.object({
 	nama: z
 		.string({ required_error: "Nama Wajib diisi" })
 		.min(3, { message: "Nama Wajib diisi" }),
-})
+});
 
 export const levelTableColumns: CustomColumnDef[] = [
 	{
@@ -28,4 +28,4 @@ export const levelTableColumns: CustomColumnDef[] = [
 		id: "aksi",
 		label: "Aksi",
 	},
-]
+];

@@ -1,14 +1,14 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface OrganisasiMini {
-	id: number
-	nama: string
+	id: number;
+	nama: string;
 }
 
 export interface Organisasi extends OrganisasiMini {
-	organisasi: OrganisasiMini | null
-	levelOrganisasi: number
+	organisasi: OrganisasiMini | null;
+	levelOrganisasi: number;
 }
 
 export const OrganisasiSchema = z.object({
@@ -20,7 +20,7 @@ export const OrganisasiSchema = z.object({
 	nama: z
 		.string({ required_error: "Nama Organisasi wajib diisi" })
 		.min(3, { message: "Nama Organisasi wajib diisi" }),
-})
+});
 
 export const organisasiTableColumns: CustomColumnDef[] = [
 	{
@@ -47,4 +47,4 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 		id: "aksi",
 		label: "Aksi",
 	},
-]
+];

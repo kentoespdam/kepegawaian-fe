@@ -4,15 +4,15 @@ import TableHeadBuilder from "@components/builder/table/head";
 import { Table } from "@components/ui/table";
 import LevelTableBody from "./body";
 import PaginationBuilder from "@components/builder/table/pagination";
-import { Level, levelTableColumns } from "@_types/master/level";
+import { type Level, levelTableColumns } from "@_types/master/level";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import { getPageMasterData } from "@helpers/action";
 import LoadingTable from "@components/builder/table/loading";
 
 const LevelTable = () => {
-    const searcjhParams = useSearchParams();
-    const search = new URLSearchParams(searcjhParams);
+    const searchParams = useSearchParams();
+    const search = new URLSearchParams(searchParams);
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["level", search.toString()],

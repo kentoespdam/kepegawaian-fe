@@ -1,10 +1,10 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface JenjangPendidikan {
-	id: number
-	nama: string
-	seq: number
+	id: number;
+	nama: string;
+	seq: number;
 }
 
 export const JenjangPendidikanSchema = z.object({
@@ -15,7 +15,7 @@ export const JenjangPendidikanSchema = z.object({
 		})
 		.min(3, { message: "Nama Jenis Kitas Wajib Diisi" }),
 	seq: z.number().min(1, "Urut Wajib Diisi"),
-})
+});
 
 export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -27,4 +27,4 @@ export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
 	},
 	{ id: "seq", label: "Urut" },
 	{ id: "aksi", label: "Aksi" },
-]
+];

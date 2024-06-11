@@ -1,7 +1,7 @@
 import FormCard from "@components/form/card";
 import LevelFormComponent from "../../form";
 import { getMasterById } from "@helpers/action";
-import { Level } from "@_types/master/level";
+import type { Level } from "@_types/master/level";
 
 export const metadata = {
     title: "Edit Level"

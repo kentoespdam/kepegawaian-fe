@@ -1,5 +1,5 @@
 "use client"
-import { StatusPegawai, statusPegawaiTableColumns } from "@_types/master/status_pegawai";
+import { type StatusPegawai, statusPegawaiTableColumns } from "@_types/master/status_pegawai";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";

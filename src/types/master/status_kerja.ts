@@ -1,9 +1,9 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface StatusKerja {
-	id: number
-	nama: string
+	id: number;
+	nama: string;
 }
 
 export const StatusKerjaSchema = z.object({
@@ -13,7 +13,7 @@ export const StatusKerjaSchema = z.object({
 			required_error: "Nama wajib diisi",
 		})
 		.min(3, { message: "Nama wajib diisi" }),
-})
+});
 
 export const statusKerjaTableColumns: CustomColumnDef[] = [
 	{
@@ -30,4 +30,4 @@ export const statusKerjaTableColumns: CustomColumnDef[] = [
 		id: "aksi",
 		label: "Aksi",
 	},
-]
+];

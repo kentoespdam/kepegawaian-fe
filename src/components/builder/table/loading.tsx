@@ -1,4 +1,4 @@
-import { CustomColumnDef } from "@_types/index";
+import type { CustomColumnDef } from "@_types/index";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 
 type LoadingTableProps = {

@@ -1,16 +1,16 @@
-"use server"
-import { BaseResult, Pageable } from "@_types/index"
-import { API_URL } from "@lib/utils"
-import { revalidatePath, revalidateTag } from "next/cache"
-import { cookies } from "next/headers"
-import { setAuthorizeHeader } from "."
+"use server";
+import type { BaseResult, Pageable } from "@_types/index";
+import { API_URL } from "@lib/utils";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { cookies } from "next/headers";
+import { setAuthorizeHeader } from ".";
 
 interface baseProps {
-	path: string
+	path: string;
 }
 interface getPageMasterDataProps extends baseProps {
-	searchParams?: string
-	retry?: number
+	searchParams?: string;
+	retry?: number;
 }
 /**
  * Retrieves data for a pageable list of TData.
@@ -18,15 +18,15 @@ interface getPageMasterDataProps extends baseProps {
  * @returns A Promise that resolves to a Pageable<TData> object containing the data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getPageMasterData = async <TData extends unknown>(
-	props: getPageMasterDataProps
+export const getPageMasterData = async <TData>(
+	props: getPageMasterDataProps,
 ): Promise<Pageable<TData>> => {
-	const url = `${API_URL}/master/${props.path.replace("_", "-")}?${props.searchParams}`
-	const headers = setAuthorizeHeader(cookies())
-	const controller = new AbortController()
-	const timeoutId = setTimeout(() => controller.abort(), 5000)
+	const url = `${API_URL}/master/${props.path.replace("_", "-")}?${props.searchParams}`;
+	const headers = setAuthorizeHeader(cookies());
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-	let retry = props.retry ?? 0
+	const retry = props.retry ?? 0;
 
 	try {
 		const response = await fetch(url, {
@@ -34,17 +34,18 @@ export const getPageMasterData = async <TData extends unknown>(
 			headers,
 			signal: controller.signal,
 			cache: "no-cache",
-		})
+		});
 		if (!response.ok) {
-			throw new Error(await response.text())
+			throw new Error(await response.text());
 		}
 
-		const result: BaseResult<Pageable<TData>> = await response.json()
-		return result.data
+		const result: BaseResult<Pageable<TData>> = await response.json();
+		return result.data;
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		if (error.status === 401)
-			return await getPageMasterData({ ...props, retry: retry + 1 })
-		console.error(error)
+			return await getPageMasterData({ ...props, retry: retry + 1 });
+		console.error(error);
 		return {
 			content: [],
 			totalPages: 0,
@@ -56,14 +57,14 @@ export const getPageMasterData = async <TData extends unknown>(
 			numberOfElements: 0,
 			first: true,
 			empty: true,
-		}
+		};
 	} finally {
-		clearTimeout(timeoutId)
+		clearTimeout(timeoutId);
 	}
-}
+};
 
 interface getMasterByIdProps extends baseProps {
-	id: number
+	id: number;
 }
 /**
  * Retrieves data for a specific master record by id.
@@ -71,15 +72,15 @@ interface getMasterByIdProps extends baseProps {
  * @returns A Promise that resolves to the specified master record data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getMasterById = async <TData extends unknown>(
-	props: getMasterByIdProps
+export const getMasterById = async <TData>(
+	props: getMasterByIdProps,
 ): Promise<TData> => {
 	// revalidatePath(`/master/${props.path.replace("_", "-")}`)
 	// revalidateTag(props.path)
-	const url = `${API_URL}/master/${props.path.replace("_", "-")}/${props.id}`
-	const headers = setAuthorizeHeader(cookies())
-	const controller = new AbortController()
-	const timeoutId = setTimeout(() => controller.abort(), 5000)
+	const url = `${API_URL}/master/${props.path.replace("_", "-")}/${props.id}`;
+	const headers = setAuthorizeHeader(cookies());
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
 	try {
 		const response = await fetch(url, {
@@ -87,22 +88,22 @@ export const getMasterById = async <TData extends unknown>(
 			headers,
 			signal: controller.signal,
 			cache: "no-cache",
-		})
+		});
 		if (!response.ok) {
-			throw new Error(await response.text())
+			throw new Error(await response.text());
 		}
-		const result: BaseResult<TData> = await response.json()
-		return result.data
+		const result: BaseResult<TData> = await response.json();
+		return result.data;
 	} catch (error) {
-		console.error(error)
-		throw error
+		console.error(error);
+		throw error;
 	} finally {
-		clearTimeout(timeoutId)
+		clearTimeout(timeoutId);
 	}
-}
+};
 
 interface getMasterListProps extends baseProps {
-	searchParams?: string
+	searchParams?: string;
 }
 /**
  * Retrieves data for a pageable list of TData.
@@ -110,15 +111,15 @@ interface getMasterListProps extends baseProps {
  * @returns A Promise that resolves to a Pageable<TData> object containing the data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getMasterList = async <TData extends unknown>(
-	props: getMasterListProps
+export const getMasterList = async <TData>(
+	props: getMasterListProps,
 ): Promise<TData[]> => {
-	revalidatePath(`/master/${props.path}`)
-	revalidateTag(props.path)
-	const url = `${API_URL}/master/${props.path}?${props.searchParams}`
-	const headers = setAuthorizeHeader(cookies())
-	const controller = new AbortController()
-	const timeoutId = setTimeout(() => controller.abort(), 5000)
+	revalidatePath(`/master/${props.path}`);
+	revalidateTag(props.path);
+	const url = `${API_URL}/master/${props.path}?${props.searchParams}`;
+	const headers = setAuthorizeHeader(cookies());
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
 	try {
 		const response = await fetch(url, {
@@ -126,17 +127,17 @@ export const getMasterList = async <TData extends unknown>(
 			headers,
 			signal: controller.signal,
 			cache: "no-cache",
-		})
+		});
 		if (!response.ok) {
-			throw new Error(await response.text())
+			throw new Error(await response.text());
 		}
 
-		const result: BaseResult<TData[]> = await response.json()
-		return result.data
+		const result: BaseResult<TData[]> = await response.json();
+		return result.data;
 	} catch (error) {
-		console.error(error)
-		throw error
+		console.error(error);
+		throw error;
 	} finally {
-		clearTimeout(timeoutId)
+		clearTimeout(timeoutId);
 	}
-}
+};
