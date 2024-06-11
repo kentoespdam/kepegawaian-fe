@@ -44,6 +44,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 	}
 
 	if (!isHasTokenCookie(cookies)) {
+		console.log("renew token")
 		const token = await renewToken(cookies, host.split(":")[0])
 		if (token) {
 			response.cookies.set(token)
@@ -70,7 +71,7 @@ export const config = {
  */
 function redirectAuth(
 	currentHref: string,
-	currentOrigin: string,
+	currentOrigin: string
 ): NextResponse {
 	const cookie = `callback_url=${encodeURIComponent(currentHref)}`
 	const headers = { "set-cookie": cookie }
@@ -104,7 +105,7 @@ async function isHasAuthSession(cookies: RequestCookies): Promise<Response> {
  * @param host - The hostname.
  * @returns A Promise that resolves to a RequestCookie object representing the renewed token, or undefined if an error occurred.
  */
-async function renewToken(cookies: RequestCookies, host: string) {
+export async function renewToken(cookies: RequestCookies, host: string) {
 	const reqHeaders: Record<string, string> = appwriteHeader(cookies)
 	const url = new URL(`${baseAuthUrl}/account/jwt`)
 	const controller = new AbortController()
@@ -115,12 +116,12 @@ async function renewToken(cookies: RequestCookies, host: string) {
 			await fetch(url, {
 				method: "POST",
 				headers: reqHeaders,
-				signal: controller.signal,
+				// signal: controller.signal,
 			})
 		).json()
 
 		const expires = getExpToken(jwt)
-		const expDate = new Date(expires)
+		const expDate = new Date(expires - 10000)
 		const result = {
 			name: sessionNames[2],
 			value: jwt,

@@ -1,25 +1,42 @@
 "use client"
 import { StatusPegawai } from "@_types/master/status_pegawai";
-import { LoadingButton } from "@components/builder/loading-button";
+import AlertBuilder from "@components/builder/alert";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";
 import { Button } from "@components/ui/button";
+import { useMutation } from "@tanstack/react-query";
 import { BanIcon, SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useFormState } from "react-dom";
+import { useState } from "react";
 import { saveStatusPegawai } from "./action";
-import AlertBuilder from "@components/builder/alert";
 
 type StatusPegawaiFormProps = {
     data?: StatusPegawai
 }
 const StatusPegawaiForm = ({ data }: StatusPegawaiFormProps) => {
-    const [state, action] = useFormState(saveStatusPegawai, null)
     const { push } = useRouter()
+    const [errState, setErrState] = useState<{ success: boolean, error?: Record<string, unknown> } | null>(null)
+    const mutation = useMutation({
+        mutationFn: saveStatusPegawai,
+        onSuccess: (result) => {
+            if (!result.success) {
+                setErrState(result)
+                return
+            }
+            push("/master/status_pegawai")
+        }
+    })
+
+    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        mutation.mutate(new FormData(e.currentTarget))
+    }
+
     return (
         <>
-            {state && state.error !== undefined ? (
+            {errState?.error ? (
                 <div className="mb-2">
-                    {Object.entries(state.error).map(([key, value]) => (
+                    {Object.entries(errState.error).map(([key, value]) => (
                         <AlertBuilder
                             key={key}
                             message={String(value)}
@@ -30,11 +47,12 @@ const StatusPegawaiForm = ({ data }: StatusPegawaiFormProps) => {
                 </div>
             ) : null}
 
-            <form className="space-y-4 md:space-y-6" action={action}>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
                 <div className="grid w-full items-center gap-1.5">
                     <InputTextComponent
                         id="nama"
                         label="Nama"
+                        required
                         defaultValue={data?.nama}
                     />
                 </div>
@@ -46,7 +64,7 @@ const StatusPegawaiForm = ({ data }: StatusPegawaiFormProps) => {
                     >
                         <BanIcon className="mr-2" /> Cancel
                     </Button>
-                    <LoadingButton title="Save" icon={<SaveIcon />} />
+                    <LoadingButtonClient pending={mutation.isPending} title="Save" icon={<SaveIcon />} />
                     <input type="hidden" name="id" value={data?.id} />
                 </div>
             </form>

@@ -3,8 +3,8 @@ import { statusPegawaiTableColumns, type StatusPegawai } from "@_types/master/st
 import ButtonDeleteBuilder from "@components/builder/button/delete";
 import ButtonEditBuilder from "@components/builder/button/edit";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
-import { hapus } from "./action";
 import { getUrut } from "@helpers/number";
+import { hapus } from "./action";
 
 type StatusPegawaiTableBodyProps = {
     data: Pageable<StatusPegawai>;
