@@ -31,9 +31,9 @@ const StatusPegawaiTableBody = ({ data }: StatusPegawaiTableBodyProps) => {
                         <TableCell align="center">
                             <ButtonDeleteBuilder
                                 id={statusPegawai.id}
-                                href={`/master/status_pegawai/delete/${statusPegawai.id}`}
                                 msg="Delete Status Pegawai"
                                 action={hapus}
+                                tag="status_pegawai"
                             />
                             <ButtonEditBuilder
                                 href={`/master/status_pegawai/edit/${statusPegawai.id}`}

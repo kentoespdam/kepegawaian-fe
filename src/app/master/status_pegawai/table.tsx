@@ -13,7 +13,7 @@ const StatusPegawaiTable = () => {
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams)
     const { data, isLoading, isSuccess, error } = useQuery({
-        queryKey: ["statusPegawai", search.toString()],
+        queryKey: ["status_pegawai", search.toString()],
         queryFn: () => getPageMasterData<StatusPegawai>({ path: "status-pegawai", searchParams: search.toString() })
     })
     return (

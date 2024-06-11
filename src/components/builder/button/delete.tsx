@@ -1,4 +1,5 @@
 "use client";
+import { queryClient } from "@components/providers/query";
 import { Alert, AlertDescription } from "@components/ui/alert";
 import {
     AlertDialog,
@@ -12,18 +13,17 @@ import {
 } from "@components/ui/alert-dialog";
 import { Button } from "@components/ui/button";
 import { Input } from "@components/ui/input";
-import { DeleteIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useState } from "react";
-import { LoadingButton } from "../loading-button";
-import TooltipBuilder from "../tooltip";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { queryClient } from "@components/providers/query";
+import { DeleteIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import React, { useState } from "react";
+import { LoadingButtonClient } from "../loading-button-client";
+import TooltipBuilder from "../tooltip";
 
 type ButtonDeleteBuilderProps = {
     id: number;
-    href: string;
     msg: string;
+    tag: string;
     action: (
         formData: FormData,
     ) => Promise<{
@@ -32,7 +32,6 @@ type ButtonDeleteBuilderProps = {
             message: string;
         };
     }>;
-    tag?: string;
 };
 
 const deleteText = "DELETE-";
@@ -40,7 +39,8 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
     const { action } = props
     const [state, setState] = useState<any>(null)
     const [open, setOpen] = React.useState(false);
-    const { refresh } = useRouter()
+    const searchParams = useSearchParams()
+    const search = new URLSearchParams(searchParams)
 
     const client = useQueryClient(queryClient)
 
@@ -51,18 +51,14 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
                 setState(result)
                 return
             }
-            // setOpen(false);
-            // refresh()
-            // return result
         },
-        onError: (err: any) => {
-            setState(err)
-        },
+        onError: (err: any) => setState(err),
         onSuccess: (result: any) => {
             setState(result)
             setOpen(false)
             client.invalidateQueries({
-                queryKey: [props.tag]
+                queryKey: [props.tag, search.toString()],
+                refetchType: "active"
             })
         }
     })
@@ -113,10 +109,10 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
                     </AlertDialogHeader>
                     <AlertDialogFooter className="mt-2">
                         <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <LoadingButton
-                            variant="outline"
+                        <LoadingButtonClient
+                            pending={mutation.isPending}
+                            title="Save"
                             type="submit"
-                            title="DELETE"
                             className="bg-destructive text-destructive-foreground"
                         />
                     </AlertDialogFooter>

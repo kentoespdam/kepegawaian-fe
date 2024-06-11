@@ -91,3 +91,8 @@ export const DeleteSchema = z.object({
 		message: "Input kode tidak sesuai!",
 	}),
 })
+
+export interface SaveErrorStatus {
+	success: boolean
+	error?: Record<string, string[]>
+}

@@ -62,7 +62,7 @@ const StatusPegawaiForm = ({ data }: StatusPegawaiFormProps) => {
                         type="button"
                         onClick={() => push("/master/status_pegawai")}
                     >
-                        <BanIcon className="mr-2" /> Cancel
+                        <BanIcon className="mr-2" /> <span>Cancel</span>
                     </Button>
                     <LoadingButtonClient pending={mutation.isPending} title="Save" icon={<SaveIcon />} />
                     <input type="hidden" name="id" value={data?.id} />

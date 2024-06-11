@@ -4,7 +4,6 @@ import { cn } from "@lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { RefreshCwIcon } from "lucide-react";
 import * as React from "react";
-import { useFormStatus } from "react-dom";
 
 interface LoadingButtonClientProps extends ButtonProps {
     pending: boolean;

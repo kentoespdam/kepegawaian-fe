@@ -21,8 +21,6 @@ interface getPageMasterDataProps extends baseProps {
 export const getPageMasterData = async <TData extends unknown>(
 	props: getPageMasterDataProps
 ): Promise<Pageable<TData>> => {
-	// revalidatePath(`/master/${props.path}`)
-	// revalidateTag(props.path)
 	const url = `${API_URL}/master/${props.path.replace("_", "-")}?${props.searchParams}`
 	const headers = setAuthorizeHeader(cookies())
 	const controller = new AbortController()
