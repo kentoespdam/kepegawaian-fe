@@ -23,14 +23,14 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
                 ))}
         </CommandGroup>
     ) : (
-        <Link href={props.menu.path} className="cursor pointer">
-            <SheetClose asChild>
+        <SheetClose asChild>
+            <Link href={props.menu.path} className="cursor pointer">
                 <CommandItem className="cursor-pointer gap-2 pl-4">
                     {props.menu.icon}
                     {props.menu.name}
                 </CommandItem>
-            </SheetClose>
-        </Link>
+            </Link>
+        </SheetClose>
     );
 };
 
