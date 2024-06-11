@@ -1,29 +1,17 @@
-import { Level, levelTableColumns } from "@_types/master/level";
-import TableHeadBuilder from "@components/builder/table/head";
-import PaginationBuilder from "@components/builder/table/pagination";
+import { levelTableColumns } from "@_types/master/level";
+import SearchBuilder from "@components/builder/search";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { Table } from "@components/ui/table";
-import { getPageMasterData } from "@helpers/action";
 import { CirclePlusIcon } from "lucide-react";
 import Link from "next/link";
-import LevelTableBody from "./body";
-import SearchBuilder from "@components/builder/search";
 import LevelTable from "./table";
 
 export const metadata = {
     title: "Master Level",
 };
 
-const LevelPage = async ({
-    searchParams,
-}: { searchParams: Record<string, string> }) => {
-    const data = await getPageMasterData<Level>({
-        path: "level",
-        searchParams: new URLSearchParams(searchParams).toString(),
-    })
-
+const LevelPage = () => {
     return (
         <Card>
             <CardHeader>

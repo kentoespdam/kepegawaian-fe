@@ -7,7 +7,7 @@ import { CirclePlus } from "lucide-react";
 import Link from "next/link";
 import StatusPegawaiTable from "./table";
 
-const StatusPegawaiPage = async () => {
+const StatusPegawaiPage = () => {
     return (
         <Card>
             <CardHeader>
