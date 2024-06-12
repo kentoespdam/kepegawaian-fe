@@ -20,9 +20,13 @@ const StatusPegawaiTable = () => {
         <>
             <Table>
                 <TableHeadBuilder columns={statusPegawaiTableColumns} />
-                {!isSuccess ?
-                    <LoadingTable columns={statusPegawaiTableColumns} isLoading={isLoading} error={error?.message} /> :
-                    <StatusPegawaiTableBody data={data} />
+                {isSuccess && data.content.length > 0 ?
+                    <StatusPegawaiTableBody data={data} /> :
+                    <LoadingTable
+                        error={error?.message}
+                        isSuccess={isSuccess}
+                        isEmpty={data?.content.length === 0}
+                        columns={statusPegawaiTableColumns} />
                 }
 
             </Table>

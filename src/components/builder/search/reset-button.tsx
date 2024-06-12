@@ -11,13 +11,13 @@ const ResetSearchComponent = () => {
     const qc = useQueryClient()
 
     const clearSearch = () => {
+        replace(pathname);
         qc.invalidateQueries({
             type: "active",
         })
         qc.refetchQueries({
             type: "active",
         })
-        replace(pathname);
     };
 
 

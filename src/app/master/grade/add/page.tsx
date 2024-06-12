@@ -1,16 +1,16 @@
 import FormCard from "@components/form/card";
-import GolonganFormComponent from "../form";
+import GradeFormComponent from "../form";
 
 export const metadata = {
-    title: "Tambah Golongan"
+    title: "Tambah Grade"
 }
 
-const AddGolonganPage = () => {
+const AddGradePage = () => {
     return (
         <FormCard metadata={metadata}>
-            <GolonganFormComponent />
+            <GradeFormComponent />
         </FormCard>
     );
 }
 
-export default AddGolonganPage;
+export default AddGradePage;

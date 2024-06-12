@@ -26,12 +26,14 @@ const GradeTable = () => {
         <div className="rounder-md">
             <Table>
                 <TableHeadBuilder columns={gradeTableColumns} />
-                {!isSuccess ?
+                {isSuccess && data.content.length > 0 ?
+                    <GradeTableBody data={data} /> :
                     <LoadingTable
                         isLoading={isLoading}
                         error={error?.message}
-                        columns={gradeTableColumns} /> :
-                    <GradeTableBody data={data} />
+                        isSuccess={isSuccess}
+                        isEmpty={data?.content.length === 0}
+                        columns={gradeTableColumns} />
                 }
             </Table>
             <PaginationBuilder data={data} />

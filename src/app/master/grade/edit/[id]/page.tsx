@@ -1,22 +1,22 @@
-import type { Golongan } from "@_types/master/golongan";
+import type { Grade } from "@_types/master/grade";
 import FormCard from "@components/form/card";
 import { getMasterById } from "@helpers/action";
-import GolonganFormComponent from "../../form";
+import GradeFormComponent from "../../form";
 
 export const metadata = {
-    title: "Edit Golongan"
+    title: "Edit Grade"
 }
 
-const EditGolonganPage = async ({ params }: { params: { id: number } }) => {
-    const data = await getMasterById<Golongan>({
-        path: "golongan",
+const EditGradePage = async ({ params }: { params: { id: number } }) => {
+    const data = await getMasterById<Grade>({
+        path: "grade",
         id: params.id
     })
     return (
         <FormCard metadata={metadata}>
-            <GolonganFormComponent data={data} />
+            <GradeFormComponent data={data} />
         </FormCard>
     );
 }
 
-export default EditGolonganPage;
+export default EditGradePage;

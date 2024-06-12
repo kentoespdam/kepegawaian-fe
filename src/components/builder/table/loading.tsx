@@ -5,14 +5,16 @@ type LoadingTableProps = {
     columns: CustomColumnDef[],
     isLoading?: boolean
     error?: string
+    isSuccess?: boolean
+    isEmpty?: boolean
 }
-const LoadingTable = ({ columns, isLoading, error }: LoadingTableProps) => {
+const LoadingTable = ({ columns, isLoading, error, isEmpty }: LoadingTableProps) => {
     return (
         <TableBody>
             <TableRow>
-                <TableCell colSpan={columns.length}>
+                <TableCell colSpan={columns.length} className="p-0">
                     <div className="p-4 w-full animate-pulse rounded-md bg-muted inline-block align-middle text-center" >
-                        <div>
+                        <div className="font-extrabold text-[16px]">
                             {isLoading ? "Loading..." : error || "No Data"}
                         </div>
                     </div>

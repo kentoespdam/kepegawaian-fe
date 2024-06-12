@@ -23,9 +23,13 @@ const LevelTable = () => {
         <>
             <Table>
                 <TableHeadBuilder columns={levelTableColumns} />
-                {!isSuccess ?
-                    <LoadingTable isLoading={isLoading} error={error?.message} columns={levelTableColumns} /> :
-                    <LevelTableBody data={data} />
+                {isSuccess && data.content.length > 0 ?
+                    <LevelTableBody data={data} /> :
+                    <LoadingTable isLoading={isLoading}
+                        error={error?.message}
+                        isSuccess={isSuccess}
+                        isEmpty={data?.content.length === 0}
+                        columns={levelTableColumns} />
                 }
             </Table>
             <PaginationBuilder data={data} />
