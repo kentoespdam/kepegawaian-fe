@@ -6,7 +6,7 @@ type FormCardProps = {
 }
 const FormCard = ({ metadata, children }: FormCardProps) => {
     return (
-        <Card className="mx-12 sm:mx-0 md:mx-48">
+        <Card className="md:mx-24 lg:mx-96">
             <CardHeader>
                 <CardTitle>{metadata.title}</CardTitle>
             </CardHeader>
