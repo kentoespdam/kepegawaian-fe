@@ -3,6 +3,7 @@ import type { CustomColumnDef } from "@_types/index";
 import { useSearchParams } from "next/navigation";
 import InputSearchComponent from "./input";
 import SearchLevelBuilder from "./level";
+import SearchProfesiBuilder from "./profesi";
 
 export interface BaseSearchProps {
     col: CustomColumnDef, val: string
@@ -22,6 +23,8 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
     switch (col.searchType) {
         case "level":
             return <SearchLevelBuilder col={col} val={value} />
+        case "profesi":
+            return <SearchProfesiBuilder col={col} val={value} />
         default:
             return <InputSearchComponent col={col} val={value} />
     }

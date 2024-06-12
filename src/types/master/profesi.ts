@@ -70,7 +70,7 @@ export const profesiTableColumns: CustomColumnDef[] = [
 	},
 ];
 
-export const findValue = (
+export const findProfesiValue = (
 	list: ProfesiMini[],
 	id: string | number | null,
 ): ProfesiMini | undefined => list.find((row) => row.id === Number(id));
