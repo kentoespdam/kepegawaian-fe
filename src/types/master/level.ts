@@ -29,3 +29,8 @@ export const levelTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 ];
+
+export const findLevelValue = (
+	list: Level[],
+	id: string | number | null,
+): Level | undefined => list.find((row) => row.id === Number(id));
