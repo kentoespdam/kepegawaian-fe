@@ -8,6 +8,7 @@ type InputTextComponentProps = {
     label: string
     defaultValue?: string
     required?: boolean
+    type?: "string" | "number"
 }
 const InputTextComponent = (props: InputTextComponentProps) => {
     return (
@@ -18,6 +19,7 @@ const InputTextComponent = (props: InputTextComponentProps) => {
             <Input
                 id={props.id}
                 name={props.id}
+                type={props.type ?? "string"}
                 placeholder={props.label}
                 defaultValue={props.defaultValue}
                 required={props.required}
