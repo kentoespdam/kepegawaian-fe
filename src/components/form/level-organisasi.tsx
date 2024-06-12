@@ -1,40 +1,31 @@
-"use client"
-
-import { findLevelValue, type Level } from "@_types/master/level";
+import { findProfesiValue } from "@_types/master/profesi";
+import query from "@components/providers/query";
 import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import { useState } from "react";
 
-type SelectLevelComponentProps = {
+type SelectLevelOrganisasiComponentProps = {
     id: string
-    label: string
-    defaultValue?: string
-    required?: boolean
+    val: string
 }
-const SelectLevelComponent = (props: SelectLevelComponentProps) => {
-    const [open, setOpen] = React.useState(false)
-    const [value, setValue] = React.useState(props.defaultValue ?? "")
+const SelectLevelOrganisasiComponent = ({ id, val }: SelectLevelOrganisasiComponentProps) => {
+    const [open, setOpen] = useState(false)
+    const [value, setValue] = useState(val ?? "")
 
-    const query = useQuery({
-        queryKey: ["level-list"],
-        queryFn: async () => {
-            const result = await getMasterList<Level>({
-                path: "level"
-            })
-            return result
-        }
-    })
+    const handleSelect = (i: string) => {
+        setValue(i)
+        setOpen(false)
+    }
+
     return (
         <>
-            <Label htmlFor={props.id}>
-                {props.label} {!props.required ? "" : <span className="text-red-500">*</span>}
-                <input type="text" name={props.id} id={props.id} defaultValue={value} required={props.required} />
+            <Label htmlFor="levelOrganisasi">
+                Level Organisasi
+                <input type="hidden" name={id} id={id} value={value} />
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -44,7 +35,9 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
                         aria-expanded={open}
                         className="w-full justify-between"
                     >
-                        {value ? findLevelValue(query.data ?? [], value)?.nama : "Pilih Level"}
+                        {value ?
+                            `Level ${value}` :
+                            <span className="opacity-50">Cari Profesi</span>}
                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -53,19 +46,18 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
                         <CommandInput placeholder="Type to search..." className="h-9" />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
-                            {query.data?.map((level) => (
+                            {["1", "2", "3", "4", "5", "6"].map((i) => (
                                 <CommandItem
-                                    key={level.id}
+                                    key={i}
                                     onSelect={() => {
-                                        setValue(String(level.id))
-                                        setOpen(false)
+                                        handleSelect(i)
                                     }}
                                 >
-                                    {level.nama}
+                                    {`Level ${i}`}
                                     <CheckIcon
                                         className={cn(
                                             "ml-auto h-4 w-4",
-                                            value === String(level.id) ? "opacity-100" : "opacity-0"
+                                            value === i ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>
@@ -78,4 +70,4 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
     );
 }
 
-export default SelectLevelComponent;
+export default SelectLevelOrganisasiComponent;

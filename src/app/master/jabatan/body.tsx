@@ -1,12 +1,12 @@
 import type { Pageable } from "@_types/index";
-import type { Golongan } from "@_types/master/golongan";
+import type { Jabatan } from "@_types/master/jabatan";
 import ButtonDeleteBuilder from "@components/builder/button/delete";
 import ButtonEditBuilder from "@components/builder/button/edit";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { hapus } from "./action";
 
-const GolonganTableBody = ({ data }: { data: Pageable<Golongan> }) => {
+const JabatanTableBody = ({ data }: { data: Pageable<Jabatan> }) => {
     let urut = getUrut(data)
 
     return (
@@ -14,18 +14,20 @@ const GolonganTableBody = ({ data }: { data: Pageable<Golongan> }) => {
             {data.content.map((row) => (
                 <TableRow key={row.id}>
                     <TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
-                    <TableCell className="border-x">{row.golongan}</TableCell>
-                    <TableCell className="border-x">{row.pangkat}</TableCell>
-                    <TableCell align="center" className="border-x">
+                    <TableCell className="border-x">{row.nama}</TableCell>
+                    <TableCell className="border-x">{row.parent?.nama}</TableCell>
+                    <TableCell className="border-x">{row.organisasi.nama}</TableCell>
+                    <TableCell className="border-x">{row.level.nama}</TableCell>
+                    <TableCell className="border-x">
                         <ButtonDeleteBuilder
                             id={row.id}
-                            msg="Delete Golongan"
+                            msg="Delete Jabatan"
                             action={hapus}
-                            tag="golongan"
+                            tag="jabatan"
                         />
                         <ButtonEditBuilder
-                            href={`/master/golongan/edit/${row.id}`}
-                            msg="Edit Golongan"
+                            href={`/master/jabatan/edit/${row.id}`}
+                            msg="Edit Jabatan"
                         />
                     </TableCell>
                 </TableRow>
@@ -34,4 +36,4 @@ const GolonganTableBody = ({ data }: { data: Pageable<Golongan> }) => {
     );
 }
 
-export default GolonganTableBody;
+export default JabatanTableBody;

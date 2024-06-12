@@ -19,9 +19,11 @@ const ProfesiBadgeBuilder = ({ rows }: ProfesiBadgeBuilderProps) => {
 
     return (
         <>
-            {rows.map((row) => (
-                <Badge key={row.id}>{row.nama}</Badge>
-            ))}
+            <div className="grid grid-cols-3 gap-2">
+                {rows.map((row) => (
+                    <Badge key={row.id}>{row.nama}</Badge>
+                ))}
+            </div>
         </>
     )
 }
@@ -36,7 +38,7 @@ const ProfesiTableBody = ({ data }: { data: Pageable<Profesi> }) => {
                 <TableRow key={row.id}>
                     <TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
                     <TableCell className="border-x">{row.level.nama}</TableCell>
-                    <TableCell align="center" className="border-x">Profesi {row.nama}</TableCell>
+                    <TableCell className="border-x">Profesi {row.nama}</TableCell>
                     <TableCell className="border-x">{row.detail}</TableCell>
                     <TableCell className="border-x">{row.resiko}</TableCell>
                     <TableCell className="border-x">

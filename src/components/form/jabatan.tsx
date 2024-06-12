@@ -1,6 +1,6 @@
 "use client"
 
-import { findLevelValue, type Level } from "@_types/master/level";
+import { type Jabatan, findJabatanValue } from "@_types/master/jabatan";
 import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
@@ -11,21 +11,21 @@ import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 
-type SelectLevelComponentProps = {
+type SelectJabatanComponentProps = {
     id: string
     label: string
     defaultValue?: string
     required?: boolean
 }
-const SelectLevelComponent = (props: SelectLevelComponentProps) => {
+const SelectJabatanComponent = (props: SelectJabatanComponentProps) => {
     const [open, setOpen] = React.useState(false)
     const [value, setValue] = React.useState(props.defaultValue ?? "")
 
     const query = useQuery({
-        queryKey: ["level-list"],
+        queryKey: ["jabatan-list"],
         queryFn: async () => {
-            const result = await getMasterList<Level>({
-                path: "level"
+            const result = await getMasterList<Jabatan>({
+                path: "jabatan"
             })
             return result
         }
@@ -34,7 +34,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
         <>
             <Label htmlFor={props.id}>
                 {props.label} {!props.required ? "" : <span className="text-red-500">*</span>}
-                <input type="text" name={props.id} id={props.id} defaultValue={value} required={props.required} />
+                <input type="hidden" name={props.id} id={props.id} defaultValue={value} required={props.required} />
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -44,7 +44,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
                         aria-expanded={open}
                         className="w-full justify-between"
                     >
-                        {value ? findLevelValue(query.data ?? [], value)?.nama : "Pilih Level"}
+                        {value ? findJabatanValue(query.data ?? [], value)?.nama : "Pilih Jabatan"}
                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -53,19 +53,19 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
                         <CommandInput placeholder="Type to search..." className="h-9" />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
-                            {query.data?.map((level) => (
+                            {query.data?.map((jabatan) => (
                                 <CommandItem
-                                    key={level.id}
+                                    key={jabatan.id}
                                     onSelect={() => {
-                                        setValue(String(level.id))
+                                        setValue(String(jabatan.id))
                                         setOpen(false)
                                     }}
                                 >
-                                    {level.nama}
+                                    {jabatan.nama}
                                     <CheckIcon
                                         className={cn(
                                             "ml-auto h-4 w-4",
-                                            value === String(level.id) ? "opacity-100" : "opacity-0"
+                                            value === String(jabatan.id) ? "opacity-100" : "opacity-0"
                                         )}
                                     />
                                 </CommandItem>
@@ -78,4 +78,4 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
     );
 }
 
-export default SelectLevelComponent;
+export default SelectJabatanComponent;

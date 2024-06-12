@@ -1,9 +1,7 @@
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
-import type { Golongan } from "./golongan";
 import type { Level } from "./level";
 import type { OrganisasiMini } from "./organisasi";
-import type { Pangkat } from "./pangkat";
 
 export interface JabatanMini {
 	id: number;
@@ -12,15 +10,12 @@ export interface JabatanMini {
 }
 
 export interface Jabatan extends JabatanMini {
-	parent: JabatanMini;
+	parent: JabatanMini | null;
 	organisasi: OrganisasiMini;
-	level: Level;
-	pangkat: Pangkat;
-	golongan: Golongan;
 }
 
 export const JabatanSchema = z.object({
-	id: z.optional(z.number()),
+	id: z.number(),
 	parentId: z.optional(z.number()),
 	organisasiId: z.number().min(1, "Organisasi harus disiis"),
 	levelId: z.number().min(1, "Level wajib diisi"),
@@ -42,3 +37,8 @@ export const jabatanTableColumns: CustomColumnDef[] = [
 	{ id: "levelId", label: "Level", search: true, searchType: "level" },
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findJabatanValue = (
+	list: JabatanMini[],
+	id: string | number | null,
+): Level | undefined => list.find((row) => row.id === Number(id));

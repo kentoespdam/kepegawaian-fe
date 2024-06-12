@@ -34,7 +34,7 @@ const SelectProfesiComponent = (props: SelectProfesiComponentProps) => {
         <>
             <Label htmlFor={props.id}>
                 {props.label} {!props.required ? "" : <span className="text-red-500">*</span>}
-                <input type="text" name={props.id} id={props.id} defaultValue={value} />
+                <input type="text" name={props.id} id={props.id} defaultValue={value} required={props.required} />
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>

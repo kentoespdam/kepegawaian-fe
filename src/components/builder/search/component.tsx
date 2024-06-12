@@ -4,6 +4,8 @@ import { useSearchParams } from "next/navigation";
 import InputSearchComponent from "./input";
 import SearchLevelBuilder from "./level";
 import SearchProfesiBuilder from "./profesi";
+import SearchJabatanBuilder from "./jabatan";
+import SearchOrganisasiBuilder from "./organisasi";
 
 export interface BaseSearchProps {
     col: CustomColumnDef, val: string
@@ -25,6 +27,10 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
             return <SearchLevelBuilder col={col} val={value} />
         case "profesi":
             return <SearchProfesiBuilder col={col} val={value} />
+        case "jabatan":
+            return <SearchJabatanBuilder col={col} val={value} />
+        case "organisasi":
+            return <SearchOrganisasiBuilder col={col} val={value} />
         default:
             return <InputSearchComponent col={col} val={value} />
     }
