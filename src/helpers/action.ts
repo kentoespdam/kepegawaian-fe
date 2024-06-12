@@ -116,7 +116,7 @@ export const getMasterList = async <TData>(
 ): Promise<TData[]> => {
 	revalidatePath(`/master/${props.path}`);
 	revalidateTag(props.path);
-	const url = `${API_URL}/master/${props.path}?${props.searchParams}`;
+	const url = `${API_URL}/master/${props.path}/list?${props.searchParams}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
