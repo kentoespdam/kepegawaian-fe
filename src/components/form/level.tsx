@@ -22,7 +22,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
     const [value, setValue] = React.useState(props.defaultValue ?? "")
 
     const query = useQuery({
-        queryKey: ["level"],
+        queryKey: ["level-list"],
         queryFn: async () => {
             const result = await getMasterList<Level>({
                 path: "level"

@@ -18,17 +18,17 @@ export interface Profesi extends ProfesiMini {
 }
 
 export const ProfesiSchema = z.object({
-	id: z.optional(z.number()),
+	id: z.number(),
 	levelId: z.number().min(1, "Level wajib diisi"),
 	nama: z
 		.string({ required_error: "Nama wajib diisi" })
 		.min(3, { message: "Nama wajib diisi" }),
 	detail: z
 		.string({ required_error: "Detail wajib diisi" })
-		.min(3, { message: "Detail wajib diisi" }),
+		.min(1, { message: "Detail wajib diisi" }),
 	resiko: z
 		.string({ required_error: "Resiko wajib diisi" })
-		.min(3, { message: "Resiko wajib diisi" }),
+		.min(1, { message: "Resiko wajib diisi" }),
 });
 
 export const profesiTableColumns: CustomColumnDef[] = [
@@ -55,6 +55,14 @@ export const profesiTableColumns: CustomColumnDef[] = [
 	{
 		id: "resiko",
 		label: "Resiko",
+	},
+	{
+		id: "apdList",
+		label: "Apd",
+	},
+	{
+		id: "alatKerjaList",
+		label: "Alat Kerja",
 	},
 	{
 		id: "aksi",
