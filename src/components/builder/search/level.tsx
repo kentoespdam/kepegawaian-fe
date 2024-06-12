@@ -47,7 +47,7 @@ const SearchLevelBuilder = ({ col, val }: BaseSearchProps) => {
                     className="w-full justify-between"
                 >
                     {value && val !== "" ?
-                        findLevelValue(query.data ?? [], value)?.nama + value :
+                        findLevelValue(query.data ?? [], value)?.nama :
                         <span className="opacity-50">Cari Level</span>}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>
