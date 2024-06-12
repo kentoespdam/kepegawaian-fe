@@ -17,9 +17,9 @@ const LevelTableBody = ({ data }: LevelTableBodyProps) => {
 		<TableBody>
 			{data.content.map((row) => (
 				<TableRow key={row.id}>
-					<TableCell align="right" width={60}>{urut++}</TableCell>
-					<TableCell>{row.nama}</TableCell>
-					<TableCell align="center">
+					<TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
+					<TableCell className="border-x">{row.nama}</TableCell>
+					<TableCell align="center" className="border-x">
 						<ButtonDeleteBuilder
 							id={row.id}
 							msg="Delete Level"

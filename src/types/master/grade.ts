@@ -9,14 +9,12 @@ export interface Grade {
 	tukin: number;
 }
 
-export const GradeForm = z.object({
-	id: z.optional(z.number()),
+export const GradeSchema = z.object({
+	id: z.number(),
 	levelId: z.number().min(1, "Level is required"),
 	grade: z.number().min(1, "Min Grade is 1"),
 	tukin: z.number().min(50_000, "Min Tukin is 50.000"),
 });
-
-export type GradeForm = z.infer<typeof GradeForm>;
 
 export const gradeTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },

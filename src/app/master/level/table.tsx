@@ -20,7 +20,7 @@ const LevelTable = () => {
     });
 
     return (
-        <div className="rounder-md border">
+        <>
             <Table>
                 <TableHeadBuilder columns={levelTableColumns} />
                 {!isSuccess ?
@@ -29,7 +29,7 @@ const LevelTable = () => {
                 }
             </Table>
             <PaginationBuilder data={data} />
-        </div>
+        </>
     );
 }
 

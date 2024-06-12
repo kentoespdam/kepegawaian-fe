@@ -17,7 +17,7 @@ const StatusPegawaiTable = () => {
         queryFn: () => getPageMasterData<StatusPegawai>({ path: "status-pegawai", searchParams: search.toString() })
     })
     return (
-        <div className="rounded-md border">
+        <>
             <Table>
                 <TableHeadBuilder columns={statusPegawaiTableColumns} />
                 {!isSuccess ?
@@ -27,7 +27,7 @@ const StatusPegawaiTable = () => {
 
             </Table>
             <PaginationBuilder data={data} />
-        </div>
+        </>
     );
 }
 

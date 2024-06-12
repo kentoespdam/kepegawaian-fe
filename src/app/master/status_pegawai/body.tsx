@@ -26,9 +26,9 @@ const StatusPegawaiTableBody = ({ data }: StatusPegawaiTableBodyProps) => {
             ) : (
                 data.content.map((statusPegawai) => (
                     <TableRow key={statusPegawai.id}>
-                        <TableCell width={60} align="right">{urut++}</TableCell>
-                        <TableCell>{statusPegawai.nama}</TableCell>
-                        <TableCell align="center">
+                        <TableCell width={60} align="right" className="border-x">{urut++}</TableCell>
+                        <TableCell className="border-x">{statusPegawai.nama}</TableCell>
+                        <TableCell align="center" className="border-x">
                             <ButtonDeleteBuilder
                                 id={statusPegawai.id}
                                 msg="Delete Status Pegawai"
