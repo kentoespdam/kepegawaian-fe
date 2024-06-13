@@ -109,7 +109,7 @@ const PaginationBuilder = ({ data }: PaginationBuilderProps) => {
                                 <Button
                                     variant="ghost"
                                     size="icon"
-                                    onClick={() => navigateToPage(totalPages)}
+                                    onClick={() => navigateToPage(totalPages-1)}
                                     disabled={last}
                                 >
                                     <ChevronLastIcon className="h-5 w-5" />

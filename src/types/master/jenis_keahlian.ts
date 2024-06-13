@@ -13,7 +13,7 @@ export const JenisKeahlianSchema = z.object({
 		.min(3, { message: "Nama Jenis Keahlian wajib diisi" }),
 })
 
-export const jenisKeahlianTableColumn: CustomColumnDef[] = [
+export const jenisKeahlianTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",

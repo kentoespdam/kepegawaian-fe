@@ -7,15 +7,16 @@ type LoadingTableProps = {
     error?: string
     isSuccess?: boolean
     isEmpty?: boolean
+    isFetching?: boolean
 }
-const LoadingTable = ({ columns, isLoading, error, isEmpty }: LoadingTableProps) => {
+const LoadingTable = ({ columns, isLoading, error, isEmpty, isFetching }: LoadingTableProps) => {
     return (
         <TableBody>
             <TableRow>
                 <TableCell colSpan={columns.length} className="p-0">
                     <div className="p-4 w-full animate-pulse rounded-md bg-muted inline-block align-middle text-center" >
                         <div className="font-extrabold text-[16px]">
-                            {isLoading ? "Loading..." : error || "No Data"}
+                            {isLoading || isFetching ? "Loading..." : error || "No Data"}
                         </div>
                     </div>
                 </TableCell>
