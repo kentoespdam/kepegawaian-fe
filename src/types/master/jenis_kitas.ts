@@ -1,9 +1,9 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface JenisKitas {
-	id: number
-	nama: string
+	id: number;
+	nama: string;
 }
 
 export const JenisKitasSchema = z.object({
@@ -11,9 +11,9 @@ export const JenisKitasSchema = z.object({
 	nama: z
 		.string({ required_error: "Nama Jenis Kitas Wajib Diisi" })
 		.min(3, { message: "Nama Jenis Kitas Wajib Diisi" }),
-})
+});
 
-export const jenisKitasTableColumn: CustomColumnDef[] = [
+export const jenisKitasTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",
@@ -22,4 +22,4 @@ export const jenisKitasTableColumn: CustomColumnDef[] = [
 		searchType: "text",
 	},
 	{ id: "aksi", label: "Aksi" },
-]
+];
