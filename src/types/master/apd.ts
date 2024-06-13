@@ -10,7 +10,7 @@ export interface ApdMini {
 
 export interface Apd extends ApdMini {}
 
-export const ApdForm = z.object({
+export const ApdSchema = z.object({
 	id: z.number(),
 	nama: z
 		.string({ required_error: "Nama Apd wajib diisi" })

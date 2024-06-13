@@ -30,7 +30,7 @@ export const getEmployeeByNipam = async (
 			},
 			organisasi: {
 				id: 3,
-				organisasi: {
+				parent: {
 					id: 2,
 					nama: "DIREKTORAT UTAMA",
 				},
