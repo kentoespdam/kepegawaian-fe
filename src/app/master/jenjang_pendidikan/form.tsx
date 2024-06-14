@@ -1,6 +1,6 @@
 "use client";
 import type { SaveErrorStatus } from "@_types/index";
-import type { JenisPelatihan } from "@_types/master/jenis_pelatihan";
+import type { JenjangPendidikan } from "@_types/master/jenjang_pendidikan";
 import AlertBuilder from "@components/builder/alert";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";
@@ -11,23 +11,23 @@ import { SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { saveJenisPelatihan } from "./action";
+import { saveJenjangPendidikan } from "./action";
 
-type JenisPelatihanFormComponentProps = {
-    data?: JenisPelatihan
+type JenjangPendidikanFormComponentProps = {
+    data?: JenjangPendidikan
 }
-const JenisPelatihanFormComponent = ({ data }: JenisPelatihanFormComponentProps) => {
+const JenjangPendidikanFormComponent = ({ data }: JenjangPendidikanFormComponentProps) => {
     const [errState, setErrState] = useState<SaveErrorStatus | null>(null)
     const { push } = useRouter()
 
     const mutation = useMutation({
-        mutationFn: saveJenisPelatihan,
+        mutationFn: saveJenjangPendidikan,
         onSuccess: (result: SaveErrorStatus) => {
             if (!result.success) {
                 setErrState(result)
                 return
             }
-            push("/master/jenis_pelatihan")
+            push("/master/jenjang_pendidikan")
         }
     })
 
@@ -55,13 +55,22 @@ const JenisPelatihanFormComponent = ({ data }: JenisPelatihanFormComponentProps)
                 <div className="grid w-full items-center gap-1.5">
                     <InputTextComponent
                         id="nama"
-                        label="Nama Jenis Pelatihan"
+                        label="Nama Jenjang Pendidikan"
                         defaultValue={data?.nama}
                         required
                     />
                 </div>
+                <div className="grid w-full items-center gap-1.5">
+                    <InputTextComponent
+                        id="seq"
+                        label="Urut Jenjang Pendidikan"
+                        type="number"
+                        defaultValue={data?.seq.toString()}
+                        required
+                    />
+                </div>
                 <div className="flex flex-row justify-end gap-2">
-                    <Link href="/master/jenis_pelatihan" className={cn(buttonVariants({
+                    <Link href="/master/jenjang_pendidikan" className={cn(buttonVariants({
                         variant: "destructive"
                     }))} >
                         Cancel
@@ -74,4 +83,4 @@ const JenisPelatihanFormComponent = ({ data }: JenisPelatihanFormComponentProps)
     );
 }
 
-export default JenisPelatihanFormComponent;
+export default JenjangPendidikanFormComponent;

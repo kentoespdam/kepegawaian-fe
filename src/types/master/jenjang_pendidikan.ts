@@ -17,7 +17,7 @@ export const JenjangPendidikanSchema = z.object({
 	seq: z.number().min(1, "Urut Wajib Diisi"),
 });
 
-export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
+export const jenjangPendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",
@@ -25,6 +25,6 @@ export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
 		search: true,
 		searchType: "text",
 	},
-	{ id: "seq", label: "Urut" },
+	{ id: "seq", label: "Urut Jenjang Pendidikan" },
 	{ id: "aksi", label: "Aksi" },
 ];
