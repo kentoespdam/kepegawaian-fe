@@ -15,7 +15,7 @@ export const JenisPelatihanSchema = z.object({
 		.min(3, { message: "Nama Jenis Kartu identitas Wajib Diisi" }),
 })
 
-export const jenisPelatihanTableColumn: CustomColumnDef[] = [
+export const jenisPelatihanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",

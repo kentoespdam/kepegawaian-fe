@@ -17,15 +17,15 @@ const LoadingButtonClient = React.forwardRef<HTMLButtonElement, LoadingButtonCli
 
         return (
             <Comp
-                className={cn(buttonVariants({ variant, size, className }))}
+                className={cn(buttonVariants({ variant, size, className }), pending ? "cursor-not-allowed bg-secondary" : "")}
                 ref={ref}
                 disabled={pending}
                 {...props}
             >
                 {pending ? (
-                    <RefreshCwIcon className="mr-2 animate-spin" />
+                    <RefreshCwIcon className={cn("mr-0 animate-spin", props.title ? "mr-2" : "")} />
                 ) : icon ? (
-                    <div className="mr-2">{icon}</div>
+                    <div className={cn("mr-0", props.title ? "mr-2" : "")}>{icon}</div>
                 ) : null}
                 {props.title}
             </Comp>

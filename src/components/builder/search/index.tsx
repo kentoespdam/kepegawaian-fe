@@ -5,6 +5,7 @@ import ResetSearchComponent from "./reset-button";
 
 type SearchBuilderProps = {
     columns: CustomColumnDef[]
+    pending?: boolean
 }
 
 const SearchBuilder = (props: SearchBuilderProps) => {
@@ -21,7 +22,8 @@ const SearchBuilder = (props: SearchBuilderProps) => {
                         </div>
                         : null
                 ))}
-                <ResetSearchComponent />
+                <ResetSearchComponent
+                    pending={props.pending ?? false} />
             </div>
         </SearchFormComponent>
     );
