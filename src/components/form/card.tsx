@@ -1,12 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { cn } from "@lib/utils";
 
 type FormCardProps = {
     metadata: { title: string }
-    children: React.ReactNode
+    children: React.ReactNode,
+    className?: string
 }
-const FormCard = ({ metadata, children }: FormCardProps) => {
+const FormCard = ({ metadata, children, className }: FormCardProps) => {
     return (
-        <Card className="md:mx-24 lg:mx-96">
+        <Card className={cn("md:mx-24 lg:mx-96", className)}>
             <CardHeader>
                 <CardTitle>{metadata.title}</CardTitle>
             </CardHeader>

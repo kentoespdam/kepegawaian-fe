@@ -6,7 +6,7 @@ const MainTemplate = ({ children }: ChildrenNode) => {
         <div className="max-w-screen grid grid-cols-1 gap-2 mx-auto">
             <TopBarComponent />
             <div className="grid grid-cols-1 gap-4 ">
-                <main className="lg:mx-2">
+                <main className="mx-6 md:mx-4 sm:mx-2">
                     {children}
                 </main>
             </div>

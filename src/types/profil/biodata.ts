@@ -27,24 +27,28 @@ export interface Biodata extends BiodataMini {
 }
 
 export const BiodataSchema = z.object({
-	nik: z.string({ message: "NIK wajib diisi" }),
-	nama: z.string({ message: "Nama wajib diisi" }),
-	jenisKelamin: z.string({ message: "Jenis Kelamin wajib diisi" }),
-	tempatLahir: z.string({ message: "Tempat Lahir wajib diisi" }),
-	tanggalLahir: z.string({ message: "Tanggal Lahir wajib diisi" }),
-	alamat: z.string({ message: "Alamat wajib diisi" }),
-	telp: z.string().optional(),
-	agama: z.number(),
-	ibuKandung: z.string({ message: "Ibu Kandung wajib diisi" }),
-	pendidikanTerakhir: z
-		.number()
-		.min(1, { message: "Pendidikan Terakhir wajib diisi" }),
-	golonganDarah: z.string().optional(),
-	statusKawin: z.string(),
+	nik: z.string().min(16, { message: "NIK wajib diisi" }),
+	nama: z.string().min(3, { message: "Nama wajib diisi" }),
+	jenisKelamin: z.string().min(1, { message: "Jenis Kelamin wajib diisi" }),
+	tempatLahir: z.string().min(3, { message: "Tempat Lahir wajib diisi" }),
+	tanggalLahir: z.string().min(10, { message: "Tanggal Lahir wajib diisi" }),
+	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),
+	telp: z.string(),
+	agama: z
+		.string()
+		.transform((val) => Number(val)),
+	ibuKandung: z.string().min(3, { message: "Ibu Kandung wajib diisi" }),
+	pendidikanTerakhirId: z
+		.string()
+		.transform((val) => Number(val)),
+	golonganDarah: z.string(),
+	statusKawin: z.string().min(1, { message: "Status Kawin wajib diisi" }),
 	notes: z.string(),
 });
 
 export type BiodataSchema = z.infer<typeof BiodataSchema>;
+
+export type TypeBiodataSchema = z.infer<typeof BiodataSchema>;
 
 export const biodataTableColumns: CustomColumnDef[] = [
 	{

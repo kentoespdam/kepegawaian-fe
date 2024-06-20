@@ -12,9 +12,7 @@ export interface AlatKerja extends AlatKerjaMini {}
 
 export const AlatKerjaSchema = z.object({
 	id: z.number(),
-	nama: z
-		.string({ required_error: "Nama Alat Kerja wajib diisi" })
-		.min(3, { message: "Nama Alat Kerja wajib diisi" }),
+	nama: z.string().min(3, { message: "Nama Alat Kerja wajib diisi" }),
 	profesiId: z.number().min(1, "Profesi harus dipilih"),
 });
 

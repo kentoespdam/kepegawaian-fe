@@ -23,3 +23,8 @@ export const golonganTableColumns: CustomColumnDef[] = [
 	{ id: "pangkat", label: "Pangkat", search: true, searchType: "text" },
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findGolonganValue = (
+	list: Golongan[],
+	id: string | number | null,
+): Golongan | undefined => list.find((row) => row.id === Number(id));

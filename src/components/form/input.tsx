@@ -3,26 +3,28 @@
 import { Input } from "@components/ui/input"
 import { Label } from "@components/ui/label"
 
-type InputTextComponentProps = {
+interface InputTextComponentProps extends React.InputHTMLAttributes<HTMLInputElement> {
     id: string
     label: string
     defaultValue?: string
     required?: boolean
     type?: "string" | "number"
 }
-const InputTextComponent = (props: InputTextComponentProps) => {
+const InputTextComponent = ({ id, label, defaultValue, required, type, ...props }: InputTextComponentProps) => {
+    console.log(props)
     return (
         <>
-            <Label htmlFor={props.id}>
-                {props.label} {!props.required ? "" : <span className="text-red-500">*</span>}
+            <Label htmlFor={id}>
+                {label} {!required ? "" : <span className="text-red-500">*</span>}
             </Label>
             <Input
-                id={props.id}
-                name={props.id}
-                type={props.type ?? "string"}
-                placeholder={props.label}
-                defaultValue={props.defaultValue}
-                required={props.required}
+                id={id}
+                name={id}
+                type={type ?? "string"}
+                placeholder={label}
+                defaultValue={defaultValue}
+                required={required}
+                {...props}
             />
         </>
     );
