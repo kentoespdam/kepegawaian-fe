@@ -1,23 +1,32 @@
-import type { ReferensiPegawai } from "@_types/pegawai";
-import SelectGolonganComponent from "@components/form/golongan";
-import InputTextComponent from "@components/form/input";
+"use client";
+
+import type { ConditionalSchema } from "@_types/pegawai";
 import DatePickerZod from "@components/form/zod/date-picker";
 import SelectGolonganZod from "@components/form/zod/golongan";
 import InputZod from "@components/form/zod/input";
+import SelectJabatanZod from "@components/form/zod/jabatan";
+import SelectOrganisasiZod from "@components/form/zod/organisasi";
+import SelectProfesiZod from "@components/form/zod/profesi";
+import SelectStatusKerjaZod from "@components/form/zod/status-kerja";
 import SelectStatusPegawaiZod from "@components/form/zod/status-pegawai";
-import DatePickerComponent from "@components/ui/date-picker";
 import Fieldset from "@components/ui/fieldset";
-import { Label } from "@components/ui/label";
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 interface PegawaiDetailComponentProps {
-    form: UseFormReturn<ReferensiPegawai>
+    form: UseFormReturn<z.infer<typeof ConditionalSchema>>
 }
 const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
+
     return (
         <Fieldset title="Data Pengangkatan Karyawan">
-            <input type="text" id="id" name="id" placeholder="id pegawai" />
             <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4">
+                <InputZod
+                    id="id"
+                    label="ID"
+                    form={form}
+                    type="hidden" />
+
                 <InputZod
                     id="nipam"
                     label="NIPAM"
@@ -28,10 +37,6 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
                     label="Status Pegawai"
                     form={form} />
 
-                <SelectGolonganZod
-                    id="golonganId"
-                    label="Golongan / Jabatan"
-                    form={form} />
 
                 <InputZod
                     id="noSk"
@@ -41,6 +46,31 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
                 <DatePickerZod
                     id="tanggalTmtSk"
                     label="Tanggal TMT SK"
+                    form={form} />
+
+                <SelectGolonganZod
+                    id="golonganId"
+                    label="Golongan"
+                    form={form} />
+
+                <SelectOrganisasiZod
+                    id="organisasiId"
+                    label="Organisasi"
+                    form={form} />
+
+                <SelectJabatanZod
+                    id="jabatanId"
+                    label="Jabatan"
+                    form={form} />
+
+                <SelectProfesiZod
+                    id="profesiId"
+                    label="Profesi"
+                    form={form} />
+
+                <SelectStatusKerjaZod
+                    id="statusKerjaId"
+                    label="Status Kerja"
                     form={form} />
 
             </div>

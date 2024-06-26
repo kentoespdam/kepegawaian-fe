@@ -4,4 +4,5 @@ export interface InputZodProps<TData extends FieldValues> {
     id: Path<TData>;
     label: string
     form: UseFormReturn<TData>;
+    type?: "text" | "number" | "email" | "hidden"
 };

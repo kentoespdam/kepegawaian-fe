@@ -73,4 +73,13 @@ export const profesiTableColumns: CustomColumnDef[] = [
 export const findProfesiValue = (
 	list: ProfesiMini[],
 	id: string | number | null,
-): ProfesiMini | undefined => list.find((row) => row.id === Number(id));
+): ProfesiMini => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari)
+		return {
+			id: 0,
+			nama: "Pilih Profesi",
+		};
+
+	return cari;
+};

@@ -34,15 +34,13 @@ export const BiodataSchema = z.object({
 	tanggalLahir: z.string().min(10, { message: "Tanggal Lahir wajib diisi" }),
 	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),
 	telp: z.string(),
-	agama: z
-		.string()
-		.transform((val) => Number(val)),
+	agama: z.number().min(0, { message: "Agama wajib diisi" }),
 	ibuKandung: z.string().min(3, { message: "Ibu Kandung wajib diisi" }),
 	pendidikanTerakhirId: z
-		.string()
-		.transform((val) => Number(val)),
+		.number()
+		.min(1, { message: "Pendidikan Terakhir wajib diisi" }),
 	golonganDarah: z.string(),
-	statusKawin: z.string().min(1, { message: "Status Kawin wajib diisi" }),
+	statusKawin: z.number().default(0),
 	notes: z.string(),
 });
 

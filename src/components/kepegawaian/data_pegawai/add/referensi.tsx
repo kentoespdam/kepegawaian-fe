@@ -1,14 +1,15 @@
 "use client"
-import type { RefNonPegawai, RefPegawai } from "@_types/pegawai";
+import type { ConditionalSchema } from "@_types/pegawai";
 import Fieldset from "@components/ui/fieldset";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form";
 import { Label } from "@components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
 import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 interface ReferensiPegawaiComponentProps {
-    form: UseFormReturn<RefNonPegawai | RefPegawai>
+    form: UseFormReturn<z.infer<typeof ConditionalSchema>>
 }
 const ReferensiPegawaiComponent = ({ form }: ReferensiPegawaiComponentProps) => {
     const store = useAddBiodataStore((state) => state)

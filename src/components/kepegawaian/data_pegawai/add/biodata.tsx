@@ -1,4 +1,4 @@
-import type { ReferensiPegawai } from "@_types/pegawai";
+import type { ConditionalSchema } from "@_types/pegawai";
 import SelectAgamaZod from "@components/form/zod/agama";
 import DatePickerZod from "@components/form/zod/date-picker";
 import RadioGolonganDarah from "@components/form/zod/gologan-darah";
@@ -9,9 +9,10 @@ import SelectStatusKawinZod from "@components/form/zod/status-kawin";
 import TextAreaZod from "@components/form/zod/textarea";
 import Fieldset from "@components/ui/fieldset";
 import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
 interface PegawaiBiodataComponentProps {
-    form: UseFormReturn<ReferensiPegawai>
+    form: UseFormReturn<z.infer<typeof ConditionalSchema>>
 }
 const PegawaiBiodataComponent = ({ form }: PegawaiBiodataComponentProps) => {
     return (
@@ -82,16 +83,6 @@ const PegawaiBiodataComponent = ({ form }: PegawaiBiodataComponentProps) => {
                     label="Notes"
                     form={form} />
 
-                {/* 
-                <div className="grid gap-2">
-                    <InputTextComponent
-                        id="telp"
-                        label="No. Telp"
-                        required />
-                </div>
-                <div className="grid gap-2">
-                    <SelectJenjangPendidikan required />
-                </div>*/}
             </div>
         </Fieldset>
     );

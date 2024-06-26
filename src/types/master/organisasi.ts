@@ -50,6 +50,6 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 ];
 
 export const findOrganisasiValue = (
-	list: Organisasi[],
+	list: OrganisasiMini[],
 	id: string | number | null,
-): Organisasi | undefined => list.find((row) => row.id === Number(id));
+): OrganisasiMini | undefined => list.find((row) => row.id === Number(id));

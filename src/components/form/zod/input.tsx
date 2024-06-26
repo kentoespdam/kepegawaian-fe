@@ -2,16 +2,17 @@ import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@compo
 import { Input } from "@components/ui/input";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { cn } from "@lib/utils";
 
-const InputZod = <TData extends FieldValues>({ id, label, form }: InputZodProps<TData>) => (
+const InputZod = <TData extends FieldValues>({ id, label, form, type = "text" }: InputZodProps<TData>) => (
     <FormField
         control={form.control}
         name={id}
         render={({ field }) => (
-            <FormItem>
+            <FormItem className={cn(type === "hidden" && "hidden")}>
                 <FormLabel>{label}</FormLabel>
                 <FormControl>
-                    <Input placeholder={`Masukkan ${label}`} {...field} />
+                    <Input type={type} placeholder={`Masukkan ${label} ${id}`} {...field} />
                 </FormControl>
                 <FormMessage />
             </FormItem>

@@ -31,3 +31,16 @@ export const statusKerjaTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 ];
+
+export const findStatusKerjaValue = (
+	list: StatusKerja[],
+	id: number | string,
+) => {
+	const statusKerja = list.find((statusKerja) => statusKerja.id === Number(id));
+	if (!statusKerja)
+		return {
+			id: 0,
+			nama: "Pilih Status Kerja",
+		};
+	return statusKerja;
+};

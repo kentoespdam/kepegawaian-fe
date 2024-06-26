@@ -27,4 +27,10 @@ export const golonganTableColumns: CustomColumnDef[] = [
 export const findGolonganValue = (
 	list: Golongan[],
 	id: string | number | null,
-): Golongan | undefined => list.find((row) => row.id === Number(id));
+): Golongan => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari)
+		return { id: 0, golongan: "Pilih Golongan", pangkat: "Pilih Pangkat" };
+
+	return cari;
+};

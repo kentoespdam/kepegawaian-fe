@@ -33,3 +33,12 @@ export const statusPegawaiTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 ];
+
+export const findStatusPegawaiValue = (
+	list: StatusPegawai[],
+	id: number | string,
+): StatusPegawai => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Status Pegawai" };
+	return cari;
+};

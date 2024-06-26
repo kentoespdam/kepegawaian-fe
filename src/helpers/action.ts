@@ -1,7 +1,6 @@
 "use server";
 import type { BaseResult, Pageable } from "@_types/index";
 import { API_URL } from "@lib/utils";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { cookies } from "next/headers";
 import { setAuthorizeHeader } from ".";
 
@@ -75,8 +74,6 @@ interface getMasterByIdProps extends baseProps {
 export const getMasterById = async <TData>(
 	props: getMasterByIdProps,
 ): Promise<TData> => {
-	// revalidatePath(`/master/${props.path.replace("_", "-")}`)
-	// revalidateTag(props.path)
 	const url = `${API_URL}/master/${props.path.replace("_", "-")}/${props.id}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
@@ -103,6 +100,7 @@ export const getMasterById = async <TData>(
 };
 
 interface getMasterListProps extends baseProps {
+	subPath?: string;
 	searchParams?: string;
 }
 /**
@@ -114,9 +112,11 @@ interface getMasterListProps extends baseProps {
 export const getMasterList = async <TData>(
 	props: getMasterListProps,
 ): Promise<TData[]> => {
-	revalidatePath(`/master/${props.path}`);
-	revalidateTag(props.path);
-	const url = `${API_URL}/master/${props.path}/list?${props.searchParams}`;
+	// revalidatePath(`/master/${props.path.replace("-", "_")}`);
+	// revalidateTag(props.path.replace("-", "_"));
+	const url = props.subPath
+		? `${API_URL}/master/${props.path}/${props.subPath}?${props.searchParams}`
+		: `${API_URL}/master/${props.path}/list?${props.searchParams}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -128,9 +128,10 @@ export const getMasterList = async <TData>(
 			signal: controller.signal,
 			cache: "no-cache",
 		});
-		if (!response.ok) {
-			throw new Error(await response.text());
-		}
+
+		// if (!response.ok) {
+		// 	throw new Error(await response.text());
+		// }
 
 		const result: BaseResult<TData[]> = await response.json();
 		return result.data;

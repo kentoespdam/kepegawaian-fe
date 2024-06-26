@@ -1,20 +1,19 @@
-import { z } from "zod";
+import { boolean, z } from "zod";
 import type { CustomColumnDef } from ".";
 import type { Golongan } from "./master/golongan";
 import type { Grade } from "./master/grade";
-import { type JabatanMini, JabatanSchema } from "./master/jabatan";
+import type { JabatanMini } from "./master/jabatan";
 import type { Organisasi } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
 import type { StatusKerja } from "./master/status_kerja";
-import {
-	type StatusPegawai,
-	StatusPegawaiSchema,
-} from "./master/status_pegawai";
+import type { StatusPegawai } from "./master/status_pegawai";
 import { type BiodataMini, BiodataSchema } from "./profil/biodata";
 
 export interface Pegawai {
 	id: number;
 	nipam: string;
+	noSk: string;
+	tanggalTmtSk: string;
 	biodata: BiodataMini;
 	statusPegawai: StatusPegawai;
 	jabatan: JabatanMini;
@@ -26,14 +25,27 @@ export interface Pegawai {
 	notes: string | null;
 }
 
-export const RefPegawai = z.object({
+export const RefNonPegawai = BiodataSchema.extend({
+	referensi: z.literal("biodata"),
+	updateBio: z.boolean().optional().default(false),
+});
+
+export const RefPegawai = BiodataSchema.extend({
 	referensi: z.literal("pegawai"),
-	id: z.string().transform((val) => Number(val)),
-	nipam: z.string(),
-	nik: z.string(),
-	noSk: z.string(),
-	tanggalTmtSk: z.string(),
+	updateBio: z.boolean().optional().default(false),
+	updatePegawai: z.boolean().optional().default(false),
+	id: z
+		.string()
+		.transform((val) => Number(val))
+		.optional(),
+	nipam: z.string().min(8, { message: "NIPAM wajib diisi" }),
+	noSk: z.string().min(3, { message: "Nomor SK wajib diisi" }),
+	tanggalTmtSk: z.string().min(10, { message: "Tgl SK wajib diisi" }),
 	statusPegawaiId: z
+		.string()
+		.min(1, { message: "Status Pegawai wajib diisi" })
+		.transform((val) => Number(val)),
+	organisasiId: z
 		.string()
 		.min(1, "Status Pegawai wajib diisi")
 		.transform((val) => Number(val)),
@@ -41,62 +53,28 @@ export const RefPegawai = z.object({
 		.string()
 		.min(1, "Status Pegawai wajib diisi")
 		.transform((val) => Number(val)),
-	organisasiId: z
-		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
 	profesiId: z
 		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
+		.transform((val) => Number(val))
+		.optional(),
 	golonganId: z
 		.string()
 		.min(1, "Status Pegawai wajib diisi")
 		.transform((val) => Number(val)),
 	gradeId: z
 		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
+		.transform((val) => Number(val))
+		.optional(),
 	statusKerjaId: z
 		.string()
 		.min(1, "Status Pegawai wajib diisi")
 		.transform((val) => Number(val)),
 });
 
-export const BaseSchema = z.object({
-	referensi: z.enum(["biodata", "pegawai"]),
-});
-
-export const ConditionalSchema = BaseSchema.extend({
-	...z
-		.object({
-			nipam: z.string().optional(),
-			nama: z.string().optional(),
-		})
-		.refine(
-			(data) => {
-				if (data.referensi === "biodata") {
-					return !!data.nama && !data.nipam;
-				} else if (data.referensi === "pegawai") {
-					return !!data.nipam && !data.nama;
-				}
-				return false;
-			},
-			{
-				message: "Invalid object structure",
-				path: ["referensi"],
-			},
-		).shape,
-});
-
-export const RefNonPegawai = BiodataSchema.extend({
-	referensi: z.literal("biodata"),
-});
-
-export const ReferensiPegawai = z.union([RefNonPegawai, RefPegawai]);
-export type RefNonPegawai = z.infer<typeof RefNonPegawai>;
-export type RefPegawai = z.infer<typeof RefPegawai>;
-export type ReferensiPegawai = RefNonPegawai | RefPegawai;
+export const ConditionalSchema = z.discriminatedUnion("referensi", [
+	RefNonPegawai,
+	RefPegawai,
+]);
 
 export const pegawaiTableColumns: CustomColumnDef[] = [
 	{

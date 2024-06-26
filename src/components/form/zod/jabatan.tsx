@@ -1,6 +1,5 @@
 "use client"
-
-import { findStatusPegawaiValue, type StatusPegawai } from "@_types/master/status_pegawai";
+import { type JabatanMini, findJabatanValue } from "@_types/master/jabatan";
 import { Button } from "@components/ui/button";
 import {
     Command,
@@ -9,27 +8,40 @@ import {
     CommandItem,
     CommandList
 } from "@components/ui/command";
-import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form";
+import {
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage
+} from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
 import { getMasterList } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
-const SelectStatusPegawaiZod = <TData extends FieldValues>({ id, label, form }: InputZodProps<TData>) => {
-    const [pop, setPop] = useState(false)
+const SelectJabatanZod = <TData extends FieldValues>({ id, label, form }: InputZodProps<TData>) => {
+    const { organisasiId, setJabLevelId } = useOrgJab(state => ({
+        organisasiId: state.organisasiId,
+        setJabLevelId: state.setJabLevelId
+    }))
 
+    const [pop, setPop] = useState(false)
     const query = useQuery({
-        queryKey: ["status-pegawai-list"],
+        queryKey: ["jabatan-list", organisasiId],
         queryFn: async () => {
-            const result = await getMasterList<StatusPegawai>({
-                path: "status-pegawai"
+            const result = await getMasterList<JabatanMini>({
+                path: "jabatan",
+                subPath: `organisasi/${organisasiId}`,
             })
             return result
-        }
+        },
+        enabled: !!organisasiId && organisasiId > 0
     })
 
     return (
@@ -48,12 +60,13 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({ id, label, form }: 
                                     className={cn("w-full justify-between", !field.value ? "text-muted-foreground" : "")}
                                 >
                                     {!query.data ?
-                                        "Status Pegawai tidak ditemukan" :
+                                        "Jabatan tidak ditemukan" :
                                         query.isLoading || query.isFetching ?
                                             "Loading..." :
                                             field.value ?
-                                                findStatusPegawaiValue(query.data, field.value).nama :
-                                                "Pilih Status Pegawai"}
+                                                findJabatanValue(query.data, field.value).nama :
+                                                "Pilih Jabatan"
+                                    }
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>
                             </FormControl>
@@ -63,20 +76,21 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({ id, label, form }: 
                                 <CommandInput placeholder="Type a command or search..." />
                                 <CommandList>
                                     <CommandEmpty>No results found.</CommandEmpty>
-                                    {query.data?.map((item) => (
+                                    {query.data?.map((jabatan) => (
                                         <CommandItem
-                                            key={item.id}
-                                            value={item.nama}
+                                            key={jabatan.id}
+                                            value={jabatan.nama}
                                             onSelect={() => {
-                                                field.onChange(String(item.id))
+                                                field.onChange(jabatan.id)
                                                 setPop(false)
+                                                setJabLevelId(jabatan.level.id)
                                             }}
                                         >
-                                            {item.nama}
+                                            {jabatan.nama}
                                             <CheckIcon
                                                 className={cn(
                                                     "ml-auto h-4 w-4",
-                                                    item.id === Number(field.value)
+                                                    jabatan.id === Number(field.value)
                                                         ? "opacity-100"
                                                         : "opacity-0"
                                                 )}
@@ -94,4 +108,4 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({ id, label, form }: 
     );
 }
 
-export default SelectStatusPegawaiZod;
+export default SelectJabatanZod;

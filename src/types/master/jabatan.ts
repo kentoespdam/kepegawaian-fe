@@ -41,4 +41,8 @@ export const jabatanTableColumns: CustomColumnDef[] = [
 export const findJabatanValue = (
 	list: JabatanMini[],
 	id: string | number | null,
-): Level | undefined => list.find((row) => row.id === Number(id));
+): Level => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Jabatan" };
+	return cari;
+};
