@@ -1,5 +1,4 @@
 "use client";
-import { queryClient } from "@components/providers/query";
 import { Alert, AlertDescription } from "@components/ui/alert";
 import {
     AlertDialog,
@@ -47,7 +46,7 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams)
 
-    const client = useQueryClient(queryClient)
+    const client = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: async (formData: FormData) => {
