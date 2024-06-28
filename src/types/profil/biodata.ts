@@ -10,6 +10,7 @@ export interface BiodataMini {
 	nama: string;
 	jenisKelamin: string;
 	tanggalLahir: string;
+	statusKawin: StatusKawin;
 }
 
 export interface Biodata extends BiodataMini {
@@ -20,7 +21,6 @@ export interface Biodata extends BiodataMini {
 	ibuKandung: string;
 	pendidikanTerakhir: PendidikanTerakhir;
 	golonganDarah: string;
-	statusKawin: StatusKawin;
 	fotoProfil: string;
 	notes: string;
 	kartuIdentitas: KartuIdentitas;

@@ -23,3 +23,9 @@ export const gradeTableColumns: CustomColumnDef[] = [
 	{ id: "tukin", label: "Tukin" },
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findGradeValue = (list: Grade[], id: number | string) => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, level: { nama: "" }, grade: 0, tukin: 0 };
+	return cari;
+};

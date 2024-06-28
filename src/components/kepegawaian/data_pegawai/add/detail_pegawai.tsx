@@ -3,6 +3,7 @@
 import type { ConditionalSchema } from "@_types/pegawai";
 import DatePickerZod from "@components/form/zod/date-picker";
 import SelectGolonganZod from "@components/form/zod/golongan";
+import SelectGradeZod from "@components/form/zod/grade";
 import InputZod from "@components/form/zod/input";
 import SelectJabatanZod from "@components/form/zod/jabatan";
 import SelectOrganisasiZod from "@components/form/zod/organisasi";
@@ -66,6 +67,11 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
                 <SelectProfesiZod
                     id="profesiId"
                     label="Profesi"
+                    form={form} />
+
+                <SelectGradeZod
+                    id="gradeId"
+                    label="Grade"
                     form={form} />
 
                 <SelectStatusKerjaZod

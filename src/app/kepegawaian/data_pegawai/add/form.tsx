@@ -7,10 +7,12 @@ import PegawaiBiodataComponent from "@components/kepegawaian/data_pegawai/add/bi
 import PegawaiDetailComponent from "@components/kepegawaian/data_pegawai/add/detail_pegawai";
 import ReferensiPegawaiComponent from "@components/kepegawaian/data_pegawai/add/referensi";
 import { Form } from "@components/ui/form";
+import { useToast } from "@components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 import { useOrgJab } from "@store/org-jab";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { saveKepegawaian } from "../action";
@@ -21,11 +23,15 @@ type PegawaiFormProps = {
 }
 
 const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
+    const { push } = useRouter()
     const { setOrganisasiId, organisasiId } = useOrgJab()
     if (pegawai) {
         setOrganisasiId(pegawai?.organisasiId ?? 0)
     }
     const store = useAddBiodataStore()
+    const { toast } = useToast()
+    const qc = useQueryClient()
+
     const form = useForm<z.infer<typeof ConditionalSchema>>({
         resolver: zodResolver(ConditionalSchema),
         defaultValues: {
@@ -50,7 +56,26 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
     })
 
     const mutation = useMutation({
-        mutationFn: saveKepegawaian
+        mutationFn: saveKepegawaian,
+        onSuccess: (data, variables, context) => {
+            if (data.status !== 201) throw new Error(data.message)
+
+            toast({
+                title: "Success",
+                description: "Data berhasil disimpan",
+                className: "bg-primary text-primary-foreground",
+            })
+            qc.invalidateQueries({ queryKey: ["data-pegawai", "data-biodata"] })
+            push("/kepegawaian/data_pegawai")
+        },
+        onError: (error, variables, context) => {
+            // console.log(error)
+            toast({
+                title: "Error",
+                description: error.message,
+                variant: "destructive",
+            })
+        }
     })
 
     const onSubmit = (values: z.infer<typeof ConditionalSchema>) => {
@@ -66,7 +91,7 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 
                 <PegawaiBiodataComponent form={form} />
 
-                <PegawaiActionComponent pending={false} />
+                <PegawaiActionComponent pending={mutation.isPending} />
             </form>
         </Form>
     )

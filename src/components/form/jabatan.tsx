@@ -56,6 +56,7 @@ const SelectJabatanComponent = (props: SelectJabatanComponentProps) => {
                             {query.data?.map((jabatan) => (
                                 <CommandItem
                                     key={jabatan.id}
+                                    value={jabatan.nama}
                                     onSelect={() => {
                                         setValue(String(jabatan.id))
                                         setOpen(false)

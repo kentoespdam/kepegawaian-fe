@@ -75,8 +75,9 @@ const SelectProfesiZod = <TData extends FieldValues>({ id, label, form }: InputZ
                                     {query.data?.map((profesi) => (
                                         <CommandItem
                                             key={profesi.id}
+                                            value={profesi.nama}
                                             onSelect={() => {
-                                                field.onChange(String(profesi.id))
+                                                field.onChange(profesi.id)
                                                 setPop(false)
                                             }}
                                         >

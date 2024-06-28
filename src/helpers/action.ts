@@ -1,15 +1,24 @@
 "use server";
 import type { BaseResult, Pageable } from "@_types/index";
 import { API_URL } from "@lib/utils";
+import type { QueryKey } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { setAuthorizeHeader } from ".";
 
+export interface myQueryRequest {
+	queryKey: QueryKey;
+	meta: Record<string, unknown> | undefined;
+	pageParam?: unknown;
+	direction?: unknown;
+}
+
 interface baseProps {
 	path: string;
-}
-interface getPageMasterDataProps extends baseProps {
-	searchParams?: string;
+	isRoot?: boolean;
 	retry?: number;
+}
+interface getDataProps extends baseProps {
+	searchParams?: string;
 }
 /**
  * Retrieves data for a pageable list of TData.
@@ -17,12 +26,14 @@ interface getPageMasterDataProps extends baseProps {
  * @returns A Promise that resolves to a Pageable<TData> object containing the data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getPageMasterData = async <TData>(
-	props: getPageMasterDataProps,
+export const getPageData = async <TData>(
+	props: getDataProps,
 ): Promise<Pageable<TData>> => {
-	const url = `${API_URL}/master/${props.path.replace("_", "-")}?${props.searchParams}`;
-	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
+
+	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
+	const url = `${basePath}/${props.path.replace("_", "-")}?${props.searchParams}`;
+	const headers = setAuthorizeHeader(cookies());
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
 	const retry = props.retry ?? 0;
@@ -42,21 +53,23 @@ export const getPageMasterData = async <TData>(
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
-		if (error.status === 401)
-			return await getPageMasterData({ ...props, retry: retry + 1 });
-		console.error(error);
-		return {
-			content: [],
-			totalPages: 0,
-			totalElements: 0,
-			last: true,
-			size: 10,
-			number: 0,
-			sort: { sorted: false, unsorted: false, empty: true },
-			numberOfElements: 0,
-			first: true,
-			empty: true,
-		};
+		if (error.status === 401 && retry < 3)
+			return await getPageData({ ...props, retry: retry + 1 });
+
+		throw new Error(error);
+		// console.error(error);
+		// return {
+		// 	content: [],
+		// 	totalPages: 0,
+		// 	totalElements: 0,
+		// 	last: true,
+		// 	size: 10,
+		// 	number: 0,
+		// 	sort: { sorted: false, unsorted: false, empty: true },
+		// 	numberOfElements: 0,
+		// 	first: true,
+		// 	empty: true,
+		// };
 	} finally {
 		clearTimeout(timeoutId);
 	}
@@ -74,10 +87,13 @@ interface getMasterByIdProps extends baseProps {
 export const getMasterById = async <TData>(
 	props: getMasterByIdProps,
 ): Promise<TData> => {
-	const url = `${API_URL}/master/${props.path.replace("_", "-")}/${props.id}`;
+	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
+	const url = `${basePath}/${props.path.replace("_", "-")}/${props.id}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	const retry = props.retry ?? 0;
 
 	try {
 		const response = await fetch(url, {
@@ -86,12 +102,15 @@ export const getMasterById = async <TData>(
 			signal: controller.signal,
 			cache: "no-cache",
 		});
-		if (!response.ok) {
-			throw new Error(await response.text());
-		}
+
+		if (!response.ok) throw new Error(await response.text());
+
 		const result: BaseResult<TData> = await response.json();
 		return result.data;
-	} catch (error) {
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (error: any) {
+		if (error.status === 401 && retry < 3)
+			return await getMasterById({ ...props, retry: retry + 1 });
 		console.error(error);
 		throw error;
 	} finally {
@@ -100,6 +119,7 @@ export const getMasterById = async <TData>(
 };
 
 interface getMasterListProps extends baseProps {
+	isMaster?: boolean;
 	subPath?: string;
 	searchParams?: string;
 }
@@ -112,14 +132,15 @@ interface getMasterListProps extends baseProps {
 export const getMasterList = async <TData>(
 	props: getMasterListProps,
 ): Promise<TData[]> => {
-	// revalidatePath(`/master/${props.path.replace("-", "_")}`);
-	// revalidateTag(props.path.replace("-", "_"));
+	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
 	const url = props.subPath
-		? `${API_URL}/master/${props.path}/${props.subPath}?${props.searchParams}`
-		: `${API_URL}/master/${props.path}/list?${props.searchParams}`;
+		? `${basePath}/${props.path}/${props.subPath}?${props.searchParams}`
+		: `${basePath}/${props.path}/list?${props.searchParams}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	const retry = props.retry ?? 0;
 
 	try {
 		const response = await fetch(url, {
@@ -129,13 +150,14 @@ export const getMasterList = async <TData>(
 			cache: "no-cache",
 		});
 
-		// if (!response.ok) {
-		// 	throw new Error(await response.text());
-		// }
+		if (!response.ok) throw new Error(await response.text());
 
 		const result: BaseResult<TData[]> = await response.json();
 		return result.data;
-	} catch (error) {
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	} catch (error: any) {
+		if (error.status === 401 && retry < 3)
+			return await getMasterList({ ...props, retry: retry + 1 });
 		console.error(error);
 		throw error;
 	} finally {

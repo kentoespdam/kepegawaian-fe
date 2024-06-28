@@ -5,7 +5,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageMasterData } from "@helpers/action";
+import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import AlatKerjaTableBody from "./body";
@@ -16,7 +16,7 @@ const AlatKerjaTable = () => {
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["alat_kerja", search.toString()],
-        queryFn: () => getPageMasterData<AlatKerja>({
+        queryFn: () => getPageData<AlatKerja>({
             path: "alat_kerja",
             searchParams: search.toString()
         }),

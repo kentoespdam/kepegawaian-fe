@@ -1,4 +1,4 @@
-import { boolean, z } from "zod";
+import { z } from "zod";
 import type { CustomColumnDef } from ".";
 import type { Golongan } from "./master/golongan";
 import type { Grade } from "./master/grade";
@@ -7,7 +7,7 @@ import type { Organisasi } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
 import type { StatusKerja } from "./master/status_kerja";
 import type { StatusPegawai } from "./master/status_pegawai";
-import { type BiodataMini, BiodataSchema } from "./profil/biodata";
+import { BiodataSchema, type BiodataMini } from "./profil/biodata";
 
 export interface Pegawai {
 	id: number;
@@ -41,34 +41,13 @@ export const RefPegawai = BiodataSchema.extend({
 	nipam: z.string().min(8, { message: "NIPAM wajib diisi" }),
 	noSk: z.string().min(3, { message: "Nomor SK wajib diisi" }),
 	tanggalTmtSk: z.string().min(10, { message: "Tgl SK wajib diisi" }),
-	statusPegawaiId: z
-		.string()
-		.min(1, { message: "Status Pegawai wajib diisi" })
-		.transform((val) => Number(val)),
-	organisasiId: z
-		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
-	jabatanId: z
-		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
-	profesiId: z
-		.string()
-		.transform((val) => Number(val))
-		.optional(),
-	golonganId: z
-		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
-	gradeId: z
-		.string()
-		.transform((val) => Number(val))
-		.optional(),
-	statusKerjaId: z
-		.string()
-		.min(1, "Status Pegawai wajib diisi")
-		.transform((val) => Number(val)),
+	statusPegawaiId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
+	organisasiId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
+	jabatanId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
+	profesiId: z.number().optional(),
+	golonganId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
+	gradeId: z.number().min(1, { message: "Grade wajib diisi" }).optional(),
+	statusKerjaId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
 });
 
 export const ConditionalSchema = z.discriminatedUnion("referensi", [
@@ -80,6 +59,12 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 	{
 		id: "urut",
 		label: "No",
+	},
+	{
+		id: "nipam",
+		label: "Nipam",
+		search: true,
+		searchType: "text",
 	},
 	{
 		id: "nik",

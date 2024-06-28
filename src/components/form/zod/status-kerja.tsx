@@ -73,7 +73,7 @@ const SelectStatusKerjaZod = <TData extends FieldValues>({ id, label, form }: In
                                             key={status_kerja.id}
                                             value={status_kerja.nama}
                                             onSelect={() => {
-                                                field.onChange(String(status_kerja.id))
+                                                field.onChange(status_kerja.id)
                                                 setPop(false)
                                             }}
                                         >

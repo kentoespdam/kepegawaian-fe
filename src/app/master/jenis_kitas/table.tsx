@@ -5,7 +5,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageMasterData } from "@helpers/action";
+import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import JenisKitasTableBody from "./body";
@@ -16,7 +16,7 @@ const JenisKitasTable = () => {
 
     const { data, isFetching, isLoading, isSuccess, error } = useQuery({
         queryKey: ["jenis_kitas", search.toString()],
-        queryFn: () => getPageMasterData<JenisKitas>({
+        queryFn: () => getPageData<JenisKitas>({
             path: "jenis_kitas",
             searchParams: search.toString()
         }),

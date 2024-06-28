@@ -7,7 +7,7 @@ import PaginationBuilder from "@components/builder/table/pagination";
 import { type Level, levelTableColumns } from "@_types/master/level";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { getPageMasterData } from "@helpers/action";
+import { getPageData } from "@helpers/action";
 import LoadingTable from "@components/builder/table/loading";
 
 const LevelTable = () => {
@@ -16,7 +16,7 @@ const LevelTable = () => {
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["level", search.toString()],
-        queryFn: () => getPageMasterData<Level>({ path: "level", searchParams: search.toString() }),
+        queryFn: () => getPageData<Level>({ path: "level", searchParams: search.toString() }),
     });
 
     return (
