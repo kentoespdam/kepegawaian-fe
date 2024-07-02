@@ -57,26 +57,13 @@ export const getPageData = async <TData>(
 			return await getPageData({ ...props, retry: retry + 1 });
 
 		throw new Error(error);
-		// console.error(error);
-		// return {
-		// 	content: [],
-		// 	totalPages: 0,
-		// 	totalElements: 0,
-		// 	last: true,
-		// 	size: 10,
-		// 	number: 0,
-		// 	sort: { sorted: false, unsorted: false, empty: true },
-		// 	numberOfElements: 0,
-		// 	first: true,
-		// 	empty: true,
-		// };
 	} finally {
 		clearTimeout(timeoutId);
 	}
 };
 
-interface getMasterByIdProps extends baseProps {
-	id: number;
+interface getByIdProps extends baseProps {
+	id: number | string;
 }
 /**
  * Retrieves data for a specific master record by id.
@@ -84,8 +71,8 @@ interface getMasterByIdProps extends baseProps {
  * @returns A Promise that resolves to the specified master record data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getMasterById = async <TData>(
-	props: getMasterByIdProps,
+export const getDataById = async <TData>(
+	props: getByIdProps,
 ): Promise<TData> => {
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
 	const url = `${basePath}/${props.path.replace("_", "-")}/${props.id}`;
@@ -103,14 +90,14 @@ export const getMasterById = async <TData>(
 			cache: "no-cache",
 		});
 
-		if (!response.ok) throw new Error(await response.text());
+		// if (!response.ok) throw new Error(await response.text());
 
 		const result: BaseResult<TData> = await response.json();
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		if (error.status === 401 && retry < 3)
-			return await getMasterById({ ...props, retry: retry + 1 });
+			return await getDataById({ ...props, retry: retry + 1 });
 		console.error(error);
 		throw error;
 	} finally {

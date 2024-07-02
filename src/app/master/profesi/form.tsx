@@ -7,7 +7,7 @@ import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";
 import { buttonVariants } from "@components/ui/button";
 import { cn } from "@lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -19,6 +19,7 @@ import TextAreaComponent from "@components/form/textarea";
 const ProfesiFormComponent = ({ data }: { data?: Profesi }) => {
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
+    const qc = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: saveProfesi,
@@ -27,6 +28,8 @@ const ProfesiFormComponent = ({ data }: { data?: Profesi }) => {
                 setErrState(result)
                 return
             }
+            qc.invalidateQueries({ queryKey: ["profesi"] })
+
             push('/master/profesi')
         }
     })

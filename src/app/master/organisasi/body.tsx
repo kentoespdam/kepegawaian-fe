@@ -15,7 +15,7 @@ const OrganisasiTableBody = ({ data }: { data: Pageable<Organisasi> }) => {
                 <TableRow key={row.id}>
                     <TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
                     <TableCell className="border-x">{row.parent?.nama}</TableCell>
-                    <TableCell className="border-x">{row.levelOrganisasi}</TableCell>
+                    <TableCell className="border-x" align="center">{row.levelOrganisasi}</TableCell>
                     <TableCell className="border-x">{row.nama}</TableCell>
                     <TableCell align="center" className="border-x">
                         <ButtonDeleteBuilder

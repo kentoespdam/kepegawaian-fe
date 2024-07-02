@@ -16,6 +16,7 @@ type SelectLevelComponentProps = {
     label: string
     defaultValue?: string
     required?: boolean
+    parentLevelId?: number
 }
 const SelectLevelComponent = (props: SelectLevelComponentProps) => {
     const [open, setOpen] = React.useState(false)
@@ -30,6 +31,10 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
             return result
         }
     })
+
+    const levelData = props.parentLevelId ?
+        query.data?.filter((level) => level.id > Number(props.parentLevelId)) :
+        query.data
     return (
         <>
             <Label htmlFor={props.id}>
@@ -53,7 +58,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
                         <CommandInput placeholder="Type to search..." className="h-9" />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
-                            {query.data?.map((level) => (
+                            {levelData?.map((level) => (
                                 <CommandItem
                                     key={level.id}
                                     onSelect={() => {

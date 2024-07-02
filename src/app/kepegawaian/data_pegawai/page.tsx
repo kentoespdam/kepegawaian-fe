@@ -61,7 +61,7 @@ const DataPegawaiPage = () => {
                     <TabBiodataNonPegawai />
                 </Tabs>
             </div>
-            <div className="w-full md:w-4/12">
+            <div className="md:w-4/12 pt-[42px] sm:mt-0">
                 <RingkasanBiodata />
             </div>
         </div>

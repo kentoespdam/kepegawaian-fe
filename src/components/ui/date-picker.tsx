@@ -13,10 +13,7 @@ const DatePickerComponent = ({ id, required=false }: DatePickerComponent) => {
         endDate: null
     })
 
-    const handleValueChange = (newValue: DateValueType) => {
-        // console.log(newValue?.startDate)
-        setValue(newValue)
-    }
+    const handleValueChange = (newValue: DateValueType) => setValue(newValue)
 
     return (
         <>

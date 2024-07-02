@@ -35,8 +35,7 @@ export const RefPegawai = BiodataSchema.extend({
 	updateBio: z.boolean().optional().default(false),
 	updatePegawai: z.boolean().optional().default(false),
 	id: z
-		.string()
-		.transform((val) => Number(val))
+		.number()
 		.optional(),
 	nipam: z.string().min(8, { message: "NIPAM wajib diisi" }),
 	noSk: z.string().min(3, { message: "Nomor SK wajib diisi" }),
@@ -61,20 +60,18 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		label: "No",
 	},
 	{
-		id: "nipam",
-		label: "Nipam",
-		search: true,
-		searchType: "text",
-	},
-	{
-		id: "nik",
-		label: "Nik",
-		search: true,
-		searchType: "text",
+		id: "aksi",
+		label: "Aksi",
 	},
 	{
 		id: "nama",
 		label: "Nama",
+		search: true,
+		searchType: "text",
+	},
+	{
+		id: "nipam",
+		label: "Nipam",
 		search: true,
 		searchType: "text",
 	},
@@ -114,8 +111,5 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		id: "statusPegawaiId",
 		label: "Status Pegawai",
 	},
-	{
-		id: "aksi",
-		label: "Aksi",
-	},
+	
 ];

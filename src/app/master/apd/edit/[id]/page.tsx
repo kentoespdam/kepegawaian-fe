@@ -1,6 +1,6 @@
 import type { Apd } from "@_types/master/apd";
 import FormCard from "@components/form/card";
-import { getMasterById } from "@helpers/action";
+import { getDataById } from "@helpers/action";
 import ApdFormComponent from "../../form";
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 }
 
 const EditApdPage = async ({ params }: { params: { id: number } }) => {
-    const data = await getMasterById<Apd>({
+    const data = await getDataById<Apd>({
         path: "apd",
         id: params.id
     })

@@ -33,4 +33,9 @@ export const levelTableColumns: CustomColumnDef[] = [
 export const findLevelValue = (
 	list: Level[],
 	id: string | number | null,
-): Level | undefined => list.find((row) => row.id === Number(id));
+): Level => {
+	if (!id) return { id: 0, nama: "Pilih Level" };
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Level" };
+	return cari;
+};

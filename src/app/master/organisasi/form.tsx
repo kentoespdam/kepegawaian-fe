@@ -8,8 +8,6 @@ import InputTextComponent from "@components/form/input";
 import SelectLevelOrganisasiComponent from "@components/form/level-organisasi";
 import SelectOrganisasiComponent from "@components/form/organisasi";
 import { buttonVariants } from "@components/ui/button";
-import { Label } from "@components/ui/label";
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@components/ui/select";
 import { cn } from "@lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
@@ -21,6 +19,7 @@ import { saveOrganisasi } from "./action";
 const OrganisasiFormComponent = ({ data }: { data?: Organisasi }) => {
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
+    const [parentOrgLevel, setParentOrgLevel] = useState(String(data?.parent?.id) ?? "")
 
     const mutation = useMutation({
         mutationFn: saveOrganisasi,
@@ -56,13 +55,15 @@ const OrganisasiFormComponent = ({ data }: { data?: Organisasi }) => {
                     <SelectOrganisasiComponent
                         label="Organisasi Induk"
                         id="parentId"
-                        defaultValue={String(data?.parent ? data.parent.id : "")}
+                        onSelect={setParentOrgLevel}
+                        defaultValue={parentOrgLevel}
                     />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                     <SelectLevelOrganisasiComponent
                         id="levelOrganisasi"
                         val={String(data ? data.levelOrganisasi : "")}
+                        parentOrgId={parentOrgLevel}
                     />
                 </div>
                 <div className="grid w-full items-center gap-1.5">

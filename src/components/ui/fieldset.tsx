@@ -19,7 +19,7 @@ const Fieldset = React.forwardRef<
         >
             <legend className="-ml-1 px-1 text-sm font-medium">{title}</legend>
             <div className="p-2">
-            {children}
+                {children}
             </div>
         </fieldset>
     );

@@ -1,13 +1,13 @@
 import FormCard from "@components/form/card";
 import JenisPelatihanFormComponent from "../../form";
-import { getMasterById } from "@helpers/action";
+import { getDataById } from "@helpers/action";
 import type { JenisPelatihan } from "@_types/master/jenis_pelatihan";
 
 export const metadata = {
     title: "Edit Jenis Pelatihan"
 }
 const EditJenisPelatihanPage = async ({ params }: { params: { id: number } }) => {
-    const data = await getMasterById<JenisPelatihan>({
+    const data = await getDataById<JenisPelatihan>({
         path: "jenis_pelatihan",
         id: params.id
     })

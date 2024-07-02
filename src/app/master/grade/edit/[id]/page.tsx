@@ -1,6 +1,6 @@
 import type { Grade } from "@_types/master/grade";
 import FormCard from "@components/form/card";
-import { getMasterById } from "@helpers/action";
+import { getDataById } from "@helpers/action";
 import GradeFormComponent from "../../form";
 
 export const metadata = {
@@ -8,7 +8,7 @@ export const metadata = {
 }
 
 const EditGradePage = async ({ params }: { params: { id: number } }) => {
-    const data = await getMasterById<Grade>({
+    const data = await getDataById<Grade>({
         path: "grade",
         id: params.id
     })

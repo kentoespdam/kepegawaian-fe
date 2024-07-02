@@ -9,8 +9,9 @@ import { useState } from "react";
 type SelectLevelOrganisasiComponentProps = {
     id: string
     val: string
+    parentOrgId: string
 }
-const SelectLevelOrganisasiComponent = ({ id, val }: SelectLevelOrganisasiComponentProps) => {
+const SelectLevelOrganisasiComponent = ({ id, val, parentOrgId }: SelectLevelOrganisasiComponentProps) => {
     const [open, setOpen] = useState(false)
     const [value, setValue] = useState(val ?? "")
 
@@ -35,7 +36,7 @@ const SelectLevelOrganisasiComponent = ({ id, val }: SelectLevelOrganisasiCompon
                     >
                         {value ?
                             `Level ${value}` :
-                            <span className="opacity-50">Cari Profesi</span>}
+                            <span className="opacity-50">Plih Level</span>}
                         <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -44,9 +45,10 @@ const SelectLevelOrganisasiComponent = ({ id, val }: SelectLevelOrganisasiCompon
                         <CommandInput placeholder="Type to search..." className="h-9" />
                         <CommandList>
                             <CommandEmpty>No results found.</CommandEmpty>
-                            {["1", "2", "3", "4", "5", "6"].map((i) => (
+                            {["1", "2", "3", "4", "5", "6"].filter((i) => Number(i) > Number(parentOrgId)).map((i) => (
                                 <CommandItem
                                     key={i}
+                                    value={`Level ${i}`}
                                     onSelect={() => {
                                         handleSelect(i)
                                     }}

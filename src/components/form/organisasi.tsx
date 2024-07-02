@@ -9,13 +9,15 @@ import { getMasterList } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 
 type SelectOrganisasiComponentProps = {
     id: string
     label: string
     defaultValue?: string
     required?: boolean
+    onSelect?: Dispatch<SetStateAction<string>>
+    parentLevelId?: number
 }
 const SelectOrganisasiComponent = (props: SelectOrganisasiComponentProps) => {
     const [open, setOpen] = React.useState(false)
@@ -58,6 +60,7 @@ const SelectOrganisasiComponent = (props: SelectOrganisasiComponentProps) => {
                                     key={organisasi.id}
                                     onSelect={() => {
                                         setValue(String(organisasi.id))
+                                        props.onSelect?.(String(organisasi.levelOrganisasi))
                                         setOpen(false)
                                     }}
                                 >

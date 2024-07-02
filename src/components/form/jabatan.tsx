@@ -9,13 +9,14 @@ import { getMasterList } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { type Dispatch, type SetStateAction } from "react";
 
 type SelectJabatanComponentProps = {
     id: string
     label: string
     defaultValue?: string
     required?: boolean
+    onSelect?: Dispatch<SetStateAction<number | undefined>>
 }
 const SelectJabatanComponent = (props: SelectJabatanComponentProps) => {
     const [open, setOpen] = React.useState(false)
@@ -59,6 +60,7 @@ const SelectJabatanComponent = (props: SelectJabatanComponentProps) => {
                                     value={jabatan.nama}
                                     onSelect={() => {
                                         setValue(String(jabatan.id))
+                                        props.onSelect?.(jabatan.id)
                                         setOpen(false)
                                     }}
                                 >

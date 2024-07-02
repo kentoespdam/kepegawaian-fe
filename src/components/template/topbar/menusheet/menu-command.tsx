@@ -34,14 +34,14 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
                     className={
                         cn(
                             "cursor-pointer gap-2 pl-4",
-                            props.menu.path === pathName ?
+                            pathName.includes(props.menu.path) ?
                                 "bg-primary text-primary-foreground" :
                                 ""
                         )}
                 >
                     {props.menu.icon}
                     {props.menu.name}
-                    {props.menu.path === pathName && <CheckIcon className="ml-auto" />}
+                    {pathName.startsWith(props.menu.path) ? <CheckIcon className="ml-auto" /> : null}
                 </CommandItem>
             </Link>
         </SheetClose>

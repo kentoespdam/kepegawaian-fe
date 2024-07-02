@@ -11,7 +11,6 @@ interface InputTextComponentProps extends React.InputHTMLAttributes<HTMLInputEle
     type?: "string" | "number"
 }
 const InputTextComponent = ({ id, label, defaultValue, required, type, ...props }: InputTextComponentProps) => {
-    console.log(props)
     return (
         <>
             <Label htmlFor={id}>

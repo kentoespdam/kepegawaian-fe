@@ -7,7 +7,7 @@ import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputTextComponent from "@components/form/input";
 import { buttonVariants } from "@components/ui/button";
 import { cn } from "@lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -18,6 +18,7 @@ import SelectLevelComponent from "@components/form/level";
 const GradeFormComponent = ({ data }: { data?: Grade }) => {
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
+    const qc = useQueryClient()
 
     const mutation = useMutation({
         mutationFn: saveGrade,
@@ -26,6 +27,7 @@ const GradeFormComponent = ({ data }: { data?: Grade }) => {
                 setErrState(result)
                 return
             }
+            qc.invalidateQueries({ queryKey: ["grade"] })
             push('/master/grade')
         }
     })
@@ -53,7 +55,7 @@ const GradeFormComponent = ({ data }: { data?: Grade }) => {
                     <SelectLevelComponent
                         label="Level"
                         id="levelId"
-                        defaultValue={String(data ? data.level : "")} />
+                        defaultValue={String(data ? data.level.id : "")} />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                     <InputTextComponent label="Grade" id="grade"

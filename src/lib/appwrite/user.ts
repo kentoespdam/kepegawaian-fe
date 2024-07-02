@@ -126,7 +126,6 @@ export const deleteCurrentSession = async (
 			`${baseAuthUrl}/account/sessions/current`,
 			{ headers },
 		);
-		console.log(data);
 	} catch (e) {
 		const err = e as AxiosError;
 		console.log(

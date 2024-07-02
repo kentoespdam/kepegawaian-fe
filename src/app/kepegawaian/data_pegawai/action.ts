@@ -1,6 +1,5 @@
 "use server";
 import type { ConditionalSchema, RefPegawai } from "@_types/pegawai";
-import type { myQueryRequest } from "@helpers/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
@@ -12,7 +11,7 @@ export const saveKepegawaian = async (
 	if (formData.referensi === "biodata") return await saveBiodata(formData);
 
 	if (formData.referensi === "pegawai") {
-		if (!formData.updateBio) await saveBiodata(formData);
+		await saveBiodata(formData);
 
 		return await savePegawai(formData);
 	}
@@ -42,7 +41,7 @@ const saveBiodata = async (formData: z.infer<typeof ConditionalSchema>) => {
 const savePegawai = async (formData: z.infer<typeof RefPegawai>) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url = formData.updatePegawai
-		? `${API_URL}/pegawai/${formData.nipam}`
+		? `${API_URL}/pegawai/${formData.id}`
 		: `${API_URL}/pegawai`;
 
 	const req = await fetch(url, {
@@ -54,53 +53,4 @@ const savePegawai = async (formData: z.infer<typeof RefPegawai>) => {
 	const result = await req.json();
 
 	return result;
-};
-
-export const getPegawaiPage = async ({
-	queryKey,
-	signal,
-	meta,
-}: myQueryRequest) => {
-	console.log("fetching data");
-	const headers = setAuthorizeHeader(cookies());
-	console.log(meta);
-	try {
-		const req = await fetch(`${API_URL}/pegawai?${queryKey[2]}`, {
-			method: "GET",
-			headers: headers,
-			cache: "no-cache",
-			signal: signal,
-		});
-		console.log(req.status);
-		const result = await req.json();
-		return result;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (err: any) {
-		console.log(err);
-	}
-};
-
-export const getBiodataPage = async ({
-	queryKey,
-	signal,
-	meta,
-}: myQueryRequest) => {
-	const headers = setAuthorizeHeader(cookies());
-	try {
-		console.log(`${API_URL}/profil/biodata?${queryKey[2]}`);
-		const req = await fetch(`${API_URL}/profil/biodata?${queryKey[2]}`, {
-			method: "GET",
-			headers: headers,
-			cache: "no-cache",
-			signal: signal,
-		});
-
-		const result = await req.json();
-
-		return result.data;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (err: any) {
-		console.log(err);
-		throw err;
-	}
 };

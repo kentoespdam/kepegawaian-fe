@@ -23,8 +23,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { useOrgJab } from "@store/org-jab";
 
 const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZodProps<TData>) => {
+    const jabLevelId = useOrgJab(state => state.jabLevelId)
     const [pop, setPop] = useState(false)
     const query = useQuery({
         queryKey: ["grade-list"],
@@ -68,7 +70,7 @@ const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZod
                                 <CommandInput placeholder="Type a command or search..." />
                                 <CommandList>
                                     <CommandEmpty>No results found.</CommandEmpty>
-                                    {query.data?.map((grade) => (
+                                    {query.data?.filter(grade => grade.level.id === jabLevelId).map((grade) => (
                                         <CommandItem
                                             key={grade.id}
                                             value={`${grade.level.nama} - Grade ${grade.grade}`}

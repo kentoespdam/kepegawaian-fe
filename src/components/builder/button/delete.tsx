@@ -62,7 +62,6 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
         },
         // biome-ignore lint/suspicious/noExplicitAny: <explanation>
         onSuccess: (result: any) => {
-            console.log(result)
             setState(result)
             setOpen(false)
             client.invalidateQueries({

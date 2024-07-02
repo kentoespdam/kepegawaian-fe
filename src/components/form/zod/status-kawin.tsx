@@ -52,7 +52,7 @@ const SelectStatusKawinZod = <TData extends FieldValues>({ id, label, form }: In
                                                 setPop(false);
                                             }}
                                         >
-                                            {index} {item.replace("_", " ")}
+                                            {item.replace("_", " ")}
                                             <CheckIcon className={cn(
                                                 "ml-auto h-4 w-4",
                                                 index === field.value

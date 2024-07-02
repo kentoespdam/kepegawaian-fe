@@ -1,3 +1,4 @@
+import { STATUS_KAWIN } from "@_types/enums/status_kawin";
 import type { Pegawai } from "@_types/pegawai";
 import { delay } from "@lib/utils";
 
@@ -15,11 +16,14 @@ export const getEmployeeByNipam = async (
 				nama: "Bagus Sudrajat",
 				jenisKelamin: "LAKI_LAKI",
 				tanggalLahir: "2000-01-01",
+				statusKawin: STATUS_KAWIN[1],
 			},
 			statusPegawai: {
 				id: 3,
 				nama: "PEGAWAI",
 			},
+			noSk: "123456789",
+			tanggalTmtSk: "2022-01-01",
 			jabatan: {
 				id: 3,
 				level: {

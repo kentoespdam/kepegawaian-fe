@@ -1,10 +1,10 @@
 import FormCard from "@components/form/card";
-import PegawaiForm from "./form";
+import PegawaiForm from "../form";
 
 export const metadata = {
-    title: "Add Biodata"
+    title: "Tambah Data Pegawai/Biodata"
 }
-const AddBiodata = () => {
+const TambahPegawai = () => {
     return (
         <FormCard metadata={metadata}>
             <PegawaiForm />
@@ -12,4 +12,4 @@ const AddBiodata = () => {
     );
 }
 
-export default AddBiodata;
+export default TambahPegawai;

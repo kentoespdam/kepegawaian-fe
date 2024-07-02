@@ -14,11 +14,11 @@ const JabatanTableBody = ({ data }: { data: Pageable<Jabatan> }) => {
             {data.content.map((row) => (
                 <TableRow key={row.id}>
                     <TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
-                    <TableCell className="border-x">{row.nama}</TableCell>
-                    <TableCell className="border-x">{row.parent?.nama}</TableCell>
-                    <TableCell className="border-x">{row.organisasi.nama}</TableCell>
-                    <TableCell className="border-x">{row.level.nama}</TableCell>
-                    <TableCell className="border-x">
+                    <TableCell className="border-x whitespace-nowrap">{row.nama}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{row.parent?.nama}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{row.organisasi.nama}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{row.level.nama}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">
                         <ButtonDeleteBuilder
                             id={row.id}
                             msg="Delete Jabatan"

@@ -20,6 +20,7 @@ import { saveJabatan } from "./action";
 const JabatanFormComponent = ({ data }: { data?: Jabatan }) => {
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
+    const [parentLevelId, setParentLevelId] = useState(data?.parent?.level.id)
 
     const mutation = useMutation({
         mutationFn: saveJabatan,
@@ -56,18 +57,21 @@ const JabatanFormComponent = ({ data }: { data?: Jabatan }) => {
                         label="Parent Jabatan"
                         id="parentId"
                         defaultValue={String(data?.parent ? data.parent.id : "")}
+                        onSelect={setParentLevelId}
                         required />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                     <SelectLevelComponent
                         label="Level"
                         id="levelId"
+                        parentLevelId={parentLevelId}
                         defaultValue={String(data ? data.level.id : "")} />
                 </div>
                 <div className="grid w-full items-center gap-1.5">
                     <SelectOrganisasiComponent
                         label="Organisasi"
                         id="organisasiId"
+                        parentLevelId={parentLevelId}
                         defaultValue={String(data ? data.organisasi.id : "")} />
                 </div>
                 <div className="grid w-full items-center gap-1.5">

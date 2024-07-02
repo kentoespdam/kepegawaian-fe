@@ -35,7 +35,7 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 	},
 	{
 		id: "levelOrganisasi",
-		label: "Level Organisasi",
+		label: "Level",
 	},
 	{
 		id: "nama",
@@ -51,5 +51,9 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 
 export const findOrganisasiValue = (
 	list: OrganisasiMini[],
-	id: string | number | null,
-): OrganisasiMini | undefined => list.find((row) => row.id === Number(id));
+	id: string | number,
+): OrganisasiMini => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Organisasi" };
+	return cari;
+};

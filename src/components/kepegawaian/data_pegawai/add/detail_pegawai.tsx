@@ -26,7 +26,7 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
                     id="id"
                     label="ID"
                     form={form}
-                    type="hidden" />
+                    type="text" />
 
                 <InputZod
                     id="nipam"

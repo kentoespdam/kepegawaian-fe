@@ -54,14 +54,18 @@ export const biodataTableColumns: CustomColumnDef[] = [
 		label: "No",
 	},
 	{
-		id: "nik",
-		label: "Nik",
-		search: true,
-		searchType: "text",
+		id: "",
+		label: "Aksi",
 	},
 	{
 		id: "nama",
 		label: "Nama",
+		search: true,
+		searchType: "text",
+	},
+	{
+		id: "nik",
+		label: "Nik",
 		search: true,
 		searchType: "text",
 	},
@@ -80,10 +84,6 @@ export const biodataTableColumns: CustomColumnDef[] = [
 	{
 		id: "alamat",
 		label: "Alamat",
-	},
-	{
-		id: "telp",
-		label: "Telp",
 	},
 	{
 		id: "agama",
