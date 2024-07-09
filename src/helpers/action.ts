@@ -116,7 +116,7 @@ interface getMasterListProps extends baseProps {
  * @returns A Promise that resolves to a Pageable<TData> object containing the data.
  * @throws An error if the API request is unsuccessful.
  */
-export const getMasterList = async <TData>(
+export const getListData = async <TData>(
 	props: getMasterListProps,
 ): Promise<TData[]> => {
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
@@ -144,7 +144,7 @@ export const getMasterList = async <TData>(
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
 		if (error.status === 401 && retry < 3)
-			return await getMasterList({ ...props, retry: retry + 1 });
+			return await getListData({ ...props, retry: retry + 1 });
 		console.error(error);
 		throw error;
 	} finally {

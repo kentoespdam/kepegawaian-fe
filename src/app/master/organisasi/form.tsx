@@ -12,11 +12,14 @@ import { cn } from "@lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { saveOrganisasi } from "./action";
 
 const OrganisasiFormComponent = ({ data }: { data?: Organisasi }) => {
+    const searchParams = useSearchParams()
+    const search = new URLSearchParams(searchParams)
+
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
     const [parentOrgLevel, setParentOrgLevel] = useState(String(data?.parent?.id) ?? "")
@@ -28,7 +31,7 @@ const OrganisasiFormComponent = ({ data }: { data?: Organisasi }) => {
                 setErrState(result)
                 return
             }
-            push('/master/organisasi')
+            push(`/master/organisasi?${search.toString()}`)
         }
     })
 

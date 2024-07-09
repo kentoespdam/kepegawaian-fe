@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -26,7 +26,7 @@ const SelectOrganisasiComponent = (props: SelectOrganisasiComponentProps) => {
     const query = useQuery({
         queryKey: ["organisasi-list"],
         queryFn: async () => {
-            const result = await getMasterList<Organisasi>({
+            const result = await getListData<Organisasi>({
                 path: "organisasi"
             })
             return result

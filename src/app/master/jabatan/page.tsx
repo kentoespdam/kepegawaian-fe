@@ -10,20 +10,22 @@ export const metadata = {
 
 const JabatanPage = () => {
     return (
-        <Card>
-            <CardHeader>
-                <CardTitle className="text-bold text-md flex flex-row justify-between items-center">
-                    <span>{metadata.title}</span>
-                    <ButtonAddBuilder
-                        href="/master/jabatan/add"
-                        msg="Tambah Jabatan" />
-                </CardTitle>
-            </CardHeader>
-            <CardContent>
-                <SearchBuilder columns={jabatanTableColumns} />
-                <JabatanTable />
-            </CardContent>
-        </Card>
+        <div className="grid">
+            <Card>
+                <CardHeader>
+                    <CardTitle className="text-bold text-md flex flex-row justify-between items-center">
+                        <span>{metadata.title}</span>
+                        <ButtonAddBuilder
+                            href="/master/jabatan/add"
+                            msg="Tambah Jabatan" />
+                    </CardTitle>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                    <SearchBuilder columns={jabatanTableColumns} />
+                    <JabatanTable />
+                </CardContent>
+            </Card>
+        </div>
     );
 }
 

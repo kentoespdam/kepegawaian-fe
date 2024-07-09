@@ -2,7 +2,7 @@
 
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form"
 import { Select, SelectContent, SelectItem, SelectTrigger } from "@components/ui/select"
-import { getMasterList } from "@helpers/action"
+import { getListData } from "@helpers/action"
 import { SelectValue } from "@radix-ui/react-select"
 import { useQuery } from "@tanstack/react-query"
 import type { FieldValues } from "react-hook-form"
@@ -26,7 +26,7 @@ const SelectGolonganZod = <TData extends FieldValues>({ id, label, form }: Input
     const query = useQuery({
         queryKey: ["golongan-list"],
         queryFn: async () => {
-            const result = await getMasterList<Golongan>({
+            const result = await getListData<Golongan>({
                 path: "golongan"
             })
             return result

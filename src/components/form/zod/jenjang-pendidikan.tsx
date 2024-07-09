@@ -11,7 +11,7 @@ import {
 } from "@components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const JenjangPendidikanZod = <TData extends FieldValues>({ id, label, form }: In
     const query = useQuery({
         queryKey: ["jenjang-pendidikan-list"],
         queryFn: async () => {
-            const result = await getMasterList<JenjangPendidikan>({
+            const result = await getListData<JenjangPendidikan>({
                 path: "jenjang-pendidikan"
             })
             return result

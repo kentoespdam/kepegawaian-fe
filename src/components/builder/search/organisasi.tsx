@@ -3,7 +3,7 @@ import { type Organisasi, findOrganisasiValue } from "@_types/master/organisasi"
 import { Button } from "@components/ui/button"
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
-import { getMasterList } from "@helpers/action"
+import { getListData } from "@helpers/action"
 import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
@@ -20,10 +20,10 @@ const SearchOrganisasiBuilder = ({ col, val }: BaseSearchProps) => {
     const [value, setValue] = React.useState(val ?? "")
 
     const query = useQuery({
-        queryKey: ["jabatan-list"],
+        queryKey: ["organisasi-list"],
         queryFn: async () => {
-            const result = await getMasterList<Organisasi>({
-                path: "jabatan"
+            const result = await getListData<Organisasi>({
+                path: "organisasi"
             })
             return result
         }
@@ -47,7 +47,7 @@ const SearchOrganisasiBuilder = ({ col, val }: BaseSearchProps) => {
                     className="w-full justify-between"
                 >
                     {value && val !== "" ?
-                        findOrganisasiValue(query.data ?? [], value)?.nama.substring(0,20) :
+                        findOrganisasiValue(query.data ?? [], value)?.nama.substring(0,15) :
                         <span className="opacity-50">Cari Organisasi</span>}
                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                 </Button>

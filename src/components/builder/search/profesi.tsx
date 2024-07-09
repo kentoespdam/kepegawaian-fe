@@ -3,7 +3,7 @@ import { findProfesiValue, type Profesi } from "@_types/master/profesi"
 import { Button } from "@components/ui/button"
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
-import { getMasterList } from "@helpers/action"
+import { getListData } from "@helpers/action"
 import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
@@ -22,7 +22,7 @@ const SearchProfesiBuilder = ({ col, val }: BaseSearchProps) => {
     const query = useQuery({
         queryKey: ["profesi-list"],
         queryFn: async () => {
-            const result = await getMasterList<Profesi>({
+            const result = await getListData<Profesi>({
                 path: "profesi"
             })
             return result

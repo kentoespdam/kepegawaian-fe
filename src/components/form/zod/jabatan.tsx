@@ -16,7 +16,7 @@ import {
     FormMessage
 } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
@@ -35,7 +35,7 @@ const SelectJabatanZod = <TData extends FieldValues>({ id, label, form }: InputZ
     const query = useQuery({
         queryKey: ["jabatan-list", organisasiId],
         queryFn: async () => {
-            const result = await getMasterList<JabatanMini>({
+            const result = await getListData<JabatanMini>({
                 path: "jabatan",
                 subPath: `organisasi/${organisasiId}`,
             })

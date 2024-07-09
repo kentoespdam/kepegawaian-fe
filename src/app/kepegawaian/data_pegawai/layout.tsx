@@ -15,7 +15,7 @@ const queryClient = new QueryClient({
 const Layout = ({ children }: ChildrenNode) => {
     return (
         <CustomQueryProvider queryClient={queryClient}>
-            <div dir="ltr" data-aria-orientation="horizontal">
+            <div dir="ltr" data-aria-orientation="horizontal" className="max-w-full">
                 {children}
                 <Toaster />
             </div>

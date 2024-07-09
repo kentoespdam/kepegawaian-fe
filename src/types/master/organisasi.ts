@@ -36,6 +36,8 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 	{
 		id: "levelOrganisasi",
 		label: "Level",
+		search:true,
+		searchType: "level",
 	},
 	{
 		id: "nama",

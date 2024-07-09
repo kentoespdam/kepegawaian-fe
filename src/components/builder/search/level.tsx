@@ -3,7 +3,7 @@ import { findLevelValue, type Level } from "@_types/master/level"
 import { Button } from "@components/ui/button"
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
-import { getMasterList } from "@helpers/action"
+import { getListData } from "@helpers/action"
 import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
@@ -22,7 +22,7 @@ const SearchLevelBuilder = ({ col, val }: BaseSearchProps) => {
     const query = useQuery({
         queryKey: ["level-list"],
         queryFn: async () => {
-            const result = await getMasterList<Level>({
+            const result = await getListData<Level>({
                 path: "level"
             })
             return result

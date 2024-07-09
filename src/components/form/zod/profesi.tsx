@@ -16,7 +16,7 @@ import {
     FormMessage
 } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
@@ -32,7 +32,7 @@ const SelectProfesiZod = <TData extends FieldValues>({ id, label, form }: InputZ
     const query = useQuery({
         queryKey: ["profesi-list", jabLevelId],
         queryFn: async () => {
-            const result = await getMasterList<ProfesiMini>({
+            const result = await getListData<ProfesiMini>({
                 path: "profesi",
                 subPath: `level/${jabLevelId}`
             })
@@ -61,7 +61,7 @@ const SelectProfesiZod = <TData extends FieldValues>({ id, label, form }: InputZ
                                         query.isLoading || query.isFetching ?
                                             "Loading..." :
                                             field.value ?
-                                                findProfesiValue(query.data ?? [], field.value).nama :
+                                                findProfesiValue(query.data ?? [], field.value).nama.substring(0,20) :
                                                 "Pilih Profesi"}
                                     <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                 </Button>

@@ -13,23 +13,33 @@ import { cn } from "@lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { saveJabatan } from "./action";
 
 const JabatanFormComponent = ({ data }: { data?: Jabatan }) => {
+    const searchParams = useSearchParams()
+    const search = new URLSearchParams(searchParams)
     const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
     const { push } = useRouter()
     const [parentLevelId, setParentLevelId] = useState(data?.parent?.level.id)
+    let ulang = 1
 
     const mutation = useMutation({
         mutationFn: saveJabatan,
-        onSuccess: (result) => {
-            if (!result.success) {
-                setErrState(result)
-                return
+        onSuccess: (data, variable, context) => {
+            if (!data.success) {
+                if (ulang === 2) {
+                    setErrState(data)
+                    return
+                }
+                if (data.error?.message === "Full authentication is required to access this resource") {
+                    mutation.mutate(variable)
+                    ulang++
+                }
+
             }
-            push('/master/jabatan')
+            push(`/master/jabatan?${search.toString()}`)
         }
     })
 

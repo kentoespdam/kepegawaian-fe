@@ -3,7 +3,7 @@ import { findJabatanValue, type Jabatan } from "@_types/master/jabatan"
 import { Button } from "@components/ui/button"
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
-import { getMasterList } from "@helpers/action"
+import { getListData } from "@helpers/action"
 import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
@@ -22,7 +22,7 @@ const SearchJabatanBuilder = ({ col, val }: BaseSearchProps) => {
     const query = useQuery({
         queryKey: ["jabatan-list"],
         queryFn: async () => {
-            const result = await getMasterList<Jabatan>({
+            const result = await getListData<Jabatan>({
                 path: "jabatan"
             })
             return result

@@ -19,6 +19,7 @@ export const BaseDelete = z.object({
 	id: z.string().startsWith("DELETE-", {
 		message: "invalid delete code!",
 	}),
+	curId: z.number().optional() || z.string().optional(),
 });
 
 export interface BaseResult<TData> {

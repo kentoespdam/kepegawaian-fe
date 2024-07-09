@@ -19,7 +19,7 @@ const OrganisasiPage = () => {
                         msg="Tambah Organisasi" />
                 </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid col-span-2">
                 <SearchBuilder columns={organisasiTableColumns} />
                 <OrganisasiTable />
             </CardContent>

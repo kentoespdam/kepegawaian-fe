@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
     const query = useQuery({
         queryKey: ["level-list"],
         queryFn: async () => {
-            const result = await getMasterList<Level>({
+            const result = await getListData<Level>({
                 path: "level"
             })
             return result
@@ -39,7 +39,7 @@ const SelectLevelComponent = (props: SelectLevelComponentProps) => {
         <>
             <Label htmlFor={props.id}>
                 {props.label} {!props.required ? "" : <span className="text-red-500">*</span>}
-                <input type="text" name={props.id} id={props.id} defaultValue={value} required={props.required} />
+                <input type="hidden" name={props.id} id={props.id} defaultValue={value} required={props.required} />
             </Label>
             <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>

@@ -2,19 +2,17 @@ import type { ChildrenNode } from "@lib/index";
 import TopBarComponent from "./topbar";
 
 const MainTemplate = ({ children }: ChildrenNode) => {
-    return (
-        <div className="max-w-screen grid grid-cols-1 gap-2 mx-auto">
-            <TopBarComponent />
-            <div className="grid grid-cols-1 gap-4 ">
-                <main className="mx-6 md:mx-4 sm:mx-2">
-                    {children}
-                </main>
-            </div>
-            <footer className="fixed bottom-0 w-full text-center">
-                &copy; Perumdam Tirta Satria 2024
-            </footer>
-        </div>
-    );
-}
+	return (
+		<>
+			<div className="max-w-full grid gap-4 mx-auto mb-10">
+				<TopBarComponent />
+				<main className="max-w-full mx-6 md:mx-4 sm:mx-2">{children}</main>
+			</div>
+			<footer className="max-w-full fixed bottom-0 w-full text-center">
+				&copy; Perumdam Tirta Satria 2024
+			</footer>
+		</>
+	);
+};
 
 export default MainTemplate;

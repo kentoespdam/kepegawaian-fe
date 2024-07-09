@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ const SelectJenjangPendidikan = (props: SelectJenjangPendidikanProps) => {
     const query = useQuery({
         queryKey: ["jenjang-pendidikan-list"],
         queryFn: async () => {
-            const result = await getMasterList<JenjangPendidikan>({
+            const result = await getListData<JenjangPendidikan>({
                 path: "jenjang-pendidikan"
             })
             return result

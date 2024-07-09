@@ -20,7 +20,7 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
                 }}>
                     <TableCell align="right" width={60} className="border-x">{urut++}</TableCell>
                     <TableCell className="border-x whitespace-nowrap">
-                        <KepegawaianTableAction nik={row.biodata.nik} />
+                        <KepegawaianTableAction data={row} />
                     </TableCell>
                     <TableCell className="border-x whitespace-nowrap">{row.biodata.nama}</TableCell>
                     <TableCell className="border-x">{row.nipam}</TableCell>

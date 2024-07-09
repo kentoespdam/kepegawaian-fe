@@ -16,7 +16,7 @@ import {
     FormMessage
 } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -30,7 +30,7 @@ const SelectStatusKerjaZod = <TData extends FieldValues>({ id, label, form }: In
     const query = useQuery({
         queryKey: ["status-kerja-list"],
         queryFn: async () => {
-            const result = await getMasterList<StatusKerja>({
+            const result = await getListData<StatusKerja>({
                 path: "status-kerja",
             })
             return result

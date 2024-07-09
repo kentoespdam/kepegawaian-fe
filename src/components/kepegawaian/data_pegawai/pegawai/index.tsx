@@ -1,34 +1,34 @@
 "use client"
 import type { Pageable } from "@_types/index";
 import { type Pegawai, pegawaiTableColumns } from "@_types/pegawai";
+import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
+import PaginationBuilder from "@components/builder/table/pagination";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
 import { Table } from "@components/ui/table";
 import { TabsContent } from "@components/ui/tabs";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PegawaiTableBody from "./body";
-import SearchBuilder from "@components/builder/search";
-import PaginationBuilder from "@components/builder/table/pagination";
 
 const TabBiodataPegawai = () => {
     const searchParams = useSearchParams()
     const params = new URLSearchParams(searchParams)
-    
+
     const qc = useQueryClient()
     const qs = qc.getQueryState<Pageable<Pegawai>>(["data-pegawai", params.toString()])
 
     return (
         <TabsContent value="pegawai">
-            <Card>
+            <Card className="w-full">
                 <CardHeader className="px-7">
                     <CardTitle>Daftar Pegawai</CardTitle>
                     <CardDescription>
                         Daftar Biodata Pegawai
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="overflow-x-auto">
+                <CardContent className="grid">
                     <SearchBuilder columns={pegawaiTableColumns} />
                     <Table>
                         <TableHeadBuilder columns={pegawaiTableColumns} />

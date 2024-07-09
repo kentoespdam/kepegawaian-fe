@@ -16,7 +16,7 @@ import {
     FormMessage
 } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -31,7 +31,7 @@ const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZod
     const query = useQuery({
         queryKey: ["grade-list"],
         queryFn: async () => {
-            const result = await getMasterList<Grade>({
+            const result = await getListData<Grade>({
                 path: "grade",
             })
             return result

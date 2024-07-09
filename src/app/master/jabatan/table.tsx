@@ -23,7 +23,7 @@ const JabatanTable = () => {
     });
 
     return (
-        <div className="rounder-md">
+        <div className="rounder-md grid">
             <Table>
                 <TableHeadBuilder columns={jabatanTableColumns} />
                 {isSuccess && data.content.length > 0 ?

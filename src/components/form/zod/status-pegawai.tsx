@@ -11,7 +11,7 @@ import {
 } from "@components/ui/command";
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({ id, label, form }: 
     const query = useQuery({
         queryKey: ["status-pegawai-list"],
         queryFn: async () => {
-            const result = await getMasterList<StatusPegawai>({
+            const result = await getListData<StatusPegawai>({
                 path: "status-pegawai"
             })
             return result

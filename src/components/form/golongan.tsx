@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { Label } from "@components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
-import { getMasterList } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -23,7 +23,7 @@ const SelectGolonganComponent = (props: SelectGolonganComponentProps) => {
     const query = useQuery({
         queryKey: ["golongan-list"],
         queryFn: async () => {
-            const result = await getMasterList<Golongan>({
+            const result = await getListData<Golongan>({
                 path: "golongan"
             })
             return result

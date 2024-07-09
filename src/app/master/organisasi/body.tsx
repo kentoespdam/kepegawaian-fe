@@ -5,9 +5,12 @@ import ButtonEditBuilder from "@components/builder/button/edit";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { hapus } from "./action";
+import { useSearchParams } from "next/navigation";
 
 const OrganisasiTableBody = ({ data }: { data: Pageable<Organisasi> }) => {
     let urut = getUrut(data)
+    const searchParams=useSearchParams()
+    const search=new URLSearchParams(searchParams)
 
     return (
         <TableBody>
@@ -25,7 +28,7 @@ const OrganisasiTableBody = ({ data }: { data: Pageable<Organisasi> }) => {
                             tag="organisasi"
                         />
                         <ButtonEditBuilder
-                            href={`/master/organisasi/edit/${row.id}`}
+                            href={`/master/organisasi/edit/${row.id}?${search.toString()}`}
                             msg="Edit Organisasi"
                         />
                     </TableCell>
