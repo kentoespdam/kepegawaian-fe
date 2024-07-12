@@ -21,6 +21,8 @@ const defaultValues = {
 interface PendidikanStore {
 	pendidikanId: number;
 	setPendidikanId: (pendidikanId: number) => void;
+	selectedPendidikanId: number;
+	setSelectedPendidikanId: (selectedPendidikanId: number) => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
 	openDelete: boolean;
@@ -32,6 +34,9 @@ interface PendidikanStore {
 export const usePendidikanStore = create<PendidikanStore>((set) => ({
 	pendidikanId: 0,
 	setPendidikanId: (pendidikanId) => set({ pendidikanId }),
+	selectedPendidikanId: 0,
+	setSelectedPendidikanId: (selectedPendidikanId) =>
+		set({ selectedPendidikanId }),
 	open: false,
 	setOpen: (open) => set({ open }),
 	openDelete: false,

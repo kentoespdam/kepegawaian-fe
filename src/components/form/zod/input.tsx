@@ -23,19 +23,19 @@ const InputZod = <TData extends FieldValues>({
 		render={({ field }) => (
 			<FormItem className={cn(type === "hidden" && "hidden")}>
 				<FormLabel>
-					{label} {type}
+					{label}
 				</FormLabel>
 				<FormControl>
 					<Input
-						type={type === "text" ? "text" : "number"}
+						type={type}
 						step={type === "float" ? 0.01 : undefined}
 						placeholder={`Masukkan ${label}`}
 						disabled={disabled}
 						{...field}
 						onChange={(event) =>
-							type === "text"
-								? field.onChange(event.target.value)
-								: field.onChange(+event.target.value)
+							type === "number"
+								? field.onChange(+event.target.value)
+								: field.onChange(event.target.value)
 						}
 					/>
 				</FormControl>

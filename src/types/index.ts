@@ -75,6 +75,7 @@ export const ESearchType = z.enum([
 	"organisasi",
 	"jabatan",
 	"profesi",
+	"jenjangPendidikan",
 ]);
 
 export type BaseColumnDef = {
@@ -98,3 +99,14 @@ export interface SaveErrorStatus {
 	error?: Record<string, string[]> | Record<string, string>;
 	data?: string | Record<string, string[]> | Record<string, string>;
 }
+
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 10; // 10MB
+export const IMAGE_TYPE = ["image/png", "image/jpeg", "image/jpg"];
+export const PDF_TYPE = ["application/pdf"];
+export const OFFICE_TYPE = [
+	"application/msword",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"application/vnd.ms-excel",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+export const ACCEPTED_FILE_TYPES = IMAGE_TYPE.concat(PDF_TYPE).concat(OFFICE_TYPE);

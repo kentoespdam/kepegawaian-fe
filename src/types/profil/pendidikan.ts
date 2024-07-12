@@ -41,10 +41,10 @@ export const pendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "action", label: "Action" },
 	{
-		id: "JenjangPendidikan",
+		id: "jenjangId",
 		label: "Jenjang Pendidikan",
 		search: true,
-		searchType: "text",
+		searchType: "jenjangPendidikan",
 	},
 	{ id: "institusi", label: "Institusi", search: true, searchType: "text" },
 	{ id: "jurusan", label: "Jurusan", search: true, searchType: "text" },

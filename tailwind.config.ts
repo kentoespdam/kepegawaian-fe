@@ -1,5 +1,5 @@
-import type { Config } from "tailwindcss"
-import { fontFamily } from "tailwindcss/defaultTheme"
+import type { Config } from "tailwindcss";
+import { fontFamily } from "tailwindcss/defaultTheme";
 
 const config = {
 	darkMode: ["class"],
@@ -27,6 +27,10 @@ const config = {
 				primary: {
 					DEFAULT: "hsl(var(--primary))",
 					foreground: "hsl(var(--primary-foreground))",
+				},
+				info: {
+					DEFAULT: "hsl(var(--info))",
+					foreground: "hsl(var(--info-foreground))",
 				},
 				secondary: {
 					DEFAULT: "hsl(var(--secondary))",
@@ -107,6 +111,6 @@ const config = {
 		},
 	},
 	plugins: [require("tailwindcss-animate")],
-} satisfies Config
+} satisfies Config;
 
-export default config
+export default config;

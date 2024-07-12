@@ -225,24 +225,10 @@ export const extracNipamFromToken = (): string | null => {
 export const setAuthorizeHeader = (
 	sessCookie: RequestCookies | ReadonlyRequestCookies,
 	token?: string,
-	contentType?: string,
-	host?: string,
 ) => {
-	const headers = {
-		"Content-Type": contentType ? contentType : "application/json",
+	const tokenCookie = token ?? sessCookie.get(sessionNames[2])?.value;
+	return {
+		Authorization: `Bearer ${tokenCookie}`,
+		"Content-Type": "application/json",
 	};
-	if (token) {
-		Object.assign(headers, {
-			Authorization: `Bearer ${token}`,
-		});
-		return headers;
-	}
-
-	// const expired = getExpToken(sessCookie.get(sessionNames[2])!.value)
-	// if (expired === 0) await renewToken(sessCookie, host)
-
-	Object.assign(headers, {
-		Authorization: `Bearer ${sessCookie.get(sessionNames[2])?.value}`,
-	});
-	return headers;
 };

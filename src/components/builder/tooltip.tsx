@@ -11,7 +11,7 @@ const TooltipBuilder = ({ text, children, className }: TooltipProps) => (
     <TooltipProvider delayDuration={0}>
         <Tooltip delayDuration={0}>
             <TooltipTrigger asChild>{children}</TooltipTrigger>
-            <TooltipContent className={cn("text-black",className)}>
+            <TooltipContent className={cn("text-primary-foreground shadow-lg border border-primary-foreground",className)}>
                 <p>{text}</p>
             </TooltipContent>
         </Tooltip>
