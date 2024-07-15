@@ -1,4 +1,7 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+import { OFFICE_TYPE } from "@_types/index";
+import type { LampiranProfil } from "@_types/profil/lampiran";
+import { getFile } from "@app/kepegawaian/profil/lampiran/action";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import {
@@ -12,13 +15,28 @@ import { ButtonLink } from "@components/ui/link";
 import { acceptLampiranProfilData } from "@helpers/action";
 import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
-import { CheckIcon, DeleteIcon, EllipsisIcon, EyeIcon } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import {
+	CheckIcon,
+	DeleteIcon,
+	DownloadIcon,
+	EllipsisIcon,
+	EyeIcon,
+} from "lucide-react";
 import { usePathname } from "next/navigation";
 
-const LampiranPendidikanAction = ({
-	id,
-	refId,
-}: { id: number; refId: number }) => {
+const base64toBlob = (base64: string, mime: string) => {
+	const byteCharacters = atob(base64);
+	const byteNumbers = new Array(byteCharacters.length);
+	for (let i = 0; i < byteCharacters.length; i++) {
+		byteNumbers[i] = byteCharacters.charCodeAt(i);
+	}
+	const byteArray = new Uint8Array(byteNumbers);
+	return new Blob([byteArray], { type: mime });
+};
+
+const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
+	const { id, refId, fileName, mimeType } = props.data;
 	const path = usePathname();
 	const { setLampiranId, setRefId, setOpenDeleteDialog, setOpenLampiran } =
 		useLampiranProfilStore((state) => ({
@@ -52,16 +70,41 @@ const LampiranPendidikanAction = ({
 		});
 	};
 
+	const downloadFile = useMutation({
+		mutationFn: () => getFile(JenisLampiranProfil.Values.PROFIL_PENDIDIKAN, id),
+		onSuccess: (data) => {
+			const blob = base64toBlob(data.base64, data.type);
+			const url = URL.createObjectURL(blob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", `${fileName}`);
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		},
+	});
+
 	return (
-		<div className="flex justify-between">
+		<div className="flex justify-between gap-2">
 			<TooltipBuilder text="Lihat" className="bg-info text-info-foreground">
-				<ButtonLink
-					href={`/kepegawaian/profil/lampiran/${JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}/${id}?path=${path}`}
-					size="icon"
-					className="h-6 w-6"
-					variant="ghost"
-					icon={<EyeIcon className="text-info" />}
-				/>
+				{OFFICE_TYPE.includes(mimeType) ? (
+					<Button
+						variant="ghost"
+						size="icon"
+						className="h-6 w-6 text-warning"
+						onClick={() => downloadFile.mutate()}
+					>
+						<DownloadIcon />
+					</Button>
+				) : (
+					<ButtonLink
+						href={`/kepegawaian/profil/lampiran/${JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}/${id}?path=${path}`}
+						size="icon"
+						className="h-6 w-6"
+						variant="ghost"
+						icon={<EyeIcon className="text-info" />}
+					/>
+				)}
 			</TooltipBuilder>
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>

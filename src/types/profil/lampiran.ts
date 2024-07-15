@@ -8,6 +8,7 @@ export interface LampiranProfil {
 	refId: number;
 	fileName: string;
 	notes: string;
+	mimeType: string;
 	disetujui: boolean;
 	disetujuiOleh: string;
 	tanggalDisetujui: string;

@@ -34,7 +34,7 @@ const LampiranPendidikanTableBody = ({
 						</TooltipBuilder>
 					</TableCell>
 					<TableCell className="border-x" align="center">
-						<LampiranPendidikanAction id={row.id} refId={row.refId} />
+						<LampiranPendidikanAction data={row} />
 					</TableCell>
 				</TableRow>
 			))}

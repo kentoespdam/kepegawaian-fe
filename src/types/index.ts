@@ -107,6 +107,7 @@ export const OFFICE_TYPE = [
 	"application/msword",
 	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
 	"application/vnd.ms-excel",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
-export const ACCEPTED_FILE_TYPES = IMAGE_TYPE.concat(PDF_TYPE).concat(OFFICE_TYPE);
+export const ACCEPTED_FILE_TYPES =
+	IMAGE_TYPE.concat(PDF_TYPE).concat(OFFICE_TYPE);

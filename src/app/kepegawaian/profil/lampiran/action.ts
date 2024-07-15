@@ -1,11 +1,13 @@
 "use server";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
+import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { cookies } from "next/headers";
 
 export interface LampiranFile {
 	type: string;
 	base64: string;
+	headers?: ReadonlyHeaders;
 }
 
 export const getFile = async (
@@ -31,6 +33,7 @@ export const getFile = async (
 	const result: LampiranFile = {
 		type: blob.type,
 		base64: Buffer.from(arrayBuffer).toString("base64"),
+		headers: response.headers,
 	};
 
 	return result;
