@@ -13,6 +13,7 @@ import {
 } from "@components/ui/dropdown-menu";
 import { ButtonLink } from "@components/ui/link";
 import { acceptLampiranProfilData } from "@helpers/action";
+import { base64toBlob } from "@helpers/string";
 import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useMutation } from "@tanstack/react-query";
@@ -24,16 +25,6 @@ import {
 	EyeIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-
-const base64toBlob = (base64: string, mime: string) => {
-	const byteCharacters = atob(base64);
-	const byteNumbers = new Array(byteCharacters.length);
-	for (let i = 0; i < byteCharacters.length; i++) {
-		byteNumbers[i] = byteCharacters.charCodeAt(i);
-	}
-	const byteArray = new Uint8Array(byteNumbers);
-	return new Blob([byteArray], { type: mime });
-};
 
 const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
 	const { id, refId, fileName, mimeType } = props.data;
