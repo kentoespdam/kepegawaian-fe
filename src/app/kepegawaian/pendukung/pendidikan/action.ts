@@ -1,6 +1,5 @@
 "use server";
 import { BaseDelete } from "@_types/index";
-import type { LampiranProfilSchema } from "@_types/profil/lampiran";
 import type { PendidikanSchema } from "@_types/profil/pendidikan";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";

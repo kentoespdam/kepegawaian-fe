@@ -10,7 +10,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getDataById, getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DeletePendidikanDialog from "./dialog/delete-dialog";
@@ -18,25 +18,35 @@ import FormProfilPendidikanDialog from "./dialog/form-dialog";
 import ProfilPendidikanTableBody from "./table/body";
 
 interface ProfilPendidikanContentComponentProps {
-	biodata: Biodata;
-	nik?: string;
+	nik: string;
 }
 
-const ProfilPendidikanContentComponent = (
-	props: ProfilPendidikanContentComponentProps,
-) => {
+const ProfilPendidikanContentComponent = ({
+	nik,
+}: ProfilPendidikanContentComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 
+	const qBio = useQuery({
+		queryKey: ["biodata", nik],
+		queryFn: () =>
+			getDataById<Biodata>({
+				path: "profil/biodata",
+				id: nik,
+				isRoot: true,
+			}),
+		enabled: !!nik,
+	});
+
 	const query = useQuery({
-		queryKey: ["profil-pendidikan", props.biodata.nik, search.toString()],
+		queryKey: ["profil-pendidikan", qBio.data?.nik, search.toString()],
 		queryFn: () =>
 			getPageData<Pendidikan>({
-				path: `profil/pendidikan/${props.biodata.nik}/biodata`,
+				path: `profil/pendidikan/${qBio.data?.nik}/biodata`,
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
-		enabled: !!props.biodata.nik,
+		enabled: qBio.data && !!qBio.data.nik,
 	});
 
 	return (
@@ -53,11 +63,8 @@ const ProfilPendidikanContentComponent = (
 							isSuccess={false}
 							error={query.error?.message}
 						/>
-					) : query.data ? (
-						<ProfilPendidikanTableBody
-							data={query.data}
-							biodata={props.biodata}
-						/>
+					) : qBio.data && query.data ? (
+						<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
 					) : null}
 				</Table>
 			</div>
