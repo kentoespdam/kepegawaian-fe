@@ -31,10 +31,12 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 	} = req.nextUrl;
 	const cookies: RequestCookies = req.cookies;
 
-	if (!isHasSessionCookie(cookies) && !currentPath.startsWith("/auth"))
+	if (!isHasSessionCookie(cookies) && !currentPath.startsWith("/auth")) {
 		return redirectAuth(currentHref, currentOrigin);
+	}
 
 	const activeSession = await isHasAuthSession(cookies);
+
 	if (activeSession.status === 401) {
 		for (const name of sessionNames) {
 			response.cookies.delete(name);
@@ -49,6 +51,11 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 		if (token) {
 			response.cookies.set(token);
 		}
+	}
+
+	if (activeSession.status === 200 && currentPath.startsWith("/auth")) {
+		console.log("redirect to dashboard");
+		return NextResponse.redirect(new URL("/dashboard", currentOrigin));
 	}
 
 	if (currentPath === "/")
@@ -73,8 +80,9 @@ function redirectAuth(
 	currentHref: string,
 	currentOrigin: string,
 ): NextResponse {
-	const cookie = `callback_url=${encodeURIComponent(currentHref)}`;
-	const headers = { "set-cookie": cookie };
+	console.log("redirectAuth", currentHref);
+	const callback_url = `callback_url=${encodeURIComponent(currentHref)}`;
+	const headers = { "set-cookie": callback_url };
 	const url = new URL("/auth", currentOrigin);
 	return NextResponse.redirect(url, { headers });
 }

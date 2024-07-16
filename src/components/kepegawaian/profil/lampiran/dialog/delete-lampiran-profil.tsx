@@ -1,6 +1,5 @@
 import { BaseDelete } from "@_types/index";
-import { deleteProfilPendidikan } from "@app/kepegawaian/pendukung/pendidikan/action";
-import { Button } from "@components/ui/button";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import {
 	Dialog,
 	DialogContent,
@@ -18,54 +17,54 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
-import { useEffect } from "react";
+import { TrashIcon } from "lucide-react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { deleteLampiranProfil } from "../action";
 
-const DeletePendidikanDialog = () => {
-	const { defaultValues, deleteOpen, setDeleteOpen, pendidikanId } =
-		usePendidikanStore((state) => ({
-			defaultValues: state.defaultValues,
-			deleteOpen: state.openDelete,
-			setDeleteOpen: state.setOpenDelete,
-			pendidikanId: state.pendidikanId,
-		}));
-
+interface DeleteLampiranProfilDialogProps {
+	rootKey: string;
+}
+const DeleteLampiranProfilDialog = (props: DeleteLampiranProfilDialogProps) => {
+	const {
+		lampiranId,
+		setLampiranId,
+		refId,
+		openDeleteDialog,
+		setOpenDeleteDialog,
+	} = useLampiranProfilStore((state) => ({
+		lampiranId: state.lampiranId,
+		setLampiranId: state.setLampiranId,
+		refId: state.refId,
+		openDeleteDialog: state.openDeleteDialog,
+		setOpenDeleteDialog: state.setOpenDeleteDialog,
+	}));
 	const form = useForm<BaseDelete>({
 		resolver: zodResolver(BaseDelete),
-		defaultValues: {
+		values: {
 			id: "",
-			curId: pendidikanId,
+			curId: lampiranId,
 		},
 	});
 
-	const mutation = useGlobalMutation({
-		mutationFunction: deleteProfilPendidikan,
-		queryKeys: [
-			["profil-pendidikan", defaultValues.biodataId],
-			["lampiranPendidikan", pendidikanId],
-		],
+	const deleteMutation = useGlobalMutation({
+		mutationFunction: deleteLampiranProfil,
+		queryKeys: [[props.rootKey, refId]],
 	});
 
-	const onSubmit = (values: BaseDelete) => {
-		values.curId = pendidikanId;
-		mutation.mutate(values);
-	};
-
 	useEffect(() => {
-		if (mutation.isSuccess) {
-			const reset = () => {
-				mutation.reset();
-				form.reset();
-				setDeleteOpen(false);
-			};
-			reset();
+		if (deleteMutation.isSuccess) {
+			setLampiranId(0);
+			setOpenDeleteDialog(false);
 		}
-	}, [mutation, form, setDeleteOpen]);
+	}, [deleteMutation.isSuccess, setLampiranId, setOpenDeleteDialog]);
+
+	const onSubmit = (values: BaseDelete) => deleteMutation.mutate(values);
 
 	return (
-		<Dialog open={deleteOpen} onOpenChange={setDeleteOpen}>
+		<Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
@@ -83,7 +82,7 @@ const DeletePendidikanDialog = () => {
 										<br />
 										Ketik {""}
 										<code className="font-normal bg-orange-300 text-gray-700 dark:text-gray-900 border px-1">
-											DELETE-{pendidikanId}
+											DELETE-{lampiranId}
 										</code>
 									</FormDescription>
 									<FormControl>
@@ -94,9 +93,13 @@ const DeletePendidikanDialog = () => {
 							)}
 						/>
 						<DialogFooter>
-							<Button type="submit" variant="destructive">
-								DELETE
-							</Button>
+							<LoadingButtonClient
+								pending={deleteMutation.isPending}
+								type="submit"
+								variant="destructive"
+								title="Hapus"
+								icon={<TrashIcon className="w-4 h-4" />}
+							/>
 						</DialogFooter>
 					</form>
 				</Form>
@@ -105,4 +108,4 @@ const DeletePendidikanDialog = () => {
 	);
 };
 
-export default DeletePendidikanDialog;
+export default DeleteLampiranProfilDialog;

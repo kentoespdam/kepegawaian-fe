@@ -17,8 +17,10 @@ import { Separator } from "@components/ui/separator";
 import { useToast } from "@components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { useGlobalMutation } from "@store/query-store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const ProfilPendidikanForm = () => {
@@ -35,30 +37,18 @@ const ProfilPendidikanForm = () => {
 		values: defaultValues,
 	});
 
-	const mutation = useMutation({
-		mutationFn: saveProfilPendidikan,
-		onSuccess: (data, variables, context) => {
-			if (data.status !== 201) throw new Error(data.message);
-
-			toast({
-				title: "Success",
-				description: "Data berhasil disimpan",
-				className: "bg-primary text-primary-foreground",
-			});
-			qc.invalidateQueries({
-				queryKey: ["profil-pendidikan", defaultValues.biodataId],
-			});
-			setOpen(false);
-		},
-		onError: (error, variables, context) => {
-			console.log(error);
-			toast({
-				title: "Error",
-				description: error.message,
-				variant: "destructive",
-			});
-		},
+	const mutation = useGlobalMutation({
+		mutationFunction: saveProfilPendidikan,
+		queryKeys: [["profil-pendidikan", defaultValues.biodataId]],
 	});
+
+	useEffect(() => {
+		if (mutation.isSuccess) {
+			mutation.reset();
+			form.reset();
+			setOpen(false);
+		}
+	}, [mutation, form, setOpen]);
 
 	const onSubmit = (values: PendidikanSchema) => {
 		console.log(values);

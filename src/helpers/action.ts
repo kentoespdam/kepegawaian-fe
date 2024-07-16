@@ -1,11 +1,10 @@
 "use server";
-import type { BaseDelete, BaseResult, Pageable } from "@_types/index";
+import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+import type { BaseResult, Pageable } from "@_types/index";
 import { API_URL } from "@lib/utils";
 import type { QueryKey } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { setAuthorizeHeader } from ".";
-import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
-import type { LampiranProfil } from "@_types/profil/lampiran";
 
 export interface myQueryRequest {
 	queryKey: QueryKey;
@@ -179,45 +178,4 @@ export const acceptLampiranProfilData = async (
 	clearTimeout(timeoutId);
 
 	return await response.json();
-};
-
-interface deleteLampiranProfilDataProps extends BaseDelete {
-	retry?: number;
-}
-
-export const deleteLampiranProfilData = async (
-	props: deleteLampiranProfilDataProps,
-): Promise<BaseResult<LampiranProfil>> => {
-	const id =
-		Number(props.id.split("-")[1]) === Number(props.curId)
-			? Number(props.id.split("-")[1])
-			: 0;
-	const url = `${API_URL}/profil/lampiran/delete/${id}`;
-	const headers = setAuthorizeHeader(cookies());
-
-	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-	const retry = props.retry ?? 0;
-
-	try {
-		const response = await fetch(url, {
-			method: "DELETE",
-			headers,
-			signal: controller.signal,
-			cache: "no-cache",
-		});
-
-		if (!response.ok) throw new Error(await response.text());
-
-		clearTimeout(timeoutId);
-
-		return await response.json();
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (error: any) {
-		if (error.status === 401 && retry < 3)
-			return await deleteLampiranProfilData({ ...props, retry: retry + 1 });
-		console.error(error);
-		throw error;
-	}
 };

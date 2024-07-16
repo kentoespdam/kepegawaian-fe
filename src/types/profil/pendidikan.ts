@@ -54,5 +54,6 @@ export const pendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "gpa", label: "GPA" },
 	{ id: "gelarDepan", label: "Gelar Depan" },
 	{ id: "gelarBelakang", label: "Gelar Belakang" },
+	{ id: "disetujui", label: "Disetujui" },
 	{ id: "isLatest", label: "terakhir" },
 ];

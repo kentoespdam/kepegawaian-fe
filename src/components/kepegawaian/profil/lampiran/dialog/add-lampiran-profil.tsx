@@ -1,5 +1,5 @@
+import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import { LampiranProfilSchema } from "@_types/profil/lampiran";
-import { saveLampiranProfil } from "@app/kepegawaian/pendukung/pendidikan/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputFileZod from "@components/form/zod/file";
 import InputZod from "@components/form/zod/input";
@@ -18,17 +18,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { saveLampiranProfil } from "../action";
+import { useEffect } from "react";
 
 interface LampiranFormDialogProps {
 	savePath: string;
 	rootKey: string;
+	jenis: JenisLampiranProfil;
 }
 const LampiranFormDialog = (props: LampiranFormDialogProps) => {
-	const { ref, refId, openLampiranForm, setOpenLampiranForm } =
+	const { refId, openLampiranForm, setOpenLampiranForm } =
 		useLampiranProfilStore((state) => ({
-			ref: state.ref,
 			refId: state.refId,
 			openLampiranForm: state.openLampiranForm,
 			setOpenLampiranForm: state.setOpenLampiranForm,
@@ -38,7 +39,7 @@ const LampiranFormDialog = (props: LampiranFormDialogProps) => {
 		resolver: zodResolver(LampiranProfilSchema),
 		values: {
 			id: 0,
-			ref: ref,
+			ref: props.jenis,
 			refId: refId,
 			notes: "",
 		},
@@ -46,10 +47,10 @@ const LampiranFormDialog = (props: LampiranFormDialogProps) => {
 
 	const fileRef = form.register("fileName");
 
-	const mutation = useGlobalMutation(saveLampiranProfil, [
-		props.rootKey,
-		refId,
-	]);
+	const mutation = useGlobalMutation({
+		mutationFunction: saveLampiranProfil,
+		queryKeys: [[props.rootKey, refId]],
+	});
 
 	const handleSubmit = (data: LampiranProfilSchema) => {
 		const formData = new FormData();

@@ -1,16 +1,16 @@
 "use server";
 import { BaseDelete } from "@_types/index";
-import type { PendidikanSchema } from "@_types/profil/pendidikan";
+import type { PengalamanKerjaSchema } from "@_types/profil/pengalaman_kerja";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
-export const saveProfilPendidikan = async (formData: PendidikanSchema) => {
+export const savePengalamanKerja = async (formData: PengalamanKerjaSchema) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url =
 		formData.id > 0
-			? `${API_URL}/profil/pendidikan/${formData.id}`
-			: `${API_URL}/profil/pendidikan`;
+			? `${API_URL}/profil/pengalaman/${formData.id}`
+			: `${API_URL}/profil/pengalaman`;
 
 	const req = await fetch(url, {
 		method: formData.id ? "PUT" : "POST",
@@ -21,34 +21,30 @@ export const saveProfilPendidikan = async (formData: PendidikanSchema) => {
 	return req.json();
 };
 
-export const deleteProfilPendidikan = async (formData: BaseDelete) => {
+export const deletePengalamanKerja = async (formData: BaseDelete) => {
 	const headers = setAuthorizeHeader(cookies());
 	const validate = BaseDelete.safeParse(formData);
 	const id = Number(formData.id.split("-")[1]);
 	if (!validate.success || Number(formData.curId) !== id)
 		return { success: false, error: { message: "invalid data" } };
-
-	const url = `${API_URL}/profil/pendidikan/${id}`;
+	const url = `${API_URL}/profil/pengalaman/${id}`;
 
 	const req = await fetch(url, {
 		method: "DELETE",
 		headers: headers,
 	});
 
-	const response = await req.json();
-	return {
-		success: true,
-		message: response.message,
-	};
+	if (req.status !== 200) return await req.text();
+
+	return await req.json();
 };
 
-export const acceptPendidikan = async ({
+export const acceptPengalamanKerja = async ({
 	id,
 	nik,
 }: { id: number; nik: string }) => {
 	const headers = setAuthorizeHeader(cookies());
-	const url = `${API_URL}/profil/pendidikan/${id}/accept`;
-
+	const url = `${API_URL}/profil/pengalaman/${id}/accept`;
 	const req = await fetch(url, {
 		method: "PUT",
 		headers: headers,
@@ -59,5 +55,5 @@ export const acceptPendidikan = async ({
 
 	if (req.status !== 201) return await req.text();
 
-	return await req.json();
+	return req.json();
 };

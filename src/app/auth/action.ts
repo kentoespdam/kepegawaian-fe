@@ -19,7 +19,8 @@ export const doLogin = async (
 	formData: FormData,
 ): Promise<LoginResponse> => {
 	const headerList = headers();
-	const callbackUrl = cookies().get("callback_url")?.value as string;
+	let callbackUrl = cookies().get("callback_url")?.value as string;
+	callbackUrl = !callbackUrl ? "" : callbackUrl.replace("undefined", "");
 	const username = formData.get("username") as string;
 	const email = userToEmail(username);
 	const password = formData.get("password") as string;

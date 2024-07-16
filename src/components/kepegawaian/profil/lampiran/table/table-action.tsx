@@ -1,4 +1,4 @@
-import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import { OFFICE_TYPE } from "@_types/index";
 import type { LampiranProfil } from "@_types/profil/lampiran";
 import { getFile } from "@app/kepegawaian/profil/lampiran/action";
@@ -26,7 +26,12 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 
-const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
+interface LampiranProfilTableActionProps {
+	data: LampiranProfil;
+	jenis: JenisLampiranProfil;
+	rootKey: string;
+}
+const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 	const { id, refId, fileName, mimeType } = props.data;
 	const path = usePathname();
 	const { setLampiranId, setRefId, setOpenDeleteDialog, setOpenLampiran } =
@@ -38,7 +43,7 @@ const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
 		}));
 	const acceptMutation = useGlobalMutation({
 		mutationFunction: acceptLampiranProfilData,
-		queryKeys: [["lampiranPendidikan", refId]],
+		queryKeys: [[props.rootKey, refId]],
 	});
 
 	const deleteHadler = () => {
@@ -55,14 +60,14 @@ const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
 			path: "profil/lampiran/accept",
 			data: {
 				id: id,
-				ref: JenisLampiranProfil.Values.PROFIL_PENDIDIKAN,
+				ref: props.jenis,
 				refId: refId,
 			},
 		});
 	};
 
 	const downloadFile = useMutation({
-		mutationFn: () => getFile(JenisLampiranProfil.Values.PROFIL_PENDIDIKAN, id),
+		mutationFn: () => getFile(props.jenis, id),
 		onSuccess: (data) => {
 			const blob = base64toBlob(data.base64, data.type);
 			const url = URL.createObjectURL(blob);
@@ -89,7 +94,7 @@ const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
 					</Button>
 				) : (
 					<ButtonLink
-						href={`/kepegawaian/profil/lampiran/${JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}/${id}?path=${path}`}
+						href={`/kepegawaian/profil/lampiran/${props.jenis}/${id}?path=${path}`}
 						size="icon"
 						className="h-6 w-6"
 						variant="ghost"
@@ -126,4 +131,4 @@ const LampiranPendidikanAction = (props: { data: LampiranProfil }) => {
 	);
 };
 
-export default LampiranPendidikanAction;
+export default LampiranProfilTableAction;

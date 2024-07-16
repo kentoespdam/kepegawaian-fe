@@ -1,6 +1,6 @@
 import type { Biodata } from "@_types/profil/biodata";
-import type { Pendidikan } from "@_types/profil/pendidikan";
-import { acceptPendidikan } from "@app/kepegawaian/pendukung/pendidikan/action";
+import type { PengalamanKerja } from "@_types/profil/pengalaman_kerja";
+import { acceptPengalamanKerja } from "@app/kepegawaian/pendukung/pengalaman_kerja/action";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -9,20 +9,24 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
 import { useGlobalMutation } from "@store/query-store";
-import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
+import {
+	CheckCircleIcon,
+	DeleteIcon,
+	EllipsisIcon,
+	PencilIcon,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-interface ProfilPendidikanActionProps {
+interface ProfilPengalamanActionProps {
 	biodata: Biodata;
-	data: Pendidikan;
+	data: PengalamanKerja;
 }
-
-const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
+const ProfilPengalamanAction = (props: ProfilPengalamanActionProps) => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const store = usePendidikanStore();
+	const store = usePengalamanKerjaStore();
 
 	const editHandler = () => {
 		store.setDefaultValues(props.biodata, props.data);
@@ -31,18 +35,18 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 
 	const deleteHadler = () => {
 		store.setDefaultValues(props.biodata);
-		store.setPendidikanId(props.data.id);
+		store.setPengalamanId(props.data.id);
 		store.setOpenDelete(true);
 	};
 
 	const accMutation = useGlobalMutation({
-		mutationFunction: acceptPendidikan,
-		queryKeys: [["pendidikan", props.biodata.nik, search.toString()]],
+		mutationFunction: acceptPengalamanKerja,
+		queryKeys: [["pengalaman-kerja", props.biodata.nik, search.toString()]],
 	});
 
 	const acceptHandler = () => {
 		const konfirmasi = confirm(
-			"Apakah anda yakin ingin menyetujui pendidikan ini?",
+			"Apakah anda yakin ingin menyetujui pengalaman kerja ini?",
 		);
 		if (!konfirmasi) return;
 
@@ -81,7 +85,7 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 						className="flex flex-row items-center cursor-pointer text-info"
 						onClick={acceptHandler}
 					>
-						<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+						<CheckCircleIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Setujui Data</span>
 					</DropdownMenuItem>
 				</DropdownMenuGroup>
@@ -90,4 +94,4 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 	);
 };
 
-export default ProfilPendidikanAction;
+export default ProfilPengalamanAction;
