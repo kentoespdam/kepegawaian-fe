@@ -3,7 +3,7 @@ import { PendidikanSchema } from "@_types/profil/pendidikan";
 import { saveProfilPendidikan } from "@app/kepegawaian/pendukung/pendidikan/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputZod from "@components/form/zod/input";
-import IsLatestZod from "@components/form/zod/is-latest";
+import YesNoZod from "@components/form/zod/is-latest";
 import JenjangPendidikanZod from "@components/form/zod/jenjang-pendidikan";
 import { Button } from "@components/ui/button";
 import {
@@ -101,7 +101,7 @@ const ProfilPendidikanForm = () => {
 						</div>
 						<div className="grid grid-cols-2 gap-4">
 							<InputZod id="gpa" label="GPA" form={form} type="float" />
-							<IsLatestZod
+							<YesNoZod
 								id="isLatest"
 								label="Pendidikan Terakhir"
 								form={form}

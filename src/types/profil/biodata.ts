@@ -30,7 +30,7 @@ export interface Biodata extends BiodataMini {
 export const BiodataSchema = z.object({
 	nik: z.string().min(16, { message: "NIK wajib diisi" }),
 	nama: z.string().min(3, { message: "Nama wajib diisi" }),
-	jenisKelamin: z.string().min(1, { message: "Jenis Kelamin wajib diisi" }),
+	jenisKelamin: z.number().min(1, { message: "Jenis Kelamin wajib diisi" }),
 	tempatLahir: z.string().min(3, { message: "Tempat Lahir wajib diisi" }),
 	tanggalLahir: z.string().min(10, { message: "Tanggal Lahir wajib diisi" }),
 	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),

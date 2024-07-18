@@ -28,6 +28,7 @@ export interface BaseResult<TData> {
 	message: string;
 	data: TData;
 	timestamp: string;
+	errors?: unknown;
 }
 
 export type BaseDelete = z.infer<typeof BaseDelete>;
