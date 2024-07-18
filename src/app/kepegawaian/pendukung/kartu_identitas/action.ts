@@ -1,16 +1,18 @@
 "use server";
-import { BaseDelete } from "@_types/index";
-import type { PengalamanKerjaSchema } from "@_types/profil/pengalaman_kerja";
+import type { BaseDelete } from "@_types/index";
+import type { KartuIdentitasSchema } from "@_types/profil/kartu_identitas";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
-export const savePengalamanKerja = async (formData: PengalamanKerjaSchema) => {
+export const saveProfilKartuIdentitas = async (
+	formData: KartuIdentitasSchema,
+) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url =
 		formData.id > 0
-			? `${API_URL}/profil/pengalaman/${formData.id}`
-			: `${API_URL}/profil/pengalaman`;
+			? `${API_URL}/profil/kartu-identitas/${formData.id}`
+			: `${API_URL}/profil/kartu-identitas`;
 
 	const req = await fetch(url, {
 		method: formData.id ? "PUT" : "POST",
@@ -18,17 +20,17 @@ export const savePengalamanKerja = async (formData: PengalamanKerjaSchema) => {
 		body: JSON.stringify(formData),
 	});
 
-	return req.json();
+	return await req.json();
 };
 
-export const deletePengalamanKerja = async (formData: BaseDelete) => {
+export const deleteProfilKartuIdentitas = async (formData: BaseDelete) => {
 	const headers = setAuthorizeHeader(cookies());
-	const validate = BaseDelete.safeParse(formData);
-	const id = Number(formData.id.split("-")[1]);
-	if (!validate.success || Number(formData.curId) !== id)
-		return { success: false, error: { message: "invalid data" } };
-	const url = `${API_URL}/profil/pengalaman/${id}`;
 
+	const id = Number(formData.id.split("-")[1]);
+	if (id !== Number(formData.curId))
+		return { success: false, error: { message: "invalid data" } };
+
+	const url = `${API_URL}/profil/kartu-identitas/${id}`;
 	const req = await fetch(url, {
 		method: "DELETE",
 		headers: headers,
@@ -37,12 +39,13 @@ export const deletePengalamanKerja = async (formData: BaseDelete) => {
 	return await req.json();
 };
 
-export const acceptPengalamanKerja = async ({
+export const acceptKartuIdentitas = async ({
 	id,
 	nik,
 }: { id: number; nik: string }) => {
 	const headers = setAuthorizeHeader(cookies());
-	const url = `${API_URL}/profil/pengalaman/${id}/accept`;
+	const url = `${API_URL}/profil/kartu-identitas/${id}/accept`;
+
 	const req = await fetch(url, {
 		method: "PUT",
 		headers: headers,
@@ -51,5 +54,5 @@ export const acceptPengalamanKerja = async ({
 		}),
 	});
 
-	return req.json();
+	return await req.json();
 };

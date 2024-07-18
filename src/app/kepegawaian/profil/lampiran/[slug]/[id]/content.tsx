@@ -40,8 +40,6 @@ const LampiranProfilContent = (props: LampiranProfilContentProps) => {
 	if (IMAGE_TYPE.includes(query.data.type))
 		return <ViewImageComponent {...query.data} />;
 
-	// return query.data
-
 	return <div>{query.data.type}</div>;
 };
 

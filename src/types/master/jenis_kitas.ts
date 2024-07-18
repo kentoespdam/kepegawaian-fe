@@ -23,3 +23,8 @@ export const jenisKitasTableColumns: CustomColumnDef[] = [
 	},
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findJenisJenisKitasValue = (list: JenisKitas[], id: number) => {
+	const result = list.find((row) => row.id === id);
+	return !result ? { nama: "Pilih Jenis Kartu Identitas" } : result;
+};

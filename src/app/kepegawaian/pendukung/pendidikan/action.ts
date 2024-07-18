@@ -35,11 +35,7 @@ export const deleteProfilPendidikan = async (formData: BaseDelete) => {
 		headers: headers,
 	});
 
-	const response = await req.json();
-	return {
-		success: true,
-		message: response.message,
-	};
+	return await req.json();
 };
 
 export const acceptPendidikan = async ({
@@ -56,8 +52,6 @@ export const acceptPendidikan = async ({
 			biodataId: nik,
 		}),
 	});
-
-	if (req.status !== 201) return await req.text();
 
 	return await req.json();
 };

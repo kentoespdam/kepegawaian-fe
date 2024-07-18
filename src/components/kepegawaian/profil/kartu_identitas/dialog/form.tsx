@@ -1,10 +1,9 @@
-import { PelatihanSchema } from "@_types/profil/pelatihan";
-import { saveProfilPelatihan } from "@app/kepegawaian/pendukung/pelatihan/action";
+import { KartuIdentitasSchema } from "@_types/profil/kartu_identitas";
+import { saveProfilKartuIdentitas } from "@app/kepegawaian/pendukung/kartu_identitas/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import DatePickerZod from "@components/form/zod/date-picker";
 import InputZod from "@components/form/zod/input";
-import JenisPelatihanZod from "@components/form/zod/jenis-pelatihan";
-import LulusZod from "@components/form/zod/lulus";
+import JenisKitasZod from "@components/form/zod/jenis-kitas";
 import TextAreaZod from "@components/form/zod/textarea";
 import { Button } from "@components/ui/button";
 import {
@@ -17,28 +16,28 @@ import {
 import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
+import { useKartuIdentitasStore } from "@store/kepegawaian/profil/kartu-identitas-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-const FormPelatihanDialog = () => {
-	const { defaultValues, open, setOpen } = usePelatihanStore((state) => ({
+const FormKartuIdentitasDialog = () => {
+	const { defaultValues, open, setOpen } = useKartuIdentitasStore((state) => ({
 		defaultValues: state.defaultValues,
 		open: state.open,
 		setOpen: state.setOpen,
 	}));
 
-	const form = useForm<PelatihanSchema>({
-		resolver: zodResolver(PelatihanSchema),
+	const form = useForm<KartuIdentitasSchema>({
+		resolver: zodResolver(KartuIdentitasSchema),
 		defaultValues,
 		values: defaultValues,
 	});
 
 	const mutation = useGlobalMutation({
-		mutationFunction: saveProfilPelatihan,
-		queryKeys: [["profil-pelatihan", defaultValues.biodataId]],
+		mutationFunction: saveProfilKartuIdentitas,
+		queryKeys: [["profil-kartu-identitas", defaultValues.nik]],
 	});
 
 	useEffect(() => {
@@ -49,14 +48,15 @@ const FormPelatihanDialog = () => {
 		}
 	}, [mutation, form, setOpen]);
 
-	const onSubmit = (values: PelatihanSchema) => {
+	const onSubmit = (values: KartuIdentitasSchema) => {
 		mutation.mutate(values);
 	};
+
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className="p-0">
 				<DialogHeader className="px-4 py-2 space-y-0">
-					Data Pelatihan Pegawai
+					Data Kartu Identitas
 				</DialogHeader>
 				<Separator />
 				<Form {...form}>
@@ -65,19 +65,21 @@ const FormPelatihanDialog = () => {
 							<InputZod type="hidden" id="id" label="ID" form={form} />
 							<InputZod
 								type="hidden"
-								id="biodataId"
+								id="nik"
 								label="NIK"
 								form={form}
 								disabled
 							/>
-							<JenisPelatihanZod id="jenisPelatihanId" form={form} />
-							<InputZod id="nama" label="Nama" form={form} />
-							<InputZod type="number" id="nilai" label="Nilai" form={form} />
-							<LulusZod id="lulus" label="Lulus" form={form} />
-							<DatePickerZod id="tanggalMulai" label="Tgl. Mulai" form={form} />
+							<JenisKitasZod id="jenisKartuId" form={form} />
+							<InputZod id="nomorKartu" label="Nomor Kartu" form={form} />
 							<DatePickerZod
-								id="tanggalSelesai"
-								label="Tgl. Selesai"
+								id="tanggalExpired"
+								label="Tgl. Expired"
+								form={form}
+							/>
+							<DatePickerZod
+								id="tanggalTerima"
+								label="Tgl. Terima"
 								form={form}
 							/>
 							<TextAreaZod id="notes" label="Catatan" form={form} />
@@ -107,4 +109,4 @@ const FormPelatihanDialog = () => {
 	);
 };
 
-export default FormPelatihanDialog;
+export default FormKartuIdentitasDialog;

@@ -49,7 +49,6 @@ const FormKeahlianDialog = () => {
 	}, [mutation, form, setOpen]);
 
 	const onSubmit = (values: KeahlianSchema) => {
-		console.log(values);
 		mutation.mutate(values);
 	};
 	return (
@@ -71,7 +70,11 @@ const FormKeahlianDialog = () => {
 								disabled
 							/>
 							<JenisKeahlianZod id="keahlianId" form={form} />
-							<KualifikasiZod id="kualifikasi" label="Kualifikasi" form={form} />
+							<KualifikasiZod
+								id="kualifikasi"
+								label="Kualifikasi"
+								form={form}
+							/>
 							<RadioSertifikasiZod
 								id="sertifikasi"
 								label="Sertifikasi"

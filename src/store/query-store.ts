@@ -16,10 +16,12 @@ export function useGlobalMutation<TData, TVariables>({
 	const queryClient = useQueryClient();
 	const { toast } = useToast();
 
-	return useMutation({
+	const mutation = useMutation({
 		mutationFn: mutationFunction,
 		onSuccess: (data) => {
-			const result = data as BaseResult<TData>;
+			const result = data as BaseResult<unknown>;
+			if (result.status !== 200 && result.status !== 201)
+				throw new Error(JSON.stringify(result));
 			toast({
 				title: `${result.status} Success`,
 				description: result.message,
@@ -29,9 +31,11 @@ export function useGlobalMutation<TData, TVariables>({
 				queryClient.invalidateQueries({ queryKey });
 			}
 		},
-		onError: (error) => {
-			console.log(error);
-			const result = JSON.parse(error.message) as BaseResult<TData>;
+		onError: (error, variables) => {
+			const result = JSON.parse(error.message) as BaseResult<unknown>;
+			if(result.status===401){
+				result.message="Network Error. please try again"
+			}
 			toast({
 				title: `${result.status} Error`,
 				description: result.message,
@@ -39,4 +43,6 @@ export function useGlobalMutation<TData, TVariables>({
 			});
 		},
 	});
+
+	return mutation;
 }

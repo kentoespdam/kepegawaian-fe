@@ -18,8 +18,6 @@ export const saveProfilKeahlian = async (formData: KeahlianSchema) => {
 		body: JSON.stringify(formData),
 	});
 
-	if (req.status !== 201) return await req.text();
-
 	return await req.json();
 };
 
@@ -36,8 +34,6 @@ export const deleteProfilKeahlian = async (formData: BaseDelete) => {
 		method: "DELETE",
 		headers: headers,
 	});
-
-	if (req.status !== 200) return await req.text();
 
 	return await req.json();
 };
@@ -56,8 +52,6 @@ export const acceptKeahlian = async ({
 			biodataId: nik,
 		}),
 	});
-
-	if (req.status !== 201) return await req.text();
 
 	return await req.json();
 };

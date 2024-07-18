@@ -46,7 +46,6 @@ const ProfilPendidikanForm = () => {
 	}, [mutation, form, setOpen]);
 
 	const onSubmit = (values: PendidikanSchema) => {
-		console.log(values);
 		mutation.mutate(values);
 	};
 
