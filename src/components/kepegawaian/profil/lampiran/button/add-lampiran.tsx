@@ -2,7 +2,7 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
-import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { PlusCircleIcon } from "lucide-react";
 
 interface AddLampiranProfilButtonProps {
@@ -21,6 +21,8 @@ const AddLampiranProfilButton = (props: AddLampiranProfilButtonProps) => {
 		switch (props.jenis) {
 			case JenisLampiranProfil.Values.PROFIL_PENGALAMAN_KERJA:
 				return "Profil Pengalaman Kerja";
+			case JenisLampiranProfil.Values.PROFIL_KEAHLIAN:
+				return "Profil Keahlian";
 			default:
 				return "Profil Pendidikan";
 		}
@@ -37,7 +39,7 @@ const AddLampiranProfilButton = (props: AddLampiranProfilButtonProps) => {
 
 	return (
 		<TooltipBuilder
-			text={`Tambah ${teks()}`}
+			text={`Tambah Lampiran ${teks()}`}
 			className="bg-primary text-primary-foreground"
 		>
 			<Button

@@ -1,6 +1,3 @@
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
-import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
 import {
 	FormControl,
 	FormField,
@@ -9,6 +6,9 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Label } from "@components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
+import type { FieldValues } from "react-hook-form";
+import type { InputZodProps } from "./iface";
 
 const IsLatestZod = <TData extends FieldValues>({
 	id,
@@ -21,15 +21,12 @@ const IsLatestZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>
-						{label}
-					</FormLabel>
+					<FormLabel>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
 							defaultValue={field.value}
 							className="flex justify-start gap-8 h-9"
 							onValueChange={field.onChange}
-							{...field}
 						>
 							<div className="flex items-center space-x-2">
 								<RadioGroupItem

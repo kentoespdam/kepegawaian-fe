@@ -30,6 +30,7 @@ export function useGlobalMutation<TData, TVariables>({
 			}
 		},
 		onError: (error) => {
+			console.log(error);
 			const result = JSON.parse(error.message) as BaseResult<TData>;
 			toast({
 				title: `${result.status} Error`,

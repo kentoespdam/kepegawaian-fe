@@ -1,5 +1,6 @@
 import type { Biodata } from "@_types/profil/biodata";
-import type { Pendidikan } from "@_types/profil/pendidikan";
+import type { Keahlian } from "@_types/profil/keahlian";
+import { acceptKeahlian } from "@app/kepegawaian/pendukung/keahlian/action";
 import { acceptPendidikan } from "@app/kepegawaian/pendukung/pendidikan/action";
 import { Button } from "@components/ui/button";
 import {
@@ -9,20 +10,20 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useGlobalMutation } from "@store/query-store";
 import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-interface ProfilPendidikanActionProps {
+interface KeahlianTableActionProps {
 	biodata: Biodata;
-	data: Pendidikan;
+	data: Keahlian;
 }
-
-const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
+const KeahlianTableAction = (props: KeahlianTableActionProps) => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const store = usePendidikanStore();
+	const store = useKeahlianStore();
 
 	const editHandler = () => {
 		store.setDefaultValues(props.biodata, props.data);
@@ -31,18 +32,18 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 
 	const deleteHadler = () => {
 		store.setDefaultValues(props.biodata);
-		store.setPendidikanId(props.data.id);
+		store.setKeahlianId(props.data.id);
 		store.setOpenDelete(true);
 	};
 
 	const accMutation = useGlobalMutation({
-		mutationFunction: acceptPendidikan,
-		queryKeys: [["pendidikan", props.biodata.nik, search.toString()]],
+		mutationFunction: acceptKeahlian,
+		queryKeys: [["profil-keahlian", props.biodata.nik, search.toString()]],
 	});
 
 	const acceptHandler = () => {
 		const konfirmasi = confirm(
-			"Apakah anda yakin ingin menyetujui pendidikan ini?",
+			"Apakah anda yakin ingin menyetujui keahlian ini?",
 		);
 		if (!konfirmasi) return;
 
@@ -90,4 +91,4 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 	);
 };
 
-export default ProfilPendidikanAction;
+export default KeahlianTableAction;

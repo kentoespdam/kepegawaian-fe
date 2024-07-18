@@ -18,7 +18,7 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";

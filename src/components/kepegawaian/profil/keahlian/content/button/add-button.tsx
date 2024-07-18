@@ -1,23 +1,32 @@
 "use client";
-
 import type { Biodata } from "@_types/profil/biodata";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
-import { useBiodataQuery } from "@store/kepegawaian/biodata/biodata-store";
-import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
+import { getDataById } from "@helpers/action";
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
+import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, PlusCircleIcon } from "lucide-react";
 
-interface AddProfilPendidikanButtonProps {
+interface AddProfilKeahlianButtonProps {
 	nik: string;
 }
-const AddProfilPendidikanButton = ({ nik }: AddProfilPendidikanButtonProps) => {
-	const { setDefaultValues, setOpen } = usePendidikanStore((state) => ({
+const AddProfilKeahlianButton = ({ nik }: AddProfilKeahlianButtonProps) => {
+	const { setDefaultValues, setOpen } = useKeahlianStore((state) => ({
 		setDefaultValues: state.setDefaultValues,
 		setOpen: state.setOpen,
 	}));
 
-	const query = useBiodataQuery<Biodata>(nik);
+	const query = useQuery({
+		queryKey: ["biodata", nik],
+		queryFn: () =>
+			getDataById<Biodata>({
+				path: "profil/biodata",
+				id: nik,
+				isRoot: true,
+			}),
+		enabled: !!nik,
+	});
 
 	if (query.isFetching || query.isLoading)
 		return (
@@ -52,4 +61,4 @@ const AddProfilPendidikanButton = ({ nik }: AddProfilPendidikanButtonProps) => {
 	);
 };
 
-export default AddProfilPendidikanButton;
+export default AddProfilKeahlianButton;

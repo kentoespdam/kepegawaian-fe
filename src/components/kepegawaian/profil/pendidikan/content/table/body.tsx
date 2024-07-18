@@ -5,10 +5,10 @@ import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { CheckCircleIcon, CircleAlertIcon, CircleDashedIcon, CircleDotIcon } from "lucide-react";
 import ProfilPendidikanAction from "./table-action";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { cn } from "@lib/utils";
 import React, { useEffect } from "react";
-import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import TooltipBuilder from "@components/builder/tooltip";
 
 interface ProfilPendidikanTableBodyProps {

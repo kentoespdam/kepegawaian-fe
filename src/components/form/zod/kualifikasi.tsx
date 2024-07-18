@@ -1,3 +1,4 @@
+"use client";
 import { GOLONGAN_DARAH } from "@_types/enums/golongan_darah";
 import {
 	FormControl,
@@ -10,8 +11,9 @@ import { Label } from "@components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@components/ui/radio-group";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { KUALIFIKASI, Kualifikasi } from "@_types/enums/kualifikasi";
 
-const RadioGolonganDarah = <TData extends FieldValues>({
+const KualifikasiZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
@@ -30,11 +32,17 @@ const RadioGolonganDarah = <TData extends FieldValues>({
 							onValueChange={(value) => field.onChange(value)}
 							{...field}
 						>
-							{Object.keys(GOLONGAN_DARAH).map((golDarah, index) => (
-								<div key={golDarah} className="flex items-center space-x-2">
-									<RadioGroupItem value={golDarah} id={golDarah} />
-									<Label htmlFor={golDarah} className="cursor-pointer">
-										{golDarah}
+							{KUALIFIKASI.map((kualifikasi) => (
+								<div key={kualifikasi} className="flex items-center space-x-2">
+									<RadioGroupItem
+										value={kualifikasi}
+										id={`kualifikasi-${kualifikasi}`}
+									/>
+									<Label
+										htmlFor={`kualifikasi-${kualifikasi}`}
+										className="cursor-pointer"
+									>
+										{kualifikasi}
 									</Label>
 								</div>
 							))}
@@ -47,4 +55,4 @@ const RadioGolonganDarah = <TData extends FieldValues>({
 	);
 };
 
-export default RadioGolonganDarah;
+export default KualifikasiZod;

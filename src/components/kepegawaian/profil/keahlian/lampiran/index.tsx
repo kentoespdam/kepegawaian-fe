@@ -1,5 +1,5 @@
 "use client";
-import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+
 import {
 	lampiranProfilTableColumns,
 	type LampiranProfil,
@@ -8,28 +8,27 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
 import { getListData } from "@helpers/action";
-import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../../lampiran/dialog/add-lampiran-profil";
+import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import DeleteLampiranProfilDialog from "../../lampiran/dialog/delete-lampiran-profil";
 import LampiranProfilTableBody from "../../lampiran/table/body";
 
-const LampiranPendidikanContent = () => {
-	const rootKey = "lampiranPendidikan";
-	const { selectedPendidikanId } = usePendidikanStore((state) => ({
-		selectedPendidikanId: state.selectedPendidikanId,
+const LampiranKeahlianContent = () => {
+	const rootKey = "lampiran-keahlian";
+	const { selectedKeahlianId } = useKeahlianStore((state) => ({
+		selectedKeahlianId: state.selectedKeahlianId,
 	}));
 
 	const query = useQuery({
-		queryKey: ["lampiranPendidikan", selectedPendidikanId],
-		queryFn: async () => {
-			const result = await getListData<LampiranProfil>({
-				path: `profil/pendidikan/lampiran/${selectedPendidikanId}`,
+		queryKey: [rootKey, selectedKeahlianId],
+		queryFn: async () =>
+			await getListData<LampiranProfil>({
+				path: `profil/keahlian/lampiran/${selectedKeahlianId}`,
 				isRoot: true,
-			});
-			return result;
-		},
-		enabled: !!selectedPendidikanId && selectedPendidikanId > 0,
+			}),
+		enabled: !!selectedKeahlianId && selectedKeahlianId > 0,
 	});
 
 	return (
@@ -45,7 +44,7 @@ const LampiranPendidikanContent = () => {
 					) : query.data && query.data.length > 0 ? (
 						<LampiranProfilTableBody
 							data={query.data}
-							jenis={JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}
+							jenis={JenisLampiranProfil.Values.PROFIL_KEAHLIAN}
 							rootKey={rootKey}
 						/>
 					) : (
@@ -60,12 +59,12 @@ const LampiranPendidikanContent = () => {
 
 			<LampiranFormDialog
 				rootKey={rootKey}
-				savePath="profil/pendidikan"
-				jenis={JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}
+				savePath="profil/keahlian"
+				jenis={JenisLampiranProfil.Values.PROFIL_KEAHLIAN}
 			/>
 			<DeleteLampiranProfilDialog rootKey={rootKey} />
 		</div>
 	);
 };
 
-export default LampiranPendidikanContent;
+export default LampiranKeahlianContent;

@@ -1,5 +1,5 @@
 import { Dialog } from "@components/ui/dialog";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import ProfilPendidikanForm from "../form";
 
 const FormProfilPendidikanDialog = () => {

@@ -24,6 +24,7 @@ export const getFile = async (
 	});
 
 	if (!response.ok) {
+		console.log("error coy!!!");
 		throw new Error("Failed to fetch file");
 	}
 
@@ -33,7 +34,7 @@ export const getFile = async (
 	const result: LampiranFile = {
 		type: blob.type,
 		base64: Buffer.from(arrayBuffer).toString("base64"),
-		headers: response.headers,
+		// headers: response.headers,
 	};
 
 	return result;

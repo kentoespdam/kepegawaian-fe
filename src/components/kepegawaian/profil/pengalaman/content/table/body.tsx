@@ -5,7 +5,7 @@ import TooltipBuilder from "@components/builder/tooltip";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { cn } from "@lib/utils";
-import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
 import { CircleDashedIcon, CircleDotIcon } from "lucide-react";
 import { useEffect } from "react";

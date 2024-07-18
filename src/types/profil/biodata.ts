@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { CustomColumnDef } from "..";
 import type { KartuIdentitas } from "./kartu_identitas";
 import type { PendidikanTerakhir } from "./pendidikan_terakhir";
+import { useMutationState, useQueryClient } from "@tanstack/react-query";
 
 export interface BiodataMini {
 	nik: string;

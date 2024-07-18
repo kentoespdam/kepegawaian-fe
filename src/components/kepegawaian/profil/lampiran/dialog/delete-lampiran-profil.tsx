@@ -17,7 +17,7 @@ import {
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
 import { TrashIcon } from "lucide-react";
 import { useCallback, useEffect } from "react";

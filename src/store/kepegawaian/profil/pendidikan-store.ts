@@ -28,7 +28,7 @@ interface PendidikanStore {
 	openDelete: boolean;
 	setOpenDelete: (open: boolean) => void;
 	defaultValues: PendidikanSchema;
-	setDefaultValues: (biodata: Biodata, pendidikan?: Pendidikan) => void;
+	setDefaultValues: (biodata?: Biodata, pendidikan?: Pendidikan) => void;
 }
 
 export const usePendidikanStore = create<PendidikanStore>((set) => ({
@@ -47,8 +47,8 @@ export const usePendidikanStore = create<PendidikanStore>((set) => ({
 			...state,
 			defaultValues: {
 				id: pendidikan?.id || 0,
-				biodataId: biodata.nik || "",
-				biodataName: biodata.nama || "",
+				biodataId: biodata?.nik || "",
+				biodataName: biodata?.nama || "",
 				jenjangPendidikanId: pendidikan?.jenjangPendidikan.id || 0,
 				gelarDepan: pendidikan?.gelarDepan || "",
 				gelarBelakang: pendidikan?.gelarBelakang || "",

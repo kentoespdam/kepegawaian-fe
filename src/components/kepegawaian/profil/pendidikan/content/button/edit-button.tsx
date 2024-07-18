@@ -2,7 +2,7 @@ import type { Biodata } from "@_types/profil/biodata";
 import type { Pendidikan } from "@_types/profil/pendidikan";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Dialog, DialogTrigger } from "@components/ui/dialog";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { PencilIcon } from "lucide-react";
 
 interface EditProfilPendidikanButtonProps {

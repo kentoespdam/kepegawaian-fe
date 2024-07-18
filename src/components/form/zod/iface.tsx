@@ -7,7 +7,7 @@ import type {
 
 export interface InputZodProps<TData extends FieldValues> {
 	id: Path<TData>;
-	label: string;
+	label?: string;
 	form: UseFormReturn<TData>;
 	type?: "text" | "number" | "email" | "hidden" | "float" | "file";
 	disabled?: boolean;

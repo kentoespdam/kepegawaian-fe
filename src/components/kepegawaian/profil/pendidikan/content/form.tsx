@@ -14,11 +14,9 @@ import {
 } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
-import { useToast } from "@components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePendidikanStore } from "@store/kepegawaian/biodata/pendidikan-store";
+import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useGlobalMutation } from "@store/query-store";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -28,9 +26,6 @@ const ProfilPendidikanForm = () => {
 		defaultValues: store.defaultValues,
 		setOpen: store.setOpen,
 	}));
-
-	const { toast } = useToast();
-	const qc = useQueryClient();
 	const form = useForm<PendidikanSchema>({
 		resolver: zodResolver(PendidikanSchema),
 		defaultValues,

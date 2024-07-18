@@ -28,7 +28,7 @@ interface PengalamanKerjaStore {
 	openDelete: boolean;
 	setOpenDelete: (val: boolean) => void;
 	defaultValues: PengalamanKerjaSchema;
-	setDefaultValues: (biodata: Biodata, pengalaman?: PengalamanKerja) => void;
+	setDefaultValues: (biodata?: Biodata, pengalaman?: PengalamanKerja) => void;
 }
 
 export const usePengalamanKerjaStore = create<PengalamanKerjaStore>((set) => ({
@@ -45,8 +45,8 @@ export const usePengalamanKerjaStore = create<PengalamanKerjaStore>((set) => ({
 		set({
 			defaultValues: {
 				id: pengalaman?.id || 0,
-				biodataId: biodata.nik || "",
-				biodataName: biodata.nama || "",
+				biodataId: biodata?.nik || "",
+				biodataName: biodata?.nama || "",
 				namaPerusahaan: pengalaman?.namaPerusahaan || "",
 				typePerusahaan: pengalaman?.typePerusahaan || "",
 				jabatan: pengalaman?.jabatan || "",

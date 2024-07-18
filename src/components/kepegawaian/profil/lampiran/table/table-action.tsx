@@ -14,7 +14,7 @@ import {
 import { ButtonLink } from "@components/ui/link";
 import { acceptLampiranProfilData } from "@helpers/action";
 import { base64toBlob } from "@helpers/string";
-import { useLampiranProfilStore } from "@store/kepegawaian/biodata/lampiran-profil-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useMutation } from "@tanstack/react-query";
 import {

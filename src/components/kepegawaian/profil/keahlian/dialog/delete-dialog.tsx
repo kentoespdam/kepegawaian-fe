@@ -1,54 +1,54 @@
 import { BaseDelete } from "@_types/index";
-import { deletePengalamanKerja } from "@app/kepegawaian/pendukung/pengalaman_kerja/action";
+import { deleteProfilKeahlian } from "@app/kepegawaian/pendukung/keahlian/action";
 import { Button } from "@components/ui/button";
 import {
-	Dialog,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogTitle,
+    Dialog,
+    DialogContent,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
 } from "@components/ui/dialog";
 import {
-	Form,
-	FormControl,
-	FormDescription,
-	FormField,
-	FormItem,
-	FormMessage,
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useForm } from "react-hook-form";
 
-const DeletePengalamanKerjaDialog = () => {
-	const { defaultValues, deleteOpen, setDeleteOpen, pengalamanId } =
-		usePengalamanKerjaStore((state) => ({
+const DeleteKeahlianDialog = () => {
+	const { defaultValues, deleteOpen, setDeleteOpen, keahlianId } =
+		useKeahlianStore((state) => ({
 			defaultValues: state.defaultValues,
 			deleteOpen: state.openDelete,
 			setDeleteOpen: state.setOpenDelete,
-			pengalamanId: state.pengalamanId,
+			keahlianId: state.keahlianId,
 		}));
 
 	const form = useForm<BaseDelete>({
 		resolver: zodResolver(BaseDelete),
 		defaultValues: {
 			id: "",
-			curId: pengalamanId,
+			curId: keahlianId,
 		},
 	});
 
 	const mutation = useGlobalMutation({
-		mutationFunction: deletePengalamanKerja,
+		mutationFunction: deleteProfilKeahlian,
 		queryKeys: [
-			["pengalaman-kerja", defaultValues.biodataId],
-			["lampiran-pengalaman", pengalamanId],
+			["profil-keahlian", defaultValues.biodataId],
+			["lampiran-keahlian", keahlianId],
 		],
 	});
 
 	const onSubmit = (values: BaseDelete) => {
-		values.curId = pengalamanId;
+		values.curId = keahlianId;
 		mutation.mutate(values);
 		setDeleteOpen(false);
 	};
@@ -72,7 +72,7 @@ const DeletePengalamanKerjaDialog = () => {
 										<br />
 										Ketik {""}
 										<code className="font-normal bg-orange-300 text-gray-700 dark:text-gray-900 border px-1">
-											DELETE-{pengalamanId}
+											DELETE-{keahlianId}
 										</code>
 									</FormDescription>
 									<FormControl>
@@ -94,4 +94,4 @@ const DeletePengalamanKerjaDialog = () => {
 	);
 };
 
-export default DeletePengalamanKerjaDialog;
+export default DeleteKeahlianDialog;
