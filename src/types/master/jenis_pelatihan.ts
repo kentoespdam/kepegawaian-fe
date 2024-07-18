@@ -1,9 +1,9 @@
-import { z } from "zod"
-import type { CustomColumnDef } from ".."
+import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface JenisPelatihan {
-	id: number
-	nama: string
+	id: number;
+	nama: string;
 }
 
 export const JenisPelatihanSchema = z.object({
@@ -13,7 +13,7 @@ export const JenisPelatihanSchema = z.object({
 			required_error: "Nama Jenis Kartu identitas Wajib Diisi",
 		})
 		.min(3, { message: "Nama Jenis Kartu identitas Wajib Diisi" }),
-})
+});
 
 export const jenisPelatihanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -24,4 +24,9 @@ export const jenisPelatihanTableColumns: CustomColumnDef[] = [
 		searchType: "text",
 	},
 	{ id: "aksi", label: "Aksi" },
-]
+];
+
+export const findJenisPelatihanValue = (list: JenisPelatihan[], id: number) => {
+	const result = list.find((row) => row.id === id);
+	return !result ? { nama: "Pilih Jenis Pelatihan" } : result;
+};

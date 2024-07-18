@@ -37,7 +37,7 @@ const LampiranProfilTableBody = ({
 							)}
 						</TooltipBuilder>
 					</TableCell>
-					<TableCell className="border-x" align="center">
+					<TableCell className="border-x w-20" align="center">
 						<LampiranProfilTableAction
 							data={row}
 							jenis={jenis}

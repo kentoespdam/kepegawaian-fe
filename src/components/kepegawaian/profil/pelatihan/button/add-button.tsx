@@ -4,15 +4,16 @@ import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { getDataById } from "@helpers/action";
-import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
+import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, PlusCircleIcon } from "lucide-react";
 
-interface AddProfilKeahlianButtonProps {
-	nik: string;
+interface AddProfilPelatihanButtonProps {
+    nik: string
 }
-const AddProfilKeahlianButton = ({ nik }: AddProfilKeahlianButtonProps) => {
-	const { setDefaultValues, setOpen } = useKeahlianStore((state) => ({
+
+const AddProfilPelatihanButton = ({nik}: AddProfilPelatihanButtonProps) => {
+    const { setDefaultValues, setOpen } = usePelatihanStore((state) => ({
 		setDefaultValues: state.setDefaultValues,
 		setOpen: state.setOpen,
 	}));
@@ -43,7 +44,7 @@ const AddProfilKeahlianButton = ({ nik }: AddProfilKeahlianButtonProps) => {
 
 	return (
 		<TooltipBuilder
-			text="Tambah Keahlian"
+			text="Tambah Pelatihan"
 			className="bg-primary text-primary-foreground"
 		>
 			<Button
@@ -59,6 +60,6 @@ const AddProfilKeahlianButton = ({ nik }: AddProfilKeahlianButtonProps) => {
 			</Button>
 		</TooltipBuilder>
 	);
-};
+}
 
-export default AddProfilKeahlianButton;
+export default AddProfilPelatihanButton;

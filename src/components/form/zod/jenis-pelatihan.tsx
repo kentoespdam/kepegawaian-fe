@@ -1,9 +1,9 @@
 "use client";
 
 import {
-	findJenisKeahlianValue,
-	type JenisKeahlian,
-} from "@_types/master/jenis_keahlian";
+	findJenisPelatihanValue,
+	type JenisPelatihan,
+} from "@_types/master/jenis_pelatihan";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -32,7 +32,7 @@ import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
-const JenisKeahlianZod = <TData extends FieldValues>({
+const JenisPelatihanZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
@@ -40,10 +40,10 @@ const JenisKeahlianZod = <TData extends FieldValues>({
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
-		queryKey: ["jenis-keahlian-list"],
+		queryKey: ["jenis-pelatihan-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisKeahlian>({
-				path: "jenis-keahlian",
+			const result = await getListData<JenisPelatihan>({
+				path: "jenis-pelatihan",
 			});
 			return result;
 		},
@@ -68,12 +68,12 @@ const JenisKeahlianZod = <TData extends FieldValues>({
 									)}
 								>
 									{!query.data
-										? "Keahlian tidak ditemukan"
+										? "Pelatihan tidak ditemukan"
 										: query.isLoading || query.isFetching
 											? "Loading..."
 											: field.value
-												? findJenisKeahlianValue(query.data, field.value).nama
-												: "Pilih Keahlian"}
+												? findJenisPelatihanValue(query.data, field.value).nama
+												: "Pilih Pelatihan"}
 									<ChevronDownIcon className="h-4 w-4 opacity-50" />
 								</Button>
 							</FormControl>
@@ -106,4 +106,4 @@ const JenisKeahlianZod = <TData extends FieldValues>({
 	);
 };
 
-export default JenisKeahlianZod;
+export default JenisPelatihanZod;

@@ -24,8 +24,9 @@ export const getFile = async (
 	});
 
 	if (!response.ok) {
-		console.log("error coy!!!");
-		throw new Error("Failed to fetch file");
+		const text=await response.json();
+		console.log(text);
+		throw new Error(text.errors);
 	}
 
 	const blob = await response.blob();

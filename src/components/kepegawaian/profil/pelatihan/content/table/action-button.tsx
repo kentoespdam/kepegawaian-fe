@@ -1,6 +1,6 @@
 import type { Biodata } from "@_types/profil/biodata";
-import type { Keahlian } from "@_types/profil/keahlian";
-import { acceptKeahlian } from "@app/kepegawaian/pendukung/keahlian/action";
+import type { Pelatihan } from "@_types/profil/pelatihan";
+import { acceptPelatihan } from "@app/kepegawaian/pendukung/pelatihan/action";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -9,19 +9,19 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
+import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
 import { useGlobalMutation } from "@store/query-store";
 import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 
-interface KeahlianTableActionProps {
+interface PelatihanTableActionProps {
 	biodata: Biodata;
-	data: Keahlian;
+	data: Pelatihan;
 }
-const KeahlianTableAction = (props: KeahlianTableActionProps) => {
+const PelatihanTableAction = (props: PelatihanTableActionProps) => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const store = useKeahlianStore();
+	const store = usePelatihanStore();
 
 	const editHandler = () => {
 		store.setDefaultValues(props.biodata, props.data);
@@ -30,18 +30,18 @@ const KeahlianTableAction = (props: KeahlianTableActionProps) => {
 
 	const deleteHadler = () => {
 		store.setDefaultValues(props.biodata);
-		store.setKeahlianId(props.data.id);
+		store.setPelatihanId(props.data.id);
 		store.setOpenDelete(true);
 	};
 
 	const accMutation = useGlobalMutation({
-		mutationFunction: acceptKeahlian,
-		queryKeys: [["profil-keahlian", props.biodata.nik, search.toString()]],
+		mutationFunction: acceptPelatihan,
+		queryKeys: [["profil-pelatihan", props.biodata.nik, search.toString()]],
 	});
 
 	const acceptHandler = () => {
 		const konfirmasi = confirm(
-			"Apakah anda yakin ingin menyetujui keahlian ini?",
+			"Apakah anda yakin ingin menyetujui pelatihan ini?",
 		);
 		if (!konfirmasi) return;
 
@@ -89,4 +89,4 @@ const KeahlianTableAction = (props: KeahlianTableActionProps) => {
 	);
 };
 
-export default KeahlianTableAction;
+export default PelatihanTableAction;
