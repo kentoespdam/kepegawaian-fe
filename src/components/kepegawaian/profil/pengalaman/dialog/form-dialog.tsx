@@ -15,7 +15,7 @@ import {
 import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";

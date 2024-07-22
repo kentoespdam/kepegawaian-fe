@@ -20,7 +20,7 @@ const queryClient = new QueryClient({
 	},
 });
 
-const layout = ({ children }: ChildrenNode) => {
+const Layout = ({ children }: ChildrenNode) => {
 	const path = usePathname();
 	const paths = path.split("/");
 	return (
@@ -138,4 +138,4 @@ const layout = ({ children }: ChildrenNode) => {
 	);
 };
 
-export default layout;
+export default Layout;

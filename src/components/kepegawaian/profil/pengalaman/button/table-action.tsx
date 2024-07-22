@@ -1,3 +1,4 @@
+"use client";
 import type { Biodata } from "@_types/profil/biodata";
 import type { PengalamanKerja } from "@_types/profil/pengalaman_kerja";
 import { acceptPengalamanKerja } from "@app/kepegawaian/pendukung/pengalaman_kerja/action";
@@ -9,7 +10,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
+
 import { useGlobalMutation } from "@store/query-store";
 import {
 	CheckCircleIcon,

@@ -1,6 +1,12 @@
 import { findAgamaIndex } from "@_types/enums/agama";
-import { findHubunganKeluargaIndex } from "@_types/enums/hubungan-keluarga";
-import { findJenisKelaminIndex } from "@_types/enums/jenisKelamin";
+import {
+	HubunganKeluarga,
+	findHubunganKeluargaIndex,
+} from "@_types/enums/hubungan-keluarga";
+import {
+	JenisKelamin,
+	findJenisKelaminIndex,
+} from "@_types/enums/jenisKelamin";
 import { findStatusKawinIndex } from "@_types/enums/status_kawin";
 import type { Biodata } from "@_types/profil/biodata";
 import type { Keluarga, KeluargaSchema } from "@_types/profil/keluarga";
@@ -33,8 +39,8 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 		biodataId: "",
 		nik: "",
 		nama: "",
-		jenisKelamin: 1,
-		hubunganKeluarga: 0,
+		jenisKelamin: JenisKelamin.Values.LAKI_LAKI,
+		hubunganKeluarga: HubunganKeluarga.Values.ANAK,
 		agama: 0,
 		tempatLahir: "",
 		tanggalLahir: "",
@@ -51,9 +57,9 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 				biodataId: biodata.nik || "",
 				nik: keluarga?.nik || "",
 				nama: keluarga?.nama || "",
-				jenisKelamin: findJenisKelaminIndex(keluarga?.jenisKelamin) || 1,
+				jenisKelamin: keluarga?.jenisKelamin || JenisKelamin.Values.LAKI_LAKI,
 				hubunganKeluarga:
-					findHubunganKeluargaIndex(keluarga?.hubunganKeluarga) || 0,
+					keluarga?.hubunganKeluarga || HubunganKeluarga.Values.ANAK,
 				agama: findAgamaIndex(keluarga?.agama) || 0,
 				tempatLahir: keluarga?.tempatLahir || "",
 				tanggalLahir: keluarga?.tanggalLahir || "",

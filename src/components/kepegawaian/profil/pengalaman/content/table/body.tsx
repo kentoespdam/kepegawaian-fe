@@ -6,10 +6,10 @@ import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
 import { CircleDashedIcon, CircleDotIcon } from "lucide-react";
 import { useEffect } from "react";
 import ProfilPengalamanAction from "../../button/table-action";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 
 interface ProfilPengalamanKerjaTableBodyProps {
 	data: Pageable<PengalamanKerja>;

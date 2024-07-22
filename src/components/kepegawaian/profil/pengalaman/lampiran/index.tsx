@@ -9,7 +9,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
 import { getListData } from "@helpers/action";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/biodata/pengalaman-store";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../../lampiran/dialog/add-lampiran-profil";
 import DeleteLampiranProfilDialog from "../../lampiran/dialog/delete-lampiran-profil";

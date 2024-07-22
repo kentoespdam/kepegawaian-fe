@@ -24,10 +24,7 @@ const YesNoZod = <TData extends FieldValues>({
 					<FormLabel>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
-							onValueChange={(value) => {
-								console.log(value);
-								field.onChange(value === "true");
-							}}
+							onValueChange={(value) => field.onChange(value === "true")}
 							defaultValue={field.value}
 							className="flex justify-start gap-8 h-9"
 						>
@@ -35,7 +32,7 @@ const YesNoZod = <TData extends FieldValues>({
 								<RadioGroupItem
 									value="false"
 									id="isLatest-false"
-									// checked={!field.value}
+									checked={!field.value}
 								/>
 								<Label htmlFor="isLatest-false">Tidak</Label>
 							</div>
@@ -43,7 +40,7 @@ const YesNoZod = <TData extends FieldValues>({
 								<RadioGroupItem
 									value="true"
 									id="isLatest-true"
-									// checked={field.value}
+									checked={field.value}
 								/>
 								<Label htmlFor="isLatest-true">Ya</Label>
 							</div>

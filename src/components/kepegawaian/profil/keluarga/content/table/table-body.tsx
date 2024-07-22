@@ -75,7 +75,7 @@ const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
 					<TableCell className="border-x whitespace-nowrap">
 						{row.tanggalLahir}
 					</TableCell>
-					<TableCell className="border-x">
+					<TableCell className="border-x" align="center">
 						<TooltipBuilder
 							text={row.tanggungan ? "ditanggung" : "Tidak ditanggung"}
 							className="bg-white text-black"

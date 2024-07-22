@@ -5,11 +5,12 @@ import type { CustomColumnDef } from "..";
 import type { KartuIdentitas } from "./kartu_identitas";
 import type { PendidikanTerakhir } from "./pendidikan_terakhir";
 import { useMutationState, useQueryClient } from "@tanstack/react-query";
+import { JenisKelamin } from "@_types/enums/jenisKelamin";
 
 export interface BiodataMini {
 	nik: string;
 	nama: string;
-	jenisKelamin: string;
+	jenisKelamin: JenisKelamin;
 	tanggalLahir: string;
 	statusKawin: StatusKawin;
 }
@@ -30,7 +31,7 @@ export interface Biodata extends BiodataMini {
 export const BiodataSchema = z.object({
 	nik: z.string().min(16, { message: "NIK wajib diisi" }),
 	nama: z.string().min(3, { message: "Nama wajib diisi" }),
-	jenisKelamin: z.number().min(1, { message: "Jenis Kelamin wajib diisi" }),
+	jenisKelamin: JenisKelamin,
 	tempatLahir: z.string().min(3, { message: "Tempat Lahir wajib diisi" }),
 	tanggalLahir: z.string().min(10, { message: "Tanggal Lahir wajib diisi" }),
 	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),

@@ -1,6 +1,7 @@
 "use client";
 
 import { findAgamaIndex } from "@_types/enums/agama";
+import { JenisKelamin } from "@_types/enums/jenisKelamin";
 import { findStatusKawinIndex } from "@_types/enums/status_kawin";
 import { ConditionalSchema, type Pegawai } from "@_types/pegawai";
 import type { Biodata } from "@_types/profil/biodata";
@@ -12,10 +13,8 @@ import { Form } from "@components/ui/form";
 import { useToast } from "@components/ui/use-toast";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
-import { useOrgJab } from "@store/org-jab";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
 import { saveKepegawaian } from "./action";
@@ -27,7 +26,6 @@ type PegawaiFormProps = {
 
 const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 	const { push } = useRouter();
-	const { setOrganisasiId } = useOrgJab();
 	const store = useAddBiodataStore();
 	const { toast } = useToast();
 	const qc = useQueryClient();
@@ -37,7 +35,7 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 		updatePegawai: false,
 		nik: biodata?.nik ?? "",
 		nama: biodata?.nama ?? "",
-		jenisKelamin: biodata?.jenisKelamin ?? "",
+		jenisKelamin: biodata?.jenisKelamin ?? JenisKelamin.Values.LAKI_LAKI,
 		tempatLahir: biodata?.tempatLahir ?? "",
 		tanggalLahir: biodata?.tanggalLahir ?? "",
 		alamat: biodata?.alamat ?? "",
@@ -75,7 +73,7 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 			updateBio: !!biodata,
 			nik: biodata?.nik ?? "",
 			nama: biodata?.nama ?? "",
-			jenisKelamin: biodata?.jenisKelamin ?? "",
+			jenisKelamin: biodata?.jenisKelamin ?? JenisKelamin.Values.LAKI_LAKI,
 			tempatLahir: biodata?.tempatLahir ?? "",
 			tanggalLahir: biodata?.tanggalLahir ?? "",
 			alamat: biodata?.alamat ?? "",
@@ -127,10 +125,6 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 	const onSubmit = (values: z.infer<typeof ConditionalSchema>) => {
 		mutation.mutate(values);
 	};
-
-	// useEffect(() => {
-	// 	if (pegawai) setOrganisasiId(pegawai.organisasi.id);
-	// }, []);
 
 	return (
 		<Form {...form}>
