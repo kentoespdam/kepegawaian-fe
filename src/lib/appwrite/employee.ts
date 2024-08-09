@@ -22,8 +22,8 @@ export const getEmployeeByNipam = async (
 				id: 3,
 				nama: "PEGAWAI",
 			},
-			noSk: "123456789",
-			tanggalTmtSk: "2022-01-01",
+			nomorSk: "123456789",
+			tanggalSk: "2022-01-01",
 			jabatan: {
 				id: 3,
 				level: {

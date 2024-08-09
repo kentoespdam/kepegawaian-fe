@@ -26,7 +26,7 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
                     id="id"
                     label="ID"
                     form={form}
-                    type="text" />
+                    type="hidden" />
 
                 <InputZod
                     id="nipam"
@@ -40,12 +40,12 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
 
 
                 <InputZod
-                    id="noSk"
+                    id="nomorSk"
                     label="Nomor SK"
                     form={form} />
 
                 <DatePickerZod
-                    id="tanggalTmtSk"
+                    id="tanggalSk"
                     label="Tanggal TMT SK"
                     form={form} />
 

@@ -1,46 +1,73 @@
 import { z } from "zod";
 import type { CustomColumnDef } from ".";
+import type { RiwayatSk } from "./kepegawaian/riwayat_sk";
 import type { Golongan } from "./master/golongan";
 import type { Grade } from "./master/grade";
 import type { JabatanMini } from "./master/jabatan";
 import type { Organisasi } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
 import type { StatusKerja } from "./master/status_kerja";
-import type { StatusPegawai } from "./master/status_pegawai";
 import { BiodataSchema, type BiodataMini } from "./profil/biodata";
 
-export interface Pegawai {
+export interface BasePegawai {
 	id: number;
 	nipam: string;
-	noSk: string;
-	tanggalTmtSk: string;
+	nomorSk: string;
+	tanggalSk: string;
 	biodata: BiodataMini;
-	statusPegawai: StatusPegawai;
-	jabatan: JabatanMini;
+	statusPegawai: string;
 	organisasi: Organisasi;
+	jabatan: JabatanMini;
 	profesi: Profesi;
 	golongan: Golongan;
 	grade: Grade;
 	statusKerja: StatusKerja;
+	tmtPensiun: string;
+	gajiPokok: number;
+	phdp: number;
+	jmlTanggungan: number;
+	mkgTahun: number;
+	mkgBulan: number;
+	absensiId: number;
 	notes: string | null;
 }
 
+export interface PegawaiDetail extends BasePegawai {
+	skCapeg: RiwayatSk;
+	skPegawai: RiwayatSk;
+	skGolongan: RiwayatSk;
+	skJabatan: RiwayatSk;
+	skMutasi: RiwayatSk;
+}
+
+export interface Pegawai extends BasePegawai {
+	refSkCapegId: number;
+	tmtKerja: string;
+	tmtPensiun: string;
+	refSkPegawaiId: number;
+	tmtPegawai: string;
+	refSkGolonganId: number;
+	tmtGolongan: string;
+	refSkJabatanId: number;
+	tmtJabatan: string;
+	refSkMutasiId: number;
+	tmtMutasi: string;
+}
+
 export const RefNonPegawai = BiodataSchema.extend({
-	referensi: z.literal("biodata"),
+	referensi: z.literal("BIODATA"),
 	updateBio: z.boolean().optional().default(false),
 });
 
 export const RefPegawai = BiodataSchema.extend({
-	referensi: z.literal("pegawai"),
+	referensi: z.literal("PEGAWAI"),
 	updateBio: z.boolean().optional().default(false),
 	updatePegawai: z.boolean().optional().default(false),
-	id: z
-		.number()
-		.optional(),
+	id: z.number().optional(),
 	nipam: z.string().min(8, { message: "NIPAM wajib diisi" }),
-	noSk: z.string().min(3, { message: "Nomor SK wajib diisi" }),
-	tanggalTmtSk: z.string().min(10, { message: "Tgl SK wajib diisi" }),
-	statusPegawaiId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
+	nomorSk: z.string().min(3, { message: "Nomor SK wajib diisi" }),
+	tanggalSk: z.string().min(10, { message: "Tgl SK wajib diisi" }),
+	statusPegawai: z.string().min(1, { message: "Status Pegawai wajib diisi" }),
 	organisasiId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
 	jabatanId: z.number().min(1, { message: "Status Pegawai wajib diisi" }),
 	profesiId: z.number().optional(),
@@ -111,5 +138,4 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		id: "statusPegawaiId",
 		label: "Status Pegawai",
 	},
-	
 ];

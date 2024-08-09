@@ -52,9 +52,9 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 		updatePegawai: !!pegawai,
 		id: pegawai?.id ?? 0,
 		nipam: pegawai?.nipam ?? "",
-		statusPegawaiId: pegawai?.statusPegawai.id ?? 0,
-		noSk: pegawai?.noSk ?? "",
-		tanggalTmtSk: pegawai?.tanggalTmtSk ?? "",
+		statusPegawaiId: pegawai?.statusPegawai ?? "",
+		nomorSk: pegawai?.nomorSk ?? "",
+		tanggalTmtSk: pegawai?.tanggalSk ?? "",
 		golonganId: pegawai?.golongan.id ?? 0,
 		organisasiId: pegawai?.organisasi.id ?? 0,
 		jabatanId: pegawai?.jabatan.id ?? 0,
@@ -67,9 +67,9 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 
 	const form = useForm<z.infer<typeof ConditionalSchema>>({
 		resolver: zodResolver(ConditionalSchema),
-		defaultValues: { ...defaultValues, referensi: "pegawai" },
+		defaultValues: { ...defaultValues, referensi: "PEGAWAI" },
 		values: {
-			referensi: pegawai ? "pegawai" : "biodata",
+			referensi: pegawai ? "PEGAWAI" : "BIODATA",
 			updateBio: !!biodata,
 			nik: biodata?.nik ?? "",
 			nama: biodata?.nama ?? "",
@@ -88,8 +88,8 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 			id: pegawai?.id ?? 0,
 			nipam: pegawai?.nipam ?? "",
 			statusPegawaiId: pegawai?.statusPegawai.id ?? 0,
-			noSk: pegawai?.noSk ?? "",
-			tanggalTmtSk: pegawai?.tanggalTmtSk ?? "",
+			nomorSk: pegawai?.nomorSk ?? "",
+			tanggalTmtSk: pegawai?.tanggalSk ?? "",
 			golonganId: pegawai?.golongan.id ?? 0,
 			organisasiId: pegawai?.organisasi.id ?? 0,
 			jabatanId: pegawai?.jabatan.id ?? 0,
@@ -101,7 +101,7 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 
 	const mutation = useMutation({
 		mutationFn: saveKepegawaian,
-		onSuccess: (data, variables, context) => {
+		onSuccess: (data) => {
 			if (data.status !== 201) throw new Error(data.message);
 
 			toast({
@@ -123,7 +123,8 @@ const PegawaiForm = ({ pegawai, biodata }: PegawaiFormProps) => {
 	});
 
 	const onSubmit = (values: z.infer<typeof ConditionalSchema>) => {
-		mutation.mutate(values);
+		// mutation.mutate(values);
+		console.log(values);
 	};
 
 	return (
