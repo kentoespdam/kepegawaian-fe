@@ -1,18 +1,16 @@
 import type { Agama } from "@_types/enums/agama";
-import type { StatusKawin } from "@_types/enums/status_kawin";
+import { JenisKelamin } from "@_types/enums/jenisKelamin";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
 import type { KartuIdentitas } from "./kartu_identitas";
 import type { PendidikanTerakhir } from "./pendidikan_terakhir";
-import { useMutationState, useQueryClient } from "@tanstack/react-query";
-import { JenisKelamin } from "@_types/enums/jenisKelamin";
 
 export interface BiodataMini {
 	nik: string;
 	nama: string;
 	jenisKelamin: JenisKelamin;
 	tanggalLahir: string;
-	statusKawin: StatusKawin;
+	statusKawin: string;
 }
 
 export interface Biodata extends BiodataMini {
@@ -36,13 +34,13 @@ export const BiodataSchema = z.object({
 	tanggalLahir: z.string().min(10, { message: "Tanggal Lahir wajib diisi" }),
 	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),
 	telp: z.string(),
-	agama: z.number().min(0, { message: "Agama wajib diisi" }),
+	agama: z.string().min(1, { message: "Agama wajib diisi" }),
 	ibuKandung: z.string().min(3, { message: "Ibu Kandung wajib diisi" }),
 	pendidikanTerakhirId: z
 		.number()
 		.min(1, { message: "Pendidikan Terakhir wajib diisi" }),
 	golonganDarah: z.string(),
-	statusKawin: z.number().default(0),
+	statusKawin: z.string().min(1, { message: "Status Kawin wajib diisi" }),
 	notes: z.string(),
 });
 

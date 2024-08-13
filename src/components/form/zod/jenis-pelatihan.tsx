@@ -67,13 +67,16 @@ const JenisPelatihanZod = <TData extends FieldValues>({
 										!field.value ? "text-muted-foreground" : "",
 									)}
 								>
-									{!query.data
-										? "Pelatihan tidak ditemukan"
-										: query.isLoading || query.isFetching
-											? "Loading..."
-											: field.value
-												? findJenisPelatihanValue(query.data, field.value).nama
-												: "Pilih Pelatihan"}
+									<span className="mr-2 flex-1 truncate">
+										{!query.data
+											? "Pelatihan tidak ditemukan"
+											: query.isLoading || query.isFetching
+												? "Loading..."
+												: field.value
+													? findJenisPelatihanValue(query.data, field.value)
+															.nama
+													: "Pilih Pelatihan"}
+									</span>
 									<ChevronDownIcon className="h-4 w-4 opacity-50" />
 								</Button>
 							</FormControl>

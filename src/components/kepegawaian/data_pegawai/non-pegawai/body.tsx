@@ -2,7 +2,7 @@ import type { Pageable } from "@_types/index";
 import type { Biodata } from "@_types/profil/biodata";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
-import KepegawaianTableAction from "../table-action";
+import { NonPegawaiTableAction } from "./table-action";
 
 type NonPegawaiTableBodyProps = {
 	data: Pageable<Biodata>;
@@ -17,7 +17,7 @@ const NonPegawaiTableBody = ({ data }: NonPegawaiTableBodyProps) => {
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						<KepegawaianTableAction />
+						<NonPegawaiTableAction biodata={row} />
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.nama}
@@ -44,7 +44,7 @@ const NonPegawaiTableBody = ({ data }: NonPegawaiTableBodyProps) => {
 					<TableCell className="border-x whitespace-nowrap">
 						{row.statusKawin.replace("_", " ")}
 					</TableCell>
-					<TableCell className="border-x">{row.notes}</TableCell>
+					<TableCell className="border-x whitespace-nowrap">{row.notes}</TableCell>
 				</TableRow>
 			))}
 		</TableBody>

@@ -1,6 +1,7 @@
 "use client"
 import CustomQueryProvider from "@components/providers/query";
-import { Toaster } from "@components/ui/toaster";
+import { Toaster } from "@components/ui/sonner";
+// import { Toaster } from "@components/ui/toaster";
 import type { ChildrenNode } from "@lib/index";
 import { QueryClient } from "@tanstack/react-query";
 
@@ -17,7 +18,7 @@ const Layout = ({ children }: ChildrenNode) => {
         <CustomQueryProvider queryClient={queryClient}>
             <div dir="ltr" data-aria-orientation="horizontal" className="max-w-full">
                 {children}
-                <Toaster />
+                <Toaster richColors />
             </div>
         </CustomQueryProvider>
     );

@@ -91,8 +91,6 @@ export const getDataById = async <TData>(
 			cache: "no-cache",
 		});
 
-		// if (!response.ok) throw new Error(await response.text());
-
 		const result: BaseResult<TData> = await response.json();
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>

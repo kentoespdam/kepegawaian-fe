@@ -40,14 +40,14 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-auto">
 				<DropdownMenuGroup>
-					<Link
+					{/* <Link
 						href={`/kepegawaian/data_pegawai/edit/${props.data?.biodata.nik}`}
 					>
 						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
 							<PencilIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Edit</span>
 						</DropdownMenuItem>
-					</Link>
+					</Link> */}
 
 					<Link href={`/kepegawaian/pendukung/pendidikan/${props.data?.biodata.nik}`}>
 						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">

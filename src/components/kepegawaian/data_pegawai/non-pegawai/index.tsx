@@ -26,7 +26,7 @@ const TabBiodataNonPegawai = () => {
                         Daftar Biodata Non Pegawai
                     </CardDescription>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="grid">
                     <SearchBuilder columns={biodataTableColumns} />
                     <Table>
                         <TableHeadBuilder columns={biodataTableColumns} />

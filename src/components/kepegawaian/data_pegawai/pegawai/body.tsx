@@ -2,7 +2,7 @@ import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
-import KepegawaianTableAction from "../table-action";
+import KepegawaianTableAction from "./table-action";
 import { useRingkasanPegawaiStore } from "@store/kepegawaian/data_pegawai/ringkasan-pegawai-store";
 
 type PegawaiTableBodyProps = {
@@ -31,7 +31,7 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
                     <TableCell className="border-x whitespace-nowrap">{row.biodata.statusKawin.replace("_", " ")}</TableCell>
                     <TableCell className="border-x">{" "}</TableCell>
                     <TableCell className="border-x">{" "}</TableCell>
-                    <TableCell className="border-x whitespace-nowrap">{row.statusPegawai.nama}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{row.statusPegawai}</TableCell>
                 </TableRow>
             ))}
         </TableBody>
