@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
-import { ProfesiMini } from "./profesi";
+import type { ProfesiMini } from "./profesi";
 
 export interface AlatKerjaMini {
 	id: number;
@@ -12,7 +12,7 @@ export interface AlatKerja extends AlatKerjaMini {}
 
 export const AlatKerjaSchema = z.object({
 	id: z.number(),
-	nama: z.string({ required_error: "Nama Alat Kerja harus diisi" }),
+	nama: z.string().min(3, { message: "Nama Alat Kerja wajib diisi" }),
 	profesiId: z.number().min(1, "Profesi harus dipilih"),
 });
 

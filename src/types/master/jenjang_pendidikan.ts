@@ -9,13 +9,11 @@ export interface JenjangPendidikan {
 
 export const JenjangPendidikanSchema = z.object({
 	id: z.number(),
-	nama: z.string({
-		required_error: "Nama Jenis Kitas Wajib Diisi",
-	}),
+	nama: z.string().min(3, { message: "Nama Jenis Kitas Wajib Diisi" }),
 	seq: z.number().min(1, "Urut Wajib Diisi"),
 });
 
-export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
+export const jenjangPendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",
@@ -23,6 +21,14 @@ export const jenjangPendidikanTableColumn: CustomColumnDef[] = [
 		search: true,
 		searchType: "text",
 	},
-	{ id: "seq", label: "Urut" },
+	{ id: "seq", label: "Urut Jenjang Pendidikan" },
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findJenjangPendidikanValue = (
+	list: JenjangPendidikan[],
+	id: number | string | null,
+) => {
+	const result = list.find((row) => row.id === Number(id));
+	return !result ? { nama: "Pilih Pendidikan Terakhir" } : result;
+};

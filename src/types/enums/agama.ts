@@ -13,3 +13,9 @@ export const AGAMA = [
 export const Agama = z.enum(AGAMA);
 
 export type Agama = z.infer<typeof Agama>;
+
+export const findAgamaIndex = (searchAgama?: string): number => {
+	if (!searchAgama) return 0;
+	const idx = AGAMA.findIndex((agama) => agama === searchAgama);
+	return idx < 0 ? 0 : idx;
+};

@@ -11,26 +11,27 @@ import { extracNipamFromToken } from "@helpers/index";
 import { getEmployeeByNipam } from "@lib/appwrite/employee";
 import { getCurrentUser } from "@lib/appwrite/user";
 import { KeyRoundIcon } from "lucide-react";
-import { cookies } from "next/headers";
 import Image from "next/image";
 import LogoutButton from "./button/logout";
 import ThemeButton from "./button/theme";
 import EmployeeStateComponent from "./employee-state";
+import { Suspense } from "react";
 
 const ProfileComponent = async () => {
-    const cookieList = cookies();
     const nipam = extracNipamFromToken();
     if (!nipam) return null;
 
     // Menggunakan destructuring untuk memperjelas assignment
     const [user, employee] = await Promise.all([
-        getCurrentUser(cookieList),
+        getCurrentUser(),
         getEmployeeByNipam(nipam),
     ]);
 
     return (
         <div className="flex items-center gap-3 py-2">
-            <EmployeeStateComponent userAccount={user} employee={employee} />
+            <Suspense fallback={<div>Loading...</div>}>
+                <EmployeeStateComponent userAccount={user} employee={employee} />
+            </Suspense>
             <div className="hidden md:block lg:block">
                 <div className="flex flex-col">
                     <h6 className="font-medium text-foreground">{user.name}</h6>

@@ -49,7 +49,7 @@ export const menus: IMenu[] = [
         role: "USER",
         subMenu: [
             {
-                path: "/",
+                path: "/dashboard",
                 name: "Dashboard",
                 icon: <HomeIcon className={defaultIconClassName} />,
                 role: "USER",

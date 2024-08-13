@@ -1,9 +1,9 @@
-import { z } from "zod"
+import { z } from "zod";
 export const Prefs = z.object({
 	roles: z.array(z.string()),
-})
+});
 
-export type Prefs = z.infer<typeof Prefs>
+export type Prefs = z.infer<typeof Prefs>;
 
 export const User = z.object({
 	$id: z.string(),
@@ -18,5 +18,5 @@ export const User = z.object({
 	emailVerification: z.boolean(),
 	phoneVerification: z.boolean(),
 	prefs: Prefs,
-})
-export type User = z.infer<typeof User>
+});
+export type User = z.infer<typeof User>;

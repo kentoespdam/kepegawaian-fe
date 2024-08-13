@@ -10,3 +10,9 @@ export const STATUS_KAWIN = [
 export const StatusKawin = z.enum(STATUS_KAWIN);
 
 export type StatusKawin = z.infer<typeof StatusKawin>;
+
+export const findStatusKawinIndex = (statusKawin?: string) => {
+	if (!statusKawin) return 0;
+	const cari = STATUS_KAWIN.findIndex((row) => row === statusKawin);
+	return cari < 0 ? 0 : cari;
+};

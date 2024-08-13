@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	experimental: {
+		extensionAlias: {
+			".js": [".tsx", ".ts", ".jsx", ".js"],
+		},
+	},
 	images: {
 		remotePatterns: [
 			{
@@ -14,6 +19,18 @@ const nextConfig = {
 		locales: ["id_ID"],
 		defaultLocale: "id_ID",
 	},
-}
+	webpack: (config) => {
+		config.module.rules.push({
+			test: /\.node$/,
+			use: "node-loader",
+		});
+		config.resolve.alias.canvas = false;
+		config.resolve.alias.encoding = false;
+		config.resolve.fallback = {
+			fs: false,
+		};
+		return config;
+	},
+};
 
-export default nextConfig
+export default nextConfig;

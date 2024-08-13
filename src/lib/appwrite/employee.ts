@@ -1,11 +1,12 @@
-import { Pegawai } from "@_types/pegawai"
-import { delay } from "@lib/utils"
+import { STATUS_KAWIN } from "@_types/enums/status_kawin";
+import type { Pegawai } from "@_types/pegawai";
+import { delay } from "@lib/utils";
 
 export const getEmployeeByNipam = async (
 	nipam: string,
 ): Promise<Pegawai | undefined> => {
 	try {
-		await delay()
+		await delay();
 		// Contoh data pegawai, seharusnya diambil dari database atau API
 		const employee: Pegawai = {
 			id: 1,
@@ -14,12 +15,15 @@ export const getEmployeeByNipam = async (
 				nik: "33021123456789",
 				nama: "Bagus Sudrajat",
 				jenisKelamin: "LAKI_LAKI",
-                tanggalLahir: "2000-01-01",
+				tanggalLahir: "2000-01-01",
+				statusKawin: STATUS_KAWIN[1],
 			},
 			statusPegawai: {
 				id: 3,
 				nama: "PEGAWAI",
 			},
+			nomorSk: "123456789",
+			tanggalSk: "2022-01-01",
 			jabatan: {
 				id: 3,
 				level: {
@@ -30,7 +34,7 @@ export const getEmployeeByNipam = async (
 			},
 			organisasi: {
 				id: 3,
-				organisasi: {
+				parent: {
 					id: 2,
 					nama: "DIREKTORAT UTAMA",
 				},
@@ -47,7 +51,7 @@ export const getEmployeeByNipam = async (
 				resiko: null,
 				nama: "Manajer Produksi & Distribusi 1",
 				apdList: null,
-                alatKerjaList: null,
+				alatKerjaList: null,
 			},
 			golongan: {
 				id: 1,
@@ -68,13 +72,13 @@ export const getEmployeeByNipam = async (
 				nama: "Karyawan Aktif",
 			},
 			notes: null,
-		}
+		};
 		// Mengembalikan data pegawai jika nipam cocok
 		if (employee.nipam === nipam) {
-			return employee
+			return employee;
 		}
-		return undefined
+		return undefined;
 	} catch (e) {
-		console.error("Terjadi kesalahan saat mengambil data pegawai:", e)
+		console.error("Terjadi kesalahan saat mengambil data pegawai:", e);
 	}
-}
+};
