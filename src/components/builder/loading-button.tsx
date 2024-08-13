@@ -1,5 +1,5 @@
 "use client";
-import { ButtonProps, buttonVariants } from "@components/ui/button";
+import { type ButtonProps, buttonVariants } from "@components/ui/button";
 import { cn } from "@lib/utils";
 import { Slot } from "@radix-ui/react-slot";
 import { RefreshCwIcon } from "lucide-react";

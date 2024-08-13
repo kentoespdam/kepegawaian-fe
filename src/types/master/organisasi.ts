@@ -7,29 +7,25 @@ export interface OrganisasiMini {
 }
 
 export interface Organisasi extends OrganisasiMini {
-	organisasi: OrganisasiMini | null;
+	parent: OrganisasiMini | null;
 	levelOrganisasi: number;
 }
 
 export const OrganisasiSchema = z.object({
-	id: z.optional(z.number()),
+	id: z.number(),
 	parentId: z.optional(z.number()),
 	levelOrganisasi: z
 		.number()
-		.min(1, { message: "Level Organisasi is required" }),
-	nama: z.string({ required_error: "Nama Organisasi is required" }),
+		.min(1, { message: "Level Organisasi wajib diisi" }),
+	nama: z
+		.string({ required_error: "Nama Organisasi wajib diisi" })
+		.min(3, { message: "Nama Organisasi wajib diisi" }),
 });
 
 export const organisasiTableColumns: CustomColumnDef[] = [
 	{
 		id: "urut",
 		label: "No",
-	},
-	{
-		id: "nama",
-		label: "Nama Organisasi",
-		search: true,
-		searchType: "text",
 	},
 	{
 		id: "parentId",
@@ -39,10 +35,27 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 	},
 	{
 		id: "levelOrganisasi",
-		label: "Level Organisasi",
+		label: "Level",
+		search:true,
+		searchType: "level",
+	},
+	{
+		id: "nama",
+		label: "Nama Organisasi",
+		search: true,
+		searchType: "text",
 	},
 	{
 		id: "aksi",
 		label: "Aksi",
 	},
 ];
+
+export const findOrganisasiValue = (
+	list: OrganisasiMini[],
+	id: string | number,
+): OrganisasiMini => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Organisasi" };
+	return cari;
+};

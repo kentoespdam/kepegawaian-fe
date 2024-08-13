@@ -8,10 +8,12 @@ export interface JenisKeahlian {
 
 export const JenisKeahlianSchema = z.object({
 	id: z.number(),
-	nama: z.string({ required_error: "Nama Jenis Keahlian wajib diisi" }),
+	nama: z
+		.string({ required_error: "Nama Jenis Keahlian wajib diisi" })
+		.min(3, { message: "Nama Jenis Keahlian wajib diisi" }),
 });
 
-export const jenisKeahlianTableColumn: CustomColumnDef[] = [
+export const jenisKeahlianTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",
@@ -21,3 +23,8 @@ export const jenisKeahlianTableColumn: CustomColumnDef[] = [
 	},
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findJenisKeahlianValue = (list: JenisKeahlian[], id: number) => {
+	const result = list.find((row) => row.id === id);
+	return !result ? { nama: "Pilih Keahlian" } : result;
+};

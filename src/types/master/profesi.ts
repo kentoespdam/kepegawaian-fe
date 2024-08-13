@@ -18,11 +18,17 @@ export interface Profesi extends ProfesiMini {
 }
 
 export const ProfesiSchema = z.object({
-	id: z.optional(z.number()),
-	levelId: z.number().min(1, "Level is required"),
-	nama: z.string({ required_error: "Nama is required" }),
-	detail: z.string({ required_error: "Detail is required" }),
-	resiko: z.string({ required_error: "Resiko is required" }),
+	id: z.number(),
+	levelId: z.number().min(1, "Level wajib diisi"),
+	nama: z
+		.string({ required_error: "Nama wajib diisi" })
+		.min(3, { message: "Nama wajib diisi" }),
+	detail: z
+		.string({ required_error: "Detail wajib diisi" })
+		.min(1, { message: "Detail wajib diisi" }),
+	resiko: z
+		.string({ required_error: "Resiko wajib diisi" })
+		.min(1, { message: "Resiko wajib diisi" }),
 });
 
 export const profesiTableColumns: CustomColumnDef[] = [
@@ -51,12 +57,29 @@ export const profesiTableColumns: CustomColumnDef[] = [
 		label: "Resiko",
 	},
 	{
+		id: "apdList",
+		label: "Apd",
+	},
+	{
+		id: "alatKerjaList",
+		label: "Alat Kerja",
+	},
+	{
 		id: "aksi",
 		label: "Aksi",
 	},
 ];
 
-export const findValue = (
+export const findProfesiValue = (
 	list: ProfesiMini[],
 	id: string | number | null,
-): ProfesiMini | undefined => list.find((row) => row.id === Number(id));
+): ProfesiMini => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari)
+		return {
+			id: 0,
+			nama: "Pilih Profesi",
+		};
+
+	return cari;
+};

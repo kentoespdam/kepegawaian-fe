@@ -8,12 +8,14 @@ export interface JenisPelatihan {
 
 export const JenisPelatihanSchema = z.object({
 	id: z.number(),
-	nama: z.string({
-		required_error: "Nama Jenis Kitas Wajib Diisi",
-	}),
+	nama: z
+		.string({
+			required_error: "Nama Jenis Kartu identitas Wajib Diisi",
+		})
+		.min(3, { message: "Nama Jenis Kartu identitas Wajib Diisi" }),
 });
 
-export const jenisPelatihanTableColumn: CustomColumnDef[] = [
+export const jenisPelatihanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{
 		id: "nama",
@@ -23,3 +25,8 @@ export const jenisPelatihanTableColumn: CustomColumnDef[] = [
 	},
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findJenisPelatihanValue = (list: JenisPelatihan[], id: number) => {
+	const result = list.find((row) => row.id === id);
+	return !result ? { nama: "Pilih Jenis Pelatihan" } : result;
+};

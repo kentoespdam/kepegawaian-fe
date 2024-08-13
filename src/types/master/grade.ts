@@ -9,14 +9,12 @@ export interface Grade {
 	tukin: number;
 }
 
-export const GradeForm = z.object({
-	id: z.optional(z.number()),
+export const GradeSchema = z.object({
+	id: z.number(),
 	levelId: z.number().min(1, "Level is required"),
 	grade: z.number().min(1, "Min Grade is 1"),
 	tukin: z.number().min(50_000, "Min Tukin is 50.000"),
 });
-
-export type GradeForm = z.infer<typeof GradeForm>;
 
 export const gradeTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -25,3 +23,9 @@ export const gradeTableColumns: CustomColumnDef[] = [
 	{ id: "tukin", label: "Tukin" },
 	{ id: "aksi", label: "Aksi" },
 ];
+
+export const findGradeValue = (list: Grade[], id: number | string) => {
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, level: { nama: "" }, grade: 0, tukin: 0 };
+	return cari;
+};

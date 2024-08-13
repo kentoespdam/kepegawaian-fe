@@ -1,3 +1,4 @@
+"use client"
 import {
     Command,
     CommandEmpty,
@@ -7,13 +8,17 @@ import {
     CommandList,
 } from "@components/ui/command";
 import { SheetClose } from "@components/ui/sheet";
-import { IMenu, menus } from "@lib/index";
+import { menus, type IMenu } from "@lib/index";
+import { cn } from "@lib/utils";
+import { CheckIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 type MenuListBuilderProps = {
     menu: IMenu;
 };
 const MenulistBuilder = (props: MenuListBuilderProps) => {
+    const pathName = usePathname()
     return props.menu.type === "group" ? (
         <CommandGroup heading={props.menu.name}>
             {props.menu.subMenu?.length === 0
@@ -23,14 +28,23 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
                 ))}
         </CommandGroup>
     ) : (
-        <Link href={props.menu.path} className="cursor pointer">
-            <SheetClose asChild>
-                <CommandItem className="cursor-pointer gap-2 pl-4">
+        <SheetClose asChild>
+            <Link href={props.menu.path} className="cursor pointer">
+                <CommandItem
+                    className={
+                        cn(
+                            "cursor-pointer gap-2 pl-4",
+                            pathName.includes(props.menu.path) ?
+                                "bg-primary text-primary-foreground" :
+                                ""
+                        )}
+                >
                     {props.menu.icon}
                     {props.menu.name}
+                    {pathName.startsWith(props.menu.path) ? <CheckIcon className="ml-auto" /> : null}
                 </CommandItem>
-            </SheetClose>
-        </Link>
+            </Link>
+        </SheetClose>
     );
 };
 

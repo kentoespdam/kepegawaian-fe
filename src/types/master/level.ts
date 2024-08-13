@@ -8,9 +8,9 @@ export interface Level {
 
 export const LevelSchema = z.object({
 	id: z.number(),
-	nama: z.string({
-		required_error: "Nama wajib diisi",
-	}),
+	nama: z
+		.string({ required_error: "Nama Wajib diisi" })
+		.min(3, { message: "Nama Wajib diisi" }),
 });
 
 export const levelTableColumns: CustomColumnDef[] = [
@@ -29,3 +29,13 @@ export const levelTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 ];
+
+export const findLevelValue = (
+	list: Level[],
+	id: string | number | null,
+): Level => {
+	if (!id) return { id: 0, nama: "Pilih Level" };
+	const cari = list.find((row) => row.id === Number(id));
+	if (!cari) return { id: 0, nama: "Pilih Level" };
+	return cari;
+};

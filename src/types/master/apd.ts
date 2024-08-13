@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
-import { ProfesiMini } from "./profesi";
+import type { ProfesiMini } from "./profesi";
 
 export interface ApdMini {
 	id: number;
@@ -10,9 +10,11 @@ export interface ApdMini {
 
 export interface Apd extends ApdMini {}
 
-export const ApdForm = z.object({
+export const ApdSchema = z.object({
 	id: z.number(),
-	nama: z.string({ required_error: "Apd is required" }),
+	nama: z
+		.string({ required_error: "Nama Apd wajib diisi" })
+		.min(3, { message: "Nama Apd wajib diisi" }),
 	profesiId: z.number().min(1, "Profesi is required"),
 });
 
