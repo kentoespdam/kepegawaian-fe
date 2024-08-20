@@ -1,22 +1,19 @@
-import AddMutasiButton from "@components/kepegawaian/detail/jabatan/button/add-mutasi-button";
-import MutasiContentComponent from "@components/kepegawaian/detail/jabatan/content";
-
 export const metadata = {
-	title: "Data Jabatan & Unit Kerja",
+	title: "Data Penggunaan Hak Cuti",
 };
 
-const DetailJabatan = ({ params }: { params: { id: number } }) => {
+const DetailCuti = ({ params }: { params: { id: number } }) => {
 	return (
 		<div className="grid min-h-screen w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
 					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 						<span className="text-md font-semibold">{metadata.title}</span>
-						{<AddMutasiButton pegawaiId={params.id} />}
+						{/* <AddMutasiButton pegawaiId={params.id} /> */}
 					</header>
 					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							<MutasiContentComponent pegawaiId={params.id} />
+							{/* <MutasiContentComponent pegawaiId={params.id} /> */}
 						</div>
 					</main>
 				</div>
@@ -40,4 +37,4 @@ const DetailJabatan = ({ params }: { params: { id: number } }) => {
 	);
 };
 
-export default DetailJabatan;
+export default DetailCuti;

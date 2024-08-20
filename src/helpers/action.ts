@@ -1,6 +1,6 @@
 "use server";
 import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
-import type { BaseResult, Pageable } from "@_types/index";
+import type { BaseDelete, BaseResult, Pageable } from "@_types/index";
 import { API_URL } from "@lib/utils";
 import type { QueryKey } from "@tanstack/react-query";
 import { cookies } from "next/headers";
@@ -21,6 +21,29 @@ interface baseProps {
 interface getDataProps extends baseProps {
 	searchParams?: string;
 }
+
+export const globalGetData = async <TData>(
+	props: getDataProps,
+): Promise<TData> => {
+	const controller = new AbortController();
+
+	const basePath = props.isRoot ? API_URL : `${API_URL}`;
+	const url = `${basePath}/${props.path}?${props.searchParams}`;
+	const headers = setAuthorizeHeader(cookies());
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	const response = await fetch(url, {
+		method: "GET",
+		headers,
+		signal: controller.signal,
+		cache: "no-cache",
+	});
+
+	const result: BaseResult<TData> = await response.json();
+	clearTimeout(timeoutId);
+	return result.data;
+};
+
 /**
  * Retrieves data for a pageable list of TData.
  * @param props - The URL path and search parameters for filtering the data.
@@ -176,4 +199,40 @@ export const acceptLampiranProfilData = async (
 	clearTimeout(timeoutId);
 
 	return await response.json();
+};
+
+interface globalDeleteDataProps extends baseProps {
+	id: number | string;
+	formData: BaseDelete;
+}
+/**
+ * Deletes a data record by id.
+ * @param props - The URL path and id for the data record to delete.
+ * @returns A Promise that resolves to the deleted data record.
+ **/
+export const globalDeleteData = async (props: globalDeleteDataProps) => {
+	const id = Number(props.formData.id.split("-")[1]);
+	if (id !== Number(props.formData.curId))
+		return {
+			status: 400,
+			statusText: "Bad Request",
+			errors: "invalid data",
+		};
+
+	const url = `${API_URL}/${props.path}/${props.id}`;
+	const headers = setAuthorizeHeader(cookies());
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	const response = await fetch(url, {
+		method: "DELETE",
+		headers,
+		signal: controller.signal,
+		cache: "no-cache",
+	});
+
+	const result = await response.json();
+	clearTimeout(timeoutId);
+
+	return result;
 };

@@ -15,6 +15,8 @@ export const BaseId = z.object({
 	id: z.number(),
 });
 
+export type BaseId = z.infer<typeof BaseId>;
+
 export const BaseDelete = z.object({
 	id: z.string().startsWith("DELETE-", {
 		message: "invalid delete code!",

@@ -16,15 +16,14 @@ const InputZod = <TData extends FieldValues>({
 	form,
 	type = "text",
 	disabled,
+	className,
 }: InputZodProps<TData>) => (
 	<FormField
 		control={form.control}
 		name={id}
 		render={({ field }) => (
-			<FormItem className={cn(type === "hidden" && "hidden")}>
-				<FormLabel>
-					{label}
-				</FormLabel>
+			<FormItem className={cn(type === "hidden" && "hidden", className)}>
+				<FormLabel>{label}</FormLabel>
 				<FormControl>
 					<Input
 						type={type}

@@ -31,7 +31,7 @@ const DatePickerZod = <TData extends FieldValues>({
 								value={{ startDate: field.value, endDate: field.value }}
 								onChange={(val) => {
 									field.onChange(val?.startDate?.toString() ?? "");
-									console.log(val);
+									// console.log(val);
 								}}
 							/>
 						</FormControl>

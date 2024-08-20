@@ -1,7 +1,5 @@
-import type { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import { OFFICE_TYPE } from "@_types/index";
-import type { LampiranProfil } from "@_types/profil/lampiran";
-import { getFile } from "@app/kepegawaian/profil/lampiran/action";
+import type { LampiranSk } from "@_types/kepegawaian/lampiran_sk";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import {
@@ -12,9 +10,8 @@ import {
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { ButtonLink } from "@components/ui/link";
-import { acceptLampiranProfilData } from "@helpers/action";
 import { base64toBlob } from "@helpers/string";
-import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
+import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useMutation } from "@tanstack/react-query";
 import {
@@ -25,49 +22,50 @@ import {
 	EyeIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
+import { acceptLampiranSk, getFile } from "../action";
 
-interface LampiranProfilTableActionProps {
-	data: LampiranProfil;
-	jenis: JenisLampiranProfil;
+type LampiranSkTableActionProps = {
+	data: LampiranSk;
 	rootKey: string;
-}
-const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
-	const { id, refId, fileName, mimeType } = props.data;
+};
+const LampiranSkTableAction = ({
+	data,
+	rootKey,
+}: LampiranSkTableActionProps) => {
+	const { id, ref, refId, fileName, mimeType } = data;
 	const path = usePathname();
-	const { setLampiranId, setRefId, setOpenDeleteDialog, setOpenLampiran } =
-		useLampiranProfilStore((state) => ({
+
+	const { setLampiranId, setRefId, setOpenDeleteLampiranForm } =
+		useLampiranSkStore((state) => ({
 			setLampiranId: state.setLampiranId,
 			setRefId: state.setRefId,
-			setOpenDeleteDialog: state.setOpenDeleteDialog,
-			setOpenLampiran: state.setOpenLampiran,
+			setOpenDeleteLampiranForm: state.setOpenDeleteLampiranForm,
 		}));
-	const acceptMutation = useGlobalMutation({
-		mutationFunction: acceptLampiranProfilData,
-		queryKeys: [[props.rootKey, refId]],
-	});
 
-	const deleteHandler = () => {
-		setLampiranId(id);
-		setRefId(refId);
-		setOpenDeleteDialog(true);
-	};
+	const acceptMutation = useGlobalMutation({
+		mutationFunction: acceptLampiranSk,
+		queryKeys: [[rootKey, ref, refId]],
+	});
 
 	const acceptHandler = () => {
 		const c = confirm("Apakah anda yakin ingin menyetujui data ini?");
 		if (!c) return;
 
 		acceptMutation.mutate({
-			path: "profil/lampiran/accept",
-			data: {
-				id: id,
-				ref: props.jenis,
-				refId: refId,
-			},
+			id: id,
+			ref: ref,
+			refId: refId,
 		});
 	};
 
+	const deleteHandler = () => {
+		setLampiranId(id);
+		setRefId(refId);
+		setOpenDeleteLampiranForm(true);
+	};
+
 	const downloadFile = useMutation({
-		mutationFn: () => getFile(props.jenis, id),
+		mutationFn: () => getFile(ref, id),
 		onSuccess: (data) => {
 			const blob = base64toBlob(data.base64, data.type);
 			const url = URL.createObjectURL(blob);
@@ -94,7 +92,7 @@ const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 					</Button>
 				) : (
 					<ButtonLink
-						href={`/kepegawaian/profil/lampiran/${props.jenis}/${id}?path=${path}`}
+						href={`/kepegawaian/lampiran/${ref}/${id}?path=${path}`}
 						size="icon"
 						className="h-6 w-6"
 						variant="ghost"
@@ -131,4 +129,4 @@ const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 	);
 };
 
-export default LampiranProfilTableAction;
+export default LampiranSkTableAction;

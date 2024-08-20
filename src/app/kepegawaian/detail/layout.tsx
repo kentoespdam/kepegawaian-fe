@@ -3,7 +3,6 @@ import { Home, Package2, Undo2Icon, UndoIcon } from "lucide-react";
 import Link from "next/link";
 
 import CustomQueryProvider from "@components/providers/query";
-import { Toaster } from "@components/ui/toaster";
 import type { ChildrenNode } from "@lib/index";
 import { QueryClient } from "@tanstack/react-query";
 import { ButtonLink } from "@components/ui/link";
@@ -11,6 +10,7 @@ import TooltipBuilder from "@components/builder/tooltip";
 import { Separator } from "@components/ui/separator";
 import { usePathname } from "next/navigation";
 import { cn } from "@lib/utils";
+import { Toaster } from "@components/ui/sonner";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -121,7 +121,7 @@ const Layout = ({ children }: ChildrenNode) => {
 
 				{children}
 			</div>
-			<Toaster />
+			<Toaster richColors />
 		</CustomQueryProvider>
 	);
 };
