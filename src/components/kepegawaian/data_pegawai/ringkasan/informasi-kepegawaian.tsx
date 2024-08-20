@@ -9,9 +9,9 @@ const InformasiKepegawaian = ({ pegawai }: InformasiKepegawaianProps) => {
     return (
         <Fieldset title="Informasi Kepegawaian">
             <div className="w-full grid gap-1">
-                <RingkasanContent field="Status" value={pegawai?.statusPegawai.nama} />
+                <RingkasanContent field="Status" value={pegawai?.statusPegawai} />
                 <RingkasanContent field="Pangkat Golongan" value={`${pegawai?.golongan.golongan} - ${pegawai?.golongan.pangkat}`} />
-                <RingkasanContent field="TMT Golongan" value={pegawai?.tanggalSk} />
+                <RingkasanContent field="TMT Golongan" value={pegawai?.tmtGolongan} />
                 <RingkasanContent field="Masa Kerja Golongan" value={""} />
                 <RingkasanContent field="Unit Kerja" value={pegawai?.organisasi.nama} />
                 <RingkasanContent field="Jabatan" value={""} />

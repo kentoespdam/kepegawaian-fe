@@ -14,14 +14,14 @@ export interface BasePegawai {
 	statusPegawai: string;
 	statusKerja: string;
 	nomorSk: string;
-	tmtKerja: string;
+	tmtKerja: string | null;
 	biodata: BiodataMini;
 	organisasi: Organisasi;
 	jabatan: JabatanMini;
 	profesi: Profesi;
 	golongan: Golongan;
 	grade: Grade;
-	tmtPensiun: string;
+	tmtPensiun: string | null;
 	gajiPokok: number;
 	phdp: number;
 	jmlTanggungan: number;
@@ -43,16 +43,16 @@ export interface PegawaiDetail extends BasePegawai {
 
 export interface Pegawai extends BasePegawai {
 	refSkCapegId: number;
-	tmtKerja: string;
-	tmtPensiun: string;
+	tmtKerja: string | null;
+	tmtPensiun: string | null;
 	refSkPegawaiId: number;
-	tmtPegawai: string;
+	tmtPegawai: string | null;
 	refSkGolonganId: number;
-	tmtGolongan: string;
+	tmtGolongan: string | null;
 	refSkJabatanId: number;
-	tmtJabatan: string;
+	tmtJabatan: string | null;
 	refSkMutasiId: number;
-	tmtMutasi: string;
+	tmtMutasi: string | null;
 }
 
 export const PegawaiSchema = BiodataSchema.extend({
