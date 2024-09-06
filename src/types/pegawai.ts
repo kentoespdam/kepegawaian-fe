@@ -66,8 +66,8 @@ export const PegawaiSchema = BiodataSchema.extend({
 	gradeId: z.number().optional(),
 	golonganId: z.number().optional(),
 	nomorSk: z.string().optional(),
-	tmtBerlakuSk: z.string().optional(),
 	tanggalSk: z.string().optional(),
+	tmtBerlakuSk: z.string().optional(),
 	tmtKontrakSelesai: z.string().optional(),
 	gajiPokok: z.number().optional().default(0),
 }).superRefine((val, ctx) => {

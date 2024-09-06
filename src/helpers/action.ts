@@ -159,7 +159,7 @@ export const getListData = async <TData>(
 			cache: "no-cache",
 		});
 
-		if (!response.ok) throw new Error(await response.text());
+		// if (!response.ok) throw Error(await response.text());
 
 		const result: BaseResult<TData[]> = await response.json();
 		return result.data;
@@ -193,8 +193,6 @@ export const acceptLampiranProfilData = async (
 		cache: "no-cache",
 		body: JSON.stringify(props.data),
 	});
-
-	if (!response.ok) throw new Error(await response.text());
 
 	clearTimeout(timeoutId);
 
