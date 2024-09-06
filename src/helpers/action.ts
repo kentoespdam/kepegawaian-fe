@@ -149,8 +149,6 @@ export const getListData = async <TData>(
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
 
-	const retry = props.retry ?? 0;
-
 	try {
 		const response = await fetch(url, {
 			method: "GET",
@@ -159,14 +157,10 @@ export const getListData = async <TData>(
 			cache: "no-cache",
 		});
 
-		// if (!response.ok) throw Error(await response.text());
-
 		const result: BaseResult<TData[]> = await response.json();
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
-		if (error.status === 401 && retry < 3)
-			return await getListData({ ...props, retry: retry + 1 });
 		console.error(error);
 		throw error;
 	} finally {

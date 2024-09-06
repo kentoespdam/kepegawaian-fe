@@ -26,13 +26,13 @@ const InputZod = <TData extends FieldValues>({
 				<FormLabel>{label}</FormLabel>
 				<FormControl>
 					<Input
-						type={type}
+						type={type === "text" ? "text" : "number"}
 						step={type === "float" ? 0.01 : undefined}
 						placeholder={`Masukkan ${label}`}
 						disabled={disabled}
 						{...field}
 						onChange={(event) =>
-							type === "number"
+							type === "number" || type === "float"
 								? field.onChange(+event.target.value)
 								: field.onChange(event.target.value)
 						}
