@@ -8,7 +8,7 @@ import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter, useSearchParams } from "next/navigation"
-import React from "react"
+import React, { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import type { BaseSearchProps } from "./component"
 
@@ -28,6 +28,10 @@ const SearchLevelBuilder = ({ col, val }: BaseSearchProps) => {
             return result
         }
     })
+
+    useEffect(() => {
+        if (val) setValue(val)
+    }, [val])
 
     const handleSelect = useDebouncedCallback((val: number) => {
         setValue(String(val))

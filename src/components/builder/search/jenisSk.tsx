@@ -1,7 +1,4 @@
-import {
-	findJenjangPendidikanValue,
-	type JenjangPendidikan,
-} from "@_types/master/jenjang_pendidikan";
+import type { JenisSk } from "@_types/master/jenis_sk";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -15,16 +12,16 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { globalGetData } from "@helpers/action";
 import { cn } from "@lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
+import { ChevronDownIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { BaseSearchProps } from "./component";
 
-const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
+const JenisSkSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 	const { replace } = useRouter();
@@ -32,17 +29,17 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const [value, setValue] = React.useState(val ?? "");
 
 	const query = useQuery({
-		queryKey: ["jenjang-pendidikan-list"],
+		queryKey: ["jenis_sk"],
 		queryFn: async () => {
-			const result = await getListData<JenjangPendidikan>({
-				path: "jenjang_pendidikan",
+			const result = await globalGetData<JenisSk[]>({
+				path: "master/jenis-sk",
 			});
 			return result;
 		},
 	});
 
-	const handleSelect = useDebouncedCallback((val: number) => {
-		setValue(String(val));
+	const handleSelect = useDebouncedCallback((val: string) => {
+		setValue(val);
 		setOpen(false);
 		if (!val) search.delete(col.id);
 		else search.set(col.id, String(val));
@@ -50,27 +47,30 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	}, 500);
 
 	useEffect(() => {
-        setValue(val ?? "")
-    }, [val])
+		setValue(val ?? "");
+	}, [val]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
 			<PopoverTrigger asChild>
 				<Button
-					variant={"outline"}
+					variant="outline"
 					role="combobox"
-					aria-expanded={open}
-					className="w-full justify-between"
-				>
-					{value && val !== "" ? (
-						findJenjangPendidikanValue(query.data ?? [], value)?.nama.substring(
-							0,
-							20,
-						)
-					) : (
-						<span className="opacity-50">Cari Pendidikan</span>
+					className={cn(
+						"w-full justify-between",
+						!value ? "text-muted-foreground" : "",
 					)}
-					<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+				>
+					<span className="text-left flex-1 truncate">
+						{!query.data
+							? "Jenis SK tidak ditemukan"
+							: query.isLoading || query.isFetching
+								? "Loading..."
+								: value
+									? query.data.find((item) => item.id === value)?.nama
+									: "Pilih Jenis Surat Keputusan"}
+					</span>
+					<ChevronDownIcon className="h-4 w-4 opacity-50" />
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="p-0">
@@ -78,22 +78,15 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 					<CommandInput placeholder="Type to search..." className="h-9" />
 					<CommandList>
 						<CommandEmpty>No results found.</CommandEmpty>
-						{query.data?.map((jabatan) => (
+						{query.data?.map((item) => (
 							<CommandItem
-								key={jabatan.id}
+								key={item.id}
+								value={item.id}
 								onSelect={() => {
-									handleSelect(jabatan.id);
+									handleSelect(item.id);
 								}}
 							>
-								{jabatan.nama}
-								<CheckIcon
-									className={cn(
-										"ml-auto h-4 w-4",
-										val !== "" && value === String(jabatan.id)
-											? "opacity-100"
-											: "opacity-0",
-									)}
-								/>
+								{item.nama}
 							</CommandItem>
 						))}
 					</CommandList>
@@ -103,4 +96,4 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	);
 };
 
-export default JenjangPendidikanSearchBuilder;
+export default JenisSkSearchBuilder;
