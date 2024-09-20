@@ -1,9 +1,11 @@
 "use client";
 import { RiwayatSkSchema } from "@_types/kepegawaian/riwayat_sk";
 import type { DetailDasarGaji } from "@_types/penggajian/detail_dasar_gaji";
+import ActionButtonZod from "@components/form/zod/action-button";
 import DatePickerZod from "@components/form/zod/date-picker";
 import SelectGolonganZod from "@components/form/zod/golongan";
 import InputZod from "@components/form/zod/input";
+import SelectJenisSkZod from "@components/form/zod/jenis-sk";
 import TextAreaZod from "@components/form/zod/textarea";
 import YesNoZod from "@components/form/zod/yes-no";
 import { Button } from "@components/ui/button";
@@ -15,11 +17,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveRiwayatSk } from "../action";
-import RiwayatSkFormAction from "./action-button";
-import SelectJenisSkZod from "@components/form/zod/jenis-sk";
 
 const RiwayatSkFormComponent = () => {
 	const { defaultValues, open, setOpen } = useRiwayatSkStore((state) => ({
@@ -40,6 +39,11 @@ const RiwayatSkFormComponent = () => {
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatSk,
 		queryKeys: [["riwayat-sk", defaultValues.pegawaiId, search.toString()]],
+		actHandler: () => {
+			mutation.reset();
+			form.reset();
+			setOpen(false);
+		},
 	});
 
 	const onSubmit = (values: RiwayatSkSchema) => {
@@ -53,13 +57,13 @@ const RiwayatSkFormComponent = () => {
 		form.setValue("gajiPokok", data.nominal);
 	};
 
-	useEffect(() => {
-		if (mutation.isSuccess) {
-			mutation.reset();
-			form.reset();
-			setOpen(false);
-		}
-	}, [mutation, form, setOpen]);
+	// useEffect(() => {
+	// 	if (mutation.isSuccess) {
+	// 		mutation.reset();
+	// 		form.reset();
+	// 		setOpen(false);
+	// 	}
+	// }, [mutation, form, setOpen]);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
@@ -138,7 +142,7 @@ const RiwayatSkFormComponent = () => {
 							<TextAreaZod id="notes" label="Notes" form={form} />
 						</div>
 						<Separator />
-						<RiwayatSkFormAction form={form} isPending={mutation.isPending} />
+						<ActionButtonZod form={form} isPending={mutation.isPending} />
 					</form>
 				</Form>
 			</DialogContent>

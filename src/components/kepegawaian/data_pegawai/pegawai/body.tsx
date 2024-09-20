@@ -47,7 +47,7 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 						{row.biodata.jenisKelamin.replace("_", " ")}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						{row.golongan.golongan} - {row.golongan.pangkat}
+						{row.golongan?.golongan} - {row.golongan?.pangkat}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.jabatan.nama}

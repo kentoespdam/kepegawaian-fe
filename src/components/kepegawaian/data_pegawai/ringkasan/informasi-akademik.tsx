@@ -30,7 +30,7 @@ const InformasiAkademik = ({ bio }: InformasiAkademikProps) => {
 					value={data?.content[0].jenjangPendidikan.nama}
 				/>
 				<RingkasanContent field="Lembaga Pendidikan" value={data?.content[0].institusi} />
-				<RingkasanContent field="Tahun Kelulusan" value={data?.content[0].tahunLulus.toString()} />
+				<RingkasanContent field="Tahun Kelulusan" value={data?.content[0].tahunLulus?.toString()} />
 			</div>
 		</Fieldset>
 	);

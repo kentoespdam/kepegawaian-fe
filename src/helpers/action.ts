@@ -25,22 +25,22 @@ interface getDataProps extends baseProps {
 export const globalGetData = async <TData>(
 	props: getDataProps,
 ): Promise<TData> => {
-	const controller = new AbortController();
+	// const controller = new AbortController();
 
 	const basePath = props.isRoot ? API_URL : `${API_URL}`;
 	const url = `${basePath}/${props.path}?${props.searchParams}`;
 	const headers = setAuthorizeHeader(cookies());
-	const timeoutId = setTimeout(() => controller.abort(), 5000);
+	// const timeoutId = setTimeout(() => controller.abort(), 5000);
 
 	const response = await fetch(url, {
 		method: "GET",
 		headers,
-		signal: controller.signal,
+		// signal: controller.signal,
 		cache: "no-cache",
 	});
 
 	const result: BaseResult<TData> = await response.json();
-	clearTimeout(timeoutId);
+	// clearTimeout(timeoutId);
 	return result.data;
 };
 
@@ -69,9 +69,9 @@ export const getPageData = async <TData>(
 			signal: controller.signal,
 			cache: "no-cache",
 		});
-		if (!response.ok) {
-			throw new Error(await response.text());
-		}
+		// if (!response.ok) {
+		// 	throw new Error(await response.text());
+		// }
 
 		const result: BaseResult<Pageable<TData>> = await response.json();
 		return result.data;

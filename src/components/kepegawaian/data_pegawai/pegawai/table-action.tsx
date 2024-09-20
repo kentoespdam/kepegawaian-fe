@@ -56,7 +56,7 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 						</DropdownMenuItem>
 					</Link>
 
-					<Link href={`/kepegawaian/detail/jabatan/${props.data?.id}`}>
+					<Link href={`/kepegawaian/detail/mutasi/${props.data?.id}`}>
 						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
 							<UserCogIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Data Kepegawaian</span>

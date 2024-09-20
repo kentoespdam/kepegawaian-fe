@@ -29,7 +29,7 @@ const RiwayatSk = ({ params }: { params: { id: number } }) => {
 						<span className="text-md font-semibold">Lampiran</span>
 						<AddLampiranSkButton />
 					</header>
-					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">
+					<main className="flex flex-1 flex-col">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
 							<LampiranSkContent pegawaiId={params.id} />
 						</div>

@@ -14,6 +14,8 @@ import { useSearchParams } from "next/navigation";
 import RiwayatSkFormComponent from "../form";
 import DeleteRiwayatSkDialog from "../form/delete-dialog";
 import RiwayatSkTableBody from "../table/body";
+import PaginationBuilder from "@components/builder/table/pagination";
+import SearchBuilder from "@components/builder/search";
 
 type RiwayatSkContentComponentProps = {
 	pegawaiId: number;
@@ -30,6 +32,7 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 					getPageData<RiwayatSk>({
 						path: `kepegawaian/riwayat/sk/pegawai/${props.pegawaiId}`,
 						isRoot: true,
+						searchParams: search.toString(),
 					}),
 				enabled: !!props.pegawaiId,
 			},
@@ -45,8 +48,9 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
+		<div className="grid p-2 gap-0">
+			<SearchBuilder columns={riwayatSkTableColumns} />
+			<div className="overflow-auto min-h-90">
 				<Table>
 					<TableHeadBuilder columns={riwayatSkTableColumns} />
 					{queries[0].isLoading ||
@@ -69,6 +73,7 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 					) : null}
 				</Table>
 			</div>
+			<PaginationBuilder data={queries[0].data} />
 			<RiwayatSkFormComponent />
 			<DeleteRiwayatSkDialog pegawaiId={props.pegawaiId} />
 		</div>

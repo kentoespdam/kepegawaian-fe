@@ -8,10 +8,6 @@ import { create } from "zustand";
 interface RiwayatSkStore extends SelectedHandlerStore {
 	riwayatSkId: number;
 	setRiwayatSkId: (val: number) => void;
-	open: boolean;
-	setOpen: (val: boolean) => void;
-	openDelete: boolean;
-	setOpenDelete: (val: boolean) => void;
 	defaultValues: RiwayatSkSchema;
 	setDefaultValues: (pegawaiId: number, riwayatSk?: RiwayatSk) => void;
 }

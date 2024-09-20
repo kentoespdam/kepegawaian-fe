@@ -69,7 +69,7 @@ export const PegawaiSchema = BiodataSchema.extend({
 	tanggalSk: z.string().optional(),
 	tmtBerlakuSk: z.string().optional(),
 	tmtKontrakSelesai: z.string().optional(),
-	gajiPokok: z.number().optional().default(0),
+	gajiPokok: z.number().default(0),
 }).superRefine((val, ctx) => {
 	if (val.statusPegawai === "NON_PEGAWAI") return;
 

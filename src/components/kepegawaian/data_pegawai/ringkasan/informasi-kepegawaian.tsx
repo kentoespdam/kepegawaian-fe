@@ -12,7 +12,7 @@ const InformasiKepegawaian = ({ pegawai }: InformasiKepegawaianProps) => {
 				<RingkasanContent field="Status" value={pegawai?.statusPegawai} />
 				<RingkasanContent
 					field="Pangkat Golongan"
-					value={`${pegawai?.golongan.golongan ?? ""} - ${pegawai?.golongan.pangkat ?? ""}`}
+					value={`${pegawai?.golongan?.golongan ?? ""} - ${pegawai?.golongan?.pangkat ?? ""}`}
 				/>
 				<RingkasanContent field="TMT Golongan" value={pegawai?.tmtGolongan} />
 				<RingkasanContent field="Masa Kerja Golongan" value={pegawai?.tmtGolongan} />

@@ -7,3 +7,13 @@ export const base64toBlob = (base64: string, mime: string) => {
 	const byteArray = new Uint8Array(byteNumbers);
 	return new Blob([byteArray], { type: mime });
 };
+
+// change date format to indonesian ${hari}, ${tanggal} ${bulan} ${tahun}
+export const dateToIndonesian = (date: string) => {
+	const d = new Date(date);
+	return `${d.toLocaleDateString("id-ID", {
+		day: "numeric",
+		month: "long",
+		year: "numeric",
+	})}`;
+};
