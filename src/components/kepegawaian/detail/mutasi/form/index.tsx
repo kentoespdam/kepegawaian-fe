@@ -2,11 +2,13 @@
 
 import { RiwayatMutasiSchema } from "@_types/kepegawaian/riwayat-mutasi";
 import InputZod from "@components/form/zod/input";
+import TextAreaZod from "@components/form/zod/textarea";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useGlobalMutation } from "@store/query-store";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
 import { saveRiwayatMutasi } from "../action";
 import RiwayatMutasiFormAction from "../button/form-action";
@@ -14,7 +16,6 @@ import MutasiGolonganForm from "./mutasi_golongan";
 import MutasiJabatanForm from "./mutasi_jabatan";
 import MutasiSkForm from "./mutasi_sk";
 import MutasiPegawaiForm from "./pegawai";
-import TextAreaZod from "@components/form/zod/textarea";
 
 export interface MutasiFormProps {
 	form: UseFormReturn<RiwayatMutasiSchema>;
@@ -28,6 +29,7 @@ const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
 		jenisMutasi: state.jenisMutasi,
 	}));
 
+	const router = useRouter();
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
 
@@ -47,6 +49,12 @@ const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
 		mutation.mutate(values);
 		// console.log(values);
 	};
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	useEffect(() => {
+		if (!defaultValues.nipam)
+			router.push(`/kepegawaian/detail/mutasi/${props.pegawaiId}`);
+	}, []);
 
 	return (
 		<div className="h-full">

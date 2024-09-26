@@ -78,9 +78,14 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 				updateMaster: riwayatMutasi?.skMutasi?.updateMaster ?? false,
 				tglBerakhir: riwayatMutasi?.tglBerakhir ?? "",
 				jenisMutasi: riwayatMutasi?.jenisMutasi ?? "",
-				golonganLamaId: pegawai?.golongan.id ?? 0,
+				golonganLamaId: pegawai
+					? pegawai.statusPegawai === "KOTRAK"
+						? 0
+						: pegawai.golongan?.id
+					: 0,
 				namaGolonganLama:
-					`${pegawai?.golongan.golongan} - ${pegawai?.golongan.pangkat}` ?? "",
+					`${pegawai?.golongan?.golongan} - ${pegawai?.golongan?.pangkat}` ??
+					"",
 				organisasiLamaId: pegawai?.organisasi.id ?? 0,
 				namaOrganisasiLama: pegawai?.organisasi.nama ?? "",
 				jabatanLamaId: pegawai?.jabatan.id ?? 0,

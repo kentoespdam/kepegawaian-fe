@@ -1,5 +1,7 @@
-"use client";
-import { mutasiGetName, type JenisMutasi } from "@_types/master/jenis_mutasi";
+import {
+	jenisKontrakGetName,
+	type JenisKontrak,
+} from "@_types/master/jenis_kontrak";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -21,31 +23,30 @@ import {
 } from "@components/ui/popover";
 import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
-import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useQuery } from "@tanstack/react-query";
-import { CheckIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 
-const JenisMutasiZod = <TData extends FieldValues>({
+const JenisKontrakZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const { jenisMutasi, setJenisMutasi } = useRiwayatMutasiStore((state) => ({
-		jenisMutasi: state.jenisMutasi,
-		setJenisMutasi: state.setJenisMutasi,
+	const { setJenisKontrak } = useRiwayatKontrakStore((state) => ({
+		setJenisKontrak: state.setJenisKontrak,
 	}));
+
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
 		queryKey: ["jenis-mutasi-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisMutasi>({
+			const result = await getListData<JenisKontrak>({
 				path: "master",
-				subPath: "jenis-mutasi",
+				subPath: "jenis-kontrak",
 				isRoot: true,
 			});
 			return result;
@@ -71,8 +72,8 @@ const JenisMutasiZod = <TData extends FieldValues>({
 									)}
 								>
 									{!field.value || field.value === ""
-										? "Pilih Jenis Mutasi"
-										: mutasiGetName(query.data || [], field.value)}
+										? "Pilih Jenis Kontrak"
+										: jenisKontrakGetName(query.data || [], field.value)}
 									<ChevronDownIcon className="h-4 w-4 opacity-50" />
 								</Button>
 							</FormControl>
@@ -87,8 +88,8 @@ const JenisMutasiZod = <TData extends FieldValues>({
 											key={mutasi.id}
 											onSelect={() => {
 												field.onChange(mutasi.id);
+												setJenisKontrak(mutasi);
 												setPop(false);
-												setJenisMutasi(mutasi);
 											}}
 										>
 											{mutasi.nama}
@@ -112,4 +113,4 @@ const JenisMutasiZod = <TData extends FieldValues>({
 	);
 };
 
-export default JenisMutasiZod;
+export default JenisKontrakZod;

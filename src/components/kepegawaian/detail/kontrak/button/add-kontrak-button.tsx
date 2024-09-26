@@ -2,25 +2,24 @@
 import type { Pegawai } from "@_types/pegawai";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
-import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
+import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { useQueryClient } from "@tanstack/react-query";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-type AddMutasiButtonProps = {
+type AddKontrakButtonProps = {
 	pegawaiId: number;
 };
-const AddMutasiButton = ({ pegawaiId }: AddMutasiButtonProps) => {
-	const setDefaultValues = useRiwayatMutasiStore(
+const AddKontrakButton = ({ pegawaiId }: AddKontrakButtonProps) => {
+	const setDefaultValues = useRiwayatKontrakStore(
 		(state) => state.setDefaultValues,
 	);
-	const router = useRouter();
 	const qc = useQueryClient();
-
+	const router = useRouter();
 	const handleClick = () => {
 		const pegawai = qc.getQueryData<Pegawai>(["pegawai", pegawaiId]);
 		setDefaultValues(pegawai);
-		router.push(`/kepegawaian/mutasi/add/${pegawaiId}`);
+		router.push(`/kepegawaian/kontrak/add/${pegawaiId}`);
 	};
 
 	return (
@@ -40,4 +39,4 @@ const AddMutasiButton = ({ pegawaiId }: AddMutasiButtonProps) => {
 	);
 };
 
-export default AddMutasiButton;
+export default AddKontrakButton;

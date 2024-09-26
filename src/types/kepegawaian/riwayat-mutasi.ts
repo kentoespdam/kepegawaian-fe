@@ -27,14 +27,14 @@ export interface RiwayatMutasi {
 }
 
 export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
-	nipam: z.string().optional(),
-	nama: z.string().optional(),
+	nipam: z.string(),
+	nama: z.string(),
 	tglBerakhir: z.string().optional(),
 	jenisMutasi: z.string().min(3, "Jenis Mutasi wajib diisi"),
 	organisasiId: z.number().optional(),
 	jabatanId: z.number().optional(),
-	organisasiLamaId: z.number().default(0),
-	namaOrganisasiLama: z.string().default(""),
+	organisasiLamaId: z.number().optional().default(0),
+	namaOrganisasiLama: z.string().optional().default(""),
 	jabatanLamaId: z.number().default(0),
 	namaJabatanLama: z.string().default(""),
 	profesiId: z.number().optional(),
@@ -44,7 +44,19 @@ export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
 	namaGolonganLama: z.string().default(""),
 	notes: z.string(),
 }).superRefine((val, ctx) => {
-	const { tanggalSk, tmtBerlaku, tglBerakhir } = val;
+	const { tanggalSk, tmtBerlaku, tglBerakhir, nipam } = val;
+	if (!nipam.startsWith("KO-")) {
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: "Golongan wajib diisi",
+			path: ["golonganLamaId"],
+		});
+		ctx.addIssue({
+			code: z.ZodIssueCode.custom,
+			message: "Golongan wajib diisi",
+			path: ["namaGolonganLama"],
+		});
+	}
 	if (new Date(tanggalSk) > new Date(tmtBerlaku)) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,

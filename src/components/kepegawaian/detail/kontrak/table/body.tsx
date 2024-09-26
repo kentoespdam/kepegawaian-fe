@@ -1,25 +1,18 @@
 import type { Pageable } from "@_types/index";
-import type { RiwayatMutasi } from "@_types/kepegawaian/riwayat-mutasi";
+import type { RiwayatKontrak } from "@_types/kepegawaian/riwayat_kontrak";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
+import { dateToIndonesian } from "@helpers/string";
 import { cn } from "@lib/utils";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
-import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
-import MutasiGolonganCell from "./golongan_cell";
-import MutasiJabatanCell from "./jabatan_cell";
-import MutasiOrganisasiCell from "./organisasi_cell";
-import RiwayatMutasiSKCell from "./sk_cell";
+import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 
-export interface MutasiRowProps {
-	row: RiwayatMutasi;
-}
-
-type RiwayatMutasiTableBodyProps = {
+type RiwayatKontrakTableBodyProps = {
 	pegawaiId: number;
-	data: Pageable<RiwayatMutasi>;
+	data: Pageable<RiwayatKontrak>;
 };
-const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
-	const { selectedDataId, setSelectedDataId } = useRiwayatMutasiStore(
+const RiwayatKontrakTableBody = (props: RiwayatKontrakTableBodyProps) => {
+	const { selectedDataId, setSelectedDataId } = useRiwayatKontrakStore(
 		(state) => ({
 			selectedDataId: state.selectedDataId,
 			setSelectedDataId: state.setSelectedDataId,
@@ -31,11 +24,10 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 		refId: state.refId,
 		setRefId: state.setRefId,
 	}));
-
-	const handleSelect = (data: RiwayatMutasi) => {
+	const handleSelect = (data: RiwayatKontrak) => {
 		setSelectedDataId(selectedDataId === data.id ? 0 : data.id);
-		setRefId(refId === data.skMutasi.id ? 0 : data.skMutasi.id);
-		setRef(ref === data.skMutasi.jenisSk ? "" : data.skMutasi.jenisSk);
+		setRefId(refId === data.id ? 0 : data.id);
+		setRef(ref === data.jenisKontrak ? "" : data.jenisKontrak);
 	};
 
 	let urut = getUrut(props.data);
@@ -45,8 +37,8 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 			{props.data.content.map((row) => (
 				<TableRow
 					key={row.id}
-					className={cn("even:bg-muted hover:bg-green-200", {
-						"bg-green-300 even:bg-green-300": selectedDataId === row.id,
+					className={cn("hover:bg-gray-100 cursor-pointer", {
+						"bg-gray-100": selectedDataId === row.id,
 					})}
 					onClick={() => handleSelect(row)}
 				>
@@ -54,13 +46,15 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">Aksi</TableCell>
-					<RiwayatMutasiSKCell row={row} />
 					<TableCell className="border-x whitespace-nowrap">
-						{row.namaJenisMutasi}
+						{row.nomorKontrak}
 					</TableCell>
-					<MutasiGolonganCell row={row} />
-					<MutasiOrganisasiCell row={row} />
-					<MutasiJabatanCell row={row} />
+					<TableCell className="border-x whitespace-nowrap">
+						{dateToIndonesian(row.tanggalMulai)}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{dateToIndonesian(row.tanggalSelesai)}
+					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.notes}
 					</TableCell>
@@ -70,4 +64,4 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 	);
 };
 
-export default RiwayatMutasiTableBody;
+export default RiwayatKontrakTableBody;

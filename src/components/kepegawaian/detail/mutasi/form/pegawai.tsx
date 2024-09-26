@@ -9,14 +9,22 @@ const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 				<InputZod type="hidden" id="pegawaiId" label="Pegawai ID" form={form} />
 				<InputZod id="nipam" label="NIPAM" form={form} disabled />
 				<InputZod id="nama" label="Nama Pegawai" form={form} disabled />
-				<InputZod
-					type="hidden"
-					id="golonganLamaId"
-					label="Golongan"
-					form={form}
-				/>
-				<InputZod id="namaGolonganLama" label="Golongan" form={form} disabled />
-
+				{form.getValues("nipam").startsWith("KO-") ? null : (
+					<>
+						<InputZod
+							type="hidden"
+							id="golonganLamaId"
+							label="Golongan"
+							form={form}
+						/>
+						<InputZod
+							id="namaGolonganLama"
+							label="Golongan"
+							form={form}
+							disabled
+						/>
+					</>
+				)}
 				<InputZod
 					type="hidden"
 					id="organisasiLamaId"
