@@ -57,12 +57,12 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 		namaProfesiLama: "",
 		notes: "",
 	},
-	setDefaultValues: (pegawai, riwayatMutasi) =>
-		set((state) => ({
+	setDefaultValues: (pegawai, riwayatMutasi) => {
+		return set((state) => ({
 			...state,
 			defaultValues: {
-				id: riwayatMutasi?.id ?? 0,
-				pegawaiId: pegawai?.id ?? 0,
+				id: riwayatMutasi ? +riwayatMutasi.id : 0,
+				pegawaiId: pegawai ? +pegawai.id : 0,
 				nipam: pegawai?.nipam ?? "",
 				nama: pegawai?.biodata.nama ?? "",
 				nomorSk: riwayatMutasi?.skMutasi?.nomorSk ?? "",
@@ -86,18 +86,24 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 				namaGolonganLama:
 					`${pegawai?.golongan?.golongan} - ${pegawai?.golongan?.pangkat}` ??
 					"",
-				organisasiLamaId: pegawai?.organisasi.id ?? 0,
+				organisasiLamaId: pegawai ? +pegawai.organisasi.id : 0,
 				namaOrganisasiLama: pegawai?.organisasi.nama ?? "",
-				jabatanLamaId: pegawai?.jabatan.id ?? 0,
+				jabatanLamaId: pegawai ? +pegawai.jabatan.id : 0,
 				namaJabatanLama: pegawai?.jabatan.nama ?? "",
-				profesiLamaId: pegawai?.profesi.id ?? 0,
+				profesiLamaId: pegawai ? +pegawai.profesi.id : 0,
 				namaProfesiLama: pegawai?.profesi.nama ?? "",
-				golonganId: riwayatMutasi?.skMutasi?.golongan?.id ?? 0,
-				organisasiId: riwayatMutasi?.organisasiId ?? 0,
-				jabatanId: riwayatMutasi?.jabatanId ?? 0,
-				profesiId: pegawai?.profesi.id ?? 0,
+				golonganId: riwayatMutasi?.skMutasi?.golongan
+					? riwayatMutasi.skMutasi.golongan.id
+					: 0,
+				organisasiId: riwayatMutasi?.organisasi
+					? riwayatMutasi.organisasi.id
+					: 0,
+				jabatanId: riwayatMutasi?.jabatan ? +riwayatMutasi.jabatan.id : 0,
+				jabatan: riwayatMutasi?.jabatan ?? undefined,
+				profesiId: pegawai ? +pegawai.profesi.id : 0,
 				notes: riwayatMutasi?.notes ?? "",
 			},
-		})),
+		}));
+	},
 	setJenisMutasi: (val) => set({ jenisMutasi: val }),
 }));

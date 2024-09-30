@@ -1,6 +1,10 @@
 "use client";
 
-import { RiwayatMutasiSchema } from "@_types/kepegawaian/riwayat-mutasi";
+import {
+	type RiwayatMutasi,
+	RiwayatMutasiSchema,
+} from "@_types/kepegawaian/riwayat-mutasi";
+import type { Pegawai } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
 import TextAreaZod from "@components/form/zod/textarea";
 import { Form } from "@components/ui/form";
@@ -9,7 +13,7 @@ import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi"
 import { useGlobalMutation } from "@store/query-store";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { saveRiwayatMutasi } from "../action";
 import RiwayatMutasiFormAction from "../button/form-action";
 import MutasiGolonganForm from "./mutasi_golongan";
@@ -19,15 +23,23 @@ import MutasiPegawaiForm from "./pegawai";
 
 export interface MutasiFormProps {
 	form: UseFormReturn<RiwayatMutasiSchema>;
+	defaultValues?: RiwayatMutasiSchema;
 }
 
-const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
-	const { defaultValues, jenisMutasi } = useRiwayatMutasiStore((state) => ({
-		defaultValues: state.defaultValues,
-		open: state.open,
-		setOpen: state.setOpen,
-		jenisMutasi: state.jenisMutasi,
-	}));
+type RiwayatMutasiFormComponentProps = {
+	pegawai: Pegawai;
+	data?: RiwayatMutasi;
+};
+
+const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
+	const { pegawai, data: riwayatMutasi } = props;
+	const { defaultValues, setDefaultValues, jenisMutasi, setJenisMutasi } =
+		useRiwayatMutasiStore((state) => ({
+			defaultValues: state.defaultValues,
+			setDefaultValues: state.setDefaultValues,
+			jenisMutasi: state.jenisMutasi,
+			setJenisMutasi: state.setJenisMutasi,
+		}));
 
 	const router = useRouter();
 	const params = useSearchParams();
@@ -42,7 +54,7 @@ const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatMutasi,
 		queryKeys: [["riwayat-mutasi", defaultValues.pegawaiId, search.toString()]],
-		redirectTo: `/kepegawaian/detail/mutasi/${props.pegawaiId}`,
+		redirectTo: `/kepegawaian/detail/mutasi/${pegawai.id}`,
 	});
 
 	const onSubmit = (values: RiwayatMutasiSchema) => {
@@ -50,18 +62,28 @@ const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
 		// console.log(values);
 	};
 
-	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	useEffect(() => {
-		if (!defaultValues.nipam)
-			router.push(`/kepegawaian/detail/mutasi/${props.pegawaiId}`);
-	}, []);
+		setDefaultValues(pegawai, riwayatMutasi);
+
+		if (riwayatMutasi) {
+			const currentJenisMutasi = { id: riwayatMutasi?.jenisMutasi, nama: "" };
+			setJenisMutasi(currentJenisMutasi);
+		}
+		// console.log(riwayatMutasi);
+	}, [setDefaultValues, setJenisMutasi, pegawai, riwayatMutasi]);
 
 	return (
 		<div className="h-full">
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-2 pl-4 pr-2 pb-4">
-						<InputZod type="hidden" id="id" label="ID" form={form} />
+						<InputZod
+							type="number"
+							id="id"
+							label="ID"
+							form={form}
+							className="hidden"
+						/>
 						<MutasiPegawaiForm form={form} />
 						<MutasiSkForm form={form} />
 						{jenisMutasi &&
@@ -72,7 +94,7 @@ const RiwayatMutasiFormComponent = (props: { pegawaiId: number }) => {
 						) : null}
 						{jenisMutasi &&
 						["MUTASI_LOKER", "MUTASI_JABATAN"].includes(jenisMutasi.id) ? (
-							<MutasiJabatanForm form={form} />
+							<MutasiJabatanForm form={form} defaultValues={defaultValues} />
 						) : null}
 						<TextAreaZod id="notes" label="Notes" form={form} />
 						<RiwayatMutasiFormAction

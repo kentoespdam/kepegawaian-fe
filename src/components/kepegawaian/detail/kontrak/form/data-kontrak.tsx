@@ -26,7 +26,7 @@ const DataKontrakForm = ({ form }: KontrakFormProps) => {
 				<InputZod id="nipam" label="Nipam" form={form} />
 				<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
 				<DatePickerZod id="tanggalMulai" label="Periode Kontrak" form={form} />
-
+				{/* <DatePickerZod id="tanggalSelesai" label="Sampai dengan" form={form} /> */}
 				{jenisKontrak?.id === "PENGANGKATAN" ? (
 					<SelectGolonganZod id="golonganId" label="Golongan" form={form} />
 				) : (

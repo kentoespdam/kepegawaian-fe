@@ -29,6 +29,7 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				searchParams: search.toString(),
 				isRoot: true,
 			});
+			console.log(result);
 			return result;
 		},
 		enabled: !!props.pegawaiId,
@@ -40,24 +41,26 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatMutasiTableColumns} />
-					{query.isLoading || query.error || !query.data ? (
+					{query.isLoading || query.error || !query.data || query.data.empty ? (
 						<LoadingTable
 							columns={riwayatMutasiTableColumns}
 							isLoading={query.isLoading}
 							error={query.error?.message}
 						/>
-					) : (
+					) : query.data && !query.data.empty ? (
 						<RiwayatMutasiTableBody
 							pegawaiId={props.pegawaiId}
 							data={query.data}
+						/>
+					) : (
+						<LoadingTable
+							columns={riwayatMutasiTableColumns}
+							isLoading={false}
 						/>
 					)}
 				</Table>
 			</div>
 			<PaginationBuilder data={query.data} />
-			{/* <RiwayatMutasiFormComponent /> */}
-			{/* <RiwayatSkFormComponent />
-			<DeleteRiwayatSkDialog pegawaiId={props.pegawaiId} /> */}
 		</div>
 	);
 };

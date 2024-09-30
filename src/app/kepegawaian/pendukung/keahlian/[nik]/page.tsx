@@ -1,19 +1,29 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+import type { Biodata } from "@_types/profil/biodata";
 import ProfilKeahlianContentComponent from "@components/kepegawaian/profil/keahlian/content";
 import AddProfilKeahlianButton from "@components/kepegawaian/profil/keahlian/content/button/add-button";
 import LampiranKeahlianContent from "@components/kepegawaian/profil/keahlian/lampiran";
 import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran";
+import { getDataById } from "@helpers/action";
 
 export const metadata = {
 	title: "Data Keahlian",
 };
-const KeahlianPage = ({ params }: { params: { nik: string } }) => {
+const KeahlianPage = async ({ params }: { params: { nik: string } }) => {
+	const bio = await getDataById<Biodata>({
+		path: "profil/biodata",
+		id: params.nik,
+		isRoot: true,
+	});
+
 	return (
 		<div className="grid min-h-screen w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
 					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-						<span className="text-md font-semibold">{metadata.title}</span>
+						<span className="text-md font-semibold">
+							{metadata.title} ({bio?.nama})
+						</span>
 						<AddProfilKeahlianButton nik={params.nik} />
 					</header>
 					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">

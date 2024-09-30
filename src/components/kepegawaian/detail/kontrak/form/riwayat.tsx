@@ -49,8 +49,8 @@ const RiwayatKontrakForm = ({ pegawaiId }: { pegawaiId: number }) => {
 	});
 	return (
 		<Fieldset title="Riwayat Kontrak">
-			<div className="w-full h-36 scroll-auto">
-				<Table className="border">
+			<div className="w-full h-36 scroll-auto overflow-auto">
+				<Table>
 					<TableHeader>
 						<TableRow>
 							<TableHead className="text-center bg-primary text-primary-foreground border-x rounded-ss-lg border-l-0">

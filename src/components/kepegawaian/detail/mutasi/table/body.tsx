@@ -9,6 +9,7 @@ import MutasiGolonganCell from "./golongan_cell";
 import MutasiJabatanCell from "./jabatan_cell";
 import MutasiOrganisasiCell from "./organisasi_cell";
 import RiwayatMutasiSKCell from "./sk_cell";
+import RiwayatMutasiTableAction from "../button/table-action";
 
 export interface MutasiRowProps {
 	row: RiwayatMutasi;
@@ -53,7 +54,9 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 					<TableCell align="right" className="border-x">
 						{urut++}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">Aksi</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						<RiwayatMutasiTableAction pegawaiId={props.pegawaiId} data={row} />
+					</TableCell>
 					<RiwayatMutasiSKCell row={row} />
 					<TableCell className="border-x whitespace-nowrap">
 						{row.namaJenisMutasi}

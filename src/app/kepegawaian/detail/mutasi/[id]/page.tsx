@@ -1,19 +1,29 @@
+import type { Pegawai } from "@_types/pegawai";
 import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button/add-lampiran";
 import LampiranSkContent from "@components/kepegawaian/detail/lampiran/content";
 import AddMutasiButton from "@components/kepegawaian/detail/mutasi/button/add-mutasi-button";
 import MutasiContentComponent from "@components/kepegawaian/detail/mutasi/content";
+import { getDataById } from "@helpers/action";
 
 export const metadata = {
 	title: "Data Mutasi Pegawai",
 };
 
-const DetailMutasi = ({ params }: { params: { id: number } }) => {
+const DetailMutasi = async ({ params }: { params: { id: number } }) => {
+	const pegawai = await getDataById<Pegawai>({
+		path: "pegawai",
+		id: params.id,
+		isRoot: true,
+	});
+
 	return (
 		<div className="grid min-h-screen w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
 					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-						<span className="text-md font-semibold">{metadata.title}</span>
+						<span className="text-md font-semibold">
+							{metadata.title} [{pegawai?.nipam}] ({pegawai?.biodata.nama})
+						</span>
 						{<AddMutasiButton pegawaiId={params.id} />}
 					</header>
 					<main className="flex flex-1 flex-col">

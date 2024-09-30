@@ -20,44 +20,44 @@ import { Input } from "@components/ui/input";
 import { globalDeleteData } from "@helpers/action";
 import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
+import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-type DeleteRiwayatSkDialogProps = {
+type DeleteRiwayatKontrakDialogProps = {
 	pegawaiId: number;
 };
-const DeleteRiwayatSkDialog = ({ pegawaiId }: DeleteRiwayatSkDialogProps) => {
+const DeleteRiwayatKontrakDialog = ({
+	pegawaiId,
+}: DeleteRiwayatKontrakDialogProps) => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const { riwayatSkId, openDelete, setDeleteOpen } = useRiwayatSkStore(
-		(state) => ({
-			riwayatSkId: state.riwayatSkId,
+	const { riwayatKontrakId, openDelete, setDeleteOpen } =
+		useRiwayatKontrakStore((state) => ({
+			riwayatKontrakId: state.riwayatKontrakId,
 			openDelete: state.openDelete,
 			setDeleteOpen: state.setOpenDelete,
-		}),
-	);
+		}));
 	const form = useForm<BaseDelete>({
 		resolver: zodResolver(BaseDelete),
 		defaultValues: {
 			id: "",
-			curId: riwayatSkId,
 		},
 	});
 
 	const mutation = useGlobalMutation({
 		mutationFunction: async () =>
 			await globalDeleteData({
-				path: "kepegawaian/riwayat/sk",
+				path: "kepegawaian/riwayat/kontrak",
 				formData: form.getValues(),
 			}),
-		queryKeys: [["riwayat-sk", pegawaiId, search.toString()]],
+		queryKeys: [["riwayat-kontrak", pegawaiId, search.toString()]],
 	});
 
 	const onSubmit = (values: BaseDelete) => {
-		form.setValue("id", `DELETE-${riwayatSkId}`);
-		form.setValue("unique", encodeId(riwayatSkId));
+		form.setValue("id", `DELETE-${riwayatKontrakId}`);
+		form.setValue("unique", encodeId(riwayatKontrakId));
 		mutation.mutate(values);
 		setDeleteOpen(false);
 	};
@@ -81,7 +81,7 @@ const DeleteRiwayatSkDialog = ({ pegawaiId }: DeleteRiwayatSkDialogProps) => {
 										<br />
 										Ketik {""}
 										<code className="font-normal bg-orange-300 text-gray-700 dark:text-gray-900 border px-1">
-											DELETE-{riwayatSkId}
+											DELETE-{riwayatKontrakId}
 										</code>
 									</FormDescription>
 									<FormControl>
@@ -103,4 +103,4 @@ const DeleteRiwayatSkDialog = ({ pegawaiId }: DeleteRiwayatSkDialogProps) => {
 	);
 };
 
-export default DeleteRiwayatSkDialog;
+export default DeleteRiwayatKontrakDialog;

@@ -5,6 +5,7 @@ import { API_URL } from "@lib/utils";
 import type { QueryKey } from "@tanstack/react-query";
 import { cookies } from "next/headers";
 import { setAuthorizeHeader } from ".";
+import { decodeId } from "./number";
 
 export interface myQueryRequest {
 	queryKey: QueryKey;
@@ -69,11 +70,11 @@ export const getPageData = async <TData>(
 			signal: controller.signal,
 			cache: "no-cache",
 		});
-		// if (!response.ok) {
-		// 	throw new Error(await response.text());
-		// }
 
-		const result: BaseResult<Pageable<TData>> = await response.json();
+		const json=await response.json();
+		// console.log(json)
+
+		const result: BaseResult<Pageable<TData>> = json
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
@@ -194,7 +195,6 @@ export const acceptLampiranProfilData = async (
 };
 
 interface globalDeleteDataProps extends baseProps {
-	id: number | string;
 	formData: BaseDelete;
 }
 /**
@@ -203,15 +203,18 @@ interface globalDeleteDataProps extends baseProps {
  * @returns A Promise that resolves to the deleted data record.
  **/
 export const globalDeleteData = async (props: globalDeleteDataProps) => {
+	const unique = props.formData.unique as string;
+	const uniqueId = decodeId(unique) as number;
+
 	const id = Number(props.formData.id.split("-")[1]);
-	if (id !== Number(props.formData.curId))
+	if (id !== uniqueId)
 		return {
 			status: 400,
 			statusText: "Bad Request",
 			errors: "invalid data",
 		};
 
-	const url = `${API_URL}/${props.path}/${props.id}`;
+	const url = `${API_URL}/${props.path}/${uniqueId}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);

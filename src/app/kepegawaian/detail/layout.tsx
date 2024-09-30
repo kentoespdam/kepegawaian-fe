@@ -1,16 +1,25 @@
 "use client";
-import { Home, Package2, Undo2Icon, UndoIcon } from "lucide-react";
+import {
+	AlarmClockOffIcon,
+	FileSignatureIcon,
+	Package2,
+	ReceiptTextIcon,
+	RefreshCcwIcon,
+	SignatureIcon,
+	TriangleAlertIcon,
+	Undo2Icon,
+} from "lucide-react";
 import Link from "next/link";
 
-import CustomQueryProvider from "@components/providers/query";
-import type { ChildrenNode } from "@lib/index";
-import { QueryClient } from "@tanstack/react-query";
-import { ButtonLink } from "@components/ui/link";
 import TooltipBuilder from "@components/builder/tooltip";
+import CustomQueryProvider from "@components/providers/query";
+import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";
-import { usePathname } from "next/navigation";
-import { cn } from "@lib/utils";
 import { Toaster } from "@components/ui/sonner";
+import type { ChildrenNode } from "@lib/index";
+import { cn } from "@lib/utils";
+import { QueryClient } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -56,7 +65,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "mutasi" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<RefreshCcwIcon className="h-4 w-4" />
 									Data Mutasi
 								</Link>
 
@@ -67,7 +76,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "cuti" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<AlarmClockOffIcon className="h-4 w-4" />
 									Data Penggunaan Hak Cuti
 								</Link>
 
@@ -78,7 +87,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_kontrak" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<ReceiptTextIcon className="h-4 w-4" />
 									Riwayat Kontrak Kerja
 								</Link>
 
@@ -89,7 +98,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_sk" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<SignatureIcon className="h-4 w-4" />
 									Riwayat Surat Keputusan
 								</Link>
 
@@ -100,7 +109,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_sp" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<TriangleAlertIcon className="h-4 w-4" />
 									Riwayat Surat Peringatan
 								</Link>
 

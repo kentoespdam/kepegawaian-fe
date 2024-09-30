@@ -41,7 +41,7 @@ export const useRiwayatSkStore = create<RiwayatSkStore>((set) => ({
 			...state,
 			defaultValues: {
 				id: riwayatSk?.id ?? 0,
-				pegawaiId: pegawaiId ?? 0,
+				pegawaiId: +pegawaiId ?? 0,
 				nomorSk: riwayatSk?.nomorSk ?? "",
 				jenisSk: riwayatSk?.jenisSk ?? "",
 				tanggalSk: riwayatSk?.tanggalSk ?? "",

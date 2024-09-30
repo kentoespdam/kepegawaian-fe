@@ -57,14 +57,6 @@ const RiwayatSkFormComponent = () => {
 		form.setValue("gajiPokok", data.nominal);
 	};
 
-	// useEffect(() => {
-	// 	if (mutation.isSuccess) {
-	// 		mutation.reset();
-	// 		form.reset();
-	// 		setOpen(false);
-	// 	}
-	// }, [mutation, form, setOpen]);
-
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className="p-0">
@@ -91,21 +83,29 @@ const RiwayatSkFormComponent = () => {
 							/>
 							<SelectJenisSkZod id="jenisSk" form={form} />
 							<InputZod type="text" id="nomorSk" label="Nomor SK" form={form} />
-							<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
-							<DatePickerZod id="tmtBerlaku" label="TMT Berlaku" form={form} />
+							<div className="grid grid-cols-2 gap-2">
+								<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
+								<DatePickerZod
+									id="tmtBerlaku"
+									label="TMT Berlaku"
+									form={form}
+								/>
+							</div>
 							<SelectGolonganZod id="golonganId" label="Golongan" form={form} />
-							<InputZod
-								type="number"
-								id="mkgTahun"
-								label="MKG Tahun"
-								form={form}
-							/>
-							<InputZod
-								type="number"
-								id="mkgBulan"
-								label="MKG Bulan"
-								form={form}
-							/>
+							<div className="grid grid-cols-2 gap-2">
+								<InputZod
+									type="number"
+									id="mkgTahun"
+									label="MKG Tahun"
+									form={form}
+								/>
+								<InputZod
+									type="number"
+									id="mkgBulan"
+									label="MKG Bulan"
+									form={form}
+								/>
+							</div>
 							<div className="grid grid-cols-4 gap-2 items-end align-center">
 								<div className="col-span-3">
 									<InputZod
@@ -126,18 +126,20 @@ const RiwayatSkFormComponent = () => {
 								label="Kenaikan Berikutnya"
 								form={form}
 							/>
-							<InputZod
-								type="number"
-								id="mkgbTahun"
-								label="MKGb Tahun"
-								form={form}
-							/>
-							<InputZod
-								type="number"
-								id="mkgbBulan"
-								label="MKGb Bulan"
-								form={form}
-							/>
+							<div className="grid grid-cols-2 gap-2">
+								<InputZod
+									type="number"
+									id="mkgbTahun"
+									label="MKGb Tahun"
+									form={form}
+								/>
+								<InputZod
+									type="number"
+									id="mkgbBulan"
+									label="MKGb Bulan"
+									form={form}
+								/>
+							</div>
 							<YesNoZod id="updateMaster" label="Update Master" form={form} />
 							<TextAreaZod id="notes" label="Notes" form={form} />
 						</div>

@@ -10,6 +10,7 @@ export interface RiwayatKontrak {
 	tanggalSk: string;
 	tanggalMulai: string;
 	tanggalSelesai: string;
+	gajiPokok: number;
 	notes: string;
 }
 
@@ -25,13 +26,13 @@ export const RiwayatKontrakSchema = z
 		nomorKontrak: z.string().min(3, "Nomor Kontrak wajib diisi"),
 		tanggalSk: z.string().min(10, "Tgl. SK wajib diisi"),
 		tanggalMulai: z.string().min(10, "Tgl. Mulai wajib diisi"),
-		tanggalSelesai: z.string().min(10, "Tgl. Selesai wajib diisi").optional(),
-		gajiPokok: z.number().default(0),
+		tanggalSelesai: z.string().optional(),
+		gajiPokok: z.number().optional().default(0),
 		golonganId: z.number().optional(),
 		notes: z.string().optional(),
 	})
 	.superRefine((val, ctx) => {
-		const { jenisKontrak, tanggalSk, tanggalMulai, tanggalSelesai } = val;
+		const { jenisKontrak, tanggalSk, tanggalMulai } = val;
 		if (new Date(tanggalSk) > new Date(tanggalMulai)) {
 			ctx.addIssue({
 				code: z.ZodIssueCode.custom,
@@ -40,7 +41,15 @@ export const RiwayatKontrakSchema = z
 			});
 		}
 		if (jenisKontrak === "PERPANJANGAN") {
-			if (!tanggalSelesai || new Date(tanggalSk) > new Date(tanggalSelesai)) {
+			const { tanggalSelesai } = val;
+			if (!tanggalSelesai) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: "Tgl. Selesai wajib diisi",
+					path: ["tanggalSelesai"],
+				});
+			}
+			if (tanggalSelesai && new Date(tanggalSk) > new Date(tanggalSelesai)) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.custom,
 					message: "Tgl. SK harus lebih kecil dari Tgl. Selesai",

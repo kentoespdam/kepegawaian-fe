@@ -8,18 +8,22 @@ import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type AddKontrakButtonProps = {
-	pegawaiId: number;
+	pegawai: Pegawai;
 };
-const AddKontrakButton = ({ pegawaiId }: AddKontrakButtonProps) => {
+const AddKontrakButton = ({ pegawai }: AddKontrakButtonProps) => {
+	const { id, statusPegawai } = pegawai;
 	const setDefaultValues = useRiwayatKontrakStore(
 		(state) => state.setDefaultValues,
 	);
 	const qc = useQueryClient();
 	const router = useRouter();
 	const handleClick = () => {
-		const pegawai = qc.getQueryData<Pegawai>(["pegawai", pegawaiId]);
+		if (statusPegawai !== "KONTRAK") {
+			return alert("Pegawai ini bukan kontrak");
+		}
+		const pegawai = qc.getQueryData<Pegawai>(["pegawai", id]);
 		setDefaultValues(pegawai);
-		router.push(`/kepegawaian/kontrak/add/${pegawaiId}`);
+		router.push(`/kepegawaian/kontrak/add/${id}`);
 	};
 
 	return (

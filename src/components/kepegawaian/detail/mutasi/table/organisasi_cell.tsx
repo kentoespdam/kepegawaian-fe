@@ -11,7 +11,7 @@ const MutasiOrganisasiCell = ({ row }: MutasiRowProps) => {
 				</div>
 				<div className="grid">
 					<span>: {row.namaOrganisasiLama}</span>
-					<span>: {row.namaOrganisasi}</span>
+					<span>: {row.organisasi?.nama}</span>
 				</div>
 			</div>
 		</TableCell>

@@ -1,8 +1,10 @@
+import type { Golongan } from "@_types/master/golongan";
+import { JabatanMiniSchema, type Jabatan } from "@_types/master/jabatan";
+import type { Organisasi } from "@_types/master/organisasi";
+import type { Profesi } from "@_types/master/profesi";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
 import { BaseRiwayatSchema, type RiwayatSk } from "./riwayat_sk";
-import type { Golongan } from "@_types/master/golongan";
-import type { Profesi } from "@_types/master/profesi";
 
 export interface RiwayatMutasi {
 	id: number;
@@ -12,10 +14,8 @@ export interface RiwayatMutasi {
 	jenisMutasi: string;
 	namaJenisMutasi: string;
 	golongan: Golongan | null;
-	organisasiId: number;
-	namaOrganisasi: string;
-	jabatanId: number;
-	namaJabatan: string;
+	organisasi: Organisasi | null;
+	jabatan: Jabatan | null;
 	profesi: Profesi | null;
 	golonganLama: Golongan | null;
 	organisasiLamaId: number;
@@ -32,6 +32,7 @@ export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
 	tglBerakhir: z.string().optional(),
 	jenisMutasi: z.string().min(3, "Jenis Mutasi wajib diisi"),
 	organisasiId: z.number().optional(),
+	jabatan: JabatanMiniSchema.optional(),
 	jabatanId: z.number().optional(),
 	organisasiLamaId: z.number().optional().default(0),
 	namaOrganisasiLama: z.string().optional().default(""),
@@ -40,11 +41,11 @@ export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
 	profesiId: z.number().optional(),
 	profesiLamaId: z.number().default(0),
 	namaProfesiLama: z.string().default(""),
-	golonganLamaId: z.number(),
-	namaGolonganLama: z.string().default(""),
+	golonganLamaId: z.number().optional().default(0),
+	namaGolonganLama: z.string().optional().default(""),
 	notes: z.string(),
 }).superRefine((val, ctx) => {
-	const { tanggalSk, tmtBerlaku, tglBerakhir, nipam } = val;
+	const { tanggalSk, tmtBerlaku, nipam } = val;
 	if (!nipam.startsWith("KO-")) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,

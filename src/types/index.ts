@@ -22,8 +22,10 @@ export const BaseDelete = z.object({
 		message: "invalid delete code!",
 	}),
 	curId: z.number().optional() || z.string().optional(),
+	unique: z.string().optional(),
 });
 
+export type BaseDelete = z.infer<typeof BaseDelete>;
 export interface BaseResult<TData> {
 	status: number;
 	statusText: string;
@@ -33,7 +35,6 @@ export interface BaseResult<TData> {
 	errors?: string | string[];
 }
 
-export type BaseDelete = z.infer<typeof BaseDelete>;
 
 export interface PageableSort {
 	sorted: boolean;

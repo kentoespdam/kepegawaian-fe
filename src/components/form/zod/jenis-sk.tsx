@@ -1,25 +1,5 @@
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
-import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { globalGetData } from "@helpers/action";
 import type { JenisSk } from "@_types/master/jenis_sk";
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@components/ui/form";
-import { findJenisPelatihanValue } from "@_types/master/jenis_pelatihan";
-import { cn } from "@lib/utils";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
 import { Button } from "@components/ui/button";
-import { ChevronDownIcon } from "lucide-react";
 import {
 	Command,
 	CommandEmpty,
@@ -27,6 +7,25 @@ import {
 	CommandItem,
 	CommandList,
 } from "@components/ui/command";
+import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@components/ui/form";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@components/ui/popover";
+import { globalGetData } from "@helpers/action";
+import { cn } from "@lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { ChevronDownIcon } from "lucide-react";
+import { useState } from "react";
+import type { FieldValues } from "react-hook-form";
+import type { InputZodProps } from "./iface";
 
 const SelectJenisSkZod = <TData extends FieldValues>({
 	id,

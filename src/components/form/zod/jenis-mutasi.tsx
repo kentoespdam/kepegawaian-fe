@@ -34,8 +34,7 @@ const JenisMutasiZod = <TData extends FieldValues>({
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const { jenisMutasi, setJenisMutasi } = useRiwayatMutasiStore((state) => ({
-		jenisMutasi: state.jenisMutasi,
+	const { setJenisMutasi } = useRiwayatMutasiStore((state) => ({
 		setJenisMutasi: state.setJenisMutasi,
 	}));
 	const [pop, setPop] = useState(false);

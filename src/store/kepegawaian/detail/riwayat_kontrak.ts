@@ -1,4 +1,7 @@
-import type { RiwayatKontrakSchema } from "@_types/kepegawaian/riwayat_kontrak";
+import type {
+	RiwayatKontrak,
+	RiwayatKontrakSchema,
+} from "@_types/kepegawaian/riwayat_kontrak";
 import type { JenisKontrak } from "@_types/master/jenis_kontrak";
 import type { Pegawai } from "@_types/pegawai";
 import type { SelectedHandlerStore } from "@store/base-store";
@@ -8,7 +11,7 @@ interface RiwayatKontrakStore extends SelectedHandlerStore {
 	riwayatKontrakId: number;
 	setRiwayatKontrakId: (val: number) => void;
 	defaultValues: RiwayatKontrakSchema;
-	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrakSchema) => void;
+	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrak) => void;
 	jenisKontrak?: JenisKontrak;
 	setJenisKontrak: (val?: JenisKontrak) => void;
 }
@@ -28,6 +31,8 @@ export const useRiwayatKontrakStore = create<RiwayatKontrakStore>((set) => ({
 		pegawaiId: 0,
 		nipam: "",
 		nama: "",
+		unitKerja: "",
+		jabatan: "",
 		nomorKontrak: "",
 		tanggalSk: "",
 		tanggalMulai: "",
@@ -35,7 +40,7 @@ export const useRiwayatKontrakStore = create<RiwayatKontrakStore>((set) => ({
 		gajiPokok: 0,
 		notes: "",
 	},
-	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrakSchema) =>
+	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrak) =>
 		set((state) => ({
 			...state,
 			defaultValues: {
@@ -44,11 +49,13 @@ export const useRiwayatKontrakStore = create<RiwayatKontrakStore>((set) => ({
 				pegawaiId: pegawai?.id ?? 0,
 				nipam: pegawai?.nipam ?? "",
 				nama: pegawai?.biodata.nama ?? "",
+				unitKerja: pegawai?.organisasi.nama ?? "",
+				jabatan: pegawai?.jabatan.nama ?? "",
 				nomorKontrak: schema?.nomorKontrak ?? "",
 				tanggalSk: schema?.tanggalSk ?? "",
 				tanggalMulai: schema?.tanggalMulai ?? "",
 				tanggalSelesai: schema?.tanggalSelesai ?? "",
-				golonganId: pegawai?.golongan? pegawai.golongan.id : 0,
+				golonganId: pegawai?.golongan ? pegawai.golongan.id : 0,
 				gajiPokok: schema?.gajiPokok ?? 0,
 				notes: schema?.notes ?? "",
 			},

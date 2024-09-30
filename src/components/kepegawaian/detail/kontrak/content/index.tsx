@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import RiwayatKontrakTableBody from "../table/body";
 import PaginationBuilder from "@components/builder/table/pagination";
+import DeleteRiwayatKontrakDialog from "../action/delete-dialog";
 
 type RiwayatKontrakComponentProps = {
 	pegawaiId: number;
@@ -55,9 +56,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 				</Table>
 			</div>
 			<PaginationBuilder data={query.data} />
-			{/* <RiwayatMutasiFormComponent /> */}
-			{/* <RiwayatSkFormComponent />
-			<DeleteRiwayatSkDialog pegawaiId={props.pegawaiId} /> */}
+			<DeleteRiwayatKontrakDialog pegawaiId={props.pegawaiId} />
 		</div>
 	);
 };

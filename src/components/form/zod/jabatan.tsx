@@ -1,5 +1,5 @@
 "use client";
-import { type JabatanMini, findJabatanValue } from "@_types/master/jabatan";
+import { findJabatanValue, type JabatanMini } from "@_types/master/jabatan";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -25,19 +25,25 @@ import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import type { FieldValues } from "react-hook-form";
+import { useEffect, useState } from "react";
+import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+
+interface SelectJabatanZodProps<TData extends FieldValues>
+	extends InputZodProps<TData> {}
 
 const SelectJabatanZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-}: InputZodProps<TData>) => {
-	const { organisasiId, setJabLevelId } = useOrgJab((state) => ({
-		organisasiId: state.organisasiId,
-		setJabLevelId: state.setJabLevelId,
-	}));
+}: SelectJabatanZodProps<TData>) => {
+	const { organisasiId, setOrganisasiId, setJabLevelId } = useOrgJab(
+		(state) => ({
+			organisasiId: state.organisasiId,
+			setOrganisasiId: state.setOrganisasiId,
+			setJabLevelId: state.setJabLevelId,
+		}),
+	);
 
 	const [pop, setPop] = useState(false);
 	const query = useQuery({
@@ -51,6 +57,12 @@ const SelectJabatanZod = <TData extends FieldValues>({
 		},
 		enabled: !!organisasiId && organisasiId > 0,
 	});
+
+	const jabatan = form.watch("jabatan" as Path<TData>);
+
+	useEffect(() => {
+		setJabLevelId(jabatan?.level.id || 0);
+	}, [setJabLevelId, jabatan]);
 
 	return (
 		<FormField

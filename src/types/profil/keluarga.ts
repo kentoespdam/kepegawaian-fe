@@ -23,21 +23,28 @@ export interface Keluarga {
 	notes: string;
 }
 
-export const KeluargaSchema = z.object({
-	id: z.number().default(0),
-	biodataId: z.string().min(16, "Biodata wajib diisi"),
-	nik: z.string().min(16, "NIK wajib diisi"),
-	nama: z.string().min(3, "Nama wajib diisi"),
-	jenisKelamin: JenisKelamin,
-	agama: z.number().min(1, "Agama wajib diisi"),
-	hubunganKeluarga: HubunganKeluarga,
-	tempatLahir: z.string().min(3, "Tempat Lahir wajib diisi"),
-	tanggalLahir: z.string().min(10, "Tgl. Lahir wajib diisi"),
-	tanggungan: z.boolean().default(true),
-	pendidikanId: z.number().default(0).optional(),
-	statusKawin: z.number().default(0),
-	notes: z.string().optional(),
-});
+export const KeluargaSchema = z
+	.object({
+		id: z.number().default(0),
+		biodataId: z.string().min(16, "Biodata wajib diisi"),
+		nik: z.string().min(16, "NIK wajib diisi"),
+		nama: z.string().min(3, "Nama wajib diisi"),
+		jenisKelamin: JenisKelamin,
+		agama: z.number().min(1, "Agama wajib diisi"),
+		hubunganKeluarga: HubunganKeluarga,
+		tempatLahir: z.string().min(3, "Tempat Lahir wajib diisi"),
+		tanggalLahir: z.string().min(10, "Tgl. Lahir wajib diisi"),
+		tanggungan: z.boolean().default(true),
+		pendidikanId: z.number().default(0).optional(),
+		statusKawin: z.number().default(0),
+		notes: z.string().optional(),
+	})
+	.superRefine((val, ctx) => {
+		const { hubunganKeluarga } = val;
+		if (["SUAMI", "ISTRI"].includes(hubunganKeluarga)) {
+			val.tanggungan = false;
+		}
+	});
 
 export type KeluargaSchema = z.infer<typeof KeluargaSchema>;
 
