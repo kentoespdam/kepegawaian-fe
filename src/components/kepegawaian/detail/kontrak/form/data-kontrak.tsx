@@ -15,7 +15,7 @@ const DataKontrakForm = ({ form }: KontrakFormProps) => {
 	return (
 		<Fieldset title="Data Kontrak Baru">
 			<JenisKontrakZod id="jenisKontrak" label="Jenis Kontrak" form={form} />
-			<div className="grid gap-2 grid-cols-1 lg:grid-cols-2 mt-2">
+			<div className="grid gap-2 grid-cols-2 sm:grid-cols-1 lg:grid-cols-2 mt-2">
 				<InputZod
 					id="nomorKontrak"
 					label={

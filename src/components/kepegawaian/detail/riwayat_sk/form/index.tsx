@@ -38,7 +38,10 @@ const RiwayatSkFormComponent = () => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatSk,
-		queryKeys: [["riwayat-sk", defaultValues.pegawaiId, search.toString()]],
+		queryKeys: [
+			["riwayat-sk", defaultValues.pegawaiId, search.toString()],
+			["pegawai", defaultValues.pegawaiId],
+		],
 		actHandler: () => {
 			mutation.reset();
 			form.reset();
@@ -106,7 +109,7 @@ const RiwayatSkFormComponent = () => {
 									form={form}
 								/>
 							</div>
-							<div className="grid grid-cols-4 gap-2 items-end align-center">
+							<div className="grid grid-cols-4 gap-2 align-center">
 								<div className="col-span-3">
 									<InputZod
 										type="number"
@@ -115,7 +118,7 @@ const RiwayatSkFormComponent = () => {
 										form={form}
 									/>
 								</div>
-								<div>
+								<div className="pt-8">
 									<Button type="button" variant={"outline"} onClick={cariGaji}>
 										CARI
 									</Button>

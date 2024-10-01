@@ -38,7 +38,7 @@ export const BaseRiwayatSchema = z.object({
 });
 
 export const RiwayatSkSchema = BaseRiwayatSchema.superRefine((val, ctx) => {
-	const { tanggalSk, tmtBerlaku } = val;
+	const { tanggalSk, tmtBerlaku, updateMaster, gajiPokok } = val;
 	if (new Date(tanggalSk) > new Date(tmtBerlaku)) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
@@ -46,7 +46,7 @@ export const RiwayatSkSchema = BaseRiwayatSchema.superRefine((val, ctx) => {
 			path: ["tmtBerlaku"],
 		});
 	}
-	if (val.updateMaster) {
+	if (updateMaster && !gajiPokok) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Gaji Pokok wajib diisi",
@@ -61,7 +61,7 @@ export const riwayatSkTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
 	{ id: "nomorSk", label: "Nomor SK", search: true, searchType: "text" },
-	{ id: "jenisSk", label: "Jenis SK", search:true, searchType: "jenisSk" },
+	{ id: "jenisSk", label: "Jenis SK", search: true, searchType: "jenisSk" },
 	{ id: "tanggalSk", label: "Tgl. SK" },
 	{ id: "tmtBerlaku", label: "Tgl. Berlaku" },
 	{ id: "golongan", label: "Golongan" },
