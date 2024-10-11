@@ -55,7 +55,6 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									// role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",

@@ -50,7 +50,6 @@ const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZod
                             <FormControl>
                                 <Button
                                     variant="outline"
-                                    role="combobox"
                                     className={cn("w-full justify-between", !field.value ? "text-muted-foreground" : "")}
                                 >
                                     {!query.data ?

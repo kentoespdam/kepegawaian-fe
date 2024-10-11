@@ -135,7 +135,6 @@ const PenandaTanganSpForm = ({ form }: SpFormProps) => {
 								<DialogTrigger asChild>
 									<Button
 										variant="outline"
-										// role="combobox"
 										aria-expanded={open}
 									>
 										CARI

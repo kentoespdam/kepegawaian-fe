@@ -55,7 +55,6 @@ const JenisSkSearchBuilder = ({ col, val }: BaseSearchProps) => {
 			<PopoverTrigger asChild>
 				<Button
 					variant="outline"
-					role="combobox"
 					className={cn(
 						"w-full justify-between",
 						!value ? "text-muted-foreground" : "",

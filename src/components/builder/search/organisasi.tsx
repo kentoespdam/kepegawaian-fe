@@ -59,7 +59,6 @@ const SearchOrganisasiBuilder = ({ col, val }: BaseSearchProps) => {
 			<PopoverTrigger asChild>
 				<Button
 					variant={"outline"}
-					role="combobox"
 					aria-expanded={open}
 					className="w-full justify-between"
 				>

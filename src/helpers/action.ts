@@ -144,8 +144,8 @@ export const getListData = async <TData>(
 ): Promise<TData[]> => {
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
 	const url = props.subPath
-		? `${basePath}/${props.path.replace("_", "-")}/${props.subPath}?${props.searchParams}`
-		: `${basePath}/${props.path.replace("_", "-")}/list?${props.searchParams}`;
+		? `${basePath}/${props.path.replace("_", "-")}/${props.subPath}?${props.searchParams ?? ""}`
+		: `${basePath}/${props.path.replace("_", "-")}/list?${props.searchParams ?? ""}`;
 	console.log(url);
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
