@@ -17,6 +17,7 @@ const InputZod = <TData extends FieldValues>({
 	type = "text",
 	disabled,
 	className,
+	readonly,
 }: InputZodProps<TData>) => (
 	<FormField
 		control={form.control}
@@ -30,6 +31,7 @@ const InputZod = <TData extends FieldValues>({
 						step={type === "float" ? 0.01 : undefined}
 						placeholder={`Masukkan ${label}`}
 						disabled={disabled}
+						readOnly={readonly}
 						{...field}
 						onChange={(event) =>
 							type === "number" || type === "float"

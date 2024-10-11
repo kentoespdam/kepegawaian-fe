@@ -1,5 +1,4 @@
 import type { RiwayatMutasi } from "@_types/kepegawaian/riwayat-mutasi";
-import type { Pegawai } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -9,7 +8,6 @@ import {
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
-import { useQueryClient } from "@tanstack/react-query";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -21,13 +19,12 @@ const RiwayatMutasiTableAction = ({
 	pegawaiId,
 	data,
 }: RiwayatMutasiTableActionProps) => {
-	const { setDefaultValues, setRiwayatMutasiId, setOpenDelete } =
-		useRiwayatMutasiStore((state) => ({
-			setDefaultValues: state.setDefaultValues,
+	const { setRiwayatMutasiId, setOpenDelete } = useRiwayatMutasiStore(
+		(state) => ({
 			setRiwayatMutasiId: state.setRiwayatMutasiId,
 			setOpenDelete: state.setOpenDelete,
-		}));
-	const qc = useQueryClient();
+		}),
+	);
 	const router = useRouter();
 
 	const editHandler = () => {

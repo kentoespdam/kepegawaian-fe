@@ -17,7 +17,7 @@ const DetailMutasi = async ({ params }: { params: { id: number } }) => {
 	});
 
 	return (
-		<div className="grid min-h-screen w-full">
+		<div className="grid min-h-full w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
 					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">

@@ -56,7 +56,7 @@ const SelectJenisSkZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
+									// role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",
@@ -64,7 +64,7 @@ const SelectJenisSkZod = <TData extends FieldValues>({
 								>
 									<span className="text-left flex-1 truncate">
 										{!query.data
-											? "Pelatihan tidak ditemukan"
+											? "Jenis Surat Keputusan tidak ditemukan"
 											: query.isLoading || query.isFetching
 												? "Loading..."
 												: field.value

@@ -4,7 +4,7 @@ import type { RiwayatSk } from "./kepegawaian/riwayat_sk";
 import type { Golongan } from "./master/golongan";
 import type { Grade } from "./master/grade";
 import type { JabatanMini } from "./master/jabatan";
-import type { Organisasi } from "./master/organisasi";
+import type { Organisasi, OrganisasiMini } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
 import { BiodataSchema, type BiodataMini } from "./profil/biodata";
 
@@ -53,6 +53,14 @@ export interface Pegawai extends BasePegawai {
 	tmtJabatan: string | null;
 	refSkMutasiId: number;
 	tmtMutasi: string | null;
+}
+
+export interface PegawaiList {
+	id: number;
+	nipam: string;
+	nama: string;
+	organisasi: OrganisasiMini;
+	jabatan: JabatanMini;
 }
 
 export const PegawaiSchema = BiodataSchema.extend({

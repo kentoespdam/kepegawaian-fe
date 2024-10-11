@@ -71,10 +71,10 @@ export const getPageData = async <TData>(
 			cache: "no-cache",
 		});
 
-		const json=await response.json();
+		const json = await response.json();
 		// console.log(json)
 
-		const result: BaseResult<Pageable<TData>> = json
+		const result: BaseResult<Pageable<TData>> = json;
 		return result.data;
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (error: any) {
@@ -146,6 +146,7 @@ export const getListData = async <TData>(
 	const url = props.subPath
 		? `${basePath}/${props.path.replace("_", "-")}/${props.subPath}?${props.searchParams}`
 		: `${basePath}/${props.path.replace("_", "-")}/list?${props.searchParams}`;
+	console.log(url);
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);

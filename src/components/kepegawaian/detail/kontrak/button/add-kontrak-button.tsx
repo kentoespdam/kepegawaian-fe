@@ -3,7 +3,6 @@ import type { Pegawai } from "@_types/pegawai";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
-import { useQueryClient } from "@tanstack/react-query";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -15,13 +14,11 @@ const AddKontrakButton = ({ pegawai }: AddKontrakButtonProps) => {
 	const setDefaultValues = useRiwayatKontrakStore(
 		(state) => state.setDefaultValues,
 	);
-	const qc = useQueryClient();
 	const router = useRouter();
 	const handleClick = () => {
 		if (statusPegawai !== "KONTRAK") {
 			return alert("Pegawai ini bukan kontrak");
 		}
-		const pegawai = qc.getQueryData<Pegawai>(["pegawai", id]);
 		setDefaultValues(pegawai);
 		router.push(`/kepegawaian/kontrak/add/${id}`);
 	};

@@ -40,14 +40,14 @@ const sqids = new Sqids({
  * @param id The number to be encoded.
  * @returns The encoded string.
  */
-export const encodeId = (id: number): string =>
-	sqids.encode([
-		rndNum(),
-		rndNum(),
-		rndNum(),
-		rndNum(),
-		rndNum(),
-		id
-	]);
+export const encodeId = (id: number): string => {
+	const arr = [rndNum(), rndNum(), rndNum(), rndNum(), rndNum(), id];
+	console.log(arr);
+	return sqids.encode(arr);
+};
 
-export const decodeId = (id: string) => sqids.decode(id)[5];
+export const decodeId = (id: string) => {
+	const arr = sqids.decode(id);
+	console.log(arr);
+	return arr[5];
+};

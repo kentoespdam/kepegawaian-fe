@@ -45,8 +45,8 @@ export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
 	namaGolonganLama: z.string().optional().default(""),
 	notes: z.string(),
 }).superRefine((val, ctx) => {
-	const { tanggalSk, tmtBerlaku, nipam } = val;
-	if (!nipam.startsWith("KO-")) {
+	const { tanggalSk, tmtBerlaku, nipam, golonganLamaId } = val;
+	if (!nipam.startsWith("KO-") && golonganLamaId <= 0) {
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Golongan wajib diisi",

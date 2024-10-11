@@ -1,8 +1,8 @@
 "use client";
 
 import {
-	type RiwayatMutasi,
 	RiwayatMutasiSchema,
+	type RiwayatMutasi,
 } from "@_types/kepegawaian/riwayat-mutasi";
 import type { Pegawai } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
@@ -11,9 +11,9 @@ import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useGlobalMutation } from "@store/query-store";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { type UseFormReturn, useForm } from "react-hook-form";
+import { useForm, type UseFormReturn } from "react-hook-form";
 import { saveRiwayatMutasi } from "../action";
 import RiwayatMutasiFormAction from "../button/form-action";
 import MutasiGolonganForm from "./mutasi_golongan";
@@ -41,7 +41,6 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 			setJenisMutasi: state.setJenisMutasi,
 		}));
 
-	const router = useRouter();
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
 

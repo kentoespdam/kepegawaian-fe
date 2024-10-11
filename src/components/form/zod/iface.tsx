@@ -13,4 +13,5 @@ export interface InputZodProps<TData extends FieldValues> {
 	disabled?: boolean;
 	fileRef?: UseFormRegisterReturn;
 	className?: string;
+	readonly?: boolean;
 }

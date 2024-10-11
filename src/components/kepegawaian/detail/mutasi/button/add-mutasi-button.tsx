@@ -1,18 +1,12 @@
 "use client";
 import TooltipBuilder from "@components/builder/tooltip";
 import { ButtonLink } from "@components/ui/link";
-import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { PlusCircleIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 type AddMutasiButtonProps = {
 	pegawaiId: number;
 };
 const AddMutasiButton = ({ pegawaiId }: AddMutasiButtonProps) => {
-	const setDefaultValues = useRiwayatMutasiStore(
-		(state) => state.setDefaultValues,
-	);
-	const router = useRouter();
 	return (
 		<TooltipBuilder
 			text="Tambah Mutasi Pegawai"

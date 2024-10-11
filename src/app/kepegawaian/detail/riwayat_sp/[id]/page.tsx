@@ -1,4 +1,6 @@
 import type { Pegawai } from "@_types/pegawai";
+import AddRiwayatSpButton from "@components/kepegawaian/detail/peringatan/button/add-sp-button";
+import RiwayatSpComponent from "@components/kepegawaian/detail/peringatan/content";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {
@@ -13,33 +15,18 @@ const RiwayatSp = async ({ params }: { params: { id: number } }) => {
 	});
 
 	return (
-		<div className="grid min-h-screen w-full">
+		<div className="grid min-h-full w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
 					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 						<span className="text-md font-semibold">
 							{metadata.title} [{pegawai?.nipam}] ({pegawai?.biodata.nama})
 						</span>
-						{/* <AddMutasiButton pegawaiId={params.id} /> */}
+						<AddRiwayatSpButton pegawaiId={params.id} />
 					</header>
 					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							{/* <MutasiContentComponent pegawaiId={params.id} /> */}
-						</div>
-					</main>
-				</div>
-			</div>
-			<div className="border-t border-r border-b gap-0">
-				<div className="grid">
-					<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-						<span className="text-md font-semibold">Lampiran</span>
-						{/* <AddLampiranProfilButton
-							jenis={JenisLampiranProfil.Values.KARTU_IDENTITAS}
-						/> */}
-					</header>
-					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">
-						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							{/* <LampiranKartuIdentitasContent /> */}
+							<RiwayatSpComponent pegawaiId={params.id} />
 						</div>
 					</main>
 				</div>

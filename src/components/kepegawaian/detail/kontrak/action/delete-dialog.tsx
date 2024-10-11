@@ -47,10 +47,10 @@ const DeleteRiwayatKontrakDialog = ({
 	});
 
 	const mutation = useGlobalMutation({
-		mutationFunction: async () =>
+		mutationFunction: async (values: BaseDelete) =>
 			await globalDeleteData({
 				path: "kepegawaian/riwayat/kontrak",
-				formData: form.getValues(),
+				formData: values,
 			}),
 		queryKeys: [["riwayat-kontrak", pegawaiId, search.toString()]],
 	});

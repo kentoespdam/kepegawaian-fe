@@ -12,6 +12,7 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import DeleteRiwayatMutasiDialog from "../form/delete-dialog";
 import RiwayatMutasiTableBody from "../table/body";
 
 type MutasiContentProps = {
@@ -29,7 +30,6 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				searchParams: search.toString(),
 				isRoot: true,
 			});
-			console.log(result);
 			return result;
 		},
 		enabled: !!props.pegawaiId,
@@ -38,7 +38,7 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 	return (
 		<div className="grid p-2 gap-0">
 			<SearchBuilder columns={riwayatMutasiTableColumns} />
-			<div className="min-h-90 overflow-auto">
+			<div className="min-h-60 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatMutasiTableColumns} />
 					{query.isLoading || query.error || !query.data || query.data.empty ? (
@@ -61,6 +61,7 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				</Table>
 			</div>
 			<PaginationBuilder data={query.data} />
+			<DeleteRiwayatMutasiDialog pegawaiId={props.pegawaiId} />
 		</div>
 	);
 };
