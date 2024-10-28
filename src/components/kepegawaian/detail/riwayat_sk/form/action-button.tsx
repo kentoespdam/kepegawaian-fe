@@ -1,8 +1,6 @@
-import { RiwayatSk } from "@_types/kepegawaian/riwayat_sk";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import { Button } from "@components/ui/button";
 import { DialogClose, DialogFooter } from "@components/ui/dialog";
-import type { UseMutationResult } from "@tanstack/react-query";
 import { SaveIcon } from "lucide-react";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
 

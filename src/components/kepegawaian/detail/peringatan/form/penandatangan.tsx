@@ -10,34 +10,17 @@ import {
 	CommandList,
 } from "@components/ui/command";
 import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
-import { getListData } from "@helpers/action";
-import { useQuery } from "@tanstack/react-query";
-import type React from "react";
-import { type Dispatch, useState } from "react";
-import type { SpFormProps } from ".";
-import { useDebouncedCallback } from "use-debounce";
-import { CheckIcon } from "lucide-react";
-import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTrigger,
 } from "@components/ui/dialog";
-import { DialogTriggerProps } from "@radix-ui/react-alert-dialog";
-
-const DetailListPegawai = ({ item }: { item: PegawaiList }) => {
-	return (
-		<span className="flex gap-2 items-center">
-			{item.nipam}
-			{item.nama}
-			{item?.jabatan?.nama}
-		</span>
-	);
-};
+import { getListData } from "@helpers/action";
+import { useQuery } from "@tanstack/react-query";
+import type React from "react";
+import { useState, type Dispatch } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import type { SpFormProps } from ".";
 
 interface PegawaiContentProps extends SpFormProps {
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
@@ -133,10 +116,7 @@ const PenandaTanganSpForm = ({ form }: SpFormProps) => {
 						<div className="pt-8 text-right">
 							<Dialog open={open} onOpenChange={setOpen}>
 								<DialogTrigger asChild>
-									<Button
-										variant="outline"
-										aria-expanded={open}
-									>
+									<Button variant="outline" aria-expanded={open}>
 										CARI
 									</Button>
 								</DialogTrigger>

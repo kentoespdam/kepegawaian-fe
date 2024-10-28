@@ -4,7 +4,7 @@ import type { Organisasi } from "@_types/master/organisasi";
 import type { Profesi } from "@_types/master/profesi";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
-import { BaseRiwayatSchema, type RiwayatSk } from "./riwayat_sk";
+import { BaseRiwayatSkSchema, type RiwayatSk } from "./riwayat_sk";
 
 export interface RiwayatMutasi {
 	id: number;
@@ -26,7 +26,7 @@ export interface RiwayatMutasi {
 	notes: string;
 }
 
-export const RiwayatMutasiSchema = BaseRiwayatSchema.extend({
+export const RiwayatMutasiSchema = BaseRiwayatSkSchema.extend({
 	nipam: z.string(),
 	nama: z.string(),
 	tglBerakhir: z.string().optional(),

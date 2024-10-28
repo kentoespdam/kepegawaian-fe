@@ -61,6 +61,7 @@ export interface PegawaiList {
 	nama: string;
 	organisasi: OrganisasiMini;
 	jabatan: JabatanMini;
+	golongan: Golongan;
 }
 
 export const PegawaiSchema = BiodataSchema.extend({

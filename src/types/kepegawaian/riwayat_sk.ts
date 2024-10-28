@@ -19,7 +19,7 @@ export interface RiwayatSk {
 	notes: string;
 }
 
-export const BaseRiwayatSchema = z.object({
+export const BaseRiwayatSkSchema = z.object({
 	id: z.number().optional().default(0),
 	pegawaiId: z.number().min(1, "Unknown Pegawai"),
 	nomorSk: z.string().min(3, "Nomor SK wajib diisi"),
@@ -37,7 +37,7 @@ export const BaseRiwayatSchema = z.object({
 	notes: z.string(),
 });
 
-export const RiwayatSkSchema = BaseRiwayatSchema.superRefine((val, ctx) => {
+export const RiwayatSkSchema = BaseRiwayatSkSchema.superRefine((val, ctx) => {
 	const { tanggalSk, tmtBerlaku, updateMaster, gajiPokok } = val;
 	if (new Date(tanggalSk) > new Date(tmtBerlaku)) {
 		ctx.addIssue({

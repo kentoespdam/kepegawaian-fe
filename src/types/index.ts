@@ -35,7 +35,6 @@ export interface BaseResult<TData> {
 	errors?: string | string[];
 }
 
-
 export interface PageableSort {
 	sorted: boolean;
 	unsorted: boolean;
@@ -92,6 +91,8 @@ export type BaseColumnDef = {
 export type CustomColumnDef = BaseColumnDef & {
 	search?: boolean;
 	searchType?: z.infer<typeof ESearchType>;
+	sortable?: boolean;
+	baseSort?: string;
 };
 
 export const DeleteSchema = z.object({
