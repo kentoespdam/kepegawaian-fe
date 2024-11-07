@@ -16,9 +16,7 @@ const NonPegawaiTableBody = ({ data }: NonPegawaiTableBodyProps) => {
 					<TableCell align="right" width={60} className="border-x">
 						{urut++}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
-						<NonPegawaiTableAction biodata={row} />
-					</TableCell>
+					<NonPegawaiTableAction biodata={row} />
 					<TableCell className="border-x whitespace-nowrap">
 						{row.nama}
 					</TableCell>
@@ -44,7 +42,9 @@ const NonPegawaiTableBody = ({ data }: NonPegawaiTableBodyProps) => {
 					<TableCell className="border-x whitespace-nowrap">
 						{row.statusKawin.replace("_", " ")}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">{row.notes}</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.notes}
+					</TableCell>
 				</TableRow>
 			))}
 		</TableBody>

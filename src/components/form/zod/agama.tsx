@@ -44,13 +44,14 @@ const SelectAgamaZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",
 									)}
 								>
-									{!field.value ? "Pilih Agama" : field.value.replace("_", " ")}
+									{!field.value || field.value === ""
+										? "Pilih Agama"
+										: field.value.replace("_", " ")}
 									<ChevronDownIcon className="h-4 w-4 opacity-50" />
 								</Button>
 							</FormControl>
@@ -60,19 +61,19 @@ const SelectAgamaZod = <TData extends FieldValues>({
 								<CommandInput placeholder="Pencarian..." />
 								<CommandList>
 									<CommandEmpty>No results found.</CommandEmpty>
-									{AGAMA.map((status, index) => (
+									{AGAMA.map((status) => (
 										<CommandItem
 											key={status}
 											value={status}
 											onSelect={() => {
-												field.onChange(index);
+												field.onChange(status);
 												setPop(false);
 											}}
 										>
 											<CheckIcon
 												className={cn(
 													"mr-2 h-4 w-4",
-													index === field.value ? "opacity-100" : "opacity-0",
+													status === field.value ? "opacity-100" : "opacity-0",
 												)}
 												aria-hidden
 											/>

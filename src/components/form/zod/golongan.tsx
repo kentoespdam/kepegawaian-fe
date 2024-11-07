@@ -1,24 +1,7 @@
 "use client";
 
-import {
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@components/ui/form";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-} from "@components/ui/select";
-import { getListData } from "@helpers/action";
-import { SelectValue } from "@radix-ui/react-select";
-import { useQuery } from "@tanstack/react-query";
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
 import { findGolonganValue, type Golongan } from "@_types/master/golongan";
+import { Button } from "@components/ui/button";
 import {
 	Command,
 	CommandEmpty,
@@ -27,14 +10,24 @@ import {
 	CommandList,
 } from "@components/ui/command";
 import {
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from "@components/ui/form";
+import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import { Button } from "@components/ui/button";
+import type { FieldValues } from "react-hook-form";
+import type { InputZodProps } from "./iface";
 
 const SelectGolonganZod = <TData extends FieldValues>({
 	id,
@@ -64,7 +57,6 @@ const SelectGolonganZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",

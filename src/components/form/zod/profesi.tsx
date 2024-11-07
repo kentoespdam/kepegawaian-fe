@@ -25,16 +25,24 @@ import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+
+interface SelectProfesiZodProps<TData extends FieldValues>
+	extends InputZodProps<TData> {
+		defaultValues?: TData;
+}
 
 const SelectProfesiZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-}: InputZodProps<TData>) => {
-	const jabLevelId = useOrgJab((state) => state.jabLevelId);
+}: SelectProfesiZodProps<TData>) => {
+	const { jabLevelId, setJabLevelId } = useOrgJab((state) => ({
+		jabLevelId: state.jabLevelId,
+		setJabLevelId: state.setJabLevelId,
+	}));
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
@@ -61,7 +69,6 @@ const SelectProfesiZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",

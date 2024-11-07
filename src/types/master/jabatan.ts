@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
-import type { Level } from "./level";
+import { LevelSchema, type Level } from "./level";
 import type { OrganisasiMini } from "./organisasi";
 
 export interface JabatanMini {
@@ -13,6 +13,14 @@ export interface Jabatan extends JabatanMini {
 	parent: JabatanMini | null;
 	organisasi: OrganisasiMini;
 }
+
+export const JabatanMiniSchema = z.object({
+	id: z.number(),
+	level: LevelSchema,
+	nama: z.string(),
+});
+
+export type JabatanMiniSchema = z.infer<typeof JabatanMiniSchema>;
 
 export const JabatanSchema = z.object({
 	id: z.number(),

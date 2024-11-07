@@ -4,7 +4,7 @@ import type { RiwayatSk } from "./kepegawaian/riwayat_sk";
 import type { Golongan } from "./master/golongan";
 import type { Grade } from "./master/grade";
 import type { JabatanMini } from "./master/jabatan";
-import type { Organisasi } from "./master/organisasi";
+import type { Organisasi, OrganisasiMini } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
 import { BiodataSchema, type BiodataMini } from "./profil/biodata";
 
@@ -14,14 +14,14 @@ export interface BasePegawai {
 	statusPegawai: string;
 	statusKerja: string;
 	nomorSk: string;
-	tmtKerja: string;
+	tmtKerja: string | null;
 	biodata: BiodataMini;
 	organisasi: Organisasi;
 	jabatan: JabatanMini;
 	profesi: Profesi;
 	golongan: Golongan;
 	grade: Grade;
-	tmtPensiun: string;
+	tmtPensiun: string | null;
 	gajiPokok: number;
 	phdp: number;
 	jmlTanggungan: number;
@@ -43,16 +43,25 @@ export interface PegawaiDetail extends BasePegawai {
 
 export interface Pegawai extends BasePegawai {
 	refSkCapegId: number;
-	tmtKerja: string;
-	tmtPensiun: string;
+	tmtKerja: string | null;
+	tmtPensiun: string | null;
 	refSkPegawaiId: number;
-	tmtPegawai: string;
+	tmtPegawai: string | null;
 	refSkGolonganId: number;
-	tmtGolongan: string;
+	tmtGolongan: string | null;
 	refSkJabatanId: number;
-	tmtJabatan: string;
+	tmtJabatan: string | null;
 	refSkMutasiId: number;
-	tmtMutasi: string;
+	tmtMutasi: string | null;
+}
+
+export interface PegawaiList {
+	id: number;
+	nipam: string;
+	nama: string;
+	organisasi: OrganisasiMini;
+	jabatan: JabatanMini;
+	golongan: Golongan;
 }
 
 export const PegawaiSchema = BiodataSchema.extend({
@@ -66,10 +75,10 @@ export const PegawaiSchema = BiodataSchema.extend({
 	gradeId: z.number().optional(),
 	golonganId: z.number().optional(),
 	nomorSk: z.string().optional(),
-	tmtBerlakuSk: z.string().optional(),
 	tanggalSk: z.string().optional(),
+	tmtBerlakuSk: z.string().optional(),
 	tmtKontrakSelesai: z.string().optional(),
-	gajiPokok: z.number().optional().default(0),
+	gajiPokok: z.number().default(0),
 }).superRefine((val, ctx) => {
 	if (val.statusPegawai === "NON_PEGAWAI") return;
 

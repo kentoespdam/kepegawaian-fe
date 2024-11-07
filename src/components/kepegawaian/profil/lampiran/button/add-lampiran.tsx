@@ -23,6 +23,13 @@ const AddLampiranProfilButton = (props: AddLampiranProfilButtonProps) => {
 				return "Profil Pengalaman Kerja";
 			case JenisLampiranProfil.Values.PROFIL_KEAHLIAN:
 				return "Profil Keahlian";
+			case JenisLampiranProfil.Values.PROFIL_PELATIHAN:
+				return "Profil Pelatihan";
+			case JenisLampiranProfil.Values.KARTU_IDENTITAS:
+				return "Kartu Identitas";
+			case JenisLampiranProfil.Values.PROFIL_KELUARGA:
+				return "Profil Keluarga";
+
 			default:
 				return "Profil Pendidikan";
 		}

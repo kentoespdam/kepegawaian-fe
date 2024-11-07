@@ -12,4 +12,6 @@ export interface InputZodProps<TData extends FieldValues> {
 	type?: "text" | "number" | "email" | "hidden" | "float" | "file";
 	disabled?: boolean;
 	fileRef?: UseFormRegisterReturn;
+	className?: string;
+	readonly?: boolean;
 }

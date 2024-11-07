@@ -6,34 +6,39 @@ import TooltipBuilder from "../tooltip";
 import { useQueryClient } from "@tanstack/react-query";
 
 type ResetSearchComponentProps = {
-    pending?: boolean
-    isFetching?: boolean
-    isLoading?: boolean
-}
+	pending?: boolean;
+	isFetching?: boolean;
+	isLoading?: boolean;
+};
 const ResetSearchComponent = (props: ResetSearchComponentProps) => {
-    const { replace } = useRouter()
-    const pathname = usePathname()
+	const { replace } = useRouter();
+	const pathname = usePathname();
 
-    const qc=useQueryClient()
+	const qc = useQueryClient();
 
-    const clearSearch = () => {
-        qc.invalidateQueries()
-        replace(pathname);
-    };
+	const clearSearch = () => {
+		// qc.invalidateQueries({
+		// 	queryKey: ["pegawai", 1],
+		// });
+		// qc.refetchQueries()
+		replace(pathname);
+	};
 
-    return (
-        <TooltipBuilder text="Clear Search" className="bg-destructive text-destructive-foreground">
-            <LoadingButtonClient
-                pending={props.pending ?? false}
-                variant="outline"
-                type="reset"
-                size="icon"
-                icon={<ResetIcon className="text-destructive" />}
-                onClick={clearSearch}
-            />
-
-        </TooltipBuilder>
-    );
-}
+	return (
+		<TooltipBuilder
+			text="Clear Search"
+			className="bg-destructive text-destructive-foreground"
+		>
+			<LoadingButtonClient
+				pending={props.pending ?? false}
+				variant="outline"
+				type="reset"
+				size="icon"
+				icon={<ResetIcon className="text-destructive" />}
+				onClick={clearSearch}
+			/>
+		</TooltipBuilder>
+	);
+};
 
 export default ResetSearchComponent;

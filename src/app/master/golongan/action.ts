@@ -1,6 +1,6 @@
 "use server";
 
-import type { SaveErrorStatus } from "@_types/index";
+import type { BaseDelete, SaveErrorStatus } from "@_types/index";
 import { GolonganSchema } from "@_types/master/golongan";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";

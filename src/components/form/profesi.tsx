@@ -40,7 +40,6 @@ const SelectProfesiComponent = (props: SelectProfesiComponentProps) => {
                 <PopoverTrigger asChild>
                     <Button
                         variant={"outline"}
-                        role="combobox"
                         aria-expanded={open}
                         className="w-full justify-between"
                     >

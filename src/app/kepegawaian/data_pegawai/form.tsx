@@ -13,6 +13,7 @@ import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useForm } from "react-hook-form";
 import { saveKepegawaian } from "./action";
+import { useEffect } from "react";
 
 type PegawaiFormProps = {
 	biodata?: Biodata;
@@ -92,7 +93,13 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 			statusKerja: "KARYAWAN_AKTIF",
 		});
 		mutation.mutate(values);
+		// console.log(values)
 	};
+
+	useEffect(() => {
+		form.watch()
+		console.table(form.watch());
+	}, [form]);
 
 	return (
 		<Form {...form}>

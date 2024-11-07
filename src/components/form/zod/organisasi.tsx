@@ -1,7 +1,7 @@
 "use client";
 import {
-	type OrganisasiMini,
 	findOrganisasiValue,
+	type OrganisasiMini,
 } from "@_types/master/organisasi";
 import { Button } from "@components/ui/button";
 import {
@@ -28,7 +28,7 @@ import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
@@ -49,6 +49,12 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 		},
 	});
 
+	const currentOrganisasiId = form.watch(id);
+	useEffect(
+		() => setOrganisasiId(currentOrganisasiId),
+		[setOrganisasiId, currentOrganisasiId],
+	);
+
 	return (
 		<FormField
 			control={form.control}
@@ -61,7 +67,6 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
 									className={cn(
 										"w-full justify-between",
 										!field.value ? "text-muted-foreground" : "",

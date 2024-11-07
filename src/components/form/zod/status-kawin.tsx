@@ -44,7 +44,6 @@ const SelectStatusKawinZod = <TData extends FieldValues>({
 							<FormControl>
 								<Button
 									variant="outline"
-									role="combobox"
 									className={cn("w-full justify-between", !field.value ? "text-muted-foreground" : "")}
 								>
 									{field.value
@@ -59,7 +58,7 @@ const SelectStatusKawinZod = <TData extends FieldValues>({
 								<CommandInput placeholder="Pencarian..." />
 								<CommandList>
 									<CommandEmpty>No results found.</CommandEmpty>
-									{STATUS_KAWIN.map((item, index) => (
+									{STATUS_KAWIN.map((item) => (
 										<CommandItem
 											key={item}
 											value={item}
@@ -72,7 +71,7 @@ const SelectStatusKawinZod = <TData extends FieldValues>({
 											<CheckIcon
 												className={cn(
 													"ml-auto h-4 w-4",
-													index === field.value ? "opacity-100" : "opacity-0",
+													item === field.value ? "opacity-100" : "opacity-0",
 												)}
 											/>
 										</CommandItem>

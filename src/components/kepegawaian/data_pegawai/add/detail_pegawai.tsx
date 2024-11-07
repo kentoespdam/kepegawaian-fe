@@ -37,7 +37,9 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
 
 				<InputZod id="nomorSk" label="Nomor SK" form={form} />
 
-				<DatePickerZod id="tanggalSk" label="TMT SK" form={form} />
+				<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
+
+				<DatePickerZod id="tmtBerlakuSk" label="TMT SK" form={form} />
 
 				{biodataStore.statusPegawai === "KONTRAK" ? (
 					<DatePickerZod

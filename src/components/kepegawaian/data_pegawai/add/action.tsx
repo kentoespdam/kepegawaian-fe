@@ -7,12 +7,12 @@ import Link from "next/link";
 const PegawaiActionComponent = ({ pending }: { pending: boolean }) => {
     return (
         <div className="w-full flex justify-end gap-2">
+            <LoadingButtonClient type="submit" title="Save" pending={pending} icon={<SaveIcon />} />
             <Link href="/kepegawaian/data_pegawai" className={cn(buttonVariants({
                 variant: "destructive"
             }))} >
                 Cancel
             </Link>
-            <LoadingButtonClient type="submit" title="Save" pending={pending} icon={<SaveIcon />} />
         </div>
     );
 }
