@@ -1,5 +1,15 @@
 "use client";
-import { Home, Package2, Undo2Icon, UndoIcon } from "lucide-react";
+import {
+	BookOpenIcon,
+	ContactIcon,
+	GraduationCapIcon,
+	HistoryIcon,
+	Home,
+	Package2,
+	TelescopeIcon,
+	Undo2Icon,
+	UndoIcon,
+} from "lucide-react";
 import Link from "next/link";
 
 import CustomQueryProvider from "@components/providers/query";
@@ -11,6 +21,7 @@ import TooltipBuilder from "@components/builder/tooltip";
 import { Separator } from "@components/ui/separator";
 import { usePathname } from "next/navigation";
 import { cn } from "@lib/utils";
+import { IdCardIcon } from "@radix-ui/react-icons";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -53,12 +64,10 @@ const Layout = ({ children }: ChildrenNode) => {
 									href={`/kepegawaian/pendukung/pendidikan/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "pendidikan"
-											? "text-info"
-											: "",
+										paths[3] === "pendidikan" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<GraduationCapIcon className="h-4 w-4" />
 									Data Pendidikan
 								</Link>
 
@@ -66,12 +75,10 @@ const Layout = ({ children }: ChildrenNode) => {
 									href={`/kepegawaian/pendukung/pengalaman_kerja/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "pengalaman_kerja"
-											? "text-info"
-											: "",
+										paths[3] === "pengalaman_kerja" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<HistoryIcon className="h-4 w-4" />
 									Pengalaman Kerja
 								</Link>
 
@@ -79,38 +86,32 @@ const Layout = ({ children }: ChildrenNode) => {
 									href={`/kepegawaian/pendukung/keahlian/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "keahlian"
-											? "text-info"
-											: "",
+										paths[3] === "keahlian" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<TelescopeIcon className="h-4 w-4" />
 									Keahlian
 								</Link>
-								
+
 								<Link
 									href={`/kepegawaian/pendukung/pelatihan/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "pelatihan"
-											? "text-info"
-											: "",
+										paths[3] === "pelatihan" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<BookOpenIcon className="h-4 w-4" />
 									Pelatihan
 								</Link>
-								
+
 								<Link
 									href={`/kepegawaian/pendukung/kartu_identitas/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "kartu_identitas"
-											? "text-info"
-											: "",
+										paths[3] === "kartu_identitas" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<IdCardIcon className="h-4 w-4" />
 									Kartu Identitas
 								</Link>
 
@@ -118,12 +119,10 @@ const Layout = ({ children }: ChildrenNode) => {
 									href={`/kepegawaian/pendukung/keluarga/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "keluarga"
-											? "text-info"
-											: "",
+										paths[3] === "keluarga" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<ContactIcon className="h-4 w-4" />
 									Keluarga
 								</Link>
 							</nav>

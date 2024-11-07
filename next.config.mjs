@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	output: "standalone",
 	experimental: {
 		extensionAlias: {
 			".js": [".tsx", ".ts", ".jsx", ".js"],

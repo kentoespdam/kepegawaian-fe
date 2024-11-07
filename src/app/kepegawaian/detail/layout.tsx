@@ -1,16 +1,25 @@
 "use client";
-import { Home, Package2, Undo2Icon, UndoIcon } from "lucide-react";
+import {
+	AlarmClockOffIcon,
+	FileSignatureIcon,
+	Package2,
+	ReceiptTextIcon,
+	RefreshCcwIcon,
+	SignatureIcon,
+	TriangleAlertIcon,
+	Undo2Icon,
+} from "lucide-react";
 import Link from "next/link";
 
-import CustomQueryProvider from "@components/providers/query";
-import { Toaster } from "@components/ui/toaster";
-import type { ChildrenNode } from "@lib/index";
-import { QueryClient } from "@tanstack/react-query";
-import { ButtonLink } from "@components/ui/link";
 import TooltipBuilder from "@components/builder/tooltip";
+import CustomQueryProvider from "@components/providers/query";
+import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";
-import { usePathname } from "next/navigation";
+import { Toaster } from "@components/ui/sonner";
+import type { ChildrenNode } from "@lib/index";
 import { cn } from "@lib/utils";
+import { QueryClient } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -25,7 +34,7 @@ const Layout = ({ children }: ChildrenNode) => {
 	const paths = path.split("/");
 	return (
 		<CustomQueryProvider queryClient={queryClient}>
-			<div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
+			<div className="grid min-h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
 				<div className="border bg-muted/40 md:block">
 					<div className="flex h-full max-h-screen flex-col gap-2">
 						<div className="flex h-10 items-center border-b px-2 lg:h-[60px] lg:px-6">
@@ -50,14 +59,14 @@ const Layout = ({ children }: ChildrenNode) => {
 						<div className="flex-1">
 							<nav className="grid items-start px-2 text-sm font-medium lg:px-4">
 								<Link
-									href={`/kepegawaian/detail/jabatan/${paths[4]}`}
+									href={`/kepegawaian/detail/mutasi/${paths[4]}`}
 									className={cn(
 										"flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary",
-										paths[3] === "jabatan" ? "text-info" : "",
+										paths[3] === "mutasi" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
-									Data Jabatan & Unit Kerja
+									<RefreshCcwIcon className="h-4 w-4" />
+									Data Mutasi
 								</Link>
 
 								<Link
@@ -67,7 +76,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "cuti" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<AlarmClockOffIcon className="h-4 w-4" />
 									Data Penggunaan Hak Cuti
 								</Link>
 
@@ -78,7 +87,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_kontrak" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<ReceiptTextIcon className="h-4 w-4" />
 									Riwayat Kontrak Kerja
 								</Link>
 
@@ -89,7 +98,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_sk" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<SignatureIcon className="h-4 w-4" />
 									Riwayat Surat Keputusan
 								</Link>
 
@@ -100,7 +109,7 @@ const Layout = ({ children }: ChildrenNode) => {
 										paths[3] === "riwayat_sp" ? "text-info" : "",
 									)}
 								>
-									<Home className="h-4 w-4" />
+									<TriangleAlertIcon className="h-4 w-4" />
 									Riwayat Surat Peringatan
 								</Link>
 
@@ -121,7 +130,7 @@ const Layout = ({ children }: ChildrenNode) => {
 
 				{children}
 			</div>
-			<Toaster />
+			<Toaster richColors />
 		</CustomQueryProvider>
 	);
 };

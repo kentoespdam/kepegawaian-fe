@@ -1,7 +1,6 @@
 "use client"
 import CustomQueryProvider from "@components/providers/query";
 import { Toaster } from "@components/ui/sonner";
-// import { Toaster } from "@components/ui/toaster";
 import type { ChildrenNode } from "@lib/index";
 import { QueryClient } from "@tanstack/react-query";
 

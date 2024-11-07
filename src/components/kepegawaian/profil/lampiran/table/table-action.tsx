@@ -46,7 +46,7 @@ const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 		queryKeys: [[props.rootKey, refId]],
 	});
 
-	const deleteHadler = () => {
+	const deleteHandler = () => {
 		setLampiranId(id);
 		setRefId(refId);
 		setOpenDeleteDialog(true);
@@ -119,7 +119,7 @@ const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 						</DropdownMenuItem>
 						<DropdownMenuItem
 							className="flex flex-row items-center cursor-pointer text-destructive"
-							onClick={deleteHadler}
+							onClick={deleteHandler}
 						>
 							<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Delete</span>

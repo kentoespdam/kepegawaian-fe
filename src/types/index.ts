@@ -15,13 +15,17 @@ export const BaseId = z.object({
 	id: z.number(),
 });
 
+export type BaseId = z.infer<typeof BaseId>;
+
 export const BaseDelete = z.object({
 	id: z.string().startsWith("DELETE-", {
 		message: "invalid delete code!",
 	}),
 	curId: z.number().optional() || z.string().optional(),
+	unique: z.string().optional(),
 });
 
+export type BaseDelete = z.infer<typeof BaseDelete>;
 export interface BaseResult<TData> {
 	status: number;
 	statusText: string;
@@ -30,8 +34,6 @@ export interface BaseResult<TData> {
 	timestamp: string;
 	errors?: string | string[];
 }
-
-export type BaseDelete = z.infer<typeof BaseDelete>;
 
 export interface PageableSort {
 	sorted: boolean;
@@ -77,6 +79,8 @@ export const ESearchType = z.enum([
 	"jabatan",
 	"profesi",
 	"jenjangPendidikan",
+	"jenisSk",
+	"jenisMutasi",
 ]);
 
 export type BaseColumnDef = {
@@ -87,6 +91,8 @@ export type BaseColumnDef = {
 export type CustomColumnDef = BaseColumnDef & {
 	search?: boolean;
 	searchType?: z.infer<typeof ESearchType>;
+	sortable?: boolean;
+	baseSort?: string;
 };
 
 export const DeleteSchema = z.object({

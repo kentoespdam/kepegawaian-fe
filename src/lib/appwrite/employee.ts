@@ -18,12 +18,9 @@ export const getEmployeeByNipam = async (
 				tanggalLahir: "2000-01-01",
 				statusKawin: STATUS_KAWIN[1],
 			},
-			statusPegawai: {
-				id: 3,
-				nama: "PEGAWAI",
-			},
+			statusPegawai: "PEGAWAI",
 			nomorSk: "123456789",
-			tanggalSk: "2022-01-01",
+			tmtGolongan: "2022-01-01",
 			jabatan: {
 				id: 3,
 				level: {
@@ -67,10 +64,23 @@ export const getEmployeeByNipam = async (
 				grade: 1,
 				tukin: 300000.0,
 			},
-			statusKerja: {
-				id: 1,
-				nama: "Karyawan Aktif",
-			},
+			statusKerja: "KARYAWAN_AKTIF",
+			refSkCapegId: 0,
+			refSkGolonganId: 0,
+			refSkJabatanId: 0,
+			refSkMutasiId: 0,
+			refSkPegawaiId: 0,
+			tmtKerja: "2022-01-01",
+			tmtJabatan: null,
+			tmtMutasi: null,
+			tmtPegawai: null,
+			tmtPensiun: null,
+			gajiPokok: 0,
+			phdp: 0,
+			jmlTanggungan: 0,
+			mkgTahun: 0,
+			mkgBulan: 0,
+			absensiId: 0,
 			notes: null,
 		};
 		// Mengembalikan data pegawai jika nipam cocok

@@ -1,23 +1,73 @@
+"use client";
 import { TableHead, TableHeader, TableRow } from "@components/ui/table";
 import type { CustomColumnDef } from "@_types/index";
 import { cn } from "@lib/utils";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { use, useState } from "react";
+import { routeModule } from "next/dist/build/templates/app-page";
+import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react";
 
 type TableHeadBuilderProps = {
-    columns: CustomColumnDef[];
+	columns: CustomColumnDef[];
 };
-const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => (
-    <TableHeader>
-        <TableRow>
-            {columns.map((head, index) => (
-                <TableHead key={head.id} className={cn("text-center bg-primary text-primary-foreground border-x",
-                    index === 0 && "rounded-ss-lg border-l-0",
-                    index === columns.length - 1 && "rounded-se-lg border-r-0")}>
-                    {head.label}
-                </TableHead>
-            ))}
-        </TableRow>
-    </TableHeader>
-);
+const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
+	const pathname = usePathname();
+	const params = useSearchParams();
+	const search = new URLSearchParams(params);
+	const sortBy = search.get("sortBy")?.split(".") || "";
+	const sortByString = sortBy.slice(sortBy.length - 1)[0] || "";
+	const sortDir = search.get("sortDirection") || "";
+	const { replace } = useRouter();
+	const handleClick = (head: CustomColumnDef) => {
+		if (!head.sortable) return;
+		search.set(
+			"sortBy",
+			head.baseSort ? `${head.baseSort}.${head.id}` : head.id,
+		);
+		search.set(
+			"sortDirection",
+			sortDir === "asc" || sortDir === "" ? "desc" : "asc",
+		);
+		replace(`${pathname}?${search.toString()}`);
+		// if (head.sortable) console.log("clicked", head.id, head.sortable);
+	};
+
+	return (
+		<TableHeader>
+			<TableRow>
+				{columns.map((head, index) => (
+					<TableHead
+						key={head.id}
+						className={cn(
+							"text-center bg-primary text-primary-foreground border-x text-nowrap",
+							index === 0 && "rounded-ss-lg border-l-0",
+							index === columns.length - 1 && "rounded-se-lg border-r-0",
+							head.sortable && "cursor-pointer",
+						)}
+						onClick={() => handleClick(head)}
+					>
+						<div
+							className={cn(
+								"",
+								head.sortable && "flex justify-between items-center",
+							)}
+						>
+							<span>{head.label}</span>
+							{head.sortable ? (
+								sortDir === "" || sortByString !== head.id ? (
+									<ArrowUpDownIcon className="ml-2 h-4 w-4" />
+								) : sortDir === "asc" ? (
+									<ArrowDownIcon className="ml-2 h-4 w-4" />
+								) : (
+									<ArrowUpIcon className="ml-2 h-4 w-4" />
+								)
+							) : null}
+						</div>
+					</TableHead>
+				))}
+			</TableRow>
+		</TableHeader>
+	);
+};
 
 export default TableHeadBuilder;
-

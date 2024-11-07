@@ -8,7 +8,7 @@ import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
 import { useRouter, useSearchParams } from "next/navigation"
-import React from "react"
+import React, { useEffect } from "react"
 import { useDebouncedCallback } from "use-debounce"
 import type { BaseSearchProps } from "./component"
 
@@ -37,12 +37,15 @@ const SearchProfesiBuilder = ({ col, val }: BaseSearchProps) => {
         replace(`${location.pathname}?${search.toString()}`)
     }, 500)
 
+    useEffect(() => {
+        setValue(val ?? "")
+    }, [val])
+
     return (
         <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                 <Button
                     variant={"outline"}
-                    role="combobox"
                     aria-expanded={open}
                     className="w-full justify-between"
                 >

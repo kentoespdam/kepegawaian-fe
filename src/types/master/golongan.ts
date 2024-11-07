@@ -34,3 +34,7 @@ export const findGolonganValue = (
 
 	return cari;
 };
+
+export const golonganCodeToNumber=(golongan: string)=> {
+	return Number(golongan.split(".")[1]);
+}
