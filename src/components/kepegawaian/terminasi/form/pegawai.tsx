@@ -1,33 +1,36 @@
-import Fieldset from "@components/ui/fieldset";
-import type { TerminasiFormProps } from ".";
-import InputZod from "@components/form/zod/input";
-import { useState, type Dispatch } from "react";
-import { useQuery } from "@tanstack/react-query";
-import { getListData } from "@helpers/action";
 import type { PegawaiList } from "@_types/pegawai";
-import { useDebouncedCallback } from "use-debounce";
+import InputZod from "@components/form/zod/input";
 import {
 	Dialog,
 	DialogContent,
 	DialogHeader,
 	DialogTrigger,
 } from "@components/ui/dialog";
+import Fieldset from "@components/ui/fieldset";
+import { getListData } from "@helpers/action";
+import { useQuery } from "@tanstack/react-query";
+import { type Dispatch, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
+import type { TerminasiFormProps } from ".";
+
+import { Button } from "@components/ui/button";
 import {
-	CommandInput,
-	CommandList,
+	Command,
 	CommandEmpty,
 	CommandGroup,
+	CommandInput,
 	CommandItem,
-} from "cmdk";
-import { Command } from "@components/ui/command";
-import { Button } from "@components/ui/button";
+	CommandList,
+} from "@components/ui/command";
+import { usePathname, useRouter } from "next/navigation";
 
 interface PegawaiContentProps extends TerminasiFormProps {
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
 }
 const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 	const [search, setSearch] = useState("");
-	const [value, setValue] = useState("");
+	const pathname = usePathname();
+	const { replace } = useRouter();
 
 	const query = useQuery({
 		queryKey: ["pegawai-list", search],
@@ -52,62 +55,61 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 
 	const handleSelect = (item: PegawaiList) => {
 		setOpen(false);
-		form.setValue("nipam", item.nipam);
-		form.setValue("nama", item.nama);
-		form.setValue("golonganId", item.golongan.id);
-		form.setValue(
-			"namaGolongan",
-			`${item.golongan.pangkat} -  ${item.golongan.golongan}`,
-		);
-		form.setValue("organisasiId", item.organisasi.id);
-		form.setValue("namaOrganisasi", item.organisasi.nama);
-		form.setValue("jabatanId", item.jabatan.id);
-		form.setValue("namaJabatan", item.jabatan.nama);
+		replace(`${pathname}?id=${item.id}`);
 	};
 
 	return (
 		<DialogContent className="md:max-w-[700px] lg:max-w-[900px] sm:max-w-[425px]">
 			<DialogHeader>Cari Penandatangan</DialogHeader>
-			<Command>
-				<CommandInput
-					placeholder="Ketik NIPAM / Nama"
-					onValueChange={handleChange}
-				/>
-				{/* <CommandEmpty>No user found.</CommandEmpty> */}
-				<CommandList>
-					{query.isFetching || query.isLoading ? (
-						<CommandEmpty>Loading...</CommandEmpty>
-					) : query.data ? (
-						<CommandGroup>
-							{query.data.map((item) => (
-								<CommandItem
-									key={item.id}
-									value={`${item.nipam}${item.nama}`}
-									onSelect={() => handleSelect(item)}
-								>
-									<div className="flex flex-row justify-around gap-2">
-										<div className="w-28">[{item.nipam}]</div>
-										<div className="w-60">{item.nama}</div>
-										<div>({item.jabatan.nama})</div>
-									</div>
-								</CommandItem>
-							))}
-						</CommandGroup>
-					) : (
-						<CommandEmpty>No user found.</CommandEmpty>
-					)}
-				</CommandList>
-			</Command>
+			<div>
+				<Command>
+					<CommandInput
+						placeholder="Ketik NIPAM / Nama"
+						onValueChange={handleChange}
+					/>
+					{/* <CommandEmpty>No user found.</CommandEmpty> */}
+					<CommandList>
+						{query.isFetching || query.isLoading ? (
+							<CommandEmpty>Loading...</CommandEmpty>
+						) : query.data ? (
+							<CommandGroup>
+								{query.data.map((item) => (
+									<CommandItem
+										key={item.id}
+										value={`${item.nipam}${item.nama}`}
+										onSelect={() => handleSelect(item)}
+									>
+										<div className="grid grid-cols-12 gap-2">
+											<div className="col-span-2">[{item.nipam}]</div>
+											<div className="col-span-4">{item.nama}</div>
+											<div className="col-span-6">({item.jabatan.nama})</div>
+										</div>
+									</CommandItem>
+								))}
+							</CommandGroup>
+						) : (
+							<CommandEmpty>No user found.</CommandEmpty>
+						)}
+					</CommandList>
+				</Command>
+			</div>
 		</DialogContent>
 	);
 };
 
-const DetailPegawaiTerminasiForm = ({ form }: TerminasiFormProps) => {
+const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 	const [open, setOpen] = useState(false);
 	return (
 		<Fieldset title="Detail Pegawai">
 			<div className="grid gap-2 grid-cols-2">
 				<div className="w-full grid grid-cols-6 justify-between gap-2">
+					<InputZod
+						type="number"
+						id="pegawaiId"
+						label="Pegawai ID"
+						form={form}
+						className="hidden"
+					/>
 					<InputZod
 						id="nipam"
 						label="NIPAM"
@@ -116,9 +118,15 @@ const DetailPegawaiTerminasiForm = ({ form }: TerminasiFormProps) => {
 						disabled
 					/>
 					<div className="pt-8 text-right">
-						<Dialog open={open} onOpenChange={setOpen}>
+						<Dialog
+							open={open}
+							onOpenChange={() => {
+								if (isEdit) return;
+								setOpen((prev) => !prev);
+							}}
+						>
 							<DialogTrigger asChild>
-								<Button variant="outline" aria-expanded={open}>
+								<Button variant="outline" aria-expanded={open} disabled={isEdit}>
 									CARI
 								</Button>
 							</DialogTrigger>

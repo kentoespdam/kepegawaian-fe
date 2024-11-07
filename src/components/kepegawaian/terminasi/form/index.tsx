@@ -15,10 +15,12 @@ import TerminasiAction from "../button/form-action";
 import DetailTerminasiForm from "./detail";
 import DetailPegawaiTerminasiForm from "./pegawai";
 import { useEffect } from "react";
+import InputZod from "@components/form/zod/input";
 
 export interface TerminasiFormProps {
 	form: UseFormReturn<RiwayatTerminasiSchema>;
 	defaultValues?: RiwayatTerminasiSchema;
+	isEdit?: boolean;
 }
 
 interface TerminasiFormComponentProps {
@@ -30,6 +32,7 @@ const TerminasiFormComponent = ({
 	data,
 }: TerminasiFormComponentProps) => {
 	const { defaultValues, setDefaultValues } = useRiwayatTerminasiStore();
+	const isEdit = !!data?.id;
 
 	const form = useForm<RiwayatTerminasiSchema>({
 		resolver: zodResolver(RiwayatTerminasiSchema),
@@ -42,7 +45,10 @@ const TerminasiFormComponent = ({
 		queryKeys: [["riwayat-terminasi", pegawai?.id]],
 		redirectTo: "/kepegawaian/terminasi/terminated",
 	});
-	const onSubmit = (data: RiwayatTerminasiSchema) => mutation.mutate(data);
+	const onSubmit = (data: RiwayatTerminasiSchema) => {
+		// console.log(data);
+		mutation.mutate(data);
+	};
 
 	useEffect(() => {
 		setDefaultValues(pegawai, data);
@@ -54,7 +60,9 @@ const TerminasiFormComponent = ({
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="w-full grid gap-2"
 			>
-				<DetailPegawaiTerminasiForm form={form} />
+				<InputZod type="number" id="id" form={form} className="hidden" />
+				<InputZod id="jenisSk" form={form} className="hidden" />
+				<DetailPegawaiTerminasiForm form={form} isEdit={isEdit} />
 				<DetailTerminasiForm form={form} />
 				<TerminasiAction form={form} isPending={mutation.isPending} />
 			</form>
