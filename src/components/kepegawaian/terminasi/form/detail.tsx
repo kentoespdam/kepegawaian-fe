@@ -3,6 +3,7 @@ import type { TerminasiFormProps } from ".";
 import DatePickerZod from "@components/form/zod/date-picker";
 import InputZod from "@components/form/zod/input";
 import TextAreaZod from "@components/form/zod/textarea";
+import InputFileZod from "@components/form/zod/file";
 
 const DetailTerminasiForm = ({ form }: TerminasiFormProps) => {
 	return (
@@ -14,6 +15,7 @@ const DetailTerminasiForm = ({ form }: TerminasiFormProps) => {
 					<DatePickerZod id="tmtBerlaku" label="Tgl. Terminasi" form={form} />
 				</div>
 				<TextAreaZod id="notes" label="Notes" form={form} />
+				<InputFileZod id="fileName" label="Lampiran Sk Terminasi" form={form} />
 			</div>
 		</Fieldset>
 	);
