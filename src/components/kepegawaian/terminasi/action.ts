@@ -12,7 +12,7 @@ export const saveRiwayatTerminasi = async (formData: FormData) => {
 			: `${API_URL}/kepegawaian/riwayat/terminasi`;
 
 	const req = await fetch(url, {
-		method: id ? "PUT" : "POST",
+		method: id > 0 ? "PUT" : "POST",
 		headers: {
 			Authorization: headers.Authorization,
 		},
