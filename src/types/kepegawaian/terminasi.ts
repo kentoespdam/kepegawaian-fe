@@ -4,7 +4,8 @@ import type { OrganisasiMini } from "@_types/master/organisasi";
 import type { JabatanMini } from "@_types/master/jabatan";
 import type { Golongan } from "@_types/master/golongan";
 import { z } from "zod";
-import type { CustomColumnDef } from "..";
+import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE, type CustomColumnDef } from "..";
+import type { LampiranSk } from "./lampiran_sk";
 
 export interface RiwayatTerminasi {
 	id: number;
@@ -13,6 +14,7 @@ export interface RiwayatTerminasi {
 	nama: string;
 	nomorSk: string;
 	skTerminasi: RiwayatSk;
+	lampiranSkTerminasi: LampiranSk;
 	organisasi: OrganisasiMini;
 	namaOrganisasi: string;
 	jabatan: JabatanMini;
@@ -33,6 +35,28 @@ export const RiwayatTerminasiSchema = BaseRiwayatSkSchema.extend({
 	namaJabatan: z.string().optional(),
 	golonganId: z.number().min(1, "Golongan wajib diisi").optional(),
 	namaGolongan: z.string().optional(),
+	fileName: z
+		.any()
+		.refine(
+			(files) => Array.from(files).every((file) => file instanceof File),
+			"File wajib diisi",
+		)
+		.refine(
+			(files) =>
+				Array.from(files).every(
+					(file) =>
+						file instanceof File && ACCEPTED_FILE_TYPES.includes(file.type),
+				),
+			"Invalid file type",
+		)
+		.refine(
+			(files) =>
+				Array.from(files).every(
+					(file) => file instanceof File && file.size <= MAX_UPLOAD_SIZE,
+				),
+			"Maks File Upload 10 MB",
+		)
+		.optional(),
 	notes: z.string().optional(),
 });
 
@@ -43,7 +67,14 @@ export const calonPensiunColumns: CustomColumnDef[] = [
 	{ id: "aksi", label: "Aksi" },
 	{ id: "tanggalTerminasi", label: "Tgl. Pensiun", sortable: true },
 	{ id: "nipam", label: "NIPAM", search: true, searchType: "text" },
-	{ id: "nama", label: "Nama", search: true, searchType: "text", sortable: true, baseSort: "Biodata" },
+	{
+		id: "nama",
+		label: "Nama",
+		search: true,
+		searchType: "text",
+		sortable: true,
+		baseSort: "Biodata",
+	},
 	{ id: "organisasiId", label: "Organisasi" },
 	{ id: "jabatanId", label: "Jabatan" },
 	{ id: "golonganId", label: "Golongan" },
@@ -62,5 +93,6 @@ export const riwayatTerminasiColumns: CustomColumnDef[] = [
 	{ id: "jabatanId", label: "Jabatan" },
 	{ id: "golonganId", label: "Golongan" },
 	{ id: "masaKerja", label: "Masa Kerja" },
+	{ id: "fileName", label: "Lampiran" },
 	{ id: "notes", label: "Notes" },
 ];

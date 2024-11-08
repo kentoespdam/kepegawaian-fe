@@ -5,6 +5,7 @@ import { ButtonLink } from "@components/ui/link";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { PenIcon, PlusIcon } from "lucide-react";
+import LampiranTerminasiColumn from "./lampiran-terminasi";
 
 const MasaKerjaTableCell = ({
 	tanggalTerminasi,
@@ -43,18 +44,29 @@ const TerminatedTableBody = ({ data }: TerminatedTableBodyProps) => {
 							/>
 						</TooltipBuilder>
 					</TableCell>
-					<TableCell className="border-x text-nowrap">{row.tanggalTerminasi}</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.tanggalTerminasi}
+					</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nipam}</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nama}</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nomorSk}</TableCell>
-					<TableCell className="border-x text-nowrap">{row.skTerminasi.tanggalSk}</TableCell>
-					<TableCell className="border-x text-nowrap">{row.namaOrganisasi}</TableCell>
-					<TableCell className="border-x text-nowrap">{row.namaJabatan}</TableCell>
-					<TableCell className="border-x text-nowrap">{row.namaGolongan}</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.skTerminasi.tanggalSk}
+					</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.namaOrganisasi}
+					</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.namaJabatan}
+					</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.namaGolongan}
+					</TableCell>
 					<MasaKerjaTableCell
 						tanggalTerminasi={row.tanggalTerminasi}
 						tmtKerja={row.pegawai.tmtPegawai ?? row.pegawai.tmtKerja}
 					/>
+					<LampiranTerminasiColumn row={row.lampiranSkTerminasi} />
 					<TableCell className="border-x text-nowrap">{row.notes}</TableCell>
 				</TableRow>
 			))}
