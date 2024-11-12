@@ -6,9 +6,11 @@ import type { Golongan } from "@_types/master/golongan";
 import { z } from "zod";
 import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE, type CustomColumnDef } from "..";
 import type { LampiranSk } from "./lampiran_sk";
+import type { AlasanBerhenti } from "@_types/master/alasan_berhenti";
 
 export interface RiwayatTerminasi {
 	id: number;
+	alasanTerminasi: AlasanBerhenti
 	pegawai: Pegawai;
 	nipam: string;
 	nama: string;
@@ -27,6 +29,7 @@ export interface RiwayatTerminasi {
 }
 
 export const RiwayatTerminasiSchema = BaseRiwayatSkSchema.extend({
+	alasanTerminasiId: z.number().min(1, "Alasan Terminasi wajib diisi"),
 	nipam: z.string().min(5, "NIPAM wajib diisi"),
 	nama: z.string().min(3, "Nama. wajib diisi"),
 	organisasiId: z.number().min(1, "Organisasi wajib diisi"),
@@ -85,6 +88,7 @@ export const riwayatTerminasiColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
 	{ id: "tanggalPensiun", label: "Tgl. Pensiun" },
+	{ id: "alasanTerminasiId", label: "Alasan Terminasi", search: true, searchType: "alasanTerminasi" },
 	{ id: "nipam", label: "NIPAM", search: true, searchType: "text" },
 	{ id: "nama", label: "Nama", search: true, searchType: "text" },
 	{ id: "nomorSk", label: "Nomor SK" },

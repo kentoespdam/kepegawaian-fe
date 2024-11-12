@@ -47,6 +47,9 @@ const TerminatedTableBody = ({ data }: TerminatedTableBodyProps) => {
 					<TableCell className="border-x text-nowrap">
 						{row.tanggalTerminasi}
 					</TableCell>
+					<TableCell className="border-x text-nowrap">
+						{row.alasanTerminasi.nama}
+					</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nipam}</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nama}</TableCell>
 					<TableCell className="border-x text-nowrap">{row.nomorSk}</TableCell>
