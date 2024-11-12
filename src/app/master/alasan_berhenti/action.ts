@@ -30,7 +30,6 @@ export const hapus = async (formData: FormData) => {
 
 	try {
 		const url = `${API_URL}/master/alasan-berhenti/${id}`;
-		console.log(url);
 		fetch(url, {
 			method: "DELETE",
 			headers: setAuthorizeHeader(cookies()),
