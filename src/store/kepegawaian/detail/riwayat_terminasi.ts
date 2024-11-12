@@ -22,6 +22,7 @@ export const useRiwayatTerminasiStore = create<RiwayatTerminasiStore>(
 			set((state) => ({ ...state, riwayatTerminasiId: val })),
 		defaultValues: {
 			id: 0,
+			alasanTerminasiId: 0,
 			pegawaiId: 0,
 			nomorSk: "",
 			jenisSk: "",
@@ -49,6 +50,7 @@ export const useRiwayatTerminasiStore = create<RiwayatTerminasiStore>(
 				...state,
 				defaultValues: {
 					id: data?.id ?? 0,
+					alasanTerminasiId: data?.alasanTerminasi.id ?? 0,
 					pegawaiId: Number(pegawai?.id) ?? 0,
 					nomorSk: data?.nomorSk ?? "",
 					jenisSk: "SK_PENSIUN",
