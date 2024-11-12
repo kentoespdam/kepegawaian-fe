@@ -1,16 +1,15 @@
 "use client";
 import type { CustomColumnDef } from "@_types/index";
 import { useSearchParams } from "next/navigation";
+import AlasanTerminasiSearchBuilder from "./alasan-terminasi";
 import InputSearchComponent from "./input";
-import SearchLevelBuilder from "./level";
-import SearchProfesiBuilder from "./profesi";
 import SearchJabatanBuilder from "./jabatan";
-import SearchOrganisasiBuilder from "./organisasi";
-import JenjangPendidikanSearchBuilder from "./jenjang-pendidikan";
-import JenisSkSearchBuilder from "./jenisSk";
 import JenisMutasiSearchBuilder from "./jenis-mutasi";
-import type { UseFormReturn } from "react-hook-form";
-import { useEffect, useState } from "react";
+import JenisSkSearchBuilder from "./jenisSk";
+import JenjangPendidikanSearchBuilder from "./jenjang-pendidikan";
+import SearchLevelBuilder from "./level";
+import SearchOrganisasiBuilder from "./organisasi";
+import SearchProfesiBuilder from "./profesi";
 
 type SearchComponentProps = {
 	col: CustomColumnDef;
@@ -42,6 +41,8 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
 			return <JenisSkSearchBuilder col={col} val={value} />;
 		case "jenisMutasi":
 			return <JenisMutasiSearchBuilder col={col} val={value} />;
+		case "alasanTerminasi":
+			return <AlasanTerminasiSearchBuilder col={col} val={value} />;
 		default:
 			return <InputSearchComponent col={col} val={value} />;
 	}
