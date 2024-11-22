@@ -1,12 +1,15 @@
 import FormCard from "@components/form/card";
-import AlasanBerhentiFormComponent from "../form";
+import AlasanBerhentiFormComponent from "@components/master/alasan-berhenti/form";
+import { Suspense } from "react";
 export const metadata = {
 	title: "Tambah Alasan Berhenti",
 };
 const AddAlasanBerhentiPage = () => {
 	return (
 		<FormCard metadata={metadata}>
-			<AlasanBerhentiFormComponent />
+			<Suspense fallback={<div>Loading...</div>}>
+				<AlasanBerhentiFormComponent />
+			</Suspense>
 		</FormCard>
 	);
 };
