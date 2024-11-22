@@ -147,6 +147,12 @@ export const menus: IMenu[] = [
 				icon: <GraduationCapIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
 			},
+			{
+				path: "/master/alasan_berhenti",
+				name: "Alasan Berhenti",
+				icon: <OctagonXIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
 		],
 	},
 	{
