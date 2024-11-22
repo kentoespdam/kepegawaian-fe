@@ -1,8 +1,9 @@
 import { alasanBerhentiTableColumns } from "@_types/master/alasan_berhenti";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
+import AlasanBerhentiTable from "@components/master/alasan-berhenti/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import AlasanBerhentiTable from "./table";
+import { Suspense } from "react";
 
 export const metadata = {
 	title: "Master Alasan Berhenti",
@@ -21,7 +22,9 @@ const AlasanBerhentiPage = () => {
 			</CardHeader>
 			<CardContent>
 				<SearchBuilder columns={alasanBerhentiTableColumns} />
-				<AlasanBerhentiTable />
+				<Suspense>
+					<AlasanBerhentiTable />
+				</Suspense>
 			</CardContent>
 		</Card>
 	);

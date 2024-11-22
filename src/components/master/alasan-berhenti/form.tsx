@@ -64,8 +64,11 @@ const AlasanBerhentiFormComponent = ({
 				onSubmit={form.handleSubmit(onSubmit)}
 				className="w-full grid gap-2"
 			>
-				<InputZod id="nama" label="Nama Alasan Berhenti" form={form} />
-				<TextAreaZod id="notes" label="Notes" form={form} />
+				<Fieldset title="Detail" clasName="">
+					<InputZod id="id" label="ID" form={form} className="hidden" />
+					<InputZod id="nama" label="Nama Alasan Berhenti" form={form} />
+					<TextAreaZod id="notes" label="Notes" form={form} />
+				</Fieldset>
 
 				<Fieldset title="Action" clasName="p-0">
 					<div className="flex justify-end gap-2 p-0">
