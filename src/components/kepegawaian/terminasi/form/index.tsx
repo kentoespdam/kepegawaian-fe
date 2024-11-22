@@ -46,8 +46,14 @@ const TerminasiFormComponent = ({
 		redirectTo: "/kepegawaian/terminasi/terminated",
 	});
 	const onSubmit = (data: RiwayatTerminasiSchema) => {
-		// console.log(data);
-		mutation.mutate(data);
+		const formData = new FormData();
+		if (data.fileName)
+			formData.set("fileName", data.fileName[0], data.fileName[0].name);
+		for (const key in data) {
+			if (key === "fileName") continue;
+			formData.set(key, data[key as keyof RiwayatTerminasiSchema]);
+		}
+		mutation.mutate(formData);
 	};
 
 	useEffect(() => {
