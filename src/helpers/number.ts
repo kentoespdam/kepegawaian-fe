@@ -42,7 +42,6 @@ const sqids = new Sqids({
  */
 export const encodeId = (id: number): string => {
 	const arr = [rndNum(), rndNum(), rndNum(), rndNum(), rndNum(), id];
-	console.log(arr);
 	return sqids.encode(arr);
 };
 

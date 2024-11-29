@@ -2,21 +2,21 @@ import { USER_ROLE, UserRole } from "@_types/index";
 import {
 	BarcodeIcon,
 	BookOpenIcon,
-	BoxesIcon,
-	CircleCheckBigIcon,
 	ContactRoundIcon,
 	CreditCardIcon,
 	GitCompareArrowsIcon,
 	GraduationCapIcon,
 	HammerIcon,
 	HomeIcon,
+	HousePlugIcon,
 	NavigationIcon,
 	OctagonXIcon,
 	RadicalIcon,
+	Settings2Icon,
 	ShieldIcon,
 	ShovelIcon,
 	SignalIcon,
-	TelescopeIcon,
+	TelescopeIcon
 } from "lucide-react";
 import type React from "react";
 import { z } from "zod";
@@ -153,13 +153,19 @@ export const menus: IMenu[] = [
 				icon: <OctagonXIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
 			},
+			{
+				path: "/master/rumah-dinas",
+				name: "Rumah Dinas",
+				icon: <HousePlugIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
 		],
 	},
 	{
 		path: "#",
 		name: "Kepegawaian",
 		type: "group",
-		role: "USER",
+		role: "ADMIN",
 		subMenu: [
 			{
 				path: "/kepegawaian/data_pegawai",
@@ -175,4 +181,54 @@ export const menus: IMenu[] = [
 			},
 		],
 	},
+	{
+		path: "#",
+		name: "Penggajian",
+		type: "group",
+		role: "ADMIN",
+		subMenu: [
+			{
+				path: "/penggajian/komponen-gaji",
+				name: "Setting Komponen Gaji",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/proses-gaji",
+				name: "01. Proses Gaji Bulanan",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/kode-pajak",
+				name:"Setting Pendapatan Non Pajak",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/tunjangan",
+				name:"Setting Tunjangan",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/ptkp",
+				name: "Setting PTKP",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/lain-lain",
+				name: "Setting Lain-lain",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/phdp",
+				name: "Setting PHDP",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			}
+		],
+	}
 ];
