@@ -18,6 +18,8 @@ export const ApdSchema = z.object({
 	profesiId: z.number().min(1, "Profesi is required"),
 });
 
+export type ApdSchema = z.infer<typeof ApdSchema>;
+
 export const apdTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "profesiId", label: "Profesi", search: true, searchType: "profesi" },

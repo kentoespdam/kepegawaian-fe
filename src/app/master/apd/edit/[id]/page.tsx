@@ -1,7 +1,7 @@
 import type { Apd } from "@_types/master/apd";
 import FormCard from "@components/form/card";
+import ApdFormComponent from "@components/master/apd/form";
 import { getDataById } from "@helpers/action";
-import ApdFormComponent from "../../form";
 
 export const metadata = {
     title: "Edit Alat Pelindung Diri"
