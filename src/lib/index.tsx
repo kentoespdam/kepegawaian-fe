@@ -154,7 +154,7 @@ export const menus: IMenu[] = [
 				role: USER_ROLE.ADMIN,
 			},
 			{
-				path: "/master/rumah-dinas",
+				path: "/master/rumah_dinas",
 				name: "Rumah Dinas",
 				icon: <HousePlugIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
@@ -188,19 +188,19 @@ export const menus: IMenu[] = [
 		role: "ADMIN",
 		subMenu: [
 			{
-				path: "/penggajian/komponen-gaji",
+				path: "/penggajian/komponen_gaji",
 				name: "Setting Komponen Gaji",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/proses-gaji",
+				path: "/penggajian/proses_gaji",
 				name: "01. Proses Gaji Bulanan",
 				icon: <BarcodeIcon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/kode-pajak",
+				path: "/penggajian/kode_pajak",
 				name:"Setting Pendapatan Non Pajak",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
@@ -218,7 +218,7 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/lain-lain",
+				path: "/penggajian/lain_lain",
 				name: "Setting Lain-lain",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
