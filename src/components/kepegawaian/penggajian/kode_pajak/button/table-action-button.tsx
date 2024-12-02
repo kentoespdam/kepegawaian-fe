@@ -8,7 +8,7 @@ const PendapatanNonPajakTableActionButton = ({ kodePajakId }: { kodePajakId: num
     const router = useRouter();
     const { setKodePajakId, setOpenDelete } = useKodePajakStore((state) => state)
     const editHandler = () => {
-        router.push(`/penggajian/kode-pajak/edit/${kodePajakId}`);
+        router.push(`/penggajian/kode_pajak/edit/${kodePajakId}`);
     }
 
     const deleteHandler = () => {

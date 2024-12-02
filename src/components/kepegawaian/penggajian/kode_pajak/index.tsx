@@ -30,7 +30,7 @@ const KodePajakComponent = () => {
             <div className="overflow-auto min-h-90">
                 <Table>
                     <TableHeadBuilder columns={pendapatanNonPajakColumns} />
-                    {isLoading || error || !data ? (
+                    {isLoading || error || !data || data?.empty ? (
                         <LoadingTable
                             columns={pendapatanNonPajakColumns}
                             isLoading={isLoading}
