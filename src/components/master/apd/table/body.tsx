@@ -4,7 +4,7 @@ import ButtonDeleteBuilder from "@components/builder/button/delete";
 import ButtonEditBuilder from "@components/builder/button/edit";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
-import { hapus } from "./action";
+import { hapus } from "../action";
 
 const ApdTableBody = ({ data }: { data: Pageable<Apd> }) => {
     let urut = getUrut(data)

@@ -47,6 +47,5 @@ export const encodeId = (id: number): string => {
 
 export const decodeId = (id: string) => {
 	const arr = sqids.decode(id);
-	console.log(arr);
 	return arr[5];
 };

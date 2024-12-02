@@ -4,8 +4,7 @@ import ApdFormComponent from "@components/master/apd/form";
 export const metadata = {
     title: "Tambah Alat Pelindung Diri"
 }
-
-const AddApdPage = () => {
+const AddApdPage = ({ params }: { params: { profesiId: string } }) => {
     return (
         <FormCard metadata={metadata}>
             <ApdFormComponent />
