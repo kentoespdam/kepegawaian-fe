@@ -3,6 +3,7 @@ import KodePajakComponent from "@components/kepegawaian/penggajian/kode_pajak";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { ButtonLink } from "@components/ui/link";
 import { PlusCircleIcon } from "lucide-react";
+import { Suspense } from "react";
 
 export const metadata = {
     title: "Pendapatan Non Pajak",
@@ -16,7 +17,7 @@ const KodePajakPage = () => {
                     <span className="text-md font-semibold">{metadata.title}</span>
                     <TooltipBuilder text="Add Pendapatan Non Pajak">
                         <ButtonLink
-                            href="/penggajian/kode-pajak/add"
+                            href="/penggajian/kode_pajak/add"
                             icon={<PlusCircleIcon className=" h-5 w-5" />}
                             variant={"ghost"}
                             className="text-primary hover:opacity-75"
@@ -25,7 +26,9 @@ const KodePajakPage = () => {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <KodePajakComponent />
+                <Suspense>
+                    <KodePajakComponent />
+                </Suspense>
             </CardContent>
         </Card>
     );
