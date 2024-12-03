@@ -51,6 +51,12 @@ export const profesiTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 	{
+		id: "nama",
+		label: "Nama Profesi",
+		search: true,
+		searchType: "text",
+	},
+	{
 		id: "organisasiId",
 		label: "Organisasi",
 		search: true,
@@ -73,12 +79,6 @@ export const profesiTableColumns: CustomColumnDef[] = [
 		label: "Grade",
 		search: true,
 		searchType: "grade",
-	},
-	{
-		id: "nama",
-		label: "Nama Profesi",
-		search: true,
-		searchType: "text",
 	},
 	{
 		id: "detail",

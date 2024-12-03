@@ -40,11 +40,11 @@ const ProfesiTableBody = ({ data }: { data: Pageable<Profesi> }) => {
                     <TableCell align="center">
                         <ProfesiTableAction profesiId={row.id} />
                     </TableCell>
+                    <TableCell className="border-x">{row.nama}</TableCell>
                     <TableCell className="border-x">{row.organisasi.nama}</TableCell>
                     <TableCell className="border-x">{row.jabatan.nama}</TableCell>
                     <TableCell className="border-x">{row.level.nama}</TableCell>
                     <TableCell className="border-x">Grade {row.grade.grade}</TableCell>
-                    <TableCell className="border-x">{row.nama}</TableCell>
                     <TableCell className="border-x">{row.detail}</TableCell>
                     <TableCell className="border-x">{row.resiko}</TableCell>
                     <TableCell className="border-x">
