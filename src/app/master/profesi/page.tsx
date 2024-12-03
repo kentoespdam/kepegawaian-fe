@@ -1,8 +1,6 @@
-import { profesiTableColumns } from "@_types/master/profesi";
 import ButtonAddBuilder from "@components/builder/button/add";
-import SearchBuilder from "@components/builder/search";
+import ProfesiTable from "@components/master/profesi";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import ProfesiTable from "./table";
 
 export const metadata = {
     title: "Master Profesi",
@@ -20,7 +18,6 @@ const ProfesiPage = () => {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-                <SearchBuilder columns={profesiTableColumns} />
                 <ProfesiTable />
             </CardContent>
         </Card>

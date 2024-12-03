@@ -3,6 +3,9 @@ import type { CustomColumnDef } from "..";
 import type { AlatKerjaMini } from "./alat_kerja";
 import type { Apd } from "./apd";
 import type { Level } from "./level";
+import type { JabatanMini } from "./jabatan";
+import type { Grade } from "./grade";
+import type { OrganisasiMini } from "./organisasi";
 
 export interface ProfesiMini {
 	id: number;
@@ -10,7 +13,10 @@ export interface ProfesiMini {
 }
 
 export interface Profesi extends ProfesiMini {
+	organisasi: OrganisasiMini;
+	jabatan: JabatanMini;
 	level: Level;
+	grade: Grade;
 	detail: string | null;
 	resiko: string | null;
 	apdList: Apd[] | null;
@@ -19,7 +25,9 @@ export interface Profesi extends ProfesiMini {
 
 export const ProfesiSchema = z.object({
 	id: z.number(),
-	levelId: z.number().min(1, "Level wajib diisi"),
+	organisasiId: z.number().min(1, "Organisasi wajib diisi"),
+	jabatanId: z.number().min(1, "Jabatan wajib diisi"),
+	gradeId: z.number().min(1, "Grade wajib diisi"),
 	nama: z
 		.string({ required_error: "Nama wajib diisi" })
 		.min(3, { message: "Nama wajib diisi" }),
@@ -31,10 +39,28 @@ export const ProfesiSchema = z.object({
 		.min(1, { message: "Resiko wajib diisi" }),
 });
 
+export type ProfesiSchema = z.infer<typeof ProfesiSchema>;
+
 export const profesiTableColumns: CustomColumnDef[] = [
 	{
 		id: "urut",
 		label: "No",
+	},
+	{
+		id: "aksi",
+		label: "Aksi",
+	},
+	{
+		id: "organisasiId",
+		label: "Organisasi",
+		search: true,
+		searchType: "organisasi",
+	},
+	{
+		id: "jabatanId",
+		label: "Jabatan",
+		search: true,
+		searchType: "jabatan",
 	},
 	{
 		id: "levelId",
@@ -43,8 +69,14 @@ export const profesiTableColumns: CustomColumnDef[] = [
 		searchType: "level",
 	},
 	{
+		id: "gradeId",
+		label: "Grade",
+		search: true,
+		searchType: "grade",
+	},
+	{
 		id: "nama",
-		label: "Nama",
+		label: "Nama Profesi",
 		search: true,
 		searchType: "text",
 	},
@@ -63,10 +95,6 @@ export const profesiTableColumns: CustomColumnDef[] = [
 	{
 		id: "alatKerjaList",
 		label: "Alat Kerja",
-	},
-	{
-		id: "aksi",
-		label: "Aksi",
 	},
 ];
 
