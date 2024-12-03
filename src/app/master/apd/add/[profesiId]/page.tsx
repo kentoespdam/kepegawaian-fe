@@ -5,9 +5,10 @@ export const metadata = {
     title: "Tambah Alat Pelindung Diri"
 }
 const AddApdPage = ({ params }: { params: { profesiId: string } }) => {
+    const profesiId = Number(params.profesiId);
     return (
         <FormCard metadata={metadata}>
-            <ApdFormComponent />
+            <ApdFormComponent profesiId={profesiId} />
         </FormCard>
     );
 }
