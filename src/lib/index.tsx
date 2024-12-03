@@ -63,18 +63,6 @@ export const menus: IMenu[] = [
 		type: "group",
 		role: "ADMIN",
 		subMenu: [
-			// {
-			//     path: "/master/status_pegawai",
-			//     name: "Status Pegawai",
-			//     icon: <BoxesIcon className={defaultIconClassName} />,
-			//     role: USER_ROLE.ADMIN,
-			// },
-			// {
-			//     path: "/master/status_kerja",
-			//     name: "Status Kerja",
-			//     icon: <CircleCheckBigIcon className={defaultIconClassName} />,
-			//     role: USER_ROLE.ADMIN,
-			// },
 			{
 				path: "/master/golongan",
 				name: "Golongan",
@@ -97,18 +85,6 @@ export const menus: IMenu[] = [
 				path: "/master/profesi",
 				name: "Profesi",
 				icon: <ShovelIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
-				path: "/master/alat_kerja",
-				name: "Alat Kerja",
-				icon: <HammerIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
-				path: "/master/apd",
-				name: "APD",
-				icon: <ShieldIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
 			},
 			{
