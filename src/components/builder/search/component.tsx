@@ -2,6 +2,7 @@
 import type { CustomColumnDef } from "@_types/index";
 import { useSearchParams } from "next/navigation";
 import AlasanTerminasiSearchBuilder from "./alasan-terminasi";
+import SearchGradeBuilder from "./grade";
 import InputSearchComponent from "./input";
 import SearchJabatanBuilder from "./jabatan";
 import JenisMutasiSearchBuilder from "./jenis-mutasi";
@@ -43,6 +44,8 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
 			return <JenisMutasiSearchBuilder col={col} val={value} />;
 		case "alasanTerminasi":
 			return <AlasanTerminasiSearchBuilder col={col} val={value} />;
+		case "grade":
+			return <SearchGradeBuilder col={col} val={value} />;
 		default:
 			return <InputSearchComponent col={col} val={value} />;
 	}
