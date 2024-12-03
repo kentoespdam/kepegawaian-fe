@@ -1,76 +1,78 @@
 "use client"
 
-import type { SaveErrorStatus } from "@_types/index";
-import type { Apd } from "@_types/master/apd";
-import AlertBuilder from "@components/builder/alert";
+import { type Apd, ApdSchema } from "@_types/master/apd";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import InputTextComponent from "@components/form/input";
-import { buttonVariants } from "@components/ui/button";
-import { cn } from "@lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import InputZod from "@components/form/zod/input";
+import { Button } from "@components/ui/button";
+import { Form } from "@components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useApdStore } from "@store/master/apd";
+import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { saveApd } from "./action";
-import SelectProfesiComponent from "@components/form/profesi";
 
-const ApdFormComponent = ({ data }: { data?: Apd }) => {
-    const [errState, setErrState] = useState<SaveErrorStatus>({ success: false })
-    const { push } = useRouter()
+interface ApdFormComponentProps {
+    profesiId?: number,
+    data?: Apd
+}
+const ApdFormComponent = ({ profesiId, data }: ApdFormComponentProps) => {
+    const params = useSearchParams()
+    const search = new URLSearchParams(params)
+    const callbackUrl = search.get("callback") ? atob(search.get("callback") as string) : ""
+    const router = useRouter()
 
-    const mutation = useMutation({
-        mutationFn: saveApd,
-        onSuccess: (result) => {
-            if (!result.success) {
-                setErrState(result)
-                return
-            }
-            push('/master/apd')
-        }
+    const { defaultValues, setDefaultValues } = useApdStore((state) => ({
+        defaultValues: state.defaultValues,
+        setDefaultValues: state.setDefaultValues
+    }))
+
+    const form = useForm<ApdSchema>({
+        resolver: zodResolver(ApdSchema),
+        defaultValues: defaultValues,
+        values: defaultValues
     })
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutation.mutate(new FormData(e.currentTarget))
+    const mutation = useGlobalMutation({
+        mutationFunction: saveApd,
+        queryKeys: [["apd"]],
+        redirectTo: search.get("callback") ? callbackUrl : "/master/apd"
+    })
+
+    const onSubmit = (values: ApdSchema) => {
+        mutation.mutate(values)
     }
+
+    const cancelHandler = () => {
+        form.reset()
+        router.back()
+    }
+
+    useEffect(() => setDefaultValues({ data: data, profesiId: profesiId }), [setDefaultValues, data, profesiId])
+
     return (
-        <>
-            {errState?.error ? (
-                <div className="mb-2">
-                    {Object.entries(errState.error).map(([key, value]) => (
-                        <AlertBuilder
-                            key={key}
-                            message={String(value)}
-                            variant="destructive"
-                            untitled
-                        />
-                    ))}
-                </div>
-            ) : null}
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <div className="grid w-full items-center gap-1.5">
-                    <SelectProfesiComponent
-                        label="Profesi"
-                        id="profesiId"
-                        defaultValue={String(data ? data.profesi.id : "")} />
-                </div>
-                <div className="grid w-full items-center gap-1.5">
-                    <InputTextComponent label="Nama" id="nama"
-                        defaultValue={String(data ? data.nama : "")} />
-                </div>
-                <div className="flex flex-row justify-end gap-2">
-                    <Link href="/master/apd" className={cn(buttonVariants({
-                        variant: "destructive"
-                    }))} >
-                        Cancel
-                    </Link>
-                    <LoadingButtonClient pending={mutation.isPending} title="Save" icon={<SaveIcon />} />
-                    <input type="hidden" name="id" value={data?.id} />
+        <Form {...form}>
+            <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="w-full grid gap-2"
+            >
+                <InputZod type="number" id="id" label="ID" form={form} />
+                <InputZod type="number" id="profesiId" label="Profesi ID" form={form} />
+                <InputZod id="nama" label="Nama Apd" form={form} />
+                <div className="mt-2 flex gap-2 justify-end">
+                    <LoadingButtonClient
+                        pending={mutation.isPending}
+                        type="submit"
+                        title="Save"
+                        icon={<SaveIcon />} />
+                    <Button type="reset" variant="destructive" onClick={cancelHandler}>Batal</Button>
                 </div>
             </form>
-        </>
-    );
+        </Form>
+    )
+
 }
 
 export default ApdFormComponent;
