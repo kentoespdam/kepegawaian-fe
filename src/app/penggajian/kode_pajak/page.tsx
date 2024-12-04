@@ -1,5 +1,5 @@
 import TooltipBuilder from "@components/builder/tooltip";
-import KodePajakComponent from "@components/kepegawaian/penggajian/kode_pajak";
+import KodePajakComponent from "@components/penggajian/kode_pajak";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { ButtonLink } from "@components/ui/link";
 import { PlusCircleIcon } from "lucide-react";

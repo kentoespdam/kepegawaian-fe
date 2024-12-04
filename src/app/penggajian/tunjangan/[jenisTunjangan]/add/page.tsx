@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import TunjanganFormComponent from "@components/kepegawaian/penggajian/tunjangan/form";
+import TunjanganFormComponent from "@components/penggajian/tunjangan/form";
 
 export const metadata = {
     title: "Tambah Tunjangan"
