@@ -217,3 +217,12 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		label: "Status Pegawai",
 	},
 ];
+
+export const ProfilGajiSchema = z.object({
+	statusPegawai: z.string().min(1, "Status Pegawai wajib diisi"),
+	gajiPokok: z.number(),
+	isAkses: z.boolean(),
+	kodePajakId: z.number().min(1, "Kode Pajak wajib diisi"),
+	gajiProfilId: z.number().min(1, "Gaji Profil wajib diisi"),
+	rumahDinasId: z.number().min(1, "Rumah Dinas wajib diisi"),
+});
