@@ -1,7 +1,7 @@
 import type { JenisTunjangan } from "@_types/enums/jenis_tunjangan";
 import type { Golongan } from "@_types/master/golongan";
 import type { Level } from "@_types/master/level";
-import { optional, z } from "zod";
+import { z } from "zod";
 import type { CustomColumnDef } from "..";
 
 export interface Tunjangan {
