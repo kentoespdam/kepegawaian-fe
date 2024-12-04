@@ -6,14 +6,12 @@ import {
 	CreditCardIcon,
 	GitCompareArrowsIcon,
 	GraduationCapIcon,
-	HammerIcon,
 	HomeIcon,
 	HousePlugIcon,
 	NavigationIcon,
 	OctagonXIcon,
 	RadicalIcon,
 	Settings2Icon,
-	ShieldIcon,
 	ShovelIcon,
 	SignalIcon,
 	TelescopeIcon
@@ -182,7 +180,7 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/tunjangan",
+				path: "/penggajian/tunjangan?jenisTunjangan=JABATAN",
 				name:"Setting Tunjangan",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",

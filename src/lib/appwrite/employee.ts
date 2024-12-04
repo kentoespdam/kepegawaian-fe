@@ -44,6 +44,27 @@ export const getEmployeeByNipam = async (
 					id: 5,
 					nama: "MANAJER",
 				},
+				organisasi: {
+					id: 39,
+					nama: "SUB BAG TEKNOLOGI INFORMASI",
+				},
+				jabatan: {
+					id: 59,
+					level: {
+						id: 5,
+						nama: "MANAJER",
+					},
+					nama: "MANAJER SDM & TI",
+				},
+				grade: {
+					id: 10,
+					level: {
+						id: 5,
+						nama: "MANAJER",
+					},
+					grade: 1,
+					tukin: 300000.0,
+				},
 				detail: null,
 				resiko: null,
 				nama: "Manajer Produksi & Distribusi 1",
