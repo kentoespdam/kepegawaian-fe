@@ -186,7 +186,7 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/lain_lain",
+				path: "/penggajian/parameter_setting",
 				name: "Setting Lain-lain",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
