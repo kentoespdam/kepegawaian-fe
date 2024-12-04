@@ -19,6 +19,7 @@ type MenuListBuilderProps = {
 };
 const MenulistBuilder = (props: MenuListBuilderProps) => {
     const pathName = usePathname()
+    const menuPath=props.menu.path.split("?")[0]
     return props.menu.type === "group" ? (
         <CommandGroup heading={props.menu.name}>
             {props.menu.subMenu?.length === 0
@@ -34,7 +35,7 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
                     className={
                         cn(
                             "cursor-pointer gap-2 pl-4",
-                            pathName.includes(props.menu.path) ?
+                            pathName.includes(menuPath) ?
                                 "bg-primary text-primary-foreground" :
                                 ""
                         )}
