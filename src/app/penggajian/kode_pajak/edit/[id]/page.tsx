@@ -1,6 +1,6 @@
 import type { PendapatanNonPajak } from "@_types/penggajian/pendapatan_non_pajak";
 import FormCard from "@components/form/card";
-import KodePajakFormComponent from "@components/kepegawaian/penggajian/kode_pajak/form";
+import KodePajakFormComponent from "@components/penggajian/kode_pajak/form";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

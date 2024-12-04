@@ -186,12 +186,6 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/ptkp",
-				name: "Setting PTKP",
-				icon: <Settings2Icon className={defaultIconClassName} />,
-				role: "ADMIN",
-			},
-			{
 				path: "/penggajian/lain_lain",
 				name: "Setting Lain-lain",
 				icon: <Settings2Icon className={defaultIconClassName} />,
