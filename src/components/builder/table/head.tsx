@@ -1,11 +1,9 @@
 "use client";
-import { TableHead, TableHeader, TableRow } from "@components/ui/table";
 import type { CustomColumnDef } from "@_types/index";
+import { TableHead, TableHeader, TableRow } from "@components/ui/table";
 import { cn } from "@lib/utils";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { use, useState } from "react";
-import { routeModule } from "next/dist/build/templates/app-page";
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
 type TableHeadBuilderProps = {
 	columns: CustomColumnDef[];
