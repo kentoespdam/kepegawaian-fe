@@ -27,7 +27,6 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 			sortDir === "asc" || sortDir === "" ? "desc" : "asc",
 		);
 		replace(`${pathname}?${search.toString()}`);
-		// if (head.sortable) console.log("clicked", head.id, head.sortable);
 	};
 
 	return (
