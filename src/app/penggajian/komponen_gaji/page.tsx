@@ -1,4 +1,4 @@
-import KomponenGajiComponent from "@components/penggajian/komponent";
+import KomponenGajiComponent from "@components/penggajian/komponen";
 import ProfilGajiComponent from "@components/penggajian/profil";
 import { cn } from "@lib/utils";
 import { Suspense } from "react";
