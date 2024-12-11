@@ -14,7 +14,7 @@ interface DeleteZodDialogBuilderProps {
     deletePath: string,
     openDelete: boolean,
     setOpenDelete: (value: boolean) => void,
-    queryKeys: string[],
+    queryKeys: (string | number)[],
 }
 const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
     const form = useForm<BaseDelete>({
