@@ -14,13 +14,13 @@ const ProfilGajiTableBody = ({ data }: ProfilGajiTableBodyProps) => {
     const params = useSearchParams()
     const profilId = +(params.get("profilId") ?? "0")
 
-    const onSelectRow = (row: ProfilGaji) => {
-        console.log("clicked", profilId === row.id)
-        const url = "/penggajian/komponen_gaji"
-        if (profilId > 0 && profilId === row.id) {
-            router.replace(url)
+    const handleRowClick = (row: ProfilGaji) => {
+        const url = "/penggajian/komponen_gaji";
+        const params = new URLSearchParams({ profilId: String(row.id) });
+        if (profilId === row.id) {
+            router.replace(url);
         } else {
-            router.replace(`${url}?profilId=${row.id}`)
+            router.replace(`${url}?${params.toString()}`);
         }
     };
 
@@ -33,7 +33,7 @@ const ProfilGajiTableBody = ({ data }: ProfilGajiTableBodyProps) => {
                         "bg-green-300 odd:bg-green-300": profilId === row.id,
                     })}
                     key={row.id}
-                    onClick={() => onSelectRow(row)}
+                    onClick={() => handleRowClick(row)}
                 >
                     <TableCell className="border" align="right">{urut++}</TableCell>
                     <TableCell className="border">{row.nama}</TableCell>
