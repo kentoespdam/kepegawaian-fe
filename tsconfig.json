@@ -28,6 +28,9 @@
 			"@components/*": [
 				"./src/components/*"
 			],
+			"@ui": [
+				"./src/components/ui/*"
+			],
 			"@utils/*": [
 				"./src/utils/*"
 			],
@@ -51,6 +54,9 @@
 			],
 			"@public/*": [
 				"./public/*"
+			],
+			"@/*": [
+				"./src/*"
 			]
 		}
 	},
