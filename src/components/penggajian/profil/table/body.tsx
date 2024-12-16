@@ -5,6 +5,8 @@ import { getUrut } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 import ProfilGajiTableAction from "../button/table-action";
+import { Button } from "@components/ui/button";
+import { EyeIcon } from "lucide-react";
 
 interface ProfilGajiTableBodyProps {
     data: Pageable<ProfilGaji>
@@ -29,16 +31,25 @@ const ProfilGajiTableBody = ({ data }: ProfilGajiTableBodyProps) => {
         <TableBody>
             {data.content.map((row) => (
                 <TableRow
-                    className={cn("cursor-pointer odd:bg-muted hover:bg-green-200", {
+                    className={cn("odd:bg-muted hover:bg-green-200", {
                         "bg-green-300 odd:bg-green-300": profilId === row.id,
                     })}
                     key={row.id}
-                    onClick={() => handleRowClick(row)}
                 >
                     <TableCell className="border" align="right">{urut++}</TableCell>
                     <TableCell className="border">{row.nama}</TableCell>
                     <TableCell className="border">
-                        <ProfilGajiTableAction row={row} />
+                        <div className="flex justify-between items-center gap-2">
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-6 w-6 text-cyan-400 hover:bg-transparent hover:text-cyan-700"
+                                onClick={() => handleRowClick(row)}
+                            >
+                                <EyeIcon />
+                            </Button>
+                            <ProfilGajiTableAction row={row} />
+                        </div>
                     </TableCell>
                 </TableRow>
             ))}

@@ -24,3 +24,17 @@ export const pendapatanNonPajakColumns: CustomColumnDef[] = [
 	{ id: "nominal", label: "Nominal" },
 	{ id: "notes", label: "Notes" },
 ];
+
+export const findKode = (
+	list: PendapatanNonPajak[],
+	id: number | string,
+) => {
+	const cari = list.find((row) => row.id === id);
+	if (!cari)
+		return {
+			id: 0,
+			kode: "Pilih Kode Pajak",
+		};
+
+	return cari;
+};

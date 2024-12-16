@@ -1,17 +1,14 @@
 "use client";
-import type { JenisSk } from "@_types/master/jenis_sk";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { PlusCircleIcon } from "lucide-react";
 
 const AddLampiranSkButton = () => {
-	const { ref, setRef, refId, setRefId, setOpenLampiranForm } =
+	const { ref, refId, setOpenLampiranForm } =
 		useLampiranSkStore((state) => ({
 			ref: state.ref,
-			setRef: state.setRef,
 			refId: state.refId,
-			setRefId: state.setRefId,
 			setOpenLampiranForm: state.setOpenLampiranForm,
 		}));
 
@@ -20,7 +17,6 @@ const AddLampiranSkButton = () => {
 			alert("Pilih data Terlebih Dahulu");
 			return;
 		}
-		// setRef();
 		setOpenLampiranForm(true);
 	};
 

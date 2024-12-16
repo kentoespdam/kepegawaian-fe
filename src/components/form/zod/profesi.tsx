@@ -25,13 +25,13 @@ import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
 interface SelectProfesiZodProps<TData extends FieldValues>
 	extends InputZodProps<TData> {
-		defaultValues?: TData;
+	defaultValues?: TData;
 }
 
 const SelectProfesiZod = <TData extends FieldValues>({
@@ -39,9 +39,8 @@ const SelectProfesiZod = <TData extends FieldValues>({
 	label,
 	form,
 }: SelectProfesiZodProps<TData>) => {
-	const { jabLevelId, setJabLevelId } = useOrgJab((state) => ({
+	const { jabLevelId } = useOrgJab((state) => ({
 		jabLevelId: state.jabLevelId,
-		setJabLevelId: state.setJabLevelId,
 	}));
 	const [pop, setPop] = useState(false);
 

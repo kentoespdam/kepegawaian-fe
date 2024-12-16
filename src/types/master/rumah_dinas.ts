@@ -21,3 +21,9 @@ export const rumahDinasTableColumns: CustomColumnDef[] = [
     { id: "nama", label: "Rumah Dinas", search: true, searchType: "text" },
     { id: "nilai", label: "Nilai" },
 ];
+
+export const findRumahDinas = (list: RumahDinas[], id: number|string) => {
+    const cari= list.find((row) => row.id === Number(id));
+    if (!cari) return { id: 0, nama: "Pilih Rumah Dinas", nilai: 0 };
+    return cari;
+}

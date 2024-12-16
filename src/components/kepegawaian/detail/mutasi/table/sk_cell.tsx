@@ -1,10 +1,8 @@
 import { TableCell } from "@components/ui/table";
-import { rupiah } from "@helpers/number";
-import type { MutasiRowProps } from "./body";
 import { dateToIndonesian } from "@helpers/string";
+import type { MutasiRowProps } from "./body";
 
 const RiwayatMutasiSKCell = ({ row }: MutasiRowProps) => {
-	console.log(row);
 	return (
 		<TableCell className="border-x whitespace-nowrap">
 			<div className="flex gap-2">
@@ -16,7 +14,6 @@ const RiwayatMutasiSKCell = ({ row }: MutasiRowProps) => {
 				<div className="grid">
 					<span>: {dateToIndonesian(row.skMutasi.tmtBerlaku)}</span>
 					<span>: {row.skMutasi.nomorSk}</span>
-					{/* <span>: {rupiah(row.skMutasi.gajiPokok)}</span> */}
 				</div>
 			</div>
 		</TableCell>

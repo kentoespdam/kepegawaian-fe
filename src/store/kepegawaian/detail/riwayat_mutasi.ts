@@ -88,8 +88,12 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 				namaOrganisasiLama: pegawai?.organisasi.nama ?? "",
 				jabatanLamaId: pegawai ? +pegawai.jabatan.id : 0,
 				namaJabatanLama: pegawai?.jabatan.nama ?? "",
-				profesiLamaId: pegawai ? +pegawai.profesi.id : 0,
-				namaProfesiLama: pegawai?.profesi.nama ?? "",
+				profesiLamaId: pegawai
+					? pegawai.profesi
+						? +pegawai.profesi.id
+						: 0
+					: 0,
+				namaProfesiLama: pegawai?.profesi?.nama ?? "",
 				golonganId: riwayatMutasi?.skMutasi?.golongan
 					? riwayatMutasi.skMutasi.golongan.id
 					: 0,
@@ -98,7 +102,7 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 					: 0,
 				jabatanId: riwayatMutasi?.jabatan ? +riwayatMutasi.jabatan.id : 0,
 				jabatan: riwayatMutasi?.jabatan ?? undefined,
-				profesiId: pegawai ? +pegawai.profesi.id : 0,
+				profesiId: pegawai ? (pegawai.profesi ? +pegawai.profesi.id : 0) : 0,
 				notes: riwayatMutasi?.notes ?? "",
 			},
 		}));

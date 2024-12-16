@@ -47,15 +47,10 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 							isLoading={query.isLoading}
 							error={query.error?.message}
 						/>
-					) : query.data && !query.data.empty ? (
+					) : (
 						<RiwayatMutasiTableBody
 							pegawaiId={props.pegawaiId}
 							data={query.data}
-						/>
-					) : (
-						<LoadingTable
-							columns={riwayatMutasiTableColumns}
-							isLoading={false}
 						/>
 					)}
 				</Table>
