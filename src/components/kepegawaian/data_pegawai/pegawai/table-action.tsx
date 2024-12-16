@@ -12,25 +12,23 @@ import {
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import {
-	BookCheckIcon,
 	DollarSignIcon,
 	EllipsisIcon,
-	FileInputIcon,
-	FileTextIcon,
-	PencilIcon,
 	RssIcon,
-	SendIcon,
 	UserCogIcon,
 	UserIcon,
-	UserRoundCogIcon,
-	UserXIcon,
+	UserRoundCogIcon
 } from "lucide-react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 interface KepegawaianTableActionProps {
 	data?: Pegawai;
 }
 const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
+	const params = useSearchParams()
+	const callbackUrl = btoa(params.toString() ?? "")
+	
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
@@ -61,7 +59,7 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 						</DropdownMenuSubTrigger>
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
-								<Link href={`/kepegawaian/profil/gaji/${props.data?.id}`}>
+								<Link href={`/kepegawaian/profil/gaji/${props.data?.id}?callbackUrl=${callbackUrl}`}>
 									<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
 										<DollarSignIcon className="mr-2 h-[1rem] w-[1rem]" />
 										<span>Data Profil Gaji</span>

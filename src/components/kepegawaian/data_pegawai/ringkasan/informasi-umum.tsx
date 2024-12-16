@@ -1,30 +1,28 @@
+import type { PegawaiRingkas } from "@_types/pegawai";
 import Fieldset from "@components/ui/fieldset";
 import RingkasanContent from "./ringkasan-content";
-import type { Pegawai } from "@_types/pegawai";
-import type { Biodata } from "@_types/profil/biodata";
 
 interface InformasiUmumProps {
-    pegawai?: Pegawai
-    bio?: Biodata
+    pegawai?: PegawaiRingkas
 }
-const InformasiUmum = ({ pegawai, bio }: InformasiUmumProps) => {
+const InformasiUmum = ({ pegawai }: InformasiUmumProps) => {
 
     return (
         <Fieldset title="Informasi Umum">
             <div className="grid gap-1">
                 <RingkasanContent field="NIPAM" value={pegawai?.nipam} />
-                <RingkasanContent field="Nama Lengkap" value={pegawai?.biodata.nama} />
-                <RingkasanContent field="Jenis Kelamin" value={bio?.jenisKelamin.replace("_", " ")} />
-                <RingkasanContent field="Tempat Lahir" value={bio?.tempatLahir} />
-                <RingkasanContent field="Tanggal Lahir" value={bio?.tanggalLahir} />
-                <RingkasanContent field="Status Perkawinan" value={bio?.statusKawin.replace("_", " ")} />
-                <RingkasanContent field="Alamat" value={bio?.alamat} />
-                <RingkasanContent field="No KTP" value={bio?.nik} />
-                <RingkasanContent field="Agama" value={bio?.agama} />
-                <RingkasanContent field="Telp" value={bio?.telp} />
-                <RingkasanContent field="Email" value={""} />
-                <RingkasanContent field="Kode Pajak" value={""} />
-                <RingkasanContent field="Nama Ibu Kandung" value={bio?.ibuKandung} />
+                <RingkasanContent field="Nama Lengkap" value={pegawai?.nama} />
+                <RingkasanContent field="Jenis Kelamin" value={pegawai?.jenisKelamin} />
+                <RingkasanContent field="Tempat Lahir" value={pegawai?.tempatLahir} />
+                <RingkasanContent field="Tanggal Lahir" value={pegawai?.tanggalLahir} />
+                <RingkasanContent field="Status Perkawinan" value={pegawai?.statusKawin.replace("_", " ")} />
+                <RingkasanContent field="Alamat" value={pegawai?.alamat} />
+                <RingkasanContent field="No KTP" value={pegawai?.nik} />
+                <RingkasanContent field="Agama" value={pegawai?.agama} />
+                <RingkasanContent field="Telp" value={pegawai?.telp} />
+                <RingkasanContent field="Email" value={pegawai?.email} />
+                <RingkasanContent field="Kode Pajak" value={pegawai?.kodePajak} />
+                <RingkasanContent field="Nama Ibu Kandung" value={pegawai?.ibuKandung} />
             </div>
         </Fieldset>
     );

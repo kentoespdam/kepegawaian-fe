@@ -101,6 +101,8 @@ export const getEmployeeByNipam = async (
 			jmlTanggungan: 0,
 			mkgTahun: 0,
 			mkgBulan: 0,
+			isAskes: false,
+			kodePajak: null,
 			absensiId: 0,
 			notes: null,
 		};
