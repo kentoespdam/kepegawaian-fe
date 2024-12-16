@@ -13,8 +13,8 @@ const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 					form={form}
 					className="hidden"
 				/>
-				<InputZod id="nipam" label="NIPAM" form={form} disabled />
-				<InputZod id="nama" label="Nama Pegawai" form={form} disabled />
+				<InputZod id="nipam" label="NIPAM" form={form} readonly />
+				<InputZod id="nama" label="Nama Pegawai" form={form} readonly />
 				{form.getValues("nipam").startsWith("KO-") ? null : (
 					<>
 						<InputZod
@@ -28,7 +28,7 @@ const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 							id="namaGolonganLama"
 							label="Golongan"
 							form={form}
-							disabled
+							readonly
 						/>
 					</>
 				)}
@@ -42,7 +42,7 @@ const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 					id="namaOrganisasiLama"
 					label="Unit Kerja"
 					form={form}
-					disabled
+					readonly
 				/>
 				<InputZod
 					type="hidden"
@@ -50,16 +50,16 @@ const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 					label="Jabatan"
 					form={form}
 				/>
-				<InputZod id="namaJabatanLama" label="Jabatan" form={form} disabled />
+				<InputZod id="namaJabatanLama" label="Jabatan" form={form} readonly />
 				<InputZod
 					type="hidden"
 					id="profesiLamaId"
 					label="Profesi"
 					form={form}
-					disabled
+					readonly
 				/>
-				<InputZod id="namaProfesiLama" label="Profesi" form={form} disabled />
-				<InputZod type="hidden" id="jenisSk" label="Jenis SK" form={form} />
+				<InputZod id="namaProfesiLama" label="Profesi" form={form} readonly />
+				<InputZod id="jenisSk" label="Jenis SK" form={form} className="hidden" />
 			</div>
 		</Fieldset>
 	);

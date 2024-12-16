@@ -1,27 +1,27 @@
 import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
+import { Button } from "@components/ui/button";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
-import KepegawaianTableAction from "./table-action";
-import { useRingkasanPegawaiStore } from "@store/kepegawaian/data_pegawai/ringkasan-pegawai-store";
 import { cn } from "@lib/utils";
+import { useRingkasanPegawaiStore } from "@store/kepegawaian/data_pegawai/ringkasan-pegawai-store";
+import { EyeIcon } from "lucide-react";
+import KepegawaianTableAction from "./table-action";
 
 type PegawaiTableBodyProps = {
 	data: Pageable<Pegawai>;
 };
 const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
-	const { pegawaiId, setPegawaiId, setPegawaiNik } = useRingkasanPegawaiStore();
+
+	const { pegawaiId, setPegawaiId } = useRingkasanPegawaiStore();
 	let urut = getUrut(data);
 
 	const onSelectRow = (row: Pegawai) => {
-        console.log("clicked")
-		if (pegawaiId === row.id) {
+		if (pegawaiId === row.id)
 			setPegawaiId(0);
-			setPegawaiNik("");
-			return;
-		}
-		setPegawaiId(row.id);
-		setPegawaiNik(row.biodata.nik);
+		else
+			setPegawaiId(row.id);
+
 	};
 	return (
 		<TableBody>
@@ -31,13 +31,22 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 						"bg-green-300 odd:bg-green-300": pegawaiId === row.id,
 					})}
 					key={row.id}
-					onClick={() => onSelectRow(row)}
 				>
 					<TableCell align="right" width={60} className="border-x">
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						<KepegawaianTableAction data={row} />
+						<div className="flex gap-2 items-center">
+							<Button
+								size="icon"
+								variant="ghost"
+								className="h-6 w-6 text-cyan-400 hover:bg-transparent hover:text-cyan-700"
+								onClick={() => onSelectRow(row)}
+							>
+								<EyeIcon />
+							</Button>
+							<KepegawaianTableAction data={row} />
+						</div>
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.biodata.nama}

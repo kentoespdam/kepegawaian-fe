@@ -58,7 +58,6 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 
 	const onSubmit = (values: RiwayatMutasiSchema) => {
 		mutation.mutate(values);
-		// console.log(values);
 	};
 
 	useEffect(() => {
@@ -68,7 +67,6 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 			const currentJenisMutasi = { id: riwayatMutasi?.jenisMutasi, nama: "" };
 			setJenisMutasi(currentJenisMutasi);
 		}
-		// console.log(riwayatMutasi);
 	}, [setDefaultValues, setJenisMutasi, pegawai, riwayatMutasi]);
 
 	return (
