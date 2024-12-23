@@ -53,7 +53,7 @@ const PhdpFormComponent = ({ data }: PhdpFormProps) => {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full grid gap-2">
                 <InputZod id="id" label="Id" form={form} className="hidden" />
-                <InputZod id="urut" label="urut" form={form} />
+                <InputZod id="urut" label="urut" form={form} type="number" />
                 <TextAreaZod id="kondisi" label="Kondisi" form={form} />
                 <TextAreaZod id="formula" label="Formula" form={form} />
                 <div className="mt-2 flex gap-2 justify-end">

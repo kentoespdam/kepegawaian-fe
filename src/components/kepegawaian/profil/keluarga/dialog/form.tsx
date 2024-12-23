@@ -8,6 +8,7 @@ import InputZod from "@components/form/zod/input";
 import RadioJenisKelaminZod from "@components/form/zod/jenis-kelamin";
 import JenjangPendidikanZod from "@components/form/zod/jenjang-pendidikan";
 import SelectStatusKawinZod from "@components/form/zod/status-kawin";
+import SelectStatusPendidikanZod from "@components/form/zod/status_pendidikan";
 import TextAreaZod from "@components/form/zod/textarea";
 import YesNoZod from "@components/form/zod/yes-no";
 import { Button } from "@components/ui/button";
@@ -87,6 +88,7 @@ const FormKeluargaDialog = () => {
 							/>
 							<YesNoZod id="tanggungan" label="Tanggungan" form={form} />
 							<JenjangPendidikanZod id="pendidikanId" form={form} />
+							<SelectStatusPendidikanZod id="statusPendidikan" form={form} />
 							<SelectStatusKawinZod id="statusKawin" form={form} />
 							<TextAreaZod id="notes" label="Notes" form={form} />
 						</div>
