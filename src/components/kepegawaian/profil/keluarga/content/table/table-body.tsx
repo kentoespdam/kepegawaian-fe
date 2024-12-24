@@ -88,7 +88,7 @@ const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
 						</TooltipBuilder>
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						{row.pendidikan.nama}
+						{row.pendidikan?.nama ?? "-"}
 					</TableCell>
 					<TableCell className="border-x ">{row.statusKawin}</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
