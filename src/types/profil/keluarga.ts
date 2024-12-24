@@ -19,7 +19,7 @@ export interface Keluarga {
 	tempatLahir: string;
 	tanggalLahir: string;
 	tanggungan: boolean;
-	pendidikan: JenjangPendidikan;
+	pendidikan: JenjangPendidikan | null;
 	statusPendidikan: StatusPendidikan;
 	statusKawin: StatusKawin;
 	notes: string;
@@ -39,7 +39,7 @@ export const KeluargaSchema = z
 		tanggungan: z.boolean().default(true),
 		pendidikanId: z.number().default(0).optional(),
 		statusPendidikan: z.string().default("SEKOLAH"),
-		statusKawin: z.string(),
+		statusKawin: z.string().default("BELUM KAWIN"),
 		notes: z.string().optional(),
 	})
 	.superRefine((val, ctx) => {
