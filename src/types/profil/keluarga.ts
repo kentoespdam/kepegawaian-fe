@@ -62,6 +62,7 @@ export const keluargaTableColumns: CustomColumnDef[] = [
 	{ id: "tempatLahir", label: "Tempat Lahir" },
 	{ id: "tanggalLahir", label: "Tgl. Lahir" },
 	{ id: "tanggungan", label: "Tanggungan" },
+	{ id: "statusPendidikan", label: "Status Pendidikan" },
 	{ id: "pendidikan", label: "Pendidikan" },
 	{ id: "statusKawin", label: "Status Kawin" },
 	{ id: "notes", label: "Catatan" },
