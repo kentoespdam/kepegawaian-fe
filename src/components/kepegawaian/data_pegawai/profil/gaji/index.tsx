@@ -39,7 +39,7 @@ const EditProfilGajiFormComponent = (props: EditProfilGajiFormProps) => {
     const mutation = useGlobalMutation({
         mutationFunction: patchProfilGajiPegawai,
         queryKeys: [["data_pegawai", callback]],
-        redirectTo: `/kepegawaian/data-pegawai?${callback}`
+        redirectTo: `/kepegawaian/data_pegawai?${callback}`
     })
 
     const submitHandler = (values: ProfilGajiPegawaiSchema) => {
