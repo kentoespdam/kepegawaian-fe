@@ -9,13 +9,16 @@ interface KomponenGajiTableActionProps {
     row: KomponenGaji
 }
 const KomponenGajiTableAction = ({ row }: KomponenGajiTableActionProps) => {
-    const router=useRouter()
-    const params=useSearchParams()
-    const profilId=+(params.get("profilId")??0)
+    const router = useRouter()
+    const params = useSearchParams()
+    const profilId = +(params.get("profilId") ?? 0)
+    const callbackUrl = btoa(`/penggajian/komponen_gaji?${params.toString()}`)
+    const search = new URLSearchParams()
+    search.set("callback", callbackUrl)
 
     const { setKomponenGajiId, setOpenDelete } = useKomponenGajiStore(state => state)
     const editHandler = () => {
-        router.push(`/penggajian/komponen_gaji/${profilId}/edit/${row.id}`)
+        router.push(`/penggajian/komponen_gaji/${profilId}/edit/${row.id}?${search.toString()}`)
     }
 
     const deleteHandler = () => {

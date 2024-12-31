@@ -47,7 +47,7 @@ const AvailableCodeButton = ({ availableCode, form, currentCode }: AvailableCode
                 </TooltipBuilder>
             </div>
             <Label>Available Kode</Label>
-            <div className="flex gap-2">
+            <div className="max-w-full flex flex-wrap gap-2">
                 {availableCode.map(item => item.kode === currentCode ? null : (
                     <div key={item.kode}>
                         <TooltipBuilder text={item.nama}>

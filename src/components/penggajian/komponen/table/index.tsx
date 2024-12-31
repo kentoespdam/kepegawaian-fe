@@ -9,16 +9,22 @@ import { getPageData } from "@helpers/action";
 import { useKomponenGajiStore } from "@store/penggajian/komponen";
 import { useQuery } from "@tanstack/react-query";
 import KomponenGajiTableBody from "./body";
+import PaginationBuilder from "@components/builder/table/pagination";
+import { useSearchParams } from "next/navigation";
 
 interface KomponenGajiTableProps {
     profilId: number
 }
 const KomponenGajiTable = ({ profilId }: KomponenGajiTableProps) => {
+    const params = useSearchParams()
+    const search = new URLSearchParams(params)
+    search.delete("profilId")
     const { komponenGajiId, openDelete, setOpenDelete } = useKomponenGajiStore(state => state)
     const { data, isFetching, isLoading, isError, error } = useQuery({
-        queryKey: ['komponen_gaji', profilId],
+        queryKey: ['komponen_gaji', profilId, search.toString()],
         queryFn: async () => getPageData<KomponenGaji>({
             path: `penggajian/komponen/${profilId}/profil`,
+            searchParams: search.toString(),
             isRoot: true
         }),
         enabled: profilId > 0
@@ -36,6 +42,7 @@ const KomponenGajiTable = ({ profilId }: KomponenGajiTableProps) => {
                         error={error?.message}
                     /> : <KomponenGajiTableBody data={data} />}
             </Table>
+            <PaginationBuilder data={data} />
             <DeleteZodDialogBuilder
                 id={komponenGajiId}
                 deletePath="penggajian/komponen"

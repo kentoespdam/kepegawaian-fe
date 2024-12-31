@@ -16,7 +16,7 @@ import { SaveIcon } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveKomponenGaji } from "../action";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Badge } from "@components/ui/badge";
 import { Label } from "@components/ui/label";
 import AvailableCodeButton from "../button/available_kode";
@@ -31,6 +31,10 @@ const KomponenGajiFormComponent = ({ availableCode, profilGaji, urut, komponenGa
     const { defaultValues, setDefaultValues, setUrut } = useKomponenGajiStore();
     const router = useRouter()
 
+    const params = useSearchParams()
+    const search = new URLSearchParams(params)
+    const callbackUrl = search.get("callback") ? atob(search.get("callback") as string) : ""
+
     const form = useForm<KomponenGajiSchema>({
         resolver: zodResolver(KomponenGajiSchema),
         defaultValues: defaultValues,
@@ -40,7 +44,8 @@ const KomponenGajiFormComponent = ({ availableCode, profilGaji, urut, komponenGa
     const mutation = useGlobalMutation({
         mutationFunction: saveKomponenGaji,
         queryKeys: [["komponen_gaji", profilGaji.id]],
-        redirectTo: `/penggajian/komponen_gaji?profilId=${profilGaji.id}`
+        // redirectTo: `/penggajian/komponen_gaji?profilId=${profilGaji.id}`
+        redirectTo: callbackUrl
     })
 
     const onSubmit = (data: KomponenGajiSchema) => {

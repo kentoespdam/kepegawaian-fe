@@ -10,13 +10,16 @@ const KomponenGajiComponent = () => {
     const router = useRouter()
     const params = useSearchParams()
     const profilId = +(params.get("profilId") ?? "0")
+    const callbackUrl = btoa(`/penggajian/komponen_gaji?${params.toString()}`)
+    const search = new URLSearchParams()
+    search.set("callback", callbackUrl)
 
     const addClick = () => {
         if (profilId === 0) {
             alert("Pilih Profil Gaji Terlebih Dahulu")
             return
         }
-        router.push(`/penggajian/komponen_gaji/${profilId}/add`)
+        router.push(`/penggajian/komponen_gaji/${profilId}/add?${search.toString()}`)
     }
 
     return (
