@@ -1,7 +1,7 @@
 import type { Pageable } from "@_types/index";
 import type { Tunjangan } from "@_types/penggajian/tunjangan";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
-import { getUrut } from "@helpers/number";
+import { getUrut, rupiah } from "@helpers/number";
 import TunjanganTableAction from "../button/tunjangan-table-action";
 
 interface TunjanganTableBodyProps {
@@ -23,7 +23,7 @@ const TunjanganTableBody = ({ data }: TunjanganTableBodyProps) => {
                     <TableCell className="border-x whitespace-nowrap">{row.jenisTunjangan}</TableCell>
                     <TableCell className="border-x whitespace-nowrap">{row.level.nama}</TableCell>
                     <TableCell className="border-x whitespace-nowrap">{row.golongan?.golongan}-{row.golongan?.pangkat}</TableCell>
-                    <TableCell className="border-x whitespace-nowrap">{row.nominal}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap" align="right">{rupiah(row.nominal)}</TableCell>
                 </TableRow>
             ))}
         </TableBody>

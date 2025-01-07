@@ -6,13 +6,13 @@ import { Suspense } from "react";
 export const metadata = { title: "Komponen Gaji" }
 const KomponenGajiPage = () => {
     return (
-        <div className={cn("grid gap-2", "lg:grid-cols-12", "md:grid-cols-12")}>
-            <div className="lg:col-span-4">
+        <div className={cn("grid gap-2", "sm:grid-cols-1 ", "lg:grid-cols-12", "md:grid-cols-12")}>
+            <div className="col-span-4 sm:col-lg-12">
                 <Suspense>
                     <ProfilGajiComponent />
                 </Suspense>
             </div>
-            <div className="lg:col-span-8">
+            <div className="col-span-8 sm:col-lg-12">
                 <Suspense>
                     <KomponenGajiComponent/>
                 </Suspense>
