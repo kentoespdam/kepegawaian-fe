@@ -1,5 +1,6 @@
 import type { BaseResult } from "@_types/index";
 import {
+	type UseMutationResult,
 	useMutation,
 	useQueryClient,
 	type QueryKey,
@@ -19,7 +20,12 @@ export function useGlobalMutation<TData, TVariables>({
 	queryKeys,
 	redirectTo,
 	actHandler,
-}: GlobalMutationProps<TData, TVariables>) {
+}: GlobalMutationProps<TData, TVariables>): UseMutationResult<
+	TData,
+	Error,
+	TVariables,
+	unknown
+> {
 	const { push } = useRouter();
 	const queryClient = useQueryClient();
 

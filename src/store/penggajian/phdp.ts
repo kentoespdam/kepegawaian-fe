@@ -1,4 +1,3 @@
-import type { BaseDelete } from "@_types/index";
 import type { Phdp, PhdpSchema } from "@_types/penggajian/phdp";
 import type { BaseDeleteStore } from "@store/base-store";
 import { create } from "zustand";

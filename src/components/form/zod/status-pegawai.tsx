@@ -1,6 +1,6 @@
 "use client";
 
-import type { StatusPegawai } from "@_types/master/status_pegawai";
+import { statusPegawaiName, type StatusPegawai } from "@_types/master/status_pegawai";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -71,7 +71,7 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({
 											? "Loading..."
 											: field.value === ""
 												? "Pilih Status Pegawai"
-												: field.value}
+												: statusPegawaiName(query.data, field.value)}
 									<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 								</Button>
 							</FormControl>

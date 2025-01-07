@@ -196,7 +196,13 @@ export const menus: IMenu[] = [
 				name: "Setting PHDP",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
-			}
+			},
+			{
+				path: "/penggajian/potongan_tkk",
+				name: "Setting Ref Potongan TKK",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
 		],
 	}
 ];
