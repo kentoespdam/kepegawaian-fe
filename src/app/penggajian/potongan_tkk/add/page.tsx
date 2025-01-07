@@ -1,5 +1,6 @@
 import FormCard from "@components/form/card";
 import RefPotonganTkkFormComponent from "@components/penggajian/potongan_tkk/form";
+import { Suspense } from "react";
 
 export const metadata = {
     title: "Tambah Ref Potongan TKK"
@@ -7,7 +8,9 @@ export const metadata = {
 const AddRefPotonganTkkPage = () => {
     return (
         <FormCard metadata={metadata} className="min-h-full">
-            <RefPotonganTkkFormComponent/>
+            <Suspense>
+                <RefPotonganTkkFormComponent />
+            </Suspense>
         </FormCard>
     );
 }
