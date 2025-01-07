@@ -2,6 +2,7 @@ import type { Pageable } from "@_types/index";
 import { jenisGajiString, type KomponenGaji } from "@_types/penggajian/komponen";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import KomponenGajiTableAction from "../button/table-action";
+import { cn } from "@lib/utils";
 
 interface KomponenGajiTableBodyProps {
     data: Pageable<KomponenGaji>
@@ -10,7 +11,7 @@ const KomponenGajiTableBody = ({ data }: KomponenGajiTableBodyProps) => {
     return (
         <TableBody>
             {data.content.map((row) => (
-                <TableRow key={row.id}>
+                <TableRow key={row.id} className={cn("odd:bg-muted", row.isReference && "text-blue-600")}>
                     <TableCell className="border" align="center" width={60}>
                         <KomponenGajiTableAction row={row} />
                     </TableCell>
