@@ -26,9 +26,8 @@ import {
 import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
@@ -37,7 +36,6 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const setOrganisasiId = useOrgJab((state) => state.setOrganisasiId);
 	const [pop, setPop] = useState(false);
 	const query = useQuery({
 		queryKey: ["organisasi-list"],
@@ -48,12 +46,6 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 			return result;
 		},
 	});
-
-	const currentOrganisasiId = form.watch(id);
-	useEffect(
-		() => setOrganisasiId(currentOrganisasiId),
-		[setOrganisasiId, currentOrganisasiId],
-	);
 
 	return (
 		<FormField
@@ -77,7 +69,7 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 											? "Loading..."
 											: field.value
 												? findOrganisasiValue(query.data ?? [], field.value)
-														?.nama
+													?.nama
 												: "Pilih Organisasi"}
 									</span>
 									<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -96,7 +88,6 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 											onSelect={() => {
 												field.onChange(organisasi.id);
 												setPop(false);
-												setOrganisasiId(organisasi.id);
 											}}
 										>
 											{organisasi.nama}

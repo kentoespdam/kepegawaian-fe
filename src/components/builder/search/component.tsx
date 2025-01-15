@@ -12,6 +12,7 @@ import SearchLevelBuilder from "./level";
 import SearchOrganisasiBuilder from "./organisasi";
 import SearchProfesiBuilder from "./profesi";
 import SearchJenisTunjanganBuilder from "./jenis_tunjangan";
+import SearchGolonganBuilder from "./golongan";
 
 type SearchComponentProps = {
 	col: CustomColumnDef;
@@ -49,6 +50,8 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
 			return <SearchGradeBuilder col={col} val={value} />;
 		case "jenisTunjangan":
 			return <SearchJenisTunjanganBuilder col={col} val={value} />;
+		case "golongan":
+			return <SearchGolonganBuilder col={col} val={value} />;
 		default:
 			return <InputSearchComponent col={col} val={value} />;
 	}

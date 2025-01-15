@@ -23,28 +23,21 @@ import {
 import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
 interface SelectJabatanZodProps<TData extends FieldValues>
-	extends InputZodProps<TData> {}
+	extends InputZodProps<TData> { }
 
 const SelectJabatanZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: SelectJabatanZodProps<TData>) => {
-	const { organisasiId, setOrganisasiId, setJabLevelId } = useOrgJab(
-		(state) => ({
-			organisasiId: state.organisasiId,
-			setOrganisasiId: state.setOrganisasiId,
-			setJabLevelId: state.setJabLevelId,
-		}),
-	);
-
+	const orgStr = "organisasiId" as Path<TData>;
+	const organisasiId = form.watch(orgStr);
 	const [pop, setPop] = useState(false);
 	const query = useQuery({
 		queryKey: ["jabatan-list", organisasiId],
@@ -57,12 +50,6 @@ const SelectJabatanZod = <TData extends FieldValues>({
 		},
 		enabled: !!organisasiId && organisasiId > 0,
 	});
-
-	const jabatan = form.watch("jabatan" as Path<TData>);
-
-	useEffect(() => {
-		setJabLevelId(jabatan?.level.id || 0);
-	}, [setJabLevelId, jabatan]);
 
 	return (
 		<FormField
@@ -106,7 +93,7 @@ const SelectJabatanZod = <TData extends FieldValues>({
 											onSelect={() => {
 												field.onChange(jabatan.id);
 												setPop(false);
-												setJabLevelId(jabatan.level.id);
+												// setJabatanId(jabatan.level.id);
 											}}
 										>
 											{jabatan.nama}

@@ -1,48 +1,49 @@
-"use client";
-import { type PegawaiDetail, ProfilGajiPegawaiSchema } from "@_types/pegawai";
+"use client"
+import { ProfilPribadiSchema, type PegawaiDetail } from "@_types/pegawai";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
+import TooltipBuilder from "@components/builder/tooltip";
+import InputZod from "@components/form/zod/input";
+import { Button } from "@components/ui/button";
+import Fieldset from "@components/ui/fieldset";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import ProfilGajiDataSk from "./data_sk";
-import { useProfilGajiPegawaiStore } from "@store/kepegawaian/profil_gaji";
-import { useEffect } from "react";
-import ProfilGajiVariableGaji from "./variable_gaji";
-import TooltipBuilder from "@components/builder/tooltip";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import { Button } from "@components/ui/button";
-import { SaveIcon } from "lucide-react";
+import { useProfilPribadiStore } from "@store/kepegawaian/profil/pribadi";
 import { useGlobalMutation } from "@store/query-store";
+import { SaveIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { patchProfilGajiPegawai } from "./action";
-import InputZod from "@components/form/zod/input";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { patchProfilPribadi } from "./action";
+import BiodataComponent from "./bio";
+import ProfilKepegawaianComponent from "./kepegawaian";
 
-interface EditProfilGajiFormProps {
+interface EditProfilPribadiFormProps {
     pegawai: PegawaiDetail
 }
-const EditProfilGajiFormComponent = (props: EditProfilGajiFormProps) => {
-    const { pegawai } = props
+const EditProfilPribadiFormComponent = ({ pegawai }: EditProfilPribadiFormProps) => {
     const router = useRouter()
     const params = useSearchParams()
     const callback = params.get("callbackUrl") ? atob(params.get("callbackUrl") as string) : ""
 
-    const { defaultValues, setDefaultValues } = useProfilGajiPegawaiStore(state => ({
+    const { defaultValues, setDefaultValues } = useProfilPribadiStore(state => ({
         defaultValues: state.defaultValues,
         setDefaultValues: state.setDefaultValues
     }))
 
-    const form = useForm<ProfilGajiPegawaiSchema>({
-        resolver: zodResolver(ProfilGajiPegawaiSchema),
+    const form = useForm<ProfilPribadiSchema>({
+        resolver: zodResolver(ProfilPribadiSchema),
         defaultValues: defaultValues,
         values: defaultValues
     })
 
     const mutation = useGlobalMutation({
-        mutationFunction: patchProfilGajiPegawai,
+        mutationFunction: patchProfilPribadi,
         queryKeys: [["data_pegawai", callback]],
         redirectTo: `/kepegawaian/data_pegawai?${callback}`
     })
 
-    const submitHandler = (values: ProfilGajiPegawaiSchema) => {
+    const submitHandler = (values: ProfilPribadiSchema) => {
+        // console.dir(values, { depth: 2 })
         mutation.mutate(values)
     }
 
@@ -56,10 +57,13 @@ const EditProfilGajiFormComponent = (props: EditProfilGajiFormProps) => {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(submitHandler)}
-                className="grid gap-4">
+                className="grid gap-2">
                 <InputZod id="id" label="ID" form={form} className="hidden" />
-                <ProfilGajiDataSk form={form} />
-                <ProfilGajiVariableGaji form={form} />
+                <BiodataComponent form={form} />
+                <ProfilKepegawaianComponent form={form} />
+                <Fieldset title="Data Absesnsi">
+                    <InputZod type="number" id="absensiId" label="ID Absensi" form={form} />
+                </Fieldset>
                 <div className="mt-2 flex gap-2 justify-end">
                     <TooltipBuilder text="Save" delayDuration={100}>
                         <LoadingButtonClient
@@ -83,4 +87,4 @@ const EditProfilGajiFormComponent = (props: EditProfilGajiFormProps) => {
     );
 }
 
-export default EditProfilGajiFormComponent;
+export default EditProfilPribadiFormComponent;

@@ -59,7 +59,13 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 						{row.golongan?.golongan} - {row.golongan?.pangkat}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
+						{row.organisasi?.nama}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
 						{row.jabatan.nama}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.profesi?.nama}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.biodata.tanggalLahir}
