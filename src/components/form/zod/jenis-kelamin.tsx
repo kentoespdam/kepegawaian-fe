@@ -20,12 +20,14 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 		<FormField
 			control={form.control}
 			name={id}
-			render={({ field }) => (
+			render={({ field }) => {
+				console.log(field.value)
+				return(
 				<FormItem>
 					<FormLabel>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
-							defaultValue={field.value}
+							value={field.value}
 							className="flex justify-start gap-8"
 							onValueChange={field.onChange}
 						>
@@ -52,7 +54,7 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 					</FormControl>
 					<FormMessage />
 				</FormItem>
-			)}
+			)}}
 		/>
 	);
 };
