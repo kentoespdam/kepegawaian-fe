@@ -20,9 +20,7 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 		<FormField
 			control={form.control}
 			name={id}
-			render={({ field }) => {
-				console.log(field.value)
-				return(
+			render={({ field }) => (
 				<FormItem>
 					<FormLabel>{label}</FormLabel>
 					<FormControl>
@@ -54,7 +52,7 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 					</FormControl>
 					<FormMessage />
 				</FormItem>
-			)}}
+			)}
 		/>
 	);
 };
