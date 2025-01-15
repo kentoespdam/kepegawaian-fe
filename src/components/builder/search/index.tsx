@@ -13,7 +13,7 @@ const SearchBuilder = (props: SearchBuilderProps) => {
 	return (
 		<Suspense>
 			<SearchFormComponent>
-				<div className="flex flex-row justify-start gap-2 mb-2">
+				<div className="max-w-full flex flex-wrap flex-row justify-start gap-2 mb-2">
 					{props.columns.map((column) =>
 						column.search ? (
 							<div key={column.id} className="w-52">

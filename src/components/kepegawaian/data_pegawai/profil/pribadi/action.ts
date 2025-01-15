@@ -1,14 +1,12 @@
-"use server";
-import type { ProfilGajiPegawaiSchema } from "@_types/pegawai";
+"use server"
+import type { ProfilPribadiSchema } from "@_types/pegawai";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
-export const patchProfilGajiPegawai = async (
-	formData: ProfilGajiPegawaiSchema,
-) => {
-	const headers = setAuthorizeHeader(cookies());
-	const url = `${API_URL}/pegawai/${formData.id}/gaji`;
+export const patchProfilPribadi=async(formData: ProfilPribadiSchema) => {
+    const headers = setAuthorizeHeader(cookies());
+	const url = `${API_URL}/pegawai/${formData.id}/profil`;
 	console.log(url);
 
 	const req = await fetch(url, {
@@ -18,4 +16,4 @@ export const patchProfilGajiPegawai = async (
 	});
 	const result = await req.json();
 	return result;
-};
+}

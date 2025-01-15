@@ -4,7 +4,7 @@ import SelectProfesiZod from "@components/form/zod/profesi";
 import Fieldset from "@components/ui/fieldset";
 import type { MutasiFormProps } from ".";
 
-const MutasiJabatanForm = ({ form, defaultValues }: MutasiFormProps) => {
+const MutasiJabatanForm = ({ form }: MutasiFormProps) => {
 	return (
 		<Fieldset title="Mutasi Lokasi Kerja / Jabatan">
 			<div className="grid gap-2 grid-cols-1 lg:grid-cols-2">
@@ -13,7 +13,6 @@ const MutasiJabatanForm = ({ form, defaultValues }: MutasiFormProps) => {
 					id="jabatanId"
 					label="Jabatan"
 					form={form}
-					// defaultValues={defaultValues}
 				/>
 				<SelectProfesiZod
 					id="profesiId"

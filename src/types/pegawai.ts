@@ -6,7 +6,11 @@ import type { Grade } from "./master/grade";
 import type { JabatanMini } from "./master/jabatan";
 import type { Organisasi, OrganisasiMini } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
-import { BiodataSchema, type BiodataMini } from "./profil/biodata";
+import {
+	type Biodata,
+	BiodataSchema,
+	type BiodataMini,
+} from "./profil/biodata";
 import type { PendapatanNonPajak } from "./penggajian/pendapatan_non_pajak";
 import type { ProfilGaji } from "./penggajian/profil";
 import type { RumahDinas } from "./master/rumah_dinas";
@@ -37,6 +41,7 @@ export interface BasePegawai {
 }
 
 export interface PegawaiDetail extends BasePegawai {
+	biodata: Biodata;
 	skCapeg: RiwayatSk | null;
 	skPegawai: RiwayatSk | null;
 	skGolongan: RiwayatSk | null;
@@ -95,6 +100,8 @@ export interface PegawaiRingkas {
 	mkg: string;
 	unitKerja: string;
 	jabatan: string;
+	profesi: string;
+	grade: string;
 	tmtKerja: string;
 	tmtPegawai: string;
 	tmtPensiun: string;
@@ -220,24 +227,46 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		label: "Nama",
 		search: true,
 		searchType: "text",
+		sortable: true,
 	},
 	{
 		id: "nipam",
 		label: "Nipam",
 		search: true,
 		searchType: "text",
+		sortable: true,
 	},
 	{
 		id: "jenisKelamin",
-		label: "J/K",
+		label: "Jenis Kelamin",
 	},
 	{
 		id: "golonganId",
-		label: "Gol.",
+		label: "Golongan",
+		search: true,
+		searchType: "golongan",
+		sortable: true,
+	},
+	{
+		id: "organisasiId",
+		label: "Organisasi",
+		search: true,
+		searchType: "organisasi",
+		sortable: true,
 	},
 	{
 		id: "jabatanId",
 		label: "Jabatan",
+		search: true,
+		searchType: "jabatan",
+		sortable: true,
+	},
+	{
+		id: "profesiId",
+		label: "Profesi",
+		search: true,
+		searchType: "profesi",
+		sortable: true,
 	},
 	{
 		id: "tglLahir",
@@ -282,3 +311,24 @@ export const ProfilGajiPegawaiSchema = z.object({
 });
 
 export type ProfilGajiPegawaiSchema = z.infer<typeof ProfilGajiPegawaiSchema>;
+
+export const ProfilPribadiSchema = z.object({
+	id: z.number().default(0),
+	nipam: z.string().min(8, "NIPAM wajib diisi"),
+	nama: z.string().min(3, "Nama wajib diisi"),
+	jenisKelamin: z.string().min(1, "Jenis Kelamin wajib diisi"),
+	statusKawin: z.string().min(1, "Status Kawin wajib diisi"),
+	agama: z.string().min(1, "Agama wajib diisi"),
+	tempatLahir: z.string(),
+	tanggalLahir: z.string(),
+	alamat: z.string(),
+	ibuKandung: z.string(),
+	telp: z.string(),
+	golonganId: z.number(),
+	organisasiId: z.number(),
+	jabatanId: z.number(),
+	profesiId: z.number().optional(),
+	absensiId: z.number(),
+});
+
+export type ProfilPribadiSchema = z.infer<typeof ProfilPribadiSchema>;

@@ -28,7 +28,7 @@ const TabBiodataPegawai = () => {
                         Daftar Biodata Pegawai
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="grid">
+                <CardContent className="max-w-full grid">
                     <SearchBuilder columns={pegawaiTableColumns} />
                     <Table>
                         <TableHeadBuilder columns={pegawaiTableColumns} />

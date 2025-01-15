@@ -21,6 +21,8 @@ const InformasiKepegawaian = ({ pegawai }: InformasiKepegawaianProps) => {
 				<RingkasanContent field="Masa Kerja Golongan" value={pegawai?.tmtGolongan} />
 				<RingkasanContent field="Unit Kerja" value={pegawai?.unitKerja} />
 				<RingkasanContent field="Jabatan" value={pegawai?.jabatan} />
+				<RingkasanContent field="Profesi" value={pegawai?.profesi} />
+				<RingkasanContent field="Grade" value={pegawai?.grade} />
 				<RingkasanContent field="Tgl. Mulai Kerja" value={pegawai?.tmtKerja} />
 				<RingkasanContent field="Tgl. Pengangkatan" value={pegawai?.tmtPegawai} />
 				<RingkasanContent field="TMT Pensiun" value={pegawai?.tmtPensiun} />
