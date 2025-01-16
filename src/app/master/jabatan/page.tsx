@@ -2,7 +2,7 @@ import { jabatanTableColumns } from "@_types/master/jabatan";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import JabatanTable from "./table";
+import JabatanTable from "../../../components/master/jabatan/table";
 
 export const metadata = {
     title: "Master Jabatan",

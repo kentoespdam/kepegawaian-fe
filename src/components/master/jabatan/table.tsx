@@ -8,11 +8,18 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import JabatanTableBody from "./body";
-
+import JabatanTableBody from "./table.body";
+import { useJabatanStore } from "@store/master/jabatan";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 const JabatanTable = () => {
     const searchParams = useSearchParams();
     const search = new URLSearchParams(searchParams);
+
+    const { jabatanId, openDelete, setOpenDelete } = useJabatanStore(state => ({
+        jabatanId: state.jabatanId,
+        openDelete: state.openDelete,
+        setOpenDelete: state.setOpenDelete
+    }))
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["jabatan", search.toString()],
@@ -37,6 +44,13 @@ const JabatanTable = () => {
                 }
             </Table>
             <PaginationBuilder data={data} />
+            <DeleteZodDialogBuilder
+                id={jabatanId}
+                deletePath="master/jabatan"
+                openDelete={openDelete}
+                setOpenDelete={setOpenDelete}
+                queryKeys={["jabatan", search.toString()]}
+            />
         </div>
     );
 }

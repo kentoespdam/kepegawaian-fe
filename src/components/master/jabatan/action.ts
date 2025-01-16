@@ -1,7 +1,6 @@
 "use server";
 
-import type { SaveErrorStatus } from "@_types/index";
-import { JabatanSchema } from "@_types/master/jabatan";
+import type { JabatanSchema } from "@_types/master/jabatan";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import axios from "axios";
@@ -12,42 +11,19 @@ import { cookies } from "next/headers";
  * @param formData - The FormData object containing the data to be saved.
  * @returns A Promise that resolves to an object with an optional error property.
  */
-export const saveJabatan = async (
-	formData: FormData,
-): Promise<SaveErrorStatus> => {
+export const saveJabatan = async (formData: JabatanSchema) => {
 	const headers = setAuthorizeHeader(cookies());
-	try {
-		const validate = JabatanSchema.safeParse({
-			id: Number(formData.get("id")),
-			parentId: Number(formData.get("parentId")),
-			organisasiId: Number(formData.get("organisasiId")),
-			levelId: Number(formData.get("levelId")),
-			nama: formData.get("nama"),
-		});
-
-		if (!validate.success)
-			return {
-				success: false,
-				error: validate.error.flatten().fieldErrors,
-			};
-
-		const apiUrl =
-			validate.data.id > 0
-				? `${API_URL}/master/jabatan/${validate.data.id}`
-				: `${API_URL}/master/jabatan`;
-
-		await axios.request({
-			method: validate.data.id ? "PUT" : "POST",
-			url: apiUrl,
-			data: formData,
-			headers: headers,
-		});
-
-		return { success: true };
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (err: any) {
-		return { success: false, error: { message: err.response.data.message } };
-	}
+	const url =
+		formData.id > 0
+			? `${API_URL}/master/jabatan/${formData.id}`
+			: `${API_URL}/master/jabatan`;
+	const req = await fetch(url, {
+		method: formData.id > 0 ? "PUT" : "POST",
+		headers,
+		body: JSON.stringify(formData),
+	});
+	const result = await req.json();
+	return result;
 };
 
 /**
