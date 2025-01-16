@@ -72,7 +72,7 @@ const SelectProfesiZod = <TData extends FieldValues>({
 								>
 									<span className="text-left flex-1 truncate">
 										{!query.data
-											? "Profesi tidak ditemukan"
+											? "No Data (Pilih Jabatan)"
 											: query.isLoading || query.isFetching
 												? "Loading..."
 												: field.value
