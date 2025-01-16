@@ -1,7 +1,7 @@
 import type { Organisasi } from "@_types/master/organisasi";
 import FormCard from "@components/form/card";
+import OrganisasiFormComponent from "@components/master/organisasi/form";
 import { getDataById } from "@helpers/action";
-import OrganisasiFormComponent from "../../form";
 
 export const metadata = {
     title: "Edit Organisasi"

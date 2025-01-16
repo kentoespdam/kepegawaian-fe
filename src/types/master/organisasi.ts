@@ -3,6 +3,7 @@ import type { CustomColumnDef } from "..";
 
 export interface OrganisasiMini {
 	id: number;
+	kode: string;
 	nama: string;
 }
 
@@ -13,6 +14,7 @@ export interface Organisasi extends OrganisasiMini {
 
 export const OrganisasiSchema = z.object({
 	id: z.number(),
+	kode: z.string(),
 	parentId: z.optional(z.number()),
 	levelOrganisasi: z
 		.number()
@@ -22,10 +24,18 @@ export const OrganisasiSchema = z.object({
 		.min(3, { message: "Nama Organisasi wajib diisi" }),
 });
 
+export type OrganisasiSchema = z.infer<typeof OrganisasiSchema>;
+
 export const organisasiTableColumns: CustomColumnDef[] = [
 	{
 		id: "urut",
 		label: "No",
+	},
+	{
+		id: "kode",
+		label: "Kode",
+		search: true,
+		searchType: "text",
 	},
 	{
 		id: "parentId",
@@ -36,7 +46,7 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 	{
 		id: "levelOrganisasi",
 		label: "Level",
-		search:true,
+		search: true,
 		searchType: "level",
 	},
 	{
@@ -56,6 +66,6 @@ export const findOrganisasiValue = (
 	id: string | number,
 ): OrganisasiMini => {
 	const cari = list.find((row) => row.id === Number(id));
-	if (!cari) return { id: 0, nama: "Pilih Organisasi" };
+	if (!cari) return { id: 0, kode: "0", nama: "Pilih Organisasi" };
 	return cari;
 };

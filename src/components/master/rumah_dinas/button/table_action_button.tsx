@@ -15,7 +15,6 @@ const RumahDinasTableAction = ({ rumahDinasId }: RumahDinasTableActionProps) => 
     }
 
     const deleteHandler = () => {
-        console.log(rumahDinasId)
         setRumahDinasId(rumahDinasId)
         setOpenDelete(true)
     }
