@@ -70,7 +70,7 @@ const SelectJabatanZod = <TData extends FieldValues>({
 								>
 									<span className="text-left flex-1 truncate">
 										{!query.data
-											? "Jabatan tidak ditemukan"
+											? "No Data (Pilih Organisasi)"
 											: query.isLoading || query.isFetching
 												? "Loading..."
 												: field.value
