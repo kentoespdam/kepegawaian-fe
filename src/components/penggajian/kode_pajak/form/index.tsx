@@ -34,7 +34,7 @@ const KodePajakFormComponent = ({ data }: KodePajakFormComponentProps) => {
     const mutation = useGlobalMutation({
         mutationFunction: saveKodePajak,
         queryKeys: [["kode_pajak"]],
-        redirectTo: "/penggajian/kode-pajak"
+        redirectTo: "/penggajian/kode_pajak"
     })
 
     const onSubmit = (values: PendapatanNonPajakSchema) => {
