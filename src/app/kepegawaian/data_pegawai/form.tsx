@@ -1,7 +1,7 @@
 "use client";
 
 import { JenisKelamin } from "@_types/enums/jenisKelamin";
-import { type PegawaiDetail, PegawaiSchema } from "@_types/pegawai";
+import { PegawaiSchema, type PegawaiDetail } from "@_types/pegawai";
 import type { Biodata } from "@_types/profil/biodata";
 import SelectStatusPegawaiZod from "@components/form/zod/status-pegawai";
 import PegawaiActionComponent from "@components/kepegawaian/data_pegawai/add/action";
@@ -13,7 +13,6 @@ import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 import { useGlobalMutation } from "@store/query-store";
 import { useForm } from "react-hook-form";
 import { saveKepegawaian } from "./action";
-import { useEffect } from "react";
 
 type PegawaiFormProps = {
 	biodata?: Biodata;
@@ -45,7 +44,6 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 			organisasiId: 0,
 			jabatanId: 0,
 			profesiId: 0,
-			gradeId: 0,
 			golonganId: 0,
 			nomorSk: "",
 			tanggalSk: "",
@@ -73,7 +71,6 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 			organisasiId: pegawai?.organisasi.id ?? 0,
 			jabatanId: pegawai?.jabatan.id ?? 0,
 			profesiId: pegawai?.profesi.id ?? 0,
-			gradeId: pegawai?.grade.id ?? 0,
 			golonganId: pegawai?.golongan.id ?? 0,
 			nomorSk: pegawai?.nomorSk ?? "",
 			tanggalSk: pegawai?.tanggalSk ?? "",
@@ -92,14 +89,9 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 		Object.assign(values, {
 			statusKerja: "KARYAWAN_AKTIF",
 		});
-		mutation.mutate(values);
-		// console.log(values)
+		// mutation.mutate(values);
+		console.log(values)
 	};
-
-	useEffect(() => {
-		form.watch()
-		console.table(form.watch());
-	}, [form]);
 
 	return (
 		<Form {...form}>
