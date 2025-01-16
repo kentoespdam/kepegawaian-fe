@@ -23,6 +23,7 @@ export const getEmployeeByNipam = async (
 			tmtGolongan: "2022-01-01",
 			jabatan: {
 				id: 3,
+				kode: "0",
 				level: {
 					id: 3,
 					nama: "DIRTEK",
@@ -31,8 +32,10 @@ export const getEmployeeByNipam = async (
 			},
 			organisasi: {
 				id: 3,
+				kode: "0",
 				parent: {
 					id: 2,
+					kode: "0",
 					nama: "DIREKTORAT UTAMA",
 				},
 				levelOrganisasi: 3,
@@ -46,10 +49,12 @@ export const getEmployeeByNipam = async (
 				},
 				organisasi: {
 					id: 39,
+					kode: "0",
 					nama: "SUB BAG TEKNOLOGI INFORMASI",
 				},
 				jabatan: {
 					id: 59,
+					kode: "0",
 					level: {
 						id: 5,
 						nama: "MANAJER",
