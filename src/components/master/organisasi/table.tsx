@@ -8,11 +8,19 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import OrganisasiTableBody from "./body";
+import OrganisasiTableBody from "./table.body";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
+import { useOrganisasiStore } from "@store/master/organisasi";
 
 const OrganisasiTable = () => {
     const searchParams = useSearchParams();
     const search = new URLSearchParams(searchParams);
+
+    const { organisasiId, openDelete, setOpenDelete } = useOrganisasiStore(state => ({
+        organisasiId: state.organisasiId,
+        openDelete: state.openDelete,
+        setOpenDelete: state.setOpenDelete
+    }))
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["organisasi", search.toString()],
@@ -37,6 +45,13 @@ const OrganisasiTable = () => {
                 }
             </Table>
             <PaginationBuilder data={data} />
+            <DeleteZodDialogBuilder
+                id={organisasiId}
+                deletePath="master/organisasi"
+                openDelete={openDelete}
+                setOpenDelete={setOpenDelete}
+                queryKeys={["organisasi", search.toString()]}
+            />
         </div>
     );
 }
