@@ -122,7 +122,7 @@ export const PegawaiSchema = BiodataSchema.extend({
 	organisasiId: z.number().optional(),
 	jabatanId: z.number().optional(),
 	profesiId: z.number().optional(),
-	gradeId: z.number().optional(),
+	kodePajakId: z.number().min(1, "Kode Pajak wajib diisi"),
 	golonganId: z.number().optional(),
 	nomorSk: z.string().optional(),
 	tanggalSk: z.string().optional(),
@@ -158,13 +158,6 @@ export const PegawaiSchema = BiodataSchema.extend({
 			code: z.ZodIssueCode.custom,
 			message: "Profesi wajib diisi",
 			path: ["profesiId"],
-		});
-
-	if (!val.gradeId || val.gradeId <= 1)
-		ctx.addIssue({
-			code: z.ZodIssueCode.custom,
-			message: "Grade wajib diisi",
-			path: ["gradeId"],
 		});
 
 	if (!val.nomorSk || val.nomorSk === "")
