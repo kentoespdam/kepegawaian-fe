@@ -74,7 +74,7 @@ const SelectJabatanZod = <TData extends FieldValues>({
 											: query.isLoading || query.isFetching
 												? "Loading..."
 												: field.value
-													? findJabatanValue(query.data, field.value).nama
+													? `${findJabatanValue(query.data, field.value).nama} (${findJabatanValue(query.data, field.value).kode})`
 													: "Pilih Jabatan"}
 									</span>
 									<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
