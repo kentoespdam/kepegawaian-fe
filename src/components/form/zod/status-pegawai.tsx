@@ -28,14 +28,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 
 const SelectStatusPegawaiZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const biodataStore = useAddBiodataStore();
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
@@ -88,7 +86,6 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({
 											onSelect={() => {
 												field.onChange(item.id);
 												setPop(false);
-												biodataStore.setStatusPegawai(item.id);
 											}}
 										>
 											{item.nama}

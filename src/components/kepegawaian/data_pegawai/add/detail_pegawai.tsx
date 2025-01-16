@@ -9,14 +9,13 @@ import SelectOrganisasiZod from "@components/form/zod/organisasi";
 import SelectPendapatanNonPajakZod from "@components/form/zod/pendapatan_non_pajak";
 import SelectProfesiZod from "@components/form/zod/profesi";
 import Fieldset from "@components/ui/fieldset";
-import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 import type { UseFormReturn } from "react-hook-form";
 
 interface PegawaiDetailComponentProps {
 	form: UseFormReturn<PegawaiSchema>;
 }
 const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
-	const biodataStore = useAddBiodataStore();
+	const statusPegawai = form.watch("statusPegawai");
 
 	return (
 		<Fieldset title="Data Pengangkatan Karyawan">
@@ -25,7 +24,7 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
 				<SelectOrganisasiZod id="organisasiId" label="Organisasi" form={form} />
 				<SelectJabatanZod id="jabatanId" label="Jabatan" form={form} />
 				<SelectProfesiZod id="profesiId" label="Profesi" form={form} />
-				{biodataStore.statusPegawai !== "KONTRAK" ? (
+				{statusPegawai !== "KONTRAK" ? (
 					<SelectGolonganZod id="golonganId" label="Golongan" form={form} />
 				) : null}
 
@@ -33,7 +32,7 @@ const PegawaiDetailComponent = ({ form }: PegawaiDetailComponentProps) => {
 				<InputZod id="nomorSk" label="Nomor SK" form={form} />
 				<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
 				<DatePickerZod id="tmtBerlakuSk" label="TMT SK" form={form} />
-				{biodataStore.statusPegawai === "KONTRAK" ? (
+				{statusPegawai === "KONTRAK" ? (
 					<DatePickerZod
 						id="tmtKontrakSelesai"
 						label="TMT Kontrak Selesai"
