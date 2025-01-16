@@ -62,12 +62,6 @@ export const menus: IMenu[] = [
 		role: "ADMIN",
 		subMenu: [
 			{
-				path: "/master/golongan",
-				name: "Golongan",
-				icon: <BarcodeIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
 				path: "/master/level",
 				name: "Level",
 				icon: <RadicalIcon className={defaultIconClassName} />,
@@ -80,12 +74,6 @@ export const menus: IMenu[] = [
 				role: USER_ROLE.ADMIN,
 			},
 			{
-				path: "/master/profesi",
-				name: "Profesi",
-				icon: <ShovelIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
 				path: "/master/organisasi",
 				name: "Organisasi",
 				icon: <GitCompareArrowsIcon className={defaultIconClassName} />,
@@ -95,6 +83,18 @@ export const menus: IMenu[] = [
 				path: "/master/jabatan",
 				name: "Jabatan",
 				icon: <SignalIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
+			{
+				path: "/master/profesi",
+				name: "Profesi",
+				icon: <ShovelIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
+			{
+				path: "/master/golongan",
+				name: "Golongan",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
 			},
 			{
