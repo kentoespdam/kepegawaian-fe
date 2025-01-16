@@ -3,8 +3,9 @@ import { z } from "zod";
 export const STATUS_KAWIN = [
 	"BELUM_KAWIN",
 	"KAWIN",
-	"CERAI_HIDUP",
-	"CERAI_MATI",
+	"JANDA_DUDA",
+	"MENIKAH_SEKANTOR",
+	"TIDAK_TAHU",
 ] as const;
 
 export const StatusKawin = z.enum(STATUS_KAWIN);

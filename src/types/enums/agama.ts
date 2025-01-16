@@ -7,6 +7,8 @@ export const AGAMA = [
 	"KATOLIK",
 	"HINDU",
 	"BUDHA",
+	"KONGHUCHU",
+	"ALIRAN_KEPERCAYAAN",
 	"LAINNYA",
 ] as const;
 
