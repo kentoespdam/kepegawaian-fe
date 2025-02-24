@@ -10,7 +10,7 @@ export interface RiwayatMutasi {
 	id: number;
 	skMutasi: RiwayatSk;
 	tmtBerlaku: string;
-	tglBerakhir: string;
+	tanggalBerakhir: string;
 	jenisMutasi: string;
 	namaJenisMutasi: string;
 	golongan: Golongan | null;
@@ -29,7 +29,7 @@ export interface RiwayatMutasi {
 export const RiwayatMutasiSchema = BaseRiwayatSkSchema.extend({
 	nipam: z.string(),
 	nama: z.string(),
-	tglBerakhir: z.string().optional(),
+	tanggalBerakhir: z.string().optional(),
 	jenisMutasi: z.string().min(3, "Jenis Mutasi wajib diisi"),
 	organisasiId: z.number().optional(),
 	jabatan: JabatanMiniSchema.optional(),

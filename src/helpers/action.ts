@@ -26,22 +26,16 @@ interface getDataProps extends baseProps {
 export const globalGetData = async <TData>(
 	props: getDataProps,
 ): Promise<TData> => {
-	// const controller = new AbortController();
+	const requestUrl = `${API_URL}/${props.path}?${props.searchParams ?? ""}`;
+	const requestHeaders = setAuthorizeHeader(cookies());
 
-	const basePath = props.isRoot ? API_URL : `${API_URL}`;
-	const url = `${basePath}/${props.path}?${props.searchParams}`;
-	const headers = setAuthorizeHeader(cookies());
-	// const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-	const response = await fetch(url, {
+	const response = await fetch(requestUrl, {
 		method: "GET",
-		headers,
-		// signal: controller.signal,
+		headers: requestHeaders,
 		cache: "no-cache",
 	});
 
-	const result: BaseResult<TData> = await response.json();
-	// clearTimeout(timeoutId);
+	const result = (await response.json()) as BaseResult<TData>;
 	return result.data;
 };
 
