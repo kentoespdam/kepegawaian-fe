@@ -42,7 +42,7 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 		mkgbTahun: 0,
 		mkgbBulan: 0,
 		updateMaster: false,
-		tglBerakhir: "",
+		tanggalBerakhir: "",
 		jenisMutasi: "",
 		organisasiId: 0,
 		jabatanId: 0,
@@ -76,7 +76,7 @@ export const useRiwayatMutasiStore = create<RiwayatMutasiStore>((set, get) => ({
 				mkgbTahun: riwayatMutasi?.skMutasi?.mkgbTahun ?? 0,
 				mkgbBulan: riwayatMutasi?.skMutasi?.mkgbBulan ?? 0,
 				updateMaster: riwayatMutasi?.skMutasi?.updateMaster ?? false,
-				tglBerakhir: riwayatMutasi?.tglBerakhir ?? "",
+				tanggalBerakhir: riwayatMutasi?.tanggalBerakhir ?? "",
 				jenisMutasi: riwayatMutasi?.jenisMutasi ?? "",
 				golonganLamaId: pegawai
 					? pegawai.statusPegawai === "KOTRAK"
