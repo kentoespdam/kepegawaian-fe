@@ -42,8 +42,7 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 		Object.assign(values, {
 			statusKerja: "KARYAWAN_AKTIF",
 		});
-		// mutation.mutate(values);
-		console.log(values)
+		mutation.mutate(values);
 	};
 
 	useEffect(() => setDefaultValues(pegawai, biodata), [setDefaultValues, pegawai, biodata])
