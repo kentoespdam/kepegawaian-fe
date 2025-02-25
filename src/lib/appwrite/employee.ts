@@ -23,6 +23,7 @@ export const getEmployeeByNipam = async (
 			tmtGolongan: "2022-01-01",
 			jabatan: {
 				id: 3,
+				kode: "0",
 				level: {
 					id: 3,
 					nama: "DIRTEK",
@@ -31,8 +32,10 @@ export const getEmployeeByNipam = async (
 			},
 			organisasi: {
 				id: 3,
+				kode: "0",
 				parent: {
 					id: 2,
+					kode: "0",
 					nama: "DIREKTORAT UTAMA",
 				},
 				levelOrganisasi: 3,
@@ -43,6 +46,29 @@ export const getEmployeeByNipam = async (
 				level: {
 					id: 5,
 					nama: "MANAJER",
+				},
+				organisasi: {
+					id: 39,
+					kode: "0",
+					nama: "SUB BAG TEKNOLOGI INFORMASI",
+				},
+				jabatan: {
+					id: 59,
+					kode: "0",
+					level: {
+						id: 5,
+						nama: "MANAJER",
+					},
+					nama: "MANAJER SDM & TI",
+				},
+				grade: {
+					id: 10,
+					level: {
+						id: 5,
+						nama: "MANAJER",
+					},
+					grade: 1,
+					tukin: 300000.0,
 				},
 				detail: null,
 				resiko: null,
@@ -80,6 +106,8 @@ export const getEmployeeByNipam = async (
 			jmlTanggungan: 0,
 			mkgTahun: 0,
 			mkgBulan: 0,
+			isAskes: false,
+			kodePajak: null,
 			absensiId: 0,
 			notes: null,
 		};

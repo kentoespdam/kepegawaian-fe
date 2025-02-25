@@ -2,7 +2,7 @@ import { organisasiTableColumns } from "@_types/master/organisasi";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import OrganisasiTable from "./table";
+import OrganisasiTable from "../../../components/master/organisasi/table";
 
 export const metadata = {
     title: "Master Organisasi",

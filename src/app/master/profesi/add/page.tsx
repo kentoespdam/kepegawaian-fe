@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import ProfesiFormComponent from "../form";
+import ProfesiFormComponent from "@components/master/profesi/form";
 
 export const metadata = {
     title: "Tambah Profesi"

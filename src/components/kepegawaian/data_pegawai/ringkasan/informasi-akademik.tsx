@@ -1,36 +1,20 @@
+import type { PegawaiRingkas } from "@_types/pegawai";
 import Fieldset from "@components/ui/fieldset";
 import RingkasanContent from "./ringkasan-content";
-import type { Biodata } from "@_types/profil/biodata";
-import { useQuery } from "@tanstack/react-query";
-import { getDataById, getListData, getPageData, globalGetData } from "@helpers/action";
-import type { Pendidikan } from "@_types/profil/pendidikan";
 
 interface InformasiAkademikProps {
-	bio?: Biodata;
+	pegawai?: PegawaiRingkas;
 }
-const InformasiAkademik = ({ bio }: InformasiAkademikProps) => {
-	const {data} = useQuery({
-		queryKey: ["informasi-akademik", bio?.nik],
-		queryFn: async () => {
-			const result = await getPageData<Pendidikan>({
-				path: "profil/pendidikan",
-				searchParams: `nik=${bio?.nik}&isLatest=true`,
-				isRoot: true,
-			});
-			return result;
-		},
-		enabled: !!bio?.nik,
-	});
-
+const InformasiAkademik = ({ pegawai }: InformasiAkademikProps) => {
 	return (
 		<Fieldset title="Informasi Akademik">
 			<div className="w-full grid gap-1">
 				<RingkasanContent
 					field="Pendidikan Terakhir"
-					value={data?.content[0].jenjangPendidikan.nama}
+					value={pegawai?.pendidikanTerakhir}
 				/>
-				<RingkasanContent field="Lembaga Pendidikan" value={data?.content[0].institusi} />
-				<RingkasanContent field="Tahun Kelulusan" value={data?.content[0].tahunLulus?.toString()} />
+				<RingkasanContent field="Lembaga Pendidikan" value={pegawai?.lembagaPendidikan} />
+				<RingkasanContent field="Tahun Kelulusan" value={pegawai?.tahunLulus?.toString() ?? "-"} />
 			</div>
 		</Fieldset>
 	);

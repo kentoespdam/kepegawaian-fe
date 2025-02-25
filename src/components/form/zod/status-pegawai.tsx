@@ -1,6 +1,6 @@
 "use client";
 
-import type { StatusPegawai } from "@_types/master/status_pegawai";
+import { statusPegawaiName, type StatusPegawai } from "@_types/master/status_pegawai";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -28,14 +28,12 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import { useAddBiodataStore } from "@store/kepegawaian/biodata/add-store";
 
 const SelectStatusPegawaiZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const biodataStore = useAddBiodataStore();
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
@@ -71,7 +69,7 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({
 											? "Loading..."
 											: field.value === ""
 												? "Pilih Status Pegawai"
-												: field.value}
+												: statusPegawaiName(query.data, field.value)}
 									<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 								</Button>
 							</FormControl>
@@ -88,7 +86,6 @@ const SelectStatusPegawaiZod = <TData extends FieldValues>({
 											onSelect={() => {
 												field.onChange(item.id);
 												setPop(false);
-												biodataStore.setStatusPegawai(item.id);
 											}}
 										>
 											{item.nama}

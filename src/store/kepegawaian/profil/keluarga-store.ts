@@ -1,13 +1,5 @@
-import { findAgamaIndex } from "@_types/enums/agama";
-import {
-	HubunganKeluarga,
-	findHubunganKeluargaIndex,
-} from "@_types/enums/hubungan-keluarga";
-import {
-	JenisKelamin,
-	findJenisKelaminIndex,
-} from "@_types/enums/jenisKelamin";
-import { findStatusKawinIndex } from "@_types/enums/status_kawin";
+import { HubunganKeluarga } from "@_types/enums/hubungan-keluarga";
+import { JenisKelamin } from "@_types/enums/jenisKelamin";
 import type { Biodata } from "@_types/profil/biodata";
 import type { Keluarga, KeluargaSchema } from "@_types/profil/keluarga";
 import { create } from "zustand";
@@ -41,32 +33,36 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 		nama: "",
 		jenisKelamin: JenisKelamin.Values.LAKI_LAKI,
 		hubunganKeluarga: HubunganKeluarga.Values.ANAK,
-		agama: 0,
+		agama: "ISLAM",
 		tempatLahir: "",
 		tanggalLahir: "",
 		tanggungan: true,
 		pendidikanId: 0,
-		statusKawin: 0,
+		statusPendidikan: "SEKOLAH",
+		statusKawin: "BELUM_KAWIN",
 		notes: "",
 	},
-	setDefaultValues: (biodata, keluarga) =>
+	setDefaultValues: (biodata, keluarga) => {
+		console.log(keluarga?.tanggungan);
 		set((state) => ({
 			...state,
 			defaultValues: {
-				id: keluarga?.id || 0,
-				biodataId: biodata.nik || "",
-				nik: keluarga?.nik || "",
-				nama: keluarga?.nama || "",
-				jenisKelamin: keluarga?.jenisKelamin || JenisKelamin.Values.LAKI_LAKI,
+				id: keluarga?.id ?? 0,
+				biodataId: biodata.nik ?? "",
+				nik: keluarga?.nik ?? "",
+				nama: keluarga?.nama ?? "",
+				jenisKelamin: keluarga?.jenisKelamin ?? JenisKelamin.Values.LAKI_LAKI,
 				hubunganKeluarga:
-					keluarga?.hubunganKeluarga || HubunganKeluarga.Values.ANAK,
-				agama: findAgamaIndex(keluarga?.agama) || 0,
-				tempatLahir: keluarga?.tempatLahir || "",
-				tanggalLahir: keluarga?.tanggalLahir || "",
-				tanggungan: keluarga?.tanggungan || true,
-				pendidikanId: keluarga?.pendidikan.id || 0,
-				statusKawin: findStatusKawinIndex(keluarga?.statusKawin) || 0,
-				notes: keluarga?.notes || "",
+					keluarga?.hubunganKeluarga ?? HubunganKeluarga.Values.ANAK,
+				agama: keluarga?.agama ?? "ISLAM",
+				tempatLahir: keluarga?.tempatLahir ?? "",
+				tanggalLahir: keluarga?.tanggalLahir ?? "",
+				tanggungan: keluarga?.tanggungan ?? true,
+				pendidikanId: keluarga?.pendidikan?.id ?? 0,
+				statusPendidikan: keluarga?.statusPendidikan ?? "SEKOLAH",
+				statusKawin: keluarga?.statusKawin ?? "BELUM_KAWIN",
+				notes: keluarga?.notes ?? "",
 			},
-		})),
+		}));
+	},
 }));

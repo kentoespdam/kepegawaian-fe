@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import OrganisasiFormComponent from "../form";
+import OrganisasiFormComponent from "../../../../components/master/organisasi/form";
 
 export const metadata = {
     title: "Tambah Organisasi"
