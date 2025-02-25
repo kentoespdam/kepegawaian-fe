@@ -1,4 +1,4 @@
-import { PROSES_GAJI } from "@_types/enums/proses_gaji";
+import { STATUS_PROSES_GAJI } from "@_types/enums/proses_gaji";
 import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
@@ -6,6 +6,17 @@ import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import ProsesGajiTableAction from "./table.action";
 import GajiBatchRootNotesCell from "./table.notes";
+import { getNamaBulan } from "@helpers/tanggal";
+
+const PeriodeCell = ({ periode }: { periode: string }) => {
+    const tahun = periode.substring(0, 4);
+    const bulan = Number(periode.substring(4, 6));
+    return (
+        <TableCell className="border-x whitespace-nowrap">
+            {getNamaBulan(bulan)} {tahun}
+        </TableCell>
+    )
+}
 
 interface GajiBatchRootTableBodyProps {
     data: Pageable<GajiBatchRoot>,
@@ -22,9 +33,9 @@ const GajiBatchRootTableBody = ({ data, pegawai, qkey }: GajiBatchRootTableBodyP
                     <TableCell className="border-x">
                         <ProsesGajiTableAction row={row} pegawai={pegawai} qkey={qkey} />
                     </TableCell>
-                    <TableCell className="border-x">{row.periode}</TableCell>
+                    <PeriodeCell periode={row.periode} />
                     <TableCell className="border-x whitespace-nowrap">{row.batchId}</TableCell>
-                    <TableCell className="border-x whitespace-nowrap">{PROSES_GAJI[row.status as keyof typeof PROSES_GAJI]}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{STATUS_PROSES_GAJI[row.status as keyof typeof STATUS_PROSES_GAJI]}</TableCell>
                     <GajiBatchRootNotesCell data={row} />
                     <TableCell className="border-x whitespace-nowrap">{row.tanggalProses}</TableCell>
                     <TableCell className="border-x" align="right">{row.totalPegawai}</TableCell>
