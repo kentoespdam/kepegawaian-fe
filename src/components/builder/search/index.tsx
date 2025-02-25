@@ -3,10 +3,12 @@ import SearchComponent from "./component";
 import SearchFormComponent from "./form";
 import ResetSearchComponent from "./reset-button";
 import { Suspense } from "react";
+import RefreshSearchComponent from "./refresh_search";
 
 type SearchBuilderProps = {
 	columns: CustomColumnDef[];
 	pending?: boolean;
+	qkey?: string[]
 };
 
 const SearchBuilder = (props: SearchBuilderProps) => {
@@ -21,7 +23,10 @@ const SearchBuilder = (props: SearchBuilderProps) => {
 							</div>
 						) : null,
 					)}
-					<ResetSearchComponent pending={props.pending ?? false} />
+					{props.qkey ?
+						<RefreshSearchComponent pending={props.pending ?? false} qkey={props.qkey ?? []} />
+						: null}
+					< ResetSearchComponent pending={props.pending ?? false} />
 				</div>
 			</SearchFormComponent>
 		</Suspense>
