@@ -23,15 +23,14 @@ import {
 import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { useOrgJab } from "@store/org-jab";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import type { FieldValues } from "react-hook-form";
+import { useState } from "react";
+import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 
 interface SelectProfesiZodProps<TData extends FieldValues>
 	extends InputZodProps<TData> {
-		defaultValues?: TData;
+	defaultValues?: TData;
 }
 
 const SelectProfesiZod = <TData extends FieldValues>({
@@ -39,22 +38,19 @@ const SelectProfesiZod = <TData extends FieldValues>({
 	label,
 	form,
 }: SelectProfesiZodProps<TData>) => {
-	const { jabLevelId, setJabLevelId } = useOrgJab((state) => ({
-		jabLevelId: state.jabLevelId,
-		setJabLevelId: state.setJabLevelId,
-	}));
+	const jabStr = "jabatanId" as Path<TData>;
+	const jabatanId = form.watch(jabStr)
 	const [pop, setPop] = useState(false);
-
 	const query = useQuery({
-		queryKey: ["profesi-list", jabLevelId],
+		queryKey: ["profesi-list", jabatanId],
 		queryFn: async () => {
 			const result = await getListData<ProfesiMini>({
 				path: "profesi",
-				subPath: `level/${jabLevelId}`,
+				subPath: `jabatan/${jabatanId}`,
 			});
 			return result;
 		},
-		enabled: !!jabLevelId && jabLevelId > 0,
+		enabled: !!jabatanId && jabatanId > 0,
 	});
 
 	return (
@@ -76,7 +72,7 @@ const SelectProfesiZod = <TData extends FieldValues>({
 								>
 									<span className="text-left flex-1 truncate">
 										{!query.data
-											? "Profesi tidak ditemukan"
+											? "No Data (Pilih Jabatan)"
 											: query.isLoading || query.isFetching
 												? "Loading..."
 												: field.value

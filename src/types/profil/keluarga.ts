@@ -6,6 +6,7 @@ import type { JenjangPendidikan } from "@_types/master/jenjang_pendidikan";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
 import type { BiodataMini } from "./biodata";
+import type { StatusPendidikan } from "@_types/enums/status_pendidikan";
 
 export interface Keluarga {
 	id: number;
@@ -18,7 +19,8 @@ export interface Keluarga {
 	tempatLahir: string;
 	tanggalLahir: string;
 	tanggungan: boolean;
-	pendidikan: JenjangPendidikan;
+	pendidikan: JenjangPendidikan | null;
+	statusPendidikan: StatusPendidikan;
 	statusKawin: StatusKawin;
 	notes: string;
 }
@@ -30,13 +32,14 @@ export const KeluargaSchema = z
 		nik: z.string().min(16, "NIK wajib diisi"),
 		nama: z.string().min(3, "Nama wajib diisi"),
 		jenisKelamin: JenisKelamin,
-		agama: z.number().min(1, "Agama wajib diisi"),
+		agama: z.string().min(1, "Agama wajib diisi"),
 		hubunganKeluarga: HubunganKeluarga,
 		tempatLahir: z.string().min(3, "Tempat Lahir wajib diisi"),
 		tanggalLahir: z.string().min(10, "Tgl. Lahir wajib diisi"),
 		tanggungan: z.boolean().default(true),
 		pendidikanId: z.number().default(0).optional(),
-		statusKawin: z.number().default(0),
+		statusPendidikan: z.string().default("SEKOLAH"),
+		statusKawin: z.string().default("BELUM KAWIN"),
 		notes: z.string().optional(),
 	})
 	.superRefine((val, ctx) => {
@@ -59,6 +62,7 @@ export const keluargaTableColumns: CustomColumnDef[] = [
 	{ id: "tempatLahir", label: "Tempat Lahir" },
 	{ id: "tanggalLahir", label: "Tgl. Lahir" },
 	{ id: "tanggungan", label: "Tanggungan" },
+	{ id: "statusPendidikan", label: "Status Pendidikan" },
 	{ id: "pendidikan", label: "Pendidikan" },
 	{ id: "statusKawin", label: "Status Kawin" },
 	{ id: "notes", label: "Catatan" },

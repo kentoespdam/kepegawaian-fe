@@ -6,14 +6,12 @@ import {
 	CreditCardIcon,
 	GitCompareArrowsIcon,
 	GraduationCapIcon,
-	HammerIcon,
 	HomeIcon,
 	HousePlugIcon,
 	NavigationIcon,
 	OctagonXIcon,
 	RadicalIcon,
 	Settings2Icon,
-	ShieldIcon,
 	ShovelIcon,
 	SignalIcon,
 	TelescopeIcon
@@ -63,24 +61,6 @@ export const menus: IMenu[] = [
 		type: "group",
 		role: "ADMIN",
 		subMenu: [
-			// {
-			//     path: "/master/status_pegawai",
-			//     name: "Status Pegawai",
-			//     icon: <BoxesIcon className={defaultIconClassName} />,
-			//     role: USER_ROLE.ADMIN,
-			// },
-			// {
-			//     path: "/master/status_kerja",
-			//     name: "Status Kerja",
-			//     icon: <CircleCheckBigIcon className={defaultIconClassName} />,
-			//     role: USER_ROLE.ADMIN,
-			// },
-			{
-				path: "/master/golongan",
-				name: "Golongan",
-				icon: <BarcodeIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
 			{
 				path: "/master/level",
 				name: "Level",
@@ -94,24 +74,6 @@ export const menus: IMenu[] = [
 				role: USER_ROLE.ADMIN,
 			},
 			{
-				path: "/master/profesi",
-				name: "Profesi",
-				icon: <ShovelIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
-				path: "/master/alat_kerja",
-				name: "Alat Kerja",
-				icon: <HammerIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
-				path: "/master/apd",
-				name: "APD",
-				icon: <ShieldIcon className={defaultIconClassName} />,
-				role: USER_ROLE.ADMIN,
-			},
-			{
 				path: "/master/organisasi",
 				name: "Organisasi",
 				icon: <GitCompareArrowsIcon className={defaultIconClassName} />,
@@ -121,6 +83,18 @@ export const menus: IMenu[] = [
 				path: "/master/jabatan",
 				name: "Jabatan",
 				icon: <SignalIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
+			{
+				path: "/master/profesi",
+				name: "Profesi",
+				icon: <ShovelIcon className={defaultIconClassName} />,
+				role: USER_ROLE.ADMIN,
+			},
+			{
+				path: "/master/golongan",
+				name: "Golongan",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
 			},
 			{
@@ -154,7 +128,7 @@ export const menus: IMenu[] = [
 				role: USER_ROLE.ADMIN,
 			},
 			{
-				path: "/master/rumah-dinas",
+				path: "/master/rumah_dinas",
 				name: "Rumah Dinas",
 				icon: <HousePlugIcon className={defaultIconClassName} />,
 				role: USER_ROLE.ADMIN,
@@ -188,37 +162,37 @@ export const menus: IMenu[] = [
 		role: "ADMIN",
 		subMenu: [
 			{
-				path: "/penggajian/komponen-gaji",
+				path: "/penggajian/komponen_gaji",
 				name: "Setting Komponen Gaji",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/proses-gaji",
+				path: "/penggajian/proses_gaji",
 				name: "01. Proses Gaji Bulanan",
 				icon: <BarcodeIcon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/kode-pajak",
+				path: "/penggajian/verif_phase_1",
+				name: "02. Verifikasi Gapok, Tunjangan & Potongan",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
+				path: "/penggajian/kode_pajak",
 				name:"Setting Pendapatan Non Pajak",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/tunjangan",
+				path: "/penggajian/tunjangan?jenisTunjangan=JABATAN",
 				name:"Setting Tunjangan",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
-				path: "/penggajian/ptkp",
-				name: "Setting PTKP",
-				icon: <Settings2Icon className={defaultIconClassName} />,
-				role: "ADMIN",
-			},
-			{
-				path: "/penggajian/lain-lain",
+				path: "/penggajian/parameter_setting",
 				name: "Setting Lain-lain",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
@@ -228,7 +202,13 @@ export const menus: IMenu[] = [
 				name: "Setting PHDP",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
-			}
+			},
+			{
+				path: "/penggajian/potongan_tkk",
+				name: "Setting Ref Potongan TKK",
+				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
 		],
 	}
 ];

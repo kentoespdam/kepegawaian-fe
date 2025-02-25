@@ -1,16 +1,24 @@
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
+import FormCard from "@components/form/card";
+import EditProfilGajiFormComponent from "@components/kepegawaian/data_pegawai/profil/gaji";
 import { getDataById } from "@helpers/action";
+import { Suspense } from "react";
 
+export const metadata = {
+    title: "Edit Profil Gaji"
+}
 const ProfilGaji = async ({ params }: { params: { id: number } }) => {
-    const pegawai = await getDataById<Pegawai>({
+    const pegawai = await getDataById<PegawaiDetail>({
         path: "pegawai",
         id: params.id,
         isRoot: true
     })
     return (
-        <div>
-            Enter
-        </div>
+        <FormCard metadata={metadata} className="min-h-full">
+            <Suspense fallback={<div>Loading...</div>}>
+                <EditProfilGajiFormComponent pegawai={pegawai} />
+            </Suspense>
+        </FormCard>
     );
 }
 

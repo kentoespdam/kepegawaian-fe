@@ -3,17 +3,19 @@ import SearchComponent from "./component";
 import SearchFormComponent from "./form";
 import ResetSearchComponent from "./reset-button";
 import { Suspense } from "react";
+import RefreshSearchComponent from "./refresh_search";
 
 type SearchBuilderProps = {
 	columns: CustomColumnDef[];
 	pending?: boolean;
+	qkey?: string[]
 };
 
 const SearchBuilder = (props: SearchBuilderProps) => {
 	return (
 		<Suspense>
 			<SearchFormComponent>
-				<div className="flex flex-row justify-start gap-2 mb-2">
+				<div className="max-w-full flex flex-wrap flex-row justify-start gap-2 mb-2">
 					{props.columns.map((column) =>
 						column.search ? (
 							<div key={column.id} className="w-52">
@@ -21,7 +23,10 @@ const SearchBuilder = (props: SearchBuilderProps) => {
 							</div>
 						) : null,
 					)}
-					<ResetSearchComponent pending={props.pending ?? false} />
+					{props.qkey ?
+						<RefreshSearchComponent pending={props.pending ?? false} qkey={props.qkey ?? []} />
+						: null}
+					< ResetSearchComponent pending={props.pending ?? false} />
 				</div>
 			</SearchFormComponent>
 		</Suspense>

@@ -21,12 +21,13 @@ import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
-import type { FieldValues } from "react-hook-form";
+import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 import { useOrgJab } from "@store/org-jab";
 
 const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZodProps<TData>) => {
-    const jabLevelId = useOrgJab(state => state.jabLevelId)
+    const levelStr = "level" as Path<TData>
+    const levelId = form.watch(levelStr)
     const [pop, setPop] = useState(false)
     const query = useQuery({
         queryKey: ["grade-list"],
@@ -69,7 +70,7 @@ const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZod
                                 <CommandInput placeholder="Type a command or search..." />
                                 <CommandList>
                                     <CommandEmpty>No results found.</CommandEmpty>
-                                    {query.data?.filter(grade => grade.level.id === jabLevelId).map((grade) => (
+                                    {query.data?.filter(grade => grade.level.id === levelId).map((grade) => (
                                         <CommandItem
                                             key={grade.id}
                                             value={`${grade.level.nama} - Grade ${grade.grade}`}
