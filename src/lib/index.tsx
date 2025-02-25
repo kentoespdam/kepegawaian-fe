@@ -174,6 +174,12 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
+				path: "/penggajian/verif_phase_1",
+				name: "02. Verifikasi Gapok, Tunjangan & Potongan",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
 				path: "/penggajian/kode_pajak",
 				name:"Setting Pendapatan Non Pajak",
 				icon: <Settings2Icon className={defaultIconClassName} />,
