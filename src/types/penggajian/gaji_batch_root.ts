@@ -27,8 +27,6 @@ export interface GajiBatchRoot {
 	jabatanPersetujuan: string;
 	errorLogs: GajiBatchRootErrorLogs[];
 	notes: string;
-	mimeType: string;
-	fileName: string;
 }
 
 export const GajiBatchRootSchema = z.object({
@@ -62,16 +60,24 @@ export const GajiBatchRootSchema = z.object({
 
 export type GajiBatchRootSchema = z.infer<typeof GajiBatchRootSchema>;
 
+export const GajiBatchRootProsesUlang = z.object({
+	batchId: z.string(),
+	nama: z.string(),
+	jabatan: z.string(),
+});
+
+export type GajiBatchRootProsesUlang = z.infer<typeof GajiBatchRootProsesUlang>;
+
 export const gajiBatchRootColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
 	{ id: "periode", label: "Periode", search: true, searchType: "text" },
 	{ id: "batchId", label: "Batch ID", search: true, searchType: "text" },
 	{ id: "status", label: "Status" },
+	{ id: "notes", label: "Notes" },
 	{ id: "tanggalProses", label: "Tanggal Proses" },
 	{ id: "totalPegawai", label: "Total Pegawai" },
 	{ id: "tanggalVerifikasiTahap1", label: "Tanggal Verifikasi Tahap 1" },
 	{ id: "tanggalVerifikasiTahap2", label: "Tanggal Verifikasi Tahap 2" },
 	{ id: "tanggalPersetujuan", label: "Tanggal Persetujuan" },
-	{ id: "notes", label: "Notes" },
 ];

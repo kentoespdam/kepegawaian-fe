@@ -49,3 +49,15 @@ export const decodeId = (id: string) => {
 	const arr = sqids.decode(id);
 	return arr[5];
 };
+
+export const encodeString = (str: string): string => {
+	const chars = str.split("");
+	const arrNumber = chars.map((char) => char.charCodeAt(0));
+	return sqids.encode(arrNumber);
+};
+
+export const decodeString = (str: string): string => {
+	const arrNumber = sqids.decode(str);
+	const chars = arrNumber.map((num) => String.fromCharCode(num));
+	return chars.join("");
+};
