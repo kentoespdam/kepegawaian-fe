@@ -85,6 +85,7 @@ export const ESearchType = z.enum([
 	"grade",
 	"jenisTunjangan",
 	"golongan",
+	"statusProsesGaji",
 ]);
 
 export type BaseColumnDef = {
