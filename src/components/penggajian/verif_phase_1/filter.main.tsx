@@ -1,19 +1,21 @@
 "use client"
+import TooltipBuilder from "@components/builder/tooltip";
 import SelectBulanZod from "@components/form/zod/bulan";
 import SelectTahunZod from "@components/form/zod/tahun";
 import { Button } from "@components/ui/button";
 import { Form } from "@components/ui/form";
 import { Label } from "@components/ui/label";
-import { LoopIcon } from "@radix-ui/react-icons";
+import { base64toBlob } from "@helpers/string";
 import { useMutation } from "@tanstack/react-query";
-import { DownloadIcon, FileSpreadsheetIcon, SearchIcon } from "lucide-react";
+import { CheckIcon, FileSpreadsheetIcon, SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { downloadTableGajiExcel } from "./action";
-import { base64toBlob } from "@helpers/string";
-import TooltipBuilder from "@components/builder/tooltip";
+import { downloadTableGajiExcel, verifPhase1 } from "./action";
+import { useGlobalMutation } from "@store/query-store";
+import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
+import type { Pegawai } from "@_types/pegawai";
 
 export const PeriodeBatchRootSchema = z.object({
     bulan: z.string(),
@@ -22,7 +24,12 @@ export const PeriodeBatchRootSchema = z.object({
 
 export type PeriodeBatchRootSchema = z.infer<typeof PeriodeBatchRootSchema>
 
-const VerifPhase1MainFilter = () => {
+interface VerifPhase1MainFilterProps {
+    pegawai: Pegawai
+    rootBatchId?: string
+}
+
+const VerifPhase1MainFilter = ({ pegawai, rootBatchId }: VerifPhase1MainFilterProps) => {
     const { replace } = useRouter()
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams.toString())
@@ -42,6 +49,21 @@ const VerifPhase1MainFilter = () => {
             document.body.removeChild(link)
         }
     })
+
+    const verifikasi = useGlobalMutation({
+        mutationFunction: verifPhase1,
+        queryKeys: [],
+    })
+
+    const verifikasiHandler = () => {
+        if (!rootBatchId) return
+        const formData: VerifikasiSchema = {
+            batchId: rootBatchId,
+            nama: pegawai.biodata.nama,
+            jabatan: pegawai.jabatan.nama
+        }
+        verifikasi.mutate(formData)
+    }
 
     const form = useForm<PeriodeBatchRootSchema>({
         defaultValues: defaultValues,
@@ -69,17 +91,22 @@ const VerifPhase1MainFilter = () => {
                     className="flex gap-2">
                     <SelectBulanZod id="bulan" form={form} className="w-fit" />
                     <SelectTahunZod id="tahun" form={form} className="w-fit" />
-                    <div className="mt-2">
-                        <TooltipBuilder text="Tampilkan Data" delayDuration={10}>
-                            <Button type="submit" className="flex gap-2">
-                                <SearchIcon className="w-4 h-4" />
-                                Tampilkan
-                            </Button>
-                        </TooltipBuilder>
-                    </div>
-                    <TooltipBuilder text="Download File Excel" delayDuration={10}>
+                    <TooltipBuilder text="Tampilkan Data" delayDuration={10} className="bg-info text-info-foreground">
+                        <Button type="submit" className="flex gap-2 mt-2 bg-info text-info-foreground hover:bg-info/90 hover:text-info-foreground/90">
+                            <SearchIcon className="w-4 h-4" />
+                            Tampilkan
+                        </Button>
+                    </TooltipBuilder>
+                    <TooltipBuilder text="Verifikasi Data" delayDuration={10}>
+                        <Button type="submit" className="flex gap-2 mt-2"
+                            onClick={verifikasiHandler}>
+                            <CheckIcon className="w-4 h-4" />
+                            Verifikasi
+                        </Button>
+                    </TooltipBuilder>
+                    <TooltipBuilder text="Download File Excel" delayDuration={10} className="bg-warning text-warning-foreground">
                         <Button type="button"
-                            className="flex gap-2 mt-2"
+                            className="flex gap-2 mt-2 bg-warning text-warning-foreground hover:bg-warning/90 hover:text-warning-foreground/90"
                             onClick={() => downloadFile.mutate()}>
                             <FileSpreadsheetIcon className="w-4 h-4" />
                             Download

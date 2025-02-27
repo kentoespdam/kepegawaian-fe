@@ -1,5 +1,6 @@
 "use server";
 
+import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
 import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
@@ -33,4 +34,17 @@ export const downloadTableGajiExcel = async (periode: string) => {
 		base64: Buffer.from(arrayBuffer).toString("base64"),
 		filename: filename,
 	} as LampiranFile;
+};
+
+export const verifPhase1 = async (formData: VerifikasiSchema) => {
+	// console.log(formData);
+	const apiUrl = `${API_URL}/penggajian/batch/${formData.batchId}/verify1`;
+	const headers = setAuthorizeHeader(cookies());
+	const response = await fetch(apiUrl, {
+		method: "PATCH",
+		headers,
+		body: JSON.stringify(formData),
+	});
+
+	return await response.json();
 };

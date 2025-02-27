@@ -47,7 +47,7 @@
 		--primary: 142.1 70.6% 45.3%;
 		--primary-foreground: 144.9 80.4% 10%;
 		--info: 217.2 91.2% 59.8%;
-		--info-foreground: 222.2 47.4% 11.2%;
+    	--info-foreground: 222.2 47.4% 11.2%;
 		--secondary: 240 3.7% 15.9%;
 		--secondary-foreground: 0 0% 98%;
 		--muted: 0 0% 15%;
@@ -72,7 +72,6 @@
 		/* @apply border-border; */
 		@apply border-border outline-ring/50;
 	}
-
 	body {
 		@apply bg-background text-foreground;
 		/* font-feature-settings: "rlig" 1, "calt" 1; */
