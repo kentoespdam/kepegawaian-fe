@@ -125,7 +125,10 @@ const config = {
     			'20s': '20s'
     		},
     		fontFamily: {
-    			sans: ["var(--font-sans)", ...fontFamily.sans]
+    			sans: [
+    				'var(--font-sans)',
+                    ...fontFamily.sans
+                ]
     		}
     	}
     },

@@ -6,10 +6,14 @@ import { Input } from "@components/ui/input";
 import { redirect } from "next/navigation";
 import { useFormState } from "react-dom";
 import { doLogin } from "./action";
+import { useEffect } from "react";
 
 const LoginForm = () => {
     const [state, action] = useFormState(doLogin, null);
-    if (state?.isAuth) redirect(decodeURIComponent(state.callbackUrl));
+
+    useEffect(() => {
+        if (state?.isAuth) redirect(decodeURIComponent(state.callbackUrl))
+    }, [state])
 
     return (
         <>

@@ -232,3 +232,14 @@ export const setAuthorizeHeader = (
 		"Content-Type": "application/json",
 	};
 };
+
+export const getNipamFromCookie = () => {
+	const cookieList = cookies();
+	const tokenString =
+		cookieList.get(sessionNames[0])?.value ||
+		cookieList.get(sessionNames[1])?.value;
+
+	if (!tokenString) return null;
+	const tokenData = JSON.parse(atob(tokenString));
+	return tokenData.id;
+};

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover";
 import { Button } from "@components/ui/button";
 import { cn } from "@lib/utils";
-import { STATUS_PROSES_GAJI, getStatusProsesGajiValue } from "@_types/enums/proses_gaji";
+import { STATUS_PROSES_GAJI, getStatusProsesGajiValue } from "@_types/enums/status_proses_gaji";
 import { ChevronDownIcon } from "lucide-react";
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command";
 import { useDebouncedCallback } from "use-debounce";

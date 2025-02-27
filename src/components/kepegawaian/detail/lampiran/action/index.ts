@@ -70,10 +70,10 @@ export const getFile = async (
 	const blob = await response.blob();
 	const arrayBuffer = await blob.arrayBuffer();
 
-	const result: LampiranFile = {
+	const result = {
 		type: blob.type,
 		base64: Buffer.from(arrayBuffer).toString("base64"),
-	};
+	} as LampiranFile;
 
 	return result;
 };
