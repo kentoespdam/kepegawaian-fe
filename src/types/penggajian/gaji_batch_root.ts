@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ACCEPTED_FILE_TYPES, type CustomColumnDef, MAX_UPLOAD_SIZE } from "..";
+import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE, type CustomColumnDef } from "..";
 
 export interface GajiBatchRootErrorLogs {
 	id: number;
@@ -60,20 +60,17 @@ export const GajiBatchRootSchema = z.object({
 
 export type GajiBatchRootSchema = z.infer<typeof GajiBatchRootSchema>;
 
-export const GajiBatchRootProsesUlang = z.object({
-	batchId: z.string(),
-	nama: z.string(),
-	jabatan: z.string(),
-});
-
-export type GajiBatchRootProsesUlang = z.infer<typeof GajiBatchRootProsesUlang>;
-
 export const gajiBatchRootColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
 	{ id: "periode", label: "Periode", search: true, searchType: "text" },
 	{ id: "batchId", label: "Batch ID" },
-	{ id: "status", label: "Status", search: true, searchType: "statusProsesGaji" },
+	{
+		id: "status",
+		label: "Status",
+		search: true,
+		searchType: "statusProsesGaji",
+	},
 	{ id: "notes", label: "Notes" },
 	{ id: "tanggalProses", label: "Tanggal Proses" },
 	{ id: "totalPegawai", label: "Total Pegawai" },
