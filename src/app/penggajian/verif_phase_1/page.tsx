@@ -1,5 +1,7 @@
+import { STATUS_PROSES_GAJI, getKeyStatusProsesGaji } from "@_types/enums/status_proses_gaji";
 import type { Organisasi } from "@_types/master/organisasi";
 import type { Pegawai } from "@_types/pegawai";
+import type { GajiBatchMaster } from "@_types/penggajian/gaji_batch_master";
 import GajiBatchMasterProcessTable from "@components/penggajian/batch_master_process/table";
 import VerifPhase1Component from "@components/penggajian/verif_phase_1";
 import VerifPhase1MainFilter from "@components/penggajian/verif_phase_1/filter.main";
@@ -14,7 +16,15 @@ export const metadata = {
     title: "Verifikasi Gapok, Tunjangan & Potongan"
 }
 
-const VerifikasiPhase1Page = async () => {
+const VerifikasiPhase1Page = async ({ searchParams }: {
+    searchParams: Promise<{
+        [key: string]: string | undefined
+    }>
+}) => {
+    const search = new URLSearchParams()
+    const { periode = "" } = await searchParams
+    if (periode !== "") search.set("periode", periode)
+    search.set("status", getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_1))
     const nipam = getNipamFromCookie();
     const pegawai = await globalGetData<Pegawai>({
         path: `pegawai/${nipam}/nipam`,
@@ -35,6 +45,14 @@ const VerifikasiPhase1Page = async () => {
     organisasiList.push(direksi)
     organisasiList.sort((a, b) => a.id - b.id)
 
+    const gajiBatchMasters = await globalGetData<GajiBatchMaster[]>({
+        path: "penggajian/batch/master",
+        searchParams: search.toString(),
+        isRoot: true
+    })
+
+    const rootBatchId = !gajiBatchMasters ? "" :
+        gajiBatchMasters[0].rootBatchId
 
     return (
         <Card>
@@ -45,13 +63,13 @@ const VerifikasiPhase1Page = async () => {
             </CardHeader>
             <CardContent className="h-fit grid col-span-2 gap-2">
                 <Suspense>
-                    <VerifPhase1MainFilter />
+                    <VerifPhase1MainFilter pegawai={pegawai} rootBatchId={rootBatchId} />
                 </Suspense>
                 <Separator />
                 <div className={cn("grid gap-4", "sm:grid-cols-1", "lg:grid-cols-12", "md:grid-cols-12")}>
                     <div className="col-span-8 sm:col-lg-12 border-r">
                         <Suspense>
-                            <VerifPhase1Component pegawai={pegawai} organisasiList={organisasiList} />
+                            <VerifPhase1Component pegawai={pegawai} organisasiList={organisasiList} gajiBatchMasters={gajiBatchMasters} />
                         </Suspense>
                     </div>
                     <div className="col-span-4 sm:col-lg-12">
