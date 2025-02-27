@@ -1,21 +1,12 @@
 "use server";
+
+import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
-import type { ReadonlyHeaders } from "next/dist/server/web/spec-extension/adapters/headers";
 import { cookies } from "next/headers";
 
-export interface LampiranFile {
-	type: string;
-	base64: string;
-	headers?: ReadonlyHeaders;
-	filename?: string;
-}
-
-export const getFile = async (
-	jenis: string,
-	id: number,
-): Promise<LampiranFile> => {
-	const apiUrl = `${API_URL}/profil/lampiran/file/${jenis}/${id}`;
+export const downloadTableGajiExcel = async (periode: string) => {
+	const apiUrl = `${API_URL}/penggajian/batch/master/download/table-gaji/${periode}`;
 	const headers = setAuthorizeHeader(cookies());
 
 	const response = await fetch(apiUrl, {
@@ -30,14 +21,16 @@ export const getFile = async (
 		throw new Error(text.errors);
 	}
 
+	const filename = response.headers
+		.get("content-disposition")
+		?.split("filename=")[1];
+
 	const blob = await response.blob();
 	const arrayBuffer = await blob.arrayBuffer();
 
-	const result: LampiranFile = {
+	return {
 		type: blob.type,
 		base64: Buffer.from(arrayBuffer).toString("base64"),
-		// headers: response.headers,
-	};
-
-	return result;
+		filename: filename,
+	} as LampiranFile;
 };

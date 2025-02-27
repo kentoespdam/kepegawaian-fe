@@ -1,4 +1,4 @@
-import { STATUS_PROSES_GAJI } from "@_types/enums/proses_gaji";
+import { STATUS_PROSES_GAJI } from "@_types/enums/status_proses_gaji";
 import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";

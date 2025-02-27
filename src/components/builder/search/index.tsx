@@ -26,7 +26,7 @@ const SearchBuilder = (props: SearchBuilderProps) => {
 					{props.qkey ?
 						<RefreshSearchComponent pending={props.pending ?? false} qkey={props.qkey ?? []} />
 						: null}
-					< ResetSearchComponent pending={props.pending ?? false} />
+					<ResetSearchComponent pending={props.pending ?? false} columns={props.columns} />
 				</div>
 			</SearchFormComponent>
 		</Suspense>

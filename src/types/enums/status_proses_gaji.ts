@@ -17,3 +17,15 @@ export type StatusProseGaji = z.infer<typeof StatusProseGaji>;
 export const getStatusProsesGajiValue = (key: string) => {
 	return STATUS_PROSES_GAJI[key as keyof typeof STATUS_PROSES_GAJI];
 };
+
+export const getKeyStatusProsesGaji = (status: StatusProseGaji): string => {
+	const keys = Object.keys(
+		STATUS_PROSES_GAJI,
+	) as (keyof typeof STATUS_PROSES_GAJI)[];
+	for (const key of keys) {
+		if (STATUS_PROSES_GAJI[key] === status) {
+			return key;
+		}
+	}
+	return "";
+};
