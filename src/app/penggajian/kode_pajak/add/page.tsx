@@ -1,5 +1,5 @@
-import KodePajakFormComponent from "@components/penggajian/kode_pajak/form";
 import FormCard from "@components/form/card";
+import KodePajakFormComponent from "@components/penggajian/kode_pajak/form.index";
 
 export const metadata = {
     title: "Tambah Kode Pajak"

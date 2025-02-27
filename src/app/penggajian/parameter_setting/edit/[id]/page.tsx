@@ -1,7 +1,7 @@
 import type { ParameterSetting } from "@_types/penggajian/parameter_setting";
-import { getDataById } from "@helpers/action";
 import FormCard from "@components/form/card";
-import ParameterSettingFormComponent from "@components/penggajian/parameter_setting/form";
+import ParameterSettingFormComponent from "@components/penggajian/parameter_setting/form.index";
+import { getDataById } from "@helpers/action";
 
 export const metadata = {
     title: "Edit Parameter Setting Gaji"

@@ -1,8 +1,8 @@
 import { jenisKitasTableColumns } from "@_types/master/jenis_kitas";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
+import JenisKitasTable from "@components/master/jenis_kitas/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import JenisKitasTable from "../../../components/master/jenis_kitas/table";
 
 export const metadata = {
     title: "Master Jenis Kartu Identitas",

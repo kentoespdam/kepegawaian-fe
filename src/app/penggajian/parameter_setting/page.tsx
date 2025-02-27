@@ -1,5 +1,5 @@
-import AddParameterSettingButton from "@components/penggajian/parameter_setting/button/add-button";
 import ParameterSettingComponent from "@components/penggajian/parameter_setting";
+import AddParameterSettingButton from "@components/penggajian/parameter_setting/button.add";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Suspense } from "react";
 

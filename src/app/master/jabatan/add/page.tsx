@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import JabatanFormComponent from "@components/master/jabatan/form";
+import JabatanFormComponent from "@components/master/jabatan/form.index";
 
 export const metadata = {
     title: "Tambah Jabatan"

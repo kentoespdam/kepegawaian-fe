@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import ApdFormComponent from "@components/master/apd/form";
+import ApdFormComponent from "@components/master/apd/form.index";
 
 export const metadata = {
     title: "Tambah Alat Pelindung Diri"

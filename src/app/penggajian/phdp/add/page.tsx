@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import PhdpFormComponent from "@components/penggajian/phdp/form";
+import PhdpFormComponent from "@components/penggajian/phdp/form.index";
 
 export const metadata = {
     title: "Tambah PHDP"

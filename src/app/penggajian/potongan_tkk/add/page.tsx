@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import RefPotonganTkkFormComponent from "@components/penggajian/potongan_tkk/form";
+import RefPotonganTkkFormComponent from "@components/penggajian/potongan_tkk/form.index";
 import { Suspense } from "react";
 
 export const metadata = {

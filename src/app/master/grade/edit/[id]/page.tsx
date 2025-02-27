@@ -1,7 +1,7 @@
 import type { Grade } from "@_types/master/grade";
 import FormCard from "@components/form/card";
+import GradeFormComponent from "@components/master/grade/form.index";
 import { getDataById } from "@helpers/action";
-import GradeFormComponent from "../../../../../components/master/grade/form.index";
 
 export const metadata = {
     title: "Edit Grade"
