@@ -7,8 +7,9 @@ import { Table } from "@components/ui/table";
 import { globalGetData } from "@helpers/action";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useQuery } from "@tanstack/react-query";
-import { ReceiptTextIcon } from "lucide-react";
+import { PlusIcon, ReceiptTextIcon } from "lucide-react";
 import GajiBatchMasterProsesKomponenTableBody from "./table.komponen.body";
+import { Button } from "@components/ui/button";
 
 const GajiBatchMasterProcessKomponenTable = () => {
     const { batchMasterId } = useGajiBatchMasterProsesStore(state => ({
@@ -35,6 +36,12 @@ const GajiBatchMasterProcessKomponenTable = () => {
                 </h2>
             </div>
             <h3>Jenis: Penghasilan</h3>
+            <div className="w-full">
+                <Button className="w-full">
+                    <PlusIcon className="w-4 h-4 mr-2" />
+                    <span>Tambah Komponen</span>
+                </Button>
+            </div>
             <div className="w-full min-h-[350px] overflow-auto">
                 <Table>
                     <TableHeadBuilder columns={gajiBatchMasterProsesKomponenColumns} />
