@@ -14,3 +14,10 @@ export const gajiBatchMasterProsesColumns: CustomColumnDef[] = [
     { id: "nama", label: "Komponen Gaji" },
     { id: "nilai", label: "Jumlah" },
 ]
+
+export const gajiBatchMasterProsesKomponenColumns: CustomColumnDef[] = [
+    { id: "id", label: "" },
+    { id: "kode", label: "Aksi" },
+    { id: "nama", label: "Komponen Gaji" },
+    { id: "nilai", label: "Jumlah" },
+]

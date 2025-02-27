@@ -14,6 +14,13 @@ export const StatusProseGaji = z.nativeEnum(STATUS_PROSES_GAJI);
 
 export type StatusProseGaji = z.infer<typeof StatusProseGaji>;
 
+export const getIndexOfKeyStatusProsesGaji = (key: string) => {
+	const keys = Object.keys(
+		STATUS_PROSES_GAJI,
+	) as (keyof typeof STATUS_PROSES_GAJI)[];
+	return keys.indexOf(key as keyof typeof STATUS_PROSES_GAJI);
+};
+
 export const getStatusProsesGajiValue = (key: string) => {
 	return STATUS_PROSES_GAJI[key as keyof typeof STATUS_PROSES_GAJI];
 };

@@ -1,12 +1,11 @@
-"use server";
-
+"use server"
 import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
-export const downloadTableGajiExcel = async (rootBatchId: string) => {
-	const apiUrl = `${API_URL}/penggajian/batch/master/download/table-gaji/${rootBatchId}`;
+export const downloadTemplatePotonganGaji = async (rootBatchId: string) => {
+	const apiUrl = `${API_URL}/penggajian/batch/master/download/potongan-gaji/${rootBatchId}`;
 	const headers = setAuthorizeHeader(cookies());
 
 	const response = await fetch(apiUrl, {

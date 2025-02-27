@@ -1,40 +1,33 @@
 "use client"
-import { getIndexOfKeyStatusProsesGaji } from "@_types/enums/status_proses_gaji";
-import type { Pageable } from "@_types/index";
+
 import type { Pegawai } from "@_types/pegawai";
-import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
-import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
 import TooltipBuilder from "@components/builder/tooltip";
 import SelectBulanZod from "@components/form/zod/bulan";
 import SelectTahunZod from "@components/form/zod/tahun";
 import { Button } from "@components/ui/button";
-import { Form } from "@components/ui/form";
 import { Label } from "@components/ui/label";
-import { base64toBlob } from "@helpers/string";
-import { LoopIcon } from "@radix-ui/react-icons";
-import { useGlobalMutation } from "@store/query-store";
-import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, FileSpreadsheetIcon, SearchIcon } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
+import {  useForm } from "react-hook-form";
+import type { PeriodeBatchRootSchema } from "../verif_phase_1/filter.main";
+import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
+import { useGlobalMutation } from "@store/query-store";
 import { verifikasiProses } from "../proses_gaji/action";
-import { downloadTableGajiExcel } from "./action";
+import type { Pageable } from "@_types/index";
+import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
+import { getIndexOfKeyStatusProsesGaji } from "@_types/enums/status_proses_gaji";
+import { useMutation } from "@tanstack/react-query";
+import { base64toBlob } from "@helpers/string";
+import { downloadTemplatePotonganGaji } from "./action";
+import { LoopIcon } from "@radix-ui/react-icons";
+import { Form } from "@components/ui/form";
 
-export const PeriodeBatchRootSchema = z.object({
-    bulan: z.string(),
-    tahun: z.string(),
-})
-
-export type PeriodeBatchRootSchema = z.infer<typeof PeriodeBatchRootSchema>
-
-interface VerifPhase1MainFilterProps {
-    pegawai: Pegawai
+interface VerifPhase2MainFilterProps {
+    pegawai: Pegawai,
     gajiBatchRoot: Pageable<GajiBatchRoot>
 }
-
-const VerifPhase1MainFilter = ({ pegawai, gajiBatchRoot }: VerifPhase1MainFilterProps) => {
+const VerifPhase2MainFilter = ({ pegawai, gajiBatchRoot }: VerifPhase2MainFilterProps) => {
     const { replace, refresh } = useRouter()
     const searchParams = useSearchParams()
     const search = new URLSearchParams(searchParams.toString())
@@ -46,7 +39,7 @@ const VerifPhase1MainFilter = ({ pegawai, gajiBatchRoot }: VerifPhase1MainFilter
         getIndexOfKeyStatusProsesGaji(gajiBatchRoot.content[0].status) > 2
 
     const downloadFile = useMutation({
-        mutationFn: downloadTableGajiExcel,
+        mutationFn: downloadTemplatePotonganGaji,
         onSuccess: (data) => {
             const blob = base64toBlob(data.base64, data.type)
             const url = URL.createObjectURL(blob)
@@ -79,7 +72,7 @@ const VerifPhase1MainFilter = ({ pegawai, gajiBatchRoot }: VerifPhase1MainFilter
             batchId: rootBatchId,
             nama: pegawai.biodata.nama,
             jabatan: pegawai.jabatan.nama,
-            phase: "verify1"
+            phase: "verify2"
         }
         verifikasi.mutate(formData)
     }
@@ -158,4 +151,4 @@ const VerifPhase1MainFilter = ({ pegawai, gajiBatchRoot }: VerifPhase1MainFilter
     );
 }
 
-export default VerifPhase1MainFilter;
+export default VerifPhase2MainFilter;

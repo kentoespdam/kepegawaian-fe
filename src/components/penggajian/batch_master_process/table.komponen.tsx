@@ -1,6 +1,6 @@
 "use client"
 import { JENIS_GAJI } from "@_types/enums/jenis_gaji";
-import { gajiBatchMasterProsesColumns, type GajiBatchMasterProses } from "@_types/gaji_batch_master_process";
+import { gajiBatchMasterProsesKomponenColumns, type GajiBatchMasterProses } from "@_types/gaji_batch_master_process";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
@@ -8,9 +8,9 @@ import { globalGetData } from "@helpers/action";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useQuery } from "@tanstack/react-query";
 import { ReceiptTextIcon } from "lucide-react";
-import GajiBatchMasterProsesTableBody from "./table.body";
+import GajiBatchMasterProsesKomponenTableBody from "./table.komponen.body";
 
-const GajiBatchMasterProcessTable = () => {
+const GajiBatchMasterProcessKomponenTable = () => {
     const { batchMasterId } = useGajiBatchMasterProsesStore(state => ({
         batchMasterId: state.batchMasterId
     }))
@@ -37,23 +37,14 @@ const GajiBatchMasterProcessTable = () => {
             <h3>Jenis: Penghasilan</h3>
             <div className="w-full min-h-[350px] overflow-auto">
                 <Table>
-                    <TableHeadBuilder columns={gajiBatchMasterProsesColumns} />
+                    <TableHeadBuilder columns={gajiBatchMasterProsesKomponenColumns} />
                     {isLoading || isFetching || isError || !data ?
-                        <LoadingTable columns={gajiBatchMasterProsesColumns} error={error?.message} />
-                        : <GajiBatchMasterProsesTableBody data={data} jenisGaji={JENIS_GAJI.PEMASUKAN} />}
-                </Table>
-            </div>
-            <h3>Jenis: Potongan</h3>
-            <div className="w-full min-h-[350px] overflow-auto">
-                <Table>
-                    <TableHeadBuilder columns={gajiBatchMasterProsesColumns} />
-                    {isLoading || isFetching || isError || !data ?
-                        <LoadingTable columns={gajiBatchMasterProsesColumns} error={error?.message} />
-                        : <GajiBatchMasterProsesTableBody data={data} jenisGaji={JENIS_GAJI.POTONGAN} />}
+                        <LoadingTable columns={gajiBatchMasterProsesKomponenColumns} error={error?.message} />
+                        : <GajiBatchMasterProsesKomponenTableBody data={data} jenisGaji={JENIS_GAJI.PEMASUKAN} />}
                 </Table>
             </div>
         </div>
     );
 }
 
-export default GajiBatchMasterProcessTable;
+export default GajiBatchMasterProcessKomponenTable;
