@@ -2,7 +2,7 @@ import { jenisKeahlianTableColumns } from "@_types/master/jenis_keahlian";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import JenisKeahlianTable from "./table";
+import JenisKeahlianTable from "../../../components/master/jenis_keahlian/table";
 
 export const metadata = {
     title: "Master Jenis Keahlian",

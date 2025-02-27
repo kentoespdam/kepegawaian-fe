@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import LevelFormComponent from "../../form";
+import LevelFormComponent from "../../../../../components/master/level/form.index";
 import { getDataById } from "@helpers/action";
 import type { Level } from "@_types/master/level";
 

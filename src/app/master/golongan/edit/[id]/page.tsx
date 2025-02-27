@@ -1,7 +1,7 @@
 import type { Golongan } from "@_types/master/golongan";
 import FormCard from "@components/form/card";
 import { getDataById } from "@helpers/action";
-import GolonganFormComponent from "../../form";
+import GolonganFormComponent from "../../../../../components/master/golongan/form.index";
 
 export const metadata = {
     title: "Edit Golongan"

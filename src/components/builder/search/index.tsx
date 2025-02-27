@@ -1,9 +1,9 @@
 import type { CustomColumnDef } from "@_types/index";
-import SearchComponent from "./component";
-import SearchFormComponent from "./form";
-import ResetSearchComponent from "./reset-button";
 import { Suspense } from "react";
+import SearchComponent from "./component";
+import SearchFormComponent from "./form.index";
 import RefreshSearchComponent from "./refresh_search";
+import ResetSearchComponent from "./reset-button";
 
 type SearchBuilderProps = {
 	columns: CustomColumnDef[];

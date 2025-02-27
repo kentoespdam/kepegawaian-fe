@@ -1,5 +1,5 @@
 import Fieldset from "@components/ui/fieldset";
-import type { KontrakFormProps } from ".";
+import type { KontrakFormProps } from "./form.kontrak";
 import InputZod from "@components/form/zod/input";
 import JenisKontrakZod from "@components/form/zod/jenis-kontrak";
 import DatePickerZod from "@components/form/zod/date-picker";

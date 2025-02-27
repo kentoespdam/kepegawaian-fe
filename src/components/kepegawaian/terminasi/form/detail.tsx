@@ -1,5 +1,5 @@
 import Fieldset from "@components/ui/fieldset";
-import type { TerminasiFormProps } from ".";
+import type { TerminasiFormProps } from "./form.index";
 import DatePickerZod from "@components/form/zod/date-picker";
 import InputZod from "@components/form/zod/input";
 import TextAreaZod from "@components/form/zod/textarea";

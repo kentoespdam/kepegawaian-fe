@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import GradeFormComponent from "../form";
+import GradeFormComponent from "../../../../components/master/grade/form.index";
 
 export const metadata = {
     title: "Tambah Grade"

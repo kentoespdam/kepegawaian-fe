@@ -2,7 +2,7 @@ import SelectJabatanZod from "@components/form/zod/jabatan";
 import SelectOrganisasiZod from "@components/form/zod/organisasi";
 import SelectProfesiZod from "@components/form/zod/profesi";
 import Fieldset from "@components/ui/fieldset";
-import type { MutasiFormProps } from ".";
+import type { MutasiFormProps } from "./form.mutasi";
 
 const MutasiJabatanForm = ({ form }: MutasiFormProps) => {
 	return (

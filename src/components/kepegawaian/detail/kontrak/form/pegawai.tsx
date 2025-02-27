@@ -1,5 +1,5 @@
 import Fieldset from "@components/ui/fieldset";
-import type { KontrakFormProps } from ".";
+import type { KontrakFormProps } from "./form.kontrak";
 import InputZod from "@components/form/zod/input";
 
 const KontrakPegawaiForm = ({ form }: KontrakFormProps) => {

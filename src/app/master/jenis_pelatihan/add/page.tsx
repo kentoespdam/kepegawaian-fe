@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import JenisPelatihanFormComponent from "../form";
+import JenisPelatihanFormComponent from "../../../../components/master/jenis_pelatihan/form.index";
 
 export const metadata = {
     title: "Tambah Jenis Pelatihan"

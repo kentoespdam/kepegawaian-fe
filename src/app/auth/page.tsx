@@ -1,7 +1,7 @@
 import logo from "@public/images/logo_pdam_40x40.png";
 import Image from "next/image";
 import Link from "next/link";
-import LoginForm from "./form";
+import LoginForm from "./form.index";
 
 const AuthPage = () => {
     return (

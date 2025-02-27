@@ -20,7 +20,7 @@ import { useQuery } from "@tanstack/react-query";
 import type React from "react";
 import { useState, type Dispatch } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import type { SpFormProps } from ".";
+import type { SpFormProps } from "./form.index";
 
 interface PegawaiContentProps extends SpFormProps {
 	setOpen: Dispatch<React.SetStateAction<boolean>>;

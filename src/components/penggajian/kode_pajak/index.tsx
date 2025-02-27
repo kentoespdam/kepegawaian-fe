@@ -8,8 +8,8 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import DeleteKodePajakDialog from "./button/delete-kode-pajak";
-import PendapatanNonPajakTableBody from "./table/body";
+import DeleteKodePajakDialog from "./button.delete";
+import PendapatanNonPajakTableBody from "./table.body";
 
 const KodePajakComponent = () => {
     const params = useSearchParams()

@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import AlasanBerhentiFormComponent from "../../../../../components/master/alasan-berhenti/form";
+import AlasanBerhentiFormComponent from "../../../../../components/master/alasan-berhenti/form.index";
 import { getDataById } from "@helpers/action";
 import type { AlasanBerhenti } from "@_types/master/alasan_berhenti";
 

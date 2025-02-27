@@ -9,7 +9,7 @@ import { Table } from "@components/ui/table"
 import { getPageData } from "@helpers/action"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
-import TunjanganTableBody from "./table/body"
+import TunjanganTableBody from "./table.body"
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
 import { useTunjanganStore } from "@store/penggajian/tunjangan"
 
@@ -53,7 +53,6 @@ const TunjanganComponent = () => {
                     setOpenDelete={setOpenDelete}
                     queryKeys={["tunjangan", search.toString()]}
                 />
-
             </div>
         </>
     );

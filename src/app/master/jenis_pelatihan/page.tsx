@@ -1,6 +1,6 @@
 import ButtonAddBuilder from "@components/builder/button/add";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import JenisPelatihanTable from "./table";
+import JenisPelatihanTable from "../../../components/master/jenis_pelatihan/table";
 
 export const metadata = {
     title: "Master Jenis Pelatihan",

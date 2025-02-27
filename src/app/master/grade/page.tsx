@@ -2,7 +2,7 @@ import { gradeTableColumns } from "@_types/master/grade";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import GradeTable from "./table";
+import GradeTable from "../../../components/master/grade/table";
 
 export const metadata = {
     title: "Master Grade",
