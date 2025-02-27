@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import LevelFormComponent from "../../../../components/master/level/form.index";
+import LevelFormComponent from "@components/master/level/form.index";
 
 export const metadata = {
     title: "Tambah Level"

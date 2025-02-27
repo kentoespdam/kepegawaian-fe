@@ -1,7 +1,7 @@
 import type { RiwayatTerminasi } from "@_types/kepegawaian/terminasi";
 import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/card";
-import TerminasiFormComponent from "@components/kepegawaian/terminasi/form";
+import TerminasiFormComponent from "@components/kepegawaian/terminasi/form/form.index";
 import { getDataById } from "@helpers/action";
 import { redirect } from "next/navigation";
 

@@ -1,7 +1,7 @@
-import FormCard from "@components/form/card";
-import JenisPelatihanFormComponent from "../../../../../components/master/jenis_pelatihan/form.index";
-import { getDataById } from "@helpers/action";
 import type { JenisPelatihan } from "@_types/master/jenis_pelatihan";
+import FormCard from "@components/form/card";
+import JenisPelatihanFormComponent from "@components/master/jenis_pelatihan/form.index";
+import { getDataById } from "@helpers/action";
 
 export const metadata = {
     title: "Edit Jenis Pelatihan"

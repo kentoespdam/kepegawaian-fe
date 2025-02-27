@@ -1,6 +1,5 @@
 "use client";
 import { type RumahDinas, RumahDinasSchema } from "@_types/master/rumah_dinas";
-import { saveRumahDinas } from "@app/master/rumah_dinas/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputZod from "@components/form/zod/input";
 import { Button } from "@components/ui/button";
@@ -12,6 +11,7 @@ import { SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { saveRumahDinas } from "./action";
 
 interface RumahDinasFormComponentProps {
     data?: RumahDinas
