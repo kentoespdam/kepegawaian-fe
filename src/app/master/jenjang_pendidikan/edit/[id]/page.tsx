@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import JenjangPendidikanFormComponent from "../../form";
+import JenjangPendidikanFormComponent from "../../../../../components/master/jenjang_pendidikan/form.index";
 import { getDataById } from "@helpers/action";
 import type { JenjangPendidikan } from "@_types/master/jenjang_pendidikan";
 

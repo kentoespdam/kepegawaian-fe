@@ -2,7 +2,7 @@ import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import type { Biodata } from "@_types/profil/biodata";
 import FormCard from "@components/form/card";
 import { getDataById } from "@helpers/action";
-import PegawaiForm from "../../form";
+import PegawaiForm from "../../../../../components/kepegawaian/data_pegawai/form.index";
 
 export const metadata = {
 	title: "Edit Data Pegawai/Biodata",

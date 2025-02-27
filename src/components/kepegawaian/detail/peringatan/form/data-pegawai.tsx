@@ -1,6 +1,6 @@
 import InputZod from "@components/form/zod/input";
 import Fieldset from "@components/ui/fieldset";
-import type { SpFormProps } from ".";
+import type { SpFormProps } from "./form.index";
 
 const DetailSpPegawaiForm = ({ form }: SpFormProps) => {
 	return (

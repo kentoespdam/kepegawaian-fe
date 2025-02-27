@@ -8,7 +8,7 @@ import { getPageData } from "@helpers/action"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
-import PhdpTableBody from "./table/body";
+import PhdpTableBody from "./table.body";
 import { usePhdpStore } from "@store/penggajian/phdp";
 import { type Phdp, phdpTableColumns } from "@_types/penggajian/phdp";
 

@@ -1,5 +1,5 @@
 import FormCard from "@components/form/card";
-import GolonganFormComponent from "../form";
+import GolonganFormComponent from "../../../../components/master/golongan/form.index";
 
 export const metadata = {
     title: "Tambah Golongan"

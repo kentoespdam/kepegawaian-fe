@@ -11,7 +11,7 @@ import { globalGetData } from "@helpers/action";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import LampiranSkForm from "../form";
+import LampiranSkForm from "../form/form.lampiran";
 import DeleteLampiranSkDialog from "../form/delete";
 import LampiranSkTableBody from "../table/body";
 

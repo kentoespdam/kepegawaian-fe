@@ -13,7 +13,7 @@ import { useApdStore } from "@store/master/apd";
 import { useProfesiStore } from "@store/master/profesi";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import ProfesiTableBody from "./table/body";
+import ProfesiTableBody from "./table.body";
 
 const ProfesiTable = () => {
     const searchParams = useSearchParams();

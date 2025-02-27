@@ -1,6 +1,6 @@
 import InputZod from "@components/form/zod/input";
 import Fieldset from "@components/ui/fieldset";
-import type { MutasiFormProps } from ".";
+import type { MutasiFormProps } from "./form.mutasi";
 
 const MutasiPegawaiForm = ({ form }: MutasiFormProps) => {
 	return (

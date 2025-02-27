@@ -1,5 +1,6 @@
 "use client";
 
+import type { Pegawai } from "@_types/pegawai";
 import { gajiBatchRootColumns, type GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
@@ -7,12 +8,11 @@ import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
+import { useGajiBatchRootStore } from "@store/penggajian/gaji_batch_root";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import DeleteBatchRootDialog from "./dialog.delete";
 import GajiBatchRootTableBody from "./table.body";
-import type { Pegawai } from "@_types/pegawai";
-import { useGajiBatchRootStore } from "@store/penggajian/gaji_batch_root";
-import DeleteBatchRootDialog from "./action.delete.dialog";
 
 interface ProsesGajiComponentProps {
     pegawai: Pegawai

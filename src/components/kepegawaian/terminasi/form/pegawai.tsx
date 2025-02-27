@@ -11,7 +11,7 @@ import { getListData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { type Dispatch, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
-import type { TerminasiFormProps } from ".";
+import type { TerminasiFormProps } from "./form.index";
 
 import { Button } from "@components/ui/button";
 import {

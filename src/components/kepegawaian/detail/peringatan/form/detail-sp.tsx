@@ -4,7 +4,7 @@ import InputZod from "@components/form/zod/input";
 import SelectJenisSpZod from "@components/form/zod/jenis-sp";
 import TextAreaZod from "@components/form/zod/textarea";
 import Fieldset from "@components/ui/fieldset";
-import type { SpFormProps } from ".";
+import type { SpFormProps } from "./form.index";
 import PenandaTanganSpForm from "./penandatangan";
 
 const DetailSpFormComponent = ({ form }: SpFormProps) => {
