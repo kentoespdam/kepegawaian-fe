@@ -1,12 +1,12 @@
 "use server";
-import type { AxiosErrorData } from "@_types/index";
 import { userToEmail } from "@helpers/email";
-import { cookieStringToObject } from "@helpers/index";
 import { deleteCurrentSession, getUserByNipam } from "@lib/appwrite/user";
 import { authUrl, projectId } from "@lib/utils";
-import axios, { type AxiosError } from "axios";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { LoginSchema } from "./form.index";
+import { cookieStringToObject } from "@helpers/index";
+import axios from "axios";
 
 interface LoginResponse {
 	isAuth: boolean;
@@ -14,60 +14,56 @@ interface LoginResponse {
 	callbackUrl: string;
 }
 
-export const doLogin = async (
-	_prevState: unknown,
-	formData: FormData,
-): Promise<LoginResponse> => {
-	const headerList = headers();
+export const doLogin = async (formData: LoginSchema) => {
+	const { username, password } = formData;
 	let callbackUrl = cookies().get("callback_url")?.value as string;
 	callbackUrl = !callbackUrl ? "" : callbackUrl.replace("undefined", "");
-	const username = formData.get("username") as string;
 	const email = userToEmail(username);
-	const password = formData.get("password") as string;
+	const headerList = headers();
 
-	const userExist = await getUserByNipam(username);
-	if (!userExist) {
+	const userExists = await getUserByNipam(username);
+	if (!userExists) {
 		return {
-			isAuth: false,
-			callbackUrl,
-			message:
-				"Akun anda tidak ditemukan / belum aktif, silahkan hubungi Administrator.",
+			status: 500,
+			statusText: "Bad Request",
+			message: "",
+			data: null,
+			timestamp: new Date().toISOString(),
+			errors: "User not found",
 		};
 	}
 
-	try {
-		const response = await axios.post(
-			authUrl,
-			{ email, password },
-			{
-				headers: {
-					"Content-Type": "application/json",
-					"X-Appwrite-Project": projectId,
-				},
+	const response = await axios.post(
+		authUrl,
+		{ email, password },
+		{
+			headers: {
+				"Content-Type": "application/json",
+				"X-Appwrite-Project": projectId,
 			},
-		);
+		},
+	);
 
-		if (response.headers["set-cookie"]) {
-			for (const item of response.headers["set-cookie"]) {
-				const cookieObject = cookieStringToObject(item, headerList);
-				cookies().set(cookieObject.name, cookieObject.value, cookieObject);
-			}
-		}
-
+	if (response.status !== 201) {
 		return {
-			isAuth: true,
-			message: "Login Success...",
-			callbackUrl,
-		};
-	} catch (error) {
-		const axiosError = error as AxiosError<AxiosErrorData>;
-		return {
-			isAuth: false,
-			callbackUrl,
-			message: axiosError.response?.data.message || "Login failed",
+			status: 500,
+			statusText: "Bad Request",
+			message: "",
+			data: null,
+			timestamp: new Date().toISOString(),
+			errors: response.data.message,
 		};
 	}
+
+	if (response.headers["set-cookie"]) {
+		for (const item of response.headers["set-cookie"]) {
+			const cookieObject = cookieStringToObject(item, headerList);
+			cookies().set(cookieObject.name, cookieObject.value, cookieObject);
+		}
+	}
+	redirect(callbackUrl);
 };
+
 export const logout = async () => {
 	const cookieList = cookies();
 	await deleteCurrentSession(cookieList);
