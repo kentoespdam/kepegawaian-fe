@@ -32,7 +32,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 	const cookies: RequestCookies = req.cookies;
 
 	if (!isHasSessionCookie(cookies) && !currentPath.startsWith("/auth")) {
-		return redirectAuth(currentHref, currentOrigin);
+		return redirectAuth(currentPath, currentOrigin);
 	}
 
 	const activeSession = await isHasAuthSession(cookies);
@@ -76,11 +76,10 @@ export const config = {
  * @returns A NextResponse object representing the redirect response.
  */
 function redirectAuth(
-	currentHref: string,
+	currentPath: string,
 	currentOrigin: string,
 ): NextResponse {
-	console.log("redirectAuth", currentHref);
-	const callback_url = `callback_url=${encodeURIComponent(currentHref)}`;
+	const callback_url = `callback_url=${encodeURIComponent(currentPath)}`;
 	const headers = { "set-cookie": callback_url };
 	const url = new URL("/auth", currentOrigin);
 	return NextResponse.redirect(url, { headers });
