@@ -29,7 +29,7 @@ const ProsesGajiTableAction = ({ row, pegawai, qkey }: ProsesGajiTableActionProp
         if (!pegawai?.biodata?.nama || !pegawai?.jabatan?.nama) return;
 
         const formData: VerifikasiSchema = {
-            batchId: row.batchId,
+            id: row.id,
             nama: pegawai.biodata.nama,
             jabatan: pegawai.jabatan.nama,
             phase: "reprocess"
@@ -38,7 +38,7 @@ const ProsesGajiTableAction = ({ row, pegawai, qkey }: ProsesGajiTableActionProp
     }
 
     const deleteHandler = () => {
-        setBatchId(row.batchId);
+        setBatchId(row.id);
         setOpenDelete(true);
     };
 

@@ -9,7 +9,7 @@ export interface GajiBatchRootErrorLogs {
 	notes: string;
 }
 export interface GajiBatchRoot {
-	batchId: string;
+	id: string;
 	periode: string;
 	status: string;
 	totalPegawai: number;
