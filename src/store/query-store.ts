@@ -13,6 +13,7 @@ interface GlobalMutationProps<TData, TVariables> {
 	queryKeys: QueryKey[];
 	redirectTo?: string;
 	actHandler?: () => void;
+	refreshPage?: boolean;
 }
 
 export function useGlobalMutation<TData, TVariables>({
@@ -20,13 +21,14 @@ export function useGlobalMutation<TData, TVariables>({
 	queryKeys,
 	redirectTo,
 	actHandler,
+	refreshPage,
 }: GlobalMutationProps<TData, TVariables>): UseMutationResult<
 	TData,
 	Error,
 	TVariables,
 	unknown
 > {
-	const { push } = useRouter();
+	const { push, refresh } = useRouter();
 	const queryClient = useQueryClient();
 
 	const mutation = useMutation({
@@ -35,14 +37,20 @@ export function useGlobalMutation<TData, TVariables>({
 			const result = data as BaseResult<unknown>;
 			if (result.status !== 200 && result.status !== 201)
 				throw new Error(JSON.stringify(result));
+
+			if (refreshPage) refresh();
+			
 			toast.success(`${result.status} Success`, {
 				description: result.message,
 				className: "bg-primary text-primary-foreground",
 			});
+			
 			for (const queryKey of queryKeys) {
 				queryClient.invalidateQueries({ queryKey });
 			}
+			
 			if (redirectTo) push(redirectTo);
+			
 			if (actHandler) actHandler();
 		},
 		onError: (error) => {

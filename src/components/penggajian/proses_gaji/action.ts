@@ -44,7 +44,7 @@ export const deleteGajiBatchRoot = async (formData: BaseDelete) => {
 
 export const verifikasiProses = async (formData: VerifikasiSchema) => {
 	// console.log(formData);
-	const apiUrl = `${API_URL}/penggajian/batch/${formData.batchId}/${formData.phase}`;
+	const apiUrl = `${API_URL}/penggajian/batch/${formData.id}/${formData.phase}`;
 	const headers = setAuthorizeHeader(cookies());
 	const response = await fetch(apiUrl, {
 		method: "PATCH",
@@ -52,5 +52,7 @@ export const verifikasiProses = async (formData: VerifikasiSchema) => {
 		body: JSON.stringify(formData),
 	});
 
-	return await response.json();
+	const result= await response.json();
+	console.log(result);
+	return result;
 };

@@ -16,11 +16,10 @@ import { useForm } from "react-hook-form";
 import { saveProfilGaji } from "./action";
 
 const ProfilGajiFormComponent = () => {
-    const { profilGajiId, setProfilGajiId, defaultValues, setDefaultValues, showForm, setShowForm } = useProfilGajiStore((state) => ({
+    const { profilGajiId, setProfilGajiId, defaultValues, showForm, setShowForm } = useProfilGajiStore((state) => ({
         profilGajiId: state.profilGajiId,
         setProfilGajiId: state.setProfilGajiId,
         defaultValues: state.defaultValues,
-        setDefaultValues: state.setDefaultValues,
         showForm: state.showForm,
         setShowForm: state.setShowForm
     }))

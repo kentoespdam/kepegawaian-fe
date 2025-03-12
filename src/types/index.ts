@@ -115,11 +115,14 @@ export interface SaveErrorStatus {
 export const MAX_UPLOAD_SIZE = 1024 * 1024 * 10; // 10MB
 export const IMAGE_TYPE = ["image/png", "image/jpeg", "image/jpg"];
 export const PDF_TYPE = ["application/pdf"];
-export const OFFICE_TYPE = [
-	"application/msword",
-	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+export const EXCEL_TYPE = [
 	"application/vnd.ms-excel",
 	"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
 ];
+export const DOC_TYPE = [
+	"application/msword",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+];
+export const OFFICE_TYPE = EXCEL_TYPE.concat(DOC_TYPE);
 export const ACCEPTED_FILE_TYPES =
 	IMAGE_TYPE.concat(PDF_TYPE).concat(OFFICE_TYPE);

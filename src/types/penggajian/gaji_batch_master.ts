@@ -27,8 +27,15 @@ export interface GajiBatchMaster {
 	totalTambahan: number;
 	penghasilanKotor: number;
 	totalPotongan: number;
-	pembulatan: number;
+	totalAddTambahan: number;
+	totalAddPotongan: number;
 	penghasilanBersih: number;
+	penghasilanBersih2: number;
+	pembulatan: number;
+	pembulatan2: number;
+	penghasilanBersihFinal: number;
+	penghasilanBersihFinal2: number;
+	pajak: number;
 	isDifferent: boolean;
 }
 
