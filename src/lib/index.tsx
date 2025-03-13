@@ -186,6 +186,12 @@ export const menus: IMenu[] = [
 				role: "ADMIN",
 			},
 			{
+				path: "/penggajian/approval",
+				name: "04. Persetujuan Akhir",
+				icon: <BarcodeIcon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+			{
 				path: "/penggajian/kode_pajak",
 				name:"Setting Pendapatan Non Pajak",
 				icon: <Settings2Icon className={defaultIconClassName} />,

@@ -44,6 +44,7 @@ const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 			props.setOpenDelete(false);
 		},
 	});
+	
 	const onSubmit = (values: BaseDelete) => {
 		values.unique = encodeString(props.id);
 		mutation.mutate(values)
