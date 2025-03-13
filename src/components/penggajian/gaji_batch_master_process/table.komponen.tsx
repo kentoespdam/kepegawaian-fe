@@ -32,7 +32,7 @@ const GajiBatchMasterProcessKomponenTable = ({
 	gajiBatchRoot,
 }: GajiBatchMasterProcessKomponenTableProps) => {
 	const isVerified =
-		gajiBatchRoot.content[0].status !==
+		gajiBatchRoot?.content[0].status !==
 		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2);
 
 	const {

@@ -39,24 +39,26 @@ export function useGlobalMutation<TData, TVariables>({
 				throw new Error(JSON.stringify(result));
 
 			if (refreshPage) refresh();
-			
+
 			toast.success(`${result.status} Success`, {
 				description: result.message,
 				className: "bg-primary text-primary-foreground",
 			});
-			
+
 			for (const queryKey of queryKeys) {
 				queryClient.invalidateQueries({ queryKey });
 			}
-			
+
 			if (redirectTo) push(redirectTo);
-			
+
 			if (actHandler) actHandler();
 		},
 		onError: (error) => {
 			const result = JSON.parse(error.message) as BaseResult<unknown>;
 			if (result.status === 401)
 				result.errors = "Network Error. please try again";
+
+			if (result.status === 400) result.errors = result.message;
 
 			if (result.errors && typeof result.errors === "object")
 				for (const message of result.errors) {
