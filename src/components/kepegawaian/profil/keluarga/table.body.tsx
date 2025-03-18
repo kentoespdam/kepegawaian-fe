@@ -88,7 +88,7 @@ const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
 						</TooltipBuilder>
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap capitalize">
-						{row.statusPendidikan.replace("_", " ")}
+						{row.statusPendidikan?.replace("_", " ")}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.pendidikan?.nama ?? "-"}
