@@ -20,7 +20,7 @@ export interface Keluarga {
 	tanggalLahir: string;
 	tanggungan: boolean;
 	pendidikan: JenjangPendidikan | null;
-	statusPendidikan: StatusPendidikan;
+	statusPendidikan: StatusPendidikan | null;
 	statusKawin: StatusKawin;
 	notes: string;
 }
