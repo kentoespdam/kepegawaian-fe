@@ -3,7 +3,7 @@ import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchMaster } from "@_types/penggajian/gaji_batch_master";
 import { TableBody } from "@components/ui/table";
 import { getUrutStatusPegawai } from "@helpers/status_pegawai";
-import GajiBatchMasterCell from "../gaji_batch_master/table.cell.grouped";
+import VerifPhase1CellGrouped from "../gaji_batch_master/verif_phase_1/table.cell.grouped";
 
 interface VerifPhase1TableBodyProps {
 	pegawai: Pegawai;
@@ -41,7 +41,7 @@ const VerifPhase1TableBody = ({
 				urut += filteredGaji?.length ?? 0;
 
 				return (
-					<GajiBatchMasterCell
+					<VerifPhase1CellGrouped
 						key={`org-${organisasi.id}`}
 						urut={urut}
 						urutOrg={urutOrg}
