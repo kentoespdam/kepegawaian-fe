@@ -19,7 +19,8 @@ import { Toaster } from "@components/ui/sonner";
 import type { ChildrenNode } from "@lib/index";
 import { cn } from "@lib/utils";
 import { QueryClient } from "@tanstack/react-query";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { Button } from "@components/ui/button";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -32,6 +33,8 @@ const queryClient = new QueryClient({
 const Layout = ({ children }: ChildrenNode) => {
 	const path = usePathname();
 	const paths = path.split("/");
+	const { back } = useRouter();
+
 	return (
 		<CustomQueryProvider queryClient={queryClient}>
 			<div className="grid min-h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -43,13 +46,14 @@ const Layout = ({ children }: ChildrenNode) => {
 									text="Kembali"
 									className="bg-destructive text-destructive-foreground"
 								>
-									<ButtonLink
-										href="/kepegawaian/data_pegawai"
-										icon={<Undo2Icon className="h-5 w-5" />}
+									<Button
+										onClick={() => back()}
 										variant="ghost"
 										size="icon"
 										className="text-destructive"
-									/>
+									>
+										<Undo2Icon className="h-5 w-5" />
+									</Button>
 								</TooltipBuilder>
 								<Separator orientation="vertical" className="h-6" />
 								<Package2 className="h-6 w-6" />
