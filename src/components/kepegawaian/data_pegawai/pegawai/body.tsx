@@ -48,15 +48,15 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 							<KepegawaianTableAction data={row} />
 						</div>
 					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">{row.nipam}</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.biodata.nama}
 					</TableCell>
-					<TableCell className="border-x">{row.nipam}</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.biodata.jenisKelamin.replace("_", " ")}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						{row.golongan?.golongan} - {row.golongan?.pangkat}
+						{row.golongan?.golongan}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.organisasi?.nama}

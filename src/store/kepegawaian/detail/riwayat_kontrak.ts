@@ -39,6 +39,7 @@ export const useRiwayatKontrakStore = create<RiwayatKontrakStore>((set) => ({
 		tanggalSelesai: "",
 		gajiPokok: 0,
 		notes: "",
+		fileName: "",
 	},
 	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrak) =>
 		set((state) => ({

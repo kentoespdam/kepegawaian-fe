@@ -7,6 +7,7 @@ import { cookies } from "next/headers";
 
 export const saveRiwayatKontrak = async (formData: RiwayatKontrakSchema) => {
 	const headers = setAuthorizeHeader(cookies());
+
 	const url =
 		formData.id > 0
 			? `${API_URL}/kepegawaian/riwayat/kontrak/${formData.id}`
@@ -17,5 +18,6 @@ export const saveRiwayatKontrak = async (formData: RiwayatKontrakSchema) => {
 		body: JSON.stringify(formData),
 	});
 	const result = await req.json();
+	console.log(result);
 	return result;
 };

@@ -32,7 +32,7 @@ const RiwayatMutasiBody = ({ data }: { data: Pageable<RiwayatKontrak> }) => {
 					{dateToIndonesian(item.tanggalSelesai)}
 				</TableCell>
 				<TableCell className="border-x whitespace-nowrap">
-					{umur.bulan} Bulan {umur.hari} Hari
+					{umur.bulan < 0 ? 0 : umur.bulan} Bulan {umur.bulan < 0 ? 0 : umur.hari} Hari
 				</TableCell>
 			</TableRow>
 		);

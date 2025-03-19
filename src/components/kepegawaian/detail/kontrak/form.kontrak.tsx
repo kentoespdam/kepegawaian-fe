@@ -11,11 +11,11 @@ import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontra
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useForm, type UseFormReturn } from "react-hook-form";
-import { saveRiwayatKontrak } from "../action";
-import KontrakPegawaiForm from "./pegawai";
-import RiwayatKontrakForm from "./riwayat";
-import DataKontrakForm from "./data-kontrak";
-import RiwayatKontrakAction from "../button/form-action";
+import { saveRiwayatKontrak } from "./action";
+import KontrakPegawaiForm from "./form.kontrak.pegawai";
+import RiwayatKontrakForm from "./form.kontrak.riwayat";
+import DataKontrakForm from "./form.kontrak.data";
+import RiwayatKontrakAction from "./button.form.action";
 import { useEffect } from "react";
 import type { Pegawai } from "@_types/pegawai";
 
@@ -69,7 +69,7 @@ const RiwayatKontrakFormComponent = ({
 			<Form {...form}>
 				<form onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-2 pb-2">
-						<InputZod type="number" id="id" label="ID" form={form} className="hidden"/>
+						<InputZod type="number" id="id" label="ID" form={form} className="hidden" />
 						<KontrakPegawaiForm form={form} />
 						<RiwayatKontrakForm pegawaiId={pegawaiId} />
 						<DataKontrakForm form={form} />

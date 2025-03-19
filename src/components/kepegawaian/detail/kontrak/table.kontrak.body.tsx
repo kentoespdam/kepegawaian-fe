@@ -6,7 +6,7 @@ import { dateToIndonesian } from "@helpers/string";
 import { cn } from "@lib/utils";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
-import RiwayatKontrakTableAction from "../button/table-action";
+import RiwayatKontrakTableAction from "./button.table.action";
 
 type RiwayatKontrakTableBodyProps = {
 	pegawaiId: number;
@@ -43,10 +43,10 @@ const RiwayatKontrakTableBody = (props: RiwayatKontrakTableBodyProps) => {
 					})}
 					onClick={() => handleSelect(row)}
 				>
-					<TableCell align="right" className="border-x">
+					<TableCell align="right" className="border-x" width={60}>
 						{urut++}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
+					<TableCell className="border-x whitespace-nowrap" width={60} align="center">
 						<RiwayatKontrakTableAction pegawaiId={props.pegawaiId} data={row} />
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
