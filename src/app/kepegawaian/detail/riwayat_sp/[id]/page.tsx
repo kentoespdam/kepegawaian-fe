@@ -1,6 +1,6 @@
 import type { Pegawai } from "@_types/pegawai";
-import AddRiwayatSpButton from "@components/kepegawaian/detail/peringatan/button/add-sp-button";
-import RiwayatSpComponent from "@components/kepegawaian/detail/peringatan/content";
+import RiwayatSpComponent from "@components/kepegawaian/detail/peringatan";
+import AddRiwayatSpButton from "@components/kepegawaian/detail/peringatan/button.add.sp";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

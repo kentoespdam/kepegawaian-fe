@@ -1,4 +1,4 @@
-import AddTerminasiButton from "@components/kepegawaian/terminasi/button/add";
+import AddTerminasiButton from "@components/kepegawaian/terminasi/button.add";
 import CalonTerminasiComponent from "@components/kepegawaian/terminasi/calon-pensiun";
 import TerminatedComponent from "@components/kepegawaian/terminasi/terminated";
 import { ButtonLink } from "@components/ui/link";

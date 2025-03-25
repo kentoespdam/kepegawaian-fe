@@ -3,7 +3,7 @@ import type { Biodata } from "@_types/profil/biodata";
 import ProfilKeluargaContentComponent from "@components/kepegawaian/profil/keluarga";
 import AddProfilKeluargaButton from "@components/kepegawaian/profil/keluarga/button.add";
 import LampiranKeluargaContent from "@components/kepegawaian/profil/keluarga/lampiran.index";
-import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/";
+import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

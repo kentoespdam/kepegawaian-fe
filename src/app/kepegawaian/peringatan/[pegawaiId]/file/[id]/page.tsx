@@ -1,5 +1,5 @@
 import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
-import LampiranSpDetailComponent from "@components/kepegawaian/detail/peringatan/file";
+import LampiranSpDetailComponent from "@components/kepegawaian/detail/peringatan/file.index";
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";

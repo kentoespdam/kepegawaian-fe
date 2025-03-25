@@ -13,10 +13,10 @@ import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
-import { saveRiwayatSp } from "../action";
-import RiwayatSpActionButton from "../button/form-action";
-import DetailSpPegawaiForm from "./data-pegawai";
-import DetailSpFormComponent from "./detail-sp";
+import { saveRiwayatSp } from "./action";
+import RiwayatSpActionButton from "./button.form.action";
+import DetailSpPegawaiForm from "./form.data.pegawai";
+import DetailSpFormComponent from "./form.detail.sp";
 
 export interface SpFormProps {
 	form: UseFormReturn<RiwayatSpSchema>;

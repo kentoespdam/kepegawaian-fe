@@ -1,4 +1,4 @@
-import LampiranSkDetailComponent from "@components/kepegawaian/detail/lampiran/content/detail";
+import LampiranSkDetailComponent from "@components/kepegawaian/detail/lampiran/detail";
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";

@@ -3,7 +3,6 @@ import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
-import type { DeleteLampiranSkProps } from "./form/delete";
 
 interface saveLampiranSkProps {
 	path: string;
@@ -27,24 +26,6 @@ export const saveLampiranSk = async ({
 
 	const result = await req.json();
 
-	return result;
-};
-
-export const deleteLampiranSk = async (props: DeleteLampiranSkProps) => {
-	const id =
-		Number(props.id.split("-")[1]) === Number(props.curId)
-			? Number(props.id.split("-")[1])
-			: 0;
-	const url = `${API_URL}/kepegawaian/lampiran/${props.ref}/${props.refId}/${id}`;
-	const headers = setAuthorizeHeader(cookies());
-
-	const response = await fetch(url, {
-		method: "DELETE",
-		headers,
-		cache: "no-cache",
-	});
-
-	const result = await response.json();
 	return result;
 };
 

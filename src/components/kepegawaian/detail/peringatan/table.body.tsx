@@ -2,8 +2,8 @@ import type { Pageable } from "@_types/index";
 import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
-import RiwayatSpTableAction from "../button/table-action";
-import RiwayatSpLampiranFileButton from "../button/file-button";
+import RiwayatSpTableAction from "./button.table.action";
+import RiwayatSpLampiranFileButton from "./button.file";
 
 type RiwayatSpTableBodyProps = {
 	pegawaiId: number;
