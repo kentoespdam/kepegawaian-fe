@@ -6,7 +6,7 @@ import ViewImageComponent from "@components/kepegawaian/lampiran/view/image";
 import ViewPdfComponent from "@components/kepegawaian/lampiran/view/pdf";
 import { useQuery } from "@tanstack/react-query";
 import { RefreshCcwIcon } from "lucide-react";
-import { getFile } from "../action";
+import { getFile } from "./action";
 
 interface LampiranSpDetailComponentProps {
 	id: number;

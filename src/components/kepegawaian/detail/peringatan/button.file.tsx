@@ -5,7 +5,7 @@ import { Button } from "@components/ui/button";
 import { ButtonLink } from "@components/ui/link";
 import { useMutation } from "@tanstack/react-query";
 import { DownloadIcon, EyeIcon } from "lucide-react";
-import { getFile } from "../action";
+import { getFile } from "./action";
 import { base64toBlob } from "@helpers/string";
 
 interface RiwayatSpLampiranFileButtonProps {

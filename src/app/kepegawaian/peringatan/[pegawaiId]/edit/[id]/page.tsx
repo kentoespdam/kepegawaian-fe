@@ -1,7 +1,7 @@
 import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/card";
-import RiwayatSpFormComponent from "@components/kepegawaian/detail/peringatan/form/form.index";
+import RiwayatSpFormComponent from "@components/kepegawaian/detail/peringatan/form.index";
 import { getDataById } from "@helpers/action";
 
 const metadata = {
