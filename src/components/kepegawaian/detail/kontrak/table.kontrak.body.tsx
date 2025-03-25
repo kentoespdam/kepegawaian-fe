@@ -52,10 +52,13 @@ const RiwayatKontrakTableBody = (props: RiwayatKontrakTableBodyProps) => {
 					<TableCell className="border-x whitespace-nowrap">
 						{row.nomorKontrak}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
+					<TableCell className="border-x whitespace-nowrap" align="center">
+						{dateToIndonesian(row.tanggalSk)}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap" align="center">
 						{dateToIndonesian(row.tanggalMulai)}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
+					<TableCell className="border-x whitespace-nowrap" align="center">
 						{dateToIndonesian(row.tanggalSelesai)}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">

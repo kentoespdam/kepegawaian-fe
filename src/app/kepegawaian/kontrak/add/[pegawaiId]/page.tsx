@@ -15,10 +15,10 @@ const AddKontrakPage = async ({
 		id: pegawaiId,
 		isRoot: true,
 	});
-	
+
 	return (
 		<FormCard metadata={metadata} className="min-h-full">
-			<RiwayatKontrakFormComponent pegawaiId={pegawaiId} pegawai={pegawai} />
+			<RiwayatKontrakFormComponent pegawai={pegawai} />
 		</FormCard>
 	);
 };

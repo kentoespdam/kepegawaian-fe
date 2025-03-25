@@ -80,6 +80,7 @@ export const riwayatKontrakTableColumns: CustomColumnDef[] = [
 		search: true,
 		searchType: "text",
 	},
+	{ id: "tanggalSk", label: "Tgl. SK" },
 	{ id: "tanggalMulai", label: "Tgl. Mulai" },
 	{ id: "tanggalSelesai", label: "Tgl. Selesai" },
 	{ id: "notes", label: "Notes" },

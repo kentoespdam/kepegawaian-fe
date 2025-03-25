@@ -24,12 +24,10 @@ export interface KontrakFormProps {
 }
 
 const RiwayatKontrakFormComponent = ({
-	pegawaiId,
 	pegawai,
 	riwayatKontrak,
 }: {
-	pegawaiId: number;
-	pegawai?: Pegawai;
+	pegawai: Pegawai;
 	riwayatKontrak?: RiwayatKontrak;
 }) => {
 	const { defaultValues, setDefaultValues } = useRiwayatKontrakStore(
@@ -50,10 +48,10 @@ const RiwayatKontrakFormComponent = ({
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatKontrak,
 		queryKeys: [
-			["riwayat-kontrak", pegawaiId, search.toString()],
-			["pegawai", pegawaiId],
+			["riwayat-kontrak", pegawai?.id, search.toString()],
+			["pegawai", pegawai?.id],
 		],
-		redirectTo: `/kepegawaian/detail/riwayat_kontrak/${pegawaiId}`,
+		redirectTo: `/kepegawaian/detail/riwayat_kontrak/${pegawai?.id}`,
 	});
 
 	const onSubmit = (values: RiwayatKontrakSchema) => {
@@ -71,7 +69,7 @@ const RiwayatKontrakFormComponent = ({
 					<div className="grid gap-2 pb-2">
 						<InputZod type="number" id="id" label="ID" form={form} className="hidden" />
 						<KontrakPegawaiForm form={form} />
-						<RiwayatKontrakForm pegawaiId={pegawaiId} />
+						<RiwayatKontrakForm pegawaiId={pegawai?.id} riwayatKontrak={riwayatKontrak} />
 						<DataKontrakForm form={form} />
 					</div>
 					<RiwayatKontrakAction form={form} isPending={mutation.isPending} />
