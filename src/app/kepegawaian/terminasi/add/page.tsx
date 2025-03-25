@@ -1,6 +1,6 @@
 import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/card";
-import TerminasiFormComponent from "@components/kepegawaian/terminasi/form/form.index";
+import TerminasiFormComponent from "@components/kepegawaian/terminasi/form.index";
 import { getDataById } from "@helpers/action";
 
 const metadata = {

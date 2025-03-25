@@ -10,10 +10,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatTerminasiStore } from "@store/kepegawaian/detail/riwayat_terminasi";
 import { useGlobalMutation } from "@store/query-store";
 import { useForm, type UseFormReturn } from "react-hook-form";
-import { saveRiwayatTerminasi } from "../action";
-import TerminasiAction from "../button/form-action";
-import DetailTerminasiForm from "./detail";
-import DetailPegawaiTerminasiForm from "./pegawai";
+import { saveRiwayatTerminasi } from "./action";
+import TerminasiAction from "./button.form.action";
+import DetailTerminasiForm from "./form.detail";
+import DetailPegawaiTerminasiForm from "./dialog.form.pegawai";
 import { useEffect } from "react";
 import InputZod from "@components/form/zod/input";
 
