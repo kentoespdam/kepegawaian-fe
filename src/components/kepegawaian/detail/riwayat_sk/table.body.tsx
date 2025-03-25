@@ -2,8 +2,8 @@ import type { Pageable } from "@_types/index";
 import type { RiwayatSk } from "@_types/kepegawaian/riwayat_sk";
 import type { JenisSk } from "@_types/master/jenis_sk";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
-import { getUrut } from "@helpers/number";
-import RiwayatSkActionButton from "./table-action";
+import { getUrut, rupiah } from "@helpers/number";
+import RiwayatSkActionButton from "./button.table.action";
 import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
 import { cn } from "@lib/utils";
 import { useEffect } from "react";
@@ -69,8 +69,8 @@ const RiwayatSkTableBody = ({
 					<TableCell className="border-x whitespace-nowrap">
 						{row.golongan?.golongan} - {row.golongan?.pangkat}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
-						{row.gajiPokok}
+					<TableCell className="border-x whitespace-nowrap" align="right">
+						{rupiah(row.gajiPokok)}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.mkgTahun} Thn - {row.mkgBulan} Bln

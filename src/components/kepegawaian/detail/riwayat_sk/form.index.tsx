@@ -18,7 +18,7 @@ import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { saveRiwayatSk } from "../action";
+import { saveRiwayatSk } from "./action";
 
 const RiwayatSkFormComponent = () => {
 	const { defaultValues, open, setOpen } = useRiwayatSkStore((state) => ({
@@ -29,6 +29,7 @@ const RiwayatSkFormComponent = () => {
 
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
+	const qKey = ["riwayat-sk", defaultValues.pegawaiId, search.toString()]
 
 	const form = useForm<RiwayatSkSchema>({
 		resolver: zodResolver(RiwayatSkSchema),
@@ -38,10 +39,7 @@ const RiwayatSkFormComponent = () => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatSk,
-		queryKeys: [
-			["riwayat-sk", defaultValues.pegawaiId, search.toString()],
-			["pegawai", defaultValues.pegawaiId],
-		],
+		queryKeys: [qKey],
 		actHandler: () => {
 			mutation.reset();
 			form.reset();

@@ -1,8 +1,8 @@
 import type { Pegawai } from "@_types/pegawai";
-import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button/add-lampiran";
-import LampiranSkContent from "@components/kepegawaian/detail/lampiran/content";
-import AddSkButton from "@components/kepegawaian/detail/riwayat_sk/button/add-sk-button";
-import RiwayatSkContentComponent from "@components/kepegawaian/detail/riwayat_sk/content";
+import LampiranSkContent from "@components/kepegawaian/detail/lampiran";
+import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button.add.lampiran";
+import RiwayatSkContentComponent from "@components/kepegawaian/detail/riwayat_sk";
+import AddSkButton from "@components/kepegawaian/detail/riwayat_sk/button.add.sk";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

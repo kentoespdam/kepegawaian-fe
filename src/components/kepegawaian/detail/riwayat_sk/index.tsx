@@ -5,36 +5,44 @@ import {
 	type RiwayatSk,
 } from "@_types/kepegawaian/riwayat_sk";
 import type { JenisSk } from "@_types/master/jenis_sk";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { getPageData, globalGetData } from "@helpers/action";
+import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
 import { useQueries } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import DeleteRiwayatSkDialog from "../form/delete-dialog";
-import RiwayatSkFormComponent from "../form/form.index";
-import RiwayatSkTableBody from "../table/body";
+import RiwayatSkFormComponent from "./form.index";
+import RiwayatSkTableBody from "./table.body";
 
 type RiwayatSkContentComponentProps = {
 	pegawaiId: number;
 };
 const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
+	const { pegawaiId } = props
+	const { riwayatSkId, openDelete, setOpenDelete } = useRiwayatSkStore((state) => ({
+		riwayatSkId: state.riwayatSkId,
+		openDelete: state.openDelete,
+		setOpenDelete: state.setOpenDelete,
+	}))
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const qKey = ["riwayat-sk", Number(pegawaiId), search.toString()]
 
 	const queries = useQueries({
 		queries: [
 			{
-				queryKey: ["riwayat-sk", props.pegawaiId, search.toString()],
+				queryKey: qKey,
 				queryFn: () =>
 					getPageData<RiwayatSk>({
-						path: `kepegawaian/riwayat/sk/pegawai/${props.pegawaiId}`,
+						path: `kepegawaian/riwayat/sk/pegawai/${pegawaiId}`,
 						isRoot: true,
 						searchParams: search.toString(),
 					}),
-				enabled: !!props.pegawaiId,
+				enabled: !!pegawaiId,
 			},
 			{
 				queryKey: ["jenis_sk"],
@@ -66,7 +74,7 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 						/>
 					) : queries[0].data && queries[1].data ? (
 						<RiwayatSkTableBody
-							pegawaiId={props.pegawaiId}
+							pegawaiId={pegawaiId}
 							data={queries[0].data}
 							jenisSkList={queries[1].data}
 						/>
@@ -75,7 +83,13 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 			</div>
 			<PaginationBuilder data={queries[0].data} />
 			<RiwayatSkFormComponent />
-			<DeleteRiwayatSkDialog pegawaiId={props.pegawaiId} />
+			<DeleteZodDialogBuilder
+				id={riwayatSkId}
+				queryKeys={qKey}
+				deletePath={"kepegawaian/riwayat/sk"}
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+			/>
 		</div>
 	);
 };
