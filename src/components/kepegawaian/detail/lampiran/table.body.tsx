@@ -2,7 +2,7 @@ import type { LampiranSk } from "@_types/kepegawaian/lampiran_sk";
 import TooltipBuilder from "@components/builder/tooltip";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { CircleDashedIcon, CircleDotIcon } from "lucide-react";
-import LampiranSkTableAction from "./table-action";
+import LampiranSkTableAction from "./button.table.action";
 
 type LampiranSkTableBodyProps = {
 	data: LampiranSk[];

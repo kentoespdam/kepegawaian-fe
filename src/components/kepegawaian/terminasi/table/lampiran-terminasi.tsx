@@ -1,7 +1,7 @@
 import { OFFICE_TYPE } from "@_types/index";
 import type { LampiranSk } from "@_types/kepegawaian/lampiran_sk";
+import { getFile } from "@app/kepegawaian/profil/lampiran/action";
 import TooltipBuilder from "@components/builder/tooltip";
-import { getFile } from "@components/kepegawaian/detail/lampiran/action";
 import { Button } from "@components/ui/button";
 import { ButtonLink } from "@components/ui/link";
 import { TableCell } from "@components/ui/table";

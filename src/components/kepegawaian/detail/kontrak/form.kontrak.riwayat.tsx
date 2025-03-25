@@ -13,14 +13,14 @@ import { getPageData } from "@helpers/action";
 import { dateToIndonesian, hitungSisaBulanHari } from "@helpers/string";
 import { useQuery } from "@tanstack/react-query";
 
-const RiwayatMutasiBody = ({ data }: { data: Pageable<RiwayatKontrak> }) => {
+const RiwayatMutasiBody = ({ data, riwayatKontrak }: { data: Pageable<RiwayatKontrak>, riwayatKontrak?: RiwayatKontrak }) => {
 	return data.content.map((item) => {
 		const umur = hitungSisaBulanHari(
 			new Date().toISOString(),
 			item.tanggalSelesai,
 		);
 
-		return (
+		return item.nomorKontrak !== riwayatKontrak?.nomorKontrak ? (
 			<TableRow key={item.id}>
 				<TableCell className="border-x whitespace-nowrap">
 					{item.nomorKontrak}
@@ -35,10 +35,10 @@ const RiwayatMutasiBody = ({ data }: { data: Pageable<RiwayatKontrak> }) => {
 					{umur.bulan < 0 ? 0 : umur.bulan} Bulan {umur.bulan < 0 ? 0 : umur.hari} Hari
 				</TableCell>
 			</TableRow>
-		);
+		) : null;
 	});
 };
-const RiwayatKontrakForm = ({ pegawaiId }: { pegawaiId: number }) => {
+const RiwayatKontrakForm = ({ pegawaiId, riwayatKontrak }: { pegawaiId: number, riwayatKontrak?: RiwayatKontrak }) => {
 	const query = useQuery({
 		queryKey: ["riwayat-kontrak", pegawaiId],
 		queryFn: () =>
@@ -67,17 +67,13 @@ const RiwayatKontrakForm = ({ pegawaiId }: { pegawaiId: number }) => {
 							</TableHead>
 						</TableRow>
 					</TableHeader>
-					<TableBody>
-						{query.isLoading ? (
+					<TableBody className="border-b">
+						{query.isLoading || query.isError || !query.data ? (
 							<TableRow>
-								<TableCell colSpan={4}>Loading data</TableCell>
-							</TableRow>
-						) : query.isError || !query.data ? (
-							<TableRow>
-								<TableCell colSpan={4}>Data Not Found!</TableCell>
+								<TableCell colSpan={4}>{query.isLoading ? "Loading data" : "Data Not Found!"}</TableCell>
 							</TableRow>
 						) : (
-							<RiwayatMutasiBody data={query.data} />
+							<RiwayatMutasiBody data={query.data} riwayatKontrak={riwayatKontrak} />
 						)}
 					</TableBody>
 				</Table>

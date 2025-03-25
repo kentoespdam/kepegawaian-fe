@@ -1,13 +1,12 @@
 "use client";
 import {
 	AlarmClockOffIcon,
-	FileSignatureIcon,
 	Package2,
 	ReceiptTextIcon,
 	RefreshCcwIcon,
 	SignatureIcon,
 	TriangleAlertIcon,
-	Undo2Icon,
+	Undo2Icon
 } from "lucide-react";
 import Link from "next/link";
 
@@ -19,8 +18,7 @@ import { Toaster } from "@components/ui/sonner";
 import type { ChildrenNode } from "@lib/index";
 import { cn } from "@lib/utils";
 import { QueryClient } from "@tanstack/react-query";
-import { usePathname, useRouter } from "next/navigation";
-import { Button } from "@components/ui/button";
+import { usePathname } from "next/navigation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -33,7 +31,6 @@ const queryClient = new QueryClient({
 const Layout = ({ children }: ChildrenNode) => {
 	const path = usePathname();
 	const paths = path.split("/");
-	const { back } = useRouter();
 
 	return (
 		<CustomQueryProvider queryClient={queryClient}>
@@ -46,14 +43,13 @@ const Layout = ({ children }: ChildrenNode) => {
 									text="Kembali"
 									className="bg-destructive text-destructive-foreground"
 								>
-									<Button
-										onClick={() => back()}
+									<ButtonLink
+										href="/kepegawaian/data_pegawai"
+										className="text-destructive"
+										icon={<Undo2Icon className="h-5 w-5" />}
 										variant="ghost"
 										size="icon"
-										className="text-destructive"
-									>
-										<Undo2Icon className="h-5 w-5" />
-									</Button>
+									/>
 								</TooltipBuilder>
 								<Separator orientation="vertical" className="h-6" />
 								<Package2 className="h-6 w-6" />

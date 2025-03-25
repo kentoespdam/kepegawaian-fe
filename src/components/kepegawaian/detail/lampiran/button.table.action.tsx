@@ -22,7 +22,7 @@ import {
 	EyeIcon,
 } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { acceptLampiranSk, getFile } from "../action";
+import { acceptLampiranSk, getFile } from "./action";
 
 type LampiranSkTableActionProps = {
 	data: LampiranSk;
@@ -34,6 +34,7 @@ const LampiranSkTableAction = ({
 }: LampiranSkTableActionProps) => {
 	const { id, ref, refId, fileName, mimeType } = data;
 	const path = usePathname();
+	const callbackUrl = btoa(path)
 
 	const { setLampiranId, setRefId, setOpenDeleteLampiranForm } =
 		useLampiranSkStore((state) => ({
@@ -80,7 +81,9 @@ const LampiranSkTableAction = ({
 
 	return (
 		<div className="flex justify-between gap-2">
-			<TooltipBuilder text="Lihat" className="bg-info text-info-foreground">
+			<TooltipBuilder
+				text={OFFICE_TYPE.includes(mimeType) ? "Download" : "Lihat"}
+				className={OFFICE_TYPE.includes(mimeType) ? "bg-warning" : "bg-info text-info-foreground"}>
 				{OFFICE_TYPE.includes(mimeType) ? (
 					<Button
 						variant="ghost"
@@ -92,7 +95,7 @@ const LampiranSkTableAction = ({
 					</Button>
 				) : (
 					<ButtonLink
-						href={`/kepegawaian/lampiran/${ref}/${id}?path=${path}`}
+						href={`/kepegawaian/lampiran/${ref}/${id}?path=${callbackUrl}`}
 						size="icon"
 						className="h-6 w-6"
 						variant="ghost"

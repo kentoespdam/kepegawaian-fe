@@ -15,6 +15,7 @@ import {
 	FormField,
 	FormItem,
 	FormLabel,
+	FormMessage,
 } from "@components/ui/form";
 import {
 	Popover,
@@ -106,6 +107,7 @@ const JenisKontrakZod = <TData extends FieldValues>({
 							</Command>
 						</PopoverContent>
 					</Popover>
+					<FormMessage />
 				</FormItem>
 			)}
 		/>

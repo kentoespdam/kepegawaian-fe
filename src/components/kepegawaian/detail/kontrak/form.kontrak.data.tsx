@@ -1,12 +1,11 @@
-import Fieldset from "@components/ui/fieldset";
-import type { KontrakFormProps } from "./form.kontrak";
+import DatePickerZod from "@components/form/zod/date-picker";
+import SelectGolonganZod from "@components/form/zod/golongan";
 import InputZod from "@components/form/zod/input";
 import JenisKontrakZod from "@components/form/zod/jenis-kontrak";
-import DatePickerZod from "@components/form/zod/date-picker";
 import TextAreaZod from "@components/form/zod/textarea";
+import Fieldset from "@components/ui/fieldset";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
-import SelectGolonganZod from "@components/form/zod/golongan";
-import InputFileZod from "@components/form/zod/file";
+import type { KontrakFormProps } from "./form.kontrak";
 
 const DataKontrakForm = ({ form }: KontrakFormProps) => {
 	const { jenisKontrak } = useRiwayatKontrakStore((state) => ({

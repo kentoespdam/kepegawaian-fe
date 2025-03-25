@@ -16,7 +16,7 @@ import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store"
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { saveLampiranSk } from "../action";
+import { saveLampiranSk } from "./action";
 import InputZod from "@components/form/zod/input";
 import InputFileZod from "@components/form/zod/file";
 import TextAreaZod from "@components/form/zod/textarea";

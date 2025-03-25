@@ -51,7 +51,7 @@ const CalonPensiunTableBody = ({ data }: CalonPensiunTableBodyProps) => {
 					<TableCell className="border-x text-nowrap">{row.organisasi.nama}</TableCell>
 					<TableCell className="border-x text-nowrap">{row.jabatan.nama}</TableCell>
 					<TableCell className="border-x text-nowrap">
-						{row.golongan.pangkat} - {row.golongan.golongan}
+						{row.golongan?.pangkat} - {row.golongan?.golongan}
 					</TableCell>
 					<MasaKerjaTableCell tmtKerja={row.tmtPegawai ?? row.tmtKerja} />
 				</TableRow>

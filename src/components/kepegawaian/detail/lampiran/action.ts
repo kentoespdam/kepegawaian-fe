@@ -3,7 +3,7 @@ import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
-import type { DeleteLampiranSkProps } from "../form/delete";
+import type { DeleteLampiranSkProps } from "./form/delete";
 
 interface saveLampiranSkProps {
 	path: string;
