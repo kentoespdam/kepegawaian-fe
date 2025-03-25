@@ -3,8 +3,8 @@ import SelectGolonganZod from "@components/form/zod/golongan";
 import InputZod from "@components/form/zod/input";
 import Fieldset from "@components/ui/fieldset";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
-import type { MutasiFormProps } from "./form.mutasi";
-import MutasiGajiForm from "./mutasi_gaji";
+import type { MutasiFormProps } from "./form.index";
+import MutasiGajiForm from "./form.gaji";
 
 const MutasiGolonganForm = ({ form }: MutasiFormProps) => {
 	const { jenisMutasi } = useRiwayatMutasiStore((state) => ({

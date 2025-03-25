@@ -1,8 +1,8 @@
 import type { Pegawai } from "@_types/pegawai";
 import LampiranSkContent from "@components/kepegawaian/detail/lampiran";
 import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button.add.lampiran";
-import AddMutasiButton from "@components/kepegawaian/detail/mutasi/button/add-mutasi-button";
-import MutasiContentComponent from "@components/kepegawaian/detail/mutasi/content";
+import MutasiContentComponent from "@components/kepegawaian/detail/mutasi";
+import AddMutasiButton from "@components/kepegawaian/detail/mutasi/button.add.mutasi";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

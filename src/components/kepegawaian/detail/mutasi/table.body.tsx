@@ -5,11 +5,11 @@ import { getUrut } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
-import MutasiGolonganCell from "./golongan_cell";
-import MutasiJabatanCell from "./jabatan_cell";
-import MutasiOrganisasiCell from "./organisasi_cell";
-import RiwayatMutasiSKCell from "./sk_cell";
-import RiwayatMutasiTableAction from "../button/table-action";
+import MutasiGolonganCell from "./table.golongan.cell";
+import MutasiJabatanCell from "./table.jabatan.cell";
+import MutasiOrganisasiCell from "./table.organisasi.cell";
+import RiwayatMutasiSKCell from "./table.sk.cell";
+import RiwayatMutasiTableAction from "./button.table.action";
 
 export interface MutasiRowProps {
 	row: RiwayatMutasi;
@@ -59,7 +59,7 @@ const RiwayatMutasiTableBody = (props: RiwayatMutasiTableBodyProps) => {
 					</TableCell>
 					<RiwayatMutasiSKCell row={row} />
 					<TableCell className="border-x whitespace-nowrap">
-						{row.namaJenisMutasi}
+						{row.jenisMutasi.replaceAll("_", " ").replace("MUTASI", "")}
 					</TableCell>
 					<MutasiGolonganCell row={row} />
 					<MutasiOrganisasiCell row={row} />

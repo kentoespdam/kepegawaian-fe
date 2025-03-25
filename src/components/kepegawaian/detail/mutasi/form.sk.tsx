@@ -2,7 +2,7 @@ import DatePickerZod from "@components/form/zod/date-picker";
 import InputZod from "@components/form/zod/input";
 import JenisMutasiZod from "@components/form/zod/jenis-mutasi";
 import Fieldset from "@components/ui/fieldset";
-import type { MutasiFormProps } from "./form.mutasi";
+import type { MutasiFormProps } from "./form.index";
 
 const MutasiSkForm = ({ form }: MutasiFormProps) => {
 	return (

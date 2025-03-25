@@ -1,5 +1,5 @@
 import { TableCell } from "@components/ui/table";
-import type { MutasiRowProps } from "./body";
+import type { MutasiRowProps } from "./table.body";
 
 const MutasiGolonganCell = ({ row }: MutasiRowProps) => {
 	return (

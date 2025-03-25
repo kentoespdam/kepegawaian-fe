@@ -14,12 +14,12 @@ import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { useForm, type UseFormReturn } from "react-hook-form";
-import { saveRiwayatMutasi } from "../action";
-import RiwayatMutasiFormAction from "../button/form-action";
-import MutasiGolonganForm from "./mutasi_golongan";
-import MutasiJabatanForm from "./mutasi_jabatan";
-import MutasiSkForm from "./mutasi_sk";
-import MutasiPegawaiForm from "./pegawai";
+import { saveRiwayatMutasi } from "./action";
+import RiwayatMutasiFormAction from "./button.form.action";
+import MutasiGolonganForm from "./form.golongan";
+import MutasiJabatanForm from "./form.jabatan";
+import MutasiSkForm from "./form.sk";
+import MutasiPegawaiForm from "./form.pegawai";
 
 export interface MutasiFormProps {
 	form: UseFormReturn<RiwayatMutasiSchema>;
