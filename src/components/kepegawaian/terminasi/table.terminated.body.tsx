@@ -5,7 +5,7 @@ import { ButtonLink } from "@components/ui/link";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { PenIcon, PlusIcon } from "lucide-react";
-import LampiranTerminasiColumn from "./lampiran-terminasi";
+import LampiranTerminasiColumn from "./table.lampiran.terminasi";
 
 const MasaKerjaTableCell = ({
 	tanggalTerminasi,
