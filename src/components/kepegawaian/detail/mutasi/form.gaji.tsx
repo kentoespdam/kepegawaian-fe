@@ -2,9 +2,7 @@ import type { DetailDasarGaji } from "@_types/penggajian/detail_dasar_gaji";
 import InputZod from "@components/form/zod/input";
 import { Button } from "@components/ui/button";
 import { globalGetData } from "@helpers/action";
-import type { MutasiFormProps } from "./form.mutasi";
-import { Label } from "@components/ui/label";
-import { FormLabel } from "@components/ui/form";
+import type { MutasiFormProps } from "./form.index";
 
 const MutasiGajiForm = ({ form }: MutasiFormProps) => {
 	const cariGaji = async () => {

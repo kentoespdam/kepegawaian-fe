@@ -4,26 +4,29 @@ import {
 	riwayatMutasiTableColumns,
 	type RiwayatMutasi,
 } from "@_types/kepegawaian/riwayat-mutasi";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
+import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import DeleteRiwayatMutasiDialog from "../form/delete-dialog";
-import RiwayatMutasiTableBody from "../table/body";
+import RiwayatMutasiTableBody from "./table.body";
 
 type MutasiContentProps = {
 	pegawaiId: number;
 };
 const MutasiContentComponent = (props: MutasiContentProps) => {
+	const { riwayatMutasiId, openDelete, setOpenDelete } = useRiwayatMutasiStore()
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const qKey = ["riwayat-mutasi", props.pegawaiId, search.toString()]
 
 	const query = useQuery({
-		queryKey: ["riwayat-mutasi", props.pegawaiId, search.toString()],
+		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageData<RiwayatMutasi>({
 				path: `kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
@@ -56,7 +59,13 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				</Table>
 			</div>
 			<PaginationBuilder data={query.data} />
-			<DeleteRiwayatMutasiDialog pegawaiId={props.pegawaiId} />
+			<DeleteZodDialogBuilder
+				id={riwayatMutasiId}
+				deletePath="kepegawaian/riwayat/mutasi"
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+				queryKeys={qKey}
+			/>
 		</div>
 	);
 };
