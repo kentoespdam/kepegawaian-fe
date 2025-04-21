@@ -56,7 +56,7 @@ export function useGlobalMutation<TData, TVariables>({
 		onError: (error) => {
 			const result = JSON.parse(error.message) as BaseResult<unknown>;
 			if (result.status === 401)
-				result.errors = "Network Error. please try again";
+				result.errors = result.errors || "Network Error. please try again";
 
 			if (result.status === 400) result.errors = result.message;
 
