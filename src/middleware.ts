@@ -1,6 +1,6 @@
 import { baseAuthUrl, sessionNames } from "@lib/utils";
 import type { RequestCookies } from "next/dist/server/web/spec-extension/cookies";
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse, type NextRequest } from "next/server";
 import {
 	appwriteHeader,
 	getExpToken,
@@ -31,9 +31,8 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 	} = req.nextUrl;
 	const cookies: RequestCookies = req.cookies;
 
-	if (!isHasSessionCookie(cookies) && !currentPath.startsWith("/auth")) {
+	if (!isHasSessionCookie(cookies) && !currentPath.startsWith("/auth"))
 		return redirectAuth(currentPath, currentOrigin);
-	}
 
 	const activeSession = await isHasAuthSession(cookies);
 
@@ -42,7 +41,7 @@ export async function middleware(req: NextRequest): Promise<NextResponse> {
 			response.cookies.delete(name);
 		}
 		if (currentPath.startsWith("/auth")) return response;
-		return redirectAuth(currentHref, currentOrigin);
+		return redirectAuth(currentPath, currentOrigin);
 	}
 
 	if (!isHasTokenCookie(cookies)) {

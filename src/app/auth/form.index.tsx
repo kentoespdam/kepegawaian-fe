@@ -18,7 +18,7 @@ export const LoginSchema = z.object({
 });
 
 export type LoginSchema = z.infer<typeof LoginSchema>;
-const LoginForm = () => {
+const LoginForm = ({ callbackUrl }: { callbackUrl: string }) => {
 	const form = useForm<LoginSchema>({
 		resolver: zodResolver(LoginSchema),
 		defaultValues: {
@@ -30,6 +30,7 @@ const LoginForm = () => {
 	const mutation = useGlobalMutation({
 		mutationFunction: doLogin,
 		queryKeys: [],
+		redirectTo: callbackUrl
 	});
 
 	const handleSubmit = (data: LoginSchema) => {
