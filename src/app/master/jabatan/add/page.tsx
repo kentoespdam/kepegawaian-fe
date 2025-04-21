@@ -1,4 +1,4 @@
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import JabatanFormComponent from "@components/master/jabatan/form.index";
 
 export const metadata = {

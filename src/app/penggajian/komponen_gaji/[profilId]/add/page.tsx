@@ -1,6 +1,6 @@
 import type { KomponenGajiMini } from "@_types/penggajian/komponen";
 import type { ProfilGaji } from "@_types/penggajian/profil";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import KomponenGajiFormComponent from "@components/penggajian/komponen/form.index";
 import { getDataById, globalGetData } from "@helpers/action";
 import { Suspense } from "react";

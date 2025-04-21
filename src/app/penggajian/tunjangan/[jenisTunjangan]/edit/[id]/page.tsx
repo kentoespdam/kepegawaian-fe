@@ -1,5 +1,5 @@
 import type { Tunjangan } from "@_types/penggajian/tunjangan";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import TunjanganFormComponent from "@components/penggajian/tunjangan/form.index";
 import { getDataById } from "@helpers/action";
 

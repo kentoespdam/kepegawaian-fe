@@ -1,4 +1,4 @@
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import GradeFormComponent from "@components/master/grade/form.index";
 
 export const metadata = {

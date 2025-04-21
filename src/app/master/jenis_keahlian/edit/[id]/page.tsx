@@ -1,4 +1,4 @@
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import { getDataById } from "@helpers/action";
 import type { JenisKeahlian } from "@_types/master/jenis_keahlian";
 import JenisKeahlianFormComponent from "@components/master/jenis_keahlian/form.index";

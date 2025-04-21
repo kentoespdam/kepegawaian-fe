@@ -1,5 +1,5 @@
 import type { PegawaiDetail } from "@_types/pegawai";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import EditProfilPribadiFormComponent from "@components/kepegawaian/data_pegawai/profil/pribadi";
 import { getDataById } from "@helpers/action";
 import { Suspense } from "react";

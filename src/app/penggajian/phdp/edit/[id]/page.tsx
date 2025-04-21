@@ -1,5 +1,5 @@
 import type { Phdp } from "@_types/penggajian/phdp";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import PhdpFormComponent from "@components/penggajian/phdp/form.index";
 import { getDataById } from "@helpers/action";
 
