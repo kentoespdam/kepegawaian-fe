@@ -19,7 +19,6 @@ import { useForm } from "react-hook-form";
 import { saveJabatan } from "./action";
 
 const JabatanFormComponent = ({ data }: { data?: Jabatan }) => {
-	console.log(data);
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 	const callbackUrl = search.get("callback")

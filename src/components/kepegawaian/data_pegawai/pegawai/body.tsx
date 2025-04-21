@@ -55,11 +55,8 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 					<TableCell className="border-x whitespace-nowrap">
 						{row.biodata.jenisKelamin.replace("_", " ")}
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
+					<TableCell className="border-x whitespace-nowrap" align="center">
 						{row.golongan?.golongan}
-					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">
-						{row.organisasi?.nama}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.jabatan.nama}
@@ -71,10 +68,13 @@ const PegawaiTableBody = ({ data }: PegawaiTableBodyProps) => {
 						{row.biodata.tanggalLahir}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						{row.biodata.statusKawin.replace("_", " ")}
+						{row.tmtPensiun}
 					</TableCell>
-					<TableCell className="border-x"> </TableCell>
-					<TableCell className="border-x"> </TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.biodata.statusKawin.replaceAll("_", "")}
+					</TableCell>
+					<TableCell className="border-x">{row.kodePajak?.kode}</TableCell>
+					<TableCell className="border-x">{row.isAskes ? "Ya" : "Tidak"}</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.statusPegawai}
 					</TableCell>
