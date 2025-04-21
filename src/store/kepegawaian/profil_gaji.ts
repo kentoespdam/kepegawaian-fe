@@ -26,6 +26,8 @@ export const useProfilGajiPegawaiStore = create<ProfilGajiPegawaiStore>(
 			kodePajakId: 0,
 			gajiProfilId: 0,
 			rumahDinasId: 0,
+			phdp: 0,
+			isAskes: false,
 		},
 		setDefaultValues: (val) =>
 			set((state) => ({
@@ -50,6 +52,8 @@ export const useProfilGajiPegawaiStore = create<ProfilGajiPegawaiStore>(
 					kodePajakId: val?.kodePajak?.id || 0,
 					gajiProfilId: val?.gajiProfil?.id || 0,
 					rumahDinasId: val?.rumahDinas?.id || 0,
+					phdp: val?.phdp || 0,
+					isAskes: val?.isAskes || false,
 				},
 			})),
 	}),
