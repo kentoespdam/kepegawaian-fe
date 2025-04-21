@@ -2,6 +2,7 @@ import { USER_ROLE, UserRole } from "@_types/index";
 import {
 	BarcodeIcon,
 	BookOpenIcon,
+	BracesIcon,
 	ContactRoundIcon,
 	CreditCardIcon,
 	GitCompareArrowsIcon,
@@ -193,13 +194,13 @@ export const menus: IMenu[] = [
 			},
 			{
 				path: "/penggajian/kode_pajak",
-				name:"Setting Pendapatan Non Pajak",
+				name: "Setting Pendapatan Non Pajak",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 			{
 				path: "/penggajian/tunjangan?jenisTunjangan=JABATAN",
-				name:"Setting Tunjangan",
+				name: "Setting Tunjangan",
 				icon: <Settings2Icon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
@@ -219,6 +220,19 @@ export const menus: IMenu[] = [
 				path: "/penggajian/potongan_tkk",
 				name: "Setting Ref Potongan TKK",
 				icon: <Settings2Icon className={defaultIconClassName} />,
+				role: "ADMIN",
+			},
+		],
+	}, {
+		path: "#",
+		name: "System",
+		type: "group",
+		role: "ADMIN",
+		subMenu: [
+			{
+				path: "/system/roles",
+				name: "Roles",
+				icon: <BracesIcon className={defaultIconClassName} />,
 				role: "ADMIN",
 			},
 		],

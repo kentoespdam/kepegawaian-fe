@@ -86,9 +86,9 @@ interface getByIdProps extends baseProps {
 }
 /**
  * Retrieves data for a specific master record by id.
- * @param props - The URL path and id for the master record.
- * @returns A Promise that resolves to the specified master record data.
- * @throws An error if the API request is unsuccessful.
+ * @param {getByIdProps} props - The URL path and id for the master record.
+ * @returns {Promise<TData>} A Promise that resolves to the specified master record data.
+ * @throws {Error} An error if the API request is unsuccessful.
  */
 export const getDataById = async <TData>(
 	props: getByIdProps,
@@ -98,28 +98,31 @@ export const getDataById = async <TData>(
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
+	const retryLimit = 3;
 
-	const retry = props.retry ?? 0;
+	let retry = 0;
+	while (retry < retryLimit) {
+		try {
+			const response = await fetch(url, {
+				method: "GET",
+				headers,
+				signal: controller.signal,
+				cache: "no-cache",
+			});
 
-	try {
-		const response = await fetch(url, {
-			method: "GET",
-			headers,
-			signal: controller.signal,
-			cache: "no-cache",
-		});
-
-		const result: BaseResult<TData> = await response.json();
-		return result.data;
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (error: any) {
-		if (error.status === 401 && retry < 3)
-			return await getDataById({ ...props, retry: retry + 1 });
-		console.error(error);
-		throw error;
-	} finally {
-		clearTimeout(timeoutId);
+			const result = (await response.json()) as BaseResult<TData>;
+			return result.data;
+			// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		} catch (error: any) {
+			if (error.status === 401) {
+				retry++;
+			} else {
+				throw error;
+			}
+		}
 	}
+
+	throw new Error("Failed to retrieve data after retrying");
 };
 
 interface getMasterListProps extends baseProps {

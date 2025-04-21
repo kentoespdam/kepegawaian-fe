@@ -2,8 +2,12 @@ import logo from "@public/images/logo_pdam_40x40.png";
 import Image from "next/image";
 import Link from "next/link";
 import LoginForm from "./form.index";
+import { cookies } from "next/headers";
 
 const AuthPage = () => {
+	let callbackUrl = cookies().get("callback_url")?.value as string;
+	callbackUrl = callbackUrl.replace("undefined", "");
+	
 	return (
 		<section className="bg-gray-50 dark:bg-gray-900">
 			<div className="mx-auto flex flex-col items-center justify-center px-3 py-8 md:h-screen lg:py-0">
@@ -25,7 +29,7 @@ const AuthPage = () => {
 						<h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 dark:text-white md:text-2xl">
 							Sign in to your account
 						</h1>
-						<LoginForm />
+						<LoginForm callbackUrl={callbackUrl} />
 					</div>
 				</div>
 			</div>
