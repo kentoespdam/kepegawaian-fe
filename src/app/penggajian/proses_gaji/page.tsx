@@ -10,9 +10,9 @@ export const metadata = {
     title: "Proses Gaji"
 }
 const ProsesGajiPage = async () => {
-    const nipam = getNipamFromCookie();
+    const pegawaiId = getNipamFromCookie();
     const pegawai = await globalGetData<Pegawai>({
-        path: `pegawai/${nipam}/nipam`,
+        path: `pegawai/${pegawaiId}`,
     })
 
     return (
