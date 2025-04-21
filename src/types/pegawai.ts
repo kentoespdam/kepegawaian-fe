@@ -182,9 +182,7 @@ export const PegawaiSchema = BiodataSchema.extend({
 		});
 
 	if (
-		["CAPEG", "PEGAWAI", "CALON_HONORER", "HONORER"].includes(
-			val.statusPegawai,
-		) &&
+		["CAPEG", "PEGAWAI"].includes(val.statusPegawai) &&
 		(!val.golonganId || val.golonganId < 1)
 	) {
 		ctx.addIssue({
@@ -305,6 +303,8 @@ export const ProfilGajiPegawaiSchema = z.object({
 	kodePajakId: z.number(),
 	gajiProfilId: z.number(),
 	rumahDinasId: z.number(),
+	phdp: z.number(),
+	isAskes: z.boolean(),
 });
 
 export type ProfilGajiPegawaiSchema = z.infer<typeof ProfilGajiPegawaiSchema>;

@@ -35,7 +35,7 @@ export const BiodataSchema = z.object({
 	alamat: z.string().min(3, { message: "Alamat wajib diisi" }),
 	telp: z.string(),
 	agama: z.string().min(1, { message: "Agama wajib diisi" }),
-	ibuKandung: z.string().min(3, { message: "Ibu Kandung wajib diisi" }),
+	ibuKandung: z.string(),
 	pendidikanTerakhirId: z
 		.number()
 		.min(1, { message: "Pendidikan Terakhir wajib diisi" }),
