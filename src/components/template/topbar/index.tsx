@@ -1,17 +1,20 @@
 import { Avatar } from "@components/ui/avatar";
 import logo from "@public/images/logo_pdam_40x40.png";
 import Image from "next/image";
+import type { Models } from "node-appwrite";
 import { Suspense } from "react";
-import RenewAuthToken from "../renew-token";
 import MenuSheet from "./menusheet";
 import ProfileComponent from "./profil";
 import LoadingProfile from "./profil/loading";
 
-const TopBarComponent = () => {
+interface TopBarProps {
+	user: Models.User<Models.Preferences>;
+}
+const TopBarComponent = ({ user }: TopBarProps) => {
 	return (
 		<div className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex flex-row justify-between items-center px-4">
 			<div className="flex flex-wrap gap-2 items-center content-center h-full">
-				<MenuSheet />
+				<MenuSheet user={user} />
 				<Avatar className="h-10 w-12">
 					<Image
 						alt="Logo Perumdam Tirta Satria"
@@ -22,7 +25,7 @@ const TopBarComponent = () => {
 					/>
 				</Avatar>
 				<div className="font-bold text-2xl">Kepegawaian</div>
-                {/* <RenewAuthToken /> */}
+				{/* <RenewAuthToken /> */}
 			</div>
 			<Suspense fallback={<LoadingProfile />}>
 				<ProfileComponent />
