@@ -210,12 +210,6 @@ export const menus: IMenu[] = [
 				role: ["HRD", "ADMIN"],
 			},
 			{
-				path: "/penggajian/phdp",
-				name: "Setting PHDP",
-				icon: <Settings2Icon className={defaultIconClassName} />,
-				role: ["HRD", "ADMIN"],
-			},
-			{
 				path: "/penggajian/potongan_tkk",
 				name: "Setting Ref Potongan TKK",
 				icon: <Settings2Icon className={defaultIconClassName} />,
