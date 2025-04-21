@@ -1,7 +1,12 @@
 import { z } from "zod";
 
-export const USER_ROLE = { USER: "USER", ADMIN: "ADMIN" } as const;
-export const UserRole = z.nativeEnum(USER_ROLE);
+// export const USER_ROLE = { USER: "USER", ADMIN: "ADMIN" } as const;
+// export const UserRole = z.nativeEnum(USER_ROLE);
+// export type UserRole = z.infer<typeof UserRole>;
+
+export const UserRole = z.object({
+	id: z.string(),
+});
 export type UserRole = z.infer<typeof UserRole>;
 
 export interface AxiosErrorData {

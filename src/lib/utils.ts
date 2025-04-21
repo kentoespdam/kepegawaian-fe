@@ -26,7 +26,7 @@ export const AUTH_SECRET = process.env.AUTH_SECRET || "";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
 
-export const cryptr = new Cryptr(`${process.env.AUTH_SECRET}`);
+export const newCrypter = new Cryptr(`${process.env.AUTH_SECRET}`);
 
 export const delay = (time = 1000) =>
 	new Promise((resolve) => setTimeout(() => resolve(true), time));

@@ -5,9 +5,9 @@ import LoginForm from "./form.index";
 import { cookies } from "next/headers";
 
 const AuthPage = () => {
-	let callbackUrl = cookies().get("callback_url")?.value as string;
+	let callbackUrl = (cookies().get("callback_url")?.value as string) ?? "";
 	callbackUrl = callbackUrl.replace("undefined", "");
-	
+
 	return (
 		<section className="bg-gray-50 dark:bg-gray-900">
 			<div className="mx-auto flex flex-col items-center justify-center px-3 py-8 md:h-screen lg:py-0">
