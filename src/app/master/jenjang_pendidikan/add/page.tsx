@@ -1,5 +1,5 @@
 
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import JenjangPendidikanFormComponent from "@components/master/jenjang_pendidikan/form.index";
 
 export const metadata = {

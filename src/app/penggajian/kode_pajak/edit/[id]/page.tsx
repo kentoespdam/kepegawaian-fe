@@ -1,5 +1,5 @@
 import type { PendapatanNonPajak } from "@_types/penggajian/pendapatan_non_pajak";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import KodePajakFormComponent from "@components/penggajian/kode_pajak/form.index";
 import { getDataById } from "@helpers/action";
 

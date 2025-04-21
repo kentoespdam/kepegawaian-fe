@@ -1,4 +1,4 @@
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import RefPotonganTkkFormComponent from "@components/penggajian/potongan_tkk/form.index";
 import { Suspense } from "react";
 

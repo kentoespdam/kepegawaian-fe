@@ -1,5 +1,5 @@
 import type { ParameterSetting } from "@_types/penggajian/parameter_setting";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import ParameterSettingFormComponent from "@components/penggajian/parameter_setting/form.index";
 import { getDataById } from "@helpers/action";
 

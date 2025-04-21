@@ -1,5 +1,5 @@
 import type { Jabatan } from "@_types/master/jabatan";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import JabatanFormComponent from "@components/master/jabatan/form.index";
 import { getDataById } from "@helpers/action";
 

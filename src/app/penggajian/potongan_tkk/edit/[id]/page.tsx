@@ -1,5 +1,5 @@
 import type { RefPotonganTkk } from "@_types/penggajian/ref_potongan_tkk";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import RefPotonganTkkFormComponent from "@components/penggajian/potongan_tkk/form.index";
 import { getDataById } from "@helpers/action";
 import { Suspense } from "react";

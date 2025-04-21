@@ -1,5 +1,5 @@
 import type { JenisPelatihan } from "@_types/master/jenis_pelatihan";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import JenisPelatihanFormComponent from "@components/master/jenis_pelatihan/form.index";
 import { getDataById } from "@helpers/action";
 

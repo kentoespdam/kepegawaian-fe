@@ -1,5 +1,5 @@
 import type { Pegawai } from "@_types/pegawai";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
 import RiwayatMutasiFormComponent from "@components/kepegawaian/detail/mutasi/form.index";
 import { getDataById } from "@helpers/action";
 
