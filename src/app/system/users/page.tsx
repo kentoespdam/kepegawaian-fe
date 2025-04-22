@@ -1,4 +1,6 @@
+import UsersTableComponent from "@components/system/users/table.index";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { Suspense } from "react";
 
 export const metadata = {
 	title: "Users",
@@ -14,7 +16,9 @@ const UsersPage = () => {
 					</CardTitle>
 				</CardHeader>
 				<CardContent className="grid gap-2">
-					{/* <RoleTableComponent /> */}
+					<Suspense fallback={<>Loading...</>}>
+						<UsersTableComponent />
+					</Suspense>
 				</CardContent>
 			</Card>
 		</div>

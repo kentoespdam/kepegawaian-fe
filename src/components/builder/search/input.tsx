@@ -11,7 +11,11 @@ const InputSearchComponent = ({ col, val }: BaseSearchProps) => {
 	const { replace } = useRouter();
 	const doChange = useDebouncedCallback((e: ChangeEvent<HTMLInputElement>) => {
 		if (!e.target.value) search.delete(col.id);
-		else search.set(col.id, e.target.value);
+		else {
+			search.set(col.id, e.target.value);
+			search.delete("page");
+			search.delete("limit");
+		}
 		replace(`${location.pathname}?${search.toString()}`);
 	}, 500);
 
