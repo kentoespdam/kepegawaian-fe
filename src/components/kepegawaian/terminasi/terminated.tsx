@@ -12,7 +12,7 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import TerminatedTableBody from "./table/terminated-body";
+import TerminatedTableBody from "./table.terminated.body";
 
 const TerminatedComponent = () => {
 	const params = useSearchParams();

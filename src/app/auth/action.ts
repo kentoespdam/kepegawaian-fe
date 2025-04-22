@@ -1,73 +1,72 @@
 "use server";
-import type { AxiosErrorData } from "@_types/index";
 import { userToEmail } from "@helpers/email";
 import { cookieStringToObject } from "@helpers/index";
 import { deleteCurrentSession, getUserByNipam } from "@lib/appwrite/user";
-import { authUrl, projectId } from "@lib/utils";
-import axios, { type AxiosError } from "axios";
+import { appwriteKey, authUrl, baseAuthUrl, projectId } from "@lib/utils";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { LoginSchema } from "./form.index";
+import { Client, Users, Query } from "node-appwrite";
 
-interface LoginResponse {
-	isAuth: boolean;
-	message: string;
-	callbackUrl: string;
-}
-
-export const doLogin = async (
-	_prevState: unknown,
-	formData: FormData,
-): Promise<LoginResponse> => {
-	const headerList = headers();
-	let callbackUrl = cookies().get("callback_url")?.value as string;
-	callbackUrl = !callbackUrl ? "" : callbackUrl.replace("undefined", "");
-	const username = formData.get("username") as string;
-	const email = userToEmail(username);
-	const password = formData.get("password") as string;
-
-	const userExist = await getUserByNipam(username);
-	if (!userExist) {
+export const doLogin = async (formData: LoginSchema) => {
+	const requestHeaders = headers();
+	const client = new Client()
+		.setEndpoint(baseAuthUrl)
+		.setProject(projectId)
+		.setKey(appwriteKey);
+	const users = new Users(client);
+	const userList = await users.list([], formData.username);
+	if (userList.total === 0 || !userList.users[0].status) {
 		return {
-			isAuth: false,
-			callbackUrl,
-			message:
-				"Akun anda tidak ditemukan / belum aktif, silahkan hubungi Administrator.",
+			status: 500,
+			statusText: "Bad Request",
+			message: "",
+			data: null,
+			timestamp: new Date().toISOString(),
+			errors: "User not found or not verified",
 		};
 	}
 
-	try {
-		const response = await axios.post(
-			authUrl,
-			{ email, password },
-			{
-				headers: {
-					"Content-Type": "application/json",
-					"X-Appwrite-Project": projectId,
-				},
-			},
-		);
+	const loginResponse = await fetch(authUrl, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+			"X-Appwrite-Project": projectId,
+		},
+		body: JSON.stringify({
+			email: userToEmail(formData.username),
+			password: formData.password,
+		}),
+	});
 
-		if (response.headers["set-cookie"]) {
-			for (const item of response.headers["set-cookie"]) {
-				const cookieObject = cookieStringToObject(item, headerList);
-				cookies().set(cookieObject.name, cookieObject.value, cookieObject);
-			}
-		}
+	const cookieHeader = loginResponse.headers.getSetCookie();
+	for (const cookieString of cookieHeader) {
+		const cookie = cookieStringToObject(cookieString, requestHeaders);
+		cookies().set(cookie.name, cookie.value, cookie);
+	}
 
+	const jsonResponse = await loginResponse.json();
+	if (jsonResponse.status !== 201) {
 		return {
-			isAuth: true,
-			message: "Login Success...",
-			callbackUrl,
-		};
-	} catch (error) {
-		const axiosError = error as AxiosError<AxiosErrorData>;
-		return {
-			isAuth: false,
-			callbackUrl,
-			message: axiosError.response?.data.message || "Login failed",
+			status: loginResponse.status,
+			statusText: "Bad Request",
+			message: "",
+			data: null,
+			timestamp: new Date().toISOString(),
+			errors: jsonResponse.message,
 		};
 	}
+
+	return {
+		status: 201,
+		statusText: "Created",
+		message: "Login Success",
+		data: null,
+		timestamp: new Date().toISOString(),
+		errors: null,
+	};
 };
+
 export const logout = async () => {
 	const cookieList = cookies();
 	await deleteCurrentSession(cookieList);

@@ -5,20 +5,25 @@ import { useSessionStore } from "@store/session";
 import { useEffect } from "react";
 
 interface EmployeeStateComponentProps {
-    userAccount: User;
-    employee?: Pegawai | null;
+	userAccount: User;
+	pegawai?: Pegawai;
 }
 
 const EmployeeStateComponent: React.FC<EmployeeStateComponentProps> = ({
-    userAccount,
+	userAccount,
+	pegawai,
 }) => {
-    const setUser = useSessionStore((state) => state.setUser);
+	const { setUser, setPegawai } = useSessionStore((state) => ({
+		setUser: state.setUser,
+		setPegawai: state.setPegawai,
+	}));
 
-    useEffect(() => {
-        setUser(userAccount);
-    }, [userAccount, setUser]);
+	useEffect(() => {
+		setUser(userAccount);
+		setPegawai(pegawai);
+	}, [userAccount, setUser, setPegawai, pegawai]);
 
-    return null;
+	return null;
 };
 
 export default EmployeeStateComponent;

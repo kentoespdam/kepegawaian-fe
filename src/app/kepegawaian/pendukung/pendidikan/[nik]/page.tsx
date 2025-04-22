@@ -1,9 +1,9 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import type { Biodata } from "@_types/profil/biodata";
 import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran";
-import ProfilPendidikanContentComponent from "@components/kepegawaian/profil/pendidikan/content";
-import AddProfilPendidikanButton from "@components/kepegawaian/profil/pendidikan/content/button/add-button";
-import LampiranPendidikanContent from "@components/kepegawaian/profil/pendidikan/lampiran";
+import ProfilPendidikanContentComponent from "@components/kepegawaian/profil/pendidikan";
+import AddProfilPendidikanButton from "@components/kepegawaian/profil/pendidikan/button.add";
+import LampiranPendidikanContent from "@components/kepegawaian/profil/pendidikan/lampiran.index";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

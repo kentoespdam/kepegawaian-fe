@@ -1,6 +1,6 @@
 import type { Pegawai } from "@_types/pegawai";
-import AddKontrakButton from "@components/kepegawaian/detail/kontrak/button/add-kontrak-button";
-import RiwayatKontrakComponent from "@components/kepegawaian/detail/kontrak/content";
+import RiwayatKontrakComponent from "@components/kepegawaian/detail/kontrak";
+import AddKontrakButton from "@components/kepegawaian/detail/kontrak/button.kontrak.add";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

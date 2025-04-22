@@ -1,13 +1,13 @@
 "use client";
 import type { Pegawai } from "@_types/pegawai";
-import type { GajiBatchRoot, GajiBatchRootProsesUlang } from "@_types/penggajian/gaji_batch_root";
+import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
+import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
 import { Button } from "@components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@components/ui/dropdown-menu";
 import { useGajiBatchRootStore } from "@store/penggajian/gaji_batch_root";
 import { useGlobalMutation } from "@store/query-store";
 import { DeleteIcon, EllipsisIcon, RefreshCcwIcon } from "lucide-react";
-import { prosesUlang } from "./action";
-import { BaseDelete } from "@_types/index";
+import { verifikasiProses } from "./action";
 
 interface ProsesGajiTableActionProps {
     row: GajiBatchRoot,
@@ -21,23 +21,24 @@ const ProsesGajiTableAction = ({ row, pegawai, qkey }: ProsesGajiTableActionProp
     }));
 
     const reprocess = useGlobalMutation({
-        mutationFunction: prosesUlang,
+        mutationFunction: verifikasiProses,
         queryKeys: [qkey],
     });
 
     const prosesUlangHandler = async () => {
         if (!pegawai?.biodata?.nama || !pegawai?.jabatan?.nama) return;
 
-        const formData: GajiBatchRootProsesUlang = { 
-            batchId: row.batchId,
+        const formData: VerifikasiSchema = {
+            id: row.id,
             nama: pegawai.biodata.nama,
-            jabatan: pegawai.jabatan.nama
+            jabatan: pegawai.jabatan.nama,
+            phase: "reprocess"
         }
         reprocess.mutate(formData)
     }
 
-    const deleteHandler = () => { 
-        setBatchId(row.batchId);
+    const deleteHandler = () => {
+        setBatchId(row.id);
         setOpenDelete(true);
     };
 

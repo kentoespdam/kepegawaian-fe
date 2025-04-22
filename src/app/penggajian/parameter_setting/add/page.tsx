@@ -1,5 +1,5 @@
-import FormCard from "@components/form/card";
-import ParameterSettingFormComponent from "@components/penggajian/parameter_setting/form";
+import FormCard from "@components/form/form.card";
+import ParameterSettingFormComponent from "@components/penggajian/parameter_setting/form.index";
 
 export const metadata = {
     title: "Tambah Parameter Setting Gaji"

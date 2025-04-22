@@ -26,7 +26,7 @@ const InputZod = <TData extends FieldValues>({
 				<FormLabel>{label}</FormLabel>
 				<FormControl>
 					<Input
-						type={type === "text" ? "text" : "number"}
+						type={type === "text" ? "text" : type}
 						step={type === "float" ? 0.01 : undefined}
 						placeholder={`Masukkan ${label}`}
 						readOnly={readonly}

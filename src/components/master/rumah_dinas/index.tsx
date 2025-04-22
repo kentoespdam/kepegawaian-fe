@@ -11,7 +11,7 @@ import { getPageData } from "@helpers/action";
 import { useRumahDinasStore } from "@store/master/rumah_dinas";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import RumahDinasTableBody from "./table/body";
+import RumahDinasTableBody from "./table.body";
 
 const RumahDinasComponent = () => {
     const params = useSearchParams()

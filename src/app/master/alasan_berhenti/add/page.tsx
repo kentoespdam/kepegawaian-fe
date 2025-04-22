@@ -1,5 +1,5 @@
-import FormCard from "@components/form/card";
-import AlasanBerhentiFormComponent from "@components/master/alasan-berhenti/form";
+import FormCard from "@components/form/form.card";
+import AlasanBerhentiFormComponent from "@components/master/alasan-berhenti/form.index";
 import { Suspense } from "react";
 export const metadata = {
 	title: "Tambah Alasan Berhenti",

@@ -1,8 +1,8 @@
 import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import type { Biodata } from "@_types/profil/biodata";
-import FormCard from "@components/form/card";
+import FormCard from "@components/form/form.card";
+import PegawaiForm from "@components/kepegawaian/data_pegawai/form.index";
 import { getDataById } from "@helpers/action";
-import PegawaiForm from "../../form";
 
 export const metadata = {
 	title: "Edit Data Pegawai/Biodata",

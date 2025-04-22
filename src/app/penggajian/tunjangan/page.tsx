@@ -1,5 +1,5 @@
 import TunjanganComponent from "@components/penggajian/tunjangan";
-import AddTunjanganButton from "@components/penggajian/tunjangan/button/add-button";
+import AddTunjanganButton from "@components/penggajian/tunjangan/button.add";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Suspense } from "react";
 

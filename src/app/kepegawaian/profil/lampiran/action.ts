@@ -8,6 +8,7 @@ export interface LampiranFile {
 	type: string;
 	base64: string;
 	headers?: ReadonlyHeaders;
+	filename?: string;
 }
 
 export const getFile = async (
@@ -24,7 +25,7 @@ export const getFile = async (
 	});
 
 	if (!response.ok) {
-		const text=await response.json();
+		const text = await response.json();
 		console.log(text);
 		throw new Error(text.errors);
 	}

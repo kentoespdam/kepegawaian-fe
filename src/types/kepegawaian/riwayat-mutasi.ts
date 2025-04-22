@@ -12,7 +12,6 @@ export interface RiwayatMutasi {
 	tmtBerlaku: string;
 	tanggalBerakhir: string;
 	jenisMutasi: string;
-	namaJenisMutasi: string;
 	golongan: Golongan | null;
 	organisasi: Organisasi | null;
 	jabatan: Jabatan | null;

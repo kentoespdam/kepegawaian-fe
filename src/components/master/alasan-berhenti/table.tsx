@@ -6,12 +6,12 @@ import {
 } from "@_types/master/alasan_berhenti";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
+import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import AlasanBerhentiTableBody from "./body";
-import PaginationBuilder from "@components/builder/table/pagination";
+import AlasanBerhentiTableBody from "./table.body";
 
 const AlasanBerhentiTable = () => {
 	const searchParams = useSearchParams();

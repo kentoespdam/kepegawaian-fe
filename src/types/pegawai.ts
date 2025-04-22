@@ -182,9 +182,7 @@ export const PegawaiSchema = BiodataSchema.extend({
 		});
 
 	if (
-		["CAPEG", "PEGAWAI", "CALON_HONORER", "HONORER"].includes(
-			val.statusPegawai,
-		) &&
+		["CAPEG", "PEGAWAI"].includes(val.statusPegawai) &&
 		(!val.golonganId || val.golonganId < 1)
 	) {
 		ctx.addIssue({
@@ -216,37 +214,37 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		label: "Aksi",
 	},
 	{
-		id: "nama",
-		label: "Nama",
+		id: "nipam",
+		label: "NIK",
 		search: true,
 		searchType: "text",
 		sortable: true,
 	},
 	{
-		id: "nipam",
-		label: "Nipam",
+		id: "nama",
+		label: "Nama Lengkap",
 		search: true,
 		searchType: "text",
 		sortable: true,
 	},
 	{
 		id: "jenisKelamin",
-		label: "Jenis Kelamin",
+		label: "J/K",
 	},
 	{
 		id: "golonganId",
-		label: "Golongan",
+		label: "Gol.",
 		search: true,
 		searchType: "golongan",
 		sortable: true,
 	},
-	{
-		id: "organisasiId",
-		label: "Organisasi",
-		search: true,
-		searchType: "organisasi",
-		sortable: true,
-	},
+	// {
+	// 	id: "organisasiId",
+	// 	label: "Organisasi",
+	// 	search: true,
+	// 	searchType: "organisasi",
+	// 	sortable: true,
+	// },
 	{
 		id: "jabatanId",
 		label: "Jabatan",
@@ -263,7 +261,11 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 	},
 	{
 		id: "tglLahir",
-		label: "Tgl Lahir",
+		label: "Tgl. Lahir",
+	},
+	{
+		id: "tmtPensiun",
+		label: "TMT Pensiun",
 	},
 	{
 		id: "statusKawin",
@@ -301,6 +303,8 @@ export const ProfilGajiPegawaiSchema = z.object({
 	kodePajakId: z.number(),
 	gajiProfilId: z.number(),
 	rumahDinasId: z.number(),
+	phdp: z.number(),
+	isAskes: z.boolean(),
 });
 
 export type ProfilGajiPegawaiSchema = z.infer<typeof ProfilGajiPegawaiSchema>;

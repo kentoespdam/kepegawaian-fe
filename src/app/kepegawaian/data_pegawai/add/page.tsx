@@ -1,5 +1,5 @@
-import FormCard from "@components/form/card";
-import PegawaiForm from "../form";
+import FormCard from "@components/form/form.card";
+import PegawaiForm from "@components/kepegawaian/data_pegawai/form.index";
 import { Suspense } from "react";
 
 export const metadata = {

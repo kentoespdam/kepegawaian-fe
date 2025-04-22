@@ -9,7 +9,7 @@ export interface InputZodProps<TData extends FieldValues> {
 	id: Path<TData>;
 	label?: string;
 	form: UseFormReturn<TData>;
-	type?: "text" | "number" | "email" | "hidden" | "float" | "file";
+	type?: "text" | "number" | "email" | "hidden" | "float" | "file" | "password";
 	disabled?: boolean;
 	fileRef?: UseFormRegisterReturn;
 	className?: string;
