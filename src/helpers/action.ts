@@ -97,7 +97,6 @@ export const getDataById = async <TData>(
 	const url = `${basePath}/${props.path.replace("_", "-")}/${props.id}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
-	const timeoutId = setTimeout(() => controller.abort(), 5000);
 	const retryLimit = 3;
 
 	let retry = 0;

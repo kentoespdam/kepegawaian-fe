@@ -15,6 +15,7 @@ import {
 	ShovelIcon,
 	SignalIcon,
 	TelescopeIcon,
+	UsersIcon,
 } from "lucide-react";
 import type React from "react";
 import { z } from "zod";
@@ -232,7 +233,7 @@ export const menus: IMenu[] = [
 			{
 				path: "/system/users",
 				name: "Users",
-				icon: <BracesIcon className={defaultIconClassName} />,
+				icon: <UsersIcon className={defaultIconClassName} />,
 				role: ["SYSTEM"],
 			},
 		],

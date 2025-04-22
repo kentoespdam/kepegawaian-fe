@@ -25,6 +25,7 @@ const ProfesiTable = () => {
 
     const { data, isLoading, isSuccess, error } = useQuery({
         queryKey: ["profesi", search.toString()],
+        
         queryFn: () => getPageData<Profesi>({
             path: "profesi",
             searchParams: search.toString()
