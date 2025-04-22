@@ -1,6 +1,6 @@
 import type { Organisasi } from "@_types/master/organisasi";
-import FormCard from "@components/form/card";
-import OrganisasiFormComponent from "@components/master/organisasi/form";
+import FormCard from "@components/form/form.card";
+import OrganisasiFormComponent from "@components/master/organisasi/form.index";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

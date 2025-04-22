@@ -43,8 +43,8 @@ const AddProsesGajiButon = ({ pegawai }: AddProsesGajiButonProps) => {
         values: {
             tahun: tahun.toString(),
             bulan: bulan < 10 ? `0${bulan}` : bulan.toString(),
-            diProsesOleh: pegawai.biodata.nama,
-            jabatanPemroses: pegawai.jabatan.nama,
+            diProsesOleh: pegawai?.biodata.nama,
+            jabatanPemroses: pegawai?.jabatan.nama,
         },
     })
     const onClose = () => {
@@ -67,7 +67,6 @@ const AddProsesGajiButon = ({ pegawai }: AddProsesGajiButonProps) => {
             formData.set(key, data[key as keyof GajiBatchRootSchema])
         }
         mutation.mutate(formData)
-        // console.log(data)
     }
 
     return (

@@ -1,6 +1,6 @@
 import type { RumahDinas } from "@_types/master/rumah_dinas";
-import FormCard from "@components/form/card";
-import RumahDinasFormComponent from "@components/master/rumah_dinas/form";
+import FormCard from "@components/form/form.card";
+import RumahDinasFormComponent from "@components/master/rumah_dinas/form.index";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {

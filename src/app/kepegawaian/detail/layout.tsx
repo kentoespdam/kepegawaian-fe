@@ -1,13 +1,12 @@
 "use client";
 import {
 	AlarmClockOffIcon,
-	FileSignatureIcon,
 	Package2,
 	ReceiptTextIcon,
 	RefreshCcwIcon,
 	SignatureIcon,
 	TriangleAlertIcon,
-	Undo2Icon,
+	Undo2Icon
 } from "lucide-react";
 import Link from "next/link";
 
@@ -32,6 +31,7 @@ const queryClient = new QueryClient({
 const Layout = ({ children }: ChildrenNode) => {
 	const path = usePathname();
 	const paths = path.split("/");
+
 	return (
 		<CustomQueryProvider queryClient={queryClient}>
 			<div className="grid min-h-full w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -45,10 +45,10 @@ const Layout = ({ children }: ChildrenNode) => {
 								>
 									<ButtonLink
 										href="/kepegawaian/data_pegawai"
+										className="text-destructive"
 										icon={<Undo2Icon className="h-5 w-5" />}
 										variant="ghost"
 										size="icon"
-										className="text-destructive"
 									/>
 								</TooltipBuilder>
 								<Separator orientation="vertical" className="h-6" />

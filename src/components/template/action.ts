@@ -2,13 +2,15 @@
 
 import {
 	appwriteHeader,
+	getCookieToken,
 	getExpToken,
 	isHasSessionCookie,
 	isValidIpAddress,
 	newHostname,
 } from "@helpers/index";
-import { baseAuthUrl, sessionNames } from "@lib/utils";
+import { baseAuthUrl, projectId, sessionNames } from "@lib/utils";
 import { cookies, headers } from "next/dist/client/components/headers";
+import { Account, Client, type Models } from "node-appwrite";
 
 export const checkToken = async () => isHasSessionCookie(cookies());
 
@@ -54,3 +56,16 @@ export async function renewToken() {
 		clearTimeout(timeoutId);
 	}
 }
+
+export const getUser = async (): Promise<Models.User<Models.Preferences>> => {
+	const token = getCookieToken(cookies()) ?? "";
+	const client = new Client()
+		.setEndpoint(baseAuthUrl)
+		.setProject(projectId)
+		.setJWT(token);
+
+	const account = new Account(client);
+
+	const user = await account.get();
+	return user;
+};

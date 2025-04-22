@@ -10,7 +10,7 @@ import { useSearchParams } from "next/navigation"
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
 import { parameterSettingTableColumns, type ParameterSetting } from "@_types/penggajian/parameter_setting";
 import { useParameterSettingStore } from "@store/penggajian/parameter_setting";
-import ParameterSettingTableBody from "./table/body";
+import ParameterSettingTableBody from "./table.body";
 
 const ParameterSettingComponent = () => {
     const params = useSearchParams()

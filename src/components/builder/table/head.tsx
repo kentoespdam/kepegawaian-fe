@@ -31,7 +31,7 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 
 	return (
 		<TableHeader>
-			<TableRow>
+			<TableRow className="sticky top-0">
 				{columns.map((head, index) => (
 					<TableHead
 						key={head.id}

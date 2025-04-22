@@ -1,6 +1,6 @@
 
-import FormCard from "@components/form/card";
-import JenjangPendidikanFormComponent from "../form";
+import FormCard from "@components/form/form.card";
+import JenjangPendidikanFormComponent from "@components/master/jenjang_pendidikan/form.index";
 
 export const metadata = {
     title: "Tambah Jenjang Pendidikan"

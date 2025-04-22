@@ -1,4 +1,4 @@
-import { STATUS_PROSES_GAJI } from "@_types/enums/proses_gaji";
+import { STATUS_PROSES_GAJI } from "@_types/enums/status_proses_gaji";
 import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
@@ -28,13 +28,13 @@ const GajiBatchRootTableBody = ({ data, pegawai, qkey }: GajiBatchRootTableBodyP
     return (
         <TableBody>
             {data.content.map((row) => (
-                <TableRow key={row.batchId}>
+                <TableRow key={row.id}>
                     <TableCell align="right" width={40} className="border-x">{urut++}</TableCell>
                     <TableCell className="border-x">
                         <ProsesGajiTableAction row={row} pegawai={pegawai} qkey={qkey} />
                     </TableCell>
                     <PeriodeCell periode={row.periode} />
-                    <TableCell className="border-x whitespace-nowrap">{row.batchId}</TableCell>
+                    <TableCell className="border-x whitespace-nowrap">{row.id}</TableCell>
                     <TableCell className="border-x whitespace-nowrap">{STATUS_PROSES_GAJI[row.status as keyof typeof STATUS_PROSES_GAJI]}</TableCell>
                     <GajiBatchRootNotesCell data={row} />
                     <TableCell className="border-x whitespace-nowrap">{row.tanggalProses}</TableCell>

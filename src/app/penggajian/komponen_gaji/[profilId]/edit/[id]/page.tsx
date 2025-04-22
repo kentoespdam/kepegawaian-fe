@@ -1,7 +1,7 @@
 import type { KomponenGaji, KomponenGajiMini } from "@_types/penggajian/komponen";
-import FormCard from "@components/form/card";
-import KomponenGajiFormComponent from "@components/penggajian/komponen/form";
-import { getDataById, getListData, globalGetData } from "@helpers/action";
+import FormCard from "@components/form/form.card";
+import KomponenGajiFormComponent from "@components/penggajian/komponen/form.index";
+import { getDataById, globalGetData } from "@helpers/action";
 import { Suspense } from "react";
 
 export const metadata = {

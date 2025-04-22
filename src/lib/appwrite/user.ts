@@ -25,10 +25,10 @@ const axiosConfig = {
 export const getUserByNipam = async (nipam: string) => {
 	try {
 		const { data } = await axios.get(
-			`${baseAuthUrl}/users/${nipam.split("@")[0]}`,
+			`${baseAuthUrl}/users?search=${nipam.split("@")[0]}`,
 			axiosConfig,
 		);
-		return data;
+		return data
 	} catch (e) {
 		const err = e as AxiosError;
 		console.log(

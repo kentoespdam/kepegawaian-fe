@@ -1,8 +1,8 @@
 import { levelTableColumns } from "@_types/master/level";
 import ButtonAddBuilder from "@components/builder/button/add";
 import SearchBuilder from "@components/builder/search";
+import LevelTable from "@components/master/level/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import LevelTable from "./table";
 
 export const metadata = {
     title: "Master Level",

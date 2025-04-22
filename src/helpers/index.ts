@@ -219,16 +219,28 @@ export const extracNipamFromToken = (): string | null => {
 		cookieList.get(sessionNames[1])?.value;
 	if (!tokenString) return null;
 	const tokenData = JSON.parse(atob(tokenString));
+	console.log(tokenData)
 	return tokenData.id;
 };
 
 export const setAuthorizeHeader = (
-	sessCookie: RequestCookies | ReadonlyRequestCookies,
+	sessionCookies: RequestCookies | ReadonlyRequestCookies,
 	token?: string,
-) => {
-	const tokenCookie = token ?? sessCookie.get(sessionNames[2])?.value;
+): { Authorization: string; "Content-Type": string } => {
+	const authorizationToken = token ?? sessionCookies.get(sessionNames[2])?.value;
 	return {
-		Authorization: `Bearer ${tokenCookie}`,
+		Authorization: `Bearer ${authorizationToken}`,
 		"Content-Type": "application/json",
 	};
+};
+
+export const getNipamFromCookie = () => {
+	const cookieList = cookies();
+	const tokenString =
+		cookieList.get(sessionNames[0])?.value ||
+		cookieList.get(sessionNames[1])?.value;
+
+	if (!tokenString) return null;
+	const tokenData = JSON.parse(atob(tokenString));
+	return tokenData.id;
 };

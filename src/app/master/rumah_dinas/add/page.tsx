@@ -1,5 +1,5 @@
-import FormCard from "@components/form/card";
-import RumahDinasFormComponent from "@components/master/rumah_dinas/form";
+import FormCard from "@components/form/form.card";
+import RumahDinasFormComponent from "@components/master/rumah_dinas/form.index";
 
 export const metadata = {
     title: "Tambah Rumah Dinas"

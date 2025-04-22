@@ -10,7 +10,7 @@ import { Table } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import CalonPensiunTableBody from "./table/calon-pensiun-body";
+import CalonPensiunTableBody from "./table.calon.pensiun.body";
 
 const CalonTerminasiComponent = () => {
 	const params = useSearchParams();

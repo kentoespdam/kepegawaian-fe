@@ -1,6 +1,6 @@
 import type { Pegawai } from "@_types/pegawai";
-import FormCard from "@components/form/card";
-import RiwayatKontrakFormComponent from "@components/kepegawaian/detail/kontrak/form";
+import FormCard from "@components/form/form.card";
+import RiwayatKontrakFormComponent from "@components/kepegawaian/detail/kontrak/form.kontrak";
 import { getDataById } from "@helpers/action";
 
 export const metadata = {
@@ -15,10 +15,10 @@ const AddKontrakPage = async ({
 		id: pegawaiId,
 		isRoot: true,
 	});
-	
+
 	return (
 		<FormCard metadata={metadata} className="min-h-full">
-			<RiwayatKontrakFormComponent pegawaiId={pegawaiId} pegawai={pegawai} />
+			<RiwayatKontrakFormComponent pegawai={pegawai} />
 		</FormCard>
 	);
 };
