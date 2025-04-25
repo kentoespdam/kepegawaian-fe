@@ -28,6 +28,7 @@ export const BaseDelete = z.object({
 	}),
 	curId: z.number().optional() || z.string().optional(),
 	unique: z.string().optional(),
+	otherId: z.number().optional() || z.string().optional(),
 });
 
 export type BaseDelete = z.infer<typeof BaseDelete>;
