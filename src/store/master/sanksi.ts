@@ -8,8 +8,8 @@ interface SanksiStore extends BaseDeleteStore {
 	setJenisSpId: (val: number) => void;
 	defaultValues: SanksiSchema;
 	setDefaultValues: (val?: Sanksi) => void;
-    openSanksiForm: boolean;
-    setOpenSanksiForm: (val: boolean) => void;
+	openSanksiForm: boolean;
+	setOpenSanksiForm: (val: boolean) => void;
 }
 
 export const useSanksiStore = create<SanksiStore>((set) => ({
@@ -23,7 +23,7 @@ export const useSanksiStore = create<SanksiStore>((set) => ({
 			...state,
 			defaultValues: {
 				id: val?.id || 0,
-				jenisSpId: state.jenisSpId || 0,
+				jenisSpId: state.jenisSpId > 0 ? state.jenisSpId : val?.jenisSpId || 0,
 				kode: val?.kode || "",
 				keterangan: val?.keterangan || "",
 				potTkk: val?.potTkk || false,
@@ -37,8 +37,8 @@ export const useSanksiStore = create<SanksiStore>((set) => ({
 				isTerminateTh: val?.isTerminateTh || false,
 			},
 		})),
-    openSanksiForm: false,
-    setOpenSanksiForm: (val) => set({ openSanksiForm: val }),
+	openSanksiForm: false,
+	setOpenSanksiForm: (val) => set({ openSanksiForm: val }),
 	openDelete: false,
 	setOpenDelete: (val) => set({ openDelete: val }),
 }));

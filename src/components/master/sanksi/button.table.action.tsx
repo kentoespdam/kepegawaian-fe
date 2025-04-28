@@ -1,4 +1,4 @@
-import type { JenisSp } from "@_types/master/jenis_sp";
+import type { Sanksi } from "@_types/master/sanksi";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -7,28 +7,29 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { useJenisSpStore } from "@store/master/jenis_sp.store";
+import { useSanksiStore } from "@store/master/sanksi";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 
-interface JenisSpTableActionProps {
-	row: JenisSp;
+interface SanksiTableActionProps {
+	row: Sanksi;
 }
-const JenisSpTableAction = ({ row }: JenisSpTableActionProps) => {
-	const { setJenisSp, setOpenJenisSpForm, setOpenDelete } = useJenisSpStore(
-		(state) => ({
-			setJenisSp: state.setJenisSp,
-			setOpenJenisSpForm: state.setOpenJenisSpForm,
+const SanksiTableAction = ({ row }: SanksiTableActionProps) => {
+	const { setSanksiId, setJenisSpId, setOpenSanksiForm, setOpenDelete } =
+		useSanksiStore((state) => ({
+			setSanksiId: state.setSanksiId,
+			setJenisSpId: state.setJenisSpId,
+			setOpenSanksiForm: state.setOpenSanksiForm,
 			setOpenDelete: state.setOpenDelete,
-		}),
-	);
+		}));
 
 	const editHandler = () => {
-		setJenisSp(row);
-		setOpenJenisSpForm(true);
+		setJenisSpId(0);
+		setSanksiId(row.id);
+		setOpenSanksiForm(true);
 	};
 
 	const deleteHandler = () => {
-		setJenisSp(row);
+		setSanksiId(row.id);
 		setOpenDelete(true);
 	};
 
@@ -62,4 +63,4 @@ const JenisSpTableAction = ({ row }: JenisSpTableActionProps) => {
 	);
 };
 
-export default JenisSpTableAction;
+export default SanksiTableAction;

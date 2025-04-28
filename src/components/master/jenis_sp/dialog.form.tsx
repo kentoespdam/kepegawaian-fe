@@ -42,23 +42,22 @@ const JenisSpFormDialog = () => {
 		values: defaultValues,
 	});
 
+	const onReset = () => {
+		form.reset();
+		setOpenJenisSpForm(false);
+	};
+
 	const mutation = useGlobalMutation({
 		mutationFunction: saveJenisSp,
 		queryKeys: [["jenis_sp", params.toString()]],
 		actHandler: () => {
-			form.reset();
-			setOpenJenisSpForm(false);
+			onReset();
 		},
 	});
 
 	const onSubmit = (values: JenisSpSchema) => {
 		console.log(values);
 		mutation.mutate(values);
-	};
-
-	const onReset = () => {
-		form.reset();
-		setOpenJenisSpForm(false);
 	};
 
 	const openChangeHandler = () => {
