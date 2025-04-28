@@ -27,9 +27,7 @@ const InputFileZod = <TData extends FieldValues>({
 							{...fieldProps}
 							type="file"
 							placeholder={`Masukkan ${label}`}
-							// {...fileRef}
 							onChange={(e) => {
-								// console.log(e.target.files?.[0]);
 								onChange(e.target.files);
 							}}
 						/>

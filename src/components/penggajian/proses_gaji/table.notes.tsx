@@ -19,7 +19,6 @@ const NotesErrorTooltip = (props: GajiBatchRootNotesProps) => {
 	const notes = props.data.notes
 		? JSON.parse(props.data.notes)
 		: { valid: 0, error: 0 };
-	console.log(notes);
 	return (
 		<TooltipProvider>
 			<Tooltip delayDuration={100}>

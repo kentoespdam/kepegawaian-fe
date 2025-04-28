@@ -12,7 +12,6 @@ const PendapatanNonPajakTableActionButton = ({ kodePajakId }: { kodePajakId: num
     }
 
     const deleteHandler = () => {
-        console.log(kodePajakId)
         setKodePajakId(kodePajakId)
         setOpenDelete(true)
     }

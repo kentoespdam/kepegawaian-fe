@@ -8,6 +8,8 @@ import {
 	GraduationCapIcon,
 	HomeIcon,
 	HousePlugIcon,
+	ListCollapseIcon,
+	ListPlusIcon,
 	NavigationIcon,
 	OctagonXIcon,
 	RadicalIcon,
@@ -120,6 +122,18 @@ export const menus: IMenu[] = [
 				path: "/master/jenjang_pendidikan",
 				name: "Jenjang Pendidikan",
 				icon: <GraduationCapIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},
+			{
+				path: "/master/jenis_sp",
+				name: "Jenis SP",
+				icon: <ListCollapseIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},
+			{
+				path: "/master/sanksi",
+				name: "Sanksi",
+				icon: <ListPlusIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
 			},
 			{

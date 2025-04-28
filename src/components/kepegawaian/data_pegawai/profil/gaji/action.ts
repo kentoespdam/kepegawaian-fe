@@ -9,7 +9,6 @@ export const patchProfilGajiPegawai = async (
 ) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url = `${API_URL}/pegawai/${formData.id}/gaji`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: "PATCH",

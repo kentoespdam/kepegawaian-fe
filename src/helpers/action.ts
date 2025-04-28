@@ -66,7 +66,6 @@ export const getPageData = async <TData>(
 		});
 
 		const json = await response.json();
-		// console.log(json)
 
 		const result: BaseResult<Pageable<TData>> = json;
 		return result.data;
@@ -142,7 +141,7 @@ export const getListData = async <TData>(
 	const url = props.subPath
 		? `${basePath}/${props.path.replace("_", "-")}/${props.subPath}?${props.searchParams ?? ""}`
 		: `${basePath}/${props.path.replace("_", "-")}/list?${props.searchParams ?? ""}`;
-	console.log(url);
+	
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);

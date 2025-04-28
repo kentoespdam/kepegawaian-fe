@@ -73,7 +73,7 @@ export const hapus = async (
 		return { success: true };
 		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	} catch (err: any) {
-		console.log(err.response?.data);
+		console.error(err.response?.data);
 		return {
 			success: false,
 			error: { message: err.response?.data.message },

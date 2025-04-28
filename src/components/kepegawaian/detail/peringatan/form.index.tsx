@@ -53,7 +53,6 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 
 	const onSubmit = (values: RiwayatSpSchema) => {
 		const formData = new FormData();
-		// console.log(values);
 		if (values.fileName)
 			formData.set("fileName", values.fileName[0], values.fileName[0].name);
 		for (const key in values) {

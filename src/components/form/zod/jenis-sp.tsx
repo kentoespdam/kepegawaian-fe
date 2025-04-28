@@ -18,26 +18,30 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { globalGetData } from "@helpers/action";
+import { getListData, globalGetData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import type { JenisSp } from "@_types/master/jenis_sp";
+import {
+	findJenisSpValue,
+	type JenisSp,
+	type JenisSpMini,
+} from "@_types/master/jenis_sp";
 
 const SelectJenisSpZod = <TData extends FieldValues>({
 	id,
 	form,
-}: InputZodProps<TData>)=> {
-    const [pop, setPop] = useState(false);
+}: InputZodProps<TData>) => {
+	const [pop, setPop] = useState(false);
 
-	const query = useQuery<JenisSp[]>({
+	const query = useQuery<JenisSpMini[]>({
 		queryKey: ["jenis-sp-list"],
 		queryFn: async () => {
-			const result = await globalGetData<JenisSp[]>({
-				path: "master/jenis-sp",
+			const result = await getListData<JenisSp>({
+				path: "jenis-sp",
 			});
 			return result;
 		},
@@ -65,10 +69,7 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 											? "Jenis Surat Peringatan tidak ditemukan"
 											: query.isLoading || query.isFetching
 												? "Loading..."
-												: field.value
-													? query.data.find((item) => item.id === field.value)
-															?.nama
-													: "Pilih Jenis Surat Keputusan"}
+												: findJenisSpValue(query.data, field.value)}
 									</span>
 									<ChevronDownIcon className="h-4 w-4 opacity-50" />
 								</Button>
@@ -82,13 +83,12 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 									{query.data?.map((item) => (
 										<CommandItem
 											key={item.id}
-											value={item.id}
 											onSelect={() => {
 												field.onChange(item.id);
 												setPop(false);
 											}}
 										>
-											{item.nama}
+											{item.kode}: {item.nama}
 										</CommandItem>
 									))}
 								</CommandList>
@@ -100,6 +100,6 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 			)}
 		/>
 	);
-}
+};
 
 export default SelectJenisSpZod;

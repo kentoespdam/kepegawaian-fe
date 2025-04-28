@@ -26,7 +26,7 @@ export const getFile = async (
 
 	if (!response.ok) {
 		const text = await response.json();
-		console.log(text);
+		console.error(text);
 		throw new Error(text.errors);
 	}
 

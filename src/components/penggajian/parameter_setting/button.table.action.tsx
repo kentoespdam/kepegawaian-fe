@@ -16,7 +16,6 @@ const ParameterSettingTableActionButton = ({ parameterSettingId
     }
 
     const deleteHandler = () => {
-        console.log(parameterSettingId)
         setParameterSettingId(parameterSettingId)
         setOpenDelete(true)
     }

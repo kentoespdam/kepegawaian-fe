@@ -17,7 +17,6 @@ export const downloadTableGajiExcel = async (rootBatchId: string) => {
 
 	if (!response.ok) {
 		const text = await response.json();
-		console.log(text);
 		throw new Error(text.errors);
 	}
 

@@ -7,7 +7,6 @@ import { cookies } from "next/headers";
 export const patchProfilPribadi=async(formData: ProfilPribadiSchema) => {
     const headers = setAuthorizeHeader(cookies());
 	const url = `${API_URL}/pegawai/${formData.id}/profil`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: "PATCH",
