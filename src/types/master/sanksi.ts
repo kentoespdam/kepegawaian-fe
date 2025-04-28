@@ -48,17 +48,17 @@ export type PatchSanksiJenisSpSchema = z.infer<typeof PatchSanksiJenisSpSchema>;
 export const sanksiTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
-	{ id: "nama", label: "Nama" },
+	{ id: "kode", label: "Kode", search: true, searchType: "text" },
 	{ id: "keterangan", label: "Keterangan" },
-	{ id: "potTkk", label: "Potensi TKK" },
-	{ id: "jmlPotTkk", label: "Jumlah Potensi TKK" },
-	{ id: "isPendingPangkat", label: "Pending Pangkat" },
-	{ id: "isPendingGaji", label: "Pending Gaji" },
-	{ id: "isTurunPangkat", label: "Turun Pangkat" },
-	{ id: "isTurunJabatan", label: "Turun Jabatan" },
-	{ id: "isSuspension", label: "Suspension" },
-	{ id: "isTerminateDht", label: "Terminate DHT" },
-	{ id: "isTerminateThn", label: "Terminate Tahun" },
+	{ id: "potTkk", label: "Potensi TKK", width: 2 },
+	{ id: "jmlPotTkk", label: "Jumlah Potongan TKK", width: 2 },
+	{ id: "isPendingPangkat", label: "Penundaan Kenaikan Pangkat", width: 2 },
+	{ id: "isPendingGaji", label: "Penundaan Kenaikan Gaji", width: 2 },
+	{ id: "isTurunPangkat", label: "Penurunan Pangkat", width: 2 },
+	{ id: "isTurunJabatan", label: "Penurunan Jabatan", width: 2 },
+	{ id: "isSuspension", label: "Pemberhentian Sementara", width: 2 },
+	{ id: "isTerminateDh", label: "Pemberhentian Dengan Hormat", width: 2 },
+	{ id: "isTerminateTh", label: "Pemberhentian Dengan Tidak Hormat", width: 2 },
 ];
 
 export const findSanksi = (sanksiList: SanksiMini[], id: number) => {

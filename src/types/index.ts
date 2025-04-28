@@ -104,6 +104,7 @@ export type CustomColumnDef = BaseColumnDef & {
 	searchType?: z.infer<typeof ESearchType>;
 	sortable?: boolean;
 	baseSort?: string;
+	width?: number;
 };
 
 export const DeleteSchema = z.object({
