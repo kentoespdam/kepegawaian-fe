@@ -37,8 +37,6 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 				searchParams: search,
 				isRoot: true,
 			});
-			console.log(result);
-
 			return result;
 		},
 		enabled: !!search && search.length >= 3,

@@ -21,7 +21,6 @@ const TunjanganTableAction = ({ tunjanganId }: TunjanganTableActionProps) => {
     }
 
     const deleteHandler = () => {
-        console.log(tunjanganId)
         setTunjanganId(tunjanganId)
         setOpenDelete(true)
     }

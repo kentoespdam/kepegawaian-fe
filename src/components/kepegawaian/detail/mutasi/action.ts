@@ -19,6 +19,5 @@ export const saveRiwayatMutasi = async (formData: RiwayatMutasiSchema) => {
 	});
 
 	const result = await req.json();
-	// console.log(result);
 	return result;
 };

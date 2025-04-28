@@ -219,7 +219,6 @@ export const extracNipamFromToken = (): string | null => {
 		cookieList.get(sessionNames[1])?.value;
 	if (!tokenString) return null;
 	const tokenData = JSON.parse(atob(tokenString));
-	console.log(tokenData)
 	return tokenData.id;
 };
 

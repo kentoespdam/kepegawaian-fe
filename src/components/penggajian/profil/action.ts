@@ -11,7 +11,6 @@ export const saveProfilGaji = async (formData: ProfilGajiSchema) => {
 		formData.id > 0
 			? `${API_URL}/penggajian/profil/${formData.id}`
 			: `${API_URL}/penggajian/profil`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",

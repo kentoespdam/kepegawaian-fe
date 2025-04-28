@@ -36,7 +36,7 @@ export const getFile = async (id: number) => {
 
 	if (!response.ok) {
 		const text = await response.json();
-		console.log(text);
+		console.error(text);
 		throw new Error(text.errors);
 	}
 
