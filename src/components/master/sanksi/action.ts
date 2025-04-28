@@ -11,7 +11,17 @@ import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
 export const saveSanksi = async (data: SanksiSchema) => {
-	return null;
+	const headers = setAuthorizeHeader(cookies());
+	const baseUrl = `${API_URL}/master/sanksi`;
+	const url = data.id > 0 ? `${baseUrl}/${data.id}` : baseUrl;
+	const res = await fetch(url, {
+		method: data.id > 0 ? "PUT" : "POST",
+		headers,
+		body: JSON.stringify(data),
+	});
+	const result = await res.json();
+	console.log(result);
+	return result;
 };
 
 export const patchDeleteSanksiJenisSp = async (data: BaseDelete) => {
@@ -19,7 +29,6 @@ export const patchDeleteSanksiJenisSp = async (data: BaseDelete) => {
 	const uniqueId = decodeId(unique) as number;
 
 	const id = Number(data.id.split("-")[1]);
-	console.log(id, uniqueId);
 	if (id !== uniqueId)
 		return {
 			status: 400,
@@ -29,6 +38,7 @@ export const patchDeleteSanksiJenisSp = async (data: BaseDelete) => {
 
 	return await patchSanksiJenisSp({
 		id: uniqueId,
+		jenisSpId: 0,
 	} as PatchSanksiJenisSpSchema);
 };
 

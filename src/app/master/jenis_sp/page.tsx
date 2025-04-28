@@ -1,5 +1,5 @@
 import JenisSpAddButton from "@components/master/jenis_sp/button.add";
-import JenisSpAddFormDialog from "@components/master/jenis_sp/form.add.dialog";
+import JenisSpFormDialog from "@components/master/jenis_sp/form.dialog";
 import JenisSpTableComponent from "@components/master/jenis_sp/table.index";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Suspense } from "react";
@@ -25,7 +25,7 @@ const JenisSpPage = () => {
 					</Suspense>
 				</CardContent>
 			</Card>
-			<JenisSpAddFormDialog />
+			<JenisSpFormDialog />
 		</div>
 	);
 };

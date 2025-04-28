@@ -28,6 +28,7 @@ const JenisSpTableComponent = () => {
 		setOpenDelete: setOpenDeleteSanksi,
 	} = useSanksiStore((state) => ({
 		sanksiId: state.sanksiId,
+		jenisSpId: state.jenisSpId,
 		openDelete: state.openDelete,
 		setOpenDelete: state.setOpenDelete,
 	}));
@@ -63,7 +64,7 @@ const JenisSpTableComponent = () => {
 			<PatchSanksiJenisSpForm qKey={qKey} />
 			<DeleteZodDialogBuilder
 				id={jenisSp ? jenisSp.id : 0}
-				deletePath="master/jenis_sp"
+				deletePath="master/jenis-sp"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
 				queryKeys={qKey}
