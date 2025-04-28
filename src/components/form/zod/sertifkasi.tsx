@@ -30,7 +30,6 @@ const RadioSertifikasiZod = <TData extends FieldValues>({
 							className="flex justify-start gap-4"
 							onValueChange={(value) => field.onChange(value === "true")}
 							onSelectCapture={(value) => {
-								console.log(value);
 								field.onChange(value);
 							}}
 						>

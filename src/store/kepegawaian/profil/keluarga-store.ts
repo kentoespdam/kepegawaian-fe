@@ -42,8 +42,7 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 		statusKawin: "BELUM_KAWIN",
 		notes: "",
 	},
-	setDefaultValues: (biodata, keluarga) => {
-		console.log(keluarga?.tanggungan);
+	setDefaultValues: (biodata, keluarga) =>
 		set((state) => ({
 			...state,
 			defaultValues: {
@@ -63,6 +62,5 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 				statusKawin: keluarga?.statusKawin ?? "BELUM_KAWIN",
 				notes: keluarga?.notes ?? "",
 			},
-		}));
-	},
+		})),
 }));

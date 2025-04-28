@@ -11,7 +11,7 @@ export const saveTunjangan = async (formData: TunjanganSchema) => {
 		formData.id > 0
 			? `${API_URL}/penggajian/tunjangan/${formData.jenisTunjangan}/${formData.id}`
 			: `${API_URL}/penggajian/tunjangan/${formData.jenisTunjangan}`;
-	console.log(url);
+	
 
 	const req = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",

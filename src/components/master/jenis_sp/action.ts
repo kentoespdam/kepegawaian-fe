@@ -9,7 +9,6 @@ export const saveJenisSp = async (formData: JenisSpSchema) => {
 	const headers = setAuthorizeHeader(cookies());
 	const baseUrl = `${API_URL}/master/jenis-sp`;
 	const url = formData.id > 0 ? `${baseUrl}/${formData.id}` : baseUrl;
-	console.log(url);
 	const res = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",
 		headers: {
@@ -19,6 +18,5 @@ export const saveJenisSp = async (formData: JenisSpSchema) => {
 		body: JSON.stringify(formData),
 	});
 	const result = await res.json();
-	console.log(result);
 	return result;
 };

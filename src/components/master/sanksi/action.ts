@@ -20,7 +20,6 @@ export const saveSanksi = async (data: SanksiSchema) => {
 		body: JSON.stringify(data),
 	});
 	const result = await res.json();
-	console.log(result);
 	return result;
 };
 

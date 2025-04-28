@@ -56,7 +56,6 @@ const JenisSpFormDialog = () => {
 	});
 
 	const onSubmit = (values: JenisSpSchema) => {
-		console.log(values);
 		mutation.mutate(values);
 	};
 

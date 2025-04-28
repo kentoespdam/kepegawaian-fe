@@ -11,7 +11,6 @@ export const saveKodePajak = async (formData: PendapatanNonPajakSchema) => {
 		formData.id > 0
 			? `${API_URL}/penggajian/pendapatan-non-pajak/${formData.id}`
 			: `${API_URL}/penggajian/pendapatan-non-pajak`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",
