@@ -42,12 +42,10 @@ const KomponenGajiFormComponent = ({ availableCode, profilGaji, urut, komponenGa
     const mutation = useGlobalMutation({
         mutationFunction: saveKomponenGaji,
         queryKeys: [["komponen_gaji", profilGaji.id]],
-        // redirectTo: `/penggajian/komponen_gaji?profilId=${profilGaji.id}`
         redirectTo: callbackUrl
     })
 
     const onSubmit = (data: KomponenGajiSchema) => {
-        // console.log(data)
         mutation.mutate(data)
     }
 

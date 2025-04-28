@@ -13,7 +13,6 @@ export const saveParameterSetting = async (
 		formData.id > 0
 			? `${API_URL}/penggajian/parameter-setting/${formData.id}`
 			: `${API_URL}/penggajian/parameter-setting`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",

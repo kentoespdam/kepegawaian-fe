@@ -108,7 +108,6 @@ const VerifPhase2MainFilter = ({
 			jabatan: pegawai.jabatan.nama,
 			phase: "reprocess",
 		};
-		console.log(formData);
 		verifikasi.mutate(formData);
 	};
 

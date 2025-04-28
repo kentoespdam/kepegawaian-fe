@@ -12,7 +12,6 @@ const EditTunjanganPage = async ({ params }: { params: { jenisTunjangan: string,
         id: params.id,
         isRoot: true
     })
-    console.log(data)
     return (
         <FormCard metadata={metadata} className="min-h-full">
             <TunjanganFormComponent jenisTunjangan={params.jenisTunjangan} data={data} />

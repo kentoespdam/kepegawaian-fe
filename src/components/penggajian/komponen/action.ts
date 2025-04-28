@@ -11,7 +11,6 @@ export const saveKomponenGaji = async (formData: KomponenGajiSchema) => {
 		formData.id > 0
 			? `${API_URL}/penggajian/komponen/${formData.id}`
 			: `${API_URL}/penggajian/komponen`;
-	console.log(url);
 
 	const req = await fetch(url, {
 		method: formData.id > 0 ? "PUT" : "POST",

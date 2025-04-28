@@ -36,7 +36,7 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 					<TableHead
 						key={head.id}
 						className={cn(
-							"text-center bg-primary text-primary-foreground border-x text-nowrap",
+							"text-center bg-primary text-primary-foreground border-x text-nowrap h-10",
 							index === 0 && "rounded-ss-lg border-l-0",
 							index === columns.length - 1 && "rounded-se-lg border-r-0",
 							head.sortable && "cursor-pointer",
@@ -46,10 +46,13 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 						<div
 							className={cn(
 								"",
+								head.width && `w-${head.width}, text-wrap`,
 								head.sortable && "flex justify-between items-center",
 							)}
 						>
-							<span>{head.label}</span>
+							<span className={cn(head.width && `w-${head.width}, text-wrap`)}>
+								{head.label}
+							</span>
 							{head.sortable ? (
 								sortDir === "" || sortByString !== head.id ? (
 									<ArrowUpDownIcon className="ml-2 h-4 w-4" />

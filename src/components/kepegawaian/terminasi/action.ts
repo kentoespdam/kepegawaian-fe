@@ -20,6 +20,5 @@ export const saveRiwayatTerminasi = async (formData: FormData) => {
 	});
 
 	const result = await req.json();
-	// console.log(result);
 	return result;
 };
