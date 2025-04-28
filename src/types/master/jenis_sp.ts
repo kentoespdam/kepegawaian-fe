@@ -18,7 +18,7 @@ export interface JenisSp extends BaseJenisSp {
 
 export const JenisSpSchema = z.object({
 	id: z.number(),
-	kode: z.string(),
+	kode: z.string().toUpperCase(),
 	nama: z.string(),
 });
 

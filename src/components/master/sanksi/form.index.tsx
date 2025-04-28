@@ -21,14 +21,8 @@ interface SanksiFormProps {
 	qKey: string[];
 	setOpenSanksiForm: (val: boolean) => void;
 	sanksi?: Sanksi;
-	jenisSpId?: number;
 }
-const SanksiForm = ({
-	qKey,
-	setOpenSanksiForm,
-	sanksi,
-	jenisSpId,
-}: SanksiFormProps) => {
+const SanksiForm = ({ qKey, setOpenSanksiForm, sanksi }: SanksiFormProps) => {
 	const { defaultValues, setDefaultValues } = useSanksiStore((state) => ({
 		defaultValues: state.defaultValues,
 		setDefaultValues: state.setDefaultValues,
@@ -39,21 +33,19 @@ const SanksiForm = ({
 		values: defaultValues,
 	});
 
-	const mutation = useGlobalMutation({
-		mutationFunction: saveSanksi,
-		queryKeys: [qKey],
-		actHandler: () => {
-			onReset();
-		},
-	});
-
-	const onSubmit = (data: SanksiSchema) => {
-		console.log(data);
-	};
-
 	const onReset = () => {
 		form.reset();
 		setOpenSanksiForm(false);
+	};
+
+	const mutation = useGlobalMutation({
+		mutationFunction: saveSanksi,
+		queryKeys: [qKey],
+		actHandler: onReset,
+	});
+
+	const onSubmit = (data: SanksiSchema) => {
+		mutation.mutate(data);
 	};
 
 	const isPotonganTkk = form.watch("potTkk");
@@ -84,13 +76,33 @@ const SanksiForm = ({
 							form={form}
 							readonly={!isPotonganTkk}
 						/>
-                        <YesNoZod id="isPendingPangkat" label="Penundaan Kenaikan Pangkat" form={form} />
-                        <YesNoZod id="isPendingGaji" label="Penundaan Kenaikan Gaji" form={form} />
-                        <YesNoZod id="isTurunPangkat" label="Turun Pangkat" form={form} />
-                        <YesNoZod id="isTurunJabatan" label="Turun Jabatan" form={form} />
-                        <YesNoZod id="isSuspension" label="Pemberhentian Sementara" form={form} />
-                        <YesNoZod id="isTerminateDh" label="Pemberhentian dengan hormat" form={form} />
-                        <YesNoZod id="isTerminateTh" label="Pemberhentian dengan tidak hormat" form={form} />
+						<YesNoZod
+							id="isPendingPangkat"
+							label="Penundaan Kenaikan Pangkat"
+							form={form}
+						/>
+						<YesNoZod
+							id="isPendingGaji"
+							label="Penundaan Kenaikan Gaji"
+							form={form}
+						/>
+						<YesNoZod id="isTurunPangkat" label="Turun Pangkat" form={form} />
+						<YesNoZod id="isTurunJabatan" label="Turun Jabatan" form={form} />
+						<YesNoZod
+							id="isSuspension"
+							label="Pemberhentian Sementara"
+							form={form}
+						/>
+						<YesNoZod
+							id="isTerminateDh"
+							label="Pemberhentian dengan hormat"
+							form={form}
+						/>
+						<YesNoZod
+							id="isTerminateTh"
+							label="Pemberhentian dengan tidak hormat"
+							form={form}
+						/>
 					</div>
 				</div>
 				<DialogFooter className="mt-2">

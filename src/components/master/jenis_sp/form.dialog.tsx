@@ -8,7 +8,7 @@ import {
 	Dialog,
 	DialogContent,
 	DialogFooter,
-	DialogTitle
+	DialogTitle,
 } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,7 +20,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveJenisSp } from "./action";
 
-const JenisSpAddFormDialog = () => {
+const JenisSpFormDialog = () => {
 	const {
 		jenisSp,
 		openJenisSpForm,
@@ -53,7 +53,7 @@ const JenisSpAddFormDialog = () => {
 
 	const onSubmit = (values: JenisSpSchema) => {
 		console.log(values);
-		// mutation.mutate(values);
+		mutation.mutate(values);
 	};
 
 	const onReset = () => {
@@ -81,8 +81,8 @@ const JenisSpAddFormDialog = () => {
 								id="id"
 								label="ID"
 								form={form}
-								readonly
-								className="hidden"
+								// readonly
+								// className="hidden"
 							/>
 							<InputZod id="kode" label="Kode" form={form} />
 							<InputZod id="nama" label="Nama" form={form} />
@@ -106,4 +106,4 @@ const JenisSpAddFormDialog = () => {
 	);
 };
 
-export default JenisSpAddFormDialog;
+export default JenisSpFormDialog;
