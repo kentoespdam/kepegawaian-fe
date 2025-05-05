@@ -45,10 +45,10 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 
 	return (
 		<div className="grid overflow-auto p-2 gap-0">
-			<div className="min-h-80">
+			<div className="min-h-fit">
 				<Table>
 					<TableHeadBuilder columns={lampiranSkTableColumns} />
-					{query.isLoading || query.isFetching || !query.data || query.data.length === 0 ? (
+					{query.isLoading || query.isFetching || query.isError || !query.data || query.data.length === 0 ? (
 						<LoadingTable
 							columns={lampiranSkTableColumns}
 							error={query.error?.message}
