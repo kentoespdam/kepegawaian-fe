@@ -1,6 +1,6 @@
 import {
-	jenisKontrakGetName,
 	type JenisKontrak,
+	jenisKontrakGetName,
 } from "@_types/master/jenis_kontrak";
 import { Button } from "@components/ui/button";
 import {
@@ -29,17 +29,12 @@ import { CheckIcon, ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 
 const JenisKontrakZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const { setJenisKontrak } = useRiwayatKontrakStore((state) => ({
-		setJenisKontrak: state.setJenisKontrak,
-	}));
-
 	const [pop, setPop] = useState(false);
 
 	const query = useQuery({
@@ -88,7 +83,6 @@ const JenisKontrakZod = <TData extends FieldValues>({
 											key={mutasi.id}
 											onSelect={() => {
 												field.onChange(mutasi.id);
-												setJenisKontrak(mutasi);
 												setPop(false);
 											}}
 										>
