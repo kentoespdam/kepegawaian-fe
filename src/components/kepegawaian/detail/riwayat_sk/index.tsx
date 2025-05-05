@@ -22,15 +22,17 @@ type RiwayatSkContentComponentProps = {
 	pegawaiId: number;
 };
 const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
-	const { pegawaiId } = props
-	const { riwayatSkId, openDelete, setOpenDelete } = useRiwayatSkStore((state) => ({
-		riwayatSkId: state.riwayatSkId,
-		openDelete: state.openDelete,
-		setOpenDelete: state.setOpenDelete,
-	}))
+	const { pegawaiId } = props;
+	const { riwayatSkId, openDelete, setOpenDelete } = useRiwayatSkStore(
+		(state) => ({
+			riwayatSkId: state.riwayatSkId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
-	const qKey = ["riwayat-sk", Number(pegawaiId), search.toString()]
+	const qKey = ["riwayat-sk", Number(pegawaiId), search.toString()];
 
 	const queries = useQueries({
 		queries: [
@@ -62,15 +64,16 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 				<Table>
 					<TableHeadBuilder columns={riwayatSkTableColumns} />
 					{queries[0].isLoading ||
-						queries[0].isFetching ||
-						queries[1].isLoading ||
-						queries[1].isFetching ? (
-						<LoadingTable columns={riwayatSkTableColumns} isLoading={true} />
-					) : queries[0].isError ? (
+					queries[0].isFetching ||
+					!queries[0].data ||
+					queries[0].isError ||
+					queries[0].data.empty ||
+					queries[1].isLoading ||
+					queries[1].isFetching ? (
 						<LoadingTable
 							columns={riwayatSkTableColumns}
-							isSuccess={false}
-							error={queries[0].error?.message}
+							isLoading={true}
+							error={JSON.stringify(queries[0].error)}
 						/>
 					) : queries[0].data && queries[1].data ? (
 						<RiwayatSkTableBody
