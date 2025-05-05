@@ -47,6 +47,8 @@ export interface PegawaiDetail extends BasePegawai {
 	skGolongan: RiwayatSk | null;
 	skJabatan: RiwayatSk | null;
 	skMutasi: RiwayatSk | null;
+	skKontrak: RiwayatSk | null;
+	skGajiBerkala: RiwayatSk | null;
 	tanggalSk: string;
 	tmtKontrakSelesai: string;
 	gajiProfil: ProfilGaji | null;
