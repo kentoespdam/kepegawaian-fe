@@ -58,7 +58,7 @@ export function useGlobalMutation<TData, TVariables>({
 			if (result.status === 401)
 				result.errors = result.errors || "Network Error. please try again";
 
-			if (result.status === 400) result.errors = result.message;
+			// if (result.status === 400) result.errors = result.message;
 
 			if (result.errors && typeof result.errors === "object")
 				for (const message of result.errors) {
