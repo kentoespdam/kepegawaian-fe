@@ -50,7 +50,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatKontrakTableColumns} />
-					{query.isLoading || query.error || !query.data ? (
+					{query.isLoading || query.error || !query.data || query.data.empty ? (
 						<LoadingTable
 							columns={riwayatKontrakTableColumns}
 							isLoading={query.isLoading}

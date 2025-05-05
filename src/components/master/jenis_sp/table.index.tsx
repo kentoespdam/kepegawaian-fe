@@ -54,7 +54,6 @@ const JenisSpTableComponent = () => {
 						columns={jenisSpTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<JenisSpTableBody data={query.data} />
