@@ -5,6 +5,17 @@ import { getUrut } from "@helpers/number";
 import RiwayatSpTableAction from "./button.table.action";
 import RiwayatSpLampiranFileButton from "./button.file";
 
+interface SanksiCellProps {
+	data: RiwayatSp;
+}
+const SanksiCell = ({ data }: SanksiCellProps) => {
+	return (
+		<TableCell className="border-x whitespace-nowrap">
+			{data.sanksi.kode} - {data.sanksi.keterangan}
+		</TableCell>
+	);
+};
+
 type RiwayatSpTableBodyProps = {
 	pegawaiId: number;
 	data: Pageable<RiwayatSp>;
@@ -18,7 +29,10 @@ const RiwayatSpTableBody = ({ pegawaiId, data }: RiwayatSpTableBodyProps) => {
 					<TableCell align="right" width={60} className="border-x">
 						{urut++}
 					</TableCell>
-					<TableCell align="center" className="border-x whitespace-nowrap align-middle">
+					<TableCell
+						align="center"
+						className="border-x whitespace-nowrap align-middle"
+					>
 						<RiwayatSpTableAction pegawaiId={pegawaiId} data={row} />
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
@@ -28,8 +42,9 @@ const RiwayatSpTableBody = ({ pegawaiId, data }: RiwayatSpTableBodyProps) => {
 						{row.tanggalSp}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
-						{row.jenisSp}
+						{row.jenisSp.kode} - {row.jenisSp.nama}
 					</TableCell>
+					<SanksiCell data={row} />
 					<TableCell className="border-x whitespace-nowrap">
 						{row.tanggalMulai}
 					</TableCell>
