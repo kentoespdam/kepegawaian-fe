@@ -1,4 +1,4 @@
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import RiwayatSpComponent from "@components/kepegawaian/detail/peringatan";
 import AddRiwayatSpButton from "@components/kepegawaian/detail/peringatan/button.add.sp";
 import { getDataById } from "@helpers/action";
@@ -8,7 +8,7 @@ export const metadata = {
 };
 
 const RiwayatSp = async ({ params }: { params: { id: number } }) => {
-	const pegawai = await getDataById<Pegawai>({
+	const pegawai = await getDataById<PegawaiDetail>({
 		path: "pegawai",
 		id: params.id,
 		isRoot: true,
