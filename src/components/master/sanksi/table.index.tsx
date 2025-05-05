@@ -38,7 +38,6 @@ const SanksiTableComponent = () => {
 						columns={sanksiTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<SanksiTableBody data={query.data} />

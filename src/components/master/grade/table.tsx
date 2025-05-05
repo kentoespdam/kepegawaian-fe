@@ -32,7 +32,7 @@ const GradeTable = () => {
                         isLoading={isLoading}
                         error={error?.message}
                         isSuccess={isSuccess}
-                        isEmpty={data?.content.length === 0}
+                        
                         columns={gradeTableColumns} />
                 }
             </Table>

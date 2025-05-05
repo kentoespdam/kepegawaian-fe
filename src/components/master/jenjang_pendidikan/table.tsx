@@ -38,7 +38,7 @@ const JenjangPendidikanTable = () => {
                         isLoading={isLoading}
                         error={error?.message}
                         isSuccess={isSuccess}
-                        isEmpty={data?.content.length === 0}
+                        
                         columns={jenjangPendidikanTableColumns} />
                 }
             </Table>
