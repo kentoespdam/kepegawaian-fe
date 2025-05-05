@@ -67,7 +67,7 @@ const PatchSanksiJenisSp = ({
 						id="id"
 						label="Sanksi"
 						form={form}
-						jenisSpId={jenisSpId}
+						notJenisSpId={jenisSpId}
 					/>
 				</div>
 				<DialogFooter className="mt-2">
