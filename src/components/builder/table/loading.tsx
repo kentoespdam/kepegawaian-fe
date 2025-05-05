@@ -6,10 +6,9 @@ type LoadingTableProps = {
     isLoading?: boolean
     error?: string
     isSuccess?: boolean
-    isEmpty?: boolean
     isFetching?: boolean
 }
-const LoadingTable = ({ columns, isLoading, error, isEmpty, isFetching }: LoadingTableProps) => {
+const LoadingTable = ({ columns, isLoading, error, isFetching }: LoadingTableProps) => {
     return (
         <TableBody>
             <TableRow>
