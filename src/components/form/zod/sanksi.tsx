@@ -2,7 +2,7 @@
 import { findSanksiValue, type SanksiMini } from "@_types/master/sanksi";
 import { getListData } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
 import {
@@ -31,13 +31,15 @@ import {
 
 interface SelectSanksiZodProps<TData extends FieldValues>
 	extends InputZodProps<TData> {
-	jenisSpId?: number;
+	notJenisSpId?: number;
+	isJenisSpId?: number;
 }
 const SelectSanksiZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-	jenisSpId = 0,
+	notJenisSpId,
+	isJenisSpId,
 }: SelectSanksiZodProps<TData>) => {
 	const [pop, setPop] = useState(false);
 
@@ -48,6 +50,22 @@ const SelectSanksiZod = <TData extends FieldValues>({
 				path: "sanksi",
 			}),
 	});
+
+	const filteredData = query.data?.filter((item) => {
+		if (notJenisSpId && notJenisSpId > 0) {
+			return item.jenisSpId !== notJenisSpId;
+		}
+		if (isJenisSpId && isJenisSpId > 0) {
+			return item.jenisSpId === isJenisSpId;
+		}
+		return true;
+	});
+
+	useEffect(() => {
+		if (isJenisSpId && isJenisSpId > 0) {
+			form.resetField(id);
+		}
+	}, [isJenisSpId, form, id]);
 
 	return (
 		<FormField
@@ -82,28 +100,26 @@ const SelectSanksiZod = <TData extends FieldValues>({
 								<CommandInput placeholder="Type a command or search..." />
 								<CommandList>
 									<CommandEmpty>No results found.</CommandEmpty>
-									{query.data
-										?.filter((s) => s.jenisSpId !== jenisSpId)
-										.map((item) => (
-											<CommandItem
-												key={item.id}
-												// value={`${item.id}`}
-												onSelect={() => {
-													field.onChange(item.id);
-													setPop(false);
-												}}
-											>
-												{item.kode} - {item.keterangan}
-												<CheckIcon
-													className={cn(
-														"ml-auto h-4 w-4",
-														item.id === Number(field.value)
-															? "opacity-100"
-															: "opacity-0",
-													)}
-												/>
-											</CommandItem>
-										))}
+									{filteredData?.map((item) => (
+										<CommandItem
+											key={item.id}
+											// value={`${item.id}`}
+											onSelect={() => {
+												field.onChange(item.id);
+												setPop(false);
+											}}
+										>
+											{item.kode} - {item.keterangan}
+											<CheckIcon
+												className={cn(
+													"ml-auto h-4 w-4",
+													item.id === Number(field.value)
+														? "opacity-100"
+														: "opacity-0",
+												)}
+											/>
+										</CommandItem>
+									))}
 								</CommandList>
 							</Command>
 						</PopoverContent>
