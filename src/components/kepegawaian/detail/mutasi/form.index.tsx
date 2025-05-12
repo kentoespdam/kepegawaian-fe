@@ -20,6 +20,8 @@ import MutasiGolonganForm from "./form.golongan";
 import MutasiJabatanForm from "./form.jabatan";
 import MutasiSkForm from "./form.sk";
 import MutasiPegawaiForm from "./form.pegawai";
+import type { Pageable } from "@_types/index";
+import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 
 export interface MutasiFormProps {
 	form: UseFormReturn<RiwayatMutasiSchema>;
@@ -29,6 +31,7 @@ export interface MutasiFormProps {
 type RiwayatMutasiFormComponentProps = {
 	pegawai: Pegawai;
 	data?: RiwayatMutasi;
+	riwayatSp?: Pageable<RiwayatSp>;
 };
 
 const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
@@ -82,7 +85,7 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 							className="hidden"
 						/>
 						<MutasiPegawaiForm form={form} />
-						<MutasiSkForm form={form} />
+						<MutasiSkForm form={form} riwayatSp={props.riwayatSp} />
 						{jenisMutasi &&
 						["MUTASI_GOLONGAN", "MUTASI_GAJI", "MUTASI_GAJI_BERKALA"].includes(
 							jenisMutasi.id,
