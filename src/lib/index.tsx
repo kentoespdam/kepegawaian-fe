@@ -4,6 +4,7 @@ import {
 	BracesIcon,
 	ContactRoundIcon,
 	CreditCardIcon,
+	FileTextIcon,
 	GitCompareArrowsIcon,
 	GraduationCapIcon,
 	HomeIcon,
@@ -166,6 +167,65 @@ export const menus: IMenu[] = [
 				path: "/kepegawaian/terminasi/will-retire",
 				name: "Terminasi Pegawai",
 				icon: <OctagonXIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},
+		],
+	},
+	{
+		path: "#",
+		name: "Laporan Kepegawaian",
+		type: "group",
+		role: ["ADMIN"],
+		subMenu: [
+			{
+				path: "/laporan/kepegawaian/duk",
+				name: "Daftar Urut Kepangkatan",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/dnp",
+				name: "Daftar Nominatif Pegawai",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/so",
+				name: "Struktur Organisasi",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/statistik/pangkat",
+				name: "Statistik Pegawai",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/cuti",
+				name: "Cuti Pegawai",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/mutasi",
+				name: "Mutasi Pegawai",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/monitor_kontrak",
+				name: "Monitoring Kontrak",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/lta",
+				name: "Lepas Tanggungan Anak",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/dkb",
+				name: "Daftar Kenaikan Gaji/Pangkat Berkala",
+				icon: <FileTextIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},{
+				path: "/laporan/kepegawaian/pensiun",
+				name: "Daftar Pensiun",
+				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
 			},
 		],
