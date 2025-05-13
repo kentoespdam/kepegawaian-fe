@@ -1,6 +1,8 @@
+import { API_URL } from "@lib/utils";
+
 const fetchSo = async () => {
 	const res = await fetch(
-		"http://192.168.1.214:82/so/template?script_url=/go.js",
+		`${API_URL}/laporan/kepegawaian/so?script_url=/go.js`,
 		{
 			headers: {
 				"cache-control": "no-cache",
