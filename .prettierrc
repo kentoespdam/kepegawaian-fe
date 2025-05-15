@@ -1,9 +1,0 @@
-{
-	"trailingComma": "es5",
-	"useTabs": true,
-	"tabWidth": 4,
-	"semi": false,
-	"plugins": ["prettier-plugin-tailwindcss"],
-	"tailwindConfig": "./tailwind.config.ts",
-	"tailwindPreserveWhitespace": true
-}
