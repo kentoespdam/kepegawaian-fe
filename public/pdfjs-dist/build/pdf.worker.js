@@ -4727,7 +4727,7 @@ class Annotation {
       rotation: this.rotation,
       contentsObj: this._contents,
       hasAppearance: !!this.appearance,
-      id: params.id,
+      id: (await params).id,
       modificationDate: this.modificationDate,
       rect: this.rectangle,
       subtype: params.subtype,

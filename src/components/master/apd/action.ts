@@ -1,0 +1,56 @@
+"use server";
+
+import type { ApdSchema } from "@_types/master/apd";
+import { setAuthorizeHeader } from "@helpers/index";
+import { API_URL } from "@lib/utils";
+import type { AxiosErrorData } from "@src/types";
+import axios, { type AxiosError } from "axios";
+import { cookies } from "next/headers";
+
+/**
+ * Saves a Apd object to the API.
+ * @param formData - The FormData object containing the data to be saved.
+ * @returns A Promise that resolves to an object with an optional error property.
+ */
+export const saveApd = async (formData: ApdSchema) => {
+	const headers = setAuthorizeHeader(await cookies());
+	const url =
+		formData.id > 0
+			? `${API_URL}/master/apd/${formData.id}`
+			: `${API_URL}/master/apd`;
+	const req = await fetch(url, {
+		method: formData.id > 0 ? "PUT" : "POST",
+		headers,
+		body: JSON.stringify(formData),
+	});
+	const result = await req.json();
+	return result;
+};
+
+/**
+ * Deletes a Apd object by its ID.
+ *
+ * @param _prevState - The previous state of the application.
+ * @param formData - The FormData object containing the data to be deleted.
+ * @returns A Promise that resolves to an object with a success property and an optional error property.
+ */
+export const hapus = async (formData: FormData) => {
+	const deleteRef = formData.get("deleteRef")?.toString() || "";
+	if (!deleteRef.startsWith("DELETE-"))
+		return { success: false, error: { message: "invalid data" } };
+	const id = Number(deleteRef.slice(7) || 0);
+	if (id <= 0) return { success: false, error: { message: "invalid data" } };
+
+	try {
+		await axios.delete(`${API_URL}/master/apd/${id}`, {
+			headers: setAuthorizeHeader(await cookies()),
+		});
+		return { success: true };
+	} catch (e) {
+		const err = e as unknown as AxiosError<AxiosErrorData>;
+		return {
+			success: false,
+			error: { message: String(err.response?.data.message) },
+		};
+	}
+};
