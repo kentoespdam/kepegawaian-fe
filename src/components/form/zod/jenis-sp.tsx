@@ -1,3 +1,8 @@
+import {
+	type JenisSp,
+	type JenisSpMini,
+	findJenisSpValue,
+} from "@_types/master/jenis_sp";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -18,18 +23,13 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData, globalGetData } from "@helpers/action";
+import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import {
-	findJenisSpValue,
-	type JenisSp,
-	type JenisSpMini,
-} from "@_types/master/jenis_sp";
 
 const SelectJenisSpZod = <TData extends FieldValues>({
 	id,

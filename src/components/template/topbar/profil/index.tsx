@@ -12,10 +12,8 @@ import { getDataById } from "@helpers/action";
 import { getCurrentUser } from "@lib/appwrite/user";
 import { KeyRoundIcon } from "lucide-react";
 import Image from "next/image";
-import { Suspense } from "react";
 import LogoutButton from "./button/logout";
 import ThemeButton from "./button/theme";
-import EmployeeStateComponent from "./employee-state";
 
 const ProfileComponent = async () => {
 	const user = await getCurrentUser();
@@ -27,9 +25,6 @@ const ProfileComponent = async () => {
 
 	return (
 		<div className="flex items-center gap-3 py-2">
-			<Suspense fallback={<div>Loading...</div>}>
-				<EmployeeStateComponent userAccount={user} pegawai={pegawai} />
-			</Suspense>
 			<div className="hidden md:block lg:block">
 				<div className="flex flex-col">
 					<h6 className="font-medium text-foreground">{user.name}</h6>

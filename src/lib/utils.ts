@@ -1,5 +1,4 @@
-import { clsx, type ClassValue } from "clsx";
-import Cryptr from "cryptr";
+import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -25,8 +24,6 @@ export const DEFAULT_MAIL_DOMAIN = process.env.DEFAULT_MAIL_DOMAIN || "";
 export const AUTH_SECRET = process.env.AUTH_SECRET || "";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL || "";
-
-export const newCrypter = new Cryptr(`${process.env.AUTH_SECRET}`);
 
 export const delay = (time = 1000) =>
 	new Promise((resolve) => setTimeout(() => resolve(true), time));
