@@ -193,7 +193,7 @@ export const menus: IMenu[] = [
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
 			},{
-				path: "/laporan/kepegawaian/statistik/pangkat",
+				path: "/laporan/kepegawaian/statistik/golongan",
 				name: "Statistik Pegawai",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],

@@ -44,7 +44,7 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0">
+		<div className="grid overflow-auto p-2 gap-0 mb-4">
 			<div className="min-h-fit">
 				<Table>
 					<TableHeadBuilder columns={lampiranSkTableColumns} />

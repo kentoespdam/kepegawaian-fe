@@ -68,7 +68,7 @@ export function useGlobalMutation<TData, TVariables>({
 					});
 				}
 			else
-				toast.error(`Error ${result.status}`, {
+				toast.error(`Error ${result.errors}`, {
 					description: result.errors,
 					duration: 3000,
 				});
