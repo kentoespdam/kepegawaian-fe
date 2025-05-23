@@ -25,7 +25,7 @@ const StatistikUmurBar = ({ data }: { data: StatistikUmurRoot }) => {
 	} satisfies ChartConfig;
 
 	return (
-		<ChartContainer config={chartConfig} className="min-h-[200px] max-h-[400px] w-full">
+		<ChartContainer config={chartConfig} className="w-[800px] min-h-[200px] max-h-[400px]">
 			<BarChart accessibilityLayer data={chartData} layout="vertical" height={400}>
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />

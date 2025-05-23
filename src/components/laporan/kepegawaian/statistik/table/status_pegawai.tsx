@@ -1,4 +1,4 @@
-import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikStatusPegawai } from "@_types/laporan/kepegawaian/LapStatistik";
 import {
 	Table,
 	TableBody,
@@ -9,32 +9,32 @@ import {
 	TableRow,
 } from "@components/ui/table";
 
-interface TableStatistikPendidikan1ComponentProps {
-	data: StatistikPendidikan1[];
+interface StatistikStatusPegawaiTableProps {
+	data: StatistikStatusPegawai[];
 }
-const TableStatistikPendidikan1Component = ({
+const StatistikStatusPegawaiTable = ({
 	data,
-}: TableStatistikPendidikan1ComponentProps) => {
+}: StatistikStatusPegawaiTableProps) => {
 	let urut = 1;
 	return (
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow>
 					<TableHead className="border text-center bg-primary text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">NAMA</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">TOTAL</TableHead>
+					<TableHead className="border text-center bg-primary text-primary-foreground">AGAMA</TableHead>
+					<TableHead className="border text-center bg-primary text-primary-foreground">JUMLAH</TableHead>
 					<TableHead className="border text-center bg-primary text-primary-foreground">PERSEN</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
 				{data.map((item) => (
-					<TableRow key={item.nama}>
+					<TableRow key={item.status_pegawai}>
 						<TableCell className="border" align="right">
 							{urut++}
 						</TableCell>
-						<TableCell className="border text-nowrap">{item.nama}</TableCell>
+						<TableCell className="border text-nowrap">{item.status_pegawai}</TableCell>
 						<TableCell className="border" align="right">{item.total}</TableCell>
-						<TableCell className="border" align="right">{item.persen}%</TableCell>
+						<TableCell className="border" align="right">{item.persen.toFixed(2)}%</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
@@ -55,4 +55,4 @@ const TableStatistikPendidikan1Component = ({
 	);
 };
 
-export default TableStatistikPendidikan1Component;
+export default StatistikStatusPegawaiTable;

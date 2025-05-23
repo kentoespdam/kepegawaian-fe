@@ -1,19 +1,20 @@
 "use client";
 import type {
+	StatistikAgama,
 	StatistikGelarAkademik,
 	StatistikGolongan,
 	StatistikJenisKelamin,
 	StatistikPendidikan1,
+	StatistikStatusPegawai,
 	StatistikUmurRoot,
 } from "@_types/laporan/kepegawaian/LapStatistik";
 import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { getNamaBulan } from "@helpers/tanggal";
-import { cn } from "@lib/utils";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { FileDownIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import StatistikBarPicker from "./bar/bar.picker";
 import StatistikPiePicker from "./pie/pie.picker";
 import SelectStatistikComponent from "./select.statisitk";
@@ -27,6 +28,8 @@ export interface StatistikComponentProps {
 				| StatistikPendidikan1
 				| StatistikJenisKelamin
 				| StatistikGelarAkademik
+				| StatistikAgama
+				| StatistikStatusPegawai
 		  )[]
 		| StatistikUmurRoot;
 }
@@ -60,6 +63,14 @@ const StatistikComponent = ({
 			title += "GELAR PENDIDIKAN";
 			title2 += "GELAR PENDIDIKAN";
 			break;
+		case "agama":
+			title += "AGAMA";
+			title2 += "AGAMA";
+			break;
+		case "status_pegawai":
+			title += "STATUS PEGAWAI";
+			title2 += "STATUS PEGAWAI";
+			break;
 		default:
 			title += "PANGKAT DAN GOLONGAN";
 			title2 += "PANGKAT DAN GOLONGAN";
@@ -70,7 +81,6 @@ const StatistikComponent = ({
 	const namaBulan = getNamaBulan(now.getMonth());
 
 	const componentRef = useRef<HTMLDivElement>(null);
-	const tableRef = useRef<HTMLDivElement>(null);
 
 	const handleGeneratePdf = async () => {
 		if (!componentRef.current) return;
@@ -106,7 +116,7 @@ const StatistikComponent = ({
 					<div className="w-fit max-h-[600px]">
 						<StatistikBarPicker slug={slug} statistikData={statistikData} />
 					</div>
-					<div className="w-fit" ref={tableRef}>
+					<div className="w-fit">
 						<StatistikTablePicker slug={slug} statistikData={statistikData} />
 					</div>
 				</div>

@@ -1,6 +1,6 @@
 "use client";
 
-import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikAgama } from "@_types/laporan/kepegawaian/LapStatistik";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -11,52 +11,59 @@ import {
 } from "@components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-const StatistikJenisKelaminBar = ({
-	data,
-}: { data: StatistikJenisKelamin[] }) => {
-	let chartConfig = {} satisfies ChartConfig;
+const StatistikAgamaBar = ({ data }: { data: StatistikAgama[] }) => {
+	let chartConfig = {
+		agama: {
+			label: "Jumlah",
+		},
+	} satisfies ChartConfig;
 	data.forEach((item, index) => {
 		chartConfig = {
 			...chartConfig,
-			[item.jenis_kelamin]: {
-				label: item.jenis_kelamin,
-				color: `hsl(var(--chart-${index + 1}))`,
+			[item.agama]: {
+				label: item.agama,
 			},
 		};
 	});
 
 	const chartData = data.map((item) => ({
-		nama: item.jenis_kelamin,
+		agama: item.agama,
 		total: item.total,
 	}));
 
-	return data.length === 0 ? null : (
+	if (data.length === 0) {
+		return null;
+	}
+
+	return (
 		<ChartContainer
 			config={chartConfig}
-			className="min-h-[200px] max-h-[400px] w-[800px] flex-2"
+			className="w-[800px] lg:w-[1000px] min-h-[200px] max-h-[400px] border"
 		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />
 				<YAxis
-					dataKey="nama"
+					dataKey="agama"
 					type="category"
 					tickLine={false}
 					tickMargin={10}
 					axisLine={false}
 					className="text-nowrap w-auto"
+					width={150}
 				/>
-				<ChartTooltip content={<ChartTooltipContent />} />
-				<ChartLegend content={<ChartLegendContent />} />
+				<ChartTooltip content={<ChartTooltipContent labelKey="agama" />} />
+				<ChartLegend content={<ChartLegendContent nameKey="agama" />} />
 				<Bar
 					dataKey="total"
 					stackId="a"
-					fill="hsl(var(--chart-1))"
+					fill="hsl(var(--chart-2))"
 					className="h-2"
+					label={{ position: "right" }}
 				/>
 			</BarChart>
 		</ChartContainer>
 	);
 };
 
-export default StatistikJenisKelaminBar;
+export default StatistikAgamaBar;

@@ -14,20 +14,11 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 const StatistikGelarAkademikBar = ({
 	data,
 }: { data: StatistikGelarAkademik[] }) => {
-	let chartConfig = {
+	const chartConfig = {
 		jumlah: {
 			label: "Jumlah",
 		},
 	} satisfies ChartConfig;
-	data.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[index]: {
-				label: `${item.jenjang} - ${item.gelar}`,
-				color: `hsl(var(--chart-${index + 1}))`,
-			},
-		};
-	});
 
 	const chartData = data.map((item, index) => ({
 		index: index,
@@ -38,7 +29,7 @@ const StatistikGelarAkademikBar = ({
 	return data.length === 0 ? null : (
 		<ChartContainer
 			config={chartConfig}
-			className="min-h-[200px] max-h-[400px] w-full"
+			className="w-[800px] min-h-[200px] max-h-[400px]"
 		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
@@ -48,7 +39,6 @@ const StatistikGelarAkademikBar = ({
 					type="category"
 					tickLine={false}
 					tickMargin={10}
-					// axisLine={false}
 					className="text-nowrap w-auto"
 					width={300}
 				/>
