@@ -19,26 +19,26 @@ const StatistikGolonganTable = ({
 	return (
 		<Table className="w-full">
 			<TableHeader>
-				<TableRow>
-					<TableHead className="border text-center" rowSpan={2}>
+				<TableRow className="bg-primary">
+					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
 						NO
 					</TableHead>
-					<TableHead className="border text-center" rowSpan={2}>
+					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
 						GOL.
 					</TableHead>
-					<TableHead className="border text-center" rowSpan={2}>
+					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
 						PANGKAT
 					</TableHead>
-					<TableHead className="border text-center" colSpan={2}>
+					<TableHead className="border text-center text-primary-foreground" colSpan={2}>
 						JENIS KELAMIN
 					</TableHead>
-					<TableHead className="border text-center" rowSpan={2}>
+					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
 						TOTAL
 					</TableHead>
 				</TableRow>
-				<TableRow>
-					<TableHead className="border text-center">LK</TableHead>
-					<TableHead className="border text-center">PR</TableHead>
+				<TableRow className="bg-primary">
+					<TableHead className="border text-center text-primary-foreground">LK</TableHead>
+					<TableHead className="border text-center text-primary-foreground">PR</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>

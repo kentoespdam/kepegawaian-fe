@@ -1,4 +1,4 @@
-import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikAgama } from "@_types/laporan/kepegawaian/LapStatistik";
 import {
 	Table,
 	TableBody,
@@ -9,30 +9,30 @@ import {
 	TableRow,
 } from "@components/ui/table";
 
-interface TableStatistikPendidikan1ComponentProps {
-	data: StatistikPendidikan1[];
+interface StatistikAgamaTableProps {
+	data: StatistikAgama[];
 }
-const TableStatistikPendidikan1Component = ({
+const StatistikAgamaTable = ({
 	data,
-}: TableStatistikPendidikan1ComponentProps) => {
+}: StatistikAgamaTableProps) => {
 	let urut = 1;
 	return (
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow>
 					<TableHead className="border text-center bg-primary text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">NAMA</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">TOTAL</TableHead>
+					<TableHead className="border text-center bg-primary text-primary-foreground">AGAMA</TableHead>
+					<TableHead className="border text-center bg-primary text-primary-foreground">JUMLAH</TableHead>
 					<TableHead className="border text-center bg-primary text-primary-foreground">PERSEN</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
 				{data.map((item) => (
-					<TableRow key={item.nama}>
+					<TableRow key={item.agama}>
 						<TableCell className="border" align="right">
 							{urut++}
 						</TableCell>
-						<TableCell className="border text-nowrap">{item.nama}</TableCell>
+						<TableCell className="border text-nowrap">{item.agama}</TableCell>
 						<TableCell className="border" align="right">{item.total}</TableCell>
 						<TableCell className="border" align="right">{item.persen}%</TableCell>
 					</TableRow>
@@ -45,7 +45,7 @@ const TableStatistikPendidikan1Component = ({
 					</TableCell>
 					<TableCell className="border" align="right">
 						{data.reduce((acc, item) => acc + item.total, 0)}
-					</TableCell>
+					</TableCell>{" "}
 					<TableCell className="border" align="right">
 						{data.reduce((acc, item) => acc + item.persen, 0)}%
 					</TableCell>
@@ -55,4 +55,4 @@ const TableStatistikPendidikan1Component = ({
 	);
 };
 
-export default TableStatistikPendidikan1Component;
+export default StatistikAgamaTable;

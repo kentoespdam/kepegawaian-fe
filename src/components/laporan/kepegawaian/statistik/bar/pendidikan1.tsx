@@ -26,7 +26,7 @@ const StatistikPendidikan1Bar = ({
 	}
 
 	return (
-		<ChartContainer config={chartConfig} className="min-h-[200px] max-h-[400px] w-full">
+		<ChartContainer config={chartConfig} className="w-[800px] lg:w-[1000px] min-h-[200px] max-h-[400px]">
 			<BarChart accessibilityLayer data={data} layout="vertical">
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />

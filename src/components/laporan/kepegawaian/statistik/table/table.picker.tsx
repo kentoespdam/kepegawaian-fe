@@ -1,15 +1,19 @@
 import type {
+	StatistikAgama,
 	StatistikGelarAkademik,
 	StatistikGolongan,
 	StatistikJenisKelamin,
 	StatistikPendidikan1,
+	StatistikStatusPegawai,
 	StatistikUmurRoot,
 } from "@_types/laporan/kepegawaian/LapStatistik";
 import type { StatistikComponentProps } from "..";
+import StatistikAgamaTable from "./agama";
 import StatistikGelarAkademikTable from "./gelar_akademik";
 import StatistikGolonganTable from "./golongan";
 import StatistikJenisKelaminTable from "./jenis_kelamin";
 import TableStatistikPendidikan1Component from "./pendidikan1";
+import StatistikStatusPegawaiTable from "./status_pegawai";
 import StatistikUmurTable from "./umur";
 
 const StatistikTablePicker = ({
@@ -39,6 +43,14 @@ const StatistikTablePicker = ({
 			return (
 				<StatistikGelarAkademikTable
 					data={statistikData as StatistikGelarAkademik[]}
+				/>
+			);
+		case "agama":
+			return <StatistikAgamaTable data={statistikData as StatistikAgama[]} />;
+		case "status_pegawai":
+			return (
+				<StatistikStatusPegawaiTable
+					data={statistikData as StatistikStatusPegawai[]}
 				/>
 			);
 		default:
