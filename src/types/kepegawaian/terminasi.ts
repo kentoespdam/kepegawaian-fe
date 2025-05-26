@@ -36,7 +36,7 @@ export const RiwayatTerminasiSchema = BaseRiwayatSkSchema.extend({
 	namaOrganisasi: z.string().optional(),
 	jabatanId: z.number().min(1, "Jabatan wajib diisi"),
 	namaJabatan: z.string().optional(),
-	golonganId: z.number().min(1, "Golongan wajib diisi").optional(),
+	golonganId: z.number(),
 	namaGolongan: z.string().optional(),
 	fileName: z
 		.any()

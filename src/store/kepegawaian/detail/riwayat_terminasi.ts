@@ -70,7 +70,7 @@ export const useRiwayatTerminasiStore = create<RiwayatTerminasiStore>(
 					namaOrganisasi: pegawai?.organisasi?.nama ?? "",
 					jabatanId: pegawai?.jabatan?.id ?? 0,
 					namaJabatan: pegawai?.jabatan?.nama ?? "",
-					namaGolongan: `${pegawai?.golongan.pangkat} -  ${pegawai?.golongan.golongan}`,
+					namaGolongan: `${pegawai?.golongan?.pangkat} -  ${pegawai?.golongan?.golongan}`,
 					notes: data?.notes ?? "",
 				},
 			})),
