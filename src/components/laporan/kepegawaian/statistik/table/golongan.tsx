@@ -20,25 +20,25 @@ const StatistikGolonganTable = ({
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow className="bg-primary">
-					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10" rowSpan={2}>
 						NO
 					</TableHead>
-					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10" rowSpan={2}>
 						GOL.
 					</TableHead>
-					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10" rowSpan={2}>
 						PANGKAT
 					</TableHead>
-					<TableHead className="border text-center text-primary-foreground" colSpan={2}>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10" colSpan={2}>
 						JENIS KELAMIN
 					</TableHead>
-					<TableHead className="border text-center text-primary-foreground" rowSpan={2}>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10" rowSpan={2}>
 						TOTAL
 					</TableHead>
 				</TableRow>
 				<TableRow className="bg-primary">
-					<TableHead className="border text-center text-primary-foreground">LK</TableHead>
-					<TableHead className="border text-center text-primary-foreground">PR</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">LK</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">PR</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>

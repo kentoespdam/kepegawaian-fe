@@ -20,10 +20,10 @@ const StatistikJenisKelaminTable = ({
 		<Table className="w-fit">
 			<TableHeader>
 				<TableRow className="sticky top-0 bg-primary">
-					<TableHead className="border text-center text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-center text-primary-foreground">JENIS KELAMIN</TableHead>
-					<TableHead className="border text-center text-primary-foreground">TOTAL</TableHead>
-					<TableHead className="border text-center text-primary-foreground">PERSEN</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">JENIS KELAMIN</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">TOTAL</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">PERSEN</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>

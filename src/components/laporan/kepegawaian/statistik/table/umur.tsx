@@ -14,9 +14,9 @@ const UmurTable1 = ({ data }: { data: StatistikUmurRoot }) => {
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow className="sticky top-0 bg-primary">
-					<TableHead className="border text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-primary-foreground">UMUR</TableHead>
-					<TableHead className="border text-primary-foreground">JML</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">UMUR</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">JML</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
@@ -44,10 +44,10 @@ const UmurTable2 = ({ data }: { data: StatistikUmurRoot }) => {
 		<Table>
 			<TableHeader>
 				<TableRow className="sticky top-0 bg-primary">
-					<TableHead className="border text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-primary-foreground">UMUR</TableHead>
-					<TableHead className="border text-primary-foreground">JML</TableHead>
-					<TableHead className="border text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">UMUR</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">JML</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						PERSEN
 					</TableHead>
 				</TableRow>
