@@ -20,19 +20,19 @@ const StatistikGelarAkademikTable = ({
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow className="sticky top-0">
-					<TableHead className="border p-1 text-center bg-primary text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						NO
 					</TableHead>
-					<TableHead className="border p-1 text-center bg-primary text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						TINGKAT
 					</TableHead>
-					<TableHead className="border p-1 text-center bg-primary text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						GELAR
 					</TableHead>
-					<TableHead className="border p-1 text-center bg-primary text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						TOTAL
 					</TableHead>
-					<TableHead className="border p-1 text-center bg-primary text-primary-foreground">
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
 						PERSEN
 					</TableHead>
 				</TableRow>

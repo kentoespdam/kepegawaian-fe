@@ -20,10 +20,10 @@ const TableStatistikPendidikan1Component = ({
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow>
-					<TableHead className="border text-center bg-primary text-primary-foreground">NO</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">NAMA</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">TOTAL</TableHead>
-					<TableHead className="border text-center bg-primary text-primary-foreground">PERSEN</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NAMA</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">TOTAL</TableHead>
+					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">PERSEN</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
