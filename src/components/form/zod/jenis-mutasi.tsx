@@ -71,7 +71,7 @@ const JenisMutasiZod = <TData extends FieldValues>({
 									{!field.value || field.value === ""
 										? "Pilih Jenis Mutasi"
 										: mutasiGetName(query.data || [], field.value)}
-									<ChevronDownIcon className="h-4 w-4 opacity-50" />
+									<ChevronDownIcon className="h-4 w-4 ml-4 opacity-50" />
 								</Button>
 							</FormControl>
 						</PopoverTrigger>
