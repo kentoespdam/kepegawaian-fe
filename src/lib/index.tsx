@@ -208,7 +208,7 @@ export const menus: IMenu[] = [
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
 			},{
-				path: "/laporan/kepegawaian/monitor_kontrak",
+				path: "/laporan/kepegawaian/monitor_kontrak/AKTIF",
 				name: "Monitoring Kontrak",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
