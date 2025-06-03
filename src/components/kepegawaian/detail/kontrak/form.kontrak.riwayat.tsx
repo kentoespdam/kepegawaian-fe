@@ -10,10 +10,14 @@ import {
 	TableRow,
 } from "@components/ui/table";
 import { getPageData } from "@helpers/action";
-import { dateToIndonesian, hitungSisaBulanHari } from "@helpers/string";
+import { dateToIndonesian } from "@helpers/string";
+import { hitungSisaBulanHari } from "@helpers/tanggal";
 import { useQuery } from "@tanstack/react-query";
 
-const RiwayatMutasiBody = ({ data, riwayatKontrak }: { data: Pageable<RiwayatKontrak>, riwayatKontrak?: RiwayatKontrak }) => {
+const RiwayatMutasiBody = ({
+	data,
+	riwayatKontrak,
+}: { data: Pageable<RiwayatKontrak>; riwayatKontrak?: RiwayatKontrak }) => {
 	return data.content.map((item) => {
 		const umur = hitungSisaBulanHari(
 			new Date().toISOString(),
@@ -32,13 +36,17 @@ const RiwayatMutasiBody = ({ data, riwayatKontrak }: { data: Pageable<RiwayatKon
 					{dateToIndonesian(item.tanggalSelesai)}
 				</TableCell>
 				<TableCell className="border-x whitespace-nowrap">
-					{umur.bulan < 0 ? 0 : umur.bulan} Bulan {umur.bulan < 0 ? 0 : umur.hari} Hari
+					{umur.bulan < 0 ? 0 : umur.bulan} Bulan{" "}
+					{umur.bulan < 0 ? 0 : umur.hari} Hari
 				</TableCell>
 			</TableRow>
 		) : null;
 	});
 };
-const RiwayatKontrakForm = ({ pegawaiId, riwayatKontrak }: { pegawaiId: number, riwayatKontrak?: RiwayatKontrak }) => {
+const RiwayatKontrakForm = ({
+	pegawaiId,
+	riwayatKontrak,
+}: { pegawaiId: number; riwayatKontrak?: RiwayatKontrak }) => {
 	const query = useQuery({
 		queryKey: ["riwayat-kontrak", pegawaiId],
 		queryFn: () =>
@@ -70,10 +78,15 @@ const RiwayatKontrakForm = ({ pegawaiId, riwayatKontrak }: { pegawaiId: number, 
 					<TableBody className="border-b">
 						{query.isLoading || query.isError || !query.data ? (
 							<TableRow>
-								<TableCell colSpan={4}>{query.isLoading ? "Loading data" : "Data Not Found!"}</TableCell>
+								<TableCell colSpan={4}>
+									{query.isLoading ? "Loading data" : "Data Not Found!"}
+								</TableCell>
 							</TableRow>
 						) : (
-							<RiwayatMutasiBody data={query.data} riwayatKontrak={riwayatKontrak} />
+							<RiwayatMutasiBody
+								data={query.data}
+								riwayatKontrak={riwayatKontrak}
+							/>
 						)}
 					</TableBody>
 				</Table>
