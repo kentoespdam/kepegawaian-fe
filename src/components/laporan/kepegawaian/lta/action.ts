@@ -5,7 +5,7 @@ import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 
 export const downloadLta = async (filter: string) => {
-	const apiUrl = `${API_URL}/laporan/kepegawaian/lepas_tanggungan_anak/excel?${filter}`;
+	const apiUrl = `${API_URL}/laporan/kepegawaian/lepas_tanggungan_anak/excel?filter=${filter}`;
 	const headers = setAuthorizeHeader(cookies());
 
 	const response = await fetch(apiUrl, {

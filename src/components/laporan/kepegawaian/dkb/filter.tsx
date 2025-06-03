@@ -1,4 +1,7 @@
-import { filterLta, getFilterLabelById } from "@_types/laporan/kepegawaian/lta";
+import {
+	filterKenaikanBerkala,
+	getFilterLabelById,
+} from "@_types/laporan/kepegawaian/dkb";
 import { Label } from "@components/ui/label";
 import {
 	Select,
@@ -8,9 +11,9 @@ import {
 	SelectValue,
 } from "@components/ui/select";
 import { usePathname, useRouter } from "next/navigation";
-import LtaDownloadButton from "./button.download";
+import KenaikanBerkalaDownloadButton from "./button.download";
 
-const LtaFilter = ({ filter }: { filter: string }) => {
+const FilterKenaikanBerkala = ({ filter }: { filter: string }) => {
 	const pathname = usePathname();
 	const { replace } = useRouter();
 
@@ -25,16 +28,16 @@ const LtaFilter = ({ filter }: { filter: string }) => {
 					<SelectValue placeholder={getFilterLabelById(filter)} />
 				</SelectTrigger>
 				<SelectContent>
-					{filterLta.map((item) => (
+					{filterKenaikanBerkala.map((item) => (
 						<SelectItem key={item.id} value={item.id}>
 							{item.label}
 						</SelectItem>
 					))}
 				</SelectContent>
 			</Select>
-            <LtaDownloadButton filter={filter} />
+            <KenaikanBerkalaDownloadButton filter={filter} />
 		</div>
 	);
 };
 
-export default LtaFilter;
+export default FilterKenaikanBerkala;
