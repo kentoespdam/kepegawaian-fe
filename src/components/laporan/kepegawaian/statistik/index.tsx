@@ -14,7 +14,7 @@ import { getNamaBulan } from "@helpers/tanggal";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import { FileDownIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import StatistikBarPicker from "./bar/bar.picker";
 import StatistikPiePicker from "./pie/pie.picker";
 import SelectStatistikComponent from "./select.statisitk";
@@ -37,8 +37,6 @@ const StatistikComponent = ({
 	slug,
 	statistikData,
 }: StatistikComponentProps) => {
-	const [isPrint, setIsPrint] = useState(false);
-	const [gambar, setGambar] = useState("");
 	let title = "STATISTIK PEGAWAI BERDASARKAN ";
 	let title2 = "KOMPOSISI PEGAWAI BERDASARKAN ";
 
@@ -97,7 +95,6 @@ const StatistikComponent = ({
 
 	return (
 		<div className="grid gap-8">
-			<img src={gambar} alt="" width={600} />
 			<div className="flex gap-2 justify-end">
 				<SelectStatistikComponent slug={slug} />
 				<Button onClick={handleGeneratePdf}>
