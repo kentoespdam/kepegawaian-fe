@@ -1,15 +1,13 @@
-"use client";
-
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import TooltipBuilder from "@components/builder/tooltip";
-import { base64toBlob } from "@helpers/string";
 import { useMutation } from "@tanstack/react-query";
+import { downloadLta } from "./action";
+import { base64toBlob } from "@helpers/string";
+import TooltipBuilder from "@components/builder/tooltip";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import { FileSpreadsheetIcon } from "lucide-react";
-import { downloadDuk } from "./action";
 
-const DukDownloadButton = () => {
+const LtaDownloadButton = ({filter}:{filter:string}) => {
 	const downloadFile = useMutation({
-		mutationFn: downloadDuk,
+		mutationFn: downloadLta,
 		onSuccess: (data) => {
 			const blob = base64toBlob(data.base64, data.type);
 			const url = URL.createObjectURL(blob);
@@ -23,7 +21,7 @@ const DukDownloadButton = () => {
 	});
 
 	const handleDownload = () => {
-		downloadFile.mutate();
+		downloadFile.mutate(filter);
 	};
 	return (
 		<TooltipBuilder
@@ -36,10 +34,10 @@ const DukDownloadButton = () => {
 				onClick={handleDownload}
 				icon={<FileSpreadsheetIcon />}
 				title="Download"
-				className="bg-warning text-warning-foreground hover:bg-warning-foreground hover:text-warning"
+                className="bg-warning text-warning-foreground hover:bg-warning-foreground hover:text-warning"
 			/>
 		</TooltipBuilder>
 	);
 };
 
-export default DukDownloadButton;
+export default LtaDownloadButton;
