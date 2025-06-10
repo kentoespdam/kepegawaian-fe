@@ -42,7 +42,7 @@
 		"highcharts-react-official": "^3.2.2",
 		"html2canvas": "^1.4.1",
 		"jspdf": "^3.0.1",
-		"lucide-react": "^0.446.0",
+		"lucide-react": "^0.513.0",
 		"next": "^14.2.18",
 		"next-themes": "^0.3.0",
 		"node-appwrite": "^16.0.0",
