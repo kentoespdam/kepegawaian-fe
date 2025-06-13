@@ -8,24 +8,24 @@ import {
 	TableHeader,
 	TableRow,
 } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { TelescopeIcon } from "lucide-react";
 
 const CvRightKeahlian = ({ nik }: { nik: string }) => {
-	const { data, isLoading, isFetching, error } = useQuery({
+	const { data, isLoading, isFetching, isError } = useQuery({
 		queryKey: ["keahlian", nik],
-		queryFn: () =>
-			getPageData<Keahlian>({
-				path: `profil/item/${nik}/biodata`,
+		queryFn: async () =>
+			await getPageDataEnc<Keahlian>({
+				path: encodeString(`profil/keahlian/${nik}/biodata`),
 				isRoot: true,
 			}),
-
-		enabled: !!nik,
+		enabled: !!nik || nik === "",
 	});
 	return (
 		<div className="grid gap-2">
-			<div className="w-full flex gap-2 items-center bg-gray-900 text-white pl-1">
+			<div className="w-full flex gap-2 items-center bg-gray-900 text-white px-2 py-1">
 				<TelescopeIcon className="w-4 h-4" />
 				<span>Data Keahlian</span>
 			</div>
@@ -47,7 +47,7 @@ const CvRightKeahlian = ({ nik }: { nik: string }) => {
 				</TableHeader>
 				{isLoading ||
 				isFetching ||
-				error ||
+				isError ||
 				!data ||
 				data.content.length === 0 ? (
 					<LoadingTable

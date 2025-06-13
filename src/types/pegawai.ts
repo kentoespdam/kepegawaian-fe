@@ -37,6 +37,7 @@ export interface BasePegawai {
 	absensiId: number;
 	isAskes: boolean;
 	kodePajak: PendapatanNonPajak | null;
+	email: string;
 	notes: string | null;
 }
 

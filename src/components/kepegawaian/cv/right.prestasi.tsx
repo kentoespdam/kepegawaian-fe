@@ -15,9 +15,9 @@ const CvRightPrestasi = ({ nik }: { nik: string }) => {
 	// });
 	return (
 		<div className="grid gap-2">
-			<div className="w-full flex gap-2 items-center bg-gray-900 text-white pl-1">
+			<div className="w-full flex gap-2 items-center bg-gray-900 text-white px-2 py-1">
 				<FileStackIcon className="w-4 h-4" />
-				<span>Data Pengalaman Kerja</span>
+				<span>Data Prestasi</span>
 			</div>
 			<Table className="border-y mb-4">
 				<TableHeader>

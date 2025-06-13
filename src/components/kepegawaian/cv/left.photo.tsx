@@ -6,7 +6,7 @@ const CvLeftPhoto = ({ pegawai }: CvComponentProps) => {
 	return (
 		<>
 			<div className="w-full flex justify-center ">
-				<div className="p-1 border-4 rounded-full">
+				<div className="w-[120px] h-[120px] flex justify-center items-center p-1 border-4 rounded-full">
 					<Avatar className="h-[100px] w-[100px]">
 						<Image
 							src={
