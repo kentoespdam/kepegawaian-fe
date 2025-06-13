@@ -6,11 +6,11 @@ type CvLeftDetailProps = {
 const CvLeftDetail = ({ icon, label, value }: CvLeftDetailProps) => {
 	return (
 		<div className="grid">
-			<div className="font-bold flex gap-2 items-center">
+			<div className="flex items-center gap-2 font-bold">
 				{icon}
 				<span>{label}</span>
 			</div>
-			<span className="text-sm font-thin pl-6 italic">{value}</span>
+			<div className="text-sm font-thin pl-6 italic">{value}</div>
 		</div>
 	);
 };

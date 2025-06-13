@@ -94,6 +94,12 @@
 		font-synthesis-weight: none;
 		text-rendering: optimizeLegibility;
 	}
+	img {
+		@apply inline-block;
+	}
+	svg {
+		@apply inline-block;
+	}
 }
 
 @layer utilities {

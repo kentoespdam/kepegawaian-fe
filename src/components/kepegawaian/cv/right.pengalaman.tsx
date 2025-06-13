@@ -8,17 +8,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { hitungUmur } from "@helpers/tanggal";
 import { useQuery } from "@tanstack/react-query";
-import { FileStackIcon } from "lucide-react";
+import { FileStackIcon, HistoryIcon } from "lucide-react";
 
 const CvRightPengalamanKerja = ({ nik }: { nik: string }) => {
 	const { data, isLoading, isFetching, error } = useQuery({
 		queryKey: ["pengalaman-kerja", nik],
-		queryFn: () =>
-			getPageData<PengalamanKerja>({
-				path: `profil/pengalaman/${nik}/biodata`,
+		queryFn: async () =>
+			await getPageDataEnc<PengalamanKerja>({
+				path: encodeString(`profil/pengalaman/${nik}/biodata`),
 				isRoot: true,
 			}),
 
@@ -26,8 +27,8 @@ const CvRightPengalamanKerja = ({ nik }: { nik: string }) => {
 	});
 	return (
 		<div className="grid gap-2">
-			<div className="w-full flex gap-2 items-center bg-gray-900 text-white pl-1">
-				<FileStackIcon className="w-4 h-4" />
+			<div className="w-full flex gap-2 items-center bg-gray-900 text-white px-2 py-1">
+				<HistoryIcon className="w-4 h-4" />
 				<span>Data Pengalaman Kerja</span>
 			</div>
 			<Table className="border-y mb-4">
