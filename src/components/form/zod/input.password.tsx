@@ -16,7 +16,6 @@ const InputPasswordZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-	className,
 	readonly,
 }: InputZodProps<TData>) => {
 	const [isView, setIsView] = useState(false);

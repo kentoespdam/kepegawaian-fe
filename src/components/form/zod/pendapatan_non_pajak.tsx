@@ -1,24 +1,25 @@
 "use client";
 import {
-    type PendapatanNonPajak,
-    findKode,
+	type PendapatanNonPajak,
+	findKode,
 } from "@_types/penggajian/pendapatan_non_pajak";
 import {
-    CommandDialog,
-    CommandEmpty,
-    CommandInput,
-    CommandItem,
-    CommandList
+	CommandDialog,
+	CommandEmpty,
+	CommandInput,
+	CommandItem,
+	CommandList,
 } from "@components/ui/command";
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -39,8 +40,8 @@ const SelectPendapatanNonPajakZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["pendapatan-non-pajak-list"],
 		queryFn: async () => {
-			const result = await getListData<PendapatanNonPajak>({
-				path: "penggajian/pendapatan-non-pajak",
+			const result = await getListDataEnc<PendapatanNonPajak>({
+				path: encodeString("penggajian/pendapatan-non-pajak"),
 				isRoot: true,
 			});
 			return result;

@@ -7,7 +7,7 @@ import {
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList
+	CommandList,
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -17,7 +17,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { CheckIcon, ChevronDownIcon } from "lucide-react";
@@ -36,9 +37,9 @@ const JenisKontrakZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["jenis-mutasi-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisKontrak>({
-				path: "master",
-				subPath: "jenis-kontrak",
+			const result = await getListDataEnc<JenisKontrak>({
+				path: encodeString("master"),
+				subPath: encodeString("jenis-kontrak"),
 				isRoot: true,
 			});
 			return result;

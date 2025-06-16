@@ -15,13 +15,14 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListData, getListDataEnc } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { encodeString } from "@helpers/number";
 
 const SelectJabatanZod = <TData extends FieldValues>({
 	id,
@@ -36,9 +37,9 @@ const SelectJabatanZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["jabatan-list", organisasiId],
 		queryFn: async () => {
-			const result = await getListData<JabatanMini>({
-				path: "jabatan",
-				subPath: `organisasi/${organisasiId}`,
+			const result = await getListDataEnc<JabatanMini>({
+				path: encodeString("jabatan"),
+				subPath: encodeString(`organisasi/${organisasiId}`),
 			});
 			return result;
 		},

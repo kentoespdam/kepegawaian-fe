@@ -9,7 +9,7 @@ import {
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList
+	CommandList,
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -19,7 +19,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -38,8 +39,8 @@ const JenisJenisKitasZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["jenis-kitas-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisKitas>({
-				path: "jenis-kitas",
+			const result = await getListDataEnc<JenisKitas>({
+				path: encodeString("jenis-kitas"),
 			});
 			return result;
 		},

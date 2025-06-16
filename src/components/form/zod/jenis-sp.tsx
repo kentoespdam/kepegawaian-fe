@@ -4,12 +4,11 @@ import {
 	findJenisSpValue,
 } from "@_types/master/jenis_sp";
 import {
-	Command,
 	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList,
+	CommandList
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -19,7 +18,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -37,8 +37,8 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 	const query = useQuery<JenisSpMini[]>({
 		queryKey: ["jenis-sp-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisSp>({
-				path: "jenis-sp",
+			const result = await getListDataEnc<JenisSp>({
+				path: encodeString("jenis-sp"),
 			});
 			return result;
 		},

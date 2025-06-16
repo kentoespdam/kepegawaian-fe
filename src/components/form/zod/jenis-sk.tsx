@@ -14,7 +14,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { globalGetData } from "@helpers/action";
+import { globalGetDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -32,8 +33,8 @@ const SelectJenisSkZod = <TData extends FieldValues>({
 	const query = useQuery<JenisSk[]>({
 		queryKey: ["jenis-sk-list"],
 		queryFn: async () => {
-			const result = await globalGetData<JenisSk[]>({
-				path: "master/jenis-sk",
+			const result = await globalGetDataEnc<JenisSk[]>({
+				path: encodeString("master/jenis-sk"),
 			});
 			return result;
 		},

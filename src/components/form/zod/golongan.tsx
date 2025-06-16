@@ -1,9 +1,8 @@
 "use client";
 
-import { findGolonganValue, type Golongan } from "@_types/master/golongan";
-import { Button } from "@components/ui/button";
+import { type Golongan, findGolonganValue } from "@_types/master/golongan";
 import {
-	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
@@ -16,14 +15,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@components/ui/form";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { Input } from "@components/ui/input";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
@@ -34,12 +30,14 @@ const SelectGolonganZod = <TData extends FieldValues>({
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const [pop, setPop] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
+
 	const query = useQuery({
 		queryKey: ["golongan-list"],
 		queryFn: async () => {
-			const result = await getListData<Golongan>({
-				path: "golongan",
+			const result = await getListDataEnc<Golongan>({
+				path: encodeString("golongan"),
 			});
 			return result;
 		},
@@ -52,73 +50,50 @@ const SelectGolonganZod = <TData extends FieldValues>({
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel htmlFor={id}>{label}</FormLabel>
-					<Popover open={pop} onOpenChange={setPop}>
-						<PopoverTrigger asChild>
-							<FormControl>
-								<Button
-									variant="outline"
-									className={cn(
-										"w-full justify-between",
-										!field.value ? "text-muted-foreground" : "",
-									)}
+					<FormControl>
+						<div className="relative w-full">
+							<Input
+								readOnly
+								id={id}
+								className="cursor-pointer"
+								onClick={handleOpenDialog}
+								value={
+									!query.data
+										? "Golongan tidak ditemukan"
+										: query.isLoading || query.isFetching
+											? "Loading..."
+											: field.value
+												? `${findGolonganValue(query.data, field.value).golongan} - ${findGolonganValue(query.data, field.value).pangkat}`
+												: "Pilih Golongan"
+								}
+							/>
+							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+						</div>
+					</FormControl>
+					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+						<CommandInput placeholder="Pencarian..." />
+						<CommandList>
+							<CommandEmpty>No results found.</CommandEmpty>
+							{query.data?.map((item) => (
+								<CommandItem
+									key={item.id}
+									value={`${item.golongan} - ${item.pangkat}`}
+									onSelect={() => {
+										field.onChange(item.id);
+										handleOpenDialog();
+									}}
 								>
-									<span className="text-left flex-1 truncate">
-										{!query.data
-											? "Golongan tidak ditemukan"
-											: query.isLoading || query.isFetching
-												? "Loading..."
-												: field.value
-													? `${findGolonganValue(query.data, field.value).golongan} - ${findGolonganValue(query.data, field.value).pangkat}`
-													: "Pilih Golongan"}
-									</span>
-									<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-								</Button>
-							</FormControl>
-						</PopoverTrigger>
-						<PopoverContent className="w-full p-0">
-							<Command>
-								<CommandInput placeholder="Pencarian..." />
-								<CommandList>
-									<CommandEmpty>No results found.</CommandEmpty>
-									{query.data?.map((item) => (
-										<CommandItem
-											key={item.id}
-											value={`${item.golongan} - ${item.pangkat}`}
-											onSelect={() => {
-												field.onChange(item.id);
-												setPop(false);
-											}}
-										>
-											{item.golongan} - {item.pangkat}
-											<CheckIcon
-												className={cn(
-													"ml-auto h-4 w-4",
-													item.id === field.value ? "opacity-100" : "opacity-0",
-												)}
-											/>
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
-					{/* <Select onValueChange={field.onChange} defaultValue={field.value > 0 ? field.value.toString() : ""}>
-                        <FormControl>
-                            <SelectTrigger className="w-full">
-                                <SelectValue placeholder={`Pilih ${label}`} />
-                            </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                            {query.data?.map((item) => (
-                                <SelectItem
-                                    key={item.id}
-                                    value={item.id.toString()}
-                                >
-                                    {item.golongan} - {item.pangkat}
-                                </SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select> */}
+									{item.golongan} - {item.pangkat}
+									<CheckIcon
+										className={cn(
+											"ml-auto h-4 w-4",
+											item.id === field.value ? "opacity-100" : "opacity-0",
+										)}
+									/>
+								</CommandItem>
+							))}
+						</CommandList>
+					</CommandDialog>
 					<FormMessage />
 				</FormItem>
 			)}

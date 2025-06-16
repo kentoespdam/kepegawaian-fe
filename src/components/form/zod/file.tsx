@@ -13,7 +13,6 @@ const InputFileZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-	fileRef,
 }: InputZodProps<TData>) => {
 	return (
 		<FormField
