@@ -21,7 +21,7 @@ const InputFileZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field: { value, onChange, ...fieldProps } }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<FormControl>
 						<Input
 							{...fieldProps}

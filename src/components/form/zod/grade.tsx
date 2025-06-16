@@ -45,7 +45,7 @@ const SelectGradeZod = <TData extends FieldValues>({ id, label, form }: InputZod
             name={id}
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{label}</FormLabel>
+                    <FormLabel htmlFor={id}>{label}</FormLabel>
                     <Popover open={pop} onOpenChange={setPop}>
                         <PopoverTrigger asChild>
                             <FormControl>

@@ -51,7 +51,7 @@ const SelectGolonganZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<Popover open={pop} onOpenChange={setPop}>
 						<PopoverTrigger asChild>
 							<FormControl>
