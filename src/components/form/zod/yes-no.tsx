@@ -21,7 +21,7 @@ const YesNoZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
 							onValueChange={(value) => field.onChange(value === "true")}

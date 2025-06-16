@@ -22,7 +22,7 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
 							value={field.value}

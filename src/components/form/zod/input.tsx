@@ -23,7 +23,7 @@ const InputZod = <TData extends FieldValues>({
 		name={id}
 		render={({ field }) => (
 			<FormItem className={cn(type === "hidden" && "hidden", className)}>
-				<FormLabel>{label}</FormLabel>
+				<FormLabel htmlFor={id}>{label}</FormLabel>
 				<FormControl>
 					<Input
 						type={type === "text" ? "text" : type}

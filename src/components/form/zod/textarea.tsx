@@ -10,7 +10,7 @@ const TextAreaZod = <TData extends FieldValues>({ id, label, form, readonly }: I
             name={id}
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{label}</FormLabel>
+                    <FormLabel htmlFor={id}>{label}</FormLabel>
                     <FormControl>
                         <Textarea
                             placeholder={`Masukkan ${label}`}

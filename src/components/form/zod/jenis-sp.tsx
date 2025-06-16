@@ -3,9 +3,9 @@ import {
 	type JenisSpMini,
 	findJenisSpValue,
 } from "@_types/master/jenis_sp";
-import { Button } from "@components/ui/button";
 import {
 	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
@@ -18,15 +18,11 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@components/ui/form";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
+import { Input } from "@components/ui/input";
 import { getListData } from "@helpers/action";
 import { cn } from "@lib/utils";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
-import { ChevronDownIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
@@ -35,7 +31,8 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 	id,
 	form,
 }: InputZodProps<TData>) => {
-	const [pop, setPop] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
 	const query = useQuery<JenisSpMini[]>({
 		queryKey: ["jenis-sp-list"],
@@ -53,48 +50,49 @@ const SelectJenisSpZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>Jenis Surat Peringatan</FormLabel>
-					<Popover open={pop} onOpenChange={setPop}>
-						<PopoverTrigger asChild>
-							<FormControl>
-								<Button
-									variant="outline"
-									className={cn(
-										"w-full justify-between",
-										!field.value ? "text-muted-foreground" : "",
-									)}
+					<FormLabel htmlFor={id}>Jenis Surat Peringatan</FormLabel>
+					<FormControl>
+						<div className="relative w-full">
+							<Input
+								readOnly
+								id={id}
+								className="cursor-pointer"
+								onClick={handleOpenDialog}
+								value={
+									!query.data
+										? "Jenis Surat Peringatan tidak ditemukan"
+										: query.isLoading || query.isFetching
+											? "Loading..."
+											: findJenisSpValue(query.data, field.value)
+								}
+							/>
+							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+						</div>
+					</FormControl>
+					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+						<CommandInput placeholder="Pencarian..." />
+						<CommandList>
+							<CommandEmpty>No results found.</CommandEmpty>
+							{query.data?.map((item) => (
+								<CommandItem
+									key={item.id}
+									onSelect={() => {
+										field.onChange(item.id);
+										handleOpenDialog();
+									}}
 								>
-									<span className="text-left flex-1 truncate">
-										{!query.data
-											? "Jenis Surat Peringatan tidak ditemukan"
-											: query.isLoading || query.isFetching
-												? "Loading..."
-												: findJenisSpValue(query.data, field.value)}
-									</span>
-									<ChevronDownIcon className="h-4 w-4 opacity-50" />
-								</Button>
-							</FormControl>
-						</PopoverTrigger>
-						<PopoverContent className="w-full p-0">
-							<Command>
-								<CommandInput placeholder="Pencarian..." />
-								<CommandList>
-									<CommandEmpty>No results found.</CommandEmpty>
-									{query.data?.map((item) => (
-										<CommandItem
-											key={item.id}
-											onSelect={() => {
-												field.onChange(item.id);
-												setPop(false);
-											}}
-										>
-											{item.kode}: {item.nama}
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
+									<CheckIcon
+										className={cn(
+											"mr-2 h-4 w-4",
+											item.id === field.value ? "opacity-100" : "opacity-0",
+										)}
+										aria-hidden
+									/>
+									{item.kode}: {item.nama}
+								</CommandItem>
+							))}
+						</CommandList>
+					</CommandDialog>
 					<FormMessage />
 				</FormItem>
 			)}

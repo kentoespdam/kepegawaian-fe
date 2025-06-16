@@ -55,7 +55,7 @@ const AlasanTerminasiZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<Popover open={pop} onOpenChange={setPop}>
 						<PopoverTrigger asChild>
 							<FormControl>
@@ -70,7 +70,7 @@ const AlasanTerminasiZod = <TData extends FieldValues>({
 										? "Pilih Alasan Terminasi"
 										: query.data?.find((item) => item.id === +field.value)
 												?.nama}
-									<ChevronDownIcon className="h-4 w-4 opacity-50" />
+									<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
 								</Button>
 							</FormControl>
 						</PopoverTrigger>

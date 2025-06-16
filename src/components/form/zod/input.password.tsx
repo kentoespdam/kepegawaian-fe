@@ -26,7 +26,7 @@ const InputPasswordZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<FormControl>
 						<div className="relative">
 							<Input
