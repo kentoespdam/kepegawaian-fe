@@ -42,7 +42,7 @@ export const globalGetData = async <TData>(
 export const globalGetDataEnc = async <TData>(
 	props: getDataProps,
 ): Promise<TData> => {
-	const decPath=decodeString(props.path)
+	const decPath = decodeString(props.path);
 	const requestUrl = `${API_URL}/${decPath}?${props.searchParams ?? ""}`;
 	const requestHeaders = setAuthorizeHeader(cookies());
 
@@ -97,14 +97,13 @@ export const getPageData = async <TData>(
 	}
 };
 
-
 export const getPageDataEnc = async <TData>(
 	props: getDataProps,
 ): Promise<Pageable<TData>> => {
 	const controller = new AbortController();
 
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
-	const decPath=decodeString(props.path)
+	const decPath = decodeString(props.path);
 	const url = `${basePath}/${decPath.replace("_", "-")}?${props.searchParams}`;
 	const headers = setAuthorizeHeader(cookies());
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -177,10 +176,15 @@ export const getDataById = async <TData>(
 	throw new Error("Failed to retrieve data after retrying");
 };
 
+type getByIdEncProps = {
+	isNotNumber: boolean;
+} & getByIdProps;
 export const getDataByIdEnc = async <TData>(
-	props: getByIdProps,
+	props: getByIdEncProps,
 ): Promise<TData> => {
-	const decId=decodeId(props.id as string)
+	const decId = props.isNotNumber
+		? decodeString(props.id as string)
+		: decodeId(props.id as string);
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
 	const url = `${basePath}/${props.path.replace("_", "-")}/${decId}`;
 	const headers = setAuthorizeHeader(cookies());
@@ -230,7 +234,7 @@ export const getListData = async <TData>(
 	const url = props.subPath
 		? `${basePath}/${props.path.replace("_", "-")}/${props.subPath}?${props.searchParams ?? ""}`
 		: `${basePath}/${props.path.replace("_", "-")}/list?${props.searchParams ?? ""}`;
-	
+
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);
@@ -258,12 +262,12 @@ export const getListDataEnc = async <TData>(
 	props: getMasterListProps,
 ): Promise<TData[]> => {
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
-	const decPath=decodeString(props.path)
-	const decSubPath=props.subPath?decodeString(props.subPath):""
+	const decPath = decodeString(props.path);
+	const decSubPath = props.subPath ? decodeString(props.subPath) : "";
 	const url = props.subPath
 		? `${basePath}/${decPath.replace("_", "-")}/${decSubPath}?${props.searchParams ?? ""}`
 		: `${basePath}/${decPath.replace("_", "-")}/list?${props.searchParams ?? ""}`;
-	
+
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);

@@ -23,7 +23,7 @@ export interface Biodata extends BiodataMini {
 	golonganDarah: string;
 	fotoProfil: string;
 	notes: string;
-	kartuIdentitas: KartuIdentitas;
+	kartuIdentitas: KartuIdentitas[];
 }
 
 export const BiodataSchema = z.object({
