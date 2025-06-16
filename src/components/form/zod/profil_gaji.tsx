@@ -14,7 +14,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -35,8 +36,8 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["profil-gaji-list"],
 		queryFn: async () => {
-			const result = await getListData<ProfilGaji>({
-				path: "penggajian/profil",
+			const result = await getListDataEnc<ProfilGaji>({
+				path: encodeString("penggajian/profil"),
 				isRoot: true,
 			});
 			return result;

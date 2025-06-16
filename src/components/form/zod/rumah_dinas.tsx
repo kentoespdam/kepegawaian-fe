@@ -14,7 +14,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -35,8 +36,8 @@ const SelectRumahDinasZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["rumah-dinas-list"],
 		queryFn: async () =>
-			await getListData<RumahDinas>({
-				path: "rumah-dinas",
+			await getListDataEnc<RumahDinas>({
+				path: encodeString("rumah-dinas"),
 			}),
 	});
 

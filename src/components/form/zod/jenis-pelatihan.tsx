@@ -19,7 +19,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -38,8 +39,8 @@ const JenisPelatihanZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["jenis-pelatihan-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisPelatihan>({
-				path: "jenis-pelatihan",
+			const result = await getListDataEnc<JenisPelatihan>({
+				path: encodeString("jenis-pelatihan"),
 			});
 			return result;
 		},

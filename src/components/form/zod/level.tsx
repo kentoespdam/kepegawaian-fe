@@ -4,7 +4,7 @@ import {
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList
+	CommandList,
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -14,12 +14,10 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
-import {
-	CheckIcon,
-	ChevronDownIcon
-} from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
@@ -36,8 +34,8 @@ const SelectLevelZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["level-list"],
 		queryFn: async () => {
-			const result = await getListData<Level>({
-				path: "level",
+			const result = await getListDataEnc<Level>({
+				path: encodeString("level"),
 			});
 			return result;
 		},

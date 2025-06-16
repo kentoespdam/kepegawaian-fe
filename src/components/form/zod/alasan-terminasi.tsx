@@ -1,8 +1,7 @@
 "use client";
 import type { AlasanBerhenti } from "@_types/master/alasan_berhenti";
-import { Button } from "@components/ui/button";
 import {
-	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
@@ -14,17 +13,13 @@ import {
 	FormItem,
 	FormLabel,
 } from "@components/ui/form";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { Input } from "@components/ui/input";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useAlasanBerhentiStore } from "@store/master/alasan_berhenti";
 import { useQuery } from "@tanstack/react-query";
-import { CheckIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
@@ -37,13 +32,14 @@ const AlasanTerminasiZod = <TData extends FieldValues>({
 	const { setAlasanTerminasi } = useAlasanBerhentiStore((state) => ({
 		setAlasanTerminasi: state.setAlasanTerminasi,
 	}));
-	const [pop, setPop] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
 	const query = useQuery({
 		queryKey: ["alasan-terminasi-list"],
 		queryFn: async () => {
-			const result = await getListData<AlasanBerhenti>({
-				path: "alasan-berhenti",
+			const result = await getListDataEnc<AlasanBerhenti>({
+				path: encodeString("alasan-berhenti"),
 			});
 			return result;
 		},
@@ -56,53 +52,46 @@ const AlasanTerminasiZod = <TData extends FieldValues>({
 			render={({ field }) => (
 				<FormItem>
 					<FormLabel htmlFor={id}>{label}</FormLabel>
-					<Popover open={pop} onOpenChange={setPop}>
-						<PopoverTrigger asChild>
-							<FormControl>
-								<Button
-									variant="outline"
-									className={cn(
-										"w-full justify-between",
-										!field.value ? "text-muted-foreground" : "",
-									)}
-								>
-									{!field.value || field.value === ""
+					<FormControl>
+						<div className="relative w-full">
+							<Input
+								readOnly
+								id={id}
+								className="cursor-pointer"
+								onClick={handleOpenDialog}
+								value={
+									!field.value || field.value === ""
 										? "Pilih Alasan Terminasi"
-										: query.data?.find((item) => item.id === +field.value)
-												?.nama}
-									<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
-								</Button>
-							</FormControl>
-						</PopoverTrigger>
-						<PopoverContent className="w-full p-0">
-							<Command>
-								<CommandInput placeholder="Pencarian..." />
-								<CommandList>
-									<CommandEmpty>No mutasi found.</CommandEmpty>
-									{query.data?.map((item) => (
-										<CommandItem
-											key={item.id}
-											onSelect={() => {
-												field.onChange(item.id);
-												setPop(false);
-												setAlasanTerminasi(item);
-											}}
-										>
-											{item.nama}
-											<CheckIcon
-												className={cn(
-													"ml-auto h-4 w-4",
-													item.id === +field.value
-														? "opacity-100"
-														: "opacity-0",
-												)}
-											/>
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
+										: query.data?.find((item) => item.id === +field.value)?.nama
+								}
+							/>
+							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+						</div>
+					</FormControl>
+					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+						<CommandInput placeholder="Pencarian..." />
+						<CommandList>
+							<CommandEmpty>No mutasi found.</CommandEmpty>
+							{query.data?.map((item) => (
+								<CommandItem
+									key={item.id}
+									onSelect={() => {
+										field.onChange(item.id);
+										setAlasanTerminasi(item);
+										handleOpenDialog();
+									}}
+								>
+									{item.nama}
+									<CheckIcon
+										className={cn(
+											"ml-auto h-4 w-4",
+											item.id === +field.value ? "opacity-100" : "opacity-0",
+										)}
+									/>
+								</CommandItem>
+							))}
+						</CommandList>
+					</CommandDialog>
 				</FormItem>
 			)}
 		/>

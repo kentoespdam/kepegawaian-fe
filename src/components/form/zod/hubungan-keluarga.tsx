@@ -28,7 +28,6 @@ const SelectHubunganKeluargaZod = <TData extends FieldValues>({
 	form,
 }: InputZodProps<TData>) => {
 	const [openDialog, setOpenDialog] = useState(false);
-
 	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
 	return (

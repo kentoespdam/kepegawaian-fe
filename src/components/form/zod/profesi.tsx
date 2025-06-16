@@ -15,7 +15,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -41,9 +42,9 @@ const SelectProfesiZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["profesi-list", jabatanId],
 		queryFn: async () => {
-			const result = await getListData<ProfesiMini>({
-				path: "profesi",
-				subPath: `jabatan/${jabatanId}`,
+			const result = await getListDataEnc<ProfesiMini>({
+				path: encodeString("profesi"),
+				subPath: encodeString(`jabatan/${jabatanId}`),
 			});
 			return result;
 		},

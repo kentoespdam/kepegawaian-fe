@@ -5,7 +5,7 @@ import {
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList
+	CommandList,
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -15,7 +15,8 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -41,8 +42,8 @@ const SelectSanksiZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["sanksi-list"],
 		queryFn: async () =>
-			await getListData<SanksiMini>({
-				path: "sanksi",
+			await getListDataEnc<SanksiMini>({
+				path: encodeString("sanksi"),
 			}),
 	});
 
@@ -94,7 +95,6 @@ const SelectSanksiZod = <TData extends FieldValues>({
 							{filteredData?.map((item) => (
 								<CommandItem
 									key={item.id}
-									// value={`${item.id}`}
 									onSelect={() => {
 										field.onChange(item.id);
 										handleOpenDialog();

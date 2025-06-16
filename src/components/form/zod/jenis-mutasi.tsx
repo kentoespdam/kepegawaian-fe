@@ -14,7 +14,7 @@ import {
 	FormLabel,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListData, getListDataEnc } from "@helpers/action";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
@@ -22,6 +22,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { encodeString } from "@helpers/number";
 
 const JenisMutasiZod = <TData extends FieldValues>({
 	id,
@@ -37,9 +38,9 @@ const JenisMutasiZod = <TData extends FieldValues>({
 	const query = useQuery({
 		queryKey: ["jenis-mutasi-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisMutasi>({
-				path: "master",
-				subPath: "jenis-mutasi",
+			const result = await getListDataEnc<JenisMutasi>({
+				path: encodeString("master"),
+				subPath: encodeString("jenis-mutasi"),
 				isRoot: true,
 			});
 			return result;
