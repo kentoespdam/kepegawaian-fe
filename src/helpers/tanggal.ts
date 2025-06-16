@@ -17,7 +17,8 @@ export const getNamaBulan = (bulan: number): string => {
 	return NAMA_BULAN[bulan - 1];
 };
 
-export const tanggalIndonesia = (tanggal: string): string => {
+export const tanggalIndonesia = (tanggal?: string): string => {
+	if (!tanggal) return "";
 	const date = new Date(tanggal);
 	const day = date.getDate();
 	const month = date.getMonth() + 1;
