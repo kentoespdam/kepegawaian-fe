@@ -177,14 +177,14 @@ export const getDataById = async <TData>(
 };
 
 type getByIdEncProps = {
-	isNotNumber: boolean;
+	isString?: boolean;
 } & getByIdProps;
 export const getDataByIdEnc = async <TData>({
-	isNotNumber = false,
+	isString = false,
 	...props
 }: getByIdEncProps): Promise<TData> => {
 	const decPath = decodeString(props.path);
-	const decId = isNotNumber
+	const decId = isString
 		? decodeString(props.id as string)
 		: decodeId(props.id as string);
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
