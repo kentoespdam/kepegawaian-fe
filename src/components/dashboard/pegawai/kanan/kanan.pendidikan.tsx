@@ -17,7 +17,7 @@ const KananDataPendidikan = ({ nik, nama }: KananDataPendidikanProps) => {
 	return (
 		<AccordionItem value="data-pendidikan">
 			<AccordionTrigger className="p-2 bg-primary text-primary-foreground">
-				Daftar Pendidikan
+				Data Pendidikan
 			</AccordionTrigger>
 			<AccordionContent className="grid border-t p-0">
 				<div className="grid min-h-screen w-full">
