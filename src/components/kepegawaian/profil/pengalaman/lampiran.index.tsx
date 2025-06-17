@@ -12,9 +12,9 @@ import { getListDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
-import LampiranFormDialog from "../../lampiran/dialog/add-lampiran-profil";
-import DeleteLampiranProfilDialog from "../../lampiran/dialog/delete-lampiran-profil";
-import LampiranProfilTableBody from "../../lampiran/table/body";
+import LampiranFormDialog from "../lampiran/dialog/add-lampiran-profil";
+import DeleteLampiranProfilDialog from "../lampiran/dialog/delete-lampiran-profil";
+import LampiranProfilTableBody from "../lampiran/table/body";
 
 const LampiranPengalamanKerjaContent = () => {
 	const rootKey = "lampiran-pengalaman";
@@ -33,8 +33,8 @@ const LampiranPengalamanKerjaContent = () => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
+		<div className="grid overflow-auto p-2 min-h-64 gap-0">
+			<div className="min-h-64">
 				<Table>
 					<TableHeadBuilder columns={lampiranProfilTableColumns} />
 					{query.isLoading || query.isFetching ? (

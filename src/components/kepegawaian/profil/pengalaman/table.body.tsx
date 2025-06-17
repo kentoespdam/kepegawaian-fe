@@ -6,10 +6,10 @@ import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { CircleDashedIcon, CircleDotIcon } from "lucide-react";
 import { useEffect } from "react";
-import ProfilPengalamanAction from "../../button/table-action";
-import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
+import ProfilPengalamanAction from "./button.table.action";
 
 interface ProfilPengalamanKerjaTableBodyProps {
 	data: Pageable<PengalamanKerja>;
@@ -60,8 +60,12 @@ const ProfilPengalamanKerjaTableBody = (
 					<TableCell className="border-x">{row.typePerusahaan}</TableCell>
 					<TableCell className="border-x">{row.jabatan}</TableCell>
 					<TableCell className="border-x">{row.lokasi}</TableCell>
-					<TableCell className="border-x" align="right">{row.tahunMasuk}</TableCell>
-					<TableCell className="border-x" align="right">{row.tahunKeluar}</TableCell>
+					<TableCell className="border-x" align="right">
+						{row.tahunMasuk}
+					</TableCell>
+					<TableCell className="border-x" align="right">
+						{row.tahunKeluar}
+					</TableCell>
 					<TableCell className="border-x">{row.notes}</TableCell>
 					<TableCell className="border-x" align="center">
 						<TooltipBuilder
