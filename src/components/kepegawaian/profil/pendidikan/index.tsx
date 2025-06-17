@@ -50,24 +50,24 @@ const ProfilPendidikanContentComponent = ({
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
+		<div className="grid overflow-auto p-2 gap-0">
 			<SearchBuilder columns={pendidikanTableColumns} />
-			<div className="min-h-96">
-				<Table>
-					<TableHeadBuilder columns={pendidikanTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable columns={pendidikanTableColumns} isLoading={true} />
-					) : query.isError ? (
-						<LoadingTable
-							columns={pendidikanTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					) : qBio.data && query.data ? (
-						<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
-					) : null}
-				</Table>
-			</div>
+			<Table>
+				<TableHeadBuilder columns={pendidikanTableColumns} />
+				{query.isLoading ||
+				query.isFetching ||
+				query.isError ||
+				!qBio.data ||
+				!query.data ||
+				query.data.empty ? (
+					<LoadingTable
+						columns={pendidikanTableColumns}
+						isLoading={query.isLoading || query.isFetching}
+					/>
+				) : (
+					<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
+				)}
+			</Table>
 			<PaginationBuilder data={query.data} />
 			<FormProfilPendidikanDialog />
 			<DeletePendidikanDialog />
