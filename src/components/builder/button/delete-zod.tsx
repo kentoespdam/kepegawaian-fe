@@ -13,11 +13,11 @@ import {
 	FormControl,
 	FormField,
 	FormItem,
-	FormMessage
+	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { globalDeleteData } from "@helpers/action";
-import { encodeId } from "@helpers/number";
+import { globalDeleteDataEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalMutation } from "@store/query-store";
 import type { QueryKey } from "@tanstack/react-query";
@@ -41,8 +41,8 @@ const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: async (values: BaseDelete) =>
-			await globalDeleteData({
-				path: props.deletePath,
+			await globalDeleteDataEnc({
+				path: encodeString(props.deletePath),
 				formData: values,
 			}),
 		queryKeys: props.queryKeys,
@@ -56,8 +56,13 @@ const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
 		mutation.mutate(values);
 	};
 
+	const handleOpenChange = () => {
+		form.reset();
+		props.setOpenDelete(false);
+	};
+
 	return (
-		<Dialog open={props.openDelete} onOpenChange={props.setOpenDelete}>
+		<Dialog open={props.openDelete} onOpenChange={handleOpenChange}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
@@ -72,7 +77,11 @@ const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
 					</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<FormField
 							control={form.control}
 							name="id"

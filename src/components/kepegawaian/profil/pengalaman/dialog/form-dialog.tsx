@@ -18,13 +18,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 const FormProfilPengalamanKerjaDialog = () => {
-	const path = usePathname();
-	const nik = path.split("/")[4];
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
 	const { defaultValues, open, setOpen } = usePengalamanKerjaStore();
@@ -37,16 +34,14 @@ const FormProfilPengalamanKerjaDialog = () => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: savePengalamanKerja,
-		queryKeys: [["pengalaman-kerja", nik, search.toString()]],
-	});
-
-	useEffect(() => {
-		if (mutation.isSuccess) {
-			mutation.reset();
+		queryKeys: [
+			["pengalaman-kerja", defaultValues.biodataId, search.toString()],
+		],
+		actHandler: () => {
 			form.reset();
 			setOpen(false);
-		}
-	}, [mutation, form, setOpen]);
+		},
+	});
 
 	const onSubmit = (values: PengalamanKerjaSchema) => {
 		mutation.mutate(values);
@@ -62,9 +57,9 @@ const FormProfilPengalamanKerjaDialog = () => {
 				<Form {...form}>
 					<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
 						<div className="grid gap-2 max-h-[450px] overflow-y-auto pl-4 pr-2 pb-4">
-							<InputZod id="id" label="Id" form={form} />
+							<InputZod id="id" type="hidden" label="Id" form={form} />
 							<InputZod
-								// type="hidden"
+								type="hidden"
 								id="biodataId"
 								label="NIK"
 								form={form}

@@ -25,7 +25,7 @@ const AddProfilKeluargaButton = ({ nik }: AddProfilKeluargaButtonProps) => {
 				path: encodeString("profil/biodata"),
 				id: encodeString(nik),
 				isRoot: true,
-				isNotNumber: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
