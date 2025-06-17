@@ -1,41 +1,54 @@
 "use client";
 import type { Biodata } from "@_types/profil/biodata";
 import {
-	pengalamanKerjaTableColumns,
 	type PengalamanKerja,
+	pengalamanKerjaTableColumns,
 } from "@_types/profil/pengalaman_kerja";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
+import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import FormProfilPengalamanKerjaDialog from "../dialog/form-dialog";
 import ProfilPengalamanKerjaTableBody from "./table/body";
-import DeletePengalamanKerjaDialog from "../dialog/delete-dialog";
 
 const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 
+	const { pengalamanId, openDelete, setOpenDelete } = usePengalamanKerjaStore(
+		(state) => ({
+			pengalamanId: state.pengalamanId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
+
 	const qBio = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
 
+	const qKey = ["pengalaman-kerja", nik, search.toString()];
+
 	const query = useQuery({
-		queryKey: ["pengalaman-kerja", qBio.data?.nik, search.toString()],
+		queryKey: qKey,
 		queryFn: () =>
-			getPageData<PengalamanKerja>({
-				path: `profil/pengalaman/${qBio.data?.nik}/biodata`,
+			getPageDataEnc<PengalamanKerja>({
+				path: encodeString(`profil/pengalaman/${qBio.data?.nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
@@ -69,7 +82,13 @@ const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 			</div>
 			<PaginationBuilder data={query.data} />
 			<FormProfilPengalamanKerjaDialog />
-			<DeletePengalamanKerjaDialog />
+			<DeleteZodDialogBuilder
+				id={pengalamanId}
+				deletePath={"profil/pengalaman"}
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+				queryKeys={[qKey]}
+			/>
 		</div>
 	);
 };
