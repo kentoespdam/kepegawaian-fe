@@ -2,7 +2,6 @@
 import { PengalamanKerjaSchema } from "@_types/profil/pengalaman_kerja";
 import { savePengalamanKerja } from "@app/kepegawaian/pendukung/pengalaman_kerja/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import DatePickerZod from "@components/form/zod/date-picker";
 import InputZod from "@components/form/zod/input";
 import { Button } from "@components/ui/button";
 import {
@@ -24,7 +23,11 @@ import { useForm } from "react-hook-form";
 const FormProfilPengalamanKerjaDialog = () => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const { defaultValues, open, setOpen } = usePengalamanKerjaStore();
+	const { defaultValues, open, setOpen } = usePengalamanKerjaStore((state) => ({
+		defaultValues: state.defaultValues,
+		open: state.open,
+		setOpen: state.setOpen,
+	}));
 
 	const form = useForm<PengalamanKerjaSchema>({
 		resolver: zodResolver(PengalamanKerjaSchema),
@@ -73,14 +76,16 @@ const FormProfilPengalamanKerjaDialog = () => {
 							/>
 							<InputZod id="jabatan" label="Jabatan" form={form} />
 							<InputZod id="lokasi" label="Lokasi" form={form} />
-							<DatePickerZod
-								id="tanggalMasuk"
-								label="Tanggal Masuk"
+							<InputZod
+								type="number"
+								id="tahunMasuk"
+								label="Tahun Masuk"
 								form={form}
 							/>
-							<DatePickerZod
-								id="tanggalKeluar"
-								label="Tanggal Keluar"
+							<InputZod
+								type="number"
+								id="tahunKeluar"
+								label="Tahun Keluar"
 								form={form}
 							/>
 							<InputZod id="notes" label="Notes" form={form} />
