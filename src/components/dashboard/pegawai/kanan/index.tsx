@@ -6,6 +6,8 @@ import KananDataKeluarga from "./kanan.keluarga";
 import { HomeIcon } from "lucide-react";
 import KananDataPendidikan from "./kanan.pendidikan";
 import KananDataPengalamanKerja from "./kanan.pengalaman";
+import KananDataKeahlian from "./kanan.keahlian";
+import KananDataPelatihan from "./kanan.pelatihan";
 
 type DashboardPanelKananComponentProps = {
 	pegawai: PegawaiDetail;
@@ -34,6 +36,14 @@ const DashboardPanelKananComponent = ({
 						nama={pegawai.biodata.nama}
 					/>
 					<KananDataPengalamanKerja
+						nik={pegawai.biodata.nik}
+						nama={pegawai.biodata.nama}
+					/>
+					<KananDataKeahlian
+						nik={pegawai.biodata.nik}
+						nama={pegawai.biodata.nama}
+					/>
+					<KananDataPelatihan
 						nik={pegawai.biodata.nik}
 						nama={pegawai.biodata.nama}
 					/>

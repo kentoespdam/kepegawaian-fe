@@ -8,9 +8,10 @@ import { cn } from "@lib/utils";
 import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
 import { useEffect } from "react";
-import PelatihanTableAction from "./action-button";
+import PelatihanTableAction from "./button.table.action";
 import TooltipBuilder from "@components/builder/tooltip";
 import { CheckIcon, XIcon } from "lucide-react";
+import { tanggalIndonesia } from "@helpers/tanggal";
 
 interface PelatihanTableBodyProps {
 	biodata: Biodata;
@@ -56,8 +57,15 @@ const PelatihanTableBody = (props: PelatihanTableBodyProps) => {
 						<PelatihanTableAction data={row} biodata={props.biodata} />
 					</TableCell>
 					<TableCell className="border-x">{row.jenisPelatihan.nama}</TableCell>
-					<TableCell className="border-x whitespace-nowrap">{row.nama}</TableCell>
-					<TableCell className="border-x" align="right">{row.nilai}</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.nama}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.lembaga}
+					</TableCell>
+					<TableCell className="border-x" align="right">
+						{row.nilai}
+					</TableCell>
 					<TableCell className="border-x" align="center">
 						<TooltipBuilder
 							text={row.lulus ? "Lulus" : "Tidak Lulus"}
@@ -70,12 +78,28 @@ const PelatihanTableBody = (props: PelatihanTableBodyProps) => {
 							)}
 						</TooltipBuilder>
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">{row.tanggalMulai}</TableCell>
-					<TableCell className="border-x whitespace-nowrap">{row.tanggalSelesai}</TableCell>
+					<TableCell className="border-x whitespace-nowrap" align="center">
+						{tanggalIndonesia(row.tanggalMulai)}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap" align="center">
+						{tanggalIndonesia(row.tanggalSelesai)}
+					</TableCell>
+					<TableCell className="border-x" align="center">
+						{row.ikatanDinas ? (
+							<CheckIcon className="text-green-500 h-5 w-5" />
+						) : (
+							<XIcon className="text-red-500 h-5 w-5" />
+						)}
+					</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.tanggalAkhirIkatan}
+					</TableCell>
 					<TableCell className="border-x" align="center">
 						<DisetujuiIconBuilder disetujui={row.disetujui} />
 					</TableCell>
-					<TableCell className="border-x whitespace-nowrap">{row.notes}</TableCell>
+					<TableCell className="border-x whitespace-nowrap">
+						{row.notes}
+					</TableCell>
 				</TableRow>
 			))}
 		</TableBody>
