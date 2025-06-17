@@ -80,7 +80,7 @@ const LampiranFormDialog = (props: LampiranFormDialogProps) => {
 				</DialogHeader>
 				<Separator />
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(handleSubmit)}>
+					<form name="form" onSubmit={form.handleSubmit(handleSubmit)}>
 						<div className="grid gap-2 max-h-[450px] overflow-auto pl-4 pr-2 pb-4">
 							<InputZod type="hidden" id="id" label="ID" form={form} />
 							<InputZod type="hidden" id="ref" label="Ref" form={form} />

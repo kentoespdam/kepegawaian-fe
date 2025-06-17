@@ -22,9 +22,10 @@ const RadioJenisKelaminZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel htmlFor={id}>{label}</FormLabel>
+					<FormLabel>{label}</FormLabel>
 					<FormControl>
 						<RadioGroup
+							id={id}
 							value={field.value}
 							className="flex justify-start gap-8"
 							onValueChange={field.onChange}

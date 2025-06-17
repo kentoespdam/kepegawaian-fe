@@ -49,7 +49,7 @@ const PegawaiForm = ({ biodata, pegawai }: PegawaiFormProps) => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+			<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 				<SelectStatusPegawaiZod
 					id="statusPegawai"
 					label="Status Pegawai"

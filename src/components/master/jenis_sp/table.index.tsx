@@ -66,13 +66,13 @@ const JenisSpTableComponent = () => {
 				deletePath="master/jenis-sp"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 			<DeleteSanksiJenisSpFormDialog
 				id={sanksiId}
 				openDelete={openDeleteSanksi}
 				setOpenDelete={setOpenDeleteSanksi}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

@@ -68,7 +68,7 @@ const GajiBatchMasterProsesForm = (props: GajiBatchMasterProsesFormProps) => {
 					<DialogTitle>Tambah Komponen Gaji</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 						<InputZod id="nama" label="Nama" form={form} />
 						<SelectJenisGajiZod id="jenisGaji" label="Jenis Gaji" form={form} />
 						<InputZod id="nilai" label="Nilai" type="number" form={form} />

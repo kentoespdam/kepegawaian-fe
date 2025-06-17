@@ -56,7 +56,7 @@ const SearchSOForm = ({ diagram }: SearchSOFormProps) => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(handleSearch)}>
+			<form name="form" onSubmit={form.handleSubmit(handleSearch)}>
 				<div className="relative">
 					<FormField
 						control={form.control}

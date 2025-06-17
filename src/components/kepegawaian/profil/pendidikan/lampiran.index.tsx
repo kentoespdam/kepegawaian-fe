@@ -33,8 +33,8 @@ const LampiranPendidikanContent = () => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
+		<div className="grid overflow-auto p-2 min-h-72 gap-0">
+			<div className="min-h-72">
 				<Table>
 					<TableHeadBuilder columns={lampiranProfilTableColumns} />
 					{query.isLoading || query.isFetching ? (

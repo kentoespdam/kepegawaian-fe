@@ -40,7 +40,7 @@ const FilterMutasiComponent = ({
 	return (
 		<Form {...form}>
 			<Fieldset title="Filter Mutasi">
-				<form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+				<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
 					<JenisMutasiZod id="jenisMutasi" form={form} />
 					<DatePickerZod id="tglAwal" form={form} />
 					<DatePickerZod id="tglAkhir" form={form} />

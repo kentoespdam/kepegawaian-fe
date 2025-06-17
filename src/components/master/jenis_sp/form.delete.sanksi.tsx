@@ -21,12 +21,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalMutation } from "@store/query-store";
 import { useForm } from "react-hook-form";
 import { patchDeleteSanksiJenisSp } from "../sanksi/action";
+import type { QueryKey } from "@tanstack/react-query";
 
 interface DeleteSanksiJenisSpFormDialogProps {
 	id: number;
 	openDelete: boolean;
 	setOpenDelete: (value: boolean) => void;
-	queryKeys: (string | number | undefined)[];
+	queryKeys: QueryKey;
 }
 
 const DeleteSanksiJenisSpFormDialog = (
@@ -64,7 +65,7 @@ const DeleteSanksiJenisSpFormDialog = (
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 						<FormField
 							control={form.control}
 							name="id"
