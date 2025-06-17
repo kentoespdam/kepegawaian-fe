@@ -19,7 +19,6 @@ const DashboardPage = async () => {
 	});
 	return (
 		<div className="grid gap-2">
-			<h2 className="text-2xl font-semibold">{metadata.title}</h2>
 			<ResizablePanelGroup
 				direction="horizontal"
 				className="w-full rounded-lg border"
