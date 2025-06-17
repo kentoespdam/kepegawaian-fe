@@ -16,7 +16,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { tanggalIndonesia } from "@helpers/tanggal";
 import { useQuery } from "@tanstack/react-query";
 
@@ -28,8 +29,8 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 	} = useQuery({
 		queryKey: ["status-pegawai"],
 		queryFn: async () =>
-			await getListData<StatusPegawai>({
-				path: "status-pegawai",
+			await getListDataEnc<StatusPegawai>({
+				path: encodeString("status-pegawai"),
 			}),
 	});
 	const tglMulaiKerja = new Date(pegawai.tmtKerja ?? "");

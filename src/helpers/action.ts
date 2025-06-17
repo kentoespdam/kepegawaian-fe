@@ -179,14 +179,16 @@ export const getDataById = async <TData>(
 type getByIdEncProps = {
 	isNotNumber: boolean;
 } & getByIdProps;
-export const getDataByIdEnc = async <TData>(
-	props: getByIdEncProps,
-): Promise<TData> => {
-	const decId = props.isNotNumber
+export const getDataByIdEnc = async <TData>({
+	isNotNumber = false,
+	...props
+}: getByIdEncProps): Promise<TData> => {
+	const decPath = decodeString(props.path);
+	const decId = isNotNumber
 		? decodeString(props.id as string)
 		: decodeId(props.id as string);
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
-	const url = `${basePath}/${props.path.replace("_", "-")}/${decId}`;
+	const url = `${basePath}/${decPath.replace("_", "-")}/${decId}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const retryLimit = 3;
@@ -337,6 +339,37 @@ export const globalDeleteData = async (props: globalDeleteDataProps) => {
 		};
 
 	const url = `${API_URL}/${props.path}/${uniqueId}`;
+	const headers = setAuthorizeHeader(cookies());
+	const controller = new AbortController();
+	const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+	const response = await fetch(url, {
+		method: "DELETE",
+		headers,
+		signal: controller.signal,
+		cache: "no-cache",
+	});
+
+	const result = await response.json();
+	clearTimeout(timeoutId);
+
+	return result;
+};
+
+export const globalDeleteDataEnc = async (props: globalDeleteDataProps) => {
+	const unique = props.formData.unique as string;
+	const uniqueId = decodeId(unique) as number;
+	const decPath = decodeString(props.path);
+
+	const id = Number(props.formData.id.split("-")[1]);
+	if (id !== uniqueId)
+		return {
+			status: 400,
+			statusText: "Bad Request",
+			errors: "invalid data",
+		};
+
+	const url = `${API_URL}/${decPath}/${uniqueId}`;
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const timeoutId = setTimeout(() => controller.abort(), 5000);

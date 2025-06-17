@@ -54,9 +54,7 @@ const KiriDataPribadi = ({ pegawai }: KiriDataPribadiProps) => {
 					</TableHeader>
 					<TableBody>
 						<TableRow>
-							<TableCell className="p-1 align-text-top">
-								NIK / NIPAM
-							</TableCell>
+							<TableCell className="p-1 align-text-top">NIK / NIPAM</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
 								{pegawai.nipam}
