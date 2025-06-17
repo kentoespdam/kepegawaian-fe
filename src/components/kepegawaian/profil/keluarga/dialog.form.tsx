@@ -3,7 +3,7 @@ import { saveProfilKeluarga } from "@app/kepegawaian/pendukung/keluarga/action";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import SelectAgamaZod from "@components/form/zod/agama";
 import DatePickerZod from "@components/form/zod/date-picker";
-import HubunganKeluargaZod from "@components/form/zod/hubungan-keluarga";
+import SelectHubunganKeluargaZod from "@components/form/zod/hubungan-keluarga";
 import InputZod from "@components/form/zod/input";
 import RadioJenisKelaminZod from "@components/form/zod/jenis-kelamin";
 import JenjangPendidikanZod from "@components/form/zod/jenjang-pendidikan";
@@ -16,12 +16,14 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { DialogTitle } from "@radix-ui/react-dialog";
 import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
@@ -60,8 +62,9 @@ const FormKeluargaDialog = () => {
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className="p-0">
-				<DialogHeader className="px-4 py-2 space-y-0">
-					Data Keluarga Pegawai
+				<DialogHeader className="px-4 pt-2 space-y-0">
+					<DialogTitle>Data Keluarga Pegawai</DialogTitle>
+					<DialogDescription>Form Input/Edit Data Keluarga</DialogDescription>
 				</DialogHeader>
 				<Separator />
 				<Form {...form}>
@@ -79,7 +82,7 @@ const FormKeluargaDialog = () => {
 							<InputZod id="nama" label="Nama" form={form} />
 							<RadioJenisKelaminZod id="jenisKelamin" form={form} />
 							<SelectAgamaZod id="agama" form={form} />
-							<HubunganKeluargaZod id="hubunganKeluarga" form={form} />
+							<SelectHubunganKeluargaZod id="hubunganKeluarga" form={form} />
 							<InputZod id="tempatLahir" label="Tempat Lahir" form={form} />
 							<DatePickerZod
 								id="tanggalLahir"

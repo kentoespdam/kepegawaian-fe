@@ -14,13 +14,20 @@ import {
 } from "@components/ui/card";
 import { Table } from "@components/ui/table";
 import { TabsContent } from "@components/ui/tabs";
+import { useProfilPribadiStore } from "@store/kepegawaian/profil/pribadi";
 import { useQueryClient } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import EditProfilPribadiFormComponent from "../profil/pribadi";
 import PegawaiTableBody from "./body";
 
 const TabBiodataPegawai = () => {
 	const searchParams = useSearchParams();
 	const params = new URLSearchParams(searchParams);
+
+	const { pegawai, open } = useProfilPribadiStore((state) => ({
+		pegawai: state.pegawai,
+		open: state.open,
+	}));
 
 	const qc = useQueryClient();
 	const qs = qc.getQueryState<Pageable<Pegawai>>([
@@ -54,6 +61,7 @@ const TabBiodataPegawai = () => {
 					<PaginationBuilder data={qs?.data} />
 				</CardContent>
 			</Card>
+			<EditProfilPribadiFormComponent open={open} pegawai={pegawai} />
 		</TabsContent>
 	);
 };

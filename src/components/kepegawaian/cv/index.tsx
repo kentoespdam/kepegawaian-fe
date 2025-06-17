@@ -26,6 +26,7 @@ import CvRightPendidikan from "./right.pendidikan";
 import CvRightPengalamanKerja from "./right.pengalaman";
 import CvRightPrestasi from "./right.prestasi";
 import CvRightTitle from "./right.title";
+import { encodeId, encodeString } from "@helpers/number";
 
 export type CvComponentProps = {
 	pegawai: PegawaiDetail;
@@ -41,9 +42,10 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 		queryKey: ["pegawai", pegawaiId],
 		queryFn: () =>
 			getDataByIdEnc<PegawaiDetail>({
-				path: "pegawai",
+				path: encodeString("pegawai"),
 				id: pegawaiId,
 				isRoot: true,
+				isNotNumber: false,
 			}),
 
 		enabled: !!pegawaiId,
