@@ -60,8 +60,8 @@ const ProfilPengalamanKerjaTableBody = (
 					<TableCell className="border-x">{row.typePerusahaan}</TableCell>
 					<TableCell className="border-x">{row.jabatan}</TableCell>
 					<TableCell className="border-x">{row.lokasi}</TableCell>
-					<TableCell className="border-x">{row.tanggalMasuk}</TableCell>
-					<TableCell className="border-x">{row.tanggalKeluar}</TableCell>
+					<TableCell className="border-x" align="right">{row.tahunMasuk}</TableCell>
+					<TableCell className="border-x" align="right">{row.tahunKeluar}</TableCell>
 					<TableCell className="border-x">{row.notes}</TableCell>
 					<TableCell className="border-x" align="center">
 						<TooltipBuilder

@@ -4,6 +4,8 @@ import { Accordion } from "@components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import KananDataKeluarga from "./kanan.keluarga";
 import { HomeIcon } from "lucide-react";
+import KananDataPendidikan from "./kanan.pendidikan";
+import KananDataPengalamanKerja from "./kanan.pengalaman";
 
 type DashboardPanelKananComponentProps = {
 	pegawai: PegawaiDetail;
@@ -24,6 +26,14 @@ const DashboardPanelKananComponent = ({
 			<CardContent className="px-0 h-auto">
 				<Accordion type="single" collapsible defaultValue="data-keluarga">
 					<KananDataKeluarga
+						nik={pegawai.biodata.nik}
+						nama={pegawai.biodata.nama}
+					/>
+					<KananDataPendidikan
+						nik={pegawai.biodata.nik}
+						nama={pegawai.biodata.nama}
+					/>
+					<KananDataPengalamanKerja
 						nik={pegawai.biodata.nik}
 						nama={pegawai.biodata.nama}
 					/>

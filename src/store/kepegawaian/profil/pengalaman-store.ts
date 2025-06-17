@@ -13,8 +13,8 @@ const defaultValues: PengalamanKerjaSchema = {
 	typePerusahaan: "",
 	jabatan: "",
 	lokasi: "",
-	tanggalMasuk: "",
-	tanggalKeluar: "",
+	tahunMasuk: 1945,
+	tahunKeluar: 1945,
 	notes: "",
 };
 
@@ -51,8 +51,8 @@ export const usePengalamanKerjaStore = create<PengalamanKerjaStore>((set) => ({
 				typePerusahaan: pengalaman?.typePerusahaan || "",
 				jabatan: pengalaman?.jabatan || "",
 				lokasi: pengalaman?.lokasi || "",
-				tanggalMasuk: pengalaman?.tanggalMasuk || "",
-				tanggalKeluar: pengalaman?.tanggalKeluar || "",
+				tahunMasuk: pengalaman?.tahunMasuk || 1945,
+				tahunKeluar: pengalaman?.tahunKeluar || 1945,
 				notes: pengalaman?.notes || "",
 			},
 		});
