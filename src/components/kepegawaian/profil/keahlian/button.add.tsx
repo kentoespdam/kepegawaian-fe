@@ -3,7 +3,8 @@ import type { Biodata } from "@_types/profil/biodata";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, PlusCircleIcon } from "lucide-react";
@@ -20,10 +21,11 @@ const AddProfilKeahlianButton = ({ nik }: AddProfilKeahlianButtonProps) => {
 	const query = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});

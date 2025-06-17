@@ -55,7 +55,7 @@ const KeahlianTableBody = (props: KeahlianTableBodyProps) => {
 					<TableCell className="border-x">
 						<KeahlianTableAction data={row} biodata={props.biodata} />
 					</TableCell>
-					<TableCell className="border-x">{row.jenisKeahlian.nama}</TableCell>
+					<TableCell className="border-x text-nowrap">{row.jenisKeahlian.nama}</TableCell>
 					<TableCell className="border-x">{row.kualifikasi}</TableCell>
 					<TableCell className="border-x" align="center">
 						<TooltipBuilder
@@ -69,7 +69,7 @@ const KeahlianTableBody = (props: KeahlianTableBodyProps) => {
 							)}
 						</TooltipBuilder>
 					</TableCell>
-					<TableCell className="border-x">{row.institusi}</TableCell>
+					<TableCell className="border-x text-nowrap">{row.institusi}</TableCell>
 					<TableCell className="border-x">{row.tahun}</TableCell>
 					<TableCell className="border-x">{row.masaBerlaku}</TableCell>
 					<TableCell className="border-x" align="center">

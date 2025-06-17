@@ -12,26 +12,33 @@ import {
 import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useGlobalMutation } from "@store/query-store";
 import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface KeahlianTableActionProps {
 	biodata: Biodata;
 	data: Keahlian;
 }
 const KeahlianTableAction = (props: KeahlianTableActionProps) => {
+	const pathname = usePathname();
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const store = useKeahlianStore();
+	const { setKeahlianId, setDefaultValues, setOpen, setOpenDelete } =
+		useKeahlianStore((state) => ({
+			setKeahlianId: state.setKeahlianId,
+			setDefaultValues: state.setDefaultValues,
+			setOpen: state.setOpen,
+			setOpenDelete: state.setOpenDelete,
+		}));
 
 	const editHandler = () => {
-		store.setDefaultValues(props.biodata, props.data);
-		store.setOpen(true);
+		setDefaultValues(props.biodata, props.data);
+		setOpen(true);
 	};
 
 	const deleteHadler = () => {
-		store.setDefaultValues(props.biodata);
-		store.setKeahlianId(props.data.id);
-		store.setOpenDelete(true);
+		setDefaultValues(props.biodata);
+		setKeahlianId(props.data.id);
+		setOpenDelete(true);
 	};
 
 	const accMutation = useGlobalMutation({
@@ -75,14 +82,15 @@ const KeahlianTableAction = (props: KeahlianTableActionProps) => {
 						<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Delete</span>
 					</DropdownMenuItem>
-
-					<DropdownMenuItem
-						className="flex flex-row items-center cursor-pointer text-info"
-						onClick={acceptHandler}
-					>
-						<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
-						<span>Setujui Data</span>
-					</DropdownMenuItem>
+					{pathname === "/dashboard" ? null : (
+						<DropdownMenuItem
+							className="flex flex-row items-center cursor-pointer text-info"
+							onClick={acceptHandler}
+						>
+							<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+							<span>Setujui Data</span>
+						</DropdownMenuItem>
+					)}
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
