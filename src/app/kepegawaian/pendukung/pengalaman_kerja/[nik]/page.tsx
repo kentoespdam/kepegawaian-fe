@@ -1,9 +1,9 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import type { Biodata } from "@_types/profil/biodata";
 import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran";
-import AddProfilPengalamanKerjaButton from "@components/kepegawaian/profil/pengalaman/button/add-button";
-import ProfilPengalamanKerjaContentComponent from "@components/kepegawaian/profil/pengalaman/content";
-import LampiranPengalamanKerjaContent from "@components/kepegawaian/profil/pengalaman/lampiran";
+import AddProfilPengalamanKerjaButton from "@components/kepegawaian/profil/pengalaman/button.add";
+import ProfilPengalamanKerjaContentComponent from "@components/kepegawaian/profil/pengalaman";
+import LampiranPengalamanKerjaContent from "@components/kepegawaian/profil/pengalaman/lampiran.index";
 import { getDataByIdEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 

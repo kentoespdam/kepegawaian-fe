@@ -15,8 +15,8 @@ import { encodeString } from "@helpers/number";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import FormProfilPengalamanKerjaDialog from "../dialog/form-dialog";
-import ProfilPengalamanKerjaTableBody from "./table/body";
+import FormProfilPengalamanKerjaDialog from "./dialog.form";
+import ProfilPengalamanKerjaTableBody from "./table.body";
 
 const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 	const searchParams = useSearchParams();
@@ -56,9 +56,9 @@ const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
+		<div className="grid overflow-auto p-2 min-h-64 gap-0">
 			<SearchBuilder columns={pengalamanKerjaTableColumns} />
-			<div className="min-h-96">
+			<div className="min-h-64">
 				<Table>
 					<TableHeadBuilder columns={pengalamanKerjaTableColumns} />
 					{query.isLoading || query.isFetching ? (
