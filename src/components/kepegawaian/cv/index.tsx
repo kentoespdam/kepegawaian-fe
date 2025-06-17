@@ -45,7 +45,6 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 				path: encodeString("pegawai"),
 				id: pegawaiId,
 				isRoot: true,
-				isNotNumber: false,
 			}),
 
 		enabled: !!pegawaiId,

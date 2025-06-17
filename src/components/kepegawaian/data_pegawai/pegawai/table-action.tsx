@@ -46,7 +46,6 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 			path: encodeString("pegawai"),
 			id: encodeId(props.data?.id as number),
 			isRoot: true,
-			isNotNumber: false,
 		}).then((res) => {
 			setPegawai(res);
 			setOpen(true);

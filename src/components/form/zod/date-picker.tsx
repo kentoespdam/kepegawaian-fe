@@ -22,7 +22,7 @@ const DatePickerZod = <TData extends FieldValues>({
 				return (
 					<FormItem>
 						<FormLabel>{label}</FormLabel>
-						<FormControl>
+						<FormControl className="relative">
 							<Datepicker
 								useRange={false}
 								asSingle={true}

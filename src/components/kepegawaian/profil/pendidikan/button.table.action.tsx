@@ -21,7 +21,6 @@ interface ProfilPendidikanActionProps {
 
 const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 	const pathname = usePathname();
-	console.log(pathname);
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
 	const store = usePendidikanStore();

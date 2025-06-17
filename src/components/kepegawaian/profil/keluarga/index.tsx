@@ -37,7 +37,7 @@ const ProfilKeluargaContentComponent = ({
 			getDataByIdEnc<Biodata>({
 				path: encodeString("profil/biodata"),
 				id: encodeString(nik),
-				isNotNumber: true,
+				isString: true,
 				isRoot: true,
 			}),
 		enabled: !!nik,

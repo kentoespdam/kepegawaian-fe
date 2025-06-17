@@ -4,17 +4,19 @@ import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/but
 import AddProfilPengalamanKerjaButton from "@components/kepegawaian/profil/pengalaman/button/add-button";
 import ProfilPengalamanKerjaContentComponent from "@components/kepegawaian/profil/pengalaman/content";
 import LampiranPengalamanKerjaContent from "@components/kepegawaian/profil/pengalaman/lampiran";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Data Pengalaman Kerja",
 };
 
 const PengalamanKerjaPage = async ({ params }: { params: { nik: string } }) => {
-	const bio = await getDataById<Biodata>({
-		path: "profil/biodata",
-		id: params.nik,
+	const bio = await getDataByIdEnc<Biodata>({
+		path: encodeString("profil/biodata"),
+		id: encodeString(params.nik),
 		isRoot: true,
+		isString: true,
 	});
 
 	return (

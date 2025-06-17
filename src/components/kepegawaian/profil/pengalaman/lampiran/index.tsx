@@ -2,13 +2,14 @@
 
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import {
-	lampiranProfilTableColumns,
 	type LampiranProfil,
+	lampiranProfilTableColumns,
 } from "@_types/profil/lampiran";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../../lampiran/dialog/add-lampiran-profil";
@@ -21,8 +22,10 @@ const LampiranPengalamanKerjaContent = () => {
 	const query = useQuery({
 		queryKey: ["lampiran-pengalaman", selectedPengalamanId],
 		queryFn: async () =>
-			await getListData<LampiranProfil>({
-				path: `profil/pengalaman/lampiran/${selectedPengalamanId}`,
+			await getListDataEnc<LampiranProfil>({
+				path: encodeString(
+					`profil/pengalaman/lampiran/${selectedPengalamanId}`,
+				),
 				isRoot: true,
 				searchParams: "",
 			}),
