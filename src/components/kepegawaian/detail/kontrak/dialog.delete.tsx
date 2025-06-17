@@ -69,7 +69,7 @@ const DeleteRiwayatKontrakDialog = ({
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 						<FormField
 							control={form.control}
 							name="id"

@@ -62,7 +62,7 @@ const VerifPhase2UploadDialog = ({
 					<DialogTitle>Upload Potongan</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 						<InputFileZod id="file" label="File" form={form} />
 						<DialogFooter>
 							<LoadingButtonClient

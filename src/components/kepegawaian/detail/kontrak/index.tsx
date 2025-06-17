@@ -70,7 +70,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 				deletePath="kepegawaian/riwayat/kontrak"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qkey}
+				queryKeys={[qkey]}
 			/>
 		</div>
 	);

@@ -31,9 +31,11 @@ const GajiBatchMasterProcessKomponenTable = ({
 	gajiBatchMasters,
 	gajiBatchRoot,
 }: GajiBatchMasterProcessKomponenTableProps) => {
+	console.log(gajiBatchRoot?.content);
 	const isVerified =
+		gajiBatchRoot?.content.length > 0 &&
 		gajiBatchRoot?.content[0].status !==
-		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2);
+			getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2);
 
 	const {
 		batchMasterId,
@@ -127,7 +129,7 @@ const GajiBatchMasterProcessKomponenTable = ({
 				deletePath="penggajian/batch/master/proses"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={["gaji_batch_master_proses", batchMasterId]}
+				queryKeys={[["gaji_batch_master_proses", batchMasterId]]}
 			/>
 		</div>
 	);

@@ -58,7 +58,7 @@ const RiwayatSpComponent = (props: RiwayatSpComponentProps) => {
 				deletePath="kepegawaian/riwayat/sp"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

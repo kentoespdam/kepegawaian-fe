@@ -106,7 +106,7 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
 				</AlertDialogTrigger>
 			</TooltipBuilder>
 			<AlertDialogContent>
-				<form onSubmit={handleSubmit}>
+				<form name="form" onSubmit={handleSubmit}>
 					<AlertDialogHeader>
 						<AlertDialogTitle>Yakin akan menghapus data?</AlertDialogTitle>
 						<AlertDialogDescription>

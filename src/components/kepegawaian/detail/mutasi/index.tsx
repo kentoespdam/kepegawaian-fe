@@ -65,7 +65,7 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				deletePath="kepegawaian/riwayat/mutasi"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qkey]}
 			/>
 		</div>
 	);

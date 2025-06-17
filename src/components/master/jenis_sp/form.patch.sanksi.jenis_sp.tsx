@@ -54,7 +54,7 @@ const PatchSanksiJenisSp = ({
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
+			<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
 				<div className="grid gap-2">
 					<InputZod
 						id="jenisSpId"

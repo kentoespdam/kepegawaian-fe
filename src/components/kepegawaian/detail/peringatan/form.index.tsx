@@ -73,7 +73,7 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 	return (
 		<div className="h-full">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)}>
+				<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-2 pl-4 pr-2 pb-4">
 						<InputZod
 							type="number"

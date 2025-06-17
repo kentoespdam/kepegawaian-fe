@@ -76,10 +76,10 @@ const ProfilKeluargaContentComponent = ({
 			<FormKeluargaDialog />
 			<DeleteZodDialogBuilder
 				id={keluargaId}
-				deletePath={encodeString("profil/keluarga")}
+				deletePath={"profil/keluarga"}
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={["profil-keluarga", nik]}
+				queryKeys={[["profil-keluarga", nik],["lampiran-keluarga", keluargaId]]}
 			/>
 		</div>
 	);

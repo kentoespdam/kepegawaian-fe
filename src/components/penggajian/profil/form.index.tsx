@@ -66,7 +66,7 @@ const ProfilGajiFormComponent = () => {
             <DialogContent>
                 {isLoading || isFetching ? <>Loading....</> : (
                     <Form {...form}>
-                        <form onSubmit={form.handleSubmit(onSubmit)}>
+                        <form name="form" onSubmit={form.handleSubmit(onSubmit)}>
                             <InputZod id="id" label="ID" form={form} className="hidden" />
                             <TextAreaZod id="nama" label="Nama" form={form} />
                             <div className="mt-2 flex gap-2 justify-end">

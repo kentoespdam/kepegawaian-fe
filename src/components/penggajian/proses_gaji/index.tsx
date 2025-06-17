@@ -60,7 +60,7 @@ const ProsesGajiComponent = ({ pegawai }: ProsesGajiComponentProps) => {
                 id={batchId}
                 openDelete={openDelete}
                 setOpenDelete={setOpenDelete}
-                queryKeys={qkey}
+                queryKeys={[qkey]}
             />
         </>
     );

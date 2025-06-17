@@ -21,7 +21,7 @@ const DatePickerZod = <TData extends FieldValues>({
 			render={({ field }) => {
 				return (
 					<FormItem>
-						<FormLabel htmlFor={id}>{label}</FormLabel>
+						<FormLabel>{label}</FormLabel>
 						<FormControl>
 							<Datepicker
 								useRange={false}
