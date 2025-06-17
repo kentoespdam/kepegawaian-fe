@@ -20,7 +20,7 @@ const KananDataPendidikan = ({ nik, nama }: KananDataPendidikanProps) => {
 				Data Pendidikan
 			</AccordionTrigger>
 			<AccordionContent className="grid border-t p-0">
-				<div className="grid min-h-screen w-full">
+				<div className="grid w-full">
 					<div className="border-t border-r border-b gap-0">
 						<div className="grid">
 							<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px]">
