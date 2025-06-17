@@ -6,6 +6,7 @@ import InputZod from "@components/form/zod/input";
 import JenisPelatihanZod from "@components/form/zod/jenis-pelatihan";
 import LulusZod from "@components/form/zod/lulus";
 import TextAreaZod from "@components/form/zod/textarea";
+import YesNoZod from "@components/form/zod/yes-no";
 import { Button } from "@components/ui/button";
 import {
 	Dialog,
@@ -72,12 +73,25 @@ const FormPelatihanDialog = () => {
 							/>
 							<JenisPelatihanZod id="jenisPelatihanId" form={form} />
 							<InputZod id="nama" label="Nama" form={form} />
+							<InputZod id="lembaga" label="Lembaga" form={form} />
 							<InputZod type="number" id="nilai" label="Nilai" form={form} />
 							<LulusZod id="lulus" label="Lulus" form={form} />
-							<DatePickerZod id="tanggalMulai" label="Tgl. Mulai" form={form} />
+							<div className="grid grid-cols-2 gap-2">
+								<DatePickerZod
+									id="tanggalMulai"
+									label="Tgl. Mulai"
+									form={form}
+								/>
+								<DatePickerZod
+									id="tanggalSelesai"
+									label="Tgl. Selesai"
+									form={form}
+								/>
+							</div>
+							<YesNoZod id="ikatanDinas" label="Ikatan Dinas" form={form} />
 							<DatePickerZod
-								id="tanggalSelesai"
-								label="Tgl. Selesai"
+								id="tanggalAkhirIkatan"
+								label="Tgl. Akhir Ikatan"
 								form={form}
 							/>
 							<TextAreaZod id="notes" label="Catatan" form={form} />

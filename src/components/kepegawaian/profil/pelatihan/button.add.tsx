@@ -3,17 +3,18 @@ import type { Biodata } from "@_types/profil/biodata";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
 import { useQuery } from "@tanstack/react-query";
 import { LoaderCircle, PlusCircleIcon } from "lucide-react";
 
 interface AddProfilPelatihanButtonProps {
-    nik: string
+	nik: string;
 }
 
-const AddProfilPelatihanButton = ({nik}: AddProfilPelatihanButtonProps) => {
-    const { setDefaultValues, setOpen } = usePelatihanStore((state) => ({
+const AddProfilPelatihanButton = ({ nik }: AddProfilPelatihanButtonProps) => {
+	const { setDefaultValues, setOpen } = usePelatihanStore((state) => ({
 		setDefaultValues: state.setDefaultValues,
 		setOpen: state.setOpen,
 	}));
@@ -21,10 +22,11 @@ const AddProfilPelatihanButton = ({nik}: AddProfilPelatihanButtonProps) => {
 	const query = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
@@ -60,6 +62,6 @@ const AddProfilPelatihanButton = ({nik}: AddProfilPelatihanButtonProps) => {
 			</Button>
 		</TooltipBuilder>
 	);
-}
+};
 
 export default AddProfilPelatihanButton;
