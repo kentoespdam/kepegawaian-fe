@@ -5,8 +5,11 @@ import type { Pendidikan } from "@_types/profil/pendidikan";
 import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { tanggalIndonesia } from "@helpers/tanggal";
 import { useQuery } from "@tanstack/react-query";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import {
 	AtSignIcon,
 	MapIcon,
@@ -18,7 +21,7 @@ import {
 	VenusAndMarsIcon,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { usePDF } from "react-to-pdf";
+import { useRef } from "react";
 import CvLeftDetail from "./left.detail";
 import CvLeftPhoto from "./left.photo";
 import CvRightKeahlian from "./right.keahlian";
@@ -26,7 +29,6 @@ import CvRightPendidikan from "./right.pendidikan";
 import CvRightPengalamanKerja from "./right.pengalaman";
 import CvRightPrestasi from "./right.prestasi";
 import CvRightTitle from "./right.title";
-import { encodeId, encodeString } from "@helpers/number";
 
 export type CvComponentProps = {
 	pegawai: PegawaiDetail;
@@ -51,11 +53,25 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 	});
 
 	const router = useRouter();
-	const { toPDF, targetRef } = usePDF({ filename: `CV-${pegawaiId}.pdf` });
+	const targetRef = useRef(null);
+	// const { toPDF, targetRef } = usePDF({ filename: `CV-${pegawaiId}.pdf` });
+	const toPDF = async () => {
+		if (!targetRef.current) return;
+
+		const pdf = new jsPDF();
+		const canvas = await html2canvas(targetRef.current);
+
+		const imgData = canvas.toDataURL("image/png");
+		const imgProps = pdf.getImageProperties(imgData);
+		const pdfWidth = pdf.internal.pageSize.getWidth();
+		const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+		pdf.addImage(imgData, "PNG", 0, 0, pdfWidth, pdfHeight);
+		pdf.save(`cv-${pegawai?.biodata.nama}.pdf`);
+	};
 
 	return !pegawai || isLoading || isFetching ? null : (
-		<div className="grid gap-4">
-			<div className="w-full grid grid-cols-5 gap-2 pl-4">
+		<div className="grid gap-2">
+			<div className="w-full grid grid-cols-5 gap-2">
 				<Button
 					variant={"destructive"}
 					className="flex gap-2 col-span-1"
@@ -72,8 +88,11 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 					<span>Cetak PDF</span>
 				</Button>
 			</div>
-			<div className="w-full max-h-auto grid grid-cols-12 p-4" ref={targetRef}>
-				<div className="grid col-span-4 p-4 gap-4 bg-gray-800 text-white">
+			<div
+				className="w-full grid grid-cols-12 items-start gap-4 bg-gray-800"
+				ref={targetRef}
+			>
+				<div className="grid col-span-4 p-4 gap-2  text-white">
 					<CvLeftPhoto pegawai={pegawai} />
 					<Separator />
 					<CvLeftDetail
@@ -126,7 +145,7 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 						value={pegawai.email ?? "-"}
 					/>
 				</div>
-				<div className="col-span-8 p-1">
+				<div className="col-span-8 p-1 bg-white">
 					<div className="grid gap-4">
 						<CvRightTitle />
 						<CvRightPendidikan nik={pegawai.biodata.nik} />

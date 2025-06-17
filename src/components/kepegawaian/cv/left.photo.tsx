@@ -4,7 +4,7 @@ import Image from "next/image";
 
 const CvLeftPhoto = ({ pegawai }: CvComponentProps) => {
 	return (
-		<>
+		<div className="grid gap-4">
 			<div className="w-full flex justify-center ">
 				<div className="w-[120px] h-[120px] flex justify-center items-center p-1 border-4 rounded-full">
 					<Avatar className="h-[100px] w-[100px]">
@@ -23,13 +23,13 @@ const CvLeftPhoto = ({ pegawai }: CvComponentProps) => {
 					</Avatar>
 				</div>
 			</div>
-			<div className="grid justify-center">
+			<div className="grid justify-center gap-2">
 				<span className="text-center font-bold">{pegawai?.biodata.nama}</span>
 				<span className="text-center text-sm font-thin">
 					{pegawai?.jabatan.nama}
 				</span>
 			</div>
-		</>
+		</div>
 	);
 };
 
