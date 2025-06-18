@@ -7,10 +7,11 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageData, getPageDataEnc } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import KananDataMutasiTableBody from "./kanan.mutasi.table.body";
+import { encodeString } from "@helpers/number";
 
 type KananDataMutasiTableProps = {
 	pegawaiId: number;
@@ -23,8 +24,10 @@ const KananDataMutasiTable = (props: KananDataMutasiTableProps) => {
 	const query = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
-			const result = await getPageData<RiwayatMutasi>({
-				path: `kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
+			const result = await getPageDataEnc<RiwayatMutasi>({
+				path: encodeString(
+					`kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
+				),
 				searchParams: search.toString(),
 				isRoot: true,
 			});

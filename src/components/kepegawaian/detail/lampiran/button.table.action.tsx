@@ -80,7 +80,7 @@ const LampiranSkTableAction = ({
 	});
 
 	return (
-		<div className="flex justify-between gap-2">
+		<div className="flex justify-center items-center gap-2">
 			<TooltipBuilder
 				text={OFFICE_TYPE.includes(mimeType) ? "Download" : "Lihat"}
 				className={
@@ -108,13 +108,13 @@ const LampiranSkTableAction = ({
 					/>
 				)}
 			</TooltipBuilder>
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<Button variant="default" size="icon" className="h-6 w-6">
-						<EllipsisIcon />
-					</Button>
-				</DropdownMenuTrigger>
-				{path === "dashboard" ? null : (
+			{path === "/dashboard" ? null : (
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<Button variant="default" size="icon" className="h-6 w-6">
+							<EllipsisIcon />
+						</Button>
+					</DropdownMenuTrigger>
 					<DropdownMenuContent className="w-auto">
 						<DropdownMenuGroup>
 							<DropdownMenuItem
@@ -133,8 +133,8 @@ const LampiranSkTableAction = ({
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 					</DropdownMenuContent>
-				)}
-			</DropdownMenu>
+				</DropdownMenu>
+			)}
 		</div>
 	);
 };
