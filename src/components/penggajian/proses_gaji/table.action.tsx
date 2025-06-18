@@ -12,9 +12,9 @@ import { verifikasiProses } from "./action";
 interface ProsesGajiTableActionProps {
     row: GajiBatchRoot,
     pegawai: Pegawai,
-    qkey: string[]
+    qKey: string[]
 }
-const ProsesGajiTableAction = ({ row, pegawai, qkey }: ProsesGajiTableActionProps) => {
+const ProsesGajiTableAction = ({ row, pegawai, qKey }: ProsesGajiTableActionProps) => {
     const { setBatchId, setOpenDelete } = useGajiBatchRootStore((state) => ({
         setBatchId: state.setBatchId,
         setOpenDelete: state.setOpenDelete,
@@ -22,7 +22,7 @@ const ProsesGajiTableAction = ({ row, pegawai, qkey }: ProsesGajiTableActionProp
 
     const reprocess = useGlobalMutation({
         mutationFunction: verifikasiProses,
-        queryKeys: [qkey],
+        queryKeys: [qKey],
     });
 
     const prosesUlangHandler = async () => {

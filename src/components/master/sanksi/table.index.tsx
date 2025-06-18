@@ -49,7 +49,7 @@ const SanksiTableComponent = () => {
 				deletePath="master/sanksi"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={[qkey]}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

@@ -6,7 +6,7 @@ import { Button } from "@components/ui/button";
 import { Separator } from "@components/ui/separator";
 import { getDataByIdEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
-import { tanggalIndonesia } from "@helpers/tanggal";
+import { dateToIndonesian } from "@helpers/string";
 import { useQuery } from "@tanstack/react-query";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
@@ -112,7 +112,7 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 					<CvLeftDetail
 						icon={<MapPinIcon className="w-4 h-4" />}
 						label="Tempat, Tgl Lahir"
-						value={`${pegawai.biodata.tempatLahir}, ${tanggalIndonesia(pegawai.biodata.tanggalLahir)}`}
+						value={`${pegawai.biodata.tempatLahir}, ${dateToIndonesian(pegawai.biodata.tanggalLahir)}`}
 					/>
 					<Separator />
 					<CvLeftDetail
@@ -155,7 +155,7 @@ const CvComponent = ({ pegawaiId }: { pegawaiId: string }) => {
 						<div className="flex justify-end pr-4">
 							<div className="min-w-40 grid gap-24 text-center">
 								<span>
-									Purwokerto, {tanggalIndonesia(new Date().toDateString())}
+									Purwokerto, {dateToIndonesian(new Date().toDateString())}
 								</span>
 								<span>({pegawai.biodata.nama})</span>
 							</div>

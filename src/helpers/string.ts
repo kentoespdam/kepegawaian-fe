@@ -9,8 +9,10 @@ export const base64toBlob = (base64: string, mime: string) => {
 };
 
 // change date format to indonesian ${hari}, ${tanggal} ${bulan} ${tahun}
-export const dateToIndonesian = (date: string) => {
+export const dateToIndonesian = (date?: string) => {
+	if (!date) return "";
 	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return "";
 	return `${d.toLocaleDateString("id-ID", {
 		day: "numeric",
 		month: "long",

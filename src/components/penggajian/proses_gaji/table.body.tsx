@@ -21,9 +21,9 @@ const PeriodeCell = ({ periode }: { periode: string }) => {
 interface GajiBatchRootTableBodyProps {
     data: Pageable<GajiBatchRoot>,
     pegawai: Pegawai,
-    qkey: string[]
+    qKey: string[]
 }
-const GajiBatchRootTableBody = ({ data, pegawai, qkey }: GajiBatchRootTableBodyProps) => {
+const GajiBatchRootTableBody = ({ data, pegawai, qKey }: GajiBatchRootTableBodyProps) => {
     let urut = getUrut(data)
     return (
         <TableBody>
@@ -31,7 +31,7 @@ const GajiBatchRootTableBody = ({ data, pegawai, qkey }: GajiBatchRootTableBodyP
                 <TableRow key={row.id}>
                     <TableCell align="right" width={40} className="border-x">{urut++}</TableCell>
                     <TableCell className="border-x">
-                        <ProsesGajiTableAction row={row} pegawai={pegawai} qkey={qkey} />
+                        <ProsesGajiTableAction row={row} pegawai={pegawai} qKey={qKey} />
                     </TableCell>
                     <PeriodeCell periode={row.periode} />
                     <TableCell className="border-x whitespace-nowrap">{row.id}</TableCell>

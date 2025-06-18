@@ -29,10 +29,10 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 		setOpenDelete: state.setOpenDelete,
 	}))
 
-	const qkey = ["riwayat-kontrak", props.pegawaiId, search.toString()]
+	const qKey = ["riwayat-kontrak", props.pegawaiId, search.toString()]
 
 	const query = useQuery({
-		queryKey: qkey,
+		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageData<RiwayatKontrak>({
 				path: `kepegawaian/riwayat/kontrak/pegawai/${props.pegawaiId}`,
@@ -70,7 +70,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 				deletePath="kepegawaian/riwayat/kontrak"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={[qkey]}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);
