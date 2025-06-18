@@ -1,6 +1,6 @@
 import {
-	findJenjangPendidikanValue,
 	type JenjangPendidikan,
+	findJenjangPendidikanValue,
 } from "@_types/master/jenjang_pendidikan";
 import { Button } from "@components/ui/button";
 import {
@@ -15,7 +15,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -34,8 +35,8 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["jenjang-pendidikan-list"],
 		queryFn: async () => {
-			const result = await getListData<JenjangPendidikan>({
-				path: "jenjang_pendidikan",
+			const result = await getListDataEnc<JenjangPendidikan>({
+				path: encodeString("jenjang_pendidikan"),
 			});
 			return result;
 		},
@@ -50,8 +51,8 @@ const JenjangPendidikanSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	}, 500);
 
 	useEffect(() => {
-        setValue(val ?? "")
-    }, [val])
+		setValue(val ?? "");
+	}, [val]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

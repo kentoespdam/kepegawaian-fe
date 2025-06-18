@@ -1,7 +1,7 @@
 "use client";
 import {
-	findOrganisasiValue,
 	type Organisasi,
+	findOrganisasiValue,
 } from "@_types/master/organisasi";
 import { Button } from "@components/ui/button";
 import {
@@ -16,7 +16,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -35,8 +36,8 @@ const SearchOrganisasiBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["organisasi-list"],
 		queryFn: async () => {
-			const result = await getListData<Organisasi>({
-				path: "organisasi",
+			const result = await getListDataEnc<Organisasi>({
+				path: encodeString("organisasi"),
 			});
 			return result;
 		},
