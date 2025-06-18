@@ -17,16 +17,6 @@ export const getNamaBulan = (bulan: number): string => {
 	return NAMA_BULAN[bulan - 1];
 };
 
-export const tanggalIndonesia = (tanggal?: string): string => {
-	if (!tanggal) return "";
-	const date = new Date(tanggal);
-	const day = date.getDate();
-	const month = date.getMonth() + 1;
-	const year = date.getFullYear();
-	return `${day} ${getNamaBulan(month)} ${year}`;
-};
-
-
 export const hitungSisaBulanHari = (
 	tanggalAwal: string,
 	tanggalAkhir: string,
@@ -66,11 +56,11 @@ export const hitungSisaBulanHari = (
 	return { bulan: totalBulan, hari: hariSelisih };
 };
 
-export const hitungUmur=(tanggalAwal: string, tanggalAkhir: string) => {
+export const hitungUmur = (tanggalAwal: string, tanggalAkhir: string) => {
 	if (!tanggalAwal || !tanggalAkhir) return 0;
-	const date1=new Date(tanggalAwal);
-	const date2=new Date(tanggalAkhir);
-	const timeDiff=date2.getTime()-date1.getTime();
+	const date1 = new Date(tanggalAwal);
+	const date2 = new Date(tanggalAkhir);
+	const timeDiff = date2.getTime() - date1.getTime();
 	const age = Math.floor(timeDiff / (1000 * 3600 * 24) / 365);
 	return age;
-}
+};

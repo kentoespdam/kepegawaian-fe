@@ -34,7 +34,7 @@ const LampiranSkTableAction = ({
 }: LampiranSkTableActionProps) => {
 	const { id, ref, refId, fileName, mimeType } = data;
 	const path = usePathname();
-	const callbackUrl = btoa(path)
+	const callbackUrl = btoa(path);
 
 	const { setLampiranId, setRefId, setOpenDeleteLampiranForm } =
 		useLampiranSkStore((state) => ({
@@ -83,7 +83,12 @@ const LampiranSkTableAction = ({
 		<div className="flex justify-between gap-2">
 			<TooltipBuilder
 				text={OFFICE_TYPE.includes(mimeType) ? "Download" : "Lihat"}
-				className={OFFICE_TYPE.includes(mimeType) ? "bg-warning" : "bg-info text-info-foreground"}>
+				className={
+					OFFICE_TYPE.includes(mimeType)
+						? "bg-warning"
+						: "bg-info text-info-foreground"
+				}
+			>
 				{OFFICE_TYPE.includes(mimeType) ? (
 					<Button
 						variant="ghost"
@@ -109,24 +114,26 @@ const LampiranSkTableAction = ({
 						<EllipsisIcon />
 					</Button>
 				</DropdownMenuTrigger>
-				<DropdownMenuContent className="w-auto">
-					<DropdownMenuGroup>
-						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-info"
-							onClick={acceptHandler}
-						>
-							<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
-							<span>Setujui Data</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-destructive"
-							onClick={deleteHandler}
-						>
-							<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
-							<span>Delete</span>
-						</DropdownMenuItem>
-					</DropdownMenuGroup>
-				</DropdownMenuContent>
+				{path === "dashboard" ? null : (
+					<DropdownMenuContent className="w-auto">
+						<DropdownMenuGroup>
+							<DropdownMenuItem
+								className="flex flex-row items-center cursor-pointer text-info"
+								onClick={acceptHandler}
+							>
+								<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+								<span>Setujui Data</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								className="flex flex-row items-center cursor-pointer text-destructive"
+								onClick={deleteHandler}
+							>
+								<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
+								<span>Delete</span>
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+					</DropdownMenuContent>
+				)}
 			</DropdownMenu>
 		</div>
 	);

@@ -67,7 +67,7 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 			<LampiranSkForm rootKey={rootKey} savePath="kepegawaian/lampiran" />
 			<DeleteZodDialogBuilder
 				id={lampiranId}
-				queryKeys={[rootKey]}
+				queryKeys={[[rootKey]]}
 				deletePath={`kepegawaian/lampiran/${jenisSk}/${refId}`}
 				openDelete={openDeleteLampiranForm}
 				setOpenDelete={setOpenDeleteLampiranForm}
