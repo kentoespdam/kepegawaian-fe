@@ -26,10 +26,10 @@ const ProsesGajiComponent = ({ pegawai }: ProsesGajiComponentProps) => {
     const params = useSearchParams()
     const search = new URLSearchParams(params)
 
-    const qkey = ["gaji_batch_root", search.toString()]
+    const qKey = ["gaji_batch_root", search.toString()]
 
     const { isLoading, error, data } = useQuery({
-        queryKey: qkey,
+        queryKey: qKey,
         queryFn: async () => await getPageData<GajiBatchRoot>({
             path: "penggajian/batch",
             searchParams: search.toString(),
@@ -40,7 +40,7 @@ const ProsesGajiComponent = ({ pegawai }: ProsesGajiComponentProps) => {
 
     return (
         <>
-            <SearchBuilder columns={gajiBatchRootColumns} qkey={qkey} />
+            <SearchBuilder columns={gajiBatchRootColumns} qKey={qKey} />
             <div className="w-full overflow-auto min-h-90">
                 <Table>
                     <TableHeadBuilder columns={gajiBatchRootColumns} />
@@ -51,7 +51,7 @@ const ProsesGajiComponent = ({ pegawai }: ProsesGajiComponentProps) => {
                             error={error?.message}
                         />
                     ) : (
-                        <GajiBatchRootTableBody data={data} pegawai={pegawai} qkey={qkey} />
+                        <GajiBatchRootTableBody data={data} pegawai={pegawai} qKey={qKey} />
                     )}
                 </Table>
                 <PaginationBuilder data={data} />
@@ -60,7 +60,7 @@ const ProsesGajiComponent = ({ pegawai }: ProsesGajiComponentProps) => {
                 id={batchId}
                 openDelete={openDelete}
                 setOpenDelete={setOpenDelete}
-                queryKeys={[qkey]}
+                queryKeys={[qKey]}
             />
         </>
     );

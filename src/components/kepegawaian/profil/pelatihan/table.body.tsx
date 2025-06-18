@@ -2,16 +2,16 @@ import type { Pageable } from "@_types/index";
 import type { Biodata } from "@_types/profil/biodata";
 import type { Pelatihan } from "@_types/profil/pelatihan";
 import DisetujuiIconBuilder from "@components/builder/disetujui-icon";
+import TooltipBuilder from "@components/builder/tooltip";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
+import { dateToIndonesian } from "@helpers/string";
 import { cn } from "@lib/utils";
 import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
 import { usePelatihanStore } from "@store/kepegawaian/profil/pelatihan-store";
+import { CheckIcon, XIcon } from "lucide-react";
 import { useEffect } from "react";
 import PelatihanTableAction from "./button.table.action";
-import TooltipBuilder from "@components/builder/tooltip";
-import { CheckIcon, XIcon } from "lucide-react";
-import { tanggalIndonesia } from "@helpers/tanggal";
 
 interface PelatihanTableBodyProps {
 	biodata: Biodata;
@@ -79,10 +79,10 @@ const PelatihanTableBody = (props: PelatihanTableBodyProps) => {
 						</TooltipBuilder>
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap" align="center">
-						{tanggalIndonesia(row.tanggalMulai)}
+						{dateToIndonesian(row.tanggalMulai)}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap" align="center">
-						{tanggalIndonesia(row.tanggalSelesai)}
+						{dateToIndonesian(row.tanggalSelesai)}
 					</TableCell>
 					<TableCell className="border-x" align="center">
 						{row.ikatanDinas ? (

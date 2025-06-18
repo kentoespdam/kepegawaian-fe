@@ -51,10 +51,10 @@ const GajiBatchMasterProcessKomponenTable = ({
 		setOpenDelete: state.setOpenDelete,
 	}));
 
-	const qkey = ["gaji_batch_master_proses", batchMasterId];
+	const qKey = ["gaji_batch_master_proses", batchMasterId];
 
 	const { isLoading, isFetching, isError, data, error } = useQuery({
-		queryKey: qkey,
+		queryKey: qKey,
 		queryFn: async () =>
 			await globalGetData<GajiBatchMasterProses[]>({
 				path: `penggajian/batch/master/proses/${batchMasterId}/master`,
@@ -123,13 +123,13 @@ const GajiBatchMasterProcessKomponenTable = ({
 					)}
 				</Table>
 			</div>
-			<GajiBatchMasterProsesForm qKey={qkey} />
+			<GajiBatchMasterProsesForm qKey={qKey} />
 			<DeleteZodDialogBuilder
 				id={batchMasterProsesId}
 				deletePath="penggajian/batch/master/proses"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={[["gaji_batch_master_proses", batchMasterId]]}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

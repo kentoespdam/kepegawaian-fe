@@ -88,7 +88,7 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 			<RiwayatSkFormComponent />
 			<DeleteZodDialogBuilder
 				id={riwayatSkId}
-				queryKeys={[qkey]}
+				queryKeys={[qKey]}
 				deletePath={"kepegawaian/riwayat/sk"}
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}

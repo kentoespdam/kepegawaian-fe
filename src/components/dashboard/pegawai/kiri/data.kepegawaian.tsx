@@ -18,7 +18,7 @@ import {
 } from "@components/ui/table";
 import { getListDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
-import { tanggalIndonesia } from "@helpers/tanggal";
+import { dateToIndonesian } from "@helpers/string";
 import { useQuery } from "@tanstack/react-query";
 
 const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
@@ -94,7 +94,7 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 							<TableCell className="p-1 align-text-top">TMT Golongan</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
-								{tanggalIndonesia(pegawai.skGolongan?.tmtBerlaku)}
+								{dateToIndonesian(pegawai.skGolongan?.tmtBerlaku)}
 							</TableCell>
 						</TableRow>
 						<TableRow>
@@ -112,7 +112,7 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 							</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
-								{tanggalIndonesia(pegawai.tmtKerja ?? "")}
+								{dateToIndonesian(pegawai.tmtKerja ?? "")}
 							</TableCell>
 						</TableRow>
 						<TableRow>
@@ -121,7 +121,7 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 							</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
-								{tanggalIndonesia(pegawai.skPegawai?.tmtBerlaku ?? "")}
+								{dateToIndonesian(pegawai.skPegawai?.tmtBerlaku ?? "")}
 							</TableCell>
 						</TableRow>
 						<TableRow>
