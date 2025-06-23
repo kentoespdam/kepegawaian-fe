@@ -1,6 +1,5 @@
 "use client";
 import type { Organisasi } from "@_types/master/organisasi";
-import type { Pegawai } from "@_types/pegawai";
 import {
 	type GajiBatchMaster,
 	gajiBatchMasterColumns,
@@ -14,12 +13,10 @@ import { useSearchParams } from "next/navigation";
 import GajiBatchMasterTableBody from "../gaji_batch_master/verif_phase_1/table.body";
 
 interface VerifPhase1ComponentProps {
-	pegawai: Pegawai;
 	organisasiList: Organisasi[];
 	gajiBatchMasters?: GajiBatchMaster[];
 }
 const VerifPhase1Component = ({
-	pegawai,
 	organisasiList,
 	gajiBatchMasters,
 }: VerifPhase1ComponentProps) => {
@@ -42,7 +39,7 @@ const VerifPhase1Component = ({
 			</div>
 			<SearchBuilder columns={gajiBatchMasterColumns} />
 			<div className="block max-h-[70vh] min-h-[350px] overflow-y-auto">
-				<table className="w-full">
+				<table>
 					<TableHeadBuilder columns={gajiBatchMasterColumns} />
 					{!gajiBatchMasters ? (
 						<LoadingTable columns={gajiBatchMasterColumns} isLoading={false} />

@@ -15,7 +15,7 @@ const GajiBatchMasterTableBody = ({
 }: GajiBatchMasterTableBodyProps) => {
 	let urut = 0;
 	return (
-		<TableBody className="h-96 overflow-y-auto">
+		<TableBody className="overflow-y-auto">
 			{organisasiList.map((organisasi, index) => {
 				const urutOrg = index + 1 < 10 ? `0${index + 1}` : `${index + 1}`;
 				const filteredGaji = gajiBatchMasters
@@ -38,7 +38,7 @@ const GajiBatchMasterTableBody = ({
 
 				urut += filteredGaji?.length ?? 0;
 
-				return (
+				return filteredGaji?.length ? (
 					<VerifPhase1CellGrouped
 						key={`org-${organisasi.id}`}
 						urut={urut}
@@ -46,7 +46,7 @@ const GajiBatchMasterTableBody = ({
 						organisasi={organisasi}
 						gajiBatchMasters={filteredGaji}
 					/>
-				);
+				) : null;
 			})}
 		</TableBody>
 	);

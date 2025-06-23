@@ -14,6 +14,11 @@ export const rupiah = (rp: number, fraction?: number): string =>
 		maximumFractionDigits: fraction || 0,
 	}).format(rp);
 
+	export const rupiah2 = (rp: number): string =>
+	new Intl.NumberFormat("id-ID", {
+		style: "decimal",
+		maximumFractionDigits: 0,
+	}).format(rp);
 /**
  * Checks if a number is a decimal.
  * @param nilai The number to be checked.

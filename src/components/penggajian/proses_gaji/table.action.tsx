@@ -28,6 +28,9 @@ const ProsesGajiTableAction = ({ row, pegawai, qKey }: ProsesGajiTableActionProp
     const prosesUlangHandler = async () => {
         if (!pegawai?.biodata?.nama || !pegawai?.jabatan?.nama) return;
 
+        const x=confirm("Apakah anda yakin ingin memproses ulang gaji ini?")
+        if(!x) return
+
         const formData: VerifikasiSchema = {
             id: row.id,
             nama: pegawai.biodata.nama,
