@@ -18,20 +18,23 @@ const DashboardPage = async () => {
 		isRoot: true,
 	});
 	return (
-		<div className="grid gap-2">
-			<ResizablePanelGroup
-				direction="horizontal"
-				className="w-full rounded-lg border"
-			>
-				<ResizablePanel defaultSize={30}>
-					<DashboardPanelKiriComponent pegawai={pegawai} />
-				</ResizablePanel>
-				<ResizableHandle withHandle />
-				<ResizablePanel>
-					<DashboardPanelKananComponent pegawai={pegawai} />
-				</ResizablePanel>
-			</ResizablePanelGroup>
-		</div>
+		<>
+			<div className="grid gap-2">
+				<ResizablePanelGroup
+					direction="horizontal"
+					className="w-full rounded-lg border"
+				>
+					<ResizablePanel defaultSize={30}>
+						<DashboardPanelKiriComponent pegawai={pegawai} />
+					</ResizablePanel>
+					<ResizableHandle withHandle />
+					<ResizablePanel>
+						<DashboardPanelKananComponent pegawai={pegawai} />
+					</ResizablePanel>
+				</ResizablePanelGroup>
+			</div>
+			<div id="clone-gaji-content" className="p-4" />
+		</>
 	);
 };
 
