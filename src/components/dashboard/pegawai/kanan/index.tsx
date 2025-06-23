@@ -8,6 +8,9 @@ import KananDataPendidikan from "./kanan.pendidikan";
 import KananDataPengalamanKerja from "./kanan.pengalaman";
 import KananDataKeahlian from "./kanan.keahlian";
 import KananDataPelatihan from "./kanan.pelatihan";
+import KananDataMutasi from "./kanan.mutasi";
+import KananDataRiwayatSk from "./kanan.sk";
+import KananDataGaji from "./kanan.gaji";
 
 type DashboardPanelKananComponentProps = {
 	pegawai: PegawaiDetail;
@@ -47,6 +50,9 @@ const DashboardPanelKananComponent = ({
 						nik={pegawai.biodata.nik}
 						nama={pegawai.biodata.nama}
 					/>
+					<KananDataMutasi pegawai={pegawai} />
+					<KananDataRiwayatSk pegawai={pegawai} />
+					<KananDataGaji pegawai={pegawai} />
 				</Accordion>
 			</CardContent>
 		</Card>
