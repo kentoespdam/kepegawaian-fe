@@ -15,7 +15,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { UploadIcon, XIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface VerifPhase2UploadDialogProps {
@@ -31,7 +30,7 @@ const VerifPhase2UploadDialog = ({
 	const { batchMasterId } = useGajiBatchMasterProsesStore((state) => ({
 		batchMasterId: state.batchMasterId,
 	}));
-	
+
 	const form = useForm<VerifPhase2UploadSchema>({
 		resolver: zodResolver(VerifPhase2UploadSchema),
 		defaultValues: {
@@ -62,7 +61,11 @@ const VerifPhase2UploadDialog = ({
 					<DialogTitle>Upload Potongan</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<InputFileZod id="file" label="File" form={form} />
 						<DialogFooter>
 							<LoadingButtonClient

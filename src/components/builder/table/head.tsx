@@ -34,7 +34,7 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 			<TableRow className="sticky top-0">
 				{columns.map((head, index) => (
 					<TableHead
-						key={head.id}
+						key={`${head.id}-${index}`}
 						className={cn(
 							"text-center bg-primary text-primary-foreground border-x text-nowrap h-10",
 							index === 0 && "rounded-ss-lg border-l-0",

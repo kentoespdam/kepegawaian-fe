@@ -10,13 +10,10 @@ import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
 import ApprovalComponent from "@components/penggajian/approval";
 import ApprovalFilterMain from "@components/penggajian/approval/filter.main";
 import GajiBatchMasterProcessTable from "@components/penggajian/gaji_batch_master_process/table";
-import GajiBatchMasterProcessKomponenTable from "@components/penggajian/gaji_batch_master_process/table.komponen";
-import VerifPhase2Component from "@components/penggajian/verif_phase_2";
-import VerifPhase2MainFilter from "@components/penggajian/verif_phase_2/filter.main";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Separator } from "@components/ui/separator";
-import { getListData, globalGetData } from "@helpers/action";
-import { getNipamFromCookie } from "@helpers/index";
+import { getDataById, getListData, globalGetData } from "@helpers/action";
+import { getCurrentUser } from "@lib/appwrite/user";
 import { cn } from "@lib/utils";
 import { Suspense } from "react";
 
@@ -30,9 +27,11 @@ const AcceptancePage = async ({
 	const { periode = "", nama } = await searchParams;
 	if (periode) queryParams.set("periode", periode);
 
-	const nipam = getNipamFromCookie();
-	const employeeData = await globalGetData<Pegawai>({
-		path: `pegawai/${nipam}/nipam`,
+	const user = await getCurrentUser();
+	const pegawai = await getDataById<Pegawai>({
+		path: "pegawai",
+		id: user.$id,
+		isRoot: true,
 	});
 
 	const organizationData = await getListData<Organisasi>({
@@ -75,7 +74,7 @@ const AcceptancePage = async ({
 			<CardContent className="h-fit grid col-span-2 gap-2">
 				<Suspense fallback={<>Loading....</>}>
 					<ApprovalFilterMain
-						pegawai={employeeData}
+						pegawai={pegawai}
 						gajiBatchRoot={gajiBatchRoot}
 					/>
 				</Suspense>

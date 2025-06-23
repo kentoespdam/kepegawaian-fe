@@ -12,8 +12,8 @@ import VerifPhase1Component from "@components/penggajian/verif_phase_1";
 import VerifPhase1MainFilter from "@components/penggajian/verif_phase_1/filter.main";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Separator } from "@components/ui/separator";
-import { getListData, globalGetData } from "@helpers/action";
-import { getNipamFromCookie } from "@helpers/index";
+import { getDataById, getListData, globalGetData } from "@helpers/action";
+import { getCurrentUser } from "@lib/appwrite/user";
 import { cn } from "@lib/utils";
 import { Suspense } from "react";
 
@@ -29,16 +29,21 @@ const VerifikasiPhase1Page = async ({
 	}>;
 }) => {
 	const search = new URLSearchParams();
-	const { periode = "" } = await searchParams;
+	const { periode = "", nama } = await searchParams;
 	if (periode !== "") search.set("periode", periode);
 	search.set(
 		"status",
 		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_1),
 	);
-	const nipam = getNipamFromCookie();
-	const pegawai = await globalGetData<Pegawai>({
-		path: `pegawai/${nipam}/nipam`,
+	if (nama) search.set("nama", nama);
+
+	const user = await getCurrentUser();
+	const pegawai = await getDataById<Pegawai>({
+		path: "pegawai",
+		id: user.$id,
+		isRoot: true,
 	});
+
 	const organisasiList = await getListData<Organisasi>({
 		path: "organisasi",
 		searchParams: "levelOrg=4",
@@ -92,7 +97,6 @@ const VerifikasiPhase1Page = async ({
 					<div className="col-span-8 sm:col-lg-12 border-r">
 						<Suspense>
 							<VerifPhase1Component
-								pegawai={pegawai}
 								organisasiList={organisasiList}
 								gajiBatchMasters={gajiBatchMasters}
 							/>

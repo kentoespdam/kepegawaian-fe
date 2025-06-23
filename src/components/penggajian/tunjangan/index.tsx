@@ -51,7 +51,7 @@ const TunjanganComponent = () => {
                     deletePath={`penggajian/tunjangan/${jenisTunjangan}`}
                     openDelete={openDelete}
                     setOpenDelete={setOpenDelete}
-                    queryKeys={["tunjangan", search.toString()]}
+                    queryKeys={[["tunjangan", search.toString()]]}
                 />
             </div>
         </>

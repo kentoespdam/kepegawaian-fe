@@ -29,7 +29,7 @@ export type VerifPhase2UploadSchema = z.infer<typeof VerifPhase2UploadSchema>;
 
 export const verifPhase2Columns: CustomColumnDef[] = [
 	{ id: "id", label: "" },
-	{ id: "nipam", label: "NIK" },
+	{ id: "nipam", label: "NIK", search: true, searchType: "text" },
 	{ id: "nama", label: "Nama Pegawai", search: true, searchType: "text" },
 	{ id: "jabatanId", label: "jabatan" },
 	{ id: "penghasilanKotor", label: "Penghasilan" },
