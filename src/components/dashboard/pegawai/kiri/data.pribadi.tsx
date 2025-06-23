@@ -1,11 +1,14 @@
 import { getStatusKawinLabel } from "@_types/enums/status_kawin";
 import type { PegawaiDetail } from "@_types/pegawai";
 import type { Pendidikan } from "@_types/profil/pendidikan";
+import TooltipBuilder from "@components/builder/tooltip";
+import EditProfilPribadiFormComponent from "@components/kepegawaian/data_pegawai/profil/pribadi";
 import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
 } from "@components/ui/accordion";
+import { Button } from "@components/ui/button";
 import {
 	Table,
 	TableBody,
@@ -16,12 +19,19 @@ import {
 } from "@components/ui/table";
 import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { useProfilPribadiStore } from "@store/kepegawaian/profil/pribadi";
 import { useQuery } from "@tanstack/react-query";
+import { EditIcon, RefreshCwIcon } from "lucide-react";
 
 type KiriDataPribadiProps = {
 	pegawai: PegawaiDetail;
 };
 const KiriDataPribadi = ({ pegawai }: KiriDataPribadiProps) => {
+	const { open, setOpen } = useProfilPribadiStore((state) => ({
+		open: state.open,
+		setOpen: state.setOpen,
+	}));
+
 	const { data: pendidikanTerakhir } = useQuery({
 		queryKey: ["pendidikan-terakhir", pegawai.biodata.nik],
 		queryFn: async () =>
@@ -40,6 +50,33 @@ const KiriDataPribadi = ({ pegawai }: KiriDataPribadiProps) => {
 			<AccordionContent className="grid border-t p-0">
 				<div className="flex justify-between p-2">
 					<span className="font-semibold">Status :</span>
+					<div className="flex items-center gap-2">
+						<TooltipBuilder
+							text="Ubah Data"
+							delayDuration={0}
+							className="bg-info text-info-foreground"
+						>
+							<Button
+								className="m-0 flex items-center gap-2 bg-info text-info-foreground size-6"
+								size="icon"
+								onClick={() => setOpen(true)}
+							>
+								<EditIcon className="size-4" />
+							</Button>
+						</TooltipBuilder>
+						<TooltipBuilder
+							text="Refresh"
+							delayDuration={0}
+							className="bg-destructive text-destructive-foreground"
+						>
+							<Button
+								className="m-0 flex items-center gap-2 bg-destructive text-destructive-foreground size-6"
+								size="icon"
+							>
+								<RefreshCwIcon className="size-4" />
+							</Button>
+						</TooltipBuilder>
+					</div>
 				</div>
 				<Table className="border border-l-4">
 					<TableHeader>
@@ -210,6 +247,11 @@ const KiriDataPribadi = ({ pegawai }: KiriDataPribadiProps) => {
 						</TableRow>
 					</TableBody>
 				</Table>
+				<EditProfilPribadiFormComponent
+					open={open}
+					pegawai={pegawai}
+					isUser={true}
+				/>
 			</AccordionContent>
 		</AccordionItem>
 	);
