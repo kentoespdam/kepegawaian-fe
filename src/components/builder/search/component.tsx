@@ -14,6 +14,7 @@ import SearchProfesiBuilder from "./profesi";
 import SearchJenisTunjanganBuilder from "./jenis_tunjangan";
 import SearchGolonganBuilder from "./golongan";
 import StatusProsesGajiSearchBuilder from "./status_proses_gaji";
+import SearchTahunBuilder from "./tahun";
 
 type SearchComponentProps = {
 	col: CustomColumnDef;
@@ -55,6 +56,8 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
 			return <SearchGolonganBuilder col={col} val={value} />;
 		case "statusProsesGaji":
 			return <StatusProsesGajiSearchBuilder col={col} val={value} />;
+		case "tahun":
+			return <SearchTahunBuilder col={col} val={value} />;
 		default:
 			return <InputSearchComponent col={col} val={value} />;
 	}

@@ -21,7 +21,7 @@ const DashboardPanelKananComponent = ({
 	return (
 		<Card className="border-none rounded-none">
 			<CardHeader className="p-2 border-b bg-warning text-warning-foreground">
-				<CardTitle className="flex items-center gap-2 py-1">
+				<CardTitle className="flex items-center gap-2">
 					<div className="flex items-center gap-2">
 						<HomeIcon className="size-4" />
 						<span>Dashboard Pegawai</span>

@@ -61,6 +61,38 @@ export const menus: IMenu[] = [
 	},
 	{
 		path: "#",
+		name: "Cuti Pegawai",
+		type: "group",
+		role: ["USER"],
+		subMenu: [
+			{
+				path: `/cuti/kuota?tahun=${new Date().getFullYear()}`,
+				name: "Kuota Cuti Pegawai",
+				icon: <HousePlugIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},
+			{
+				path: "/cuti/pengajuan",
+				name: "Pengajuan Cuti Pegawai",
+				icon: <ShovelIcon className={defaultIconClassName} />,
+				role: ["USER"],
+			},
+			{
+				path: "/cuti/persetujuan",
+				name: "Persetujuan Cuti Pegawai",
+				icon: <ListPlusIcon className={defaultIconClassName} />,
+				role: ["USER"],
+			},
+			{
+				path: "/cuti/monitoring",
+				name: "Monitoring Cuti yang bisa diambil",
+				icon: <ListCollapseIcon className={defaultIconClassName} />,
+				role: ["ADMIN"],
+			},
+		],
+	},
+	{
+		path: "#",
 		name: "Master",
 		type: "group",
 		role: ["ADMIN"],
@@ -182,47 +214,56 @@ export const menus: IMenu[] = [
 				name: "Daftar Urut Kepangkatan",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/dnp",
 				name: "Daftar Nominatif Pegawai",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/so",
 				name: "Struktur Organisasi",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/statistik/golongan",
 				name: "Statistik Pegawai",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/cuti",
 				name: "Cuti Pegawai",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/mutasi",
 				name: "Mutasi Pegawai",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/monitor_kontrak/AKTIF",
 				name: "Monitoring Kontrak",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/lta",
 				name: "Lepas Tanggungan Anak",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/dkb",
 				name: "Daftar Kenaikan Gaji/Pangkat Berkala",
 				icon: <FileTextIcon className={defaultIconClassName} />,
 				role: ["ADMIN"],
-			},{
+			},
+			{
 				path: "/laporan/kepegawaian/pensiun",
 				name: "Daftar Pensiun",
 				icon: <FileTextIcon className={defaultIconClassName} />,

@@ -21,6 +21,8 @@ const ResetSearchComponent = (props: ResetSearchComponentProps) => {
 		for (const c of props.columns) {
 			search.delete(c.id);
 		}
+		search.delete("sortBy");
+		search.delete("sortDirection");
 		replace(`${pathname}?${search.toString()}`);
 	};
 
