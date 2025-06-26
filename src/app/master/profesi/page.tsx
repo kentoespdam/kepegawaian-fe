@@ -17,7 +17,7 @@ const ProfesiPage = () => {
                         msg="Tambah Profesi" />
                 </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="grid">
                 <ProfesiTable />
             </CardContent>
         </Card>

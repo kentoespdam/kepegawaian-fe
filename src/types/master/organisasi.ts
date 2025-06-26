@@ -36,6 +36,7 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 		label: "Kode",
 		search: true,
 		searchType: "text",
+		sortable: true,
 	},
 	{
 		id: "parentId",
@@ -54,6 +55,7 @@ export const organisasiTableColumns: CustomColumnDef[] = [
 		label: "Nama Organisasi",
 		search: true,
 		searchType: "text",
+		sortable: true,
 	},
 	{
 		id: "aksi",

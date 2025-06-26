@@ -15,6 +15,15 @@ import type { PendapatanNonPajak } from "./penggajian/pendapatan_non_pajak";
 import type { ProfilGaji } from "./penggajian/profil";
 import type { RumahDinas } from "./master/rumah_dinas";
 
+export interface PegawaiMini{
+	id: number;
+	nipam: string;
+	nama: string;
+	statusPegawai: string;
+	jabatan: string;
+	organisasi: string;
+}
+
 export interface BasePegawai {
 	id: number;
 	nipam: string;
@@ -74,6 +83,7 @@ export interface PegawaiList {
 	id: number;
 	nipam: string;
 	nama: string;
+	statusPegawai: string;
 	organisasi: OrganisasiMini;
 	jabatan: JabatanMini;
 	golongan: Golongan;
