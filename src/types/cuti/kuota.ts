@@ -64,6 +64,7 @@ export const CutiKuotaImportSchema = z.object({
 		.optional(),
 });
 
+export type CutiKuotaImportSchema = z.infer<typeof CutiKuotaImportSchema>;
 export const getCutiKuotaColumns = (tahun: number) => {
 	const cutiKuotaColums: CustomColumnDef[] = [
 		{ id: "id", label: "No" },
