@@ -1,4 +1,8 @@
-import type { CutiKuota, CutiKuotaSchema } from "@_types/cuti/kuota";
+import type {
+	CutiKuota,
+	CutiKuotaImportSchema,
+	CutiKuotaSchema,
+} from "@_types/cuti/kuota";
 import type { PegawaiList } from "@_types/pegawai";
 import type { SelectedHandlerStore } from "@store/base-store";
 import { create } from "zustand";
@@ -10,6 +14,8 @@ interface CutiKuotaStore extends SelectedHandlerStore {
 		pegawai?: PegawaiList,
 		val?: CutiKuota,
 	) => void;
+	openBatch: boolean;
+	setOpenBatch: (open: boolean) => void;
 }
 
 const now = new Date();
@@ -22,11 +28,11 @@ export const useCutiKuotaStore = create<CutiKuotaStore>((set) => ({
 		nama: "",
 		statusPegawai: "",
 		jabatan: "",
-		tahun: new Date().getFullYear(),
+		tahun: 0,
 		kuota: 12,
 		kuotaTambahan: 0,
 		sisaKuota: 12,
-		expired: `${now.getFullYear() + 1}-06-30`,
+		expired: "",
 	},
 	setDefaultValue: (tahun, pegawai, val) => {
 		return set((state) => ({
@@ -54,4 +60,6 @@ export const useCutiKuotaStore = create<CutiKuotaStore>((set) => ({
 	setOpen: (val: boolean) => set({ open: val }),
 	openDelete: false,
 	setOpenDelete: (val: boolean) => set({ openDelete: val }),
+	openBatch: false,
+	setOpenBatch: (val: boolean) => set({ openBatch: val }),
 }));

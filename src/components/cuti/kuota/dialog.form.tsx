@@ -28,11 +28,9 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveKuotaCuti } from "./action";
 
-const CutiKuotaFormDialog = () => {
+const CutiKuotaFormDialog = ({ tahun }: { tahun: number }) => {
 	const params = useSearchParams();
-	const yearParam = params.get("tahun");
 	const search = new URLSearchParams(params);
-	search.set("tahun", yearParam ? yearParam : String(new Date().getFullYear()));
 	const qKey = ["cuti-kuota", search.toString()];
 
 	const { selectedDataId, defaultValue, setDefaultValue, open, setOpen } =
@@ -57,7 +55,11 @@ const CutiKuotaFormDialog = () => {
 
 	const form = useForm<CutiKuotaSchema>({
 		resolver: zodResolver(CutiKuotaSchema),
-		defaultValues: defaultValue,
+		defaultValues: {
+			...defaultValue,
+			tahun: tahun,
+			expired: `${tahun + 1}-06-30`,
+		},
 		values: defaultValue,
 	});
 
@@ -67,19 +69,16 @@ const CutiKuotaFormDialog = () => {
 		actHandler: () => cancelHandler(),
 	});
 
-	const submitHandler = (values: CutiKuotaSchema) => {
-		// console.dir(values, { depth: 2 });
-		mutation.mutate(values);
-	};
+	const submitHandler = (values: CutiKuotaSchema) => mutation.mutate(values);
 
 	const cancelHandler = () => {
 		form.reset();
-		setDefaultValue(Number(yearParam));
+		setDefaultValue(Number(tahun));
 		setOpen(false);
 	};
 
 	const handleSearchPegawai = (pegawai: PegawaiList) =>
-		setDefaultValue(Number(yearParam), pegawai);
+		setDefaultValue(Number(tahun), pegawai);
 
 	useEffect(() => {
 		if (query.data) {

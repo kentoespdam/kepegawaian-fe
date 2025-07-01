@@ -1,12 +1,6 @@
 "use client";
-
-import TooltipBuilder from "@components/builder/tooltip";
-import { Button } from "@components/ui/button";
-import { useCutiKuotaStore } from "@store/cuti/kuota";
-import { PlusCircleIcon } from "lucide-react";
-
-const AddKuotaCutiButton = () => {
-	const { setOpen } = useCutiKuotaStore((state) => ({
+const AddPengajuanCutiButton = () => {
+	const { setOpen } = usePengajuanCutiStore((state) => ({
 		setOpen: state.setOpen,
 	}));
 
@@ -26,4 +20,4 @@ const AddKuotaCutiButton = () => {
 	);
 };
 
-export default AddKuotaCutiButton;
+export default AddPengajuanCutiButton;

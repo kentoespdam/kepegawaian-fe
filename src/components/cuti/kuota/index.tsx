@@ -13,17 +13,21 @@ import { Table } from "@components/ui/table";
 import { globalGetDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import CutiKuotaTable from "./table.body";
 import CutiKuotaFormDialog from "./dialog.form";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import { useCutiKuotaStore } from "@store/cuti/kuota";
+import { useEffect } from "react";
+import CutiKuotaFormBatchDialog from "./dialog.form.batch";
 
 const CutiKuotaComponent = () => {
+	const { replace } = useRouter();
 	const params = useSearchParams();
-	const yearParam = params.get("tahun");
-	const currentYear = yearParam ? Number(yearParam) : new Date().getFullYear();
 	const search = new URLSearchParams(params);
+	const yearParam = params.get("tahun");
+
+	const currentYear = yearParam ? Number(yearParam) : new Date().getFullYear();
 	const qKey = ["cuti-kuota", search.toString()];
 
 	const { selectedDataId, openDelete, setOpenDelete } = useCutiKuotaStore(
@@ -43,6 +47,12 @@ const CutiKuotaComponent = () => {
 				searchParams: search.toString(),
 			}),
 	});
+	useEffect(() => {
+		if (!yearParam) {
+			search.set("tahun", String(new Date().getFullYear()));
+			replace(`?${search.toString()}`);
+		}
+	}, [yearParam, search, replace]);
 	return (
 		<div className="grid">
 			<SearchBuilder columns={cutiKuotaSearchColumns} />
@@ -55,7 +65,7 @@ const CutiKuotaComponent = () => {
 				)}
 			</Table>
 			<PaginationBuilder data={data?.page} />
-			<CutiKuotaFormDialog />
+			<CutiKuotaFormDialog tahun={currentYear} />
 			<DeleteZodDialogBuilder
 				id={selectedDataId}
 				deletePath="cuti/kuota"
@@ -63,6 +73,7 @@ const CutiKuotaComponent = () => {
 				setOpenDelete={setOpenDelete}
 				queryKeys={[qKey]}
 			/>
+			<CutiKuotaFormBatchDialog tahun={currentYear} />
 		</div>
 	);
 };
