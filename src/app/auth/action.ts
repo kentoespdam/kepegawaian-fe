@@ -1,12 +1,12 @@
 "use server";
 import { userToEmail } from "@helpers/email";
 import { cookieStringToObject } from "@helpers/index";
-import { deleteCurrentSession, getUserByNipam } from "@lib/appwrite/user";
+import { deleteCurrentSession } from "@lib/appwrite/user";
 import { appwriteKey, authUrl, baseAuthUrl, projectId } from "@lib/utils";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { Client, Users } from "node-appwrite";
 import type { LoginSchema } from "./form.index";
-import { Client, Users, Query } from "node-appwrite";
 
 export const doLogin = async (formData: LoginSchema) => {
 	const requestHeaders = headers();

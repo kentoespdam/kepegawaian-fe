@@ -14,7 +14,7 @@ export interface myQueryRequest {
 	direction?: unknown;
 }
 
-interface baseProps {
+export interface baseProps {
 	path: string;
 	isRoot?: boolean;
 	retry?: number;
@@ -189,6 +189,7 @@ export const getDataByIdEnc = async <TData>({
 		: decodeId(props.id as string);
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`;
 	const url = `${basePath}/${decPath.replace("_", "-")}/${decId}`;
+	console.log(url);
 	const headers = setAuthorizeHeader(cookies());
 	const controller = new AbortController();
 	const retryLimit = 3;
@@ -385,4 +386,15 @@ export const globalDeleteDataEnc = async (props: globalDeleteDataProps) => {
 	clearTimeout(timeoutId);
 
 	return result;
+};
+
+export const getCsrfToken = async () => {
+	const url = `${API_URL}/auth/csrf-token`;
+
+	const request = await fetch(url, {
+		method: "GET",
+		cache: "no-cache",
+	});
+
+	return await request.json();
 };

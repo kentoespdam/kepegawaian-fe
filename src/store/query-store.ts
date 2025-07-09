@@ -14,6 +14,7 @@ interface GlobalMutationProps<TData, TVariables> {
 	redirectTo?: string;
 	actHandler?: () => void;
 	refreshPage?: boolean;
+	refreshCsrf?: () => void;
 }
 
 export function useGlobalMutation<TData, TVariables>({
@@ -22,6 +23,7 @@ export function useGlobalMutation<TData, TVariables>({
 	redirectTo,
 	actHandler,
 	refreshPage,
+	refreshCsrf,
 }: GlobalMutationProps<TData, TVariables>): UseMutationResult<
 	TData,
 	Error,
@@ -72,6 +74,7 @@ export function useGlobalMutation<TData, TVariables>({
 					description: result.errors,
 					duration: 3000,
 				});
+			if (refreshCsrf) refreshCsrf();
 		},
 	});
 
