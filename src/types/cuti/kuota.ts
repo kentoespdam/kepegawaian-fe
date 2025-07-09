@@ -34,7 +34,7 @@ export const CutiKuotaSchema = z.object({
 	kuota: z.number(),
 	kuotaTambahan: z.number(),
 	sisaKuota: z.number(),
-	expired: z.string()
+	expired: z.string(),
 });
 
 export type CutiKuotaSchema = z.infer<typeof CutiKuotaSchema>;
@@ -89,3 +89,8 @@ export const cutiKuotaSearchColumns: CustomColumnDef[] = [
 	{ id: "nipam", label: "NIPAM", search: true, searchType: "text" },
 	{ id: "nama", label: "Nama", search: true, searchType: "text" },
 ];
+
+export interface CutiKuotaSisa {
+	sisaCutiTahunIni: number;
+	sisaCutiTahunLalu: number;
+}

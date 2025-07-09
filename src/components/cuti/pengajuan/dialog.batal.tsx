@@ -1,4 +1,4 @@
-import { BaseDelete } from "@_types/index";
+import { BatalCutiPegawaiSchema } from "@_types/cuti/cuti_pegawai";
 import { Button } from "@components/ui/button";
 import {
 	Dialog,
@@ -16,63 +16,63 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { globalDeleteDataEnc } from "@helpers/action";
-import { encodeId, encodeString } from "@helpers/number";
+import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { useGlobalMutation } from "@store/query-store";
 import type { QueryKey } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { batalPengajuanCuti } from "./action";
 
-export interface DeleteZodDialogBuilderProps {
-	id: number;
-	deletePath: string;
-	openDelete: boolean;
-	setOpenDelete: (value: boolean) => void;
+type BatalPengajuanCutiDialogProps = {
 	queryKeys: QueryKey[];
-}
-const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
-	const form = useForm<BaseDelete>({
-		resolver: zodResolver(BaseDelete),
+};
+const BatalPengajuanCutiDialog = (props: BatalPengajuanCutiDialogProps) => {
+	const { selectedDataId, openDelete, setOpenDelete } = usePengajuanCutiStore(
+		(state) => ({
+			selectedDataId: state.selectedDataId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
+
+	const form = useForm<BatalCutiPegawaiSchema>({
+		resolver: zodResolver(BatalCutiPegawaiSchema),
 		defaultValues: {
 			id: "",
-			unique: "",
 		},
 	});
 
 	const mutation = useGlobalMutation({
-		mutationFunction: async (values: BaseDelete) =>
-			await globalDeleteDataEnc({
-				path: encodeString(props.deletePath),
-				formData: values,
-			}),
+		mutationFunction: batalPengajuanCuti,
 		queryKeys: props.queryKeys,
 		actHandler: () => {
-			props.setOpenDelete(false);
+			setOpenDelete(false);
 		},
 	});
 
-	const onSubmit = (values: BaseDelete) => {
-		values.unique = encodeId(props.id);
+	const onSubmit = (values: BatalCutiPegawaiSchema) => {
+		values.unique = encodeId(selectedDataId);
 		mutation.mutate(values);
 	};
 
 	const handleOpenChange = () => {
 		form.reset();
-		props.setOpenDelete(false);
+		setOpenDelete(false);
 	};
 
 	return (
-		<Dialog open={props.openDelete} onOpenChange={handleOpenChange}>
+		<Dialog open={openDelete} onOpenChange={handleOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
+					<DialogTitle>Yakin akan membatalkan pengajuan cuti ini?</DialogTitle>
 					<DialogDescription className="text-[.8rem]">
 						proses ini tidak bisa dibatalkan dan data yang terhapus tidak dapat
 						dikembalikan.
 						<br />
 						Ketik {""}
 						<code className="font-normal bg-orange-300 text-gray-700 dark:text-gray-900 border px-1">
-							DELETE-{props.id}
+							BATAL-{selectedDataId}
 						</code>
 					</DialogDescription>
 				</DialogHeader>
@@ -96,7 +96,7 @@ const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
 						/>
 						<DialogFooter>
 							<Button type="submit" variant="destructive">
-								DELETE
+								BATALKAN PENGAJUAN
 							</Button>
 						</DialogFooter>
 					</form>
@@ -106,4 +106,4 @@ const DeleteZodDialogBuilder = (props: DeleteZodDialogBuilderProps) => {
 	);
 };
 
-export default DeleteZodDialogBuilder;
+export default BatalPengajuanCutiDialog;
