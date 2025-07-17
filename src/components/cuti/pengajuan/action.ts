@@ -23,13 +23,22 @@ export const savePengajuanCuti = async (formData: CutiPegawaiSchema) => {
 		body: JSON.stringify(formData),
 	});
 	const result = await req.json();
-	console.log("savePengajuanCuti", result);
 	return result;
 };
 
-interface BatalPengajuanCutiProps extends baseProps {
-	formData: BatalCutiPegawaiSchema;
-}
+export const saveKlaimCutiPegawai = async (formData: CutiPegawaiSchema) => {
+	const headers = setAuthorizeHeader(cookies());
+	const url = `${API_URL}/cuti/pengajuan/klaim`;
+
+	const req = await fetch(url, {
+		method: "POST",
+		headers: headers,
+		body: JSON.stringify(formData),
+	});
+	const result = await req.json();
+	return result;
+};
+
 export const batalPengajuanCuti = async (formData: BatalCutiPegawaiSchema) => {
 	const unique = formData.unique as string;
 	const uniqueId = decodeId(unique) as number;

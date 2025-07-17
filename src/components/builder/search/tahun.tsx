@@ -14,35 +14,32 @@ import {
 } from "@components/ui/popover";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { BaseSearchProps } from "./component";
 
-const SearchTahunBuilder = ({ col, val: initialValue }: BaseSearchProps) => {
-	const pathname = usePathname();
+const SearchTahunBuilder = ({ col, val }: BaseSearchProps) => {
 	const { replace } = useRouter();
 	const searchParams = useSearchParams();
-	const tahunParam = searchParams.get("tahun");
-	const initialTahun =
-		initialValue === "" && tahunParam !== null
-			? Number.parseInt(tahunParam)
-			: new Date().getFullYear();
-	const [tahun, setTahun] = useState("");
-	const [open, setOpen] = useState(false);
+	const search = new URLSearchParams(searchParams);
+	const tahun = new Date().getFullYear() + 1;
+	const listTahun = [...Array(5)].map((_, index) => tahun - index);
 
-	const handleSelect = useDebouncedCallback((newTahun: number) => {
-		setTahun(String(newTahun));
+	const [open, setOpen] = useState(false);
+	const [value, setValue] = useState(val ?? String(tahun));
+
+	const handleSelect = useDebouncedCallback((val: number) => {
+		setValue(String(val));
 		setOpen(false);
-		const search = new URLSearchParams(searchParams);
-		if (!newTahun) search.delete(col.id);
-		else search.set(col.id, String(newTahun));
-		replace(`${pathname}?${search.toString()}`);
+		if (!val) search.delete(col.id);
+		else search.set(col.id, String(val));
+		replace(`${location.pathname}?${search.toString()}`);
 	}, 500);
 
 	useEffect(() => {
-		setTahun(initialValue !== "" ? initialValue : initialTahun.toString());
-	}, [initialValue, initialTahun]);
+		setValue(val ?? String(tahun));
+	}, [val, tahun]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>
@@ -52,7 +49,7 @@ const SearchTahunBuilder = ({ col, val: initialValue }: BaseSearchProps) => {
 					aria-expanded={open}
 					className="w-full justify-between"
 				>
-					{tahun}
+					{value}
 					<CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 				</Button>
 			</PopoverTrigger>
@@ -61,33 +58,21 @@ const SearchTahunBuilder = ({ col, val: initialValue }: BaseSearchProps) => {
 					<CommandInput placeholder="Type to search..." className="h-9" />
 					<CommandList>
 						<CommandEmpty>No results found.</CommandEmpty>
-						<CommandItem
-							className="cursor-pointer"
-							onSelect={() => handleSelect(initialTahun + 1)}
-						>
-							{initialTahun + 1}
-							<CheckIcon
-								className={cn(
-									"ml-auto h-4 w-4",
-									initialValue !== "" && tahun === String(initialTahun + 1)
-										? "opacity-100"
-										: "opacity-0",
-								)}
-							/>
-						</CommandItem>
-						{Array.from({ length: 5 }).map((_, i) => {
-							const curTahun = initialTahun - i;
+						{listTahun.map((item) => {
 							return (
 								<CommandItem
-									key={curTahun}
-									className="cursor-pointer"
-									onSelect={() => handleSelect(curTahun)}
+									key={item}
+									className={cn(
+										"cursor-pointer",
+										value !== "" && value === String(item) && "bg-secondary/80",
+									)}
+									onSelect={() => handleSelect(item)}
 								>
-									{curTahun}
+									{item}
 									<CheckIcon
 										className={cn(
-											"ml-auto h-4 w-4",
-											initialValue !== "" && tahun === String(curTahun)
+											"ml-auto h-4 w-4 text-primary",
+											value !== "" && value === String(item)
 												? "opacity-100"
 												: "opacity-0",
 										)}

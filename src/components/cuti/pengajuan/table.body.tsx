@@ -13,6 +13,7 @@ import { BanIcon } from "lucide-react";
 import PengajuanCutiTableActionButton from "./button.table.action";
 import PengajuanCutiClaimTableActionButton from "./button.table.claim";
 import { Button } from "@components/ui/button";
+import PengajuanCutiInfoButton from "./button.info";
 
 type PengajuanCutiTableBodyProps = {
 	pegawai: PegawaiDetail;
@@ -31,15 +32,22 @@ const PengajuanCutiTableBody = ({
 						{urut++}
 					</TableCell>
 					<TableCell className="border" align="center" width={60}>
-						{row.approvalCutiStatus === ApprovalCutiStatus.Enum.APPROVED ? (
-							<PengajuanCutiClaimTableActionButton data={row} />
-						) : row.approvalLevel === 1 && row.approvalCutiStatus === ApprovalCutiStatus.Enum.PENDING ? (
-							<PengajuanCutiTableActionButton pegawai={pegawai} data={row} />
-						) : (
-							<Button variant={"outline"} size={"icon"} className="size-6">
-								<BanIcon className="size-4 text-muted-foreground" />
-							</Button>
-						)}
+						<div className="flex gap-2">
+							{row.approvalCutiStatus === ApprovalCutiStatus.Enum.APPROVED ? (
+								<PengajuanCutiClaimTableActionButton
+									pegawai={pegawai}
+									data={row}
+								/>
+							) : row.approvalLevel === 1 &&
+								row.approvalCutiStatus === ApprovalCutiStatus.Enum.PENDING ? (
+								<PengajuanCutiTableActionButton pegawai={pegawai} data={row} />
+							) : (
+								<Button variant={"outline"} size={"icon"} className="size-6">
+									<BanIcon className="size-4 text-muted-foreground" />
+								</Button>
+							)}
+							<PengajuanCutiInfoButton pegawai={pegawai} cutiPegawai={row} />
+						</div>
 					</TableCell>
 					<TableCell className="border text-nowrap" align="center">
 						{dateToIndonesian(row.tanggalPengajuan)}

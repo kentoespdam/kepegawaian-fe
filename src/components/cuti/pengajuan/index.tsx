@@ -14,24 +14,23 @@ import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
+import BatalPengajuanCutiDialog from "./dialog.batal";
 import PengajuanCutiFormDialog from "./dialog.form";
+import CutiPengajuanInfoDialog from "./dialog.info";
+import KlaimPengajuanCutiFormDialog from "./dialog.klaim.form";
 import SisaCutiComponent from "./sisa.cuti";
 import PengajuanCutiTableBody from "./table.body";
-import BatalPengajuanCutiDialog from "./dialog.batal";
-import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 
 type PengajuanCutiComponentProps = {
 	pegawai: PegawaiDetail;
 };
 const PengajuanCutiComponent = ({ pegawai }: PengajuanCutiComponentProps) => {
-	const params = useSearchParams();
-	const search = new URLSearchParams(params.toString());
-	const tahun = search.get("tahun") || new Date().getFullYear().toString();
-	search.set("tahun", tahun);
-
 	const { replace } = useRouter();
+	const params = useSearchParams();
+	const search = new URLSearchParams(params);
+	const tahun = params.get("tahun");
 
-	const qKeyPengajuan = ["pengajuan-cuti", pegawai.id, search.toString()];
+	const qKeyPengajuan = ["pengajuan-cuti", pegawai.id, params.toString()];
 	const qKeySisaCuti = ["sisa-cuti", pegawai.id, Number(tahun)];
 
 	const { data, isLoading, isFetching } = useQuery({
@@ -40,21 +39,25 @@ const PengajuanCutiComponent = ({ pegawai }: PengajuanCutiComponentProps) => {
 			await getPageDataEnc<CutiPegawai>({
 				path: encodeString(`cuti/pengajuan/${pegawai.id}/pegawai`),
 				isRoot: true,
-				searchParams: search.toString(),
+				searchParams: params.toString(),
 			}),
+		enabled: !!pegawai.id && !!tahun,
 	});
 
 	useEffect(() => {
-		if (!params.get("tahun")) replace(`/cuti/pengajuan?${search.toString()}`);
-	}, [params, replace, search]);
+		if (!tahun) {
+			search.set("tahun", String(new Date().getFullYear()));
+			replace(`?${search.toString()}`);
+		}
+	}, [tahun, search, replace]);
 
 	return (
-		<div className="grid">
+		<div className="grid max-w-full">
 			<div className="flex gap-2 flex-col items-start md:flex-row md:justify-between lg:flex-row lg:justify-between">
 				<SearchBuilder columns={cutiPegawaiColumns} />
 				<SisaCutiComponent qKey={qKeySisaCuti} />
 			</div>
-			<Table>
+			<Table className="mb-2">
 				<TableHeadBuilder columns={cutiPegawaiColumns} />
 				{!data || data.empty ? (
 					<LoadingTable
@@ -68,6 +71,8 @@ const PengajuanCutiComponent = ({ pegawai }: PengajuanCutiComponentProps) => {
 			<PaginationBuilder data={data} />
 			<PengajuanCutiFormDialog pegawai={pegawai} />
 			<BatalPengajuanCutiDialog queryKeys={[qKeyPengajuan]} />
+			<KlaimPengajuanCutiFormDialog qKey={qKeyPengajuan} />
+			<CutiPengajuanInfoDialog />
 		</div>
 	);
 };

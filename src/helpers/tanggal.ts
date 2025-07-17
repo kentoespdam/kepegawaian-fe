@@ -64,3 +64,16 @@ export const hitungUmur = (tanggalAwal: string, tanggalAkhir: string) => {
 	const age = Math.floor(timeDiff / (1000 * 3600 * 24) / 365);
 	return age;
 };
+
+export const getTanggalRangeList = (
+	tanggalAwalDate: Date,
+	tanggalAkhirDate: Date,
+): string[] => {
+	const tanggalRangeList = [];
+	const currentDate = new Date(tanggalAwalDate);
+	while (currentDate <= tanggalAkhirDate) {
+		tanggalRangeList.push(currentDate.toISOString().split("T")[0].toString());
+		currentDate.setDate(currentDate.getDate() + 1);
+	}
+	return tanggalRangeList;
+};

@@ -72,7 +72,7 @@ export const menus: IMenu[] = [
 				role: ["ADMIN"],
 			},
 			{
-				path: "/cuti/pengajuan",
+				path: `/cuti/pengajuan?tahun=${new Date().getFullYear()}`,
 				name: "Pengajuan Cuti Pegawai",
 				icon: <ShovelIcon className={defaultIconClassName} />,
 				role: ["USER"],
