@@ -18,7 +18,7 @@ const PengajuanCutiPage = async () => {
 	});
 
 	return pegawai === null ? null : (
-		<Card>
+		<Card className="max-w-full sm:max-w-[80vw] md:max-w-full">
 			<CardHeader>
 				<CardTitle className="text-bold text-md flex flex-row justify-between items-center">
 					<span className="text-md font-semibold">{metadata.title}</span>

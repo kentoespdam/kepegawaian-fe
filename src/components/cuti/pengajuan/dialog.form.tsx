@@ -77,7 +77,6 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 	};
 
 	const submitHandler = (values: CutiPegawaiSchema) => {
-		console.log("submitHandler", values);
 		mutation.mutate(values);
 	};
 
@@ -117,7 +116,7 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 
 	return (
 		<Dialog open={open} onOpenChange={cancelHandler}>
-			<DialogContent className="max-h-screen p-2 w-[650px] max-w-full">
+			<DialogContent className="max-h-screen p-2 max-w-full sm:max-w-screen md:w-[650px] lg:w-[650px]">
 				<DialogHeader>
 					<DialogTitle>Pengajuan Cuti</DialogTitle>
 				</DialogHeader>
@@ -127,8 +126,13 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 						className="grid gap-2"
 					>
 						<div className="grid gap-2 max-h-[80vh] overflow-auto p-1">
-							<InputZod type="number" id="id" label="ID" form={form} />
-							<InputZod id="csrfToken" label="CSRF Token" form={form} />
+							<InputZod type="hidden" id="id" label="ID" form={form} />
+							<InputZod
+								type="hidden"
+								id="csrfToken"
+								label="CSRF Token"
+								form={form}
+							/>
 							<Fieldset title="Data Karyawan" clasName="p-1">
 								<div className="grid gap-2 grid-cols-2">
 									<InputZod

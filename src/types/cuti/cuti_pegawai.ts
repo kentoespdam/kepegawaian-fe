@@ -54,6 +54,27 @@ export const BatalCutiPegawaiSchema = z.object({
 
 export type BatalCutiPegawaiSchema = z.infer<typeof BatalCutiPegawaiSchema>;
 
+export const KlaimCutiPegawaiSchema = z.object({
+	csrfToken: z.string().min(1, "CSRF Token tidak boleh Kosong!"),
+	id: z.number(),
+	pegawaiId: z.number().min(1, "Pegawai tidak boleh Kosong!"),
+	nipam: z.string(),
+	nama: z.string(),
+	pangkatGolongan: z.string(),
+	organisasi: z.string(),
+	jabatan: z.string(),
+	jenisCutiId: z.number().min(1, "Jenis Cuti tidak boleh Kosong!"),
+	jenisCutiNama: z.string(),
+	subJenisCutiId: z.number(),
+	subJenisCutiNama: z.string(),
+	tanggalMulai: z.string().min(10, "Tanggal Awal tidak boleh Kosong!"),
+	tanggalSelesai: z.string().min(10, "Tanggal Akhir tidak boleh Kosong!"),
+	alasan: z.string().min(3, "Alasan tidak boleh Kosong!"),
+	listHari: z.array(z.string()),
+});
+
+export type KlaimCutiPegawaiSchema = z.infer<typeof KlaimCutiPegawaiSchema>;
+
 export const cutiPegawaiColumns: CustomColumnDef[] = [
 	{ id: "id", label: "No" },
 	{ id: "id", label: "Action" },

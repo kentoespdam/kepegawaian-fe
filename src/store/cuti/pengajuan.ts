@@ -2,6 +2,7 @@ import type {
 	BatalCutiPegawaiSchema,
 	CutiPegawai,
 	CutiPegawaiSchema,
+	KlaimCutiPegawaiSchema,
 } from "@_types/cuti/cuti_pegawai";
 import type { PegawaiDetail } from "@_types/pegawai";
 import { globalGetDataEnc } from "@helpers/action";
@@ -20,6 +21,16 @@ interface PengajuanCutiStore extends SelectedHandlerStore {
 	setPegawai: (pegawai: PegawaiDetail) => void;
 	defaultBatalCutiPegawai: BatalCutiPegawaiSchema;
 	setDefaultBatalCutiPegawai: (value?: BatalCutiPegawaiSchema) => void;
+	setKlaimCsrfToken: () => void;
+	defaultKlaimCutiPegawai: KlaimCutiPegawaiSchema;
+	setDefaultKlaimCutiPegawai: (
+		pegawai: PegawaiDetail,
+		value?: CutiPegawai,
+	) => void;
+	openKlaim: boolean;
+	setOpenKlaim: (open: boolean) => void;
+	openInfo: boolean;
+	setOpenInfo: (open: boolean) => void;
 }
 
 export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
@@ -95,6 +106,59 @@ export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
 	setOpenDelete: (val) => set({ openDelete: val }),
 	setCutiPegawai: (cutiPegawai) => set({ cutiPegawai }),
 	setPegawai: (pegawai) => set({ pegawai }),
+	setKlaimCsrfToken: () => {
+		globalGetDataEnc({
+			path: encodeString("auth/csrf-token"),
+		}).then((csrfToken) => {
+			set((state) => ({
+				...state,
+				defaultKlaimCutiPegawai: {
+					...state.defaultKlaimCutiPegawai,
+					csrfToken: String(csrfToken),
+				},
+			}));
+		});
+	},
+	defaultKlaimCutiPegawai: {
+		csrfToken: "",
+		id: 0,
+		pegawaiId: 0,
+		nipam: "",
+		nama: "",
+		pangkatGolongan: "",
+		organisasi: "",
+		jabatan: "",
+		jenisCutiId: 0,
+		jenisCutiNama: "",
+		subJenisCutiId: 0,
+		subJenisCutiNama: "",
+		tanggalMulai: "",
+		tanggalSelesai: "",
+		alasan: "",
+		listHari: [],
+	},
+	setDefaultKlaimCutiPegawai: (pegawai, value) =>
+		set((state) => ({
+			...state,
+			defaultKlaimCutiPegawai: {
+				...state.defaultKlaimCutiPegawai,
+				id: value?.id ?? 0,
+				pegawaiId: value?.pegawaiId ?? 0,
+				nipam: value?.nipam ?? "",
+				nama: value?.nama ?? "",
+				pangkatGolongan: `${pegawai.golongan?.golongan} - ${pegawai.golongan?.pangkat}`,
+				organisasi: value?.organisasi?.nama ?? "",
+				jabatan: value?.jabatan?.nama ?? "",
+				jenisCutiId: value?.jenisCuti.id ?? 0,
+				jenisCutiNama: value?.jenisCuti.nama ?? "",
+				subJenisCutiId: value?.subJenisCuti?.id ?? 0,
+				subJenisCutiNama: value?.subJenisCuti?.nama ?? "",
+				tanggalMulai: value?.tanggalMulai ?? "",
+				tanggalSelesai: value?.tanggalSelesai ?? "",
+				alasan: value?.alasan ?? "",
+				listHari: [],
+			},
+		})),
 	defaultBatalCutiPegawai: {
 		id: "",
 		unique: "",
@@ -107,4 +171,8 @@ export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
 				unique: value?.unique ?? "",
 			},
 		})),
+	openKlaim: false,
+	setOpenKlaim: (open) => set({ openKlaim: open }),
+	openInfo: false,
+	setOpenInfo: (open) => set({ openInfo: open }),
 }));
