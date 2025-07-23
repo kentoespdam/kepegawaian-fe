@@ -2,6 +2,7 @@ import {
 	type CutiApprovalMini,
 	cutiApprovalColumns,
 } from "@_types/cuti/cuti.approval";
+import type { CutiPegawai } from "@_types/cuti/cuti_pegawai";
 import { getApprovalCutiStatusLabel } from "@_types/enums/approval_cuti_status";
 import type { Pageable } from "@_types/index";
 import TableHeadBuilder from "@components/builder/table/head";
@@ -11,7 +12,6 @@ import { Table, TableBody, TableCell, TableRow } from "@components/ui/table";
 import { TabsContent } from "@components/ui/tabs";
 import { getPageDataEnc } from "@helpers/action";
 import { encodeString, getUrut } from "@helpers/number";
-import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { useQuery } from "@tanstack/react-query";
 
 const CutiRiwayatPersetujuanTableBody = ({
@@ -22,11 +22,7 @@ const CutiRiwayatPersetujuanTableBody = ({
 		<TableBody>
 			{data.content.map((row) => (
 				<TableRow key={row.id}>
-					<TableCell
-						align="right"
-						width={60}
-						className="border"
-					>
+					<TableCell align="right" width={60} className="border">
 						{urut++}
 					</TableCell>
 					<TableCell align="center" width={60} className="border text-nowrap">
@@ -53,11 +49,9 @@ const CutiRiwayatPersetujuanTableBody = ({
 	);
 };
 
-const CutiRiwayatPersetujuanTab = () => {
-	const { cutiPegawai } = usePengajuanCutiStore((state) => ({
-		cutiPegawai: state.cutiPegawai,
-	}));
-
+const CutiRiwayatPersetujuanTab = ({
+	cutiPegawai,
+}: { cutiPegawai?: CutiPegawai }) => {
 	const { data, isLoading, isFetching, isError } = useQuery({
 		queryKey: ["riwayat-persetujuan", cutiPegawai?.id],
 		queryFn: async () =>
@@ -65,7 +59,7 @@ const CutiRiwayatPersetujuanTab = () => {
 				path: encodeString(`cuti/approval/${cutiPegawai?.id}`),
 				isRoot: true,
 			}),
-		enabled: Boolean(cutiPegawai?.id),
+		enabled: !!cutiPegawai?.id,
 	});
 	return (
 		<TabsContent

@@ -1,3 +1,4 @@
+import type { CutiPegawai } from "@_types/cuti/cuti_pegawai";
 import { Button } from "@components/ui/button";
 import {
 	Dialog,
@@ -7,20 +8,20 @@ import {
 	DialogTitle,
 } from "@components/ui/dialog";
 import { Tabs, TabsList, TabsTrigger } from "@components/ui/tabs";
-import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { XCircleIcon } from "lucide-react";
 import InfoCutiTab from "./tab.info";
 import CutiRiwayatPersetujuanTab from "./tab.riwayat";
 
-const CutiPengajuanInfoDialog = () => {
-	const { openInfo, setOpenInfo, cutiPegawai } = usePengajuanCutiStore(
-		(state) => ({
-			openInfo: state.openInfo,
-			setOpenInfo: state.setOpenInfo,
-			cutiPegawai: state.cutiPegawai,
-		}),
-	);
-
+type CutiPengajuanInfoDialogProps = {
+	cutiPegawai?: CutiPegawai;
+	openInfo: boolean;
+	setOpenInfo: (value: boolean) => void;
+};
+const CutiPengajuanInfoDialog = ({
+	cutiPegawai,
+	openInfo,
+	setOpenInfo,
+}: CutiPengajuanInfoDialogProps) => {
 	return (
 		<Dialog open={openInfo} onOpenChange={() => setOpenInfo(false)}>
 			<DialogContent className="mx-h-screen p-2 max-w-full sm:max-w-screen md:w-[650px] lg:w-[650px]">
@@ -35,8 +36,8 @@ const CutiPengajuanInfoDialog = () => {
 						</TabsTrigger>
 					</TabsList>
 					<div className="grid">
-						<InfoCutiTab />
-						<CutiRiwayatPersetujuanTab />
+						<InfoCutiTab cutiPegawai={cutiPegawai} />
+						<CutiRiwayatPersetujuanTab cutiPegawai={cutiPegawai} />
 					</div>
 				</Tabs>
 				<DialogFooter>

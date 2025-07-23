@@ -20,23 +20,16 @@ const PengajuanCutiTableActionButton = ({
 	pegawai,
 	data,
 }: PengajuanCutiTableActionButtonProps) => {
-	const {
-		setSelectedDataId,
-		setOpen,
-		setOpenDelete,
-		setDefaultValue,
-		setCsrfToken,
-	} = usePengajuanCutiStore((state) => ({
-		setSelectedDataId: state.setSelectedDataId,
-		setOpen: state.setOpen,
-		setOpenDelete: state.setOpenDelete,
-        setDefaultValue: state.setDefaultValue,
-		setCsrfToken: state.setCsrfToken,
-	}));
+	const { setSelectedDataId, setOpen, setOpenDelete, setDefaultValue } =
+		usePengajuanCutiStore((state) => ({
+			setSelectedDataId: state.setSelectedDataId,
+			setOpen: state.setOpen,
+			setOpenDelete: state.setOpenDelete,
+			setDefaultValue: state.setDefaultValue,
+		}));
 
 	const editHandler = () => {
 		if (data.approvalCutiStatus !== ApprovalCutiStatus.Enum.PENDING) return;
-		setCsrfToken();
 		setDefaultValue(pegawai, data);
 		setOpen(true);
 	};

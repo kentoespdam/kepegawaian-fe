@@ -87,7 +87,7 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 							</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
-								{pegawai.golongan.golongan}-{pegawai.golongan.pangkat}
+								{pegawai.golongan?.golongan}-{pegawai.golongan?.pangkat}
 							</TableCell>
 						</TableRow>
 						<TableRow>
@@ -151,7 +151,7 @@ const KiriDataKepegawaian = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 						</TableRow>
 						<TableRow>
 							<TableCell className="p-1 align-text-top">
-								ID Mesin Absen
+								No. NPWP
 							</TableCell>
 							<TableCell className="p-1 align-text-top">:</TableCell>
 							<TableCell className="p-1 align-text-top">
