@@ -1,14 +1,15 @@
 import type { JabatanMini } from "@_types/master/jabatan";
-import type { CutiJenis } from "./jenis";
 import type { OrganisasiMini } from "@_types/master/organisasi";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
+import type { CutiJenis } from "./jenis";
 
 export interface CutiPegawai {
 	id: number;
 	pegawaiId: number;
 	nama: string;
 	nipam: string;
+	pangkatGolongan: string;
 	organisasi: OrganisasiMini | null;
 	jabatan: OrganisasiMini | null;
 	tanggalPengajuan: string;
@@ -86,6 +87,35 @@ export const cutiPegawaiColumns: CustomColumnDef[] = [
 	},
 	{ id: "jenisPengajuanCuti", label: "Jenis Pengajuan" },
 	{ id: "approvalCutiStatus", label: "Status" },
+	{ id: "jenisCuti.id", label: "Jenis Cuti" },
+	{ id: "subJenisCuti.id", label: "Sub Jenis Cuti" },
+	{ id: "nipam", label: "NIK" },
+	{ id: "nama", label: "Nama Karyawan" },
+	{ id: "organisasi", label: "Unit Kerja" },
+	{ id: "jabatan", label: "Jabatan" },
+	{ id: "tanggalMulai", label: "Awal Cuti" },
+	{ id: "tanggalSelesai", label: "Akhir Cuti" },
+	{ id: "jmlHariKerja", label: "Jml. Hari Kerja" },
+	{ id: "alasan", label: "Alasan" },
+	{ id: "picSaatIni", label: "PIC Saat Ini" },
+];
+
+export const cutiPegawaiApprovalColumns: CustomColumnDef[] = [
+	{ id: "id", label: "No" },
+	{ id: "id", label: "Action" },
+	{
+		id: "tahun",
+		label: "Tgl. Pengajuan",
+		search: true,
+		searchType: "tahun",
+	},
+	{ id: "jenisPengajuanCuti", label: "Jenis Pengajuan" },
+	{
+		id: "approvalCutiStatus",
+		label: "Status",
+		search: true,
+		searchType: "approvalCutiStatus",
+	},
 	{ id: "jenisCuti.id", label: "Jenis Cuti" },
 	{ id: "subJenisCuti.id", label: "Sub Jenis Cuti" },
 	{ id: "nipam", label: "NIK" },

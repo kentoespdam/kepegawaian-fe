@@ -34,14 +34,11 @@ import { useForm } from "react-hook-form";
 import { savePengajuanCuti } from "./action";
 
 const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
-	const { defaultValue, open, setOpen, setCsrfToken } = usePengajuanCutiStore(
-		(state) => ({
-			defaultValue: state.defaultValue,
-			open: state.open,
-			setOpen: state.setOpen,
-			setCsrfToken: state.setCsrfToken,
-		}),
-	);
+	const { defaultValue, open, setOpen } = usePengajuanCutiStore((state) => ({
+		defaultValue: state.defaultValue,
+		open: state.open,
+		setOpen: state.setOpen,
+	}));
 	const params = useSearchParams();
 	const qKey = ["pengajuan-cuti", pegawai.id, params.toString()];
 	const qKeyCsrf = ["csrf-token"];
@@ -56,25 +53,34 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 		enabled: !!open,
 	});
 
+	const csrffQuery = useQuery({
+		queryKey: qKeyCsrf,
+		queryFn: async () =>
+			await globalGetDataEnc({
+				path: encodeString("auth/csrf-token"),
+			}),
+		enabled: !!open,
+	});
+
 	const form = useForm<CutiPegawaiSchema>({
 		resolver: zodResolver(CutiPegawaiSchema),
 		defaultValues: defaultValue,
 		values: defaultValue,
 	});
 
-	const { watch, setValue } = form;
+	const { watch, setValue, reset } = form;
+
+	const cancelHandler = () => {
+		reset();
+		setOpen(false);
+	};
 
 	const mutation = useGlobalMutation({
 		mutationFunction: savePengajuanCuti,
-		queryKeys: [qKey, qKeyCsrf],
-		actHandler: () => cancelHandler(),
-		refreshCsrf: setCsrfToken,
+		queryKeys: [qKey],
+		actHandler: cancelHandler,
+		refreshCsrf: csrffQuery.refetch,
 	});
-
-	const cancelHandler = () => {
-		form.reset();
-		setOpen(false);
-	};
 
 	const submitHandler = (values: CutiPegawaiSchema) => {
 		mutation.mutate(values);
@@ -113,6 +119,10 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 			setValue("jumlahHariKerja", Number(jmlHariKerja));
 		}
 	}, [tanggalMulai, tanggalSelesai, jmlHariKerja, setValue]);
+
+	useEffect(() => {
+		setValue("csrfToken", String(csrffQuery.data));
+	}, [csrffQuery.data, setValue]);
 
 	return (
 		<Dialog open={open} onOpenChange={cancelHandler}>

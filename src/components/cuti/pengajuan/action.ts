@@ -4,9 +4,8 @@ import type {
 	BatalCutiPegawaiSchema,
 	CutiPegawaiSchema,
 } from "@_types/cuti/cuti_pegawai";
-import type { baseProps } from "@helpers/action";
 import { setAuthorizeHeader } from "@helpers/index";
-import { decodeId, decodeString } from "@helpers/number";
+import { decodeId } from "@helpers/number";
 import { API_URL } from "@lib/utils";
 import { cookies } from "next/headers";
 

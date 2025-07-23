@@ -1,3 +1,4 @@
+import type { CutiPegawai } from "@_types/cuti/cuti_pegawai";
 import Fieldset from "@components/ui/fieldset";
 import { Input } from "@components/ui/input";
 import { Label } from "@components/ui/label";
@@ -5,14 +6,11 @@ import { TabsContent } from "@components/ui/tabs";
 import { Textarea } from "@components/ui/textarea";
 import { dateToIndonesian } from "@helpers/string";
 import { cn } from "@lib/utils";
-import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 
-const InfoCutiTab = () => {
-	const { pegawai, cutiPegawai } = usePengajuanCutiStore((state) => ({
-		pegawai: state.pegawai,
-		cutiPegawai: state.cutiPegawai,
-	}));
-
+type InfoCutiTabProps = {
+	cutiPegawai?: CutiPegawai;
+};
+const InfoCutiTab = ({ cutiPegawai }: InfoCutiTabProps) => {
 	return (
 		<TabsContent
 			value="informasiCuti"
@@ -43,7 +41,7 @@ const InfoCutiTab = () => {
 							<Label htmlFor="golongan">Pangkat Golongan</Label>
 							<Input
 								id="golongan"
-								value={`${pegawai?.golongan.golongan} - ${pegawai?.golongan.pangkat}`}
+								value={cutiPegawai?.pangkatGolongan}
 								readOnly
 								className="bg-secondary text-secondary-foreground"
 							/>

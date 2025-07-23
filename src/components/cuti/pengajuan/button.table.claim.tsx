@@ -1,28 +1,24 @@
 import type { CutiPegawai } from "@_types/cuti/cuti_pegawai";
-import type { PegawaiDetail } from "@_types/pegawai";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { FileLock2Icon } from "lucide-react";
 
 type PengajuanCutiClaimTableActionButtonProps = {
-	pegawai: PegawaiDetail;
 	data: CutiPegawai;
 };
 const PengajuanCutiClaimTableActionButton = ({
-	pegawai,
 	data,
 }: PengajuanCutiClaimTableActionButtonProps) => {
-	const { setDefaultKlaimCutiPegawai, setOpenKlaim, setKlaimCsrfToken } =
-		usePengajuanCutiStore((state) => ({
+	const { setDefaultKlaimCutiPegawai, setOpenKlaim } = usePengajuanCutiStore(
+		(state) => ({
 			setDefaultKlaimCutiPegawai: state.setDefaultKlaimCutiPegawai,
 			setOpenKlaim: state.setOpenKlaim,
-			setKlaimCsrfToken: state.setKlaimCsrfToken,
-		}));
+		}),
+	);
 
 	const handleClick = () => {
-		setKlaimCsrfToken();
-		setDefaultKlaimCutiPegawai(pegawai, data);
+		setDefaultKlaimCutiPegawai(data);
 		setOpenKlaim(true);
 	};
 

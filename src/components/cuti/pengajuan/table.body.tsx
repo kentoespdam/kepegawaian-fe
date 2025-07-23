@@ -6,14 +6,14 @@ import {
 import { getJenisPengajuanCutiLabel } from "@_types/enums/jenis_pengajuan_cuti";
 import type { Pageable } from "@_types/index";
 import type { PegawaiDetail } from "@_types/pegawai";
+import { Button } from "@components/ui/button";
 import { TableBody, TableCell, TableRow } from "@components/ui/table";
 import { getUrut } from "@helpers/number";
 import { dateToIndonesian } from "@helpers/string";
 import { BanIcon } from "lucide-react";
+import PengajuanCutiInfoButton from "./button.info";
 import PengajuanCutiTableActionButton from "./button.table.action";
 import PengajuanCutiClaimTableActionButton from "./button.table.claim";
-import { Button } from "@components/ui/button";
-import PengajuanCutiInfoButton from "./button.info";
 
 type PengajuanCutiTableBodyProps = {
 	pegawai: PegawaiDetail;
@@ -34,10 +34,7 @@ const PengajuanCutiTableBody = ({
 					<TableCell className="border" align="center" width={60}>
 						<div className="flex gap-2">
 							{row.approvalCutiStatus === ApprovalCutiStatus.Enum.APPROVED ? (
-								<PengajuanCutiClaimTableActionButton
-									pegawai={pegawai}
-									data={row}
-								/>
+								<PengajuanCutiClaimTableActionButton data={row} />
 							) : row.approvalLevel === 1 &&
 								row.approvalCutiStatus === ApprovalCutiStatus.Enum.PENDING ? (
 								<PengajuanCutiTableActionButton pegawai={pegawai} data={row} />
