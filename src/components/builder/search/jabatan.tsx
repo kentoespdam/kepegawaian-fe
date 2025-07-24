@@ -13,7 +13,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -32,8 +33,8 @@ const SearchJabatanBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["jabatan-list"],
 		queryFn: async () => {
-			const result = await getListData<Jabatan>({
-				path: "jabatan",
+			const result = await getListDataEnc<Jabatan>({
+				path: encodeString("jabatan"),
 			});
 			return result;
 		},
@@ -68,9 +69,9 @@ const SearchJabatanBuilder = ({ col, val }: BaseSearchProps) => {
 				</Button>
 			</PopoverTrigger>
 			<PopoverContent className="p-0">
-				<Command>
+				<Command className="w-full">
 					<CommandInput placeholder="Type to search..." className="h-9" />
-					<CommandList>
+					<CommandList className="w-fit">
 						<CommandEmpty>No results found.</CommandEmpty>
 						{query.data?.map((jabatan) => (
 							<CommandItem
@@ -78,6 +79,7 @@ const SearchJabatanBuilder = ({ col, val }: BaseSearchProps) => {
 								onSelect={() => {
 									handleSelect(jabatan.id);
 								}}
+								className="text-nowrap border-b"
 							>
 								{jabatan.nama}
 								<CheckIcon

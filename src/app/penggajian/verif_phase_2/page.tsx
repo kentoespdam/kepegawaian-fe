@@ -5,15 +5,14 @@ import {
 import type { Pageable } from "@_types/index";
 import type { Organisasi } from "@_types/master/organisasi";
 import type { Pegawai } from "@_types/pegawai";
-import type { GajiBatchMaster } from "@_types/penggajian/gaji_batch_master";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
 import GajiBatchMasterProcessKomponenTable from "@components/penggajian/gaji_batch_master_process/table.komponen";
 import VerifPhase2Component from "@components/penggajian/verif_phase_2";
 import VerifPhase2MainFilter from "@components/penggajian/verif_phase_2/filter.main";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { Separator } from "@components/ui/separator";
-import { getListData, globalGetData } from "@helpers/action";
-import { getNipamFromCookie } from "@helpers/index";
+import { getDataById, getListData, globalGetData } from "@helpers/action";
+import { getCurrentUser } from "@lib/appwrite/user";
 import { cn } from "@lib/utils";
 import { Suspense } from "react";
 
@@ -24,12 +23,15 @@ const VerifPhase2Page = async ({
 	searchParams,
 }: { searchParams: Promise<{ [key: string]: string | undefined }> }) => {
 	const queryParams = new URLSearchParams();
-	const { periode = "" } = await searchParams;
+	const { periode = "", nama } = await searchParams;
 	if (periode) queryParams.set("periode", periode);
+	if (nama) queryParams.set("nama", nama);
 
-	const nipam = getNipamFromCookie();
-	const employeeData = await globalGetData<Pegawai>({
-		path: `pegawai/${nipam}/nipam`,
+	const user = await getCurrentUser();
+	const pegawai = await getDataById<Pegawai>({
+		path: "pegawai",
+		id: user.$id,
+		isRoot: true,
 	});
 
 	const organizationData = await getListData<Organisasi>({
@@ -52,16 +54,6 @@ const VerifPhase2Page = async ({
 		isRoot: true,
 	});
 
-	queryParams.set(
-		"status",
-		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2),
-	);
-	const gajiBatchMasters = await globalGetData<GajiBatchMaster[]>({
-		path: "penggajian/batch/master",
-		searchParams: queryParams.toString(),
-		isRoot: true,
-	});
-
 	return (
 		<Card>
 			<CardHeader>
@@ -72,7 +64,7 @@ const VerifPhase2Page = async ({
 			<CardContent className="h-fit grid col-span-2 gap-2">
 				<Suspense>
 					<VerifPhase2MainFilter
-						pegawai={employeeData}
+						pegawai={pegawai}
 						gajiBatchRoot={gajiBatchRoot}
 					/>
 				</Suspense>
@@ -87,15 +79,11 @@ const VerifPhase2Page = async ({
 				>
 					<div className="col-span-8 sm:col-lg-12 border-r">
 						<Suspense fallback={<>Loading....</>}>
-							<VerifPhase2Component
-								organisasiList={organizationData}
-								gajiBatchMasters={gajiBatchMasters}
-							/>
+							<VerifPhase2Component organisasiList={organizationData} />
 						</Suspense>
 					</div>
 					<div className="col-span-4 sm:col-lg-12">
 						<GajiBatchMasterProcessKomponenTable
-							gajiBatchMasters={gajiBatchMasters}
 							gajiBatchRoot={gajiBatchRoot}
 						/>
 					</div>

@@ -4,7 +4,7 @@ import {
 	RiwayatSpSchema,
 	type RiwayatSp,
 } from "@_types/kepegawaian/riwayat-sp";
-import type { Pegawai } from "@_types/pegawai";
+import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -24,7 +24,7 @@ export interface SpFormProps {
 }
 
 type RiwayatSpFormProps = {
-	pegawai: Pegawai;
+	pegawai: PegawaiDetail;
 	data?: RiwayatSp;
 };
 const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
@@ -65,7 +65,7 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 	useEffect(() => {
 		setDefaultValues(pegawai, data);
 		if (data) {
-			const currentJenisSp = { id: data.jenisSp, nama: "" };
+			const currentJenisSp = { id: data.jenisSp.id, kode: "", nama: "", sanksiSp:[] };
 			setJenisSp(currentJenisSp);
 		}
 	}, [setDefaultValues, setJenisSp, pegawai, data]);
@@ -73,7 +73,7 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 	return (
 		<div className="h-full">
 			<Form {...form}>
-				<form onSubmit={form.handleSubmit(onSubmit)}>
+				<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-2 pl-4 pr-2 pb-4">
 						<InputZod
 							type="number"

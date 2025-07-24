@@ -1,5 +1,5 @@
 import type { Golongan } from "@_types/master/golongan";
-import { JabatanMiniSchema, type Jabatan } from "@_types/master/jabatan";
+import { type Jabatan, JabatanMiniSchema } from "@_types/master/jabatan";
 import type { Organisasi } from "@_types/master/organisasi";
 import type { Profesi } from "@_types/master/profesi";
 import { z } from "zod";
@@ -64,14 +64,7 @@ export const RiwayatMutasiSchema = BaseRiwayatSkSchema.extend({
 			path: ["tmtBerlaku"],
 		});
 	}
-
-	// if (new Date(tglBerakhir) < new Date(tmtBerlaku)) {
-	// 	ctx.addIssue({
-	// 		code: z.ZodIssueCode.custom,
-	// 		message: "Tgl. Berakhir harus lebih besar dari Tgl. Berlaku",
-	// 		path: ["tglBerakhir"],
-	// 	});
-	// }
+	
 
 	if (["MUTASI_LOKER", "MUTASI_JABATAN"].includes(val.jenisMutasi)) {
 		if (!val.organisasiId || val.organisasiId <= 0) {
@@ -147,12 +140,21 @@ export const riwayatMutasiTableColumns: CustomColumnDef[] = [
 		search: true,
 		searchType: "jenisMutasi",
 	},
-	// { id: "tmtBerlaku", label: "Tgl. Berlaku" },
-	// { id: "tglBerakhir", label: "Tgl. Berakhir" },
-	// { id: "namaOrganisasi", label: "Organisasi" },
-	// { id: "namaJabatan", label: "Jabatan" },
-	// { id: "namaOrganisasiLama", label: "Organisasi Lama" },
-	// { id: "namaJabatanLama", label: "Jabatan Lama" },
+	{ id: "golonganId", label: "Golongan" },
+	{ id: "organisasiId", label: "Unit Kerja" },
+	{ id: "jabatanId", label: "Jabatan" },
+	{ id: "notes", label: "Notes" },
+];
+
+export const riwayatMutasiTableColumnsDashboard: CustomColumnDef[] = [
+	{ id: "urut", label: "No" },
+	{ id: "nomorSk", label: "SK", search: true, searchType: "text" },
+	{
+		id: "jenisMutasi",
+		label: "Jenis Mutasi",
+		search: true,
+		searchType: "jenisMutasi",
+	},
 	{ id: "golonganId", label: "Golongan" },
 	{ id: "organisasiId", label: "Unit Kerja" },
 	{ id: "jabatanId", label: "Jabatan" },

@@ -108,6 +108,7 @@ export const getEmployeeByNipam = async (
 			mkgBulan: 0,
 			isAskes: false,
 			kodePajak: null,
+			email:"admin@example.com",
 			absensiId: 0,
 			notes: null,
 		};

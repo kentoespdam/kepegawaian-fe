@@ -19,7 +19,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const FormKeahlianDialog = () => {
@@ -38,15 +37,11 @@ const FormKeahlianDialog = () => {
 	const mutation = useGlobalMutation({
 		mutationFunction: saveProfilKeahlian,
 		queryKeys: [["profil-keahlian", defaultValues.biodataId]],
-	});
-
-	useEffect(() => {
-		if (mutation.isSuccess) {
-			mutation.reset();
+		actHandler: () => {
 			form.reset();
 			setOpen(false);
-		}
-	}, [mutation, form, setOpen]);
+		},
+	});
 
 	const onSubmit = (values: KeahlianSchema) => {
 		mutation.mutate(values);
@@ -59,7 +54,7 @@ const FormKeahlianDialog = () => {
 				</DialogHeader>
 				<Separator />
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)}>
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
 						<div className="grid gap-2 max-h-[450px] overflow-auto pl-4 pr-2 pb-4">
 							<InputZod type="hidden" id="id" label="ID" form={form} />
 							<InputZod

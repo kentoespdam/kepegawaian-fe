@@ -17,21 +17,29 @@ import { useSearchParams } from "next/navigation";
 interface KeluargaTableActionProps {
 	biodata: Biodata;
 	data: Keluarga;
+	editHandler: (id: number, data: Keluarga) => void;
 }
 const KeluargaTableAction = (props: KeluargaTableActionProps) => {
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const store = useKeluargaStore();
+	const { setKeluargaId, setDefaultValues, setOpen, setOpenDelete } =
+		useKeluargaStore((state) => ({
+			setKeluargaId: state.setKeluargaId,
+			setDefaultValues: state.setDefaultValues,
+			setOpen: state.setOpen,
+			setOpenDelete: state.setOpenDelete,
+		}));
 
-	const editHandler = () => {
-		store.setDefaultValues(props.biodata, props.data);
-		store.setOpen(true);
-	};
+	// const editHandler = () => {
+	// 	setKeluargaId(props.data.id);
+	// 	setDefaultValues(props.biodata, props.data);
+	// 	setOpen(true);
+	// };
 
 	const deleteHadler = () => {
-		store.setDefaultValues(props.biodata);
-		store.setKeluargaId(props.data.id);
-		store.setOpenDelete(true);
+		setDefaultValues(props.biodata);
+		setKeluargaId(props.data.id);
+		setOpenDelete(true);
 	};
 
 	const accMutation = useGlobalMutation({
@@ -62,7 +70,7 @@ const KeluargaTableAction = (props: KeluargaTableActionProps) => {
 				<DropdownMenuGroup>
 					<DropdownMenuItem
 						className="flex flex-row items-center cursor-pointer text-primary"
-						onClick={editHandler}
+						onClick={() => props.editHandler(props.data.id, props.data)}
 					>
 						<PencilIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Edit</span>

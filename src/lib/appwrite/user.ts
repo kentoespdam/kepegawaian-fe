@@ -3,7 +3,6 @@ import type { User } from "@_types/user";
 import { appwriteHeader, getExpToken, newHostname } from "@helpers/index";
 
 import { appwriteKey, baseAuthUrl, projectId, sessionNames } from "@lib/utils";
-import { useSessionStore } from "@store/session";
 import axios, { type AxiosError } from "axios";
 import type {
 	RequestCookie,
@@ -28,7 +27,7 @@ export const getUserByNipam = async (nipam: string) => {
 			`${baseAuthUrl}/users?search=${nipam.split("@")[0]}`,
 			axiosConfig,
 		);
-		return data
+		return data;
 	} catch (e) {
 		const err = e as AxiosError;
 		console.log(
@@ -83,7 +82,6 @@ export const getCurrentUser = async (): Promise<User> => {
 	const headers = appwriteHeader(cookieList, token);
 	try {
 		const { data } = await axios.get(`${baseAuthUrl}/account`, { headers });
-		useSessionStore.setState({ user: data });
 		return data;
 	} catch (e) {
 		const err = e as AxiosError;

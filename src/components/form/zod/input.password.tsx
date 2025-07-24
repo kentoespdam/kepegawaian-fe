@@ -16,7 +16,6 @@ const InputPasswordZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
-	className,
 	readonly,
 }: InputZodProps<TData>) => {
 	const [isView, setIsView] = useState(false);
@@ -26,7 +25,7 @@ const InputPasswordZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
+					<FormLabel htmlFor={id}>{label}</FormLabel>
 					<FormControl>
 						<div className="relative">
 							<Input

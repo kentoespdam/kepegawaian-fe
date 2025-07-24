@@ -23,14 +23,19 @@ const InputZod = <TData extends FieldValues>({
 		name={id}
 		render={({ field }) => (
 			<FormItem className={cn(type === "hidden" && "hidden", className)}>
-				<FormLabel>{label}</FormLabel>
+				{type === "hidden" ? null : <FormLabel htmlFor={id}>{label}</FormLabel>}
 				<FormControl>
 					<Input
-						type={type === "text" ? "text" : type}
+						id={id}
+						type={type === "text" ? "text" : type === "float" ? "number" : type}
 						step={type === "float" ? 0.01 : undefined}
 						placeholder={`Masukkan ${label}`}
 						readOnly={readonly}
-						className={readonly ? "cursor-not-allowed bg-secondary text-secondary-foreground" : ""}
+						className={
+							readonly
+								? "cursor-not-allowed bg-secondary text-secondary-foreground"
+								: ""
+						}
 						{...field}
 						onChange={(event) =>
 							type === "number" || type === "float"

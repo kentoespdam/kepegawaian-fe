@@ -1,11 +1,10 @@
 import { STATUS_KAWIN } from "@_types/enums/status_kawin";
-import { Button } from "@components/ui/button";
 import {
-	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
-	CommandList,
+	CommandList
 } from "@components/ui/command";
 import {
 	FormControl,
@@ -14,13 +13,9 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@components/ui/form";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
+import { Input } from "@components/ui/input";
 import { cn } from "@lib/utils";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
@@ -30,7 +25,8 @@ const SelectStatusKawinZod = <TData extends FieldValues>({
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const [pop, setPop] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
 	return (
 		<FormField
@@ -38,48 +34,47 @@ const SelectStatusKawinZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
-					<Popover open={pop} onOpenChange={setPop}>
-						<PopoverTrigger asChild>
-							<FormControl>
-								<Button
-									variant="outline"
-									className={cn("w-full justify-between", !field.value ? "text-muted-foreground" : "")}
-								>
-									{field.value
+					<FormLabel htmlFor={id}>{label}</FormLabel>
+					<FormControl>
+						<div className="relative w-full">
+							<Input
+								readOnly
+								id={id}
+								className="cursor-pointer"
+								onClick={handleOpenDialog}
+								value={
+									field.value
 										? field.value.replace("_", " ")
-										: "Pilih Status Kawin"}
-									<CaretSortIcon className="h-4 w-4 opacity-50" />
-								</Button>
-							</FormControl>
-						</PopoverTrigger>
-						<PopoverContent className="w-full p-0">
-							<Command>
-								<CommandInput placeholder="Pencarian..." />
-								<CommandList>
-									<CommandEmpty>No results found.</CommandEmpty>
-									{STATUS_KAWIN.map((item) => (
-										<CommandItem
-											key={item}
-											value={item}
-											onSelect={() => {
-												field.onChange(item);
-												setPop(false);
-											}}
-										>
-											{item.replace("_", " ")}
-											<CheckIcon
-												className={cn(
-													"ml-auto h-4 w-4",
-													item === field.value ? "opacity-100" : "opacity-0",
-												)}
-											/>
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
+										: "Pilih Status Kawin"
+								}
+							/>
+							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+						</div>
+					</FormControl>
+					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+						<CommandInput placeholder="Pencarian..." />
+						<CommandList>
+							<CommandEmpty>No results found.</CommandEmpty>
+							{STATUS_KAWIN.map((item) => (
+								<CommandItem
+									key={item}
+									value={item}
+									onSelect={() => {
+										field.onChange(item);
+										handleOpenDialog();
+									}}
+								>
+									{item.replace("_", " ")}
+									<CheckIcon
+										className={cn(
+											"ml-auto h-4 w-4",
+											item === field.value ? "opacity-100" : "opacity-0",
+										)}
+									/>
+								</CommandItem>
+							))}
+						</CommandList>
+					</CommandDialog>
 					<FormMessage />
 				</FormItem>
 			)}

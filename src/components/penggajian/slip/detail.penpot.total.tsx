@@ -1,0 +1,33 @@
+import type { GajiBatchMasterProses } from "@_types/gaji_batch_master_process";
+import { Table, TableCell, TableHeader, TableRow } from "@components/ui/table";
+import { rupiah2 } from "@helpers/number";
+
+const SlipGajiDetailPenPotTotal = ({
+	detail,
+	jenis,
+}: { detail: GajiBatchMasterProses[]; jenis: "PEMASUKAN" | "POTONGAN" }) => {
+	const filtered = detail.filter((item) => item.jenisGaji === jenis);
+	const total = filtered.reduce((acc, item) => acc + item.nilai, 0);
+	return (
+		<Table className="text-xs bg-secondary">
+			<TableHeader>
+				<TableRow className="border-none">
+					<TableCell className="px-2 py-1 font-bold" align="right">
+						{jenis === "PEMASUKAN" ? "Total Penerimaan" : "Total Potongan"}
+					</TableCell>
+					<TableCell className="px-2 py-1" width={10}>
+						:
+					</TableCell>
+					<TableCell className="px-2 py-1" width={10}>
+						Rp.
+					</TableCell>
+					<TableCell className="px-2 py-1" align="right" width={100}>
+						{rupiah2(total)}
+					</TableCell>
+				</TableRow>
+			</TableHeader>
+		</Table>
+	);
+};
+
+export default SlipGajiDetailPenPotTotal;

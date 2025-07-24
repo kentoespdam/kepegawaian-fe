@@ -35,6 +35,34 @@
 		--chart-3: 197 37% 24%;
 		--chart-4: 43 74% 66%;
 		--chart-5: 27 87% 67%;
+		--chart-6: 220 70% 50%;
+		--chart-7: 160 60% 45%;
+		--chart-8: 30 80% 55%;
+		--chart-9: 280 65% 60%;
+		--chart-10: 340 75% 55%;
+		--chart-11: 82 80% 55%;
+		--chart-12: 128 90% 37%;
+		--chart-13: 210 88% 64%;
+		--chart-14: 274 55% 74%;
+		--chart-15: 0 89% 44%;
+		--chart-16: 103 89% 55%;
+		--chart-17: 97 39% 49%;
+		--chart-18: 170 67% 21%;
+		--chart-19: 221 55% 49%;
+		--chart-20: 279 94% 21%;
+		--chart-21: 321 85% 73%;
+		--chart-22: 21 75% 53%;
+		--chart-23: 56 96% 50%;
+		--chart-24: 226 63% 47%;
+		--chart-25: 149 96% 50%;
+		--sidebar-background: 0 0% 98%;
+		--sidebar-foreground: 240 5.3% 26.1%;
+		--sidebar-primary: 240 5.9% 10%;
+		--sidebar-primary-foreground: 0 0% 98%;
+		--sidebar-accent: 240 4.8% 95.9%;
+		--sidebar-accent-foreground: 240 5.9% 10%;
+		--sidebar-border: 220 13% 91%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
 	}
 
 	.dark {
@@ -59,11 +87,15 @@
 		--border: 240 3.7% 15.9%;
 		--input: 240 3.7% 15.9%;
 		--ring: 142.4 71.8% 29.2%;
-		--chart-1: 220 70% 50%;
-		--chart-2: 160 60% 45%;
-		--chart-3: 30 80% 55%;
-		--chart-4: 280 65% 60%;
-		--chart-5: 340 75% 55%;
+		--sidebar-background: 240 5.9% 10%;
+		--sidebar-foreground: 240 4.8% 95.9%;
+		--sidebar-primary: 224.3 76.3% 48%;
+		--sidebar-primary-foreground: 0 0% 100%;
+		--sidebar-accent: 240 3.7% 15.9%;
+		--sidebar-accent-foreground: 240 4.8% 95.9%;
+		--sidebar-border: 240 3.7% 15.9%;
+		--sidebar-ring: 217.2 91.2% 59.8%;
+		
 	}
 }
 
@@ -77,6 +109,12 @@
 		/* font-feature-settings: "rlig" 1, "calt" 1; */
 		font-synthesis-weight: none;
 		text-rendering: optimizeLegibility;
+	}
+	img {
+		@apply inline-block;
+	}
+	svg {
+		@apply inline-block;
 	}
 }
 

@@ -57,7 +57,7 @@ const RefPotonganTkkFormComponent = ({ data }: RefPotonganTkkFormProps) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
+            <form name="form" onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full grid grid-cols-2 gap-2">
                 <InputZod id="id" label="ID" form={form} className="hidden" />
                 <SelectStatusPegawaiZod id="statusPegawai" label="Status Pegawai" form={form} />

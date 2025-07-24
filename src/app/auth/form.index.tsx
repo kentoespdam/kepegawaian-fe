@@ -39,7 +39,7 @@ const LoginForm = ({ callbackUrl }: { callbackUrl: string }) => {
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
+			<form name="form" onSubmit={form.handleSubmit(handleSubmit)} className="grid gap-4">
 				<InputZod id="username" label="Username" form={form} />
 				<InputZod id="password" label="Password" type="password" form={form} />
 				<TooltipBuilder text="Save" delayDuration={100}>

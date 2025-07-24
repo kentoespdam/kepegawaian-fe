@@ -101,7 +101,7 @@ const ApprovalFilterMain = ({
 				<Label className="mt-2">
 					Periode Gaji:<b className="text-destructive">*</b>{" "}
 				</Label>
-				<form onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+				<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
 					<SelectBulanZod id="bulan" form={form} className="w-fit" />
 					<SelectTahunZod id="tahun" form={form} className="w-fit" />
 					<TooltipBuilder

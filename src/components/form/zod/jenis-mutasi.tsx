@@ -1,8 +1,7 @@
 "use client";
-import { mutasiGetName, type JenisMutasi } from "@_types/master/jenis_mutasi";
-import { Button } from "@components/ui/button";
+import { type JenisMutasi, mutasiGetName } from "@_types/master/jenis_mutasi";
 import {
-	Command,
+	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
@@ -14,20 +13,16 @@ import {
 	FormItem,
 	FormLabel,
 } from "@components/ui/form";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { Input } from "@components/ui/input";
+import { getListData, getListDataEnc } from "@helpers/action";
 import { cn } from "@lib/utils";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useQuery } from "@tanstack/react-query";
-import { CheckIcon } from "lucide-react";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import type { InputZodProps } from "./iface";
+import { encodeString } from "@helpers/number";
 
 const JenisMutasiZod = <TData extends FieldValues>({
 	id,
@@ -37,14 +32,15 @@ const JenisMutasiZod = <TData extends FieldValues>({
 	const { setJenisMutasi } = useRiwayatMutasiStore((state) => ({
 		setJenisMutasi: state.setJenisMutasi,
 	}));
-	const [pop, setPop] = useState(false);
+	const [openDialog, setOpenDialog] = useState(false);
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 
 	const query = useQuery({
 		queryKey: ["jenis-mutasi-list"],
 		queryFn: async () => {
-			const result = await getListData<JenisMutasi>({
-				path: "master",
-				subPath: "jenis-mutasi",
+			const result = await getListDataEnc<JenisMutasi>({
+				path: encodeString("master"),
+				subPath: encodeString("jenis-mutasi"),
 				isRoot: true,
 			});
 			return result;
@@ -57,53 +53,47 @@ const JenisMutasiZod = <TData extends FieldValues>({
 			name={id}
 			render={({ field }) => (
 				<FormItem>
-					<FormLabel>{label}</FormLabel>
-					<Popover open={pop} onOpenChange={setPop}>
-						<PopoverTrigger asChild>
-							<FormControl>
-								<Button
-									variant="outline"
-									className={cn(
-										"w-full justify-between",
-										!field.value ? "text-muted-foreground" : "",
-									)}
-								>
-									{!field.value || field.value === ""
+					<FormLabel htmlFor={id}>{label}</FormLabel>
+					<FormControl>
+						<div className="relative w-full">
+							<Input
+								readOnly
+								id={id}
+								className="cursor-pointer"
+								onClick={handleOpenDialog}
+								value={
+									!field.value || field.value === ""
 										? "Pilih Jenis Mutasi"
-										: mutasiGetName(query.data || [], field.value)}
-									<ChevronDownIcon className="h-4 w-4 opacity-50" />
-								</Button>
-							</FormControl>
-						</PopoverTrigger>
-						<PopoverContent className="w-full p-0">
-							<Command>
-								<CommandInput placeholder="Pencarian..." />
-								<CommandList>
-									<CommandEmpty>No mutasi found.</CommandEmpty>
-									{query.data?.map((mutasi) => (
-										<CommandItem
-											key={mutasi.id}
-											onSelect={() => {
-												field.onChange(mutasi.id);
-												setPop(false);
-												setJenisMutasi(mutasi);
-											}}
-										>
-											{mutasi.nama}
-											<CheckIcon
-												className={cn(
-													"ml-auto h-4 w-4",
-													mutasi.id === field.value
-														? "opacity-100"
-														: "opacity-0",
-												)}
-											/>
-										</CommandItem>
-									))}
-								</CommandList>
-							</Command>
-						</PopoverContent>
-					</Popover>
+										: mutasiGetName(query.data || [], field.value)
+								}
+							/>
+							<ChevronDownIcon className="h-4 w-4 ml-4 opacity-50" />
+						</div>
+					</FormControl>
+					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+						<CommandInput placeholder="Pencarian..." />
+						<CommandList>
+							<CommandEmpty>No mutasi found.</CommandEmpty>
+							{query.data?.map((mutasi) => (
+								<CommandItem
+									key={mutasi.id}
+									onSelect={() => {
+										field.onChange(mutasi.id);
+										setJenisMutasi(mutasi);
+										handleOpenDialog();
+									}}
+								>
+									{mutasi.nama}
+									<CheckIcon
+										className={cn(
+											"ml-auto h-4 w-4",
+											mutasi.id === field.value ? "opacity-100" : "opacity-0",
+										)}
+									/>
+								</CommandItem>
+							))}
+						</CommandList>
+					</CommandDialog>
 				</FormItem>
 			)}
 		/>

@@ -12,7 +12,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { globalGetData } from "@helpers/action";
+import { globalGetDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
@@ -31,8 +32,8 @@ const JenisSkSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["jenis_sk"],
 		queryFn: async () => {
-			const result = await globalGetData<JenisSk[]>({
-				path: "master/jenis-sk",
+			const result = await globalGetDataEnc<JenisSk[]>({
+				path: encodeString("master/jenis-sk"),
 			});
 			return result;
 		},

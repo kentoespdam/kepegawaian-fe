@@ -41,7 +41,7 @@ const RiwayatSpComponent = (props: RiwayatSpComponentProps) => {
 			<div className="min-h-60 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatSpTableColumns} />
-					{query.isLoading || query.error || !query.data ? (
+					{query.isLoading || query.error || !query.data || query.data.empty ? (
 						<LoadingTable
 							columns={riwayatSpTableColumns}
 							isLoading={query.isLoading}
@@ -58,7 +58,7 @@ const RiwayatSpComponent = (props: RiwayatSpComponentProps) => {
 				deletePath="kepegawaian/riwayat/sp"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

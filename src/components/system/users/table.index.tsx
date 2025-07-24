@@ -42,7 +42,6 @@ const UsersTableComponent = () => {
 						columns={userTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<UserTableBody data={query.data} />

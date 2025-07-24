@@ -1,14 +1,16 @@
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 
 export const useBiodataQuery = <Biodata>(nik: string) => {
 	const { data, isFetching, isLoading, isError } = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: async () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});

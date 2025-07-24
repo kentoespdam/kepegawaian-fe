@@ -12,7 +12,7 @@ import {
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useGlobalMutation } from "@store/query-store";
 import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 
 interface ProfilPendidikanActionProps {
 	biodata: Biodata;
@@ -20,6 +20,7 @@ interface ProfilPendidikanActionProps {
 }
 
 const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
+	const pathname = usePathname();
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
 	const store = usePendidikanStore();
@@ -76,14 +77,15 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 						<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Delete</span>
 					</DropdownMenuItem>
-
-					<DropdownMenuItem
-						className="flex flex-row items-center cursor-pointer text-info"
-						onClick={acceptHandler}
-					>
-						<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
-						<span>Setujui Data</span>
-					</DropdownMenuItem>
+					{pathname === "/dashboard" ? null : (
+						<DropdownMenuItem
+							className="flex flex-row items-center cursor-pointer text-info"
+							onClick={acceptHandler}
+						>
+							<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+							<span>Setujui Data</span>
+						</DropdownMenuItem>
+					)}
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>

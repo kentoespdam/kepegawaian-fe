@@ -71,3 +71,17 @@ export const riwayatSkTableColumns: CustomColumnDef[] = [
 	{ id: "mkgbTahun", label: "MKGB" },
 	{ id: "notes", label: "Notes" },
 ];
+
+export const riwayatSkTableColumnsDashboard: CustomColumnDef[] = [
+	{ id: "urut", label: "No" },
+	{ id: "nomorSk", label: "Nomor SK", search: true, searchType: "text" },
+	{ id: "jenisSk", label: "Jenis SK", search: true, searchType: "jenisSk" },
+	{ id: "tanggalSk", label: "Tgl. SK" },
+	{ id: "tmtBerlaku", label: "Tgl. Berlaku" },
+	{ id: "golongan", label: "Golongan" },
+	{ id: "gajiPokok", label: "Gaji Pokok" },
+	{ id: "mkgTahun", label: "MKG" },
+	{ id: "kenaikanBerikutnya", label: "Kenaikan Berikutnya" },
+	{ id: "mkgbTahun", label: "MKGB" },
+	{ id: "notes", label: "Notes" },
+];

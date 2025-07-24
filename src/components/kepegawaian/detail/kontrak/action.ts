@@ -18,5 +18,6 @@ export const saveRiwayatKontrak = async (formData: RiwayatKontrakSchema) => {
 		body: JSON.stringify(formData),
 	});
 	const result = await req.json();
+	console.log(result)
 	return result;
 };

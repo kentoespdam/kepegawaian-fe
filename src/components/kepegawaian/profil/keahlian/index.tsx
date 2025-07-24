@@ -1,14 +1,16 @@
 "use client";
 import type { Biodata } from "@_types/profil/biodata";
-import { keahlianTableColumns, type Keahlian } from "@_types/profil/keahlian";
+import { type Keahlian, keahlianTableColumns } from "@_types/profil/keahlian";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import DeleteKeahlianDialog from "./dialog.delete";
 import FormKeahlianDialog from "./dialog.form";
 import KeahlianTableBody from "./table.body";
 
@@ -21,22 +23,33 @@ const ProfilKeahlianContentComponent = ({
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 
+	const { keahlianId, openDelete, setOpenDelete } = useKeahlianStore(
+		(state) => ({
+			keahlianId: state.keahlianId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
+
+	const qKey = ["profil-keahlian", nik, search.toString()];
+
 	const qBio = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
 
 	const query = useQuery({
-		queryKey: ["profil-keahlian", qBio.data?.nik, search.toString()],
+		queryKey: qKey,
 		queryFn: () =>
-			getPageData<Keahlian>({
-				path: `profil/keahlian/${qBio.data?.nik}/biodata`,
+			getPageDataEnc<Keahlian>({
+				path: encodeString(`profil/keahlian/${qBio.data?.nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
@@ -44,27 +57,28 @@ const ProfilKeahlianContentComponent = ({
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			{/* <SearchBuilder columns={keahlianTableColumns} /> */}
-			<div className="min-h-96">
-				<Table>
-					<TableHeadBuilder columns={keahlianTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable columns={keahlianTableColumns} isLoading={true} />
-					) : query.isError ? (
-						<LoadingTable
-							columns={keahlianTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					) : qBio.data && query.data ? (
-						<KeahlianTableBody biodata={qBio.data} data={query.data} />
-					) : null}
-				</Table>
-			</div>
+		<div className="grid overflow-auto p-2 gap-0">
+			<Table>
+				<TableHeadBuilder columns={keahlianTableColumns} />
+				{query.isLoading ||
+				query.isFetching ||
+				query.isError ||
+				!qBio.data ||
+				!query.data ? (
+					<LoadingTable columns={keahlianTableColumns} isLoading={true} />
+				) : (
+					<KeahlianTableBody biodata={qBio.data} data={query.data} />
+				)}
+			</Table>
 			<PaginationBuilder data={query.data} />
 			<FormKeahlianDialog />
-			<DeleteKeahlianDialog />
+			<DeleteZodDialogBuilder
+				id={keahlianId}
+				deletePath="profil/keahlian"
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+				queryKeys={[qKey, ["lampiran-keahlian", keahlianId]]}
+			/>
 		</div>
 	);
 };

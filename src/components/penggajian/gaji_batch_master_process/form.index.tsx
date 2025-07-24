@@ -20,9 +20,10 @@ import SelectJenisGajiZod from "@components/form/zod/jenis_gaji";
 import TooltipBuilder from "@components/builder/tooltip";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import { SaveIcon, XCircleIcon } from "lucide-react";
+import type { QueryKey } from "@tanstack/react-query";
 
 interface GajiBatchMasterProsesFormProps {
-	qKey: (string | number | undefined)[];
+	qKey: QueryKey[];
 }
 const GajiBatchMasterProsesForm = (props: GajiBatchMasterProsesFormProps) => {
 	const { batchMasterId, defaultValues, openForm, setOpenForm } =
@@ -46,7 +47,7 @@ const GajiBatchMasterProsesForm = (props: GajiBatchMasterProsesFormProps) => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: saveGajiBatchMasterProses,
-		queryKeys: [props.qKey, ["gaji_batch_master_proses", batchMasterId]],
+		queryKeys: props.qKey,
 		actHandler: () => {
 			setOpenForm(false);
 		},
@@ -68,7 +69,11 @@ const GajiBatchMasterProsesForm = (props: GajiBatchMasterProsesFormProps) => {
 					<DialogTitle>Tambah Komponen Gaji</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<InputZod id="nama" label="Nama" form={form} />
 						<SelectJenisGajiZod id="jenisGaji" label="Jenis Gaji" form={form} />
 						<InputZod id="nilai" label="Nilai" type="number" form={form} />

@@ -19,6 +19,7 @@ import { Input } from "@components/ui/input";
 import { encodeString } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalMutation } from "@store/query-store";
+import type { QueryKey } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { deleteGajiBatchRoot } from "./action";
 
@@ -26,7 +27,7 @@ interface DeleteBatchRootDialogProps {
 	id: string;
 	openDelete: boolean;
 	setOpenDelete: (value: boolean) => void;
-	queryKeys: string[];
+	queryKeys: QueryKey;
 }
 const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 	const form = useForm<BaseDelete>({
@@ -44,11 +45,11 @@ const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 			props.setOpenDelete(false);
 		},
 	});
-	
+
 	const onSubmit = (values: BaseDelete) => {
 		values.unique = encodeString(props.id);
-		mutation.mutate(values)
-	}
+		mutation.mutate(values);
+	};
 
 	return (
 		<Dialog open={props.openDelete} onOpenChange={props.setOpenDelete}>
@@ -57,7 +58,7 @@ const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
 				</DialogHeader>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 						<FormField
 							control={form.control}
 							name="id"
@@ -88,7 +89,7 @@ const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 				</Form>
 			</DialogContent>
 		</Dialog>
-	)
+	);
 };
 
 export default DeleteBatchRootDialog;

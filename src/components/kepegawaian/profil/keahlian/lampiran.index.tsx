@@ -8,7 +8,8 @@ import {
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../lampiran/dialog/add-lampiran-profil";
@@ -24,38 +25,33 @@ const LampiranKeahlianContent = () => {
 	const query = useQuery({
 		queryKey: [rootKey, selectedKeahlianId],
 		queryFn: async () =>
-			await getListData<LampiranProfil>({
-				path: `profil/keahlian/lampiran/${selectedKeahlianId}`,
+			await getListDataEnc<LampiranProfil>({
+				path: encodeString(`profil/keahlian/lampiran/${selectedKeahlianId}`),
 				isRoot: true,
 			}),
 		enabled: !!selectedKeahlianId && selectedKeahlianId > 0,
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
-				<Table>
-					<TableHeadBuilder columns={lampiranProfilTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable
-							columns={lampiranProfilTableColumns}
-							isLoading={true}
-						/>
-					) : query.data && query.data.length > 0 ? (
-						<LampiranProfilTableBody
-							data={query.data}
-							jenis={JenisLampiranProfil.Values.PROFIL_KEAHLIAN}
-							rootKey={rootKey}
-						/>
-					) : (
-						<LoadingTable
-							columns={lampiranProfilTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					)}
-				</Table>
-			</div>
+		<div className="grid overflow-auto p-2 gap-0">
+			<Table>
+				<TableHeadBuilder columns={lampiranProfilTableColumns} />
+				{query.isLoading || query.isFetching ? (
+					<LoadingTable columns={lampiranProfilTableColumns} isLoading={true} />
+				) : query.data && query.data.length > 0 ? (
+					<LampiranProfilTableBody
+						data={query.data}
+						jenis={JenisLampiranProfil.Values.PROFIL_KEAHLIAN}
+						rootKey={rootKey}
+					/>
+				) : (
+					<LoadingTable
+						columns={lampiranProfilTableColumns}
+						isSuccess={false}
+						error={query.error?.message}
+					/>
+				)}
+			</Table>
 
 			<LampiranFormDialog
 				rootKey={rootKey}

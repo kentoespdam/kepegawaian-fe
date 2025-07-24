@@ -33,31 +33,25 @@ const LampiranPendidikanContent = () => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
-				<Table>
-					<TableHeadBuilder columns={lampiranProfilTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable
-							columns={lampiranProfilTableColumns}
-							isLoading={true}
-						/>
-					) : query.data && query.data.length > 0 ? (
-						<LampiranProfilTableBody
-							data={query.data}
-							jenis={JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}
-							rootKey={rootKey}
-						/>
-					) : (
-						<LoadingTable
-							columns={lampiranProfilTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					)}
-				</Table>
-			</div>
-
+		<div className="grid overflow-auto p-2 gap-0">
+			<Table>
+				<TableHeadBuilder columns={lampiranProfilTableColumns} />
+				{query.isLoading ||
+				query.isFetching ||
+				!query.data ||
+				query.data.length === 0 ? (
+					<LoadingTable
+						columns={lampiranProfilTableColumns}
+						isLoading={query.isLoading || query.isFetching}
+					/>
+				) : (
+					<LampiranProfilTableBody
+						data={query.data}
+						jenis={JenisLampiranProfil.Values.PROFIL_PENDIDIKAN}
+						rootKey={rootKey}
+					/>
+				)}
+			</Table>
 			<LampiranFormDialog
 				rootKey={rootKey}
 				savePath="profil/pendidikan"

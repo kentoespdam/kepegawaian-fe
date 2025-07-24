@@ -4,24 +4,22 @@ import {
 	ContactIcon,
 	GraduationCapIcon,
 	HistoryIcon,
-	Home,
 	Package2,
 	TelescopeIcon,
 	Undo2Icon,
-	UndoIcon,
 } from "lucide-react";
 import Link from "next/link";
 
-import CustomQueryProvider from "@components/providers/query";
-import { Toaster } from "@components/ui/toaster";
-import type { ChildrenNode } from "@lib/index";
-import { QueryClient } from "@tanstack/react-query";
-import { ButtonLink } from "@components/ui/link";
 import TooltipBuilder from "@components/builder/tooltip";
+import CustomQueryProvider from "@components/providers/query";
+import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";
-import { usePathname } from "next/navigation";
+import { Toaster } from "@components/ui/sonner";
+import type { ChildrenNode } from "@lib/index";
 import { cn } from "@lib/utils";
 import { IdCardIcon } from "@radix-ui/react-icons";
+import { QueryClient } from "@tanstack/react-query";
+import { usePathname } from "next/navigation";
 
 const queryClient = new QueryClient({
 	defaultOptions: {
@@ -132,7 +130,7 @@ const Layout = ({ children }: ChildrenNode) => {
 
 				{children}
 			</div>
-			<Toaster />
+			<Toaster richColors />
 		</CustomQueryProvider>
 	);
 };

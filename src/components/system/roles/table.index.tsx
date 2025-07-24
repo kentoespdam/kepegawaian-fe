@@ -34,7 +34,6 @@ const RoleTableComponent = () => {
 						columns={systemRoleTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<RoleTableBody data={query.data} />

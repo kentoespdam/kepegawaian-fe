@@ -83,7 +83,7 @@ const AddProsesGajiButon = ({ pegawai }: AddProsesGajiButonProps) => {
                     <DialogTitle>Buat Proses Baru</DialogTitle>
                 </DialogHeader>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-full grid gap-2">
+                    <form name="form" onSubmit={form.handleSubmit(onSubmit)} className="w-full grid gap-2">
                         <InputZod form={form} id="tahun" label="Tahun" />
                         <InputZod form={form} id="bulan" label="Bulan" />
                         <InputZod form={form} id="diProsesOleh" label="Di Proses Oleh" readonly />

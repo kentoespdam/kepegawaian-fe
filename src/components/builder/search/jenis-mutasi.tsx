@@ -1,3 +1,4 @@
+import type { JenisMutasi } from "@_types/master/jenis_mutasi";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -11,7 +12,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { globalGetData } from "@helpers/action";
+import { globalGetDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
@@ -19,7 +21,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { BaseSearchProps } from "./component";
-import type { JenisMutasi } from "@_types/master/jenis_mutasi";
 
 const JenisMutasiSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const searchParams = useSearchParams();
@@ -31,8 +32,8 @@ const JenisMutasiSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["jenis-mutasi"],
 		queryFn: () =>
-			globalGetData<JenisMutasi[]>({
-				path: "master/jenis-mutasi",
+			globalGetDataEnc<JenisMutasi[]>({
+				path: encodeString("master/jenis-mutasi"),
 			}),
 	});
 

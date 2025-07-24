@@ -3,7 +3,7 @@ import type {
 	RiwayatSpSchema,
 } from "@_types/kepegawaian/riwayat-sp";
 import type { JenisSp } from "@_types/master/jenis_sp";
-import type { Pegawai } from "@_types/pegawai";
+import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import type { SelectedHandlerStore } from "@store/base-store";
 import { create } from "zustand";
 
@@ -11,7 +11,7 @@ interface RiwayatSpStore extends SelectedHandlerStore {
 	riwayatSpId: number;
 	setRiwayatSpId: (val: number) => void;
 	defaultValues: RiwayatSpSchema;
-	setDefaultValues: (pegawai?: Pegawai, data?: RiwayatSp) => void;
+	setDefaultValues: (pegawai?: PegawaiDetail, data?: RiwayatSp) => void;
 	jenisSp?: JenisSp;
 	setJenisSp: (val?: JenisSp) => void;
 }
@@ -33,19 +33,25 @@ export const useRiwayatSpStore = create<RiwayatSpStore>((set, get) => ({
 		nipam: "",
 		nama: "",
 		organisasiId: 0,
-        namaOrganisasi: "",
+		namaOrganisasi: "",
 		jabatanId: 0,
-        namaJabatan: "",
+		namaJabatan: "",
+		tmtJabatan: "",
+		tmtGolongan: "",
+		tmtGajiBerkala: "",
 		nomorSp: "",
 		tanggalSp: "",
-		jenisSp: "",
+		jenisSpId: 0,
+		sanksiId: 0,
+		sanksiNotes: "",
+		tanggalEksekusiSanksi: "",
 		tanggalMulai: "",
 		tanggalSelesai: "",
 		penandaTangan: "",
 		jabatanPenandaTangan: "",
 		notes: "",
 	},
-	setDefaultValues: (pegawai?: Pegawai, data?: RiwayatSp) => {
+	setDefaultValues: (pegawai?: PegawaiDetail, data?: RiwayatSp) => {
 		return set((state) => ({
 			...state,
 			defaultValues: {
@@ -69,7 +75,13 @@ export const useRiwayatSpStore = create<RiwayatSpStore>((set, get) => ({
 					: pegawai
 						? pegawai.jabatan.nama
 						: "",
-				jenisSp: data?.jenisSp ?? "",
+				tmtJabatan: pegawai?.skJabatan?.tmtBerlaku ?? "",
+				tmtGolongan: pegawai?.skGolongan?.tmtBerlaku ?? "",
+				tmtGajiBerkala: pegawai?.skGajiBerkala?.tmtBerlaku ?? "",
+				jenisSpId: data?.jenisSp.id ?? 0,
+				sanksiId: data?.sanksi.id ?? 0,
+				sanksiNotes: data?.sanksiNotes ?? "",
+				tanggalEksekusiSanksi: data?.tanggalEksekusiSanksi ?? "",
 				nomorSp: data?.nomorSp ?? "",
 				tanggalSp: data?.tanggalSp ?? "",
 				tanggalMulai: data?.tanggalMulai ?? "",

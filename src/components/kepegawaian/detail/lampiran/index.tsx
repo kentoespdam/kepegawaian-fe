@@ -8,7 +8,8 @@ import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
-import { globalGetData } from "@helpers/action";
+import { globalGetDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -22,7 +23,13 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 	const param = useSearchParams();
 	const search = new URLSearchParams(param);
 	const rootKey = "lampiran-sk";
-	const { lampiranId, jenisSk, refId, openDeleteLampiranForm, setOpenDeleteLampiranForm } = useLampiranSkStore((state) => ({
+	const {
+		lampiranId,
+		jenisSk,
+		refId,
+		openDeleteLampiranForm,
+		setOpenDeleteLampiranForm,
+	} = useLampiranSkStore((state) => ({
 		lampiranId: state.lampiranId,
 		jenisSk: state.ref,
 		refId: state.refId,
@@ -33,8 +40,8 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 	const query = useQuery<LampiranSk[]>({
 		queryKey: [rootKey, jenisSk, refId],
 		queryFn: async () => {
-			const result = await globalGetData<LampiranSk[]>({
-				path: `kepegawaian/lampiran/list/${jenisSk}/${refId}`,
+			const result = await globalGetDataEnc<LampiranSk[]>({
+				path: encodeString(`kepegawaian/lampiran/list/${jenisSk}/${refId}`),
 				isRoot: true,
 				searchParams: search.toString(),
 			});
@@ -44,11 +51,15 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0">
-			<div className="min-h-80">
+		<div className="grid overflow-auto p-2 gap-0 mb-4">
+			<div className="min-h-fit">
 				<Table>
 					<TableHeadBuilder columns={lampiranSkTableColumns} />
-					{query.isLoading || query.isFetching || !query.data || query.data.length === 0 ? (
+					{query.isLoading ||
+					query.isFetching ||
+					query.isError ||
+					!query.data ||
+					query.data.length === 0 ? (
 						<LoadingTable
 							columns={lampiranSkTableColumns}
 							error={query.error?.message}
@@ -57,7 +68,6 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 					) : (
 						<LampiranSkTableBody
 							data={query.data}
-							jenisSk={jenisSk}
 							rootKey={rootKey}
 						/>
 					)}
@@ -67,7 +77,7 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 			<LampiranSkForm rootKey={rootKey} savePath="kepegawaian/lampiran" />
 			<DeleteZodDialogBuilder
 				id={lampiranId}
-				queryKeys={[rootKey]}
+				queryKeys={[[rootKey]]}
 				deletePath={`kepegawaian/lampiran/${jenisSk}/${refId}`}
 				openDelete={openDeleteLampiranForm}
 				setOpenDelete={setOpenDeleteLampiranForm}

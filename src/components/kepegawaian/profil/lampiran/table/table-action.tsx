@@ -110,13 +110,15 @@ const LampiranProfilTableAction = (props: LampiranProfilTableActionProps) => {
 				</DropdownMenuTrigger>
 				<DropdownMenuContent className="w-auto">
 					<DropdownMenuGroup>
-						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-info"
-							onClick={acceptHandler}
-						>
-							<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
-							<span>Setujui Data</span>
-						</DropdownMenuItem>
+						{path === "/dashboard" ? null : (
+							<DropdownMenuItem
+								className="flex flex-row items-center cursor-pointer text-info"
+								onClick={acceptHandler}
+							>
+								<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
+								<span>Setujui Data</span>
+							</DropdownMenuItem>
+						)}
 						<DropdownMenuItem
 							className="flex flex-row items-center cursor-pointer text-destructive"
 							onClick={deleteHandler}

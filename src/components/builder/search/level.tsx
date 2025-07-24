@@ -1,9 +1,10 @@
 "use client"
-import { findLevelValue, type Level } from "@_types/master/level"
+import { type Level, findLevelValue } from "@_types/master/level"
 import { Button } from "@components/ui/button"
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@components/ui/popover"
-import { getListData } from "@helpers/action"
+import { getListDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
 import { cn } from "@lib/utils"
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
 import { useQuery } from "@tanstack/react-query"
@@ -22,8 +23,8 @@ const SearchLevelBuilder = ({ col, val }: BaseSearchProps) => {
     const query = useQuery({
         queryKey: ["level-list"],
         queryFn: async () => {
-            const result = await getListData<Level>({
-                path: "level"
+            const result = await getListDataEnc<Level>({
+                path: encodeString("level")
             })
             return result
         }
