@@ -31,7 +31,10 @@ const TerminasiFormComponent = ({
 	pegawai,
 	data,
 }: TerminasiFormComponentProps) => {
-	const { defaultValues, setDefaultValues } = useRiwayatTerminasiStore();
+	const { defaultValues, setDefaultValues } = useRiwayatTerminasiStore(state=>({
+		defaultValues: state.defaultValues,
+		setDefaultValues: state.setDefaultValues
+	}));
 	const isEdit = !!data?.id;
 
 	const form = useForm<RiwayatTerminasiSchema>({
@@ -57,6 +60,7 @@ const TerminasiFormComponent = ({
 	};
 
 	useEffect(() => {
+		if (!pegawai && !data) return;
 		setDefaultValues(pegawai, data);
 	}, [setDefaultValues, pegawai, data]);
 
