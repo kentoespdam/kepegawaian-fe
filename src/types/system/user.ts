@@ -1,6 +1,6 @@
 import type { Prefs } from "@_types/user";
-import type { CustomColumnDef } from "..";
 import { z } from "zod";
+import type { CustomColumnDef } from "..";
 
 export interface User {
 	id: number;

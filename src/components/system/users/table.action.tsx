@@ -25,6 +25,8 @@ const UserTableAction = ({ row }: UserTableActionProps) => {
 		setUserId(row.id.toString());
 		setOpenChangePassword(true);
 	};
+
+
 	const editHandler = () => {
 		if (row.isActive) {
 			const tanya = confirm("Yakin akan non-aktifkan user ini?");
