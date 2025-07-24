@@ -1,7 +1,7 @@
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import { Button } from "@components/ui/button";
 import Fieldset from "@components/ui/fieldset";
-import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
+import { useRiwayatTerminasiStore } from "@store/kepegawaian/detail/riwayat_terminasi";
 import { SaveIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import type { FieldValues, UseFormReturn } from "react-hook-form";
@@ -14,13 +14,13 @@ const TerminasiAction = <TData extends FieldValues>({
 	form,
 	isPending,
 }: TerminasiActionProps<TData>) => {
+	const { setDefaultValues } = useRiwayatTerminasiStore((state) => ({
+		setDefaultValues: state.setDefaultValues,
+	}));
 	const router = useRouter();
-	// const { setJenisMutasi } = useRiwayatMutasiStore((state) => ({
-	// 	setJenisMutasi: state.setJenisMutasi,
-	// }));
 	const cancelHandler = () => {
-		// setJenisMutasi();
 		form.reset();
+		setDefaultValues();
 		router.back();
 	};
 

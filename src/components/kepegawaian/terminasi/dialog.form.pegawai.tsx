@@ -113,7 +113,7 @@ const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 						label="NIPAM"
 						form={form}
 						className="col-span-4 sm:cols-span-4 md:col-span-3 lg:col-span-5 xl:col-span-5"
-						disabled
+						readonly
 					/>
 					<div className="pt-8 text-right">
 						<Dialog
@@ -132,7 +132,7 @@ const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 						</Dialog>
 					</div>
 				</div>
-				<InputZod id="nama" label="Nama Pegawai" form={form} disabled />
+				<InputZod id="nama" label="Nama Pegawai" form={form} readonly />
 				{form.getValues("nipam")?.startsWith("KO-") ? null : (
 					<>
 						<InputZod
@@ -142,7 +142,7 @@ const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 							form={form}
 							className="hidden"
 						/>
-						<InputZod id="namaGolongan" label="Golongan" form={form} disabled />
+						<InputZod id="namaGolongan" label="Golongan" form={form} readonly />
 					</>
 				)}
 				<InputZod
@@ -151,14 +151,14 @@ const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 					form={form}
 					className="hidden"
 				/>
-				<InputZod id="namaOrganisasi" label="Unit Kerja" form={form} disabled />
+				<InputZod id="namaOrganisasi" label="Unit Kerja" form={form} readonly />
 				<InputZod
 					id="jabatanId"
 					label="Jabatan"
 					form={form}
 					className="hidden"
 				/>
-				<InputZod id="namaJabatan" label="Jabatan" form={form} disabled />
+				<InputZod id="namaJabatan" label="Jabatan" form={form} readonly />
 			</div>
 		</Fieldset>
 	);

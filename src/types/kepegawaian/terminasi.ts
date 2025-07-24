@@ -10,7 +10,7 @@ import type { AlasanBerhenti } from "@_types/master/alasan_berhenti";
 
 export interface RiwayatTerminasi {
 	id: number;
-	alasanTerminasi: AlasanBerhenti
+	alasanTerminasi: AlasanBerhenti;
 	pegawai: Pegawai;
 	nipam: string;
 	nama: string;
@@ -33,11 +33,11 @@ export const RiwayatTerminasiSchema = BaseRiwayatSkSchema.extend({
 	nipam: z.string().min(5, "NIPAM wajib diisi"),
 	nama: z.string().min(3, "Nama. wajib diisi"),
 	organisasiId: z.number().min(1, "Organisasi wajib diisi"),
-	namaOrganisasi: z.string().optional(),
+	namaOrganisasi: z.string(),
 	jabatanId: z.number().min(1, "Jabatan wajib diisi"),
-	namaJabatan: z.string().optional(),
+	namaJabatan: z.string(),
 	golonganId: z.number(),
-	namaGolongan: z.string().optional(),
+	namaGolongan: z.string(),
 	fileName: z
 		.any()
 		.refine(
@@ -58,9 +58,8 @@ export const RiwayatTerminasiSchema = BaseRiwayatSkSchema.extend({
 					(file) => file instanceof File && file.size <= MAX_UPLOAD_SIZE,
 				),
 			"Maks File Upload 10 MB",
-		)
-		.optional(),
-	notes: z.string().optional(),
+		),
+	notes: z.string(),
 });
 
 export type RiwayatTerminasiSchema = z.infer<typeof RiwayatTerminasiSchema>;
@@ -88,7 +87,12 @@ export const riwayatTerminasiColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
 	{ id: "aksi", label: "Aksi" },
 	{ id: "tanggalPensiun", label: "Tgl. Pensiun" },
-	{ id: "alasanTerminasiId", label: "Alasan Terminasi", search: true, searchType: "alasanTerminasi" },
+	{
+		id: "alasanTerminasiId",
+		label: "Alasan Terminasi",
+		search: true,
+		searchType: "alasanTerminasi",
+	},
 	{ id: "nipam", label: "NIPAM", search: true, searchType: "text" },
 	{ id: "nama", label: "Nama", search: true, searchType: "text" },
 	{ id: "nomorSk", label: "Nomor SK" },
