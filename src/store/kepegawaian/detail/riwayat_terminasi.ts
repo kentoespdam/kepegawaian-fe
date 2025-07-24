@@ -51,7 +51,7 @@ export const useRiwayatTerminasiStore = create<RiwayatTerminasiStore>(
 				defaultValues: {
 					id: data?.id ?? 0,
 					alasanTerminasiId: data?.alasanTerminasi.id ?? 0,
-					pegawaiId: Number(pegawai?.id) ?? 0,
+					pegawaiId: pegawai?.id ?? 0,
 					nomorSk: data?.nomorSk ?? "",
 					jenisSk: "SK_PENSIUN",
 					tanggalSk: data?.skTerminasi.tanggalSk ?? "",
@@ -70,7 +70,7 @@ export const useRiwayatTerminasiStore = create<RiwayatTerminasiStore>(
 					namaOrganisasi: pegawai?.organisasi?.nama ?? "",
 					jabatanId: pegawai?.jabatan?.id ?? 0,
 					namaJabatan: pegawai?.jabatan?.nama ?? "",
-					namaGolongan: `${pegawai?.golongan?.pangkat} -  ${pegawai?.golongan?.golongan}`,
+					namaGolongan: `${pegawai?.golongan?.pangkat ?? ""} -  ${pegawai?.golongan?.golongan ?? ""}`,
 					notes: data?.notes ?? "",
 				},
 			})),

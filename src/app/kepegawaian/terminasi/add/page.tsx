@@ -2,6 +2,7 @@ import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import TerminasiFormComponent from "@components/kepegawaian/terminasi/form.index";
 import { getDataById } from "@helpers/action";
+import { Suspense } from "react";
 
 const metadata = {
 	title: "Add Terminasi",
@@ -22,7 +23,9 @@ const AddTerminasiPage = async ({
 
 	return (
 		<FormCard metadata={metadata} className="min-h-full">
-			<TerminasiFormComponent pegawai={pegawai} />
+			<Suspense fallback={<div>Loading...</div>}>
+				<TerminasiFormComponent pegawai={pegawai} />
+			</Suspense>
 		</FormCard>
 	);
 };
