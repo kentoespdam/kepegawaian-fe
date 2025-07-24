@@ -38,10 +38,11 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 		enabled: !!props.pegawaiId,
 	});
 
+
 	return (
 		<div className="grid p-2 gap-0">
 			<SearchBuilder columns={riwayatMutasiTableColumns} />
-			<div className="min-h-60 overflow-auto">
+			<div className="min-h-fit overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatMutasiTableColumns} />
 					{query.isLoading || query.error || !query.data || query.data.empty ? (
@@ -64,7 +65,7 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 				deletePath="kepegawaian/riwayat/mutasi"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

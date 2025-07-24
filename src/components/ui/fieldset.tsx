@@ -17,8 +17,8 @@ const Fieldset = React.forwardRef<
             className={cn("grid rounded-lg border p-2 max-w-content", clasName)}
             {...props}
         >
-            <legend className="-ml-1 px-1 text-sm font-medium">{title}</legend>
-            <div className="p-2">
+            <legend className="px-1 text-sm font-medium">{title}</legend>
+            <div className="p-1">
                 {children}
             </div>
         </fieldset>

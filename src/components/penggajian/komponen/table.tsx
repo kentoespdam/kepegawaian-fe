@@ -1,6 +1,9 @@
-"use client"
+"use client";
 
-import { komponentGajiColumns, type KomponenGaji } from "@_types/penggajian/komponen";
+import {
+	komponentGajiColumns,
+	type KomponenGaji,
+} from "@_types/penggajian/komponen";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
@@ -13,45 +16,53 @@ import { useSearchParams } from "next/navigation";
 import KomponenGajiTableBody from "./table.body";
 
 interface KomponenGajiTableProps {
-    profilId: number
+	profilId: number;
 }
 const KomponenGajiTable = ({ profilId }: KomponenGajiTableProps) => {
-    const params = useSearchParams()
-    const search = new URLSearchParams(params)
-    search.delete("profilId")
-    const { komponenGajiId, openDelete, setOpenDelete } = useKomponenGajiStore(state => state)
-    const { data, isFetching, isLoading, isError, error } = useQuery({
-        queryKey: ['komponen_gaji', profilId, search.toString()],
-        queryFn: async () => getPageData<KomponenGaji>({
-            path: `penggajian/komponen/${profilId}/profil`,
-            searchParams: search.toString(),
-            isRoot: true
-        }),
-        enabled: profilId > 0
-    })
+	const params = useSearchParams();
+	const search = new URLSearchParams(params);
+	search.delete("profilId");
 
-    return (
-        <div className="w-full min-h-4 scroll-auto">
-            <Table>
-                <TableHeadBuilder columns={komponentGajiColumns} />
-                {isFetching || isLoading || isError || !data ?
-                    <LoadingTable
-                        columns={komponentGajiColumns}
-                        isFetching={isFetching}
-                        isLoading={isLoading}
-                        error={error?.message}
-                    /> : <KomponenGajiTableBody data={data} />}
-            </Table>
-            <PaginationBuilder data={data} />
-            <DeleteZodDialogBuilder
-                id={komponenGajiId}
-                deletePath="penggajian/komponen"
-                openDelete={openDelete}
-                setOpenDelete={setOpenDelete}
-                queryKeys={["komponen_gaji", profilId]}
-            />
-        </div>
-    );
-}
+	const qKey = ["komponen_gaji", profilId, search.toString()];
+	const { komponenGajiId, openDelete, setOpenDelete } = useKomponenGajiStore(
+		(state) => state,
+	);
+	const { data, isFetching, isLoading, isError, error } = useQuery({
+		queryKey: qKey,
+		queryFn: async () =>
+			getPageData<KomponenGaji>({
+				path: `penggajian/komponen/${profilId}/profil`,
+				searchParams: search.toString(),
+				isRoot: true,
+			}),
+		enabled: profilId > 0,
+	});
+
+	return (
+		<div className="w-full min-h-4 scroll-auto">
+			<Table>
+				<TableHeadBuilder columns={komponentGajiColumns} />
+				{isFetching || isLoading || isError || !data ? (
+					<LoadingTable
+						columns={komponentGajiColumns}
+						isFetching={isFetching}
+						isLoading={isLoading}
+						error={error?.message}
+					/>
+				) : (
+					<KomponenGajiTableBody data={data} />
+				)}
+			</Table>
+			<PaginationBuilder data={data} />
+			<DeleteZodDialogBuilder
+				id={komponenGajiId}
+				deletePath="penggajian/komponen"
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+				queryKeys={[qKey]}
+			/>
+		</div>
+	);
+};
 
 export default KomponenGajiTable;

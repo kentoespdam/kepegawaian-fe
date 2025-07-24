@@ -20,8 +20,8 @@ export type PendapatanNonPajakSchema = z.infer<typeof PendapatanNonPajakSchema>;
 
 export const pendapatanNonPajakColumns: CustomColumnDef[] = [
 	{ id: "aksi", label: "Aksi" },
-	{ id: "kode", label: "Kode", search: true, searchType: "text" },
-	{ id: "nominal", label: "Nominal" },
+	{ id: "kode", label: "Kode", search: true, searchType: "text", sortable: true },
+	{ id: "nominal", label: "Nominal", sortable: true },
 	{ id: "notes", label: "Notes" },
 ];
 

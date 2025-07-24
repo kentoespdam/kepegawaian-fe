@@ -12,7 +12,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { getListData, getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { useQuery } from "@tanstack/react-query";
 import { ChevronDownIcon } from "lucide-react";
@@ -31,8 +32,8 @@ const AlasanTerminasiSearchBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["alasan-terminasi-list"],
 		queryFn: () =>
-			getListData<AlasanBerhenti>({
-				path: "alasan-berhenti",
+			getListDataEnc<AlasanBerhenti>({
+				path: encodeString("alasan-berhenti"),
 			}),
 	});
 

@@ -55,7 +55,7 @@ const EditProfilGajiFormComponent = (props: EditProfilGajiFormProps) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(submitHandler)}
+            <form name="form" onSubmit={form.handleSubmit(submitHandler)}
                 className="grid gap-4">
                 <InputZod id="id" label="ID" form={form} className="hidden" />
                 <ProfilGajiDataSk form={form} />

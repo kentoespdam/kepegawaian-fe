@@ -38,7 +38,6 @@ const SanksiTableComponent = () => {
 						columns={sanksiTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<SanksiTableBody data={query.data} />
@@ -50,7 +49,7 @@ const SanksiTableComponent = () => {
 				deletePath="master/sanksi"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

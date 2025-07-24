@@ -15,23 +15,29 @@ import {
 	TableRow,
 } from "@components/ui/table";
 import { rupiah } from "@helpers/number";
+import { useQueryClient } from "@tanstack/react-query";
 import GajiBatchMasterProsesKomponenTableAction from "./button.action.table.komponen";
 
 interface GajiBatchMasterProsesTableKomponenBodyProps {
 	data: GajiBatchMasterProses[];
 	jenisGaji: JenisGaji;
 	isVerified: boolean;
-	gajiBatchMaster?: GajiBatchMaster;
+	gajiBatchMasterId?: number;
 }
 const GajiBatchMasterProsesKomponenTableBody = ({
 	data,
 	jenisGaji,
 	isVerified,
-	gajiBatchMaster,
+	gajiBatchMasterId,
 }: GajiBatchMasterProsesTableKomponenBodyProps) => {
 	const filtered = data.filter(
 		(item) => item.jenisGaji === getKeyJenisGaji(jenisGaji),
 	);
+
+	const qKey = ["gaji_batch_master", gajiBatchMasterId];
+	const qc = useQueryClient();
+	const gajiBatchMaster = qc.getQueryData<GajiBatchMaster>(qKey);
+
 	const penghasilan =
 		jenisGaji === JENIS_GAJI.PEMASUKAN
 			? (gajiBatchMaster?.penghasilanKotor ?? 0) +
@@ -49,10 +55,10 @@ const GajiBatchMasterProsesKomponenTableBody = ({
 							{urut++}
 						</TableCell>
 						<TableCell className="border-x" align="center" width={45}>
-							<GajiBatchMasterProsesKomponenTableAction 
-							batchMasterProsesId={item.id} 
-							kode={item.kode}
-							isVerified={isVerified}
+							<GajiBatchMasterProsesKomponenTableAction
+								batchMasterProsesId={item.id}
+								kode={item.kode}
+								isVerified={isVerified}
 							/>
 						</TableCell>
 						<TableCell className="border-x">{item.nama}</TableCell>

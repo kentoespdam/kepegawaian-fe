@@ -2,18 +2,20 @@
 import type { CustomColumnDef } from "@_types/index";
 import { useSearchParams } from "next/navigation";
 import AlasanTerminasiSearchBuilder from "./alasan-terminasi";
+import SearchCutiApprovalStatusBuilder from "./cuti.approval.status";
+import SearchGolonganBuilder from "./golongan";
 import SearchGradeBuilder from "./grade";
 import InputSearchComponent from "./input";
 import SearchJabatanBuilder from "./jabatan";
 import JenisMutasiSearchBuilder from "./jenis-mutasi";
 import JenisSkSearchBuilder from "./jenisSk";
+import SearchJenisTunjanganBuilder from "./jenis_tunjangan";
 import JenjangPendidikanSearchBuilder from "./jenjang-pendidikan";
 import SearchLevelBuilder from "./level";
 import SearchOrganisasiBuilder from "./organisasi";
 import SearchProfesiBuilder from "./profesi";
-import SearchJenisTunjanganBuilder from "./jenis_tunjangan";
-import SearchGolonganBuilder from "./golongan";
 import StatusProsesGajiSearchBuilder from "./status_proses_gaji";
+import SearchTahunBuilder from "./tahun";
 
 type SearchComponentProps = {
 	col: CustomColumnDef;
@@ -55,6 +57,10 @@ const SearchComponent = ({ col }: SearchComponentProps) => {
 			return <SearchGolonganBuilder col={col} val={value} />;
 		case "statusProsesGaji":
 			return <StatusProsesGajiSearchBuilder col={col} val={value} />;
+		case "tahun":
+			return <SearchTahunBuilder col={col} val={value} />;
+		case "approvalCutiStatus":
+			return <SearchCutiApprovalStatusBuilder col={col} val={value} />;
 		default:
 			return <InputSearchComponent col={col} val={value} />;
 	}

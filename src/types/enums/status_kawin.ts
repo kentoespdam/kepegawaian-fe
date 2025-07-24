@@ -17,3 +17,20 @@ export const findStatusKawinIndex = (statusKawin?: string) => {
 	const cari = STATUS_KAWIN.findIndex((row) => row === statusKawin);
 	return cari < 0 ? 0 : cari;
 };
+
+export const getStatusKawinLabel = (statusKawin?: string) => {
+	switch (statusKawin) {
+		case "BELUM_KAWIN":
+			return "Belum Menikah";
+		case "KAWIN":
+			return "Sudah Menikah";
+		case "JANDA_DUDA":
+			return "Janda/Duda";
+		case "MENIKAH_SEKANTOR":
+			return "Menikah Sekantor";
+		case "TIDAK_TAHU":
+			return "Tidak Tahu";
+		default:
+			return "";
+	}
+};

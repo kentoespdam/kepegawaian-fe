@@ -1,16 +1,19 @@
 "use client";
 import type { Biodata } from "@_types/profil/biodata";
-import { keluargaTableColumns, type Keluarga } from "@_types/profil/keluarga";
+import { type Keluarga, keluargaTableColumns } from "@_types/profil/keluarga";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DeleteKeluargaDialog from "./dialog.delete";
 import FormKeluargaDialog from "./dialog.form";
 import KeluargaTableBody from "./table.body";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
+import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 
 interface ProfilKeluargaContentComponentProps {
 	nik: string;
@@ -20,13 +23,21 @@ const ProfilKeluargaContentComponent = ({
 }: ProfilKeluargaContentComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const { keluargaId, openDelete, setOpenDelete } = useKeluargaStore(
+		(state) => ({
+			keluargaId: state.keluargaId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
 
 	const qBio = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
+				isString: true,
 				isRoot: true,
 			}),
 		enabled: !!nik,
@@ -35,18 +46,17 @@ const ProfilKeluargaContentComponent = ({
 	const query = useQuery({
 		queryKey: ["profil-keluarga", nik, search.toString()],
 		queryFn: () =>
-			getPageData<Keluarga>({
-				path: `profil/keluarga/${nik}/biodata`,
+			getPageDataEnc<Keluarga>({
+				path: encodeString(`profil/keluarga/${nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
-		enabled: qBio.data && !!qBio.data.nik,
+		enabled: !!nik,
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			{/* <SearchBuilder columns={keluargaTableColumns} /> */}
-			<div className="min-h-96">
+		<div className="grid overflow-auto p-2 gap-0">
+			<div className="min-h-80">
 				<Table>
 					<TableHeadBuilder columns={keluargaTableColumns} />
 					{query.isLoading || query.isFetching ? (
@@ -64,7 +74,13 @@ const ProfilKeluargaContentComponent = ({
 			</div>
 			<PaginationBuilder data={query.data} />
 			<FormKeluargaDialog />
-			<DeleteKeluargaDialog />
+			<DeleteZodDialogBuilder
+				id={keluargaId}
+				deletePath={"profil/keluarga"}
+				openDelete={openDelete}
+				setOpenDelete={setOpenDelete}
+				queryKeys={[["profil-keluarga", nik],["lampiran-keluarga", keluargaId]]}
+			/>
 		</div>
 	);
 };

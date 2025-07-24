@@ -9,7 +9,7 @@ import {
 	newHostname,
 } from "@helpers/index";
 import { baseAuthUrl, projectId, sessionNames } from "@lib/utils";
-import { cookies, headers } from "next/dist/client/components/headers";
+import { cookies, headers } from "next/headers";
 import { Account, Client, type Models } from "node-appwrite";
 
 export const checkToken = async () => isHasSessionCookie(cookies());

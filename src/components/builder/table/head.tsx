@@ -5,6 +5,35 @@ import { cn } from "@lib/utils";
 import { ArrowDownIcon, ArrowUpDownIcon, ArrowUpIcon } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
+export const TableHeadCellContentBuilder = ({
+	head,
+	sortDir,
+	sortByString,
+}: { head: CustomColumnDef; sortDir: string; sortByString: string }) => {
+	return (
+		<div
+			className={cn(
+				"",
+				head.width && `w-${head.width}, text-wrap`,
+				head.sortable && "flex justify-between items-center",
+			)}
+		>
+			<span className={cn(head.width && `w-${head.width}, text-wrap`)}>
+				{head.label}
+			</span>
+			{head.sortable ? (
+				sortDir === "" || sortByString !== head.id ? (
+					<ArrowUpDownIcon className="ml-2 h-4 w-4" />
+				) : sortDir === "asc" ? (
+					<ArrowDownIcon className="ml-2 h-4 w-4" />
+				) : (
+					<ArrowUpIcon className="ml-2 h-4 w-4" />
+				)
+			) : null}
+		</div>
+	);
+};
+
 type TableHeadBuilderProps = {
 	columns: CustomColumnDef[];
 };
@@ -34,7 +63,7 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 			<TableRow className="sticky top-0">
 				{columns.map((head, index) => (
 					<TableHead
-						key={head.id}
+						key={`${head.id}-${index}`}
 						className={cn(
 							"text-center bg-primary text-primary-foreground border-x text-nowrap h-10",
 							index === 0 && "rounded-ss-lg border-l-0",
@@ -43,26 +72,11 @@ const TableHeadBuilder = ({ columns }: TableHeadBuilderProps) => {
 						)}
 						onClick={() => handleClick(head)}
 					>
-						<div
-							className={cn(
-								"",
-								head.width && `w-${head.width}, text-wrap`,
-								head.sortable && "flex justify-between items-center",
-							)}
-						>
-							<span className={cn(head.width && `w-${head.width}, text-wrap`)}>
-								{head.label}
-							</span>
-							{head.sortable ? (
-								sortDir === "" || sortByString !== head.id ? (
-									<ArrowUpDownIcon className="ml-2 h-4 w-4" />
-								) : sortDir === "asc" ? (
-									<ArrowDownIcon className="ml-2 h-4 w-4" />
-								) : (
-									<ArrowUpIcon className="ml-2 h-4 w-4" />
-								)
-							) : null}
-						</div>
+						<TableHeadCellContentBuilder
+							head={head}
+							sortDir={sortDir}
+							sortByString={sortByString}
+						/>
 					</TableHead>
 				))}
 			</TableRow>

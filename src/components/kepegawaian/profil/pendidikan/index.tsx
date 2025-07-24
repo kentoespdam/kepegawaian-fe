@@ -2,15 +2,16 @@
 
 import type { Biodata } from "@_types/profil/biodata";
 import {
-	pendidikanTableColumns,
 	type Pendidikan,
+	pendidikanTableColumns,
 } from "@_types/profil/pendidikan";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DeletePendidikanDialog from "./dialog.delete";
@@ -30,10 +31,11 @@ const ProfilPendidikanContentComponent = ({
 	const qBio = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: () =>
-			getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
@@ -41,8 +43,8 @@ const ProfilPendidikanContentComponent = ({
 	const query = useQuery({
 		queryKey: ["profil-pendidikan", qBio.data?.nik, search.toString()],
 		queryFn: () =>
-			getPageData<Pendidikan>({
-				path: `profil/pendidikan/${qBio.data?.nik}/biodata`,
+			getPageDataEnc<Pendidikan>({
+				path: encodeString(`profil/pendidikan/${qBio.data?.nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
@@ -50,24 +52,24 @@ const ProfilPendidikanContentComponent = ({
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
+		<div className="grid overflow-auto p-2 gap-0">
 			<SearchBuilder columns={pendidikanTableColumns} />
-			<div className="min-h-96">
-				<Table>
-					<TableHeadBuilder columns={pendidikanTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable columns={pendidikanTableColumns} isLoading={true} />
-					) : query.isError ? (
-						<LoadingTable
-							columns={pendidikanTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					) : qBio.data && query.data ? (
-						<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
-					) : null}
-				</Table>
-			</div>
+			<Table>
+				<TableHeadBuilder columns={pendidikanTableColumns} />
+				{query.isLoading ||
+				query.isFetching ||
+				query.isError ||
+				!qBio.data ||
+				!query.data ||
+				query.data.empty ? (
+					<LoadingTable
+						columns={pendidikanTableColumns}
+						isLoading={query.isLoading || query.isFetching}
+					/>
+				) : (
+					<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
+				)}
+			</Table>
 			<PaginationBuilder data={query.data} />
 			<FormProfilPendidikanDialog />
 			<DeletePendidikanDialog />

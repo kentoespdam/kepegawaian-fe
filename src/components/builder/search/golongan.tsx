@@ -13,7 +13,8 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@components/ui/popover";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
@@ -32,8 +33,8 @@ const SearchGolonganBuilder = ({ col, val }: BaseSearchProps) => {
 	const query = useQuery({
 		queryKey: ["golongan-list"],
 		queryFn: async () => {
-			const result = await getListData<Golongan>({
-				path: "golongan",
+			const result = await getListDataEnc<Golongan>({
+				path: encodeString("golongan"),
 			});
 			return result;
 		},

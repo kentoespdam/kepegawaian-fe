@@ -54,7 +54,6 @@ const JenisSpTableComponent = () => {
 						columns={jenisSpTableColumns}
 						isLoading={query.isLoading}
 						error={query.error?.message}
-						isEmpty={query.data?.empty}
 					/>
 				) : (
 					<JenisSpTableBody data={query.data} />
@@ -67,13 +66,13 @@ const JenisSpTableComponent = () => {
 				deletePath="master/jenis-sp"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 			<DeleteSanksiJenisSpFormDialog
 				id={sanksiId}
 				openDelete={openDeleteSanksi}
 				setOpenDelete={setOpenDeleteSanksi}
-				queryKeys={qKey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

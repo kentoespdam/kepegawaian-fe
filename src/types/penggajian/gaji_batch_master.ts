@@ -57,3 +57,17 @@ export const gajiBatchMasterColumns: CustomColumnDef[] = [
 	{ id: "pembulatan", label: "Pembulatan" },
 	{ id: "penghasilanBersih", label: "Net. Gaji" },
 ];
+
+export const gajiBatchMasterColumnsDashboard: CustomColumnDef[] = [
+	{ id: "id", label: "No" },
+	{ id: "periode", label: "Periode" },
+	{ id: "namaJabatan", label: "Jabatan" },
+	{ id: "penghasilanKotor", label: "Penghasilan" },
+	{ id: "totalPotongan", label: "Potongan" },
+	{ id: "pembulatan", label: "Pembulatan" },
+	{ id: "penghasilanBersih", label: "Sub Total" },
+	{ id: "totalAddTambahan", label: "Penghasilan +" },
+	{ id: "totalAddPotongan", label: "Potongan +" },
+	{ id: "penghasilanBersihFinal", label: "THP" },
+	{ id: "id", label: "Rincian" },
+];

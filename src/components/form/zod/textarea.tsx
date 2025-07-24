@@ -10,9 +10,10 @@ const TextAreaZod = <TData extends FieldValues>({ id, label, form, readonly }: I
             name={id}
             render={({ field }) => (
                 <FormItem>
-                    <FormLabel>{label}</FormLabel>
+                    <FormLabel htmlFor={id}>{label}</FormLabel>
                     <FormControl>
                         <Textarea
+                            id={id}
                             placeholder={`Masukkan ${label}`}
                             readOnly={readonly}
                             className={readonly ? "bg-secondary text-secondary-foreground" : ""}

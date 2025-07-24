@@ -14,6 +14,7 @@ interface GlobalMutationProps<TData, TVariables> {
 	redirectTo?: string;
 	actHandler?: () => void;
 	refreshPage?: boolean;
+	refreshCsrf?: () => void;
 }
 
 export function useGlobalMutation<TData, TVariables>({
@@ -22,6 +23,7 @@ export function useGlobalMutation<TData, TVariables>({
 	redirectTo,
 	actHandler,
 	refreshPage,
+	refreshCsrf,
 }: GlobalMutationProps<TData, TVariables>): UseMutationResult<
 	TData,
 	Error,
@@ -58,7 +60,7 @@ export function useGlobalMutation<TData, TVariables>({
 			if (result.status === 401)
 				result.errors = result.errors || "Network Error. please try again";
 
-			if (result.status === 400) result.errors = result.message;
+			// if (result.status === 400) result.errors = result.message;
 
 			if (result.errors && typeof result.errors === "object")
 				for (const message of result.errors) {
@@ -68,10 +70,11 @@ export function useGlobalMutation<TData, TVariables>({
 					});
 				}
 			else
-				toast.error(`Error ${result.status}`, {
+				toast.error(`Error ${result.errors}`, {
 					description: result.errors,
 					duration: 3000,
 				});
+			if (refreshCsrf) refreshCsrf();
 		},
 	});
 

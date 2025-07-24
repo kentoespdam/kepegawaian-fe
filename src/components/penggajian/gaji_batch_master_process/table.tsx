@@ -15,10 +15,10 @@ const GajiBatchMasterProcessTable = () => {
         batchMasterId: state.batchMasterId
     }))
 
-    const qkey = ["gaji_batch_master_proses", batchMasterId]
+    const qKey = ["gaji_batch_master_proses", batchMasterId]
 
     const { isLoading, isFetching, isError, data, error } = useQuery({
-        queryKey: qkey,
+        queryKey: qKey,
         queryFn: async () => await globalGetData<GajiBatchMasterProses[]>({
             path: `penggajian/batch/master/proses/${batchMasterId}/master`,
             isRoot: true

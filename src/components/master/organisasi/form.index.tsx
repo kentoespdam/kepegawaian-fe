@@ -56,7 +56,7 @@ const OrganisasiFormComponent = ({ data }: OrganisasiFormComponentProps) => {
     useEffect(() => setDefaultValues(data), [setDefaultValues, data])
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}
+            <form name="form" onSubmit={form.handleSubmit(onSubmit)}
                 className="w-full grid gap-2">
                 <SelectOrganisasiZod id="parentId" label="Organisasi Induk" form={form} />
                 <SelectLevelZod id="levelOrganisasi" label="Level" form={form} />

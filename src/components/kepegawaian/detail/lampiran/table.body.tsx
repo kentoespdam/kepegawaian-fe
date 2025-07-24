@@ -6,12 +6,10 @@ import LampiranSkTableAction from "./button.table.action";
 
 type LampiranSkTableBodyProps = {
 	data: LampiranSk[];
-	jenisSk: string;
 	rootKey: string;
 };
 const LampiranSkTableBody = ({
 	data,
-	jenisSk,
 	rootKey,
 }: LampiranSkTableBodyProps) => {
 	let urut = 1;

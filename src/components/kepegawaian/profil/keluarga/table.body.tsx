@@ -16,12 +16,21 @@ interface KeluargaTableBodyProps {
 	data: Pageable<Keluarga>;
 }
 const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
-	const { selectedKeluargaId, setSelectedKeluargaId } = useKeluargaStore(
-		(state) => ({
-			selectedKeluargaId: state.selectedKeluargaId,
-			setSelectedKeluargaId: state.setSelectedKeluargaId,
-		}),
-	);
+	const {
+		selectedKeluargaId,
+		setSelectedKeluargaId,
+		setKeluargaId,
+		setDefaultValues,
+		setOpen,
+		setOpenDelete,
+	} = useKeluargaStore((state) => ({
+		selectedKeluargaId: state.selectedKeluargaId,
+		setSelectedKeluargaId: state.setSelectedKeluargaId,
+		setKeluargaId: state.setKeluargaId,
+		setDefaultValues: state.setDefaultValues,
+		setOpen: state.setOpen,
+		setOpenDelete: state.setOpenDelete,
+	}));
 	const { setRefId, setNik } = useLampiranProfilStore((state) => ({
 		setRefId: state.setRefId,
 		setNik: state.setNik,
@@ -30,6 +39,12 @@ const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
 	const handleSelect = (id: number) => {
 		setSelectedKeluargaId(selectedKeluargaId === id ? 0 : id);
 		setNik(props.biodata.nik);
+	};
+
+	const editHandler = (id: number, data: Keluarga) => {
+		setKeluargaId(id);
+		setDefaultValues(props.biodata, data);
+		setOpen(true);
 	};
 
 	useEffect(() => {
@@ -52,7 +67,11 @@ const KeluargaTableBody = (props: KeluargaTableBodyProps) => {
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x">
-						<KeluargaTableAction data={row} biodata={props.biodata} />
+						<KeluargaTableAction
+							data={row}
+							biodata={props.biodata}
+							editHandler={editHandler}
+						/>
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.nik}

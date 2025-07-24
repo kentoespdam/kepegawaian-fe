@@ -29,10 +29,10 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 		setOpenDelete: state.setOpenDelete,
 	}))
 
-	const qkey = ["riwayat-kontrak", props.pegawaiId, search.toString()]
+	const qKey = ["riwayat-kontrak", props.pegawaiId, search.toString()]
 
 	const query = useQuery({
-		queryKey: qkey,
+		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageData<RiwayatKontrak>({
 				path: `kepegawaian/riwayat/kontrak/pegawai/${props.pegawaiId}`,
@@ -50,7 +50,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatKontrakTableColumns} />
-					{query.isLoading || query.error || !query.data ? (
+					{query.isLoading || query.error || !query.data || query.data.empty ? (
 						<LoadingTable
 							columns={riwayatKontrakTableColumns}
 							isLoading={query.isLoading}
@@ -70,7 +70,7 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 				deletePath="kepegawaian/riwayat/kontrak"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={qkey}
+				queryKeys={[qKey]}
 			/>
 		</div>
 	);

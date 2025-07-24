@@ -1,5 +1,5 @@
 import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import RiwayatSpFormComponent from "@components/kepegawaian/detail/peringatan/form.index";
 import { getDataById } from "@helpers/action";
@@ -11,7 +11,7 @@ const EditSpPage = async ({
 	params,
 }: { params: { pegawaiId: number; id: number } }) => {
 	const { pegawaiId, id } = params;
-	const pegawai = await getDataById<Pegawai>({
+	const pegawai = await getDataById<PegawaiDetail>({
 		path: "pegawai",
 		id: pegawaiId,
 		isRoot: true,

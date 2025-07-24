@@ -4,13 +4,10 @@ import InputZod from "@components/form/zod/input";
 import JenisKontrakZod from "@components/form/zod/jenis-kontrak";
 import TextAreaZod from "@components/form/zod/textarea";
 import Fieldset from "@components/ui/fieldset";
-import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import type { KontrakFormProps } from "./form.kontrak";
 
 const DataKontrakForm = ({ form }: KontrakFormProps) => {
-	const { jenisKontrak } = useRiwayatKontrakStore((state) => ({
-		jenisKontrak: state.jenisKontrak,
-	}));
+	const jenisKontrakWatch = form.watch("jenisKontrak");
 
 	return (
 		<Fieldset title="Data Kontrak Baru">
@@ -20,14 +17,24 @@ const DataKontrakForm = ({ form }: KontrakFormProps) => {
 					<InputZod
 						id="nomorKontrak"
 						label={
-							jenisKontrak?.id === "PENGANGKATAN" ? "Nomor Sk" : "Nomor Kontrak"
+							jenisKontrakWatch === "PENGANGKATAN"
+								? "Nomor Sk"
+								: "Nomor Kontrak"
 						}
 						form={form}
 					/>
 					<InputZod id="nipam" label="Nipam" form={form} />
 					<DatePickerZod id="tanggalSk" label="Tanggal SK" form={form} />
-					<DatePickerZod id="tanggalMulai" label="Periode Kontrak" form={form} />
-					{jenisKontrak?.id === "PENGANGKATAN" ? (
+					<DatePickerZod
+						id="tanggalMulai"
+						label={
+							jenisKontrakWatch === "PENGANGKATAN"
+								? "Tgl. TMT SK"
+								: "Periode Kontrak"
+						}
+						form={form}
+					/>
+					{jenisKontrakWatch === "PENGANGKATAN" ? (
 						<SelectGolonganZod id="golonganId" label="Golongan" form={form} />
 					) : (
 						<DatePickerZod

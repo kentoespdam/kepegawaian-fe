@@ -3,6 +3,7 @@ import type { JenisSp } from "@_types/master/jenis_sp";
 import type { OrganisasiMini } from "@_types/master/organisasi";
 import { z } from "zod";
 import { ACCEPTED_FILE_TYPES, type CustomColumnDef, MAX_UPLOAD_SIZE } from "..";
+import type { Sanksi } from "@_types/master/sanksi";
 
 export interface RiwayatSp {
 	id: number;
@@ -15,7 +16,10 @@ export interface RiwayatSp {
 	namaJabatan: string;
 	tanggalSp: string;
 	nomorSp: string;
-	jenisSp: string;
+	jenisSp: JenisSp;
+	sanksi: Sanksi;
+	sanksiNotes: string;
+	tanggalEksekusiSanksi: string;
 	tanggalMulai: string;
 	tanggalSelesai: string;
 	penandaTangan: string;
@@ -35,7 +39,13 @@ export const RiwayatSpSchema = z.object({
 	namaJabatan: z.string().optional(),
 	organisasiId: z.number().min(1, "Organisasi wajib diisi"),
 	jabatanId: z.number().min(1, "Jabatan wajib diisi"),
-	jenisSp: z.string().min(1, "Jenis SP wajib diisi"),
+	tmtJabatan: z.string().optional(),
+	tmtGolongan: z.string().optional(),
+	tmtGajiBerkala: z.string().optional(),
+	jenisSpId: z.number().min(1, "Jenis SP wajib diisi"),
+	sanksiId: z.number().min(1, "Sanksi wajib diisi"),
+	sanksiNotes: z.string().optional(),
+	tanggalEksekusiSanksi: z.string().optional(),
 	tanggalSp: z.string().min(10, "Tgl. SP wajib diisi"),
 	tanggalMulai: z.string().min(10, "Tgl. Mulai wajib diisi"),
 	tanggalSelesai: z.string().min(10, "Tgl. Selesai wajib diisi"),
@@ -73,7 +83,8 @@ export const riwayatSpTableColumns: CustomColumnDef[] = [
 	{ id: "aksi", label: "Aksi" },
 	{ id: "nomorSp", label: "Nomor SP", search: true, searchType: "text" },
 	{ id: "tanggalSp", label: "Tgl. SP" },
-	{ id: "jenisSp", label: "Jenis SP", search: true, searchType: "text" },
+	{ id: "jenisSpId", label: "Jenis SP", search: true, searchType: "text" },
+	{ id: "sanksiId", label: "Sanksi SP", search: true },
 	{ id: "tanggalMulai", label: "Tgl. Mulai" },
 	{ id: "tanggalSelesai", label: "Tgl. Selesai" },
 	{ id: "notes", label: "Alasan Pemberian Peringatan" },

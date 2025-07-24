@@ -58,7 +58,7 @@ const RoleFormDialog = () => {
 			<DialogContent>
 				<DialogTitle>Add Roles</DialogTitle>
 				<Form {...form}>
-					<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
+					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
 						<div className="grid gap-2">
 							<InputZod id="id" label="Nama Role" form={form} />
 						</div>

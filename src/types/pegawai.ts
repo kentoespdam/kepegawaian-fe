@@ -6,14 +6,23 @@ import type { Grade } from "./master/grade";
 import type { JabatanMini } from "./master/jabatan";
 import type { Organisasi, OrganisasiMini } from "./master/organisasi";
 import type { Profesi } from "./master/profesi";
-import {
-	type Biodata,
-	BiodataSchema,
-	type BiodataMini,
-} from "./profil/biodata";
+import type { RumahDinas } from "./master/rumah_dinas";
 import type { PendapatanNonPajak } from "./penggajian/pendapatan_non_pajak";
 import type { ProfilGaji } from "./penggajian/profil";
-import type { RumahDinas } from "./master/rumah_dinas";
+import {
+	type Biodata,
+	type BiodataMini,
+	BiodataSchema,
+} from "./profil/biodata";
+
+export interface PegawaiMini {
+	id: number;
+	nipam: string;
+	nama: string;
+	statusPegawai: string;
+	jabatan: string;
+	organisasi: string;
+}
 
 export interface BasePegawai {
 	id: number;
@@ -37,6 +46,7 @@ export interface BasePegawai {
 	absensiId: number;
 	isAskes: boolean;
 	kodePajak: PendapatanNonPajak | null;
+	email: string;
 	notes: string | null;
 }
 
@@ -47,6 +57,8 @@ export interface PegawaiDetail extends BasePegawai {
 	skGolongan: RiwayatSk | null;
 	skJabatan: RiwayatSk | null;
 	skMutasi: RiwayatSk | null;
+	skKontrak: RiwayatSk | null;
+	skGajiBerkala: RiwayatSk | null;
 	tanggalSk: string;
 	tmtKontrakSelesai: string;
 	gajiProfil: ProfilGaji | null;
@@ -71,6 +83,7 @@ export interface PegawaiList {
 	id: number;
 	nipam: string;
 	nama: string;
+	statusPegawai: string;
 	organisasi: OrganisasiMini;
 	jabatan: JabatanMini;
 	golongan: Golongan;
@@ -238,13 +251,13 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		searchType: "golongan",
 		sortable: true,
 	},
-	// {
-	// 	id: "organisasiId",
-	// 	label: "Organisasi",
-	// 	search: true,
-	// 	searchType: "organisasi",
-	// 	sortable: true,
-	// },
+	{
+		id: "organisasiId",
+		label: "Organisasi",
+		search: true,
+		searchType: "organisasi",
+		sortable: true,
+	},
 	{
 		id: "jabatanId",
 		label: "Jabatan",

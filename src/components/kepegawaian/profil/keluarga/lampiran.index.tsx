@@ -2,13 +2,14 @@
 
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import {
-	lampiranProfilTableColumns,
 	type LampiranProfil,
+	lampiranProfilTableColumns,
 } from "@_types/profil/lampiran";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../lampiran/dialog/add-lampiran-profil";
@@ -24,34 +25,32 @@ const LampiranKeluargaContent = () => {
 	const query = useQuery({
 		queryKey: [rootKey, selectedKeluargaId],
 		queryFn: async () =>
-			await getListData<LampiranProfil>({
-				path: `profil/keluarga/lampiran/${selectedKeluargaId}`,
+			await getListDataEnc<LampiranProfil>({
+				path: encodeString(`profil/keluarga/lampiran/${selectedKeluargaId}`),
 				isRoot: true,
 			}),
 		enabled: !!selectedKeluargaId && selectedKeluargaId > 0,
 	});
 
 	return (
-		<div className="grid overflow-auto p-2 min-h-96 gap-0">
-			<div className="min-h-96">
+		<div className="grid overflow-auto p-2 gap-0">
+			<div className="min-h-80">
 				<Table>
 					<TableHeadBuilder columns={lampiranProfilTableColumns} />
-					{query.isLoading || query.isFetching ? (
+					{query.isLoading ||
+					query.isFetching ||
+					query.isError ||
+					!query.data ||
+					query.data.length === 0 ? (
 						<LoadingTable
 							columns={lampiranProfilTableColumns}
-							isLoading={true}
+							isLoading={query.isLoading || query.isFetching}
 						/>
-					) : query.data && query.data.length > 0 ? (
+					) : (
 						<LampiranProfilTableBody
 							data={query.data}
 							jenis={JenisLampiranProfil.Values.PROFIL_KELUARGA}
 							rootKey={rootKey}
-						/>
-					) : (
-						<LoadingTable
-							columns={lampiranProfilTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
 						/>
 					)}
 				</Table>
