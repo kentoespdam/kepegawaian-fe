@@ -3,10 +3,11 @@ import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
 import { ButtonLink } from "@components/ui/link";
+import { encodeId } from "@helpers/number";
+import { base64toBlob } from "@helpers/string";
 import { useMutation } from "@tanstack/react-query";
 import { DownloadIcon, EyeIcon } from "lucide-react";
 import { getFile } from "./action";
-import { base64toBlob } from "@helpers/string";
 
 interface RiwayatSpLampiranFileButtonProps {
 	data: RiwayatSp;
@@ -41,7 +42,7 @@ const RiwayatSpLampiranFileButton = ({
 				</Button>
 			) : (
 				<ButtonLink
-					href={`/kepegawaian/peringatan/${pegawaiId}/file/${id}`}
+					href={`/kepegawaian/peringatan/${encodeId(pegawaiId)}/file/${encodeId(id)}`}
 					size="icon"
 					className="h-6 w-6"
 					variant="ghost"

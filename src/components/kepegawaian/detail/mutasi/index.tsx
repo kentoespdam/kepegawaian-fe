@@ -21,13 +21,18 @@ type MutasiContentProps = {
 	pegawaiId: number;
 };
 const MutasiContentComponent = (props: MutasiContentProps) => {
-	const { riwayatMutasiId, openDelete, setOpenDelete } =
-		useRiwayatMutasiStore();
+	const { riwayatMutasiId, openDelete, setOpenDelete } = useRiwayatMutasiStore(
+		(state) => ({
+			riwayatMutasiId: state.riwayatMutasiId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}),
+	);
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 	const qKey = ["riwayat-mutasi", props.pegawaiId, search.toString()];
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageDataEnc<RiwayatMutasi>({
@@ -48,21 +53,17 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 			<div className="min-h-fit overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatMutasiTableColumns} />
-					{query.isLoading || query.error || !query.data || query.data.empty ? (
+					{data && !data.empty ? (
+						<RiwayatMutasiTableBody pegawaiId={props.pegawaiId} data={data} />
+					) : (
 						<LoadingTable
 							columns={riwayatMutasiTableColumns}
-							isLoading={query.isLoading}
-							error={query.error?.message}
-						/>
-					) : (
-						<RiwayatMutasiTableBody
-							pegawaiId={props.pegawaiId}
-							data={query.data}
+							isLoading={isLoading || isFetching}
 						/>
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<DeleteZodDialogBuilder
 				id={riwayatMutasiId}
 				deletePath="kepegawaian/riwayat/mutasi"

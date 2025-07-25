@@ -4,20 +4,20 @@ import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button.
 import RiwayatSkContentComponent from "@components/kepegawaian/detail/riwayat_sk";
 import AddSkButton from "@components/kepegawaian/detail/riwayat_sk/button.add.sk";
 import { getDataByIdEnc } from "@helpers/action";
-import { encodeId, encodeString } from "@helpers/number";
+import { encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Riwayat Surat Keputusan",
 };
 
-const RiwayatSk = async ({ params }: { params: { id: number } }) => {
+const RiwayatSk = async ({ params }: { params: { id: string } }) => {
 	const pegawai = await getDataByIdEnc<Pegawai>({
 		path: encodeString("pegawai"),
-		id: encodeId(params.id),
+		id: params.id,
 		isRoot: true,
 	});
 
-	return (
+	return !pegawai ? null : (
 		<div className="grid min-h-full w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
@@ -25,11 +25,11 @@ const RiwayatSk = async ({ params }: { params: { id: number } }) => {
 						<span className="text-md font-semibold">
 							{metadata.title} [{pegawai?.nipam}] ({pegawai?.biodata.nama})
 						</span>
-						<AddSkButton pegawaiId={params.id} />
+						<AddSkButton pegawaiId={pegawai.id} />
 					</header>
 					<main className="flex flex-1 flex-col">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							<RiwayatSkContentComponent pegawaiId={params.id} />
+							<RiwayatSkContentComponent pegawaiId={pegawai.id} />
 						</div>
 					</main>
 				</div>
@@ -42,7 +42,7 @@ const RiwayatSk = async ({ params }: { params: { id: number } }) => {
 					</header>
 					<main className="flex flex-1 flex-col">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							<LampiranSkContent pegawaiId={params.id} />
+							<LampiranSkContent pegawaiId={pegawai.id} />
 						</div>
 					</main>
 				</div>

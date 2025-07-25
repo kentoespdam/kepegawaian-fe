@@ -47,6 +47,12 @@ const JenisMutasiZod = <TData extends FieldValues>({
 		},
 	});
 
+	const selectedData = (value: string) => {
+		return !value || value === ""
+			? "Pilih Jenis Mutasi"
+			: mutasiGetName(query.data || [], value);
+	};
+
 	return (
 		<FormField
 			control={form.control}
@@ -61,13 +67,9 @@ const JenisMutasiZod = <TData extends FieldValues>({
 								id={id}
 								className="cursor-pointer"
 								onClick={handleOpenDialog}
-								value={
-									!field.value || field.value === ""
-										? "Pilih Jenis Mutasi"
-										: mutasiGetName(query.data || [], field.value)
-								}
+								value={selectedData(field.value)}
 							/>
-							<ChevronDownIcon className="h-4 w-4 ml-4 opacity-50" />
+							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
 						</div>
 					</FormControl>
 					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>

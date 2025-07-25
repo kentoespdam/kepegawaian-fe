@@ -1,5 +1,5 @@
 import type { RiwayatMutasi } from "@_types/kepegawaian/riwayat-mutasi";
-import type { Pegawai } from "@_types/pegawai";
+import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import RiwayatMutasiFormComponent from "@components/kepegawaian/detail/mutasi/form.index";
 import { getDataByIdEnc } from "@helpers/action";
@@ -12,14 +12,14 @@ const EditMutasiPage = async ({
 	params,
 }: { params: { pegawaiId: number; id: number } }) => {
 	const { pegawaiId, id } = params;
-	const pegawai = await getDataByIdEnc<Pegawai>({
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
 		path: encodeString("pegawai"),
-		id: encodeId(pegawaiId),
+		id: pegawaiId,
 		isRoot: true,
 	});
 	const riwayatMutasi = await getDataByIdEnc<RiwayatMutasi>({
 		path: encodeString("kepegawaian/riwayat/mutasi"),
-		id: encodeId(id),
+		id: id,
 		isRoot: true,
 	});
 

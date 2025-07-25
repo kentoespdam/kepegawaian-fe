@@ -1,4 +1,5 @@
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
+import type { Biodata } from "@_types/profil/biodata";
 import ProfilKeluargaContentComponent from "@components/kepegawaian/profil/keluarga";
 import AddProfilKeluargaButton from "@components/kepegawaian/profil/keluarga/button.add";
 import LampiranKeluargaContent from "@components/kepegawaian/profil/keluarga/lampiran.index";
@@ -9,7 +10,7 @@ import {
 	AccordionTrigger,
 } from "@components/ui/accordion";
 
-const KananDataKeluarga = ({ nik, nama }: { nik: string; nama: string }) => {
+const KananDataKeluarga = ({ biodata }: { biodata: Biodata }) => {
 	return (
 		<AccordionItem value="data-keluarga">
 			<AccordionTrigger className="p-2 bg-primary text-primary-foreground">
@@ -21,13 +22,13 @@ const KananDataKeluarga = ({ nik, nama }: { nik: string; nama: string }) => {
 						<div className="grid">
 							<header className="w-full flex justify-between items-center border-b bg-muted/40 px-4 lg:h-[60px]">
 								<span className="text-md font-semibold">
-									Data Keluarga ({nama})
+									Data Keluarga ({biodata.nama})
 								</span>
-								<AddProfilKeluargaButton nik={nik} />
+								<AddProfilKeluargaButton nik={biodata.nik} />
 							</header>
 							<main className="flex flex-1 flex-col lg:gap-6">
 								<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-									<ProfilKeluargaContentComponent nik={nik} />
+									<ProfilKeluargaContentComponent biodata={biodata} />
 								</div>
 							</main>
 						</div>
