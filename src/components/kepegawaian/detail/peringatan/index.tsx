@@ -23,7 +23,7 @@ const RiwayatSpComponent = (props: RiwayatSpComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 	const qKey = ["riwayat-sp", props.pegawaiId, search.toString()];
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageDataEnc<RiwayatSp>({
@@ -42,18 +42,17 @@ const RiwayatSpComponent = (props: RiwayatSpComponentProps) => {
 			<div className="min-h-60 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatSpTableColumns} />
-					{query.isLoading || query.error || !query.data || query.data.empty ? (
+					{data && !data.empty ? (
+						<RiwayatSpTableBody pegawaiId={props.pegawaiId} data={data} />
+					) : (
 						<LoadingTable
 							columns={riwayatSpTableColumns}
-							isLoading={query.isLoading}
-							error={query.error?.message}
+							isLoading={isLoading || isFetching}
 						/>
-					) : (
-						<RiwayatSpTableBody pegawaiId={props.pegawaiId} data={query.data} />
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<DeleteZodDialogBuilder
 				id={riwayatSpId}
 				deletePath="kepegawaian/riwayat/sp"

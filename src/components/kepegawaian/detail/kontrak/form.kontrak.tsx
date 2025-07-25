@@ -4,20 +4,21 @@ import {
 	type RiwayatKontrak,
 	RiwayatKontrakSchema,
 } from "@_types/kepegawaian/riwayat_kontrak";
+import type { PegawaiDetail } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
 import { Form } from "@components/ui/form";
+import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { useEffect } from "react";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { saveRiwayatKontrak } from "./action";
+import RiwayatKontrakAction from "./button.form.action";
+import DataKontrakForm from "./form.kontrak.data";
 import KontrakPegawaiForm from "./form.kontrak.pegawai";
 import RiwayatKontrakForm from "./form.kontrak.riwayat";
-import DataKontrakForm from "./form.kontrak.data";
-import RiwayatKontrakAction from "./button.form.action";
-import { useEffect } from "react";
-import type { Pegawai } from "@_types/pegawai";
 
 export interface KontrakFormProps {
 	form: UseFormReturn<RiwayatKontrakSchema>;
@@ -27,7 +28,7 @@ const RiwayatKontrakFormComponent = ({
 	pegawai,
 	riwayatKontrak,
 }: {
-	pegawai: Pegawai;
+	pegawai: PegawaiDetail;
 	riwayatKontrak?: RiwayatKontrak;
 }) => {
 	const { defaultValues, setDefaultValues } = useRiwayatKontrakStore(
@@ -48,10 +49,10 @@ const RiwayatKontrakFormComponent = ({
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatKontrak,
 		queryKeys: [
-			["riwayat-kontrak", pegawai?.id, search.toString()],
-			["pegawai", pegawai?.id],
+			["riwayat-kontrak", pegawai.id, search.toString()],
+			["pegawai", pegawai.id],
 		],
-		redirectTo: `/kepegawaian/detail/riwayat_kontrak/${pegawai?.id}`,
+		redirectTo: `/kepegawaian/detail/riwayat_kontrak/${encodeId(pegawai.id)}`,
 	});
 
 	const onSubmit = (values: RiwayatKontrakSchema) => {
@@ -67,9 +68,18 @@ const RiwayatKontrakFormComponent = ({
 			<Form {...form}>
 				<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
 					<div className="grid gap-2 pb-2">
-						<InputZod type="number" id="id" label="ID" form={form} className="hidden" />
+						<InputZod
+							type="number"
+							id="id"
+							label="ID"
+							form={form}
+							className="hidden"
+						/>
 						<KontrakPegawaiForm form={form} />
-						<RiwayatKontrakForm pegawaiId={pegawai?.id} riwayatKontrak={riwayatKontrak} />
+						<RiwayatKontrakForm
+							pegawaiId={pegawai.id}
+							riwayatKontrak={riwayatKontrak}
+						/>
 						<DataKontrakForm form={form} />
 					</div>
 					<RiwayatKontrakAction form={form} isPending={mutation.isPending} />

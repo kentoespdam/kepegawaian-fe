@@ -2,7 +2,8 @@ import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 import type { PegawaiDetail } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import RiwayatSpFormComponent from "@components/kepegawaian/detail/peringatan/form.index";
-import { getDataById } from "@helpers/action";
+import { getDataById, getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 
 const metadata = {
 	title: "Surat Peringatan",
@@ -11,14 +12,14 @@ const EditSpPage = async ({
 	params,
 }: { params: { pegawaiId: number; id: number } }) => {
 	const { pegawaiId, id } = params;
-	const pegawai = await getDataById<PegawaiDetail>({
-		path: "pegawai",
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
 		id: pegawaiId,
 		isRoot: true,
 	});
-	const riwayatSp = await getDataById<RiwayatSp>({
-		path: "kepegawaian/riwayat/sp",
-		id,
+	const riwayatSp = await getDataByIdEnc<RiwayatSp>({
+		path: encodeString("kepegawaian/riwayat/sp"),
+		id: id,
 		isRoot: true,
 	});
 	return (

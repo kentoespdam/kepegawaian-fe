@@ -52,7 +52,7 @@ const ProfilKeahlianContentComponent = ({
 				{data && !data.empty ? (
 					<KeahlianTableBody biodata={biodata} data={data} />
 				) : (
-					<LoadingTable columns={keahlianTableColumns} isLoading={true} />
+					<LoadingTable columns={keahlianTableColumns} isLoading={isLoading || isFetching} />
 				)}
 			</Table>
 			<PaginationBuilder data={data} />

@@ -4,6 +4,7 @@ import {
 	type RiwayatKontrak,
 	riwayatKontrakTableColumns,
 } from "@_types/kepegawaian/riwayat_kontrak";
+import type { PegawaiDetail } from "@_types/pegawai";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
@@ -18,7 +19,7 @@ import { useSearchParams } from "next/navigation";
 import RiwayatKontrakTableBody from "./table.kontrak.body";
 
 type RiwayatKontrakComponentProps = {
-	pegawaiId: number;
+	pegawai: PegawaiDetail;
 };
 const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 	const searchParams = useSearchParams();
@@ -31,21 +32,21 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 			setOpenDelete: state.setOpenDelete,
 		}));
 
-	const qKey = ["riwayat-kontrak", props.pegawaiId, search.toString()];
+	const qKey = ["riwayat-kontrak", props.pegawai.id, search.toString()];
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
 			const result = await getPageDataEnc<RiwayatKontrak>({
 				path: encodeString(
-					`kepegawaian/riwayat/kontrak/pegawai/${props.pegawaiId}`,
+					`kepegawaian/riwayat/kontrak/pegawai/${props.pegawai.id}`,
 				),
 				searchParams: search.toString(),
 				isRoot: true,
 			});
 			return result;
 		},
-		enabled: !!props.pegawaiId,
+		enabled: !!props.pegawai.id,
 	});
 
 	return (
@@ -54,21 +55,17 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatKontrakTableColumns} />
-					{query.isLoading || query.error || !query.data || query.data.empty ? (
+					{data && !data.empty ? (
+						<RiwayatKontrakTableBody pegawai={props.pegawai} data={data} />
+					) : (
 						<LoadingTable
 							columns={riwayatKontrakTableColumns}
-							isLoading={query.isLoading}
-							error={query.error?.message}
-						/>
-					) : (
-						<RiwayatKontrakTableBody
-							pegawaiId={props.pegawaiId}
-							data={query.data}
+							isLoading={isLoading || isFetching}
 						/>
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<DeleteZodDialogBuilder
 				id={riwayatKontrakId}
 				deletePath="kepegawaian/riwayat/kontrak"

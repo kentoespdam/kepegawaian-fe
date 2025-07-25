@@ -7,9 +7,10 @@ import { cn } from "@lib/utils";
 import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import RiwayatKontrakTableAction from "./button.table.action";
+import type { PegawaiDetail } from "@_types/pegawai";
 
 type RiwayatKontrakTableBodyProps = {
-	pegawaiId: number;
+	pegawai: PegawaiDetail
 	data: Pageable<RiwayatKontrak>;
 };
 const RiwayatKontrakTableBody = (props: RiwayatKontrakTableBodyProps) => {
@@ -47,7 +48,7 @@ const RiwayatKontrakTableBody = (props: RiwayatKontrakTableBodyProps) => {
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap" width={60} align="center">
-						<RiwayatKontrakTableAction pegawaiId={props.pegawaiId} data={row} />
+						<RiwayatKontrakTableAction pegawai={props.pegawai} data={row} />
 					</TableCell>
 					<TableCell className="border-x whitespace-nowrap">
 						{row.nomorKontrak}

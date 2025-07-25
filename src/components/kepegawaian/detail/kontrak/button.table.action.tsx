@@ -1,5 +1,5 @@
 import type { RiwayatKontrak } from "@_types/kepegawaian/riwayat_kontrak";
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -8,17 +8,18 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { encodeId } from "@helpers/number";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { useQueryClient } from "@tanstack/react-query";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type RiwayatKontrakTableActionProps = {
-	pegawaiId: number;
+	pegawai: PegawaiDetail;
 	data: RiwayatKontrak;
 };
 const RiwayatKontrakTableAction = ({
-	pegawaiId,
+	pegawai,
 	data,
 }: RiwayatKontrakTableActionProps) => {
 	const { setDefaultValues, setRiwayatKontrakId, setOpenDelete } =
@@ -31,9 +32,10 @@ const RiwayatKontrakTableAction = ({
 	const router = useRouter();
 
 	const editHandler = () => {
-		const pegawai = qc.getQueryData<Pegawai>(["pegawai", pegawaiId]);
 		setDefaultValues(pegawai, data);
-		router.push(`/kepegawaian/kontrak/edit/${pegawaiId}/${data.id}`);
+		router.push(
+			`/kepegawaian/kontrak/edit/${encodeId(pegawai.id)}/${encodeId(data.id)}`,
+		);
 	};
 
 	const deleteHandler = () => {

@@ -5,7 +5,7 @@ import { ButtonLink } from "@components/ui/link";
 import { PlusCircleIcon } from "lucide-react";
 
 type AddRiwayatSpButtonProps = {
-	pegawaiId: number;
+	pegawaiId: string;
 };
 
 const AddRiwayatSpButton = ({ pegawaiId }: AddRiwayatSpButtonProps) => {

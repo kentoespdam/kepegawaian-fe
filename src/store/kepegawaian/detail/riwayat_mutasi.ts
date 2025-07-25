@@ -3,7 +3,7 @@ import type {
 	RiwayatMutasiSchema,
 } from "@_types/kepegawaian/riwayat-mutasi";
 import type { JenisMutasi } from "@_types/master/jenis_mutasi";
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import type { SelectedHandlerStore } from "@store/base-store";
 import { create } from "zustand";
 
@@ -11,7 +11,10 @@ interface RiwayatMutasiStore extends SelectedHandlerStore {
 	riwayatMutasiId: number;
 	setRiwayatMutasiId: (id: number) => void;
 	defaultValues: RiwayatMutasiSchema;
-	setDefaultValues: (pegawai?: Pegawai, riwayatMutasi?: RiwayatMutasi) => void;
+	setDefaultValues: (
+		pegawai?: PegawaiDetail,
+		riwayatMutasi?: RiwayatMutasi,
+	) => void;
 	jenisMutasi?: JenisMutasi;
 	setJenisMutasi: (val?: JenisMutasi) => void;
 }
