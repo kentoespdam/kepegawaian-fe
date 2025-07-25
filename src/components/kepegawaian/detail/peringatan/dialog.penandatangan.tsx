@@ -15,10 +15,11 @@ import {
 	DialogHeader,
 	DialogTrigger,
 } from "@components/ui/dialog";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import type React from "react";
-import { useState, type Dispatch } from "react";
+import { type Dispatch, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { SpFormProps } from "./form.index";
 
@@ -32,8 +33,8 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 	const query = useQuery({
 		queryKey: ["pegawai-list", search],
 		queryFn: async () => {
-			const result = await getListData<PegawaiList>({
-				path: "pegawai",
+			const result = await getListDataEnc<PegawaiList>({
+				path: encodeString("pegawai"),
 				searchParams: search,
 				isRoot: true,
 			});

@@ -8,7 +8,8 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { getCurrentUser } from "@lib/appwrite/user";
 import { KeyRoundIcon } from "lucide-react";
 import Image from "next/image";
@@ -17,10 +18,11 @@ import ThemeButton from "./button/theme";
 
 const ProfileComponent = async () => {
 	const user = await getCurrentUser();
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: user.$id,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeString(user.$id),
 		isRoot: true,
+		isString: true,
 	});
 
 	return (

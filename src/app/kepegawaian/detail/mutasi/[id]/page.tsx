@@ -3,16 +3,17 @@ import LampiranSkContent from "@components/kepegawaian/detail/lampiran";
 import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button.add.lampiran";
 import MutasiContentComponent from "@components/kepegawaian/detail/mutasi";
 import AddMutasiButton from "@components/kepegawaian/detail/mutasi/button.add.mutasi";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Data Mutasi Pegawai",
 };
 
 const DetailMutasi = async ({ params }: { params: { id: number } }) => {
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: params.id,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeId(params.id),
 		isRoot: true,
 	});
 

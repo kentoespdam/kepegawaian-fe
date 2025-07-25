@@ -1,14 +1,15 @@
 "use client";
 import type { Biodata } from "@_types/profil/biodata";
 import {
-	kartuIdentitasTableColumns,
 	type KartuIdentitas,
+	kartuIdentitasTableColumns,
 } from "@_types/profil/kartu_identitas";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataById, getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import DeleteKartuIdentitasDialog from "./dialog.delete";
@@ -26,10 +27,11 @@ const ProfilKartuIdentitasContentComponent = ({
 	const qBio = useQuery({
 		queryKey: ["biodata", nik],
 		queryFn: async () =>
-			await getDataById<Biodata>({
-				path: "profil/biodata",
-				id: nik,
+			await getDataByIdEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				id: encodeString(nik),
 				isRoot: true,
+				isString: true,
 			}),
 		enabled: !!nik,
 	});
@@ -37,8 +39,8 @@ const ProfilKartuIdentitasContentComponent = ({
 	const query = useQuery({
 		queryKey: ["profil-kartu-identitas", qBio.data?.nik, search.toString()],
 		queryFn: async () =>
-			await getPageData<KartuIdentitas>({
-				path: `profil/kartu-identitas/${qBio.data?.nik}/biodata`,
+			await getPageDataEnc<KartuIdentitas>({
+				path: encodeString(`profil/kartu-identitas/${qBio.data?.nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),

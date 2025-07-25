@@ -2,20 +2,21 @@ import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
 import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import RiwayatMutasiFormComponent from "@components/kepegawaian/detail/mutasi/form.index";
-import { getDataById, getPageData } from "@helpers/action";
+import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Mutasi Pegawai",
 };
 const AddMutasiPage = async ({ params }: { params: { pegawaiId: number } }) => {
 	const { pegawaiId } = params;
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: pegawaiId,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeId(pegawaiId),
 		isRoot: true,
 	});
-	const riwayatSp = await getPageData<RiwayatSp>({
-		path: `kepegawaian/riwayat/sp/pegawai/${pegawaiId}`,
+	const riwayatSp = await getPageDataEnc<RiwayatSp>({
+		path: encodeString(`kepegawaian/riwayat/sp/pegawai/${pegawaiId}`),
 		isRoot: true,
 	});
 	return (

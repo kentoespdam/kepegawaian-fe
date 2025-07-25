@@ -7,7 +7,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import CalonPensiunTableBody from "./table.calon.pensiun.body";
@@ -19,8 +20,8 @@ const CalonTerminasiComponent = () => {
 	const query = useQuery({
 		queryKey: ["calon-pensiun", search.toString()],
 		queryFn: async () =>
-			await getPageData<Pegawai>({
-				path: "kepegawaian/riwayat/terminasi/calon-pensiun",
+			await getPageDataEnc<Pegawai>({
+				path: encodeString("kepegawaian/riwayat/terminasi/calon-pensiun"),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),

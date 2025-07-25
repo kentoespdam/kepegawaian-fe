@@ -1,8 +1,8 @@
 "use client";
 
 import {
-	riwayatMutasiTableColumns,
 	type RiwayatMutasi,
+	riwayatMutasiTableColumns,
 } from "@_types/kepegawaian/riwayat-mutasi";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
@@ -10,7 +10,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -20,16 +21,19 @@ type MutasiContentProps = {
 	pegawaiId: number;
 };
 const MutasiContentComponent = (props: MutasiContentProps) => {
-	const { riwayatMutasiId, openDelete, setOpenDelete } = useRiwayatMutasiStore()
+	const { riwayatMutasiId, openDelete, setOpenDelete } =
+		useRiwayatMutasiStore();
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
-	const qKey = ["riwayat-mutasi", props.pegawaiId, search.toString()]
+	const qKey = ["riwayat-mutasi", props.pegawaiId, search.toString()];
 
 	const query = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
-			const result = await getPageData<RiwayatMutasi>({
-				path: `kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
+			const result = await getPageDataEnc<RiwayatMutasi>({
+				path: encodeString(
+					`kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
+				),
 				searchParams: search.toString(),
 				isRoot: true,
 			});
@@ -37,7 +41,6 @@ const MutasiContentComponent = (props: MutasiContentProps) => {
 		},
 		enabled: !!props.pegawaiId,
 	});
-
 
 	return (
 		<div className="grid p-2 gap-0">

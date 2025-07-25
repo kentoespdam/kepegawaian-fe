@@ -6,16 +6,18 @@ import {
 	ResizablePanel,
 	ResizablePanelGroup,
 } from "@components/ui/resizable";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { getCurrentUser } from "@lib/appwrite/user";
 
 export const metadata = { title: "Dashboard Pegawai" };
 const DashboardPage = async () => {
 	const user = await getCurrentUser();
-	const pegawai = await getDataById<PegawaiDetail>({
-		path: "pegawai",
-		id: user.$id,
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
+		id: encodeString(user.$id),
 		isRoot: true,
+		isString: true,
 	});
 	return (
 		<>

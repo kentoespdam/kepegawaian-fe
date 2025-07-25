@@ -3,16 +3,17 @@ import LampiranSkContent from "@components/kepegawaian/detail/lampiran";
 import AddLampiranSkButton from "@components/kepegawaian/detail/lampiran/button.add.lampiran";
 import RiwayatSkContentComponent from "@components/kepegawaian/detail/riwayat_sk";
 import AddSkButton from "@components/kepegawaian/detail/riwayat_sk/button.add.sk";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Riwayat Surat Keputusan",
 };
 
 const RiwayatSk = async ({ params }: { params: { id: number } }) => {
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: params.id,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeId(params.id),
 		isRoot: true,
 	});
 

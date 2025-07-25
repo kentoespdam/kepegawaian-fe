@@ -9,7 +9,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKodePajakStore } from "@store/penggajian/kode_pajak";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -32,8 +33,8 @@ const KodePajakComponent = () => {
 	const { isLoading, error, data } = useQuery({
 		queryKey: qKey,
 		queryFn: async () =>
-			await getPageData<PendapatanNonPajak>({
-				path: "penggajian/pendapatan-non-pajak",
+			await getPageDataEnc<PendapatanNonPajak>({
+				path: encodeString("penggajian/pendapatan-non-pajak"),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),

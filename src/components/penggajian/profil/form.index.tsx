@@ -6,7 +6,7 @@ import TextAreaZod from "@components/form/zod/textarea";
 import { Button } from "@components/ui/button";
 import { Dialog, DialogContent } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
-import { getDataById } from "@helpers/action";
+import { getDataById, getDataByIdEnc } from "@helpers/action";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useProfilGajiStore } from "@store/penggajian/profil";
 import { useGlobalMutation } from "@store/query-store";
@@ -14,6 +14,7 @@ import { useQuery } from "@tanstack/react-query";
 import { SaveIcon, XCircleIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { saveProfilGaji } from "./action";
+import { encodeId, encodeString } from "@helpers/number";
 
 const ProfilGajiFormComponent = () => {
     const { profilGajiId, setProfilGajiId, defaultValues, showForm, setShowForm } = useProfilGajiStore((state) => ({
@@ -26,9 +27,9 @@ const ProfilGajiFormComponent = () => {
 
     const { data, isLoading, isFetching } = useQuery({
         queryKey: [["profil_gaji", profilGajiId]],
-        queryFn: async () => await getDataById<ProfilGaji>({
-            path: "penggajian/profil",
-            id: profilGajiId,
+        queryFn: async () => await getDataByIdEnc<ProfilGaji>({
+            path: encodeString("penggajian/profil"),
+            id: encodeId(profilGajiId),
             isRoot: true
         }),
     })

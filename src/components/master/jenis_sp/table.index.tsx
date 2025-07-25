@@ -7,7 +7,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useJenisSpStore } from "@store/master/jenis_sp.store";
 import { useSanksiStore } from "@store/master/sanksi";
 import { useQuery } from "@tanstack/react-query";
@@ -38,8 +39,8 @@ const JenisSpTableComponent = () => {
 	const query = useQuery({
 		queryKey: qKey,
 		queryFn: async () =>
-			await getPageData<JenisSp>({
-				path: "master/jenis_sp",
+			await getPageDataEnc<JenisSp>({
+				path: encodeString("master/jenis_sp"),
 				isRoot: true,
 				searchParams: params.toString(),
 			}),

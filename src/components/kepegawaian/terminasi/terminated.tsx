@@ -9,7 +9,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import TerminatedTableBody from "./table.terminated.body";
@@ -21,8 +22,8 @@ const TerminatedComponent = () => {
 	const query = useQuery({
 		queryKey: ["riwayat-terminasi", search.toString()],
 		queryFn: async () =>
-			await getPageData<RiwayatTerminasi>({
-				path: "kepegawaian/riwayat/terminasi",
+			await getPageDataEnc<RiwayatTerminasi>({
+				path: encodeString("kepegawaian/riwayat/terminasi"),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),

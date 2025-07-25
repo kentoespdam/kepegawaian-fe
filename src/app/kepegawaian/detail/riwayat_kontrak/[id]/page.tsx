@@ -1,16 +1,17 @@
 import type { Pegawai } from "@_types/pegawai";
 import RiwayatKontrakComponent from "@components/kepegawaian/detail/kontrak";
 import AddKontrakButton from "@components/kepegawaian/detail/kontrak/button.kontrak.add";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Riwayat Kontrak",
 };
 
 const RiwayatKontrakPage = async ({ params }: { params: { id: number } }) => {
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: params.id,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeId(params.id),
 		isRoot: true,
 	});
 
