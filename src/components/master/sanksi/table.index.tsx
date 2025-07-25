@@ -5,12 +5,13 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageData, getPageDataEnc } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import SanksiTableBody from "./table.body";
 import { useSanksiStore } from "@store/master/sanksi";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
+import { encodeString } from "@helpers/number";
 
 const SanksiTableComponent = () => {
 	const { sanksiId, openDelete, setOpenDelete } = useSanksiStore((state) => ({
@@ -23,8 +24,8 @@ const SanksiTableComponent = () => {
 	const query = useQuery({
 		queryKey: qKey,
 		queryFn: () =>
-			getPageData<Sanksi>({
-				path: "sanksi",
+			getPageDataEnc<Sanksi>({
+				path: encodeString("sanksi"),
 				searchParams: searchParams.toString(),
 			}),
 	});

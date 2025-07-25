@@ -1,7 +1,8 @@
 import type { PegawaiDetail } from "@_types/pegawai";
 import PersetujuanCutiComponent from "@components/cuti/persetujuan";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { getCurrentUser } from "@lib/appwrite/user";
 import { Suspense } from "react";
 
@@ -10,10 +11,11 @@ export const metadata = {
 };
 const PersetujuanCutiPage = async () => {
 	const user = await getCurrentUser();
-	const pegawai = await getDataById<PegawaiDetail>({
-		path: "pegawai",
-		id: user.$id,
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
+		id: encodeString(user.$id),
 		isRoot: true,
+		isString: true,
 	});
 
 	return pegawai === null ? null : (

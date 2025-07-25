@@ -5,6 +5,7 @@ import {
 	cutiKuotaSearchColumns,
 	getCutiKuotaColumns,
 } from "@_types/cuti/kuota";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
@@ -12,14 +13,13 @@ import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { globalGetDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { useCutiKuotaStore } from "@store/cuti/kuota";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import CutiKuotaTable from "./table.body";
+import { useEffect, useMemo } from "react";
 import CutiKuotaFormDialog from "./dialog.form";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import { useCutiKuotaStore } from "@store/cuti/kuota";
-import { useEffect } from "react";
 import CutiKuotaFormBatchDialog from "./dialog.form.batch";
+import CutiKuotaTable from "./table.body";
 
 const CutiKuotaComponent = () => {
 	const { replace } = useRouter();
@@ -47,12 +47,20 @@ const CutiKuotaComponent = () => {
 				searchParams: search.toString(),
 			}),
 	});
-	useEffect(() => {
+
+	const searchMemo = useMemo(() => {
+		const search = new URLSearchParams(params);
 		if (!yearParam) {
 			search.set("tahun", String(new Date().getFullYear()));
-			replace(`?${search.toString()}`);
 		}
-	}, [yearParam, search, replace]);
+		return search;
+	}, [params, yearParam]);
+
+	useEffect(() => {
+		if (!yearParam) {
+			replace(`?${searchMemo.toString()}`);
+		}
+	}, [yearParam, searchMemo, replace]);
 	return (
 		<div className="grid">
 			<SearchBuilder columns={cutiKuotaSearchColumns} />

@@ -7,7 +7,7 @@ import {
 	DialogTrigger,
 } from "@components/ui/dialog";
 import Fieldset from "@components/ui/fieldset";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
 import { useQuery } from "@tanstack/react-query";
 import { type Dispatch, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
@@ -22,6 +22,7 @@ import {
 	CommandItem,
 	CommandList,
 } from "@components/ui/command";
+import { encodeString } from "@helpers/number";
 import { usePathname, useRouter } from "next/navigation";
 
 interface PegawaiContentProps extends TerminasiFormProps {
@@ -35,8 +36,8 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 	const query = useQuery({
 		queryKey: ["pegawai-list", search],
 		queryFn: async () => {
-			const result = await getListData<PegawaiList>({
-				path: "pegawai",
+			const result = await getListDataEnc<PegawaiList>({
+				path: encodeString("pegawai"),
 				searchParams: search,
 				isRoot: true,
 			});
@@ -124,7 +125,11 @@ const DetailPegawaiTerminasiForm = ({ form, isEdit }: TerminasiFormProps) => {
 							}}
 						>
 							<DialogTrigger asChild>
-								<Button variant="outline" aria-expanded={open} disabled={isEdit}>
+								<Button
+									variant="outline"
+									aria-expanded={open}
+									disabled={isEdit}
+								>
 									CARI
 								</Button>
 							</DialogTrigger>

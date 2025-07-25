@@ -1,16 +1,17 @@
 import type { PegawaiDetail } from "@_types/pegawai";
 import RiwayatSpComponent from "@components/kepegawaian/detail/peringatan";
 import AddRiwayatSpButton from "@components/kepegawaian/detail/peringatan/button.add.sp";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Riwayat Surat Peringatan",
 };
 
 const RiwayatSp = async ({ params }: { params: { id: number } }) => {
-	const pegawai = await getDataById<PegawaiDetail>({
-		path: "pegawai",
-		id: params.id,
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
+		id: encodeId(params.id),
 		isRoot: true,
 	});
 

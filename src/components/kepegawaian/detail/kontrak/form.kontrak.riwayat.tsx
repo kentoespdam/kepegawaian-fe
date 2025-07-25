@@ -9,7 +9,8 @@ import {
 	TableHeader,
 	TableRow,
 } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { dateToIndonesian } from "@helpers/string";
 import { hitungSisaBulanHari } from "@helpers/tanggal";
 import { useQuery } from "@tanstack/react-query";
@@ -50,8 +51,8 @@ const RiwayatKontrakForm = ({
 	const query = useQuery({
 		queryKey: ["riwayat-kontrak", pegawaiId],
 		queryFn: () =>
-			getPageData<RiwayatKontrak>({
-				path: `kepegawaian/riwayat/kontrak/pegawai/${pegawaiId}`,
+			getPageDataEnc<RiwayatKontrak>({
+				path: encodeString(`kepegawaian/riwayat/kontrak/pegawai/${pegawaiId}`),
 				isRoot: true,
 			}),
 	});

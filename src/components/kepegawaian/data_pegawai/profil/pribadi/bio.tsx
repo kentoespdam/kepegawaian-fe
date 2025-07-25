@@ -15,7 +15,7 @@ const BiodataComponent = ({ form }: BiodataComponentProps) => {
     return (
         <Fieldset title="Data Pribadi Pegawai">
             <div className="grid grid-cols-2 gap-2">
-                <InputZod id="nipam" label="NIPAM" form={form} />
+                <InputZod id="nipam" label="NIPAM" form={form} readonly/>
                 <InputZod id="nama" label="Nama Pegawai" form={form} />
                 <RadioJenisKelaminZod id="jenisKelamin" label="Jenis Kelamin" form={form} />
                 <SelectStatusKawinZod id="statusKawin" label="Status Kawin" form={form} />

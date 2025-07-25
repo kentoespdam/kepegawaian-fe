@@ -48,7 +48,7 @@ const KlaimPengajuanCutiFormDialog = ({
 			await globalGetDataEnc({
 				path: encodeString("auth/csrf-token"),
 			}),
-		enabled: !!open,
+		enabled: !!openKlaim,
 	});
 
 	const form = useForm<KlaimCutiPegawaiSchema>({

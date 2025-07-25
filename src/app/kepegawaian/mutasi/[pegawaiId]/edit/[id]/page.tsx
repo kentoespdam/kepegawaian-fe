@@ -2,7 +2,8 @@ import type { RiwayatMutasi } from "@_types/kepegawaian/riwayat-mutasi";
 import type { Pegawai } from "@_types/pegawai";
 import FormCard from "@components/form/form.card";
 import RiwayatMutasiFormComponent from "@components/kepegawaian/detail/mutasi/form.index";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeId, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Mutasi Pegawai",
@@ -11,14 +12,14 @@ const EditMutasiPage = async ({
 	params,
 }: { params: { pegawaiId: number; id: number } }) => {
 	const { pegawaiId, id } = params;
-	const pegawai = await getDataById<Pegawai>({
-		path: "pegawai",
-		id: pegawaiId,
+	const pegawai = await getDataByIdEnc<Pegawai>({
+		path: encodeString("pegawai"),
+		id: encodeId(pegawaiId),
 		isRoot: true,
 	});
-	const riwayatMutasi = await getDataById<RiwayatMutasi>({
-		path: "kepegawaian/riwayat/mutasi",
-		id,
+	const riwayatMutasi = await getDataByIdEnc<RiwayatMutasi>({
+		path: encodeString("kepegawaian/riwayat/mutasi"),
+		id: encodeId(id),
 		isRoot: true,
 	});
 
