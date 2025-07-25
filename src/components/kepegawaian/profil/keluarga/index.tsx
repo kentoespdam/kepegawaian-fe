@@ -1,25 +1,24 @@
 "use client";
 import type { Biodata } from "@_types/profil/biodata";
 import { type Keluarga, keluargaTableColumns } from "@_types/profil/keluarga";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import DeleteKeluargaDialog from "./dialog.delete";
 import FormKeluargaDialog from "./dialog.form";
 import KeluargaTableBody from "./table.body";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 
 interface ProfilKeluargaContentComponentProps {
-	nik: string;
+	biodata: Biodata;
 }
 const ProfilKeluargaContentComponent = ({
-	nik,
+	biodata,
 }: ProfilKeluargaContentComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
@@ -30,20 +29,9 @@ const ProfilKeluargaContentComponent = ({
 			setOpenDelete: state.setOpenDelete,
 		}),
 	);
+	const { nik } = biodata;
 
-	const qBio = useQuery({
-		queryKey: ["biodata", nik],
-		queryFn: () =>
-			getDataByIdEnc<Biodata>({
-				path: encodeString("profil/biodata"),
-				id: encodeString(nik),
-				isString: true,
-				isRoot: true,
-			}),
-		enabled: !!nik,
-	});
-
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: ["profil-keluarga", nik, search.toString()],
 		queryFn: () =>
 			getPageDataEnc<Keluarga>({
@@ -59,27 +47,27 @@ const ProfilKeluargaContentComponent = ({
 			<div className="min-h-80">
 				<Table>
 					<TableHeadBuilder columns={keluargaTableColumns} />
-					{query.isLoading || query.isFetching ? (
-						<LoadingTable columns={keluargaTableColumns} isLoading={true} />
-					) : query.isError ? (
+					{data && !data.empty ? (
+						<KeluargaTableBody biodata={biodata} data={data} />
+					) : (
 						<LoadingTable
 							columns={keluargaTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
+							isLoading={isLoading || isFetching}
 						/>
-					) : qBio.data && query.data ? (
-						<KeluargaTableBody biodata={qBio.data} data={query.data} />
-					) : null}
+					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<FormKeluargaDialog />
 			<DeleteZodDialogBuilder
 				id={keluargaId}
 				deletePath={"profil/keluarga"}
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={[["profil-keluarga", nik],["lampiran-keluarga", keluargaId]]}
+				queryKeys={[
+					["profil-keluarga", nik],
+					["lampiran-keluarga", keluargaId],
+				]}
 			/>
 		</div>
 	);

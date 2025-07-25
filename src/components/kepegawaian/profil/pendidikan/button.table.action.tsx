@@ -11,18 +11,18 @@ import {
 } from "@components/ui/dropdown-menu";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useGlobalMutation } from "@store/query-store";
+import type { QueryKey } from "@tanstack/react-query";
 import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 
 interface ProfilPendidikanActionProps {
 	biodata: Biodata;
 	data: Pendidikan;
+	qKey: QueryKey;
 }
 
 const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 	const pathname = usePathname();
-	const params = useSearchParams();
-	const search = new URLSearchParams(params);
 	const store = usePendidikanStore();
 
 	const editHandler = () => {
@@ -38,7 +38,7 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 
 	const accMutation = useGlobalMutation({
 		mutationFunction: acceptPendidikan,
-		queryKeys: [["pendidikan", props.biodata.nik, search.toString()]],
+		queryKeys: [props.qKey],
 	});
 
 	const acceptHandler = () => {

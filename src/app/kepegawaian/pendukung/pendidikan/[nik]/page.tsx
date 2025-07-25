@@ -4,18 +4,23 @@ import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/but
 import ProfilPendidikanContentComponent from "@components/kepegawaian/profil/pendidikan";
 import AddProfilPendidikanButton from "@components/kepegawaian/profil/pendidikan/button.add";
 import LampiranPendidikanContent from "@components/kepegawaian/profil/pendidikan/lampiran.index";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { decodeString, encodeString } from "@helpers/number";
 
 export const metadata = {
 	title: "Data Pendidikan",
 };
 const PendukungPage = async ({ params }: { params: { nik: string } }) => {
-	const bio = await getDataById<Biodata>({
-		path: "profil/biodata",
+	const nik = decodeString(params.nik);
+
+	const bio = await getDataByIdEnc<Biodata>({
+		path: encodeString("profil/biodata"),
 		id: params.nik,
 		isRoot: true,
+		isString: true,
 	});
-	return (
+
+	return bio ? (
 		<div className="grid min-h-screen w-full">
 			<div className="border-t border-r border-b gap-0">
 				<div className="grid">
@@ -23,11 +28,11 @@ const PendukungPage = async ({ params }: { params: { nik: string } }) => {
 						<span className="text-md font-semibold">
 							{metadata.title} ({bio?.nama})
 						</span>
-						<AddProfilPendidikanButton nik={params.nik} />
+						<AddProfilPendidikanButton nik={nik} />
 					</header>
 					<main className="flex flex-1 flex-col lg:gap-6 lg:p-6">
 						<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-							<ProfilPendidikanContentComponent nik={params.nik} />
+							<ProfilPendidikanContentComponent biodata={bio} />
 						</div>
 					</main>
 				</div>
@@ -48,6 +53,8 @@ const PendukungPage = async ({ params }: { params: { nik: string } }) => {
 				</div>
 			</div>
 		</div>
+	) : (
+		<div>Loading...</div>
 	);
 };
 

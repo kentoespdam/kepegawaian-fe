@@ -50,6 +50,7 @@ export const acceptPendidikan = async ({
 		headers: headers,
 		body: JSON.stringify({
 			biodataId: nik,
+			isLatest: true,
 		}),
 	});
 

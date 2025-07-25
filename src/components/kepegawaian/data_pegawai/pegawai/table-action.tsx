@@ -28,7 +28,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 interface KepegawaianTableActionProps {
-	data?: Pegawai;
+	data: Pegawai;
 }
 const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 	const params = useSearchParams();
@@ -62,7 +62,7 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 			<DropdownMenuContent className="w-auto">
 				<DropdownMenuGroup>
 					<Link
-						href={`/kepegawaian/pendukung/pendidikan/${props.data?.biodata.nik}`}
+						href={`/kepegawaian/pendukung/pendidikan/${encodeString(props.data?.biodata.nik)}`}
 					>
 						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
 							<RssIcon className="mr-2 h-[1rem] w-[1rem]" />
@@ -70,7 +70,7 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 						</DropdownMenuItem>
 					</Link>
 
-					<Link href={`/kepegawaian/detail/mutasi/${props.data?.id}`}>
+					<Link href={`/kepegawaian/detail/mutasi/${props.data.id}`}>
 						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
 							<UserCogIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Data Kepegawaian</span>
