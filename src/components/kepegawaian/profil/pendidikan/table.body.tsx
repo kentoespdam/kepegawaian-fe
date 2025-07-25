@@ -10,10 +10,12 @@ import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { CheckCircleIcon, CircleDashedIcon, CircleDotIcon } from "lucide-react";
 import { useEffect } from "react";
 import ProfilPendidikanAction from "./button.table.action";
+import type { QueryKey } from "@tanstack/react-query";
 
 interface ProfilPendidikanTableBodyProps {
 	biodata: Biodata;
 	data: Pageable<Pendidikan>;
+	qKey:QueryKey
 }
 const ProfilPendidikanTableBody = (props: ProfilPendidikanTableBodyProps) => {
 	const { selectedPendidikanId, setSelectedPendidikanId } = usePendidikanStore(
@@ -53,7 +55,7 @@ const ProfilPendidikanTableBody = (props: ProfilPendidikanTableBodyProps) => {
 						{urut++}
 					</TableCell>
 					<TableCell className="border-x p-0" align="center">
-						<ProfilPendidikanAction biodata={props.biodata} data={row} />
+						<ProfilPendidikanAction biodata={props.biodata} data={row} qKey={props.qKey} />
 					</TableCell>
 					<TableCell className="border-x">
 						{row.jenjangPendidikan.nama}

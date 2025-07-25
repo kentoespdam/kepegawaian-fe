@@ -10,7 +10,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { usePengalamanKerjaStore } from "@store/kepegawaian/profil/pengalaman-store";
 import { useQuery } from "@tanstack/react-query";
@@ -18,9 +18,12 @@ import { useSearchParams } from "next/navigation";
 import FormProfilPengalamanKerjaDialog from "./dialog.form";
 import ProfilPengalamanKerjaTableBody from "./table.body";
 
-const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
+const ProfilPengalamanKerjaContentComponent = ({
+	biodata,
+}: { biodata: Biodata }) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const { nik } = biodata;
 
 	const { pengalamanId, openDelete, setOpenDelete } = usePengalamanKerjaStore(
 		(state) => ({
@@ -30,29 +33,17 @@ const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 		}),
 	);
 
-	const qBio = useQuery({
-		queryKey: ["biodata", nik],
-		queryFn: () =>
-			getDataByIdEnc<Biodata>({
-				path: encodeString("profil/biodata"),
-				id: encodeString(nik),
-				isRoot: true,
-				isString: true,
-			}),
-		enabled: !!nik,
-	});
-
 	const qKey = ["pengalaman-kerja", nik, search.toString()];
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: () =>
 			getPageDataEnc<PengalamanKerja>({
-				path: encodeString(`profil/pengalaman/${qBio.data?.nik}/biodata`),
+				path: encodeString(`profil/pengalaman/${nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
-		enabled: qBio.data && !!qBio.data.nik,
+		enabled: !!nik,
 	});
 
 	return (
@@ -61,26 +52,17 @@ const ProfilPengalamanKerjaContentComponent = ({ nik }: { nik: string }) => {
 			<div className="min-h-64">
 				<Table>
 					<TableHeadBuilder columns={pengalamanKerjaTableColumns} />
-					{query.isLoading || query.isFetching ? (
+					{data && !data.empty ? (
+						<ProfilPengalamanKerjaTableBody data={data} biodata={biodata} />
+					) : (
 						<LoadingTable
 							columns={pengalamanKerjaTableColumns}
-							isLoading={true}
+							isLoading={isLoading || isFetching}
 						/>
-					) : query.isError ? (
-						<LoadingTable
-							columns={pengalamanKerjaTableColumns}
-							isSuccess={false}
-							error={query.error?.message}
-						/>
-					) : qBio.data && query.data ? (
-						<ProfilPengalamanKerjaTableBody
-							data={query.data}
-							biodata={qBio.data}
-						/>
-					) : null}
+					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<FormProfilPengalamanKerjaDialog />
 			<DeleteZodDialogBuilder
 				id={pengalamanId}
