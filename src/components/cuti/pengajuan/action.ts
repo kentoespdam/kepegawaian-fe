@@ -3,6 +3,7 @@
 import type {
 	BatalCutiPegawaiSchema,
 	CutiPegawaiSchema,
+	KlaimCutiPegawaiSchema,
 } from "@_types/cuti/cuti_pegawai";
 import { setAuthorizeHeader } from "@helpers/index";
 import { decodeId } from "@helpers/number";
@@ -25,7 +26,9 @@ export const savePengajuanCuti = async (formData: CutiPegawaiSchema) => {
 	return result;
 };
 
-export const saveKlaimCutiPegawai = async (formData: CutiPegawaiSchema) => {
+export const saveKlaimCutiPegawai = async (
+	formData: KlaimCutiPegawaiSchema,
+) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url = `${API_URL}/cuti/pengajuan/klaim`;
 
