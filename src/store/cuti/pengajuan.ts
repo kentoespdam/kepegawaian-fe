@@ -91,6 +91,7 @@ export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
 	defaultKlaimCutiPegawai: {
 		csrfToken: "",
 		id: 0,
+		refCutiId: 0,
 		pegawaiId: 0,
 		nipam: "",
 		nama: "",
@@ -105,13 +106,14 @@ export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
 		tanggalSelesai: "",
 		alasan: "",
 		listHari: [],
+		keterangan: "",
 	},
 	setDefaultKlaimCutiPegawai: (value) =>
 		set((state) => ({
 			...state,
 			defaultKlaimCutiPegawai: {
 				...state.defaultKlaimCutiPegawai,
-				id: value?.id ?? 0,
+				refCutiId: value?.id ?? 0,
 				pegawaiId: value?.pegawaiId ?? 0,
 				nipam: value?.nipam ?? "",
 				nama: value?.nama ?? "",
@@ -125,7 +127,6 @@ export const usePengajuanCutiStore = create<PengajuanCutiStore>((set) => ({
 				tanggalMulai: value?.tanggalMulai ?? "",
 				tanggalSelesai: value?.tanggalSelesai ?? "",
 				alasan: value?.alasan ?? "",
-				listHari: [],
 			},
 		})),
 	defaultBatalCutiPegawai: {
