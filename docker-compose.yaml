@@ -1,0 +1,12 @@
+services:
+  kepegawaian:
+    container_name: kepegawain-fe
+    image: kepegawaian-fe:latest
+    build: .
+    env_file:
+      - .env
+    entrypoint: 
+      - node
+      - server.js
+    ports:
+      - 3000:3000
