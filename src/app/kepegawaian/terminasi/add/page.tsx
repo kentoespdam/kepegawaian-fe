@@ -8,10 +8,9 @@ const metadata = {
 };
 
 const AddTerminasiPage = async ({
-	params,
-}: { params: Promise<{ searchParams: Record<string, string> }> }) => {
-	const { searchParams } = await params;
-	const id = searchParams.id ? +searchParams.id : 0;
+	searchParams,
+}: { searchParams: Promise<Record<string, unknown>> }) => {
+	const id = (await searchParams).id ? Number((await searchParams).id) : 0;
 	const pegawai =
 		id === 0
 			? undefined

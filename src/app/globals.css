@@ -60,7 +60,7 @@
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.99 0.00 0);
+  --destructive-foreground: oklch(0.99 0 0);
   --warning: oklch(0.723 0.219 149.579);
   --warning-foreground: oklch(0.982 0.018 155.826);
   --border: oklch(0.92 0.004 286.32);
@@ -97,7 +97,7 @@
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --destructive-foreground: oklch(0.99 0.00 0);
+  --destructive-foreground: oklch(0.99 0 0);
   --warning: oklch(0.696 0.17 162.48);
   --warning-foreground: oklch(0.393 0.095 152.535);
   --border: oklch(1 0 0 / 10%);
@@ -125,4 +125,23 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@utility grid-cols-* {
+  grid-template-columns: repeat(auto-fill, minmax(0, 1fr));
+}
+
+@layer utilities {
+  .step {
+    counter-increment: step;
+  }
+
+  .step:before {
+    @apply absolute inline-flex h-9 w-9 items-center justify-center rounded-full border-4 border-background bg-muted text-center -indent-px font-mono text-base font-medium;
+    @apply ml-[-50px] mt-[-4px];
+    content: counter(step);
+  }
+  /* .grid-cols-7 {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  } */
 }

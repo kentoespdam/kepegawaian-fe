@@ -4,9 +4,10 @@ import fontFamily from "tailwindcss/defaultTheme";
 const config = {
 	darkMode: "class",
 	content: [
-		"./src/components/**/*.{ts,tsx}",
-		"./src/app/**/*.{ts,tsx}",
-		"./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
+		// "./src/components/**/*.{ts,tsx}",
+		// "./src/app/**/*.{js,jsx,ts,tsx}",
+		"./src/**/*.{js,jsx,ts,tsx}",
+        "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js"
 	],
 	prefix: "",
 	theme: {
