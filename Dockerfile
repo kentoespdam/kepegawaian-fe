@@ -1,8 +1,8 @@
 # initial image
-FROM node:22.11.0-alpine3.20 AS BASE
+FROM node:22.11.0-alpine3.20 AS base
 
 # install packages
-FROM base AS DEPS
+FROM base AS deps
 RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY package.json package-lock.json ./
