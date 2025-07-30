@@ -9,4 +9,4 @@ services:
       - node
       - server.js
     ports:
-      - 3000:3000
+      - 3002:3000
