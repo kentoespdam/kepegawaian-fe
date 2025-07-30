@@ -92,10 +92,20 @@ const KlaimPengajuanCutiFormDialog = ({
 					>
 						<div className="grid gap-2 max-h-[80vh] overflow-auto p-1">
 							<InputZod type="hidden" id="id" label="ID" form={form} />
-							<InputZod type="hidden" id="csrfToken" label="CSRF Token" form={form} />
+							<InputZod
+								type="hidden"
+								id="csrfToken"
+								label="CSRF Token"
+								form={form}
+							/>
 							<Fieldset title="Data Karyawan" clasName="p-1">
 								<div className="grid gap-2 grid-cols-2">
-									<InputZod className="hidden" id="pegawaiId" label="Pegawai ID" form={form} />
+									<InputZod
+										className="hidden"
+										id="pegawaiId"
+										label="Pegawai ID"
+										form={form}
+									/>
 									<InputZod id="nipam" label="Nipam" form={form} readonly />
 									<InputZod id="nama" label="Nama" form={form} readonly />
 									<InputZod
@@ -105,7 +115,12 @@ const KlaimPengajuanCutiFormDialog = ({
 										className="col-span-2"
 										readonly
 									/>
-									<InputZod id="organisasi" label="Organisasi" form={form} readonly />
+									<InputZod
+										id="organisasi"
+										label="Organisasi"
+										form={form}
+										readonly
+									/>
 									<InputZod id="jabatan" label="Jabatan" form={form} readonly />
 								</div>
 							</Fieldset>
