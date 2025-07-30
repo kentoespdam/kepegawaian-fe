@@ -3,7 +3,10 @@ import {
 	ApprovalCutiStatus,
 	getApprovalCutiStatusLabel,
 } from "@_types/enums/approval_cuti_status";
-import { getJenisPengajuanCutiLabel } from "@_types/enums/jenis_pengajuan_cuti";
+import {
+	getJenisPengajuanCutiLabel,
+	JenisPengajuanCuti,
+} from "@_types/enums/jenis_pengajuan_cuti";
 import type { Pageable } from "@_types/index";
 import type { PegawaiDetail } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
@@ -32,17 +35,15 @@ const PengajuanCutiTableBody = ({
 						{urut++}
 					</TableCell>
 					<TableCell className="border" align="center" width={60}>
-						<div className="flex gap-2">
-							{row.approvalCutiStatus === ApprovalCutiStatus.Enum.APPROVED ? (
+						<div className="flex gap-2 justify-center">
+							{row.approvalCutiStatus === ApprovalCutiStatus.Enum.APPROVED &&
+							row.jenisPengajuanCuti ===
+								JenisPengajuanCuti.Enum.PENGAJUAN_CUTI ? (
 								<PengajuanCutiClaimTableActionButton data={row} />
 							) : row.approvalLevel === 1 &&
 								row.approvalCutiStatus === ApprovalCutiStatus.Enum.PENDING ? (
 								<PengajuanCutiTableActionButton pegawai={pegawai} data={row} />
-							) : (
-								<Button variant={"outline"} size={"icon"} className="size-6">
-									<BanIcon className="size-4 text-muted-foreground" />
-								</Button>
-							)}
+							) : null}
 							<PengajuanCutiInfoButton pegawai={pegawai} cutiPegawai={row} />
 						</div>
 					</TableCell>
