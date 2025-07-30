@@ -12,7 +12,8 @@ import { Button } from "@components/ui/button";
 import { Dialog, DialogContent, DialogHeader } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
-import { globalGetData } from "@helpers/action";
+import { globalGetDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
 import { useGlobalMutation } from "@store/query-store";
@@ -29,7 +30,7 @@ const RiwayatSkFormComponent = () => {
 
 	const params = useSearchParams();
 	const search = new URLSearchParams(params);
-	const qKey = ["riwayat-sk", defaultValues.pegawaiId, search.toString()]
+	const qKey = ["riwayat-sk", defaultValues.pegawaiId, search.toString()];
 
 	const form = useForm<RiwayatSkSchema>({
 		resolver: zodResolver(RiwayatSkSchema),
@@ -52,8 +53,10 @@ const RiwayatSkFormComponent = () => {
 	};
 
 	const cariGaji = async () => {
-		const data = await globalGetData<DetailDasarGaji>({
-			path: `penggajian/detail-dasar-gaji/${form.getValues().golonganId}/${form.getValues().mkgTahun}`,
+		const data = await globalGetDataEnc<DetailDasarGaji>({
+			path: encodeString(
+				`penggajian/detail-dasar-gaji/${form.getValues().golonganId}/${form.getValues().mkgTahun}`,
+			),
 		});
 		form.setValue("gajiPokok", data.nominal);
 	};

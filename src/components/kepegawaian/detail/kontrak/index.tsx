@@ -1,47 +1,52 @@
 "use client";
 
 import {
-	riwayatKontrakTableColumns,
 	type RiwayatKontrak,
+	riwayatKontrakTableColumns,
 } from "@_types/kepegawaian/riwayat_kontrak";
+import type { PegawaiDetail } from "@_types/pegawai";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import RiwayatKontrakTableBody from "./table.kontrak.body";
 
 type RiwayatKontrakComponentProps = {
-	pegawaiId: number;
+	pegawai: PegawaiDetail;
 };
 const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
 
-	const { riwayatKontrakId, openDelete, setOpenDelete } = useRiwayatKontrakStore(state => ({
-		riwayatKontrakId: state.riwayatKontrakId,
-		openDelete: state.openDelete,
-		setOpenDelete: state.setOpenDelete,
-	}))
+	const { riwayatKontrakId, openDelete, setOpenDelete } =
+		useRiwayatKontrakStore((state) => ({
+			riwayatKontrakId: state.riwayatKontrakId,
+			openDelete: state.openDelete,
+			setOpenDelete: state.setOpenDelete,
+		}));
 
-	const qKey = ["riwayat-kontrak", props.pegawaiId, search.toString()]
+	const qKey = ["riwayat-kontrak", props.pegawai.id, search.toString()];
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: async () => {
-			const result = await getPageData<RiwayatKontrak>({
-				path: `kepegawaian/riwayat/kontrak/pegawai/${props.pegawaiId}`,
+			const result = await getPageDataEnc<RiwayatKontrak>({
+				path: encodeString(
+					`kepegawaian/riwayat/kontrak/pegawai/${props.pegawai.id}`,
+				),
 				searchParams: search.toString(),
 				isRoot: true,
 			});
 			return result;
 		},
-		enabled: !!props.pegawaiId,
+		enabled: !!props.pegawai.id,
 	});
 
 	return (
@@ -50,21 +55,17 @@ const RiwayatKontrakComponent = (props: RiwayatKontrakComponentProps) => {
 			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatKontrakTableColumns} />
-					{query.isLoading || query.error || !query.data || query.data.empty ? (
+					{data && !data.empty ? (
+						<RiwayatKontrakTableBody pegawai={props.pegawai} data={data} />
+					) : (
 						<LoadingTable
 							columns={riwayatKontrakTableColumns}
-							isLoading={query.isLoading}
-							error={query.error?.message}
-						/>
-					) : (
-						<RiwayatKontrakTableBody
-							pegawaiId={props.pegawaiId}
-							data={query.data}
+							isLoading={isLoading || isFetching}
 						/>
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<DeleteZodDialogBuilder
 				id={riwayatKontrakId}
 				deletePath="kepegawaian/riwayat/kontrak"

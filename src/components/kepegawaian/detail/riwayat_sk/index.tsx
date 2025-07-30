@@ -64,25 +64,18 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 			<div className="overflow-auto min-h-90">
 				<Table>
 					<TableHeadBuilder columns={riwayatSkTableColumns} />
-					{queries[0].isLoading ||
-					queries[0].isFetching ||
-					!queries[0].data ||
-					queries[0].isError ||
-					queries[0].data.empty ||
-					queries[1].isLoading ||
-					queries[1].isFetching ? (
-						<LoadingTable
-							columns={riwayatSkTableColumns}
-							isLoading={true}
-							error={JSON.stringify(queries[0].error)}
-						/>
-					) : queries[0].data && queries[1].data ? (
+					{queries[0].data && !queries[0].data.empty && queries[1].data ? (
 						<RiwayatSkTableBody
 							pegawaiId={pegawaiId}
 							data={queries[0].data}
 							jenisSkList={queries[1].data}
 						/>
-					) : null}
+					) : (
+						<LoadingTable
+							columns={riwayatSkTableColumns}
+							isLoading={queries[0].isLoading || queries[0].isFetching}
+						/>
+					)}
 				</Table>
 			</div>
 			<PaginationBuilder data={queries[0].data} />

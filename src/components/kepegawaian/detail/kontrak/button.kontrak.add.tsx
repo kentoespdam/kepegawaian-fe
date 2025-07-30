@@ -1,13 +1,14 @@
 "use client";
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Button } from "@components/ui/button";
+import { encodeId } from "@helpers/number";
 import { useRiwayatKontrakStore } from "@store/kepegawaian/detail/riwayat_kontrak";
 import { PlusCircleIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 type AddKontrakButtonProps = {
-	pegawai: Pegawai;
+	pegawai: PegawaiDetail;
 };
 const AddKontrakButton = ({ pegawai }: AddKontrakButtonProps) => {
 	const { id, statusPegawai } = pegawai;
@@ -20,7 +21,7 @@ const AddKontrakButton = ({ pegawai }: AddKontrakButtonProps) => {
 			return alert("Pegawai ini bukan kontrak");
 		}
 		setDefaultValues(pegawai);
-		router.push(`/kepegawaian/kontrak/add/${id}`);
+		router.push(`/kepegawaian/kontrak/add/${encodeId(id)}`);
 	};
 
 	return (

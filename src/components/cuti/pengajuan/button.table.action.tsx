@@ -1,5 +1,6 @@
 import type { CutiPegawai } from "@_types/cuti/cuti_pegawai";
 import { ApprovalCutiStatus } from "@_types/enums/approval_cuti_status";
+import { JenisPengajuanCuti } from "@_types/enums/jenis_pengajuan_cuti";
 import type { PegawaiDetail } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
 import {
@@ -48,13 +49,16 @@ const PengajuanCutiTableActionButton = ({
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-auto">
 				<DropdownMenuGroup>
-					<DropdownMenuItem
-						className="flex flex-row items-center cursor-pointer text-primary"
-						onClick={editHandler}
-					>
-						<PencilIcon className="mr-2 h-[1rem] w-[1rem]" />
-						<span>Edit</span>
-					</DropdownMenuItem>
+					{data.jenisPengajuanCuti ===
+					JenisPengajuanCuti.Enum.PENGAJUAN_CUTI ? (
+						<DropdownMenuItem
+							className="flex flex-row items-center cursor-pointer text-primary"
+							onClick={editHandler}
+						>
+							<PencilIcon className="mr-2 h-[1rem] w-[1rem]" />
+							<span>Edit</span>
+						</DropdownMenuItem>
+					) : null}
 
 					<DropdownMenuItem
 						className="flex flex-row items-center cursor-pointer text-destructive"

@@ -3,7 +3,7 @@ import type {
 	RiwayatKontrakSchema,
 } from "@_types/kepegawaian/riwayat_kontrak";
 import type { JenisKontrak } from "@_types/master/jenis_kontrak";
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import type { SelectedHandlerStore } from "@store/base-store";
 import { create } from "zustand";
 
@@ -11,7 +11,7 @@ interface RiwayatKontrakStore extends SelectedHandlerStore {
 	riwayatKontrakId: number;
 	setRiwayatKontrakId: (val: number) => void;
 	defaultValues: RiwayatKontrakSchema;
-	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrak) => void;
+	setDefaultValues: (pegawai?: PegawaiDetail, schema?: RiwayatKontrak) => void;
 	jenisKontrak?: JenisKontrak;
 	setJenisKontrak: (val?: JenisKontrak) => void;
 }
@@ -38,10 +38,11 @@ export const useRiwayatKontrakStore = create<RiwayatKontrakStore>((set) => ({
 		tanggalMulai: "",
 		tanggalSelesai: "",
 		gajiPokok: 0,
+		golonganId: 0,
 		notes: "",
 		fileName: "",
 	},
-	setDefaultValues: (pegawai?: Pegawai, schema?: RiwayatKontrak) =>
+	setDefaultValues: (pegawai, schema) =>
 		set((state) => ({
 			...state,
 			defaultValues: {

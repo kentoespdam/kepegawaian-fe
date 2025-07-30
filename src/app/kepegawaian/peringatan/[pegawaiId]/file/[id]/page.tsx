@@ -3,7 +3,8 @@ import LampiranSpDetailComponent from "@components/kepegawaian/detail/peringatan
 import { Card, CardContent, CardHeader } from "@components/ui/card";
 import { ButtonLink } from "@components/ui/link";
 import { Separator } from "@components/ui/separator";
-import { getDataById } from "@helpers/action";
+import { getDataByIdEnc } from "@helpers/action";
+import { decodeId, encodeString } from "@helpers/number";
 import { ArrowLeftIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -13,13 +14,13 @@ export const metadata = {
 
 const LampiranSpPage = async ({
 	params,
-}: { params: { pegawaiId: number; id: number } }) => {
-	const riwayatSp = await getDataById<RiwayatSp>({
-		path: "kepegawaian/riwayat/sp",
+}: { params: { pegawaiId: string; id: string } }) => {
+	const riwayatSp = await getDataByIdEnc<RiwayatSp>({
+		path: encodeString("kepegawaian/riwayat/sp"),
 		id: params.id,
 		isRoot: true,
 	});
-	if (riwayatSp.pegawaiId !== +params.pegawaiId)
+	if (riwayatSp.pegawaiId !== decodeId(params.pegawaiId))
 		return redirect(`/kepegawaian/detail/riwayat_sp/${params.id}`);
 
 	return (
@@ -35,7 +36,7 @@ const LampiranSpPage = async ({
 			</CardHeader>
 			<Separator className="mb-4" />
 			<CardContent>
-				<LampiranSpDetailComponent id={params.id} />
+				<LampiranSpDetailComponent id={decodeId(params.id)} />
 			</CardContent>
 		</Card>
 	);

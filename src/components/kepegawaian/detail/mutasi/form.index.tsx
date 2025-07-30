@@ -1,27 +1,28 @@
 "use client";
 
+import type { Pageable } from "@_types/index";
 import {
-	RiwayatMutasiSchema,
 	type RiwayatMutasi,
+	RiwayatMutasiSchema,
 } from "@_types/kepegawaian/riwayat-mutasi";
-import type { Pegawai } from "@_types/pegawai";
+import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
+import type { PegawaiDetail } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
 import TextAreaZod from "@components/form/zod/textarea";
 import { Form } from "@components/ui/form";
+import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { saveRiwayatMutasi } from "./action";
 import RiwayatMutasiFormAction from "./button.form.action";
 import MutasiGolonganForm from "./form.golongan";
 import MutasiJabatanForm from "./form.jabatan";
-import MutasiSkForm from "./form.sk";
 import MutasiPegawaiForm from "./form.pegawai";
-import type { Pageable } from "@_types/index";
-import type { RiwayatSp } from "@_types/kepegawaian/riwayat-sp";
+import MutasiSkForm from "./form.sk";
 
 export interface MutasiFormProps {
 	form: UseFormReturn<RiwayatMutasiSchema>;
@@ -29,7 +30,7 @@ export interface MutasiFormProps {
 }
 
 type RiwayatMutasiFormComponentProps = {
-	pegawai: Pegawai;
+	pegawai: PegawaiDetail;
 	data?: RiwayatMutasi;
 	riwayatSp?: Pageable<RiwayatSp>;
 };
@@ -56,7 +57,7 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatMutasi,
 		queryKeys: [["riwayat-mutasi", defaultValues.pegawaiId, search.toString()]],
-		redirectTo: `/kepegawaian/detail/mutasi/${pegawai.id}`,
+		redirectTo: `/kepegawaian/detail/mutasi/${encodeId(pegawai.id)}`,
 	});
 
 	const onSubmit = (values: RiwayatMutasiSchema) => {
@@ -76,7 +77,7 @@ const RiwayatMutasiFormComponent = (props: RiwayatMutasiFormComponentProps) => {
 		<div className="h-full">
 			<Form {...form}>
 				<form name="form" onSubmit={form.handleSubmit(onSubmit)}>
-					<div className="grid gap-2 pl-4 pr-2 pb-4">
+					<div className="grid gap-2">
 						<InputZod
 							type="number"
 							id="id"

@@ -58,9 +58,7 @@ const CvRightPengalamanKerja = ({ nik }: { nik: string }) => {
 					<TableBody>
 						{data.content.map((item) => (
 							<TableRow key={item.id}>
-								<TableCell>
-									{hitungUmur(item.tanggalMasuk, item.tanggalKeluar)}
-								</TableCell>
+								<TableCell>{item.tahunKeluar - item.tahunMasuk}</TableCell>
 								<TableCell>{item.namaPerusahaan}</TableCell>
 								<TableCell>{item.typePerusahaan}</TableCell>
 								<TableCell>{item.jabatan}</TableCell>

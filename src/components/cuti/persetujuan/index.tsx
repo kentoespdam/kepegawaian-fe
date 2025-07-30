@@ -12,7 +12,7 @@ import { encodeString } from "@helpers/number";
 import { usePersetujuanCutiStore } from "@store/cuti/persetujuan";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import CutiPengajuanInfoDialog from "../pengajuan/dialog.info";
 import PersetujuanCutiFormDialog from "./dialog.form";
 import CutiPersetujuanTableBody from "./table.body";
@@ -52,12 +52,19 @@ const PersetujuanCutiComponent = ({
 		enabled: !!pegawai.id && !!tahun,
 	});
 
-	useEffect(() => {
+	const searchMemo = useMemo(() => {
+		const search = new URLSearchParams(params);
 		if (!tahun) {
 			search.set("tahun", String(new Date().getFullYear()));
-			replace(`?${search.toString()}`);
 		}
-	}, [tahun, search, replace]);
+		return search;
+	}, [params, tahun]);
+
+	useEffect(() => {
+		if (!tahun) {
+			replace(`?${searchMemo.toString()}`);
+		}
+	}, [tahun, searchMemo, replace]);
 	return (
 		<div className="grid max-w-full">
 			<div className="flex gap-2 flex-col items-start md:flex-row md:justify-between lg:flex-row lg:justify-between">

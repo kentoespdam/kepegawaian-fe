@@ -10,7 +10,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
@@ -19,36 +19,27 @@ import FormProfilPendidikanDialog from "./dialog.form";
 import ProfilPendidikanTableBody from "./table.body";
 
 interface ProfilPendidikanContentComponentProps {
-	nik: string;
+	biodata: Biodata;
 }
 
 const ProfilPendidikanContentComponent = ({
-	nik,
+	biodata,
 }: ProfilPendidikanContentComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const { nik } = biodata;
 
-	const qBio = useQuery({
-		queryKey: ["biodata", nik],
-		queryFn: () =>
-			getDataByIdEnc<Biodata>({
-				path: encodeString("profil/biodata"),
-				id: encodeString(nik),
-				isRoot: true,
-				isString: true,
-			}),
-		enabled: !!nik,
-	});
+	const qKey = ["profil-pendidikan", nik, search.toString()];
 
 	const query = useQuery({
-		queryKey: ["profil-pendidikan", qBio.data?.nik, search.toString()],
+		queryKey: qKey,
 		queryFn: () =>
 			getPageDataEnc<Pendidikan>({
-				path: encodeString(`profil/pendidikan/${qBio.data?.nik}/biodata`),
+				path: encodeString(`profil/pendidikan/${biodata.nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
-		enabled: qBio.data && !!qBio.data.nik,
+		enabled: biodata && !!biodata.nik,
 	});
 
 	return (
@@ -59,7 +50,7 @@ const ProfilPendidikanContentComponent = ({
 				{query.isLoading ||
 				query.isFetching ||
 				query.isError ||
-				!qBio.data ||
+				!biodata ||
 				!query.data ||
 				query.data.empty ? (
 					<LoadingTable
@@ -67,7 +58,11 @@ const ProfilPendidikanContentComponent = ({
 						isLoading={query.isLoading || query.isFetching}
 					/>
 				) : (
-					<ProfilPendidikanTableBody data={query.data} biodata={qBio.data} />
+					<ProfilPendidikanTableBody
+						data={query.data}
+						biodata={biodata}
+						qKey={qKey}
+					/>
 				)}
 			</Table>
 			<PaginationBuilder data={query.data} />

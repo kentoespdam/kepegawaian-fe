@@ -7,6 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { encodeId } from "@helpers/number";
 import { useRiwayatSpStore } from "@store/kepegawaian/detail/riwayat_sp";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -26,7 +27,9 @@ const RiwayatSpTableAction = ({
 	}));
 	const { push } = useRouter();
 	const editHandler = () =>
-		push(`/kepegawaian/peringatan/${pegawaiId}/edit/${data.id}`);
+		push(
+			`/kepegawaian/peringatan/${encodeId(pegawaiId)}/edit/${encodeId(data.id)}`,
+		);
 	const deleteHandler = () => {
 		setRiwayatSpId(data.id);
 		setOpenDelete(true);

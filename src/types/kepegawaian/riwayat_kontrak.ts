@@ -16,20 +16,20 @@ export interface RiwayatKontrak {
 
 export const RiwayatKontrakSchema = z
 	.object({
-		id: z.number().optional().default(0),
+		id: z.number(),
 		jenisKontrak: z.string().min(3, "Jenis Kontrak wajib diisi"),
 		pegawaiId: z.number().min(1, "Pegawai wajib diisi"),
 		nipam: z.string().min(6, "NIPAM wajib diisi"),
 		nama: z.string().min(3, "Nama wajib diisi"),
-		unitKerja: z.string().optional(),
-		jabatan: z.string().optional(),
+		unitKerja: z.string(),
+		jabatan: z.string(),
 		nomorKontrak: z.string().min(3, "Nomor Kontrak wajib diisi"),
 		tanggalSk: z.string().min(10, "Tgl. SK wajib diisi"),
 		tanggalMulai: z.string().min(10, "Tgl. Mulai wajib diisi"),
-		tanggalSelesai: z.string().optional(),
-		gajiPokok: z.number().optional().default(0),
-		golonganId: z.number().optional(),
-		notes: z.string().optional(),
+		tanggalSelesai: z.string(),
+		gajiPokok: z.number(),
+		golonganId: z.number(),
+		notes: z.string(),
 	})
 	.superRefine((val, ctx) => {
 		const { jenisKontrak, tanggalSk, tanggalMulai } = val;

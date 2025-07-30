@@ -1,8 +1,9 @@
 import type { PegawaiDetail } from "@_types/pegawai";
 import PengajuanCutiComponent from "@components/cuti/pengajuan";
 import AddPengajuanCutiButton from "@components/cuti/pengajuan/button.add";
-import { Card, CardHeader, CardTitle, CardContent } from "@components/ui/card";
-import { getDataById } from "@helpers/action";
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { getCurrentUser } from "@lib/appwrite/user";
 import { Suspense } from "react";
 
@@ -11,10 +12,11 @@ export const metadata = {
 };
 const PengajuanCutiPage = async () => {
 	const user = await getCurrentUser();
-	const pegawai = await getDataById<PegawaiDetail>({
-		path: "pegawai",
-		id: user.$id,
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
+		id: encodeString(user.$id),
 		isRoot: true,
+		isString: true,
 	});
 
 	return pegawai === null ? null : (

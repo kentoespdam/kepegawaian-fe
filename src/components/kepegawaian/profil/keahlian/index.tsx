@@ -6,7 +6,7 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getDataByIdEnc, getPageDataEnc } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
 import { useQuery } from "@tanstack/react-query";
@@ -15,13 +15,14 @@ import FormKeahlianDialog from "./dialog.form";
 import KeahlianTableBody from "./table.body";
 
 interface ProfilKeahlianContentComponentProps {
-	nik: string;
+	biodata: Biodata;
 }
 const ProfilKeahlianContentComponent = ({
-	nik,
+	biodata,
 }: ProfilKeahlianContentComponentProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
+	const { nik } = biodata;
 
 	const { keahlianId, openDelete, setOpenDelete } = useKeahlianStore(
 		(state) => ({
@@ -33,44 +34,28 @@ const ProfilKeahlianContentComponent = ({
 
 	const qKey = ["profil-keahlian", nik, search.toString()];
 
-	const qBio = useQuery({
-		queryKey: ["biodata", nik],
-		queryFn: () =>
-			getDataByIdEnc<Biodata>({
-				path: encodeString("profil/biodata"),
-				id: encodeString(nik),
-				isRoot: true,
-				isString: true,
-			}),
-		enabled: !!nik,
-	});
-
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: () =>
 			getPageDataEnc<Keahlian>({
-				path: encodeString(`profil/keahlian/${qBio.data?.nik}/biodata`),
+				path: encodeString(`profil/keahlian/${nik}/biodata`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),
-		enabled: qBio.data && !!qBio.data.nik,
+		enabled: !!nik,
 	});
 
 	return (
 		<div className="grid overflow-auto p-2 gap-0">
 			<Table>
 				<TableHeadBuilder columns={keahlianTableColumns} />
-				{query.isLoading ||
-				query.isFetching ||
-				query.isError ||
-				!qBio.data ||
-				!query.data ? (
-					<LoadingTable columns={keahlianTableColumns} isLoading={true} />
+				{data && !data.empty ? (
+					<KeahlianTableBody biodata={biodata} data={data} />
 				) : (
-					<KeahlianTableBody biodata={qBio.data} data={query.data} />
+					<LoadingTable columns={keahlianTableColumns} isLoading={isLoading || isFetching} />
 				)}
 			</Table>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<FormKeahlianDialog />
 			<DeleteZodDialogBuilder
 				id={keahlianId}

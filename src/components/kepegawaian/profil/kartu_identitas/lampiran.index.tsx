@@ -2,8 +2,8 @@
 
 import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
 import {
-	lampiranProfilTableColumns,
 	type LampiranProfil,
+	lampiranProfilTableColumns,
 } from "@_types/profil/lampiran";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
@@ -11,7 +11,8 @@ import LampiranFormDialog from "@components/kepegawaian/profil/lampiran/dialog/a
 import DeleteLampiranProfilDialog from "@components/kepegawaian/profil/lampiran/dialog/delete-lampiran-profil";
 import LampiranProfilTableBody from "@components/kepegawaian/profil/lampiran/table/body";
 import { Table } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKartuIdentitasStore } from "@store/kepegawaian/profil/kartu-identitas-store";
 import { useQuery } from "@tanstack/react-query";
 
@@ -24,8 +25,10 @@ const LampiranKartuIdentitasContent = () => {
 	const query = useQuery({
 		queryKey: [rootKey, selectedKartuIdentitasId],
 		queryFn: async () =>
-			await getListData<LampiranProfil>({
-				path: `profil/kartu-identitas/lampiran/${selectedKartuIdentitasId}`,
+			await getListDataEnc<LampiranProfil>({
+				path: encodeString(
+					`profil/kartu-identitas/lampiran/${selectedKartuIdentitasId}`,
+				),
 				isRoot: true,
 			}),
 		enabled: !!selectedKartuIdentitasId && selectedKartuIdentitasId > 0,
@@ -65,6 +68,6 @@ const LampiranKartuIdentitasContent = () => {
 			<DeleteLampiranProfilDialog rootKey={rootKey} />
 		</div>
 	);
-}
+};
 
 export default LampiranKartuIdentitasContent;

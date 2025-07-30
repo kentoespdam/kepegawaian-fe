@@ -1,28 +1,29 @@
 import type { PegawaiList } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
 import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
+	Command,
+	CommandEmpty,
+	CommandGroup,
+	CommandInput,
+	CommandItem,
+	CommandList,
 } from "@components/ui/command";
 import {
-    Dialog,
-    DialogContent,
-    DialogHeader,
-    DialogTrigger,
+	Dialog,
+	DialogContent,
+	DialogHeader,
+	DialogTrigger,
 } from "@components/ui/dialog";
 import {
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData } from "@helpers/action";
+import { getListData, getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
@@ -39,8 +40,8 @@ const PegawaiContent = ({ handleSelect }: PegawaiContentProps) => {
 	const query = useQuery({
 		queryKey: ["pegawai-list", search],
 		queryFn: async () => {
-			const result = await getListData<PegawaiList>({
-				path: "pegawai",
+			const result = await getListDataEnc<PegawaiList>({
+				path: encodeString("pegawai"),
 				searchParams: search,
 				isRoot: true,
 			});

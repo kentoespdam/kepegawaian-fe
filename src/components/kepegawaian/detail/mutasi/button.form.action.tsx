@@ -25,8 +25,8 @@ const RiwayatMutasiFormAction = <TData extends FieldValues>({
 	};
 
 	return (
-		<Fieldset title="Action" clasName="p-0">
-			<div className="flex justify-end gap-2 p-0">
+		<Fieldset title="Action" clasName="">
+			<div className="flex justify-end gap-2">
 				<LoadingButtonClient
 					type="submit"
 					title="Save"

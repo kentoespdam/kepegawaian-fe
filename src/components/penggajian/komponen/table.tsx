@@ -1,17 +1,18 @@
 "use client";
 
 import {
-	komponentGajiColumns,
 	type KomponenGaji,
+	komponentGajiColumns,
 } from "@_types/penggajian/komponen";
 import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
+import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useKomponenGajiStore } from "@store/penggajian/komponen";
 import { useQuery } from "@tanstack/react-query";
-import PaginationBuilder from "@components/builder/table/pagination";
 import { useSearchParams } from "next/navigation";
 import KomponenGajiTableBody from "./table.body";
 
@@ -30,8 +31,8 @@ const KomponenGajiTable = ({ profilId }: KomponenGajiTableProps) => {
 	const { data, isFetching, isLoading, isError, error } = useQuery({
 		queryKey: qKey,
 		queryFn: async () =>
-			getPageData<KomponenGaji>({
-				path: `penggajian/komponen/${profilId}/profil`,
+			await getPageDataEnc<KomponenGaji>({
+				path: encodeString(`penggajian/komponen/${profilId}/profil`),
 				searchParams: search.toString(),
 				isRoot: true,
 			}),

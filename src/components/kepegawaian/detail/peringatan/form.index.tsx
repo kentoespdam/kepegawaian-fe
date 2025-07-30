@@ -1,18 +1,19 @@
 "use client";
 
 import {
-	RiwayatSpSchema,
 	type RiwayatSp,
+	RiwayatSpSchema,
 } from "@_types/kepegawaian/riwayat-sp";
 import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import InputZod from "@components/form/zod/input";
 import { Form } from "@components/ui/form";
+import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRiwayatSpStore } from "@store/kepegawaian/detail/riwayat_sp";
 import { useGlobalMutation } from "@store/query-store";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useForm, type UseFormReturn } from "react-hook-form";
+import { type UseFormReturn, useForm } from "react-hook-form";
 import { saveRiwayatSp } from "./action";
 import RiwayatSpActionButton from "./button.form.action";
 import DetailSpPegawaiForm from "./form.data.pegawai";
@@ -48,7 +49,7 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 	const mutation = useGlobalMutation({
 		mutationFunction: saveRiwayatSp,
 		queryKeys: [["riwayat-sp", defaultValues.pegawaiId, search.toString()]],
-		redirectTo: `/kepegawaian/detail/riwayat_sp/${pegawai.id}`,
+		redirectTo: `/kepegawaian/detail/riwayat_sp/${encodeId(pegawai.id)}`,
 	});
 
 	const onSubmit = (values: RiwayatSpSchema) => {
@@ -65,7 +66,12 @@ const RiwayatSpFormComponent = ({ pegawai, data }: RiwayatSpFormProps) => {
 	useEffect(() => {
 		setDefaultValues(pegawai, data);
 		if (data) {
-			const currentJenisSp = { id: data.jenisSp.id, kode: "", nama: "", sanksiSp:[] };
+			const currentJenisSp = {
+				id: data.jenisSp.id,
+				kode: "",
+				nama: "",
+				sanksiSp: [],
+			};
 			setJenisSp(currentJenisSp);
 		}
 	}, [setDefaultValues, setJenisSp, pegawai, data]);

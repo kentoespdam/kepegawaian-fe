@@ -48,7 +48,7 @@ const KlaimPengajuanCutiFormDialog = ({
 			await globalGetDataEnc({
 				path: encodeString("auth/csrf-token"),
 			}),
-		enabled: !!open,
+		enabled: !!openKlaim,
 	});
 
 	const form = useForm<KlaimCutiPegawaiSchema>({
@@ -63,7 +63,7 @@ const KlaimPengajuanCutiFormDialog = ({
 		mutationFunction: saveKlaimCutiPegawai,
 		queryKeys: [qKey],
 		actHandler: () => cancelHandler(),
-		// refreshCsrf: setCsrfToken,
+		refreshCsrf: () => csrffQuery.refetch(),
 	});
 
 	const cancelHandler = () => {
@@ -72,8 +72,7 @@ const KlaimPengajuanCutiFormDialog = ({
 	};
 
 	const submitHandler = (values: KlaimCutiPegawaiSchema) => {
-		console.log("submitHandler", values);
-		// mutation.mutate(values);
+		mutation.mutate(values);
 	};
 
 	useEffect(() => {
@@ -92,15 +91,20 @@ const KlaimPengajuanCutiFormDialog = ({
 						className="grid gap-2"
 					>
 						<div className="grid gap-2 max-h-[80vh] overflow-auto p-1">
-							<InputZod type="number" id="id" label="ID" form={form} />
-							<InputZod id="csrfToken" label="CSRF Token" form={form} />
+							<InputZod type="hidden" id="id" label="ID" form={form} />
+							<InputZod
+								type="hidden"
+								id="csrfToken"
+								label="CSRF Token"
+								form={form}
+							/>
 							<Fieldset title="Data Karyawan" clasName="p-1">
 								<div className="grid gap-2 grid-cols-2">
 									<InputZod
+										className="hidden"
 										id="pegawaiId"
 										label="Pegawai ID"
 										form={form}
-										className="hidden"
 									/>
 									<InputZod id="nipam" label="Nipam" form={form} readonly />
 									<InputZod id="nama" label="Nama" form={form} readonly />
@@ -159,7 +163,7 @@ const KlaimPengajuanCutiFormDialog = ({
 										readonly
 									/>
 									<div className="col-span-2">
-										<TextAreaZod
+										<InputZod
 											id="alasan"
 											label="Alasan Cuti"
 											form={form}
@@ -174,6 +178,9 @@ const KlaimPengajuanCutiFormDialog = ({
 											startDate={watch("tanggalMulai")}
 											endDate={watch("tanggalSelesai")}
 										/>
+									</div>
+									<div className="col-span-2">
+										<TextAreaZod id="keterangan" label="Notes" form={form} />
 									</div>
 								</div>
 							</Fieldset>
