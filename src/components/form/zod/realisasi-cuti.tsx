@@ -1,6 +1,4 @@
 "use client";
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
 import {
 	FormControl,
 	FormField,
@@ -8,10 +6,12 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@components/ui/form";
-import { getTanggalRangeList } from "@helpers/tanggal";
-import { dateToIndonesian } from "@helpers/string";
 import { MultiSelect } from "@components/ui/multi-select";
+import { dateToIndonesian } from "@helpers/string";
+import { getTanggalRangeList } from "@helpers/tanggal";
 import { useState } from "react";
+import type { FieldValues } from "react-hook-form";
+import type { InputZodProps } from "./iface";
 
 interface RealisasiCutiFormProps<TData extends FieldValues>
 	extends InputZodProps<TData> {
@@ -57,8 +57,6 @@ const RealisasiCutiZod = <TData extends FieldValues>({
 							}}
 							defaultValue={selectedFrameworks}
 							placeholder="Pilih Tanggal"
-							animation={2}
-							maxCount={3}
 							{...field}
 						/>
 					</FormControl>

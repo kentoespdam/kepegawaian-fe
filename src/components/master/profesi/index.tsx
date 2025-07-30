@@ -7,7 +7,8 @@ import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { useAlatKerjaStore } from "@store/master/alat_kerja";
 import { useApdStore } from "@store/master/apd";
 import { useProfesiStore } from "@store/master/profesi";
@@ -39,8 +40,8 @@ const ProfesiTable = () => {
 		queryKey: qKey,
 
 		queryFn: () =>
-			getPageData<Profesi>({
-				path: "profesi",
+			getPageDataEnc<Profesi>({
+				path: encodeString("profesi"),
 				searchParams: search.toString(),
 			}),
 	});

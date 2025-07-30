@@ -7,6 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
+import { encodeId } from "@helpers/number";
 import { useRiwayatMutasiStore } from "@store/kepegawaian/detail/riwayat_mutasi";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -28,7 +29,9 @@ const RiwayatMutasiTableAction = ({
 	const router = useRouter();
 
 	const editHandler = () => {
-		router.push(`/kepegawaian/mutasi/${pegawaiId}/edit/${data.id}`);
+		router.push(
+			`/kepegawaian/mutasi/${encodeId(pegawaiId)}/edit/${encodeId(data.id)}`,
+		);
 	};
 
 	const deleteHandler = () => {

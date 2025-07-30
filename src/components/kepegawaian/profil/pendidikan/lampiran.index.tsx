@@ -7,7 +7,8 @@ import {
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import { Table } from "@components/ui/table";
-import { getListData } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { useQuery } from "@tanstack/react-query";
 import LampiranFormDialog from "../lampiran/dialog/add-lampiran-profil";
@@ -23,8 +24,10 @@ const LampiranPendidikanContent = () => {
 	const query = useQuery({
 		queryKey: ["lampiranPendidikan", selectedPendidikanId],
 		queryFn: async () => {
-			const result = await getListData<LampiranProfil>({
-				path: `profil/pendidikan/lampiran/${selectedPendidikanId}`,
+			const result = await getListDataEnc<LampiranProfil>({
+				path: encodeString(
+					`profil/pendidikan/lampiran/${selectedPendidikanId}`,
+				),
 				isRoot: true,
 			});
 			return result;

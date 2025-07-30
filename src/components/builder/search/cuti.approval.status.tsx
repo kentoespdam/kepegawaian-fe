@@ -1,4 +1,8 @@
 "use client";
+import {
+	APPROVAL_CUTI_STATUS,
+	getApprovalCutiStatusLabel,
+} from "@_types/enums/approval_cuti_status";
 import { Button } from "@components/ui/button";
 import {
 	Command,
@@ -14,14 +18,10 @@ import {
 } from "@components/ui/popover";
 import { cn } from "@lib/utils";
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { BaseSearchProps } from "./component";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-	APPROVAL_CUTI_STATUS,
-	getApprovalCutiStatusLabel,
-} from "@_types/enums/approval_cuti_status";
 const SearchCutiApprovalStatusBuilder = ({ col, val }: BaseSearchProps) => {
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams);
@@ -37,12 +37,17 @@ const SearchCutiApprovalStatusBuilder = ({ col, val }: BaseSearchProps) => {
 		replace(`${location.pathname}?${search.toString()}`);
 	}, 500);
 
-	useEffect(() => {
+	const initValue = useMemo(() => {
+		const search = new URLSearchParams(searchParams);
 		if (!val) {
 			search.append("approvalCutiStatus", "PENDING");
 			replace(`${location.pathname}?${search.toString()}`);
-		} else setValue(val);
-	}, [val, replace, search]);
+			return "PENDING";
+		}
+		return val;
+	}, [val, replace, searchParams]);
+
+	useEffect(() => setValue(initValue), [initValue]);
 
 	return (
 		<Popover open={open} onOpenChange={setOpen}>

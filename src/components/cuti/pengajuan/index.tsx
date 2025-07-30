@@ -11,16 +11,16 @@ import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
 import { getPageDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import BatalPengajuanCutiDialog from "./dialog.batal";
 import PengajuanCutiFormDialog from "./dialog.form";
 import CutiPengajuanInfoDialog from "./dialog.info";
 import KlaimPengajuanCutiFormDialog from "./dialog.klaim.form";
 import SisaCutiComponent from "./sisa.cuti";
 import PengajuanCutiTableBody from "./table.body";
-import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 
 type PengajuanCutiComponentProps = {
 	pegawai: PegawaiDetail;
@@ -28,7 +28,6 @@ type PengajuanCutiComponentProps = {
 const PengajuanCutiComponent = ({ pegawai }: PengajuanCutiComponentProps) => {
 	const { replace } = useRouter();
 	const params = useSearchParams();
-	const search = new URLSearchParams(params);
 	const tahun = params.get("tahun");
 
 	const { cutiPegawai, openInfo, setOpenInfo } = usePengajuanCutiStore(
@@ -53,12 +52,19 @@ const PengajuanCutiComponent = ({ pegawai }: PengajuanCutiComponentProps) => {
 		enabled: !!pegawai.id && !!tahun,
 	});
 
-	useEffect(() => {
+	const searchMemo = useMemo(() => {
+		const search = new URLSearchParams(params);
 		if (!tahun) {
 			search.set("tahun", String(new Date().getFullYear()));
-			replace(`?${search.toString()}`);
 		}
-	}, [tahun, search, replace]);
+		return search;
+	}, [params, tahun]);
+
+	useEffect(() => {
+		if (!tahun) {
+			replace(`?${searchMemo.toString()}`);
+		}
+	}, [tahun, searchMemo, replace]);
 
 	return (
 		<div className="grid max-w-full">

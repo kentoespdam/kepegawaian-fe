@@ -4,16 +4,17 @@ import {
 	type Organisasi,
 	organisasiTableColumns,
 } from "@_types/master/organisasi";
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
 import PaginationBuilder from "@components/builder/table/pagination";
 import { Table } from "@components/ui/table";
-import { getPageData } from "@helpers/action";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
+import { useOrganisasiStore } from "@store/master/organisasi";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import OrganisasiTableBody from "./table.body";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import { useOrganisasiStore } from "@store/master/organisasi";
 
 const OrganisasiTable = () => {
 	const searchParams = useSearchParams();
@@ -32,8 +33,8 @@ const OrganisasiTable = () => {
 	const { data, isLoading, isSuccess, error } = useQuery({
 		queryKey: qKey,
 		queryFn: () =>
-			getPageData<Organisasi>({
-				path: "organisasi",
+			getPageDataEnc<Organisasi>({
+				path: encodeString("organisasi"),
 				searchParams: search.toString(),
 			}),
 	});

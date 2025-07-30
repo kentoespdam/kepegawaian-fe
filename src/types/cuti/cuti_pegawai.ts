@@ -4,7 +4,7 @@ import { z } from "zod";
 import type { CustomColumnDef } from "..";
 import type { CutiJenis } from "./jenis";
 
-export interface CutiPegawai {
+export interface CutiPegawaiMini {
 	id: number;
 	pegawaiId: number;
 	nama: string;
@@ -24,6 +24,10 @@ export interface CutiPegawai {
 	jumlahHari: number;
 	jumlahHariKerja: number;
 	picSaatIni: JabatanMini | null;
+}
+
+export interface CutiPegawai extends CutiPegawaiMini {
+	refCuti: CutiPegawaiMini;
 }
 
 export const CutiPegawaiSchema = z.object({
@@ -58,6 +62,7 @@ export type BatalCutiPegawaiSchema = z.infer<typeof BatalCutiPegawaiSchema>;
 export const KlaimCutiPegawaiSchema = z.object({
 	csrfToken: z.string().min(1, "CSRF Token tidak boleh Kosong!"),
 	id: z.number(),
+	refCutiId: z.number().min(1, "Referensi Cuti tidak boleh Kosong!"),
 	pegawaiId: z.number().min(1, "Pegawai tidak boleh Kosong!"),
 	nipam: z.string(),
 	nama: z.string(),
@@ -70,8 +75,9 @@ export const KlaimCutiPegawaiSchema = z.object({
 	subJenisCutiNama: z.string(),
 	tanggalMulai: z.string().min(10, "Tanggal Awal tidak boleh Kosong!"),
 	tanggalSelesai: z.string().min(10, "Tanggal Akhir tidak boleh Kosong!"),
-	alasan: z.string().min(3, "Alasan tidak boleh Kosong!"),
+	alasan: z.string(),
 	listHari: z.array(z.string()),
+	keterangan: z.string(),
 });
 
 export type KlaimCutiPegawaiSchema = z.infer<typeof KlaimCutiPegawaiSchema>;
