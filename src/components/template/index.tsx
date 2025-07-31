@@ -4,6 +4,7 @@ import TopBarComponent from "./topbar";
 
 const MainTemplate = async ({ children }: ChildrenNode) => {
 	const user = await getUser();
+
 	return (
 		<>
 			<div className="max-w-full grid gap-4 mx-auto mb-10">

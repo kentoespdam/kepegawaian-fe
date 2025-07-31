@@ -1,4 +1,7 @@
+import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
 import { Avatar } from "@components/ui/avatar";
+import { getDataByIdEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import logo from "@public/images/logo_pdam_40x40.png";
 import Image from "next/image";
 import type { Models } from "node-appwrite";
@@ -10,11 +13,17 @@ import LoadingProfile from "./profil/loading";
 interface TopBarProps {
 	user: Models.User<Models.Preferences>;
 }
-const TopBarComponent = ({ user }: TopBarProps) => {
+const TopBarComponent = async ({ user }: TopBarProps) => {
+	const pegawai = await getDataByIdEnc<PegawaiDetail>({
+		path: encodeString("pegawai"),
+		id: encodeString(user.$id),
+		isRoot: true,
+		isString: true,
+	});
 	return (
 		<div className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex flex-row justify-between items-center px-4">
 			<div className="flex flex-wrap gap-2 items-center content-center h-full">
-				<MenuSheet user={user} />
+				<MenuSheet user={user} pegawai={pegawai} />
 				<Avatar className="h-10 w-12">
 					<Image
 						alt="Logo Perumdam Tirta Satria"
@@ -28,7 +37,7 @@ const TopBarComponent = ({ user }: TopBarProps) => {
 				{/* <RenewAuthToken /> */}
 			</div>
 			<Suspense fallback={<LoadingProfile />}>
-				<ProfileComponent />
+				<ProfileComponent user={user} pegawai={pegawai} />
 			</Suspense>
 		</div>
 	);
