@@ -1,4 +1,4 @@
-import type { Pegawai } from "@_types/pegawai";
+import type { PegawaiDetail } from "@_types/pegawai";
 import { Avatar, AvatarFallback } from "@components/ui/avatar";
 import {
 	DropdownMenu,
@@ -8,23 +8,16 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { getCurrentUser } from "@lib/appwrite/user";
 import { KeyRoundIcon } from "lucide-react";
 import Image from "next/image";
+import type { Models } from "node-appwrite";
 import LogoutButton from "./button/logout";
 import ThemeButton from "./button/theme";
 
-const ProfileComponent = async () => {
-	const user = await getCurrentUser();
-	const pegawai = await getDataByIdEnc<Pegawai>({
-		path: encodeString("pegawai"),
-		id: encodeString(user.$id),
-		isRoot: true,
-		isString: true,
-	});
-
+const ProfileComponent = async ({
+	user,
+	pegawai,
+}: { user: Models.User<Models.Preferences>; pegawai: PegawaiDetail }) => {
 	return (
 		<div className="flex items-center gap-3 py-2">
 			<div className="hidden md:block lg:block">
