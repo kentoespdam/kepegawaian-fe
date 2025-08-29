@@ -14,7 +14,7 @@ const VerifPhase2TableBody = ({
 }: VerifPhase2TableBodyProps) => {
 	let urut = 0;
 	return (
-		<TableBody className="h-96 overflow-y-auto">
+		<TableBody className="overflow-y-auto">
 			{organisasiList.map((organisasi, index) => {
 				const urutOrg = index + 1 < 10 ? `0${index + 1}` : `${index + 1}`;
 				const filteredGaji = gajiBatchMasters
@@ -36,8 +36,7 @@ const VerifPhase2TableBody = ({
 					});
 
 				urut += filteredGaji?.length ?? 0;
-
-				return (
+				return filteredGaji?.length ? (
 					<VerifPhase2CellGrouped
 						key={`org-${organisasi.id}`}
 						urut={urut}
@@ -45,7 +44,7 @@ const VerifPhase2TableBody = ({
 						organisasi={organisasi}
 						gajiBatchMasters={filteredGaji}
 					/>
-				);
+				) : null;
 			})}
 		</TableBody>
 	);

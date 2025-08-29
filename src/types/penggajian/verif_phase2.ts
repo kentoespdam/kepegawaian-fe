@@ -2,7 +2,7 @@ import { z } from "zod";
 import { EXCEL_TYPE, MAX_UPLOAD_SIZE, type CustomColumnDef } from "..";
 
 export const VerifPhase2UploadSchema = z.object({
-	id: z.string(),
+	id: z.string().min(10, "ID wajib diisi"),
 	file: z
 		.any()
 		.refine((files) => files !== "", "File wajib diisi")

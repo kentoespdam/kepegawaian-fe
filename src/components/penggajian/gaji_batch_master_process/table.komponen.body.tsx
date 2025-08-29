@@ -17,6 +17,7 @@ import {
 import { rupiah } from "@helpers/number";
 import { useQueryClient } from "@tanstack/react-query";
 import GajiBatchMasterProsesKomponenTableAction from "./button.action.table.komponen";
+import { cn } from "@lib/utils";
 
 interface GajiBatchMasterProsesTableKomponenBodyProps {
 	data: GajiBatchMasterProses[];
@@ -61,8 +62,21 @@ const GajiBatchMasterProsesKomponenTableBody = ({
 								isVerified={isVerified}
 							/>
 						</TableCell>
-						<TableCell className="border-x">{item.nama}</TableCell>
-						<TableCell className="border-x" align="right">
+						<TableCell
+							className={cn(
+								"border-x",
+								item.kode.startsWith("ADD_") && "text-info",
+							)}
+						>
+							{item.nama}
+						</TableCell>
+						<TableCell
+							className={cn(
+								"border-x",
+								item.kode.startsWith("ADD_") && "text-info",
+							)}
+							align="right"
+						>
 							{rupiah(item.nilai)}
 						</TableCell>
 					</TableRow>

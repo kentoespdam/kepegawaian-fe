@@ -63,8 +63,8 @@ const VerifPhase2Component = ({
 				</h2>
 			</div>
 			<SearchBuilder columns={verifPhase2Columns} />
-			<div className="block max-h-[550px] min-h-[350px] overflow-y-auto">
-				<table className="w-full">
+			<div className="block max-h-[70vh] min-h-[350px] overflow-y-auto">
+				<table>
 					<TableHeadBuilder columns={verifPhase2Columns} />
 					{isLoading || isFetching || isError || !gajiBatchMasters ? (
 						<LoadingTable columns={verifPhase2Columns} isLoading={false} />
