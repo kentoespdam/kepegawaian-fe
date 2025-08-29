@@ -90,6 +90,8 @@ const VerifPhase2MainFilter = ({
 	});
 
 	const verifikasiHandler = () => {
+		const x = confirm("Apakah anda yakin memverifikasi data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,
@@ -101,6 +103,8 @@ const VerifPhase2MainFilter = ({
 	};
 
 	const prosesUlangHandler = () => {
+		const x = confirm("Apakah anda yakin memproses ulang data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,
@@ -136,7 +140,11 @@ const VerifPhase2MainFilter = ({
 				<Label className="mt-2">
 					Periode Gaji:<b className="text-destructive">*</b>{" "}
 				</Label>
-				<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+				<form
+					name="form"
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="flex gap-2"
+				>
 					<SelectBulanZod id="bulan" form={form} className="w-fit" />
 					<SelectTahunZod id="tahun" form={form} className="w-fit" />
 					<TooltipBuilder

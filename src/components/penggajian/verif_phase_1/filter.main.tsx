@@ -82,6 +82,8 @@ const VerifPhase1MainFilter = ({
 	});
 
 	const verifikasiHandler = () => {
+		const x = confirm("Apakah anda yakin memverifikasi data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,
@@ -93,6 +95,8 @@ const VerifPhase1MainFilter = ({
 	};
 
 	const prosesUlangHandler = () => {
+		const x = confirm("Apakah anda yakin memproses ulang data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,

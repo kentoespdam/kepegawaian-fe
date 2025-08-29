@@ -55,6 +55,8 @@ const ApprovalFilterMain = ({
 	});
 
 	const verifikasiHandler = () => {
+		const x = confirm("Apakah anda yakin memverifikasi data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,
@@ -66,6 +68,8 @@ const ApprovalFilterMain = ({
 	};
 
 	const prosesUlangHandler = () => {
+		const x = confirm("Apakah anda yakin memproses ulang data ini?");
+		if (!x) return;
 		if (!gajiBatchRoot || gajiBatchRoot.empty) return;
 		const formData: VerifikasiSchema = {
 			id: rootBatchId,
@@ -101,7 +105,11 @@ const ApprovalFilterMain = ({
 				<Label className="mt-2">
 					Periode Gaji:<b className="text-destructive">*</b>{" "}
 				</Label>
-				<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+				<form
+					name="form"
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="flex gap-2"
+				>
 					<SelectBulanZod id="bulan" form={form} className="w-fit" />
 					<SelectTahunZod id="tahun" form={form} className="w-fit" />
 					<TooltipBuilder
@@ -122,7 +130,7 @@ const ApprovalFilterMain = ({
 						<Button
 							type="submit"
 							className="flex gap-2 mt-2"
-							disabled={isApproved}
+							disabled={isApproved || rootBatchId === ""}
 							onClick={verifikasiHandler}
 							key="verifikasi"
 						>
@@ -140,7 +148,7 @@ const ApprovalFilterMain = ({
 							type="submit"
 							variant="destructive"
 							className="flex gap-2 mt-2"
-							disabled={isApproved}
+							disabled={isApproved || rootBatchId === ""}
 							onClick={prosesUlangHandler}
 						>
 							<LoopIcon className="w-4 h-4" />
@@ -156,7 +164,6 @@ const ApprovalFilterMain = ({
 						<Button
 							type="submit"
 							className="flex gap-2 mt-2 bg-warning text-warning-foreground hover:bg-warning/90 hover:text-warning-foreground/90"
-							// onClick={prosesUlangHandler}
 							disabled={!isApproved}
 						>
 							<SendIcon className="w-4 h-4" />

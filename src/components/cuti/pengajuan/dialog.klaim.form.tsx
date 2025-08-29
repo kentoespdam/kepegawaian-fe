@@ -10,6 +10,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -84,6 +85,7 @@ const KlaimPengajuanCutiFormDialog = ({
 			<DialogContent className="max-h-screen p-2 w-[650px] max-w-full">
 				<DialogHeader>
 					<DialogTitle>Pengajuan Cuti</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
 					<form

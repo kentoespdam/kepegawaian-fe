@@ -4,6 +4,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -69,9 +70,14 @@ const DeletePendidikanDialog = () => {
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<FormField
 							control={form.control}
 							name="id"

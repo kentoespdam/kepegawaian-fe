@@ -11,6 +11,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -91,6 +92,7 @@ const CutiKuotaFormDialog = ({ tahun }: { tahun: number }) => {
 			<DialogContent className="max-h-screen p-2 w-[500px] max-w-full">
 				<DialogHeader>
 					<DialogTitle>Add/Edit Kuota Cuti</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<div className="h-full overflow-auto p-1">
 					<Form {...form}>
