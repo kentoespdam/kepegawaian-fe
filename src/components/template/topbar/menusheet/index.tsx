@@ -1,7 +1,13 @@
 "use client";
 import type { PegawaiDetail } from "@_types/pegawai";
 import { Button } from "@components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@components/ui/sheet";
+import {
+	Sheet,
+	SheetContent,
+	SheetDescription,
+	SheetTitle,
+	SheetTrigger,
+} from "@components/ui/sheet";
 import { LayoutDashboardIcon } from "lucide-react";
 import type { Models } from "node-appwrite";
 import SheetMenuCommand from "./menu-command";
@@ -22,6 +28,8 @@ const MenuSheet = ({ user, pegawai }: MenuSheetProps) => {
 				</Button>
 			</SheetTrigger>
 			<SheetContent side="left" className="w-fit p-0 h-full">
+				<SheetTitle className="sr-only"/>
+				<SheetDescription className="sr-only"/>
 				<SheetMenuCommand roles={roles} levelJabatan={levelJabatan} />
 			</SheetContent>
 		</Sheet>

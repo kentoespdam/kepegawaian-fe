@@ -5,6 +5,7 @@ export const VerifPhase2UploadSchema = z.object({
 	id: z.string(),
 	file: z
 		.any()
+		.refine((files) => files !== "", "File wajib diisi")
 		.refine(
 			(files) => Array.from(files).every((file) => file instanceof File),
 			"File wajib diisi",

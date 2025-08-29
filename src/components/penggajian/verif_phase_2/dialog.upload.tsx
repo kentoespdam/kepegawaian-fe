@@ -1,6 +1,7 @@
 import { VerifPhase2UploadSchema } from "@_types/penggajian/verif_phase2";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputFileZod from "@components/form/zod/file";
+import InputZod from "@components/form/zod/input";
 import { uploadPotongan } from "@components/penggajian/verif_phase_2/action";
 import { Button } from "@components/ui/button";
 import {
@@ -12,6 +13,7 @@ import {
 } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Description } from "@radix-ui/react-toast";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { UploadIcon, XIcon } from "lucide-react";
@@ -35,7 +37,11 @@ const VerifPhase2UploadDialog = ({
 		resolver: zodResolver(VerifPhase2UploadSchema),
 		defaultValues: {
 			id: rootBatchId,
-			file: null,
+			file: "",
+		},
+		values: {
+			id: rootBatchId,
+			file: "",
 		},
 	});
 	const mutation = useGlobalMutation({
@@ -54,8 +60,13 @@ const VerifPhase2UploadDialog = ({
 		mutation.mutate(formData);
 	};
 
+	const onOpenChange = (open: boolean) => {
+		form.reset();
+		setOpenForm(open);
+	}
+
 	return (
-		<Dialog open={openForm} onOpenChange={setOpenForm}>
+		<Dialog open={openForm} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Upload Potongan</DialogTitle>
@@ -66,6 +77,7 @@ const VerifPhase2UploadDialog = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="grid gap-4"
 					>
+						<InputZod id="id" label="ID" form={form} />
 						<InputFileZod id="file" label="File" form={form} />
 						<DialogFooter>
 							<LoadingButtonClient

@@ -3,7 +3,9 @@ import InputZod from "@components/form/zod/input";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
+	DialogTitle,
 	DialogTrigger,
 } from "@components/ui/dialog";
 import Fieldset from "@components/ui/fieldset";
@@ -59,7 +61,10 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 
 	return (
 		<DialogContent className="md:max-w-[700px] lg:max-w-[900px] sm:max-w-[425px]">
-			<DialogHeader>Cari Penandatangan</DialogHeader>
+			<DialogHeader>
+				<DialogTitle>Cari Penandatangan</DialogTitle>
+				<DialogDescription className="sr-only" />
+			</DialogHeader>
 			<div>
 				<Command>
 					<CommandInput

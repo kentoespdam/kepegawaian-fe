@@ -6,6 +6,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -64,6 +65,7 @@ const CutiKuotaFormBatchDialog = ({ tahun }: { tahun: number }) => {
 			<DialogContent className="max-h-screen p-2 w-[500px] max-w-full">
 				<DialogHeader>
 					<DialogTitle>Add/Edit Kuota Cuti</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<div className="h-full overflow-auto p-1">
 					<Form {...form}>
@@ -72,7 +74,7 @@ const CutiKuotaFormBatchDialog = ({ tahun }: { tahun: number }) => {
 							className="grid gap-2"
 						>
 							<InputZod id="tahun" label="Tahun" form={form} type="number" />
-                            <InputFileZod id="file" label="File" form={form} />
+							<InputFileZod id="file" label="File" form={form} />
 							<DialogFooter>
 								<TooltipBuilder text="Save" delayDuration={100}>
 									<LoadingButtonClient

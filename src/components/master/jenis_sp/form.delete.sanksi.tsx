@@ -3,6 +3,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -19,9 +20,9 @@ import { Input } from "@components/ui/input";
 import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalMutation } from "@store/query-store";
+import type { QueryKey } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { patchDeleteSanksiJenisSp } from "../sanksi/action";
-import type { QueryKey } from "@tanstack/react-query";
 
 interface DeleteSanksiJenisSpFormDialogProps {
 	id: number;
@@ -63,9 +64,14 @@ const DeleteSanksiJenisSpFormDialog = (
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<FormField
 							control={form.control}
 							name="id"
