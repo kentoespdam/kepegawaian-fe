@@ -80,10 +80,6 @@ const GajiBatchMasterProcessKomponenTable = ({
 		enabled: !!batchMasterId,
 	});
 
-	// const gajiBatchMaster = gajiBatchMasters?.find(
-	// 	(item) => item.id === batchMasterId,
-	// );
-
 	return (
 		<div className="grid gap-2">
 			<div>
@@ -115,7 +111,6 @@ const GajiBatchMasterProcessKomponenTable = ({
 						<GajiBatchMasterProsesKomponenTableBody
 							data={data}
 							jenisGaji={JENIS_GAJI.PEMASUKAN}
-							// gajiBatchMaster={gajiBatchMaster}
 							gajiBatchMasterId={batchMasterId}
 							isVerified={isVerified}
 						/>
@@ -142,7 +137,6 @@ const GajiBatchMasterProcessKomponenTable = ({
 						<GajiBatchMasterProsesKomponenTableBody
 							data={data}
 							jenisGaji={JENIS_GAJI.POTONGAN}
-							// gajiBatchMaster={gajiBatchMaster}
 							gajiBatchMasterId={batchMasterId}
 							isVerified={isVerified}
 						/>

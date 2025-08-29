@@ -14,7 +14,9 @@ import { useQuery } from "@tanstack/react-query";
 import { ReceiptTextIcon } from "lucide-react";
 import GajiBatchMasterProsesTableBody from "./table.body";
 
-const GajiBatchMasterProcessTable = () => {
+const GajiBatchMasterProcessTable = ({
+	isApproval = false,
+}: { isApproval?: boolean }) => {
 	const { batchMasterId } = useGajiBatchMasterProsesStore((state) => ({
 		batchMasterId: state.batchMasterId,
 	}));
@@ -54,6 +56,7 @@ const GajiBatchMasterProcessTable = () => {
 						<GajiBatchMasterProsesTableBody
 							data={data}
 							jenisGaji={JENIS_GAJI.PEMASUKAN}
+							isApproval={isApproval}
 						/>
 					)}
 				</Table>
@@ -71,6 +74,7 @@ const GajiBatchMasterProcessTable = () => {
 						<GajiBatchMasterProsesTableBody
 							data={data}
 							jenisGaji={JENIS_GAJI.POTONGAN}
+							isApproval={isApproval}
 						/>
 					)}
 				</Table>

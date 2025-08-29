@@ -73,7 +73,7 @@ const VerifPhase2CellGrouped = ({
 							{rupiah(gbm.pembulatan)}
 						</TableCell>
 						<TableCell className="border-x whitespace-nowrap" align="right">
-							{rupiah(gbm.penghasilanBersih)}
+							{rupiah(gbm.penghasilanBersih + gbm.pembulatan)}
 						</TableCell>
 						<TableCell className="border-x whitespace-nowrap" align="right">
 							{rupiah(gbm.totalAddTambahan)}

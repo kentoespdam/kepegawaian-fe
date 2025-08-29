@@ -90,8 +90,7 @@ export const getPageData = async <TData>(
 	} catch (error: any) {
 		if (error.status === 401 && retry < 3)
 			return await getPageData({ ...props, retry: retry + 1 });
-
-		throw new Error(error);
+		return await getPageData({ ...props, retry: retry + 1 });
 	} finally {
 		clearTimeout(timeoutId);
 	}
@@ -126,8 +125,7 @@ export const getPageDataEnc = async <TData>(
 	} catch (error: any) {
 		if (error.status === 401 && retry < 3)
 			return await getPageData({ ...props, retry: retry + 1 });
-
-		throw new Error(error);
+		return await getPageData({ ...props, retry: retry + 1 });
 	} finally {
 		clearTimeout(timeoutId);
 	}

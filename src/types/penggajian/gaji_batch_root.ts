@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { ACCEPTED_FILE_TYPES, MAX_UPLOAD_SIZE, type CustomColumnDef } from "..";
+import type { StatusProseGaji } from "@_types/enums/status_proses_gaji";
 
 export interface GajiBatchRootErrorLogs {
 	id: number;
@@ -11,7 +12,7 @@ export interface GajiBatchRootErrorLogs {
 export interface GajiBatchRoot {
 	id: string;
 	periode: string;
-	status: string;
+	status: StatusProseGaji;
 	totalPegawai: number;
 	tanggalProses: string;
 	diProsesOleh: string;

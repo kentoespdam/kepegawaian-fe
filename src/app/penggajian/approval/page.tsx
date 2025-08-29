@@ -96,7 +96,7 @@ const AcceptancePage = async ({
 						</Suspense>
 					</div>
 					<div className="col-span-4 sm:col-lg-12">
-						<GajiBatchMasterProcessTable />
+						<GajiBatchMasterProcessTable isApproval={true} />
 					</div>
 				</div>
 			</CardContent>

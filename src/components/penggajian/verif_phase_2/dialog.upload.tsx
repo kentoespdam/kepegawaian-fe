@@ -7,13 +7,13 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 } from "@components/ui/dialog";
 import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Description } from "@radix-ui/react-toast";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { UploadIcon, XIcon } from "lucide-react";
@@ -63,13 +63,14 @@ const VerifPhase2UploadDialog = ({
 	const onOpenChange = (open: boolean) => {
 		form.reset();
 		setOpenForm(open);
-	}
+	};
 
 	return (
 		<Dialog open={openForm} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Upload Potongan</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
 					<form
@@ -77,7 +78,7 @@ const VerifPhase2UploadDialog = ({
 						onSubmit={form.handleSubmit(onSubmit)}
 						className="grid gap-4"
 					>
-						<InputZod id="id" label="ID" form={form} />
+						<InputZod id="id" label="ID" form={form} readonly />
 						<InputFileZod id="file" label="File" form={form} />
 						<DialogFooter>
 							<LoadingButtonClient
