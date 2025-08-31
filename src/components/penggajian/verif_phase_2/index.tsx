@@ -34,7 +34,7 @@ const VerifPhase2Component = ({
 		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2),
 	);
 
-	const qKey = ["gaji_batch_masters", search.toString()];
+	const qKey = ["gaji_batch_master", search.toString()];
 
 	const {
 		data: gajiBatchMasters,
