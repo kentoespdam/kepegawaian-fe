@@ -24,9 +24,9 @@ const GajiBatchMasterProsesTableBody = ({
 }: GajiBatchMasterProsesTableBodyProps) => {
 	const filtered = data.filter((item) =>
 		isApproval
-			? item.jenisGaji === getKeyJenisGaji(jenisGaji) &&
-				!item.kode.startsWith("ADD_")
-			: item.jenisGaji === getKeyJenisGaji(jenisGaji),
+			? item.jenisGaji === getKeyJenisGaji(jenisGaji)
+			: item.jenisGaji === getKeyJenisGaji(jenisGaji) &&
+				!item.kode.startsWith("ADD_"),
 	);
 	const penghasilan = filtered.reduce((total, item) => total + item.nilai, 0);
 	let urut = 1;

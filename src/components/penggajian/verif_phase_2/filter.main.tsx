@@ -1,6 +1,10 @@
 "use client";
 
-import { getIndexOfKeyStatusProsesGaji } from "@_types/enums/status_proses_gaji";
+import {
+	STATUS_PROSES_GAJI,
+	getIndexOfKeyStatusProsesGaji,
+	getKeyStatusProsesGaji,
+} from "@_types/enums/status_proses_gaji";
 import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
@@ -13,6 +17,7 @@ import { Form } from "@components/ui/form";
 import { Label } from "@components/ui/label";
 import { base64toBlob } from "@helpers/string";
 import { LoopIcon } from "@radix-ui/react-icons";
+import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, SearchIcon } from "lucide-react";
@@ -23,7 +28,6 @@ import { verifikasiProses } from "../proses_gaji/action";
 import type { PeriodeBatchRootSchema } from "../verif_phase_1/filter.main";
 import { downloadTemplatePotonganGaji, rollbackAdditionalGaji } from "./action";
 import VerifPhase2DownloadButton from "./button.filter.download";
-import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 
 interface VerifPhase2MainFilterProps {
 	pegawai: Pegawai;
@@ -34,9 +38,12 @@ const VerifPhase2MainFilter = ({
 	gajiBatchRoot,
 }: VerifPhase2MainFilterProps) => {
 	const { replace } = useRouter();
-	const { batchMasterId } = useGajiBatchMasterProsesStore((state) => ({
-		batchMasterId: state.batchMasterId,
-	}));
+	const { batchMasterId, setBatchMasterId } = useGajiBatchMasterProsesStore(
+		(state) => ({
+			batchMasterId: state.batchMasterId,
+			setBatchMasterId: state.setBatchMasterId,
+		}),
+	);
 	const searchParams = useSearchParams();
 	const search = new URLSearchParams(searchParams.toString());
 	const periode = searchParams.get("periode") ?? "";
@@ -70,9 +77,13 @@ const VerifPhase2MainFilter = ({
 		downloadFile.mutate(rootBatchId);
 	};
 
+	const searchParamString = `${search.toString()}&status=${getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2)}`;
 	const rollback = useGlobalMutation({
 		mutationFunction: rollbackAdditionalGaji,
-		queryKeys: [["gaji_batch_master_proses", batchMasterId]],
+		queryKeys: [
+			["gaji_batch_master", searchParamString],
+			["gaji_batch_master_proses", batchMasterId],
+		],
 		refreshPage: true,
 	});
 
@@ -124,6 +135,7 @@ const VerifPhase2MainFilter = ({
 		if (values.bulan === "" || values.tahun === "") return;
 		search.set("periode", `${values.tahun}${values.bulan}`);
 		replace(`?${search.toString()}`);
+		setBatchMasterId(0);
 	};
 
 	useEffect(() => {

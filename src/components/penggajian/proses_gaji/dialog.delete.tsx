@@ -28,7 +28,7 @@ interface DeleteBatchRootDialogProps {
 	id: string;
 	openDelete: boolean;
 	setOpenDelete: (value: boolean) => void;
-	queryKeys: QueryKey;
+	queryKeys: QueryKey[];
 }
 const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 	const form = useForm<BaseDelete>({
@@ -41,7 +41,7 @@ const DeleteBatchRootDialog = (props: DeleteBatchRootDialogProps) => {
 
 	const mutation = useGlobalMutation({
 		mutationFunction: deleteGajiBatchRoot,
-		queryKeys: [props.queryKeys],
+		queryKeys: props.queryKeys,
 		actHandler: () => {
 			props.setOpenDelete(false);
 		},

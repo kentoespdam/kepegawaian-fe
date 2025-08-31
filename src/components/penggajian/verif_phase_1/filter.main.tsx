@@ -4,6 +4,7 @@ import type { Pageable } from "@_types/index";
 import type { Pegawai } from "@_types/pegawai";
 import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
 import type { VerifikasiSchema } from "@_types/penggajian/verifikasi";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import TooltipBuilder from "@components/builder/tooltip";
 import SelectBulanZod from "@components/form/zod/bulan";
 import SelectTahunZod from "@components/form/zod/tahun";
@@ -12,6 +13,7 @@ import { Form } from "@components/ui/form";
 import { Label } from "@components/ui/label";
 import { base64toBlob } from "@helpers/string";
 import { LoopIcon } from "@radix-ui/react-icons";
+import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { useMutation } from "@tanstack/react-query";
 import { CheckIcon, FileSpreadsheetIcon, SearchIcon } from "lucide-react";
@@ -21,7 +23,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { verifikasiProses } from "../proses_gaji/action";
 import { downloadTableGajiExcel } from "./action";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
 
 export const PeriodeBatchRootSchema = z.object({
 	bulan: z.string(),
@@ -53,6 +54,10 @@ const VerifPhase1MainFilter = ({
 		!gajiBatchRoot ||
 		gajiBatchRoot.empty ||
 		getIndexOfKeyStatusProsesGaji(gajiBatchRoot.content[0].status) > 2;
+
+	const { setBatchMasterId } = useGajiBatchMasterProsesStore((state) => ({
+		setBatchMasterId: state.setBatchMasterId,
+	}));
 
 	const downloadFile = useMutation({
 		mutationFn: downloadTableGajiExcel,
@@ -116,6 +121,7 @@ const VerifPhase1MainFilter = ({
 		if (values.bulan === "" || values.tahun === "") return;
 		search.set("periode", `${values.tahun}${values.bulan}`);
 		replace(`?${search.toString()}`);
+		setBatchMasterId(0);
 	};
 
 	useEffect(() => {
@@ -132,7 +138,11 @@ const VerifPhase1MainFilter = ({
 				<Label className="mt-2">
 					Periode Gaji:<b className="text-destructive">*</b>{" "}
 				</Label>
-				<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="flex gap-2">
+				<form
+					name="form"
+					onSubmit={form.handleSubmit(onSubmit)}
+					className="flex gap-2"
+				>
 					<SelectBulanZod id="bulan" form={form} className="w-fit" />
 					<SelectTahunZod id="tahun" form={form} className="w-fit" />
 					<TooltipBuilder

@@ -33,9 +33,12 @@ const ApprovalFilterMain = ({
 	gajiBatchRoot,
 }: ApprovalFilterMainProps) => {
 	const { replace } = useRouter();
-	const { batchMasterId } = useGajiBatchMasterProsesStore((state) => ({
-		batchMasterId: state.batchMasterId,
-	}));
+	const { batchMasterId, setBatchMasterId } = useGajiBatchMasterProsesStore(
+		(state) => ({
+			batchMasterId: state.batchMasterId,
+			setBatchMasterId: state.setBatchMasterId,
+		}),
+	);
 	const isApproved =
 		gajiBatchRoot?.content[0]?.status ===
 		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.FINISHED);
@@ -89,6 +92,7 @@ const ApprovalFilterMain = ({
 		if (values.bulan === "" || values.tahun === "") return;
 		search.set("periode", `${values.tahun}${values.bulan}`);
 		replace(`?${search.toString()}`);
+		setBatchMasterId(0);
 	};
 
 	useEffect(() => {

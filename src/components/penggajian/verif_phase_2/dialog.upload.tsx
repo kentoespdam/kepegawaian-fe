@@ -1,3 +1,7 @@
+import {
+	getKeyStatusProsesGaji,
+	STATUS_PROSES_GAJI,
+} from "@_types/enums/status_proses_gaji";
 import { VerifPhase2UploadSchema } from "@_types/penggajian/verif_phase2";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
 import InputFileZod from "@components/form/zod/file";
@@ -17,6 +21,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
 import { UploadIcon, XIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 interface VerifPhase2UploadDialogProps {
@@ -33,6 +38,9 @@ const VerifPhase2UploadDialog = ({
 		batchMasterId: state.batchMasterId,
 	}));
 
+	const params = useSearchParams();
+	const paramsString = `${params.toString()}&status=${getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2)}`;
+
 	const form = useForm<VerifPhase2UploadSchema>({
 		resolver: zodResolver(VerifPhase2UploadSchema),
 		defaultValues: {
@@ -46,7 +54,10 @@ const VerifPhase2UploadDialog = ({
 	});
 	const mutation = useGlobalMutation({
 		mutationFunction: uploadPotongan,
-		queryKeys: [["gaji_batch_master_proses", batchMasterId]],
+		queryKeys: [
+			["gaji_batch_master", paramsString],
+			["gaji_batch_master_proses", batchMasterId],
+		],
 		refreshPage: true,
 		actHandler: () => {
 			setOpenForm(false);
