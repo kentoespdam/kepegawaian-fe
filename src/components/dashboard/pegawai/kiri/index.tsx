@@ -2,6 +2,7 @@
 
 import type { PegawaiDetail } from "@_types/pegawai";
 import { Accordion } from "@components/ui/accordion";
+import { Button } from "@components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { UserIcon } from "lucide-react";
 import KiriDataKepegawaian from "./data.kepegawaian";
@@ -21,6 +22,7 @@ const DashboardPanelKiriComponent = ({
 						<UserIcon className="size-4" />
 						<span>Profil Karyawan</span>
 					</div>
+					<Button variant={"ghost"} size={"sm"} />
 				</CardTitle>
 			</CardHeader>
 			<CardContent className="px-0 h-auto">
