@@ -77,3 +77,12 @@ export const getTanggalRangeList = (
 	}
 	return tanggalRangeList;
 };
+
+export const dateToYMD = (date?: string) => {
+	if (!date) return "";
+	const d = new Date(date);
+	if (Number.isNaN(d.getTime())) return "";
+	const month = (d.getMonth() + 1).toString().padStart(2, "0");
+	const day = d.getDate().toString().padStart(2, "0");
+	return `${d.getFullYear()}-${month}-${day}`;
+};

@@ -1,4 +1,4 @@
-import { ContactRoundIcon, OctagonXIcon } from "lucide-react";
+import { ContactRoundIcon, HomeIcon, OctagonXIcon } from "lucide-react";
 import type { IMenu } from "..";
 
 const defaultIconClassName = "w-3 h-3";
@@ -11,7 +11,7 @@ export const menuKepegawaian: IMenu = {
 		{
 			path: "/kepegawaian/dashboard",
 			name: "Dashboard Pegawai",
-			icon: <ContactRoundIcon className={defaultIconClassName} />,
+			icon: <HomeIcon className={defaultIconClassName} />,
 			role: ["ADMIN"],
 		},
 		{

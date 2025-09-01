@@ -24,6 +24,7 @@ import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
 import { getListDataEnc, globalGetDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { dateToYMD } from "@helpers/tanggal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { useGlobalMutation } from "@store/query-store";
