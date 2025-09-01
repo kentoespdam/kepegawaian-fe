@@ -9,6 +9,12 @@ export const menuKepegawaian: IMenu = {
 	role: ["ADMIN"],
 	subMenu: [
 		{
+			path: "/kepegawaian/dashboard",
+			name: "Dashboard Pegawai",
+			icon: <ContactRoundIcon className={defaultIconClassName} />,
+			role: ["ADMIN"],
+		},
+		{
 			path: "/kepegawaian/data_pegawai",
 			name: "Data Pegawai",
 			icon: <ContactRoundIcon className={defaultIconClassName} />,
