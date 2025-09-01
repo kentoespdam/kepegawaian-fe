@@ -35,7 +35,7 @@ const StatistikGolonganBar = ({ data }: { data: StatistikGolongan[] }) => {
 	}
 
 	return (
-		<ChartContainer config={chartConfig} className="w-[800px] lg:w-[1000px] min-h-[200px] max-h-[400px]">
+		<ChartContainer config={chartConfig} className="w-[750px] lg:w-[1000px] min-h-[200px] max-h-[400px]">
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />
