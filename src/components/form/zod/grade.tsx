@@ -15,22 +15,22 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData, getListDataEnc } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import { encodeString } from "@helpers/number";
 
 const SelectGradeZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const levelStr = "level" as Path<TData>;
-	const levelId = form.watch(levelStr);
+	const levelPath="levelId" as Path<TData>
+	const levelId = form.watch(levelPath);
 	const [openDialog, setOpenDialog] = useState(false);
 	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
 	const query = useQuery({
@@ -42,6 +42,13 @@ const SelectGradeZod = <TData extends FieldValues>({
 			return result;
 		},
 	});
+
+	const selectedData = (value: string | number | null) => {
+		if (!query.data) return "Grade tidak ditemukan";
+		if (value === null || value === "" || value === 0) return "Pilih Grade";
+		const grade = findGradeValue(query.data, value);
+		return `${grade.level.nama} - Grade ${grade.grade} - level id ${levelId}`;
+	};
 
 	return (
 		<FormField
@@ -57,15 +64,7 @@ const SelectGradeZod = <TData extends FieldValues>({
 								id={id}
 								className="cursor-pointer"
 								onClick={handleOpenDialog}
-								value={
-									!query.data
-										? "Grade tidak ditemukan"
-										: query.isLoading || query.isFetching
-											? "Loading..."
-											: field.value
-												? `${findGradeValue(query.data, field.value).level.nama} - Grade ${findGradeValue(query.data, field.value).grade}`
-												: "Pilih Grade"
-								}
+								value={selectedData(field.value)}
 							/>
 							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
 						</div>
