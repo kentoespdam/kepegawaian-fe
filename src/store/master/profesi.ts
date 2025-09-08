@@ -16,6 +16,7 @@ export const useProfesiStore = create<ProfesiStore>((set) => ({
 		id: 0,
         organisasiId:0,
 		jabatanId: 0,
+		levelId: 0,
 		gradeId: 0,
 		nama: "",
 		detail: "",
@@ -25,8 +26,9 @@ export const useProfesiStore = create<ProfesiStore>((set) => ({
 		set({
 			defaultValues: {
 				id: val?.id || 0,
-                organisasiId: val?.organisasi.id || 0,
+				organisasiId: val?.organisasi.id || 0,
 				jabatanId: val?.jabatan.id || 0,
+				levelId: val?.jabatan.level.id || 0,
 				gradeId: val?.grade.id || 0,
 				nama: val?.nama || "",
 				detail: val?.detail || "",
