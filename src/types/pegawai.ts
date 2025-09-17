@@ -243,6 +243,9 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 	{
 		id: "jenisKelamin",
 		label: "J/K",
+		sortable: true,
+		search: true,
+		searchType: "jenisKelamin",
 	},
 	{
 		id: "golonganId",
