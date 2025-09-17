@@ -94,6 +94,7 @@ export const ESearchType = z.enum([
 	"statusProsesGaji",
 	"tahun",
 	"approvalCutiStatus",
+	"jenisKelamin",
 ]);
 
 export type BaseColumnDef = {
