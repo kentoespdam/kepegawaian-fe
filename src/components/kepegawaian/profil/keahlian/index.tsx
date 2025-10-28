@@ -1,58 +1,76 @@
-"use client";
-import type { Biodata } from "@_types/profil/biodata";
-import { type Keahlian, keahlianTableColumns } from "@_types/profil/keahlian";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import PaginationBuilder from "@components/builder/table/pagination";
-import { Table } from "@components/ui/table";
-import { getPageDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import FormKeahlianDialog from "./dialog.form";
-import KeahlianTableBody from "./table.body";
+"use client"
+import type { Biodata } from "@_types/profil/biodata"
+import { type Keahlian, keahlianTableColumns } from "@_types/profil/keahlian"
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import PaginationBuilder from "@components/builder/table/pagination"
+import { Table } from "@components/ui/table"
+import { getPageDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { useKeahlianStore } from "@store/kepegawaian/profil/keahlian-store"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import FormKeahlianDialog from "./dialog.form"
+import KeahlianTableBody from "./table.body"
+import { useMemo } from "react"
 
 interface ProfilKeahlianContentComponentProps {
-	biodata: Biodata;
+	biodata: Biodata
+	isKaryawanAktif: boolean
 }
 const ProfilKeahlianContentComponent = ({
 	biodata,
+	isKaryawanAktif,
 }: ProfilKeahlianContentComponentProps) => {
-	const searchParams = useSearchParams();
-	const search = new URLSearchParams(searchParams);
-	const { nik } = biodata;
+	const searchParams = useSearchParams()
+	const { nik } = biodata
 
 	const { keahlianId, openDelete, setOpenDelete } = useKeahlianStore(
 		(state) => ({
 			keahlianId: state.keahlianId,
 			openDelete: state.openDelete,
 			setOpenDelete: state.setOpenDelete,
-		}),
-	);
+		})
+	)
 
-	const qKey = ["profil-keahlian", nik, search.toString()];
+	const qKeys = useMemo(
+		() => [
+			["profil-keahlian", nik, searchParams.toString()],
+			["lampiran-keahlian", keahlianId],
+		],
+		[nik, keahlianId, searchParams]
+	)
 
 	const { data, isLoading, isFetching } = useQuery({
-		queryKey: qKey,
+		queryKey: qKeys[0],
 		queryFn: () =>
 			getPageDataEnc<Keahlian>({
 				path: encodeString(`profil/keahlian/${nik}/biodata`),
-				searchParams: search.toString(),
+				searchParams: searchParams.toString(),
 				isRoot: true,
 			}),
 		enabled: !!nik,
-	});
+	})
+
+	const showLoading = isLoading || isFetching
+	const isEmptyData = !data || data.empty
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0">
+		<div className="grid gap-0 overflow-auto p-2">
 			<Table>
 				<TableHeadBuilder columns={keahlianTableColumns} />
-				{data && !data.empty ? (
-					<KeahlianTableBody biodata={biodata} data={data} />
+				{!isEmptyData ? (
+					<KeahlianTableBody
+						biodata={biodata}
+						data={data}
+						isKaryawanAktif={isKaryawanAktif}
+					/>
 				) : (
-					<LoadingTable columns={keahlianTableColumns} isLoading={isLoading || isFetching} />
+					<LoadingTable
+						columns={keahlianTableColumns}
+						isLoading={showLoading}
+					/>
 				)}
 			</Table>
 			<PaginationBuilder data={data} />
@@ -62,10 +80,10 @@ const ProfilKeahlianContentComponent = ({
 				deletePath="profil/keahlian"
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
-				queryKeys={[qKey, ["lampiran-keahlian", keahlianId]]}
+				queryKeys={qKeys}
 			/>
 		</div>
-	);
-};
+	)
+}
 
-export default ProfilKeahlianContentComponent;
+export default ProfilKeahlianContentComponent

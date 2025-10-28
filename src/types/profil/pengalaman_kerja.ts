@@ -1,18 +1,17 @@
-import { z } from "zod";
-import type { CustomColumnDef } from "..";
-import type { BiodataMini } from "./biodata";
+import { z } from "zod"
+import type { CustomColumnDef } from ".."
+import type { BiodataMini } from "./biodata"
 
 export interface PengalamanKerja {
-	id: number;
-	biodata: BiodataMini;
-	namaPerusahaan: string;
-	typePerusahaan: string;
-	jabatan: string;
-	lokasi: string;
-	tahunMasuk: number;
-	tahunKeluar: number;
-	notes: string;
-	disetujui: boolean;
+	id: number
+	biodata: BiodataMini
+	namaPerusahaan: string
+	typePerusahaan: string
+	jabatan: string
+	lokasi: string
+	tahunMasuk: number
+	tahunKeluar: number
+	notes: string
 }
 
 export const PengalamanKerjaSchema = z.object({
@@ -26,9 +25,9 @@ export const PengalamanKerjaSchema = z.object({
 	tahunMasuk: z.number().min(1945, "Tahun Masuk wajib diisi"),
 	tahunKeluar: z.number().min(1945, "Tahun Masuk wajib diisi"),
 	notes: z.string().optional(),
-});
+})
 
-export type PengalamanKerjaSchema = z.infer<typeof PengalamanKerjaSchema>;
+export type PengalamanKerjaSchema = z.infer<typeof PengalamanKerjaSchema>
 
 export const pengalamanKerjaTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -50,5 +49,4 @@ export const pengalamanKerjaTableColumns: CustomColumnDef[] = [
 	{ id: "tahunMasuk", label: "Tahun Masuk" },
 	{ id: "tahunKeluar", label: "Tahun Keluar" },
 	{ id: "notes", label: "Notes" },
-	{ id: "disetujui", label: "Disetujui" },
-];
+]

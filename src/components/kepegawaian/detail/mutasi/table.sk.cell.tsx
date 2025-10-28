@@ -1,11 +1,12 @@
-import { TableCell } from "@components/ui/table";
-import { rupiah } from "@helpers/number";
-import { dateToIndonesian } from "@helpers/string";
-import type { MutasiRowProps } from "./table.body";
+import { TableCell } from "@components/ui/table"
+import { rupiah } from "@helpers/number"
+import { dateToIndonesian } from "@helpers/string"
+import type { MutasiRowProps } from "./table.body"
+import { memo } from "react"
 
-const RiwayatMutasiSKCell = ({ row }: MutasiRowProps) => {
+const RiwayatMutasiSKCell = memo(({ row }: MutasiRowProps) => {
 	return (
-		<TableCell className="border-x whitespace-nowrap">
+		<TableCell className="whitespace-nowrap border-x">
 			<div className="flex gap-2">
 				<div className="grid">
 					<span>Efektif</span>
@@ -19,7 +20,8 @@ const RiwayatMutasiSKCell = ({ row }: MutasiRowProps) => {
 				</div>
 			</div>
 		</TableCell>
-	);
-};
+	)
+})
+RiwayatMutasiSKCell.displayName = "RiwayatMutasiSKCell"
 
-export default RiwayatMutasiSKCell;
+export default RiwayatMutasiSKCell

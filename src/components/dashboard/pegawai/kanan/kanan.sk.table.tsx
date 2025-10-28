@@ -1,42 +1,48 @@
 import {
 	type RiwayatSk,
 	riwayatSkTableColumnsDashboard,
-} from "@_types/kepegawaian/riwayat_sk";
-import type { JenisSk } from "@_types/master/jenis_sk";
-import type { PegawaiDetail } from "@_types/pegawai";
-import SearchBuilder from "@components/builder/search";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import PaginationBuilder from "@components/builder/table/pagination";
-import { Table } from "@components/ui/table";
-import { getPageDataEnc, globalGetDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { useQueries } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import KananDataRiwayatSkTableBody from "./kanan.sk.table.body";
+} from "@_types/kepegawaian/riwayat_sk"
+import type { JenisSk } from "@_types/master/jenis_sk"
+import type { PegawaiDetail } from "@_types/pegawai"
+import SearchBuilder from "@components/builder/search"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import PaginationBuilder from "@components/builder/table/pagination"
+import { Table } from "@components/ui/table"
+import { getPageDataEnc, globalGetDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { useQueries } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import KananDataRiwayatSkTableBody from "./kanan.sk.table.body"
+import { useMemo } from "react"
 
 type KananDataRiwayatSkTableProps = {
-	pegawai: PegawaiDetail;
-};
+	pegawai: PegawaiDetail
+}
 const KananDataRiwayatSkTable = ({ pegawai }: KananDataRiwayatSkTableProps) => {
-	const searchParams = useSearchParams();
-	const search = new URLSearchParams(searchParams);
-	const qKey = ["riwayat-sk", pegawai.id, search.toString()];
+	const { id } = pegawai
+	const searchParams = useSearchParams()
+	const qKeys = useMemo(
+		() => [["riwayat-sk", id, searchParams.toString()], ["jenis_sk"]],
+		[id, searchParams]
+	)
 
 	const queries = useQueries({
 		queries: [
 			{
-				queryKey: qKey,
+				queryKey: qKeys[0],
 				queryFn: () =>
 					getPageDataEnc<RiwayatSk>({
-						path: encodeString(`kepegawaian/riwayat/sk/pegawai/${pegawai.id}`),
+						path: encodeString(
+							`kepegawaian/riwayat/sk/pegawai/${id}`
+						),
 						isRoot: true,
-						searchParams: search.toString(),
+						searchParams: searchParams.toString(),
 					}),
-				enabled: !!pegawai.id,
+				enabled: !!id,
 			},
 			{
-				queryKey: ["jenis_sk"],
+				queryKey: qKeys[1],
 				queryFn: () =>
 					globalGetDataEnc<JenisSk[]>({
 						path: encodeString("master/jenis-sk"),
@@ -44,40 +50,48 @@ const KananDataRiwayatSkTable = ({ pegawai }: KananDataRiwayatSkTableProps) => {
 					}),
 			},
 		],
-	});
+	})
+
+	const {
+		data: dataSk,
+		isLoading: isLoadingSk,
+		isFetching: isFetchingSk,
+	} = queries[0]
+	const {
+		data: dataJenisSk,
+		isLoading: isLoadingJenisSk,
+		isFetching: isFetchingJenisSk,
+	} = queries[1]
+
+	const showLoading =
+		isLoadingSk || isFetchingSk || isLoadingJenisSk || isFetchingJenisSk
+	const isEmptyData =
+		!dataSk || !dataJenisSk || dataSk.empty || dataJenisSk.length === 0
 
 	return (
-		<div className="grid p-2 gap-0">
+		<div className="grid gap-0 p-2">
 			<SearchBuilder columns={riwayatSkTableColumnsDashboard} />
-			<div className="overflow-auto min-h-90">
+			<div className="min-h-90 overflow-auto">
 				<Table>
-					<TableHeadBuilder columns={riwayatSkTableColumnsDashboard} />
-					{queries[0].isLoading ||
-					queries[0].isFetching ||
-					!queries[0].data ||
-					queries[0].isError ||
-					queries[0].data.empty ||
-					!queries[1].data ||
-					queries[1].isLoading ||
-					queries[1].isFetching ||
-					(!queries[0].data && !queries[1].data) ? (
-						<LoadingTable
-							columns={riwayatSkTableColumnsDashboard}
-							isLoading={true}
-							error={JSON.stringify(queries[0].error)}
+					<TableHeadBuilder
+						columns={riwayatSkTableColumnsDashboard}
+					/>
+					{!isEmptyData ? (
+						<KananDataRiwayatSkTableBody
+							data={dataSk}
+							jenisSkList={dataJenisSk}
 						/>
 					) : (
-						<KananDataRiwayatSkTableBody
-							pegawaiId={pegawai.id}
-							data={queries[0].data}
-							jenisSkList={queries[1].data}
+						<LoadingTable
+							columns={riwayatSkTableColumnsDashboard}
+							isLoading={showLoading}
 						/>
 					)}
 				</Table>
 			</div>
 			<PaginationBuilder data={queries[0].data} />
 		</div>
-	);
-};
+	)
+}
 
-export default KananDataRiwayatSkTable;
+export default KananDataRiwayatSkTable

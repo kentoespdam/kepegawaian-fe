@@ -1,28 +1,27 @@
-"use client";
+"use client"
 
 import {
 	type LampiranSk,
 	lampiranSkTableColumns,
-} from "@_types/kepegawaian/lampiran_sk";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import { Table } from "@components/ui/table";
-import { globalGetDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import LampiranSkForm from "./form.index";
-import LampiranSkTableBody from "./table.body";
+} from "@_types/kepegawaian/lampiran_sk"
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import { Table } from "@components/ui/table"
+import { globalGetDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { useLampiranSkStore } from "@store/kepegawaian/detail/lampiran-sk-store"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import LampiranSkForm from "./form.index"
+import LampiranSkTableBody from "./table.body"
+import { useMemo } from "react"
 
 type LampiranSkContentProps = {
-	pegawaiId: number;
-};
-const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
-	const param = useSearchParams();
-	const search = new URLSearchParams(param);
-	const rootKey = "lampiran-sk";
+	isKaryawanAktif: boolean
+}
+const LampiranSkContent = ({ isKaryawanAktif }: LampiranSkContentProps) => {
+	const searchParams = useSearchParams()
 	const {
 		lampiranId,
 		jenisSk,
@@ -35,40 +34,47 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 		refId: state.refId,
 		openDeleteLampiranForm: state.openDeleteLampiranForm,
 		setOpenDeleteLampiranForm: state.setOpenDeleteLampiranForm,
-	}));
+	}))
 
-	const query = useQuery<LampiranSk[]>({
-		queryKey: [rootKey, jenisSk, refId],
-		queryFn: async () => {
-			const result = await globalGetDataEnc<LampiranSk[]>({
-				path: encodeString(`kepegawaian/lampiran/list/${jenisSk}/${refId}`),
+	const { rootKey, qKey } = useMemo(
+		() => ({
+			rootKey: "lampiran-sk",
+			qKey: ["lampiran-sk", jenisSk, refId],
+		}),
+		[jenisSk, refId]
+	)
+
+	const { data, isLoading, isFetching } = useQuery<LampiranSk[]>({
+		queryKey: qKey,
+		queryFn: async () =>
+			await globalGetDataEnc<LampiranSk[]>({
+				path: encodeString(
+					`kepegawaian/lampiran/list/${jenisSk}/${refId}`
+				),
 				isRoot: true,
-				searchParams: search.toString(),
-			});
-			return result;
-		},
+				searchParams: searchParams.toString(),
+			}),
 		enabled: !!jenisSk && !!refId,
-	});
+	})
+
+	const showLoading = isLoading || isFetching
+	const isEmptyData = !data || data.length === 0
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0 mb-4">
+		<div className="mb-4 grid gap-0 overflow-auto p-2">
 			<div className="min-h-fit">
 				<Table>
 					<TableHeadBuilder columns={lampiranSkTableColumns} />
-					{query.isLoading ||
-					query.isFetching ||
-					query.isError ||
-					!query.data ||
-					query.data.length === 0 ? (
+					{isEmptyData ? (
 						<LoadingTable
 							columns={lampiranSkTableColumns}
-							error={query.error?.message}
-							isLoading={query.isLoading || query.isFetching}
+							isLoading={showLoading}
 						/>
 					) : (
 						<LampiranSkTableBody
-							data={query.data}
+							data={data}
 							rootKey={rootKey}
+							isKaryawanAktif={isKaryawanAktif}
 						/>
 					)}
 				</Table>
@@ -83,7 +89,7 @@ const LampiranSkContent = ({ pegawaiId }: LampiranSkContentProps) => {
 				setOpenDelete={setOpenDeleteLampiranForm}
 			/>
 		</div>
-	);
-};
+	)
+}
 
-export default LampiranSkContent;
+export default LampiranSkContent

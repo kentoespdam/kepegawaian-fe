@@ -1,75 +1,79 @@
-"use client";
+"use client"
 
-import type { Biodata } from "@_types/profil/biodata";
+import type { Biodata } from "@_types/profil/biodata"
 import {
 	type Pendidikan,
 	pendidikanTableColumns,
-} from "@_types/profil/pendidikan";
-import SearchBuilder from "@components/builder/search";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import PaginationBuilder from "@components/builder/table/pagination";
-import { Table } from "@components/ui/table";
-import { getPageDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import DeletePendidikanDialog from "./dialog.delete";
-import FormProfilPendidikanDialog from "./dialog.form";
-import ProfilPendidikanTableBody from "./table.body";
+} from "@_types/profil/pendidikan"
+import SearchBuilder from "@components/builder/search"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import PaginationBuilder from "@components/builder/table/pagination"
+import { Table } from "@components/ui/table"
+import { getPageDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import DeletePendidikanDialog from "./dialog.delete"
+import FormProfilPendidikanDialog from "./dialog.form"
+import ProfilPendidikanTableBody from "./table.body"
+import { useMemo } from "react"
 
 interface ProfilPendidikanContentComponentProps {
-	biodata: Biodata;
+	biodata: Biodata
+	isKaryawanAktif: boolean
 }
 
 const ProfilPendidikanContentComponent = ({
 	biodata,
+	isKaryawanAktif,
 }: ProfilPendidikanContentComponentProps) => {
-	const searchParams = useSearchParams();
-	const search = new URLSearchParams(searchParams);
-	const { nik } = biodata;
+	const searchParams = useSearchParams()
+	const { nik } = biodata
 
-	const qKey = ["profil-pendidikan", nik, search.toString()];
+	const qKey = useMemo(
+		() => ["profil-pendidikan", nik, searchParams.toString()],
+		[searchParams, nik]
+	)
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
 		queryFn: () =>
 			getPageDataEnc<Pendidikan>({
 				path: encodeString(`profil/pendidikan/${biodata.nik}/biodata`),
-				searchParams: search.toString(),
+				searchParams: searchParams.toString(),
 				isRoot: true,
 			}),
 		enabled: biodata && !!biodata.nik,
-	});
+	})
+
+	const showLoading = isLoading || isFetching
+	const isEmptyData = !data || data.empty
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0">
+		<div className="grid gap-0 overflow-auto p-2">
 			<SearchBuilder columns={pendidikanTableColumns} />
 			<Table>
 				<TableHeadBuilder columns={pendidikanTableColumns} />
-				{query.isLoading ||
-				query.isFetching ||
-				query.isError ||
-				!biodata ||
-				!query.data ||
-				query.data.empty ? (
-					<LoadingTable
-						columns={pendidikanTableColumns}
-						isLoading={query.isLoading || query.isFetching}
-					/>
-				) : (
+				{!isEmptyData ? (
 					<ProfilPendidikanTableBody
-						data={query.data}
+						data={data}
 						biodata={biodata}
 						qKey={qKey}
+						isKaryawanAktif={isKaryawanAktif}
+					/>
+				) : (
+					<LoadingTable
+						columns={pendidikanTableColumns}
+						isLoading={showLoading}
 					/>
 				)}
 			</Table>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 			<FormProfilPendidikanDialog />
 			<DeletePendidikanDialog />
 		</div>
-	);
-};
+	)
+}
 
-export default ProfilPendidikanContentComponent;
+export default ProfilPendidikanContentComponent

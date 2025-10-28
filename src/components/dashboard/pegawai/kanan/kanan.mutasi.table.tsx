@@ -1,64 +1,66 @@
 import {
 	type RiwayatMutasi,
 	riwayatMutasiTableColumnsDashboard,
-} from "@_types/kepegawaian/riwayat-mutasi";
-import SearchBuilder from "@components/builder/search";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import PaginationBuilder from "@components/builder/table/pagination";
-import { Table } from "@components/ui/table";
-import { getPageData, getPageDataEnc } from "@helpers/action";
-import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import KananDataMutasiTableBody from "./kanan.mutasi.table.body";
-import { encodeString } from "@helpers/number";
+} from "@_types/kepegawaian/riwayat-mutasi"
+import SearchBuilder from "@components/builder/search"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import PaginationBuilder from "@components/builder/table/pagination"
+import { Table } from "@components/ui/table"
+import { getPageDataEnc } from "@helpers/action"
+import { useQuery } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import KananDataMutasiTableBody from "./kanan.mutasi.table.body"
+import { encodeString } from "@helpers/number"
+import { useMemo } from "react"
 
 type KananDataMutasiTableProps = {
-	pegawaiId: number;
-};
-const KananDataMutasiTable = (props: KananDataMutasiTableProps) => {
-	const searchParams = useSearchParams();
-	const search = new URLSearchParams(searchParams);
-	const qKey = ["riwayat-mutasi", props.pegawaiId, search.toString()];
+	pegawaiId: number
+}
+const KananDataMutasiTable = ({ pegawaiId }: KananDataMutasiTableProps) => {
+	const searchParams = useSearchParams()
+	const qKey = useMemo(
+		() => ["riwayat-mutasi", pegawaiId, searchParams.toString()],
+		[pegawaiId, searchParams]
+	)
 
-	const query = useQuery({
+	const { data, isLoading, isFetching } = useQuery({
 		queryKey: qKey,
-		queryFn: async () => {
-			const result = await getPageDataEnc<RiwayatMutasi>({
+		queryFn: async () =>
+			await getPageDataEnc<RiwayatMutasi>({
 				path: encodeString(
-					`kepegawaian/riwayat/mutasi/pegawai/${props.pegawaiId}`,
+					`kepegawaian/riwayat/mutasi/pegawai/${pegawaiId}`
 				),
-				searchParams: search.toString(),
+				searchParams: searchParams.toString(),
 				isRoot: true,
-			});
-			return result;
-		},
-		enabled: !!props.pegawaiId,
-	});
+			}),
+		enabled: !!pegawaiId,
+	})
+
+	const showLoading = isLoading || isFetching
+	const isEmptyData = !data || data.empty
 
 	return (
-		<div className="grid overflow-auto p-2 gap-0">
+		<div className="grid gap-0 overflow-auto p-2">
 			<SearchBuilder columns={riwayatMutasiTableColumnsDashboard} />
 			<div className="min-h-fit overflow-auto">
 				<Table>
-					<TableHeadBuilder columns={riwayatMutasiTableColumnsDashboard} />
-					{query.isLoading || query.error || !query.data || query.data.empty ? (
+					<TableHeadBuilder
+						columns={riwayatMutasiTableColumnsDashboard}
+					/>
+					{!isEmptyData ? (
+						<KananDataMutasiTableBody data={data} />
+					) : (
 						<LoadingTable
 							columns={riwayatMutasiTableColumnsDashboard}
-							isLoading={query.isLoading}
-							error={query.error?.message}
-						/>
-					) : (
-						<KananDataMutasiTableBody
-							pegawaiId={props.pegawaiId}
-							data={query.data}
+							isLoading={showLoading}
 						/>
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={query.data} />
+			<PaginationBuilder data={data} />
 		</div>
-	);
-};
+	)
+}
 
-export default KananDataMutasiTable;
+export default KananDataMutasiTable

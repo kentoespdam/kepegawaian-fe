@@ -1,54 +1,65 @@
-"use client";
+"use client"
 
 import {
 	type RiwayatSk,
 	riwayatSkTableColumns,
-} from "@_types/kepegawaian/riwayat_sk";
-import type { JenisSk } from "@_types/master/jenis_sk";
-import DeleteZodDialogBuilder from "@components/builder/button/delete-zod";
-import SearchBuilder from "@components/builder/search";
-import TableHeadBuilder from "@components/builder/table/head";
-import LoadingTable from "@components/builder/table/loading";
-import PaginationBuilder from "@components/builder/table/pagination";
-import { Table } from "@components/ui/table";
-import { getPageDataEnc, globalGetDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk";
-import { useQueries } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
-import RiwayatSkFormComponent from "./form.index";
-import RiwayatSkTableBody from "./table.body";
+} from "@_types/kepegawaian/riwayat_sk"
+import type { JenisSk } from "@_types/master/jenis_sk"
+import DeleteZodDialogBuilder from "@components/builder/button/delete-zod"
+import SearchBuilder from "@components/builder/search"
+import TableHeadBuilder from "@components/builder/table/head"
+import LoadingTable from "@components/builder/table/loading"
+import PaginationBuilder from "@components/builder/table/pagination"
+import { Table } from "@components/ui/table"
+import { getPageDataEnc, globalGetDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { useRiwayatSkStore } from "@store/kepegawaian/detail/riwayat_sk"
+import { useQueries } from "@tanstack/react-query"
+import { useSearchParams } from "next/navigation"
+import RiwayatSkFormComponent from "./form.index"
+import RiwayatSkTableBody from "./table.body"
+import { useMemo } from "react"
 
 type RiwayatSkContentComponentProps = {
-	pegawaiId: number;
-};
-const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
-	const { pegawaiId } = props;
+	pegawaiId: number
+	isKaryawanAktif: boolean
+}
+const RiwayatSkContentComponent = ({
+	pegawaiId,
+	isKaryawanAktif,
+}: RiwayatSkContentComponentProps) => {
+	const searchParams = useSearchParams()
 	const { riwayatSkId, openDelete, setOpenDelete } = useRiwayatSkStore(
 		(state) => ({
 			riwayatSkId: state.riwayatSkId,
 			openDelete: state.openDelete,
 			setOpenDelete: state.setOpenDelete,
-		}),
-	);
-	const searchParams = useSearchParams();
-	const search = new URLSearchParams(searchParams);
-	const qKey = ["riwayat-sk", Number(pegawaiId), search.toString()];
+		})
+	)
+	const qKeys = useMemo(
+		() => [
+			["riwayat-sk", pegawaiId, searchParams.toString()],
+			["jenis_sk"],
+		],
+		[pegawaiId, searchParams]
+	)
 
 	const queries = useQueries({
 		queries: [
 			{
-				queryKey: qKey,
+				queryKey: qKeys[0],
 				queryFn: () =>
 					getPageDataEnc<RiwayatSk>({
-						path: encodeString(`kepegawaian/riwayat/sk/pegawai/${pegawaiId}`),
+						path: encodeString(
+							`kepegawaian/riwayat/sk/pegawai/${pegawaiId}`
+						),
 						isRoot: true,
-						searchParams: search.toString(),
+						searchParams: searchParams.toString(),
 					}),
 				enabled: !!pegawaiId,
 			},
 			{
-				queryKey: ["jenis_sk"],
+				queryKey: qKeys[1],
 				queryFn: () =>
 					globalGetDataEnc<JenisSk[]>({
 						path: encodeString("master/jenis-sk"),
@@ -56,39 +67,62 @@ const RiwayatSkContentComponent = (props: RiwayatSkContentComponentProps) => {
 					}),
 			},
 		],
-	});
+	})
+
+	const {
+		data: dataRiwayatSk,
+		isLoading: isLoadingRiwayatSk,
+		isFetching: isFetchingRiwayatSk,
+	} = queries[0]
+	const {
+		data: dataJenisSk,
+		isLoading: isLoadingJenisSk,
+		isFetching: isFetchingJenisSk,
+	} = queries[1]
+
+	const showLoading =
+		isLoadingRiwayatSk ||
+		isLoadingJenisSk ||
+		isFetchingRiwayatSk ||
+		isFetchingJenisSk
+	const isEmptyData =
+		!dataRiwayatSk ||
+		!dataJenisSk ||
+		dataRiwayatSk.empty ||
+		dataJenisSk.length === 0
 
 	return (
-		<div className="grid p-2 gap-0">
+		<div className="grid gap-0 p-2">
 			<SearchBuilder columns={riwayatSkTableColumns} />
-			<div className="overflow-auto min-h-90">
+			<div className="min-h-90 overflow-auto">
 				<Table>
 					<TableHeadBuilder columns={riwayatSkTableColumns} />
-					{queries[0].data && !queries[0].data.empty && queries[1].data ? (
+					{!isEmptyData ? (
 						<RiwayatSkTableBody
 							pegawaiId={pegawaiId}
-							data={queries[0].data}
-							jenisSkList={queries[1].data}
+							data={dataRiwayatSk}
+							jenisSkList={dataJenisSk}
+							isKaryawanAktif={isKaryawanAktif}
 						/>
 					) : (
 						<LoadingTable
 							columns={riwayatSkTableColumns}
-							isLoading={queries[0].isLoading || queries[0].isFetching}
+							isLoading={showLoading}
 						/>
 					)}
 				</Table>
 			</div>
-			<PaginationBuilder data={queries[0].data} />
+			<PaginationBuilder data={dataRiwayatSk} />
 			<RiwayatSkFormComponent />
 			<DeleteZodDialogBuilder
 				id={riwayatSkId}
-				queryKeys={[qKey]}
+				queryKeys={[qKeys[0]]}
 				deletePath={"kepegawaian/riwayat/sk"}
 				openDelete={openDelete}
 				setOpenDelete={setOpenDelete}
 			/>
 		</div>
-	);
-};
+	)
+}
 
-export default RiwayatSkContentComponent;
+export default RiwayatSkContentComponent
