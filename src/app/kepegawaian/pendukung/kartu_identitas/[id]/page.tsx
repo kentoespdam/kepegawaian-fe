@@ -45,6 +45,7 @@ const KartuIdentitasPage = async ({ params }: { params: { id: string } }) => {
 						>
 							<ProfilKartuIdentitasContentComponent
 								biodata={biodata}
+								isKaryawanAktif={isKaryawanAktif}
 							/>
 						</div>
 					</main>
