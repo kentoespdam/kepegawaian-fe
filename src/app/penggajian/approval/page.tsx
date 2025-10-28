@@ -1,43 +1,45 @@
 import {
-	STATUS_PROSES_GAJI,
 	getKeyStatusProsesGaji,
-} from "@_types/enums/status_proses_gaji";
-import type { Pageable } from "@_types/index";
-import type { Organisasi } from "@_types/master/organisasi";
-import type { Pegawai } from "@_types/pegawai";
-import type { GajiBatchMaster } from "@_types/penggajian/gaji_batch_master";
-import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root";
-import ApprovalComponent from "@components/penggajian/approval";
-import ApprovalFilterMain from "@components/penggajian/approval/filter.main";
-import GajiBatchMasterProcessTable from "@components/penggajian/gaji_batch_master_process/table";
-import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
-import { Separator } from "@components/ui/separator";
-import { getDataById, getListData, globalGetData } from "@helpers/action";
-import { getCurrentUser } from "@lib/appwrite/user";
-import { cn } from "@lib/utils";
-import { Suspense } from "react";
+	STATUS_PROSES_GAJI,
+} from "@_types/enums/status_proses_gaji"
+import type { Pageable } from "@_types/index"
+import type { Organisasi } from "@_types/master/organisasi"
+import type { Pegawai } from "@_types/pegawai"
+import type { GajiBatchMaster } from "@_types/penggajian/gaji_batch_master"
+import type { GajiBatchRoot } from "@_types/penggajian/gaji_batch_root"
+import ApprovalComponent from "@components/penggajian/approval"
+import ApprovalFilterMain from "@components/penggajian/approval/filter.main"
+import GajiBatchMasterProcessTable from "@components/penggajian/gaji_batch_master_process/table"
+import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card"
+import { Separator } from "@components/ui/separator"
+import { getDataById, getListData, globalGetData } from "@helpers/action"
+import { getCurrentUser } from "@lib/appwrite/user"
+import { cn } from "@lib/utils"
+import { Suspense } from "react"
 
 export const metadata = {
 	title: "Persetujuan Akhir",
-};
+}
 const AcceptancePage = async ({
 	searchParams,
-}: { searchParams: Promise<{ [key: string]: string | undefined }> }) => {
-	const queryParams = new URLSearchParams();
-	const { periode = "", nama } = await searchParams;
-	if (periode) queryParams.set("periode", periode);
+}: {
+	searchParams: Promise<{ [key: string]: string | undefined }>
+}) => {
+	const queryParams = new URLSearchParams()
+	const { periode = "", nama } = await searchParams
+	if (periode) queryParams.set("periode", periode)
 
-	const user = await getCurrentUser();
+	const user = await getCurrentUser()
 	const pegawai = await getDataById<Pegawai>({
 		path: "pegawai",
 		id: user.$id,
 		isRoot: true,
-	});
+	})
 
 	const organizationData = await getListData<Organisasi>({
 		path: "organisasi",
 		searchParams: "levelOrg=4",
-	});
+	})
 
 	const executive: Organisasi = {
 		id: 1,
@@ -45,33 +47,35 @@ const AcceptancePage = async ({
 		kode: "1",
 		levelOrganisasi: 2,
 		parent: null,
-	};
-	organizationData.push(executive);
-	organizationData.sort((a, b) => a.id - b.id);
+	}
+	organizationData.push(executive)
+	organizationData.sort((a, b) => a.id - b.id)
 
 	const gajiBatchRoot = await globalGetData<Pageable<GajiBatchRoot>>({
 		path: `penggajian/batch/${periode}/periode/${getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_APPROVAL)}/status`,
 		isRoot: true,
-	});
+	})
 
 	queryParams.set(
 		"status",
-		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_APPROVAL),
-	);
-	if (nama) queryParams.set("nama", nama);
+		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_APPROVAL)
+	)
+	if (nama) queryParams.set("nama", nama)
 	const gajiBatchMasters = await globalGetData<GajiBatchMaster[]>({
 		path: "penggajian/batch/master",
 		searchParams: queryParams.toString(),
 		isRoot: true,
-	});
+	})
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className="text-bold text-md flex flex-row justify-between items-center">
-					<span className="text-md font-semibold">{metadata.title}</span>
+				<CardTitle className="text-bold text-md flex flex-row items-center justify-between">
+					<span className="text-md font-semibold">
+						{metadata.title}
+					</span>
 				</CardTitle>
 			</CardHeader>
-			<CardContent className="h-fit grid col-span-2 gap-2">
+			<CardContent className="col-span-2 grid h-fit gap-2">
 				<Suspense fallback={<>Loading....</>}>
 					<ApprovalFilterMain
 						pegawai={pegawai}
@@ -84,10 +88,10 @@ const AcceptancePage = async ({
 						"grid gap-4",
 						"sm:grid-cols-1",
 						"lg:grid-cols-12",
-						"md:grid-cols-12",
+						"md:grid-cols-12"
 					)}
 				>
-					<div className="col-span-8 sm:col-lg-12 border-r">
+					<div className="sm:col-lg-12 col-span-8 border-r">
 						<Suspense fallback={<>Loading....</>}>
 							<ApprovalComponent
 								organisasiList={organizationData}
@@ -95,13 +99,13 @@ const AcceptancePage = async ({
 							/>
 						</Suspense>
 					</div>
-					<div className="col-span-4 sm:col-lg-12">
+					<div className="sm:col-lg-12 col-span-4">
 						<GajiBatchMasterProcessTable isApproval={true} />
 					</div>
 				</div>
 			</CardContent>
 		</Card>
-	);
-};
+	)
+}
 
-export default AcceptancePage;
+export default AcceptancePage

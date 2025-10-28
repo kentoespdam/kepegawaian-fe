@@ -4,37 +4,39 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@components/ui/command";
+} from "@components/ui/command"
 import {
 	FormControl,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { cn } from "@lib/utils";
-import { CheckIcon, ChevronDownIcon } from "lucide-react";
-import { useState } from "react";
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
-
-const tahunList = () => {
-	const today = new Date();
-	const tahuns = [];
-	for (let i = today.getFullYear(); i >= today.getFullYear() - 4; i--) {
-		tahuns.push(i);
-	}
-	return tahuns;
-};
+} from "@components/ui/form"
+import { Input } from "@components/ui/input"
+import { cn } from "@lib/utils"
+import { CheckIcon, ChevronDownIcon } from "lucide-react"
+import { useMemo, useState } from "react"
+import type { FieldValues } from "react-hook-form"
+import type { InputZodProps } from "./iface"
+import { makeTahunList } from "@helpers/tanggal"
 
 const SelectTahunZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const [openDialog, setOpenDialog] = useState(false);
-	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
+	const [openDialog, setOpenDialog] = useState(false)
+
+	// Accepts an optional boolean from CommandDialog's onOpenChange
+	const handleOpenDialog = (value?: boolean) => {
+		if (typeof value === "boolean") {
+			setOpenDialog(value)
+		} else {
+			setOpenDialog((prev) => !prev)
+		}
+	}
+
+	const tahuns = useMemo(() => makeTahunList(5), [])
 
 	return (
 		<FormField
@@ -48,45 +50,49 @@ const SelectTahunZod = <TData extends FieldValues>({
 							<Input
 								readOnly
 								id={id}
+								aria-label={label}
 								className="cursor-pointer"
-								onClick={handleOpenDialog}
+								onClick={() => handleOpenDialog(true)}
 								value={field.value ?? "Pilih Tahun"}
 							/>
-							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+							<ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 transform opacity-50" />
 						</div>
 					</FormControl>
-					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+					<CommandDialog
+						open={openDialog}
+						onOpenChange={handleOpenDialog}
+					>
 						<CommandInput placeholder="Pencarian..." />
 						<CommandList>
 							<CommandEmpty>No results found.</CommandEmpty>
-							{tahunList().map((item) => {
-								return (
-									<CommandItem
-										key={item}
-										value={`${item}`}
-										onSelect={() => {
-											field.onChange(item);
-											handleOpenDialog();
-										}}
-									>
-										<CheckIcon
-											className={cn(
-												"mr-2 h-4 w-4",
-												`${item}` === field.value ? "opacity-100" : "opacity-0",
-											)}
-											aria-hidden
-										/>
-										{item}
-									</CommandItem>
-								);
-							})}
+							{tahuns.map((item) => (
+								<CommandItem
+									key={item}
+									value={`${item}`}
+									onSelect={() => {
+										field.onChange(item)
+										handleOpenDialog(false)
+									}}
+								>
+									<CheckIcon
+										className={cn(
+											"mr-2 h-4 w-4",
+											`${item}` === `${field.value}`
+												? "opacity-100"
+												: "opacity-0"
+										)}
+										aria-hidden={true}
+									/>
+									{item}
+								</CommandItem>
+							))}
 						</CommandList>
 					</CommandDialog>
 					<FormMessage />
 				</FormItem>
 			)}
 		/>
-	);
-};
+	)
+}
 
-export default SelectTahunZod;
+export default SelectTahunZod

@@ -1,58 +1,56 @@
-import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
+} from "@components/ui/dropdown-menu"
+import React, { useCallback, useState } from "react"
+import VerifPhase2UploadDialog from "./dialog.upload"
+import { Button } from "@components/ui/button"
+import TooltipBuilder from "@components/builder/tooltip"
 import {
 	ChevronDownIcon,
 	DownloadIcon,
 	FolderSyncIcon,
 	UploadCloudIcon,
-} from "lucide-react";
-import { useState } from "react";
-import VerifPhase2UploadDialog from "./dialog.upload";
-import TooltipBuilder from "@components/builder/tooltip";
+} from "lucide-react"
 
 interface VerifPhase2DownloadButtonProps {
-	rootBatchId: string;
-	downloadHandler: () => void;
-	rollbackHandler: () => void;
+	rootBatchId: string
+	downloadHandler: () => void
+	rollbackHandler: () => void
 }
 const VerifPhase2DownloadButton = ({
 	rootBatchId,
 	downloadHandler,
 	rollbackHandler,
 }: VerifPhase2DownloadButtonProps) => {
-	const [openForm, setOpenForm] = useState(false);
-	const uploadHandler = () => {
-		setOpenForm(true);
-	};
+	const [openForm, setOpenForm] = useState(false)
+	const uploadHandler = useCallback(() => {
+		setOpenForm(true)
+	}, [])
+
+	const isDisabledUpload = rootBatchId === undefined || rootBatchId === ""
 	return (
 		<>
 			<DropdownMenu>
 				<TooltipBuilder
 					text="Komponen Gaji"
-					delayDuration={10}
 					className="bg-warning text-warning-foreground"
-					key="download"
+					delayDuration={100}
 				>
 					<DropdownMenuTrigger asChild>
-						<Button
-							variant="default"
-							className="flex gap-2 mt-2 bg-warning text-warning-foreground hover:bg-warning/80 hover:text-warning-foreground/80"
-						>
-							<ChevronDownIcon />
-							<span>Komponen Gaji</span>
+						<Button className="mt-2 flex gap-2 bg-warning text-warning-foreground hover:bg-warning/80 hover:text-warning-foreground">
+							<ChevronDownIcon className="size-4" />
+							Komponen Gaji
 						</Button>
 					</DropdownMenuTrigger>
 				</TooltipBuilder>
 				<DropdownMenuContent className="w-auto">
 					<DropdownMenuGroup>
 						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-primary"
+							className="flex cursor-pointer flex-row items-center text-primary"
 							onClick={downloadHandler}
 						>
 							<DownloadIcon className="mr-2 h-[1rem] w-[1rem]" />
@@ -60,15 +58,16 @@ const VerifPhase2DownloadButton = ({
 						</DropdownMenuItem>
 
 						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-info"
+							className="flex cursor-pointer flex-row items-center text-info"
 							onClick={uploadHandler}
+							disabled={isDisabledUpload}
 						>
 							<UploadCloudIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Upload Potongan Gaji</span>
 						</DropdownMenuItem>
 
 						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-destructive"
+							className="flex cursor-pointer flex-row items-center text-destructive"
 							onClick={rollbackHandler}
 						>
 							<FolderSyncIcon className="mr-2 h-[1rem] w-[1rem]" />
@@ -83,7 +82,7 @@ const VerifPhase2DownloadButton = ({
 				setOpenForm={setOpenForm}
 			/>
 		</>
-	);
-};
+	)
+}
 
-export default VerifPhase2DownloadButton;
+export default VerifPhase2DownloadButton
