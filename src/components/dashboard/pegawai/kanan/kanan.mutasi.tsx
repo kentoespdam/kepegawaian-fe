@@ -2,10 +2,13 @@ import LampiranSkContent from "@components/kepegawaian/detail/lampiran"
 import { AccordionItem, AccordionTrigger } from "@components/ui/accordion"
 import { AccordionContent } from "@radix-ui/react-accordion"
 import KananDataMutasiTable from "./kanan.mutasi.table"
-import { PegawaiDetail } from "@_types/pegawai"
+import { DashboardPanelKananComponentProps } from "@components/dashboard/pegawai/kanan/index"
 
-const KananDataMutasi = ({ pegawai }: { pegawai: PegawaiDetail }) => {
-	const { id, nipam, biodata } = pegawai ?? {}
+const KananDataMutasi = ({
+	pegawai,
+	isKaryawanAktif,
+}: DashboardPanelKananComponentProps) => {
+	const { id, nipam, biodata } = pegawai
 	return (
 		<AccordionItem value="data-mutasi">
 			<AccordionTrigger className="bg-primary p-2 text-primary-foreground">
@@ -43,7 +46,9 @@ const KananDataMutasi = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 									className="grid flex-1"
 									x-chunk="dashboard-02-chunk-1"
 								>
-									<LampiranSkContent pegawaiId={id} />
+									<LampiranSkContent
+										isKaryawanAktif={isKaryawanAktif}
+									/>
 								</div>
 							</main>
 						</div>

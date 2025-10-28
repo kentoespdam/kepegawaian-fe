@@ -78,8 +78,14 @@ const DashboardPanelKananComponent = ({
 						biodata={biodata}
 						isKaryawanAktif={isKaryawanAktif}
 					/>
-					<KananDataMutasi pegawai={pegawai} />
-					<KananDataRiwayatSk pegawai={pegawai} />
+					<KananDataMutasi
+						pegawai={pegawai}
+						isKaryawanAktif={isKaryawanAktif}
+					/>
+					<KananDataRiwayatSk
+						pegawai={pegawai}
+						isKaryawanAktif={isKaryawanAktif}
+					/>
 					<KananDataGaji pegawai={pegawai} />
 				</Accordion>
 			</CardContent>

@@ -1,4 +1,3 @@
-import type { PegawaiDetail } from "@_types/pegawai"
 import LampiranSkContent from "@components/kepegawaian/detail/lampiran"
 import {
 	AccordionContent,
@@ -6,12 +5,13 @@ import {
 	AccordionTrigger,
 } from "@components/ui/accordion"
 import KananDataRiwayatSkTable from "./kanan.sk.table"
+import { DashboardPanelKananComponentProps } from "@components/dashboard/pegawai/kanan/index"
 
-type KananDataRiwayatSkProps = {
-	pegawai: PegawaiDetail
-}
-const KananDataRiwayatSk = ({ pegawai }: KananDataRiwayatSkProps) => {
-	const { id, nipam, biodata } = pegawai
+const KananDataRiwayatSk = ({
+	pegawai,
+	isKaryawanAktif,
+}: DashboardPanelKananComponentProps) => {
+	const { nipam, biodata } = pegawai
 	return (
 		<AccordionItem value="data-riwayat-sk">
 			<AccordionTrigger className="bg-primary p-2 text-primary-foreground">
@@ -51,7 +51,9 @@ const KananDataRiwayatSk = ({ pegawai }: KananDataRiwayatSkProps) => {
 									className="grid flex-1"
 									x-chunk="dashboard-02-chunk-1"
 								>
-									<LampiranSkContent pegawaiId={id} />
+									<LampiranSkContent
+										isKaryawanAktif={isKaryawanAktif}
+									/>
 								</div>
 							</main>
 						</div>
