@@ -8,6 +8,7 @@
       <w>aksi</w>
       <w>aktif</w>
       <w>alamat</w>
+      <w>alat</w>
       <w>apakah</w>
       <w>askes</w>
       <w>baru</w>
@@ -16,17 +17,22 @@
       <w>berhenti</w>
       <w>berkala</w>
       <w>berlaku</w>
+      <w>bisa</w>
       <w>bpjs</w>
       <w>capeg</w>
       <w>cetak</w>
       <w>cuti</w>
       <w>daftar</w>
       <w>dalam</w>
+      <w>dapat</w>
+      <w>dibatalkan</w>
       <w>diisi</w>
+      <w>dikembalikan</w>
       <w>dirumahkan</w>
       <w>disetujui</w>
       <w>ditanggung</w>
       <w>ditanggunga</w>
+      <w>ditemukan</w>
       <w>gaji</w>
       <w>identitas</w>
       <w>ikatan</w>
@@ -46,6 +52,8 @@
       <w>keputusan</w>
       <w>kerja</w>
       <w>keterangan</w>
+      <w>ketik</w>
+      <w>kirim</w>
       <w>kontrak</w>
       <w>kualifikasi</w>
       <w>kuota</w>
@@ -56,6 +64,9 @@
       <w>lokasi</w>
       <w>lucide</w>
       <w>masuk</w>
+      <w>memproses</w>
+      <w>memverifikasi</w>
+      <w>menghapus</w>
       <w>menikah</w>
       <w>menulist</w>
       <w>mutasi</w>
@@ -70,18 +81,22 @@
       <w>pelatihan</w>
       <w>pendukung</w>
       <w>penerimaan</w>
+      <w>pengajuan</w>
       <w>pengalaman</w>
       <w>penggajian</w>
       <w>penggunaan</w>
       <w>pensiun</w>
       <w>peringatan</w>
+      <w>periode</w>
       <w>perkawinan</w>
       <w>persetujuan</w>
       <w>perumdam</w>
       <w>perumdamts</w>
       <w>perusahaan</w>
       <w>phdp</w>
+      <w>pilih</w>
       <w>pokok</w>
+      <w>potongan</w>
       <w>pribadi</w>
       <w>profesi</w>
       <w>profil</w>
@@ -97,15 +112,19 @@
       <w>sertifikasi</w>
       <w>sertifikat</w>
       <w>tahun</w>
+      <w>tampilkan</w>
       <w>tanggal</w>
       <w>tanggungan</w>
       <w>telp</w>
       <w>tempat</w>
       <w>terakhir</w>
+      <w>terhapus</w>
       <w>terminasi</w>
       <w>tidak</w>
       <w>tirta</w>
       <w>tunjangan</w>
+      <w>ulang</w>
+      <w>verifikasi</w>
     </words>
   </dictionary>
 </component>

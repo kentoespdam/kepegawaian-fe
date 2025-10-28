@@ -1,10 +1,11 @@
 "use server";
 
-import type { AlatKerjaSchema } from "@_types/master/alat_kerja";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import axios from "axios";
-import { cookies } from "next/headers";
+import type { AlatKerjaSchema } from "@_types/master/alat_kerja"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import axios from "axios"
+import { cookies } from "next/headers"
+
 export const saveAlatKerja = async (formData: AlatKerjaSchema) => {
 	const headers = setAuthorizeHeader(cookies());
 	const url =
@@ -16,14 +17,13 @@ export const saveAlatKerja = async (formData: AlatKerjaSchema) => {
 		headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 /**
  * Deletes a AlatKerja object by its ID.
  *
- * @param _prevState - The previous state of the application.
  * @param formData - The FormData object containing the data to be deleted.
  * @returns A Promise that resolves to an object with a success property and an optional error property.
  */

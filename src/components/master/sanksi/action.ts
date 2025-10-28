@@ -1,14 +1,11 @@
 "use server";
 
-import type { BaseDelete } from "@_types/index";
-import type {
-	PatchSanksiJenisSpSchema,
-	SanksiSchema,
-} from "@_types/master/sanksi";
-import { setAuthorizeHeader } from "@helpers/index";
-import { decodeId } from "@helpers/number";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { BaseDelete } from "@_types/index"
+import type { PatchSanksiJenisSpSchema, SanksiSchema, } from "@_types/master/sanksi"
+import { setAuthorizeHeader } from "@helpers/index"
+import { decodeId } from "@helpers/number"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
 
 export const saveSanksi = async (data: SanksiSchema) => {
 	const headers = setAuthorizeHeader(cookies());
@@ -19,8 +16,8 @@ export const saveSanksi = async (data: SanksiSchema) => {
 		headers,
 		body: JSON.stringify(data),
 	});
-	const result = await res.json();
-	return result;
+
+	return await res.json()
 };
 
 export const patchDeleteSanksiJenisSp = async (data: BaseDelete) => {
@@ -48,6 +45,6 @@ export const patchSanksiJenisSp = async (data: PatchSanksiJenisSpSchema) => {
 		headers,
 		body: JSON.stringify(data),
 	});
-	const result = await res.json();
-	return result;
+
+	return await res.json()
 };

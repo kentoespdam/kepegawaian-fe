@@ -1,27 +1,27 @@
-import { type ProfilGaji, findKode } from "@_types/penggajian/profil";
+import { findKode, type ProfilGaji } from "@_types/penggajian/profil"
 import {
 	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@components/ui/command";
+} from "@components/ui/command"
 import {
 	FormControl,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { getListDataEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { cn } from "@lib/utils";
-import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
+} from "@components/ui/form"
+import { Input } from "@components/ui/input"
+import { getListDataEnc } from "@helpers/action"
+import { encodeString } from "@helpers/number"
+import { cn } from "@lib/utils"
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons"
+import { useQuery } from "@tanstack/react-query"
+import { useState } from "react"
+import type { FieldValues } from "react-hook-form"
+import type { InputZodProps } from "./iface"
 
 interface SelectProfilGajiZodProps<TData extends FieldValues>
 	extends InputZodProps<TData> {}
@@ -30,19 +30,18 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 	label,
 	form,
 }: SelectProfilGajiZodProps<TData>) => {
-	const [openDialog, setOpenDialog] = useState(false);
-	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
+	const [openDialog, setOpenDialog] = useState(false)
+	const handleOpenDialog = () => setOpenDialog((prev) => !prev)
 
 	const query = useQuery({
 		queryKey: ["profil-gaji-list"],
 		queryFn: async () => {
-			const result = await getListDataEnc<ProfilGaji>({
+			return await getListDataEnc<ProfilGaji>({
 				path: encodeString("penggajian/profil"),
 				isRoot: true,
-			});
-			return result;
+			})
 		},
-	});
+	})
 
 	return (
 		<FormField
@@ -64,14 +63,20 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 										: query.isLoading || query.isFetching
 											? "Loading..."
 											: field.value
-												? findKode(query.data ?? [], field.value).nama
+												? findKode(
+														query.data ?? [],
+														field.value
+													).nama
 												: "Pilih Profil Gaji"
 								}
 							/>
-							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+							<ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 transform opacity-50" />
 						</div>
 					</FormControl>
-					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+					<CommandDialog
+						open={openDialog}
+						onOpenChange={handleOpenDialog}
+					>
 						<CommandInput placeholder="Type a command or search..." />
 						<CommandList>
 							<CommandEmpty>No results found.</CommandEmpty>
@@ -80,8 +85,8 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 									key={item.id}
 									value={item.nama}
 									onSelect={() => {
-										field.onChange(item.id);
-										handleOpenDialog();
+										field.onChange(item.id)
+										handleOpenDialog()
 									}}
 								>
 									{item.nama}
@@ -90,7 +95,7 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 											"ml-auto h-4 w-4",
 											item.id === Number(field.value)
 												? "opacity-100"
-												: "opacity-0",
+												: "opacity-0"
 										)}
 									/>
 								</CommandItem>
@@ -101,7 +106,7 @@ const SelectProfilGajiZod = <TData extends FieldValues>({
 				</FormItem>
 			)}
 		/>
-	);
-};
+	)
+}
 
-export default SelectProfilGajiZod;
+export default SelectProfilGajiZod
