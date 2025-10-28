@@ -1,10 +1,10 @@
 "use server";
 
-import type { JabatanSchema } from "@_types/master/jabatan";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import axios from "axios";
-import { cookies } from "next/headers";
+import type { JabatanSchema } from "@_types/master/jabatan"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import axios from "axios"
+import { cookies } from "next/headers"
 
 /**
  * Saves a Jabatan object to the API.
@@ -22,8 +22,8 @@ export const saveJabatan = async (formData: JabatanSchema) => {
 		headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 /**

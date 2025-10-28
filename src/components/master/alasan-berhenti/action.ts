@@ -1,9 +1,9 @@
 "use server";
 
-import type { AlasanBerhentiSchema } from "@_types/master/alasan_berhenti";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { AlasanBerhentiSchema } from "@_types/master/alasan_berhenti"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
 
 export const saveAlasanBerhenti = async (formData: AlasanBerhentiSchema) => {
 	const headers = setAuthorizeHeader(cookies());
@@ -17,8 +17,8 @@ export const saveAlasanBerhenti = async (formData: AlasanBerhentiSchema) => {
 		headers: headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 export const hapus = async (formData: FormData) => {
@@ -30,7 +30,7 @@ export const hapus = async (formData: FormData) => {
 
 	try {
 		const url = `${API_URL}/master/alasan-berhenti/${id}`;
-		fetch(url, {
+		await fetch(url, {
 			method: "DELETE",
 			headers: setAuthorizeHeader(cookies()),
 		});

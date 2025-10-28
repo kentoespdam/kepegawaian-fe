@@ -1,9 +1,9 @@
 "use server";
 
-import type { JenisSpSchema } from "@_types/master/jenis_sp";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { JenisSpSchema } from "@_types/master/jenis_sp"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
 
 export const saveJenisSp = async (formData: JenisSpSchema) => {
 	const headers = setAuthorizeHeader(cookies());
@@ -17,6 +17,6 @@ export const saveJenisSp = async (formData: JenisSpSchema) => {
 		},
 		body: JSON.stringify(formData),
 	});
-	const result = await res.json();
-	return result;
+
+	return await res.json()
 };

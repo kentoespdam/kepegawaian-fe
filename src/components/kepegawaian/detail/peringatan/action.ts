@@ -1,16 +1,17 @@
 "use server";
 
-import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
+
 export const saveRiwayatSp = async (formData: FormData) => {
-	const id = (formData.get("id") as unknown as number) ?? 0;
-	const headers = setAuthorizeHeader(cookies());
+	const id = (formData.get("id") as unknown as number) ?? 0
+	const headers = setAuthorizeHeader(cookies())
 	const url =
 		id && id > 0
 			? `${API_URL}/kepegawaian/riwayat/sp/${id}`
-			: `${API_URL}/kepegawaian/riwayat/sp`;
+			: `${API_URL}/kepegawaian/riwayat/sp`
 
 	const req = await fetch(url, {
 		method: id > 0 ? "PUT" : "POST",
@@ -18,10 +19,9 @@ export const saveRiwayatSp = async (formData: FormData) => {
 			Authorization: headers.Authorization,
 		},
 		body: formData,
-	});
+	})
 
-	const result = await req.json();
-	return result;
+	return await req.json()
 };
 
 export const getFile = async (id: number) => {
