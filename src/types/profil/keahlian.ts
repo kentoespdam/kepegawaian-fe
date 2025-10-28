@@ -37,5 +37,4 @@ export const keahlianTableColumns: CustomColumnDef[] = [
 	{ id: "institusi", label: "Institusi" },
 	{ id: "tahun", label: "Tahun" },
 	{ id: "masaBerlaku", label: "Masa Berlaku" },
-	{ id: "disetujui", label: "Disetujui" },
 ];

@@ -1,48 +1,65 @@
-import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil";
-import type { Biodata } from "@_types/profil/biodata";
-import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran";
-import ProfilPelatihanContentComponent from "@components/kepegawaian/profil/pelatihan";
-import AddProfilPelatihanButton from "@components/kepegawaian/profil/pelatihan/button.add";
-import LampiranPelatihanContent from "@components/kepegawaian/profil/pelatihan/lampiran.index";
+import { JenisLampiranProfil } from "@_types/enums/jenisl_lampiran_profil"
+import AddLampiranProfilButton from "@components/kepegawaian/profil/lampiran/button/add-lampiran"
+import ProfilPelatihanContentComponent from "@components/kepegawaian/profil/pelatihan"
+import AddProfilPelatihanButton from "@components/kepegawaian/profil/pelatihan/button.add"
+import LampiranPelatihanContent from "@components/kepegawaian/profil/pelatihan/lampiran.index"
 import {
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from "@components/ui/accordion";
+} from "@components/ui/accordion"
+import { DashboardPanelKananBiodataProps } from "@components/dashboard/pegawai/kanan/index"
 
-const KananDataPelatihan = ({ biodata }: { biodata: Biodata }) => {
+const KananDataPelatihan = ({
+	biodata,
+	isKaryawanAktif,
+}: DashboardPanelKananBiodataProps) => {
 	return (
 		<AccordionItem value="data-pelatihan">
-			<AccordionTrigger className="p-2 bg-primary text-primary-foreground">
+			<AccordionTrigger className="bg-primary p-2 text-primary-foreground">
 				Data Pelatihan
 			</AccordionTrigger>
 			<AccordionContent className="grid border-t p-0">
 				<div className="grid w-full">
-					<div className="border-t border-r border-b gap-0">
+					<div className="gap-0 border-b border-r border-t">
 						<div className="grid">
-							<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+							<header className="flex h-10 items-center justify-between border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 								<span className="text-md font-semibold">
 									Data Pelatihan ({biodata.nama})
 								</span>
 								<AddProfilPelatihanButton nik={biodata.nik} />
 							</header>
 							<main className="flex flex-1 flex-col lg:gap-6">
-								<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-									<ProfilPelatihanContentComponent biodata={biodata} />
+								<div
+									className="grid flex-1"
+									x-chunk="dashboard-02-chunk-1"
+								>
+									<ProfilPelatihanContentComponent
+										biodata={biodata}
+										isKaryawanAktif={isKaryawanAktif}
+									/>
 								</div>
 							</main>
 						</div>
 					</div>
-					<div className="border-t border-r border-b gap-0">
+					<div className="gap-0 border-b border-r border-t">
 						<div className="grid">
-							<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-								<span className="text-md font-semibold">Lampiran</span>
+							<header className="flex h-10 items-center justify-between border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+								<span className="text-md font-semibold">
+									Lampiran
+								</span>
 								<AddLampiranProfilButton
-									jenis={JenisLampiranProfil.Values.PROFIL_PELATIHAN}
+									jenis={
+										JenisLampiranProfil.Values
+											.PROFIL_PELATIHAN
+									}
 								/>
 							</header>
 							<main className="flex flex-1 flex-col lg:gap-6">
-								<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
+								<div
+									className="grid flex-1"
+									x-chunk="dashboard-02-chunk-1"
+								>
 									<LampiranPelatihanContent />
 								</div>
 							</main>
@@ -51,7 +68,7 @@ const KananDataPelatihan = ({ biodata }: { biodata: Biodata }) => {
 				</div>
 			</AccordionContent>
 		</AccordionItem>
-	);
-};
+	)
+}
 
-export default KananDataPelatihan;
+export default KananDataPelatihan

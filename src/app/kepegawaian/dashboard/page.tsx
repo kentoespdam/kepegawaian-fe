@@ -1,24 +1,19 @@
-import type { PegawaiDetail } from "@_types/pegawai";
-import DashboardPanelKananComponent from "@components/dashboard/pegawai/kanan";
-import DashboardPanelKiriComponent from "@components/dashboard/pegawai/kiri";
+import DashboardPanelKananComponent from "@components/dashboard/pegawai/kanan"
+import DashboardPanelKiriComponent from "@components/dashboard/pegawai/kiri"
 import {
 	ResizableHandle,
 	ResizablePanel,
 	ResizablePanelGroup,
-} from "@components/ui/resizable";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { getCurrentUser } from "@lib/appwrite/user";
+} from "@components/ui/resizable"
+import getAppData from "@lib/app-data"
 
-export const metadata = { title: "Dashboard Pegawai" };
+export const metadata = { title: "Dashboard Pegawai" }
 const DashboardPage = async () => {
-	const user = await getCurrentUser();
-	const pegawai = await getDataByIdEnc<PegawaiDetail>({
-		path: encodeString("pegawai"),
-		id: encodeString(user.$id),
-		isRoot: true,
-		isString: true,
-	});
+	const appData = await getAppData()
+	const { pegawai } = appData
+	const isKaryawanAktif = ["KARYAWAN_AKTIF", "DIRUMAHKAN"].includes(
+		pegawai?.statusKerja
+	)
 	return (
 		<>
 			<div className="grid gap-2">
@@ -31,13 +26,16 @@ const DashboardPage = async () => {
 					</ResizablePanel>
 					<ResizableHandle withHandle />
 					<ResizablePanel>
-						<DashboardPanelKananComponent pegawai={pegawai} />
+						<DashboardPanelKananComponent
+							pegawai={pegawai}
+							isKaryawanAktif={isKaryawanAktif}
+						/>
 					</ResizablePanel>
 				</ResizablePanelGroup>
 			</div>
 			<div id="clone-gaji-content" className="p-4" />
 		</>
-	);
-};
+	)
+}
 
-export default DashboardPage;
+export default DashboardPage
