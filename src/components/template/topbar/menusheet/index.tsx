@@ -1,24 +1,20 @@
-"use client";
-import type { PegawaiDetail } from "@_types/pegawai";
-import { Button } from "@components/ui/button";
+"use client"
+import { Button } from "@components/ui/button"
 import {
 	Sheet,
 	SheetContent,
 	SheetDescription,
 	SheetTitle,
 	SheetTrigger,
-} from "@components/ui/sheet";
-import { LayoutDashboardIcon } from "lucide-react";
-import type { Models } from "node-appwrite";
-import SheetMenuCommand from "./menu-command";
+} from "@components/ui/sheet"
+import { LayoutDashboardIcon } from "lucide-react"
+import SheetMenuCommand from "./menu-command"
+import { TopBarProps } from "@components/template/topbar"
 
-interface MenuSheetProps {
-	user: Models.User<Models.Preferences>;
-	pegawai: PegawaiDetail;
-}
-const MenuSheet = ({ user, pegawai }: MenuSheetProps) => {
-	const roles = user.prefs.roles;
-	const levelJabatan = pegawai.jabatan.level.id;
+const MenuSheet = ({ appData }: TopBarProps) => {
+	const { user, pegawai } = appData ?? {}
+	const roles = user?.prefs.roles ?? []
+	const levelJabatan = pegawai?.jabatan.level.id ?? 0
 
 	return (
 		<Sheet>
@@ -27,13 +23,13 @@ const MenuSheet = ({ user, pegawai }: MenuSheetProps) => {
 					<LayoutDashboardIcon />
 				</Button>
 			</SheetTrigger>
-			<SheetContent side="left" className="w-fit p-0 h-full">
-				<SheetTitle className="sr-only"/>
-				<SheetDescription className="sr-only"/>
+			<SheetContent side="left" className="h-full w-fit p-0">
+				<SheetTitle className="sr-only" />
+				<SheetDescription className="sr-only" />
 				<SheetMenuCommand roles={roles} levelJabatan={levelJabatan} />
 			</SheetContent>
 		</Sheet>
-	);
-};
+	)
+}
 
-export default MenuSheet;
+export default MenuSheet
