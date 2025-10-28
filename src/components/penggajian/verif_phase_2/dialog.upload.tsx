@@ -1,13 +1,13 @@
 import {
 	getKeyStatusProsesGaji,
 	STATUS_PROSES_GAJI,
-} from "@_types/enums/status_proses_gaji";
-import { VerifPhase2UploadSchema } from "@_types/penggajian/verif_phase2";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import InputFileZod from "@components/form/zod/file";
-import InputZod from "@components/form/zod/input";
-import { uploadPotongan } from "@components/penggajian/verif_phase_2/action";
-import { Button } from "@components/ui/button";
+} from "@_types/enums/status_proses_gaji"
+import { VerifPhase2UploadSchema } from "@_types/penggajian/verif_phase2"
+import { LoadingButtonClient } from "@components/builder/loading-button-client"
+import InputFileZod from "@components/form/zod/file"
+import InputZod from "@components/form/zod/input"
+import { uploadPotongan } from "@components/penggajian/verif_phase_2/action"
+import { Button } from "@components/ui/button"
 import {
 	Dialog,
 	DialogContent,
@@ -15,19 +15,20 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@components/ui/dialog";
-import { Form } from "@components/ui/form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
-import { useGlobalMutation } from "@store/query-store";
-import { UploadIcon, XIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+} from "@components/ui/dialog"
+import { Form } from "@components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses"
+import { useGlobalMutation } from "@store/query-store"
+import { UploadIcon, XIcon } from "lucide-react"
+import { useSearchParams } from "next/navigation"
+import { useForm } from "react-hook-form"
+import React from "react"
 
 interface VerifPhase2UploadDialogProps {
-	rootBatchId: string;
-	openForm: boolean;
-	setOpenForm: React.Dispatch<React.SetStateAction<boolean>>;
+	rootBatchId: string
+	openForm: boolean
+	setOpenForm: React.Dispatch<React.SetStateAction<boolean>>
 }
 const VerifPhase2UploadDialog = ({
 	rootBatchId,
@@ -36,10 +37,10 @@ const VerifPhase2UploadDialog = ({
 }: VerifPhase2UploadDialogProps) => {
 	const { batchMasterId } = useGajiBatchMasterProsesStore((state) => ({
 		batchMasterId: state.batchMasterId,
-	}));
+	}))
 
-	const params = useSearchParams();
-	const paramsString = `${params.toString()}&status=${getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2)}`;
+	const params = useSearchParams()
+	const paramsString = `${params.toString()}&status=${getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_2)}`
 
 	const form = useForm<VerifPhase2UploadSchema>({
 		resolver: zodResolver(VerifPhase2UploadSchema),
@@ -51,7 +52,7 @@ const VerifPhase2UploadDialog = ({
 			id: rootBatchId,
 			file: "",
 		},
-	});
+	})
 	const mutation = useGlobalMutation({
 		mutationFunction: uploadPotongan,
 		queryKeys: [
@@ -60,21 +61,21 @@ const VerifPhase2UploadDialog = ({
 		],
 		refreshPage: true,
 		actHandler: () => {
-			setOpenForm(false);
+			setOpenForm(false)
 		},
-	});
+	})
 
 	const onSubmit = (values: VerifPhase2UploadSchema) => {
-		const formData = new FormData();
-		formData.set("file", values.file[0], values.file[0].name);
-		formData.set("id", values.id);
-		mutation.mutate(formData);
-	};
+		const formData = new FormData()
+		formData.set("file", values.file[0], values.file[0].name)
+		formData.set("id", values.id)
+		mutation.mutate(formData)
+	}
 
 	const onOpenChange = (open: boolean) => {
-		form.reset();
-		setOpenForm(open);
-	};
+		form.reset()
+		setOpenForm(open)
+	}
 
 	return (
 		<Dialog open={openForm} onOpenChange={onOpenChange}>
@@ -112,7 +113,7 @@ const VerifPhase2UploadDialog = ({
 				</Form>
 			</DialogContent>
 		</Dialog>
-	);
-};
+	)
+}
 
-export default VerifPhase2UploadDialog;
+export default VerifPhase2UploadDialog

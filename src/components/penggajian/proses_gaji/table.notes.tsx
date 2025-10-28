@@ -1,24 +1,24 @@
 import type {
-    GajiBatchRoot,
-    GajiBatchRootErrorLogs,
-} from "@_types/penggajian/gaji_batch_root";
-import { Button } from "@components/ui/button";
-import { TableCell } from "@components/ui/table";
+	GajiBatchRoot,
+	GajiBatchRootErrorLogs,
+} from "@_types/penggajian/gaji_batch_root"
+import { Button } from "@components/ui/button"
+import { TableCell } from "@components/ui/table"
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from "@components/ui/tooltip";
-import { cn } from "@lib/utils";
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@components/ui/tooltip"
+import { cn } from "@lib/utils"
 
 interface GajiBatchRootNotesProps {
-	data: GajiBatchRoot;
+	data: GajiBatchRoot
 }
 const NotesErrorTooltip = (props: GajiBatchRootNotesProps) => {
 	const notes = props.data.notes
 		? JSON.parse(props.data.notes)
-		: { valid: 0, error: 0 };
+		: { valid: 0, error: 0 }
 	return (
 		<TooltipProvider>
 			<Tooltip delayDuration={100}>
@@ -27,30 +27,34 @@ const NotesErrorTooltip = (props: GajiBatchRootNotesProps) => {
 						valid : {notes.valid}, error: {notes.error}
 					</Button>
 				</TooltipTrigger>
-				<TooltipContent className="bg-white shadow-md border text-black">
+				<TooltipContent className="border bg-white text-black shadow-md">
 					<ul>
-						{props.data.errorLogs.map((log: GajiBatchRootErrorLogs) => (
-							<li key={log.id}>
-								{log.nipam}-{log.nama}:{" "}
-								<span className="text-destructive">{log.notes}</span>
-							</li>
-						))}
+						{props.data.errorLogs.map(
+							(log: GajiBatchRootErrorLogs) => (
+								<li key={log.id}>
+									{log.nipam}-{log.nama}:{" "}
+									<span className="text-destructive">
+										{log.notes}
+									</span>
+								</li>
+							)
+						)}
 					</ul>
 				</TooltipContent>
 			</Tooltip>
 		</TooltipProvider>
-	);
-};
+	)
+}
 
 const GajiBatchRootNotesCell = (props: GajiBatchRootNotesProps) => {
 	const notes = props.data.notes
 		? JSON.parse(props.data.notes)
-		: { valid: 0, error: 0 };
+		: { valid: 0, error: 0 }
 	return (
 		<TableCell
 			className={cn(
-				"border-x whitespace-nowrap",
-				notes.error ? "text-destructive" : "text-primary",
+				"whitespace-nowrap border-x",
+				notes.error ? "text-destructive" : "text-primary"
 			)}
 		>
 			{notes.error > 0 ? (
@@ -63,7 +67,7 @@ const GajiBatchRootNotesCell = (props: GajiBatchRootNotesProps) => {
 				</>
 			)}
 		</TableCell>
-	);
-};
+	)
+}
 
-export default GajiBatchRootNotesCell;
+export default GajiBatchRootNotesCell
