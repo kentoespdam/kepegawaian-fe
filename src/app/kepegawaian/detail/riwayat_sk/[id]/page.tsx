@@ -57,7 +57,6 @@ const RiwayatSk = async ({ params }: { params: { id: string } }) => {
 							x-chunk="dashboard-02-chunk-1"
 						>
 							<LampiranSkContent
-								pegawaiId={pegawai.id}
 								isKaryawanAktif={isKaryawanAktif}
 							/>
 						</div>

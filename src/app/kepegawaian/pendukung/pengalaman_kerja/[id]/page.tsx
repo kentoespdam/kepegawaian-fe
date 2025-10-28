@@ -69,7 +69,9 @@ const PengalamanKerjaPage = async ({ params }: { params: { id: string } }) => {
 							className="grid flex-1"
 							x-chunk="dashboard-02-chunk-1"
 						>
-							<LampiranPengalamanKerjaContent />
+							<LampiranPengalamanKerjaContent
+								isKaryawanAktif={isKaryawanAktif}
+							/>
 						</div>
 					</main>
 				</div>
