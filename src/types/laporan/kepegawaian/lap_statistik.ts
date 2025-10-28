@@ -1,3 +1,5 @@
+import z from "zod";
+
 interface BaseStatistik {
 	total: number;
 	persen: number;
@@ -26,6 +28,29 @@ export interface StatistikPendidikan1 extends BaseStatistik {
 	nama: string;
 }
 
+export interface StatistikPendidikan2 {
+	id: number;
+	pendidikan: string;
+	non_golongan: number;
+	golongan_a: number;
+	golongan_b: number;
+	golongan_c: number;
+	golongan_d: number;
+	jml_golongan: number;
+	kontrak: number;
+	capeg: number;
+	honorer: number;
+	tetap: number;
+	jml_status_pegawai: number;
+	adm: number;
+	pelayanan: number;
+	teknik: number;
+	jml_unit_kerja: number;
+	pria: number;
+	wanita: number;
+	jml_jenis_kelamin: number;
+}
+
 export interface StatistikStatusPegawai extends BaseStatistik {
 	status_pegawai: string;
 }
@@ -43,3 +68,21 @@ export interface StatistikUmurRoot {
 	umur: StatistikUmur[];
 	range: StatistikRangeUmur[];
 }
+
+export const FilterLaporanPendidikan2Schema = z.object({
+	tahun: z.string(),
+	bulan: z.string(),
+});
+
+export type FilterLaporanPendidikan2Schema = z.infer<
+	typeof FilterLaporanPendidikan2Schema
+>;
+
+export type BaseLaporanStatistik =
+	| StatistikGolongan
+	| StatistikPendidikan1
+	| StatistikPendidikan2
+	| StatistikJenisKelamin
+	| StatistikGelarAkademik
+	| StatistikAgama
+	| StatistikStatusPegawai;

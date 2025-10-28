@@ -1,7 +1,7 @@
-import { FileTextIcon } from "lucide-react";
-import type { IMenu } from "..";
+import { FileTextIcon } from "lucide-react"
+import type { IMenu } from ".."
 
-const defaultIconClassName = "w-3 h-3";
+const defaultIconClassName = "w-3 h-3"
 export const menuLaporanKepegawaian: IMenu = {
 	path: "#",
 	name: "Laporan Kepegawaian",
@@ -57,8 +57,14 @@ export const menuLaporanKepegawaian: IMenu = {
 			role: ["ADMIN"],
 		},
 		{
-			path: "/laporan/kepegawaian/dkb",
-			name: "Daftar Kenaikan Gaji/Pangkat Berkala",
+			path: "/laporan/kepegawaian/dkb/golongan",
+			name: "Daftar Kenaikan Pangkat/Golongan",
+			icon: <FileTextIcon className={defaultIconClassName} />,
+			role: ["ADMIN"],
+		},
+		{
+			path: "/laporan/kepegawaian/dkb/gaji",
+			name: "Daftar Kenaikan Gaji Berkala",
 			icon: <FileTextIcon className={defaultIconClassName} />,
 			role: ["ADMIN"],
 		},
@@ -69,4 +75,4 @@ export const menuLaporanKepegawaian: IMenu = {
 			role: ["ADMIN"],
 		},
 	],
-};
+}

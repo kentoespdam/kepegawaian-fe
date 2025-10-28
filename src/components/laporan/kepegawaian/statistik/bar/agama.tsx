@@ -1,6 +1,7 @@
-"use client";
+"use client"
 
-import type { StatistikAgama } from "@_types/laporan/kepegawaian/LapStatistik";
+import React, { useMemo } from "react"
+import type { StatistikAgama } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,37 +9,32 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikAgamaBar = ({ data }: { data: StatistikAgama[] }) => {
-	let chartConfig = {
-		agama: {
-			label: "Jumlah",
-		},
-	} satisfies ChartConfig;
-	data.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[item.agama]: {
-				label: item.agama,
-			},
-		};
-	});
+	const chartConfig = useMemo(() => {
+		// build a config object without mutating the original repeatedly
+		const cfg: Record<string, { label: string }> = {
+			agama: { label: "Jumlah" },
+		}
+		for (const item of data) {
+			cfg[item.agama] = { label: item.agama }
+		}
+		return cfg as unknown as ChartConfig
+	}, [data])
 
-	const chartData = data.map((item) => ({
-		agama: item.agama,
-		total: item.total,
-	}));
+	const chartData = useMemo(
+		() => data.map((item) => ({ agama: item.agama, total: item.total })),
+		[data]
+	)
 
-	if (data.length === 0) {
-		return null;
-	}
+	if (data.length === 0) return null
 
 	return (
 		<ChartContainer
 			config={chartConfig}
-			className="w-[800px] lg:w-[1000px] min-h-[200px] max-h-[400px] border"
+			className="max-h-[400px] min-h-[200px] w-[800px] border lg:w-[1000px]"
 		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
@@ -49,10 +45,12 @@ const StatistikAgamaBar = ({ data }: { data: StatistikAgama[] }) => {
 					tickLine={false}
 					tickMargin={10}
 					axisLine={false}
-					className="text-nowrap w-auto"
+					className="w-auto text-nowrap"
 					width={150}
 				/>
-				<ChartTooltip content={<ChartTooltipContent labelKey="agama" />} />
+				<ChartTooltip
+					content={<ChartTooltipContent labelKey="agama" />}
+				/>
 				<ChartLegend content={<ChartLegendContent nameKey="agama" />} />
 				<Bar
 					dataKey="total"
@@ -63,7 +61,7 @@ const StatistikAgamaBar = ({ data }: { data: StatistikAgama[] }) => {
 				/>
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikAgamaBar;
+export default StatistikAgamaBar

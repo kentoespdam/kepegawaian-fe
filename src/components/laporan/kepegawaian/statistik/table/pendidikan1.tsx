@@ -1,4 +1,4 @@
-import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	Table,
 	TableBody,
@@ -7,34 +7,57 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@components/ui/table";
+} from "@components/ui/table"
+import { useMemo } from "react"
 
 interface TableStatistikPendidikan1ComponentProps {
-	data: StatistikPendidikan1[];
+	data: StatistikPendidikan1[]
 }
 const TableStatistikPendidikan1Component = ({
 	data,
 }: TableStatistikPendidikan1ComponentProps) => {
-	let urut = 1;
+	const totalPegawai = useMemo(
+		() => data.reduce((acc, item) => acc + item.total, 0),
+		[data]
+	)
+	const totalPersen = useMemo(
+		() => data.reduce((acc, item) => acc + item.persen, 0),
+		[data]
+	)
+
 	return (
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NAMA</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">TOTAL</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">PERSEN</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						NO
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						NAMA
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						TOTAL
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						PERSEN
+					</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{data.map((item) => (
+				{data.map((item, idx) => (
 					<TableRow key={item.nama}>
 						<TableCell className="border" align="right">
-							{urut++}
+							{idx + 1}
 						</TableCell>
-						<TableCell className="border text-nowrap">{item.nama}</TableCell>
-						<TableCell className="border" align="right">{item.total}</TableCell>
-						<TableCell className="border" align="right">{item.persen}%</TableCell>
+						<TableCell className="text-nowrap border">
+							{item.nama}
+						</TableCell>
+						<TableCell className="border" align="right">
+							{item.total}
+						</TableCell>
+						<TableCell className="border" align="right">
+							{item.persen}%
+						</TableCell>
 					</TableRow>
 				))}
 			</TableBody>
@@ -44,15 +67,15 @@ const TableStatistikPendidikan1Component = ({
 						Total Pegawai
 					</TableCell>
 					<TableCell className="border" align="right">
-						{data.reduce((acc, item) => acc + item.total, 0)}
+						{totalPegawai}
 					</TableCell>
 					<TableCell className="border" align="right">
-						{data.reduce((acc, item) => acc + item.persen, 0)}%
+						{totalPersen}%
 					</TableCell>
 				</TableRow>
 			</TableFooter>
 		</Table>
-	);
-};
+	)
+}
 
-export default TableStatistikPendidikan1Component;
+export default TableStatistikPendidikan1Component

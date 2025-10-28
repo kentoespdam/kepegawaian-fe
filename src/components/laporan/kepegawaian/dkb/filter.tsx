@@ -1,43 +1,53 @@
+"use client"
 import {
 	filterKenaikanBerkala,
 	getFilterLabelById,
-} from "@_types/laporan/kepegawaian/dkb";
-import { Label } from "@components/ui/label";
+} from "@_types/laporan/kepegawaian/dkb"
+import { Label } from "@components/ui/label"
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@components/ui/select";
-import { usePathname, useRouter } from "next/navigation";
-import KenaikanBerkalaDownloadButton from "./button.download";
+} from "@components/ui/select"
+import { usePathname, useRouter } from "next/navigation"
+import React, { useCallback, useMemo } from "react"
+import KenaikanBerkalaDownloadButton from "./button.download"
 
 const FilterKenaikanBerkala = ({ filter }: { filter: string }) => {
-	const pathname = usePathname();
-	const { replace } = useRouter();
+	const pathname = usePathname()
+	const { replace } = useRouter()
 
-	const handleChange = (value: string) => {
-		replace(`${pathname}?filter=${value}`);
-	};
+	const items = useMemo(() => filterKenaikanBerkala, [])
+	const placeholder = useMemo(() => getFilterLabelById(filter), [filter])
+
+	const handleChange = useCallback(
+		(value: string) => {
+			// use replace to avoid adding history entries when changing filter
+			replace(`${pathname}?filter=${value}`)
+		},
+		[pathname, replace]
+	)
+
 	return (
-		<div className="flex gap-2 items-center justify-center">
+		<div className="flex items-center justify-center gap-2">
 			<Label>Filter</Label>
-			<Select onValueChange={handleChange}>
-				<SelectTrigger className="w-auto flex gap-2">
-					<SelectValue placeholder={getFilterLabelById(filter)} />
+			<Select value={filter} onValueChange={handleChange}>
+				<SelectTrigger className="flex w-auto gap-2">
+					<SelectValue placeholder={placeholder} />
 				</SelectTrigger>
 				<SelectContent>
-					{filterKenaikanBerkala.map((item) => (
+					{items.map((item) => (
 						<SelectItem key={item.id} value={item.id}>
 							{item.label}
 						</SelectItem>
 					))}
 				</SelectContent>
 			</Select>
-            <KenaikanBerkalaDownloadButton filter={filter} />
+			<KenaikanBerkalaDownloadButton filter={filter} />
 		</div>
-	);
-};
+	)
+}
 
-export default FilterKenaikanBerkala;
+export default React.memo(FilterKenaikanBerkala)

@@ -1,6 +1,7 @@
-"use client";
+"use client"
 
-import type { StatistikGolongan } from "@_types/laporan/kepegawaian/LapStatistik";
+import React, { useMemo } from "react"
+import type { StatistikGolongan } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,34 +9,43 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikGolonganBar = ({ data }: { data: StatistikGolongan[] }) => {
-	const chartConfig = {
-		pria: {
-			label: "pria",
-			color: "hsl(var(--chart-1))",
-		},
-		wanita: {
-			label: "wanita",
-			color: "hsl(var(--chart-2))",
-		},
-	} satisfies ChartConfig;
+	const chartConfig = useMemo(
+		() =>
+			({
+				pria: {
+					label: "pria",
+					color: "hsl(var(--chart-1))",
+				},
+				wanita: {
+					label: "wanita",
+					color: "hsl(var(--chart-2))",
+				},
+			}) as unknown as ChartConfig,
+		[]
+	)
 
-	const chartData = data.map(({ golongan, pangkat, jml_l, jml_p, total }) => ({
-		nama: `${golongan}-${pangkat}`,
-		pria: jml_l,
-		wanita: jml_p,
-		total: total,
-	}));
+	const chartData = useMemo(
+		() =>
+			data.map(({ golongan, pangkat, jml_l, jml_p, total }) => ({
+				nama: `${golongan}-${pangkat}`,
+				pria: jml_l,
+				wanita: jml_p,
+				total: total,
+			})),
+		[data]
+	)
 
-	if (data.length === 0) {
-		return null;
-	}
+	if (data.length === 0) return null
 
 	return (
-		<ChartContainer config={chartConfig} className="w-[750px] lg:w-[1000px] min-h-[200px] max-h-[400px]">
+		<ChartContainer
+			config={chartConfig}
+			className="max-h-[400px] min-h-[200px] w-[750px] lg:w-[1000px]"
+		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />
@@ -45,7 +55,7 @@ const StatistikGolonganBar = ({ data }: { data: StatistikGolongan[] }) => {
 					tickLine={false}
 					tickMargin={10}
 					axisLine={false}
-					className="text-nowrap w-auto"
+					className="w-auto text-nowrap"
 					width={200}
 				/>
 				<ChartTooltip content={<ChartTooltipContent />} />
@@ -59,7 +69,7 @@ const StatistikGolonganBar = ({ data }: { data: StatistikGolongan[] }) => {
 				<Bar dataKey="wanita" stackId="a" fill="hsl(var(--chart-2))" />
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikGolonganBar;
+export default StatistikGolonganBar

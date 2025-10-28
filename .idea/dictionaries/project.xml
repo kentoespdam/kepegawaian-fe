@@ -4,16 +4,20 @@
       <w>absensi</w>
       <w>acdba</w>
       <w>aedf</w>
+      <w>akademik</w>
       <w>akhir</w>
       <w>aksi</w>
       <w>aktif</w>
       <w>alamat</w>
       <w>alat</w>
+      <w>anak</w>
       <w>apakah</w>
       <w>askes</w>
+      <w>awal</w>
       <w>baru</w>
       <w>batal</w>
       <w>belum</w>
+      <w>berdasarkan</w>
       <w>berhenti</w>
       <w>berkala</w>
       <w>berlaku</w>
@@ -34,6 +38,8 @@
       <w>ditanggunga</w>
       <w>ditemukan</w>
       <w>gaji</w>
+      <w>gelar</w>
+      <w>hontap</w>
       <w>identitas</w>
       <w>ikatan</w>
       <w>informasi</w>
@@ -42,18 +48,23 @@
       <w>jamsostek</w>
       <w>jenis</w>
       <w>jenjang</w>
+      <w>jumlah</w>
       <w>kandung</w>
       <w>karyawan</w>
+      <w>kategori</w>
       <w>kawin</w>
       <w>keahlian</w>
       <w>kelamin</w>
       <w>keluar</w>
       <w>keluarga</w>
+      <w>kenaikan</w>
+      <w>kepangkatan</w>
       <w>keputusan</w>
       <w>kerja</w>
       <w>keterangan</w>
       <w>ketik</w>
       <w>kirim</w>
+      <w>komposisi</w>
       <w>kontrak</w>
       <w>kualifikasi</w>
       <w>kuota</w>
@@ -61,6 +72,7 @@
       <w>lampiran</w>
       <w>lembaga</w>
       <w>lengkap</w>
+      <w>lepas</w>
       <w>lokasi</w>
       <w>lucide</w>
       <w>masuk</w>
@@ -72,6 +84,7 @@
       <w>mutasi</w>
       <w>nilai</w>
       <w>nipam</w>
+      <w>nominatif</w>
       <w>nomor</w>
       <w>npwp</w>
       <w>organisasi</w>
@@ -79,6 +92,7 @@
       <w>pangkat</w>
       <w>pekerjaan</w>
       <w>pelatihan</w>
+      <w>pelayanan</w>
       <w>pendukung</w>
       <w>penerimaan</w>
       <w>pengajuan</w>
@@ -89,6 +103,7 @@
       <w>peringatan</w>
       <w>periode</w>
       <w>perkawinan</w>
+      <w>persen</w>
       <w>persetujuan</w>
       <w>perumdam</w>
       <w>perumdamts</w>
@@ -97,6 +112,7 @@
       <w>pilih</w>
       <w>pokok</w>
       <w>potongan</w>
+      <w>pria</w>
       <w>pribadi</w>
       <w>profesi</w>
       <w>profil</w>
@@ -111,20 +127,24 @@
       <w>sertificated</w>
       <w>sertifikasi</w>
       <w>sertifikat</w>
+      <w>struktur</w>
       <w>tahun</w>
       <w>tampilkan</w>
       <w>tanggal</w>
       <w>tanggungan</w>
+      <w>teknik</w>
       <w>telp</w>
       <w>tempat</w>
       <w>terakhir</w>
       <w>terhapus</w>
       <w>terminasi</w>
+      <w>tetap</w>
       <w>tidak</w>
       <w>tirta</w>
       <w>tunjangan</w>
       <w>ulang</w>
       <w>verifikasi</w>
+      <w>wanita</w>
     </words>
   </dictionary>
 </component>

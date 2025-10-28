@@ -1,49 +1,76 @@
-import type { DUK } from "@_types/laporan/kepegawaian/duk";
-import { TableBody, TableCell, TableRow } from "@components/ui/table";
+import type { DUK } from "@_types/laporan/kepegawaian/duk"
+import { TableBody, TableCell, TableRow } from "@components/ui/table"
+import { useMemo } from "react"
 
 interface DukTableBodyProps {
-	duk: DUK[];
+	duk: DUK[]
 }
 const DukTableBody = ({ duk }: DukTableBodyProps) => {
-	let urut = 0;
+	const tableData = useMemo(
+		() =>
+			duk.map((item, index) => ({
+				...item,
+				urut: index + 1,
+			})),
+		[duk]
+	)
+
 	return (
 		<TableBody>
-			{duk.map((row) => (
+			{tableData.map((row) => (
 				<TableRow key={row.nipam}>
 					<TableCell className="border" align="right">
-						{++urut}
+						{row.urut}
 					</TableCell>
-					<TableCell className="border text-nowrap">{row.nama}</TableCell>
-					<TableCell className="border text-nowrap">{row.nipam}</TableCell>
-					<TableCell className="border text-nowrap">{row.golongan}</TableCell>
-					<TableCell className="border text-nowrap">{row.pangkat}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
+						{row.nama}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.nipam}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.golongan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.pangkat}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.tmt_golongan}
 					</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
 						{row.nama_jabatan}
 					</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
 						{row.tmt_jabatan}
 					</TableCell>
-					<TableCell className="border text-nowrap">{row.tmt_kerja}</TableCell>
-					<TableCell className="border text-nowrap" align="right">{row.mk_tahun}</TableCell>
-					<TableCell className="border text-nowrap" align="right">{row.mk_bulan}</TableCell>
-					<TableCell className="border text-nowrap">{row.jurusan}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
+						{row.tmt_kerja}
+					</TableCell>
+					<TableCell className="text-nowrap border" align="right">
+						{row.mk_tahun}
+					</TableCell>
+					<TableCell className="text-nowrap border" align="right">
+						{row.mk_bulan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.jurusan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.tahun_lulus}
 					</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
 						{row.tingkat_pendidikan}
 					</TableCell>
-					<TableCell className="border text-nowrap" align="right">{row.usia}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border" align="right">
+						{row.usia}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.status_pegawai}
 					</TableCell>
 				</TableRow>
 			))}
 		</TableBody>
-	);
-};
+	)
+}
 
-export default DukTableBody;
+export default DukTableBody

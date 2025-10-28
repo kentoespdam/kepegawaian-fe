@@ -1,4 +1,4 @@
-import type { StatistikGelarAkademik } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikGelarAkademik } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	Table,
 	TableBody,
@@ -7,44 +7,57 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@components/ui/table";
+} from "@components/ui/table"
+import React, { useMemo } from "react"
 
 interface StatistikGelarAkademikTableProps {
-	data: StatistikGelarAkademik[];
+	data: StatistikGelarAkademik[]
 }
 const StatistikGelarAkademikTable = ({
 	data,
 }: StatistikGelarAkademikTableProps) => {
-	let urut = 1;
+	const total = useMemo(
+		() => data.reduce((acc, item) => acc + item.total, 0),
+		[data]
+	)
+	const persen = useMemo(
+		() => data.reduce((acc, item) => acc + item.persen, 0).toFixed(2),
+		[data]
+	)
+
 	return (
 		<Table className="w-full">
 			<TableHeader>
 				<TableRow className="sticky top-0">
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
 						NO
 					</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
 						TINGKAT
 					</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
 						GELAR
 					</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
 						TOTAL
 					</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
 						PERSEN
 					</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{data.map((item) => (
+				{data.map((item, idx) => (
 					<TableRow key={`${item.gelar}-${item.jenjang}`}>
 						<TableCell className="border p-1" align="right">
-							{urut++}
+							{idx + 1}
 						</TableCell>
-						<TableCell className="border p-1 text-nowrap">{item.jenjang}</TableCell>
-						<TableCell className="border p-1 text-nowrap">{item.gelar}</TableCell>
+						<TableCell className="text-nowrap border p-1">
+							{item.jenjang}
+						</TableCell>
+						<TableCell className="text-nowrap border p-1">
+							{item.gelar}
+						</TableCell>
 						<TableCell className="border p-1" align="right">
 							{item.total}
 						</TableCell>
@@ -60,15 +73,15 @@ const StatistikGelarAkademikTable = ({
 						Total Pegawai
 					</TableCell>
 					<TableCell className="border p-1" align="right">
-						{data.reduce((acc, item) => acc + item.total, 0)}
+						{total}
 					</TableCell>
 					<TableCell className="border p-1" align="right">
-						{data.reduce((acc, item) => acc + item.persen, 0)}%
+						{persen}%
 					</TableCell>
 				</TableRow>
 			</TableFooter>
 		</Table>
-	);
-};
+	)
+}
 
-export default StatistikGelarAkademikTable;
+export default StatistikGelarAkademikTable

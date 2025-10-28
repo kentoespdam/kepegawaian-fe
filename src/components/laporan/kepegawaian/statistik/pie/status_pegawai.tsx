@@ -1,43 +1,59 @@
-"use client";
+"use client"
 
-import type { StatistikStatusPegawai } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikStatusPegawai } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Pie, PieChart } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Pie, PieChart } from "recharts"
 
-const StatistikStatusPegawaiPie = ({ data }: { data: StatistikStatusPegawai[] }) => {
-	const chartData = data.map((item, index) => ({
-		label: item.status_pegawai,
-		value: Number(item.persen.toFixed(2)),
-		fill: `hsl(var(--chart-${index + 1}))`,
-	}));
-
-	let chartConfig = {
-		status_pegawai: {
-			label: "Jumlah",
-		},
-	} satisfies ChartConfig;
-	data.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[item.status_pegawai]: {
+const StatistikStatusPegawaiPie = ({
+	data,
+}: {
+	data: StatistikStatusPegawai[]
+}) => {
+	const chartData = useMemo(
+		() =>
+			data.map((item, index) => ({
 				label: item.status_pegawai,
-				color: `hsl(var(--chart-${index + 1}))`,
+				value: Number(item.persen.toFixed(2)),
+				fill: `hsl(var(--chart-${index + 1}))`,
+			})),
+		[data]
+	)
+
+	const chartConfig = useMemo(() => {
+		const cfg: Record<string, { label: string; color?: string }> = {
+			status_pegawai: {
+				label: "Jumlah",
 			},
-		};
-	});
+		} satisfies ChartConfig
+		for (const item of data) {
+			cfg[item.status_pegawai] = {
+				label: item.status_pegawai,
+				color: `hsl(var(--chart-${data.indexOf(item) + 1}))`,
+			}
+		}
+		return cfg
+	}, [data])
 
 	if (data.length === 0) {
-		return null;
+		return null
 	}
 	return (
-		<ChartContainer config={chartConfig} className="w-[600px] mx-auto">
+		<ChartContainer config={chartConfig} className="mx-auto w-[600px]">
 			<PieChart accessibilityLayer>
-				<ChartTooltip content={<ChartTooltipContent labelKey="label" nameKey="status_pegawai" />}/>
+				<ChartTooltip
+					content={
+						<ChartTooltipContent
+							labelKey="label"
+							nameKey="status_pegawai"
+						/>
+					}
+				/>
 				<Pie
 					data={chartData}
 					dataKey="value"
@@ -59,7 +75,7 @@ const StatistikStatusPegawaiPie = ({ data }: { data: StatistikStatusPegawai[] })
 				/>
 			</PieChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikStatusPegawaiPie;
+export default StatistikStatusPegawaiPie
