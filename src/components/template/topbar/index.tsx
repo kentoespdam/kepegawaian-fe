@@ -1,29 +1,20 @@
-import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
-import { Avatar } from "@components/ui/avatar";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import logo from "@public/images/logo_pdam_40x40.png";
-import Image from "next/image";
-import type { Models } from "node-appwrite";
-import { Suspense } from "react";
-import MenuSheet from "./menusheet";
-import ProfileComponent from "./profil";
-import LoadingProfile from "./profil/loading";
+import { Avatar } from "@components/ui/avatar"
+import logo from "@public/images/logo_pdam_40x40.png"
+import Image from "next/image"
+import { Suspense } from "react"
+import MenuSheet from "./menusheet"
+import ProfileComponent from "./profil"
+import LoadingProfile from "./profil/loading"
+import { AppData } from "@_types/index"
 
-interface TopBarProps {
-	user: Models.User<Models.Preferences>;
+export type TopBarProps = {
+	appData?: AppData
 }
-const TopBarComponent = async ({ user }: TopBarProps) => {
-	const pegawai = await getDataByIdEnc<PegawaiDetail>({
-		path: encodeString("pegawai"),
-		id: encodeString(user.$id),
-		isRoot: true,
-		isString: true,
-	});
+const TopBarComponent = ({ appData }: TopBarProps) => {
 	return (
-		<div className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 flex flex-row justify-between items-center px-4">
-			<div className="flex flex-wrap gap-2 items-center content-center h-full">
-				<MenuSheet user={user} pegawai={pegawai} />
+		<div className="sticky top-0 z-50 flex w-full flex-row items-center justify-between border-b border-border/40 bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+			<div className="flex h-full flex-wrap content-center items-center gap-2">
+				<MenuSheet appData={appData} />
 				<Avatar className="h-10 w-12">
 					<Image
 						alt="Logo Perumdam Tirta Satria"
@@ -33,14 +24,13 @@ const TopBarComponent = async ({ user }: TopBarProps) => {
 						sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
 					/>
 				</Avatar>
-				<div className="font-bold text-2xl">Kepegawaian</div>
-				{/* <RenewAuthToken /> */}
+				<div className="text-2xl font-bold">Kepegawaian</div>
 			</div>
 			<Suspense fallback={<LoadingProfile />}>
-				<ProfileComponent user={user} pegawai={pegawai} />
+				<ProfileComponent appData={appData} />
 			</Suspense>
 		</div>
-	);
-};
+	)
+}
 
-export default TopBarComponent;
+export default TopBarComponent

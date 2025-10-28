@@ -19,7 +19,7 @@ type MenuListBuilderProps = {
 	roles: string[];
 	levelJabatan: number
 };
-const MenulistBuilder = (props: MenuListBuilderProps) => {
+const MenuListBuilder = (props: MenuListBuilderProps) => {
 	const pathName = usePathname();
 	const menuPath = props.menu.path.split("?")[0];
 
@@ -31,7 +31,7 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
 				{props.menu.subMenu?.length === 0
 					? null
 					: props.menu.subMenu?.map((menu) => (
-							<MenulistBuilder
+							<MenuListBuilder
 								menu={menu}
 								key={`${menu.name}-${menu.path}`}
 								roles={props.roles}
@@ -75,7 +75,7 @@ const SheetMenuCommand = ({ roles, levelJabatan }: SheetMenuCommandProps) => {
 			<CommandList className="h-screen max-h-[100%]">
 				<CommandEmpty>No results found.</CommandEmpty>
 				{menus.map((menu) => (
-					<MenulistBuilder
+					<MenuListBuilder
 						menu={menu}
 						key={`${menu.name}-${menu.path}`}
 						roles={roles}
