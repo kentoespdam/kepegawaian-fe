@@ -1,6 +1,6 @@
-"use client";
-import type { Pegawai, PegawaiDetail } from "@_types/pegawai";
-import { Button } from "@components/ui/button";
+"use client"
+import type { Pegawai, PegawaiDetail } from "@_types/pegawai"
+import { Button } from "@components/ui/button"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,10 +11,10 @@ import {
 	DropdownMenuSubContent,
 	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeId, encodeString } from "@helpers/number";
-import { useProfilPribadiStore } from "@store/kepegawaian/profil/pribadi";
+} from "@components/ui/dropdown-menu"
+import { getDataByIdEnc } from "@helpers/action"
+import { encodeId, encodeString } from "@helpers/number"
+import { useProfilPribadiStore } from "@store/kepegawaian/profil/pribadi"
 import {
 	DollarSignIcon,
 	EllipsisIcon,
@@ -23,34 +23,37 @@ import {
 	UserCogIcon,
 	UserIcon,
 	UserRoundCogIcon,
-} from "lucide-react";
-import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+} from "lucide-react"
+import Link from "next/link"
+import { useSearchParams } from "next/navigation"
+import { useMemo } from "react"
 
 interface KepegawaianTableActionProps {
-	data: Pegawai;
+	data: Pegawai
 }
-const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
-	const params = useSearchParams();
-	const callbackUrl = btoa(params.toString() ?? "");
+const KepegawaianTableAction = ({ data }: KepegawaianTableActionProps) => {
+	const { id } = data
+	const params = useSearchParams()
+	const callbackUrl = btoa(params.toString() ?? "")
 
-	const { setPegawai, open, setOpen } = useProfilPribadiStore((state) => ({
+	const encodedId = useMemo(() => encodeId(id), [id])
+
+	const { setPegawai, setOpen } = useProfilPribadiStore((state) => ({
 		setPegawai: state.setPegawaiId,
-		open: state.open,
 		setOpen: state.setOpen,
-	}));
+	}))
 
 	const handleEditProfilePribadi = () => {
 		// "use server";
 		getDataByIdEnc<PegawaiDetail>({
 			path: encodeString("pegawai"),
-			id: encodeId(props.data?.id as number),
+			id: encodedId,
 			isRoot: true,
 		}).then((res) => {
-			setPegawai(res);
-			setOpen(true);
-		});
-	};
+			setPegawai(res)
+			setOpen(true)
+		})
+	}
 
 	return (
 		<DropdownMenu>
@@ -62,16 +65,16 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 			<DropdownMenuContent className="w-auto">
 				<DropdownMenuGroup>
 					<Link
-						href={`/kepegawaian/pendukung/pendidikan/${encodeString(props.data?.biodata.nik)}`}
+						href={`/kepegawaian/pendukung/pendidikan/${encodedId}`}
 					>
-						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
+						<DropdownMenuItem className="flex cursor-pointer flex-row items-center">
 							<RssIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Data Pendukung</span>
 						</DropdownMenuItem>
 					</Link>
 
-					<Link href={`/kepegawaian/detail/mutasi/${encodeId(props.data.id)}`}>
-						<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
+					<Link href={`/kepegawaian/detail/mutasi/${encodedId}`}>
+						<DropdownMenuItem className="flex cursor-pointer flex-row items-center">
 							<UserCogIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Data Kepegawaian</span>
 						</DropdownMenuItem>
@@ -85,16 +88,16 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 						<DropdownMenuPortal>
 							<DropdownMenuSubContent>
 								<Link
-									href={`/kepegawaian/profil/gaji/${props.data?.id}?callbackUrl=${callbackUrl}`}
+									href={`/kepegawaian/profil/gaji/${encodedId}?callbackUrl=${callbackUrl}`}
 								>
-									<DropdownMenuItem className="flex flex-row items-center cursor-pointer">
+									<DropdownMenuItem className="flex cursor-pointer flex-row items-center">
 										<DollarSignIcon className="mr-2 h-[1rem] w-[1rem]" />
 										<span>Data Profil Gaji</span>
 									</DropdownMenuItem>
 								</Link>
 
 								<DropdownMenuItem
-									className="flex flex-row items-center cursor-pointer"
+									className="flex cursor-pointer flex-row items-center"
 									onClick={handleEditProfilePribadi}
 								>
 									<UserRoundCogIcon className="mr-2 h-[1rem] w-[1rem]" />
@@ -104,21 +107,19 @@ const KepegawaianTableAction = (props: KepegawaianTableActionProps) => {
 						</DropdownMenuPortal>
 					</DropdownMenuSub>
 
-					<Link
-						href={`/laporan/kepegawaian/cv/${encodeId(props.data?.id as number)}`}
+					<DropdownMenuItem
+						className="flex cursor-pointer flex-row items-center"
+						asChild
 					>
-						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer"
-							// onClick={handleClickCv}
-						>
+						<Link href={`/laporan/kepegawaian/cv/${encodedId}`}>
 							<PrinterIcon className="mr-2 h-[1rem] w-[1rem]" />
 							<span>Cetak CV</span>
-						</DropdownMenuItem>
-					</Link>
+						</Link>
+					</DropdownMenuItem>
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
-	);
-};
+	)
+}
 
-export default KepegawaianTableAction;
+export default KepegawaianTableAction
