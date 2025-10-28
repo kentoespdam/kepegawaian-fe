@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import type { StatistikUmurRoot } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikUmurRoot } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,31 +8,49 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikUmurBar = ({ data }: { data: StatistikUmurRoot }) => {
-	const chartData = data.range.map((item, index) => ({
-		range: item.range,
-		total: item.total,
-	}));
-
-	const chartConfig = {
-		total: {
-			label: "Jumlah",
-			color: "hsl(var(--chart-2))",
-		},
-	} satisfies ChartConfig;
+	const chartConfig = useMemo(
+		() =>
+			({
+				total: {
+					label: "Jumlah",
+					color: "hsl(var(--chart-2))",
+				},
+			}) satisfies ChartConfig,
+		[]
+	)
+	const chartData = useMemo(
+		() =>
+			data.range.map((item) => ({
+				range: item.range,
+				total: item.total,
+			})),
+		[data.range]
+	)
 
 	return (
-		<ChartContainer config={chartConfig} className="w-[800px] min-h-[200px] max-h-[400px]">
-			<BarChart accessibilityLayer data={chartData} layout="vertical" height={400}>
+		<ChartContainer
+			config={chartConfig}
+			className="max-h-[400px] min-h-[200px] w-[800px]"
+		>
+			<BarChart
+				accessibilityLayer
+				data={chartData}
+				layout="vertical"
+				height={400}
+			>
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />
 				<YAxis dataKey="range" type="category" tickMargin={10} />
 				<ChartTooltip
 					content={
-						<ChartTooltipContent labelFormatter={(x) => `Umur ${x} Tahun`} />
+						<ChartTooltipContent
+							labelFormatter={(x) => `Umur ${x} Tahun`}
+						/>
 					}
 				/>
 				<ChartLegend content={<ChartLegendContent />} />
@@ -44,7 +62,7 @@ const StatistikUmurBar = ({ data }: { data: StatistikUmurRoot }) => {
 				/>
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikUmurBar;
+export default StatistikUmurBar

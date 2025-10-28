@@ -1,5 +1,5 @@
 "use client";
-import type { StatistikGolongan } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikGolongan } from "@_types/laporan/kepegawaian/lap_statistik";
 import StatistikBarPicker from "@components/laporan/kepegawaian/statistik/bar/bar.picker";
 import StatistikPiePicker from "@components/laporan/kepegawaian/statistik/pie/pie.picker";
 import StatistikTablePicker from "@components/laporan/kepegawaian/statistik/table/table.picker";

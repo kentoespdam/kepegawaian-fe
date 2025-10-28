@@ -1,4 +1,4 @@
-import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	Table,
 	TableBody,
@@ -7,32 +7,50 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "@components/ui/table";
+} from "@components/ui/table"
+import React, { useMemo } from "react"
 
 interface StatistikJenisKelaminTableProps {
-	data: StatistikJenisKelamin[];
+	data: StatistikJenisKelamin[]
 }
 const StatistikJenisKelaminTable = ({
 	data,
 }: StatistikJenisKelaminTableProps) => {
-	let urut = 1;
+	const total = useMemo(
+		() => data.reduce((acc, item) => acc + item.total, 0),
+		[data]
+	)
+	const persen = useMemo(
+		() => data.reduce((acc, item) => acc + item.persen, 0).toFixed(2),
+		[data]
+	)
 	return (
 		<Table className="w-fit">
 			<TableHeader>
 				<TableRow className="sticky top-0 bg-primary">
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">NO</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">JENIS KELAMIN</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">TOTAL</TableHead>
-					<TableHead className="text-center bg-primary text-primary-foreground border-x text-nowrap h-10">PERSEN</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						NO
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						JENIS KELAMIN
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						TOTAL
+					</TableHead>
+					<TableHead className="h-10 text-nowrap border-x bg-primary text-center text-primary-foreground">
+						PERSEN
+					</TableHead>
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{data.map((item) => (
+				{data.map((item, idx) => (
 					<TableRow key={item.jenis_kelamin}>
 						<TableCell className="border" align="right">
-							{urut++}
+							{idx + 1}
 						</TableCell>
-						<TableCell className="border">{item.jenis_kelamin}</TableCell>
+						<TableCell className="border">
+							{item.jenis_kelamin}
+						</TableCell>
 						<TableCell className="border" align="right">
 							{item.total}
 						</TableCell>
@@ -48,15 +66,15 @@ const StatistikJenisKelaminTable = ({
 						Total Pegawai
 					</TableCell>
 					<TableCell className="border" align="right">
-						{data.reduce((acc, item) => acc + item.total, 0)}
+						{total}
 					</TableCell>
 					<TableCell className="border" align="right">
-						{data.reduce((acc, item) => acc + item.persen, 0)}%
+						{persen}%
 					</TableCell>
 				</TableRow>
 			</TableFooter>
 		</Table>
-	);
-};
+	)
+}
 
-export default StatistikJenisKelaminTable;
+export default StatistikJenisKelaminTable

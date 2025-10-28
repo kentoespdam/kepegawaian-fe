@@ -1,4 +1,4 @@
-import type { StatistikGolongan } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikGolongan } from "@_types/laporan/kepegawaian/lap_statistik";
 import type { PegawaiDetail } from "@_types/pegawai";
 import DashboardCardSection from "@components/dashboard/main/card-section";
 import DasboardStatistikPegawai from "@components/dashboard/main/statistik";

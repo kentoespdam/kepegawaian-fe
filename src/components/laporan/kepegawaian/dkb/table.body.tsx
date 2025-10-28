@@ -1,41 +1,67 @@
-import type { KenaikanBerkala } from "@_types/laporan/kepegawaian/dkb";
-import { TableBody, TableCell, TableRow } from "@components/ui/table";
+import type { KenaikanBerkala } from "@_types/laporan/kepegawaian/dkb"
+import { TableBody, TableCell, TableRow } from "@components/ui/table"
+import { useMemo } from "react"
 
 const LapKenaikanBerkalaTableBody = ({ data }: { data: KenaikanBerkala[] }) => {
-	let urut = 1;
+	const tableData = useMemo(
+		() =>
+			data.map((item, index) => ({
+				...item,
+				urut: index + 1,
+			})),
+		[data]
+	)
 	return (
 		<TableBody>
-			{data.map((row) => (
+			{tableData.map((row) => (
 				<TableRow key={row.id}>
 					<TableCell className="border" align="right">
-						{urut++}
+						{row.urut}
 					</TableCell>
-					<TableCell className="border text-nowrap">{row.nama}</TableCell>
-					<TableCell className="border text-nowrap">{row.nipam}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
+						{row.nama}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.nipam}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.tmt_jabatan}
 					</TableCell>
-					<TableCell className="border text-nowrap">{row.pangkat}</TableCell>
-					<TableCell className="border text-nowrap">{row.golongan}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
+						{row.pangkat}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.golongan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.tmt_golongan}
 					</TableCell>
-					<TableCell className="border text-nowrap">{row.mkg_tahun}</TableCell>
-					<TableCell className="border text-nowrap">{row.mkg_bulan}</TableCell>
-					<TableCell className="border text-nowrap">{row.tmt_kerja}</TableCell>
-					<TableCell className="border text-nowrap">{row.mk_tahun}</TableCell>
-					<TableCell className="border text-nowrap">{row.mk_bulan}</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
+						{row.mkg_tahun}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.mkg_bulan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.tmt_kerja}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.mk_tahun}
+					</TableCell>
+					<TableCell className="text-nowrap border">
+						{row.mk_bulan}
+					</TableCell>
+					<TableCell className="text-nowrap border">
 						{row.pendidikan_terakhir}
 					</TableCell>
-					<TableCell className="border text-nowrap">
+					<TableCell className="text-nowrap border">
 						{row.tempat_lahir}, {row.tanggal_lahir}
 					</TableCell>
-					<TableCell className="border text-nowrap">&nbsp;</TableCell>
+					<TableCell className="text-nowrap border">&nbsp;</TableCell>
 				</TableRow>
 			))}
 		</TableBody>
-	);
-};
+	)
+}
 
-export default LapKenaikanBerkalaTableBody;
+export default LapKenaikanBerkalaTableBody

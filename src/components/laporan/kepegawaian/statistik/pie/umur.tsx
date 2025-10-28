@@ -1,39 +1,43 @@
-"use client";
+"use client"
 
-import type { StatistikUmurRoot } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikUmurRoot } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Pie, PieChart } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Pie, PieChart } from "recharts"
 
 const StatistikUmurPie = ({ data }: { data: StatistikUmurRoot }) => {
-	const chartData = data.range.map((item, index) => ({
-		label: item.range,
-		value: item.persen,
-		fill: `hsl(var(--chart-${index + 1}))`,
-	}));
-
-	let chartConfig = {
-		value: {
-			label: "Jumlah",
-		},
-	} satisfies ChartConfig;
-
-	data.range.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[item.range]: {
+	const chartData = useMemo(
+		() =>
+			data.range.map((item, index) => ({
 				label: item.range,
-				color: `hsl(var(--chart-${index + 1}))`,
+				value: item.persen,
+				fill: `hsl(var(--chart-${index + 1}))`,
+			})),
+		[data]
+	)
+
+	const chartConfig = useMemo(() => {
+		const cfg: Record<string, { label: string; color?: string }> = {
+			value: {
+				label: "Jumlah",
 			},
-		};
-	});
+		} satisfies ChartConfig
+		for (const item of data.range) {
+			cfg[item.range] = {
+				label: item.range,
+				color: `hsl(var(--chart-${data.range.indexOf(item) + 1}))`,
+			}
+		}
+		return cfg
+	}, [data])
 
 	return (
-		<ChartContainer config={chartConfig} className="w-[600px] mx-auto">
+		<ChartContainer config={chartConfig} className="mx-auto w-[600px]">
 			<PieChart>
 				<ChartTooltip
 					content={
@@ -64,7 +68,7 @@ const StatistikUmurPie = ({ data }: { data: StatistikUmurRoot }) => {
 				/>
 			</PieChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikUmurPie;
+export default StatistikUmurPie

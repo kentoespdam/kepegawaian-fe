@@ -175,7 +175,6 @@ export const getDataByIdEnc = async <TData>({
 		: decodeId(props.id as string)
 	const basePath = props.isRoot ? API_URL : `${API_URL}/master`
 	const url = `${basePath}/${decPath.replace("_", "-")}/${decId}`
-	console.log(url)
 	const headers = setAuthorizeHeader(cookies())
 	const controller = new AbortController()
 	const retryLimit = 3

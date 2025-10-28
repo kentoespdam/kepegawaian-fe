@@ -1,30 +1,31 @@
-"use client";
+"use client"
 
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import TooltipBuilder from "@components/builder/tooltip";
-import { base64toBlob } from "@helpers/string";
-import { useMutation } from "@tanstack/react-query";
-import { FileSpreadsheetIcon } from "lucide-react";
-import { downloadDuk } from "./action";
+import { LoadingButtonClient } from "@components/builder/loading-button-client"
+import TooltipBuilder from "@components/builder/tooltip"
+import { base64toBlob } from "@helpers/string"
+import { useMutation } from "@tanstack/react-query"
+import { FileSpreadsheetIcon } from "lucide-react"
+import { downloadDuk } from "./action"
+import { useCallback } from "react"
 
 const DukDownloadButton = () => {
 	const downloadFile = useMutation({
 		mutationFn: downloadDuk,
 		onSuccess: (data) => {
-			const blob = base64toBlob(data.base64, data.type);
-			const url = URL.createObjectURL(blob);
-			const link = document.createElement("a");
-			link.href = url;
-			link.setAttribute("download", data.filename ?? "duk.xlsx");
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
+			const blob = base64toBlob(data.base64, data.type)
+			const url = URL.createObjectURL(blob)
+			const link = document.createElement("a")
+			link.href = url
+			link.setAttribute("download", data.filename ?? "duk.xlsx")
+			document.body.appendChild(link)
+			link.click()
+			document.body.removeChild(link)
 		},
-	});
+	})
 
-	const handleDownload = () => {
-		downloadFile.mutate();
-	};
+	const handleDownload = useCallback(() => {
+		downloadFile.mutate()
+	}, [downloadFile])
 	return (
 		<TooltipBuilder
 			text="Download File Excel"
@@ -39,7 +40,7 @@ const DukDownloadButton = () => {
 				className="bg-warning text-warning-foreground hover:bg-warning-foreground hover:text-warning"
 			/>
 		</TooltipBuilder>
-	);
-};
+	)
+}
 
-export default DukDownloadButton;
+export default DukDownloadButton

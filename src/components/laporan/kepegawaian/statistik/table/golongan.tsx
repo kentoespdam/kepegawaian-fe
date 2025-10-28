@@ -1,4 +1,4 @@
-import type { StatistikGolongan } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikGolongan } from "@_types/laporan/kepegawaian/lap_statistik";
 import {
 	Table,
 	TableBody,
@@ -8,14 +8,16 @@ import {
 	TableHeader,
 	TableRow,
 } from "@components/ui/table";
+import { useMemo } from "react";
 
 interface StatistikGolonganTableProps {
 	data: StatistikGolongan[];
 }
 const StatistikGolonganTable = ({
-	data,
-}: StatistikGolonganTableProps) => {
-	let urut = 1;
+									data,
+								}: StatistikGolonganTableProps) => {
+	const totalPegawai = useMemo(() => data.reduce((acc, item) => acc + item.total, 0), [data]);
+
 	return (
 		<Table className="w-full">
 			<TableHeader>
@@ -42,10 +44,10 @@ const StatistikGolonganTable = ({
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{data.map((item) => (
+				{data.map((item, idx) => (
 					<TableRow key={item.golongan}>
 						<TableCell className="border" align="right">
-							{urut++}
+							{idx + 1}
 						</TableCell>
 						<TableCell className="border">{item.golongan}</TableCell>
 						<TableCell className="border">{item.pangkat}</TableCell>
@@ -61,17 +63,17 @@ const StatistikGolonganTable = ({
 					</TableRow>
 				))}
 			</TableBody>
-            <TableFooter>
-                <TableRow>
-                    <TableCell colSpan={5} className="border" align="right">
-                        Total Pegawai
-                    </TableCell>
-                    <TableCell className="border" align="right">
-                        {data.reduce((acc, item) => acc + item.total, 0)}
-                    </TableCell>
+			<TableFooter>
+				<TableRow>
+					<TableCell colSpan={5} className="border" align="right">
+						Total Pegawai
+					</TableCell>
+					<TableCell className="border" align="right">
+						{totalPegawai}
+					</TableCell>
 
-                </TableRow>
-            </TableFooter>
+				</TableRow>
+			</TableFooter>
 		</Table>
 	);
 };
