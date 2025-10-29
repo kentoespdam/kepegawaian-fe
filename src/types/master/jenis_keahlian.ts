@@ -1,9 +1,9 @@
-import { z } from "zod";
-import type { CustomColumnDef } from "..";
+import { z } from "zod"
+import type { CustomColumnDef } from ".."
 
 export interface JenisKeahlian {
-	id: number;
-	nama: string;
+	id: number
+	nama: string
 }
 
 export const JenisKeahlianSchema = z.object({
@@ -11,7 +11,9 @@ export const JenisKeahlianSchema = z.object({
 	nama: z
 		.string({ required_error: "Nama Jenis Keahlian wajib diisi" })
 		.min(3, { message: "Nama Jenis Keahlian wajib diisi" }),
-});
+})
+
+export type JenisKeahlianSchema = z.infer<typeof JenisKeahlianSchema>
 
 export const jenisKeahlianTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -22,9 +24,9 @@ export const jenisKeahlianTableColumns: CustomColumnDef[] = [
 		searchType: "text",
 	},
 	{ id: "aksi", label: "Aksi" },
-];
+]
 
 export const findJenisKeahlianValue = (list: JenisKeahlian[], id: number) => {
-	const result = list.find((row) => row.id === id);
-	return !result ? { nama: "Pilih Keahlian" } : result;
-};
+	const result = list.find((row) => row.id === id)
+	return !result ? { nama: "Pilih Keahlian" } : result
+}

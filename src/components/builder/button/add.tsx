@@ -1,21 +1,25 @@
-import Link from "next/link";
-import TooltipBuilder from "../tooltip";
-import { Button } from "@components/ui/button";
-import { CirclePlusIcon } from "lucide-react";
+import Link from "next/link"
+import TooltipBuilder from "../tooltip"
+import { Button } from "@components/ui/button"
+import { CirclePlusIcon } from "lucide-react"
+import { memo } from "react"
 
-const ButtonAddBuilder = ({ href, msg }: { href: string, msg: string }) => {
-    return (
-        <TooltipBuilder text={msg} className="bg-primary">
-            <Link href={href}>
-                <Button
-                    variant="ghost"
-                    className="p-0 w-6 h-6 rounded-full text-primary hover:bg-primary hover:text-primary-foreground"
-                >
-                    <CirclePlusIcon />
-                </Button>
-            </Link>
-        </TooltipBuilder>
-    );
-}
+const ButtonAddBuilder = memo(
+	({ href, msg }: { href: string; msg: string }) => {
+		return (
+			<TooltipBuilder text={msg} className="bg-primary">
+				<Link href={href}>
+					<Button
+						variant="ghost"
+						className="h-6 w-6 rounded-full p-0 text-primary hover:bg-primary hover:text-primary-foreground"
+					>
+						<CirclePlusIcon />
+					</Button>
+				</Link>
+			</TooltipBuilder>
+		)
+	}
+)
+ButtonAddBuilder.displayName = "ButtonAddBuilder"
 
-export default ButtonAddBuilder;
+export default ButtonAddBuilder

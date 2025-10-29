@@ -1,21 +1,20 @@
 "use client";
 
 import { SanksiSchema, type Sanksi } from "@_types/master/sanksi";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
+import InputZod from "@components/form/zod/input";
+import SelectJenisSpZod from "@components/form/zod/jenis-sp";
+import YesNoZod from "@components/form/zod/yes-no";
+import { Button } from "@components/ui/button";
+import { DialogFooter } from "@components/ui/dialog";
+import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSanksiStore } from "@store/master/sanksi";
 import { useGlobalMutation } from "@store/query-store";
+import { SaveIcon, XCircleIcon } from "lucide-react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveSanksi } from "./action";
-import { Form } from "@components/ui/form";
-import { DialogFooter } from "@components/ui/dialog";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import { Button } from "@components/ui/button";
-import InputZod from "@components/form/zod/input";
-import SelectSanksiZod from "@components/form/zod/sanksi";
-import { SaveIcon, XCircleIcon } from "lucide-react";
-import SelectJenisSpZod from "@components/form/zod/jenis-sp";
-import { useEffect } from "react";
-import YesNoZod from "@components/form/zod/yes-no";
 
 interface SanksiFormProps {
 	qKey: string[];
@@ -33,10 +32,10 @@ const SanksiForm = ({ qKey, setOpenSanksiForm, sanksi }: SanksiFormProps) => {
 		values: defaultValues,
 	});
 
-	const onReset = () => {
+	const onReset = useCallback(() => {
 		form.reset();
 		setOpenSanksiForm(false);
-	};
+	},[form, setOpenSanksiForm]);
 
 	const mutation = useGlobalMutation({
 		mutationFunction: saveSanksi,
@@ -44,9 +43,9 @@ const SanksiForm = ({ qKey, setOpenSanksiForm, sanksi }: SanksiFormProps) => {
 		actHandler: onReset,
 	});
 
-	const onSubmit = (data: SanksiSchema) => {
+	const onSubmit = useCallback((data: SanksiSchema) => {
 		mutation.mutate(data);
-	};
+	},[mutation]);
 
 	const isPotonganTkk = form.watch("potTkk");
 
@@ -55,14 +54,18 @@ const SanksiForm = ({ qKey, setOpenSanksiForm, sanksi }: SanksiFormProps) => {
 	}, [sanksi, setDefaultValues]);
 	return (
 		<Form {...form}>
-			<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
+			<form
+				name="form"
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="grid gap-2"
+			>
 				<div className="grid gap-2 scroll-auto">
 					<InputZod
 						id="id"
 						label="id"
 						form={form}
-						// readonly
-						// className="hidden"
+						readonly
+						className="hidden"
 					/>
 					<SelectJenisSpZod id="jenisSpId" form={form} />
 					<InputZod id="kode" label="Kode" form={form} />

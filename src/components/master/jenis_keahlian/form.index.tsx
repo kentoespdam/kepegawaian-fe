@@ -1,77 +1,91 @@
-"use client";
-import type { SaveErrorStatus } from "@_types/index";
-import type { JenisKeahlian } from "@_types/master/jenis_keahlian";
-import AlertBuilder from "@components/builder/alert";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import InputTextComponent from "@components/form/input";
-import { buttonVariants } from "@components/ui/button";
-import { cn } from "@lib/utils";
-import { useMutation } from "@tanstack/react-query";
-import { SaveIcon } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { saveJenisKeahlian } from "./action";
+"use client"
+import {
+	type JenisKeahlian,
+	JenisKeahlianSchema,
+} from "@_types/master/jenis_keahlian"
+import { LoadingButtonClient } from "@components/builder/loading-button-client"
+import InputZod from "@components/form/zod/input"
+import { Button } from "@components/ui/button"
+import { Form } from "@components/ui/form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useGlobalMutation } from "@store/query-store";
+import { SaveIcon } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useCallback, useMemo } from "react"
+import { useForm } from "react-hook-form"
+import { saveJenisKeahlian } from "./action"
 
 type JenisKeahlianFormComponentProps = {
-    data?: JenisKeahlian
+	data?: JenisKeahlian
 }
-const JenisKeahlianFormComponent = ({ data }: JenisKeahlianFormComponentProps) => {
-    const [errState, setErrState] = useState<SaveErrorStatus | null>(null)
-    const { push } = useRouter()
+const JenisKeahlianFormComponent = ({
+	data,
+}: JenisKeahlianFormComponentProps) => {
+	const { back } = useRouter()
 
-    const mutation = useMutation({
-        mutationFn: saveJenisKeahlian,
-        onSuccess: (result: SaveErrorStatus) => {
-            if (!result.success) {
-                setErrState(result)
-                return
-            }
-            push("/master/jenis_keahlian")
-        }
-    })
+	const defaultValues = useMemo(() => {
+		const result = data
+			? {
+					id: data.id,
+					nama: data.nama,
+				}
+			: {
+					id: 0,
+					nama: "",
+				}
+		return result as JenisKeahlianSchema
+	}, [data])
+	const form = useForm<JenisKeahlianSchema>({
+		resolver: zodResolver(JenisKeahlianSchema),
+		defaultValues: defaultValues,
+		values: defaultValues,
+	})
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutation.mutate(new FormData(e.currentTarget))
-    }
+	const mutation = useGlobalMutation({
+		mutationFunction: saveJenisKeahlian,
+		queryKeys: [["jenis_keahlian", ""]],
+		redirectTo: "/master/jenis_keahlian",
+	})
 
-    return (
-        <>
-            {errState?.error ? (
-                <div className="mb-2">
-                    {Object.entries(errState.error).map(([key, value]) => (
-                        <AlertBuilder
-                            key={key}
-                            message={String(value)}
-                            variant="destructive"
-                            untitled
-                        />
-                    ))}
-                </div>
-            ) : null}
+	const onSubmit = useCallback(
+		(value: JenisKeahlianSchema) => {
+			mutation.mutate(value)
+		},
+		[mutation]
+	)
 
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <div className="grid w-full items-center gap-1.5">
-                    <InputTextComponent
-                        id="nama"
-                        label="Nama Jenis Keahlian"
-                        defaultValue={data?.nama}
-                        required
-                    />
-                </div>
-                <div className="flex flex-row justify-end gap-2">
-                    <Link href="/master/jenis_keahlian" className={cn(buttonVariants({
-                        variant: "destructive"
-                    }))} >
-                        Cancel
-                    </Link>
-                    <LoadingButtonClient pending={mutation.isPending} title="Save" icon={<SaveIcon />} />
-                    <input type="hidden" name="id" value={data?.id} />
-                </div>
-            </form>
-        </>
-    );
+	const cancelHandler = useCallback(() => {
+		form.reset()
+		back()
+	}, [form, back])
+
+	return (
+		<Form {...form}>
+			<form
+				className="space-y-4 md:space-y-6"
+				onSubmit={form.handleSubmit(onSubmit)}
+			>
+				<InputZod type={"hidden"} id={"id"} form={form} />
+				<InputZod id={"nama"} label={"Nama Jenis Keahlian"} form={form} />
+				<div className="flex flex-row justify-end gap-2">
+					<LoadingButtonClient
+						type="submit"
+						title="Save"
+						pending={mutation.isPending}
+						icon={<SaveIcon />}
+					/>
+					<Button
+						type="reset"
+						variant="destructive"
+						onClick={cancelHandler}
+					>
+						Cancel
+					</Button>
+					<input type="hidden" name="id" value={data?.id} />
+				</div>
+			</form>
+		</Form>
+	)
 }
 
-export default JenisKeahlianFormComponent;
+export default JenisKeahlianFormComponent

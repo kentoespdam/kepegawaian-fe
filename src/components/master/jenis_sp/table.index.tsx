@@ -13,6 +13,7 @@ import { useJenisSpStore } from "@store/master/jenis_sp.store";
 import { useSanksiStore } from "@store/master/sanksi";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import PatchSanksiJenisSpForm from "./form.add.sanksi.jenis_sp.dialog";
 import DeleteSanksiJenisSpFormDialog from "./form.delete.sanksi";
 import JenisSpTableBody from "./table.body";
@@ -35,7 +36,7 @@ const JenisSpTableComponent = () => {
 	}));
 
 	const params = useSearchParams();
-	const qKey = ["jenis_sp", params.toString()];
+	const qKey = useMemo(() => ["jenis_sp", params.toString()], [params]);
 	const query = useQuery({
 		queryKey: qKey,
 		queryFn: async () =>
