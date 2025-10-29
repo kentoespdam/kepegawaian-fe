@@ -1,6 +1,6 @@
 import {
-	STATUS_PROSES_GAJI,
 	getKeyStatusProsesGaji,
+	STATUS_PROSES_GAJI,
 } from "@_types/enums/status_proses_gaji"
 import type { Pageable } from "@_types/index"
 import type { Organisasi } from "@_types/master/organisasi"
@@ -35,13 +35,6 @@ const VerifikasiPhase1Page = async ({
 		getKeyStatusProsesGaji(STATUS_PROSES_GAJI.WAIT_VERIFICATION_PHASE_1)
 	)
 	if (nama) search.set("nama", nama)
-
-	// const user = await getCurrentUser();
-	// const pegawai = await getDataById<Pegawai>({
-	// 	path: "pegawai",
-	// 	id: user.$id,
-	// 	isRoot: true,
-	// });
 
 	const { pegawai } = await getAppData()
 
