@@ -1,6 +1,6 @@
-import { z } from "zod"
-import { User } from "@_types/user"
-import { PegawaiDetail } from "@_types/pegawai"
+import type { PegawaiDetail } from "@_types/pegawai"
+import type { User } from "@_types/user"
+import { z } from "zod";
 
 export const UserRole = z.object({
 	id: z.string(),
@@ -73,6 +73,10 @@ export interface PageResponse<TData> {
 	message: string
 	data: Pageable<TData>
 	timestamp: string
+}
+
+export interface BaseCount {
+	count: number;
 }
 
 export const ESearchType = z.enum([

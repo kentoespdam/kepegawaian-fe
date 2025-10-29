@@ -48,26 +48,26 @@ const ButtonDeleteBuilder = memo((props: ButtonDeleteBuilderProps) => {
 
 	const mutation = useMutation({
 		mutationFn: async (formData: FormData) => {
-			const result = await action(formData)
+			const result = await action(formData);
 			if (!result.success) {
-				setState(result)
-				return
+				setState(result);
+				return;
 			}
 		},
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: false positive
 		onError: (err: any) => {
-			setState(err)
+			setState(err);
 		},
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: false positive
 		onSuccess: async (result: any) => {
-			setState(result)
-			setOpen(false)
+			setState(result);
+			setOpen(false);
 			await client.invalidateQueries({
 				queryKey: [props.tag, search.toString()],
 				refetchType: "active",
-			})
+			});
 		},
-	})
+	});
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
