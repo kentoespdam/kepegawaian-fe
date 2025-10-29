@@ -32,12 +32,12 @@ export const menuLaporanKepegawaian: IMenu = {
 			icon: <FileTextIcon className={defaultIconClassName} />,
 			role: ["ADMIN"],
 		},
-		{
-			path: "/laporan/kepegawaian/cuti",
-			name: "Cuti Pegawai",
-			icon: <FileTextIcon className={defaultIconClassName} />,
-			role: ["ADMIN"],
-		},
+		// {
+		// 	path: "/laporan/kepegawaian/cuti",
+		// 	name: "Cuti Pegawai",
+		// 	icon: <FileTextIcon className={defaultIconClassName} />,
+		// 	role: ["ADMIN"],
+		// },
 		{
 			path: "/laporan/kepegawaian/mutasi",
 			name: "Mutasi Pegawai",
@@ -68,11 +68,11 @@ export const menuLaporanKepegawaian: IMenu = {
 			icon: <FileTextIcon className={defaultIconClassName} />,
 			role: ["ADMIN"],
 		},
-		{
-			path: "/laporan/kepegawaian/pensiun",
-			name: "Daftar Pensiun",
-			icon: <FileTextIcon className={defaultIconClassName} />,
-			role: ["ADMIN"],
-		},
+		// {
+		// 	path: "/laporan/kepegawaian/pensiun",
+		// 	name: "Daftar Pensiun",
+		// 	icon: <FileTextIcon className={defaultIconClassName} />,
+		// 	role: ["ADMIN"],
+		// },
 	],
 }

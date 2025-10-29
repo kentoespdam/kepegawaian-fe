@@ -1,12 +1,7 @@
-import {
-	HousePlugIcon,
-	ListCollapseIcon,
-	ListPlusIcon,
-	ShovelIcon,
-} from "lucide-react";
-import type { IMenu } from "..";
+import { HousePlugIcon, ListPlusIcon, ShovelIcon } from "lucide-react"
+import type { IMenu } from ".."
 
-const defaultIconClassName = "w-3 h-3";
+const defaultIconClassName = "w-3 h-3"
 
 export const menuCuti: IMenu = {
 	path: "#",
@@ -32,11 +27,11 @@ export const menuCuti: IMenu = {
 			icon: <ListPlusIcon className={defaultIconClassName} />,
 			role: ["USER"],
 		},
-		{
-			path: "/cuti/monitoring",
-			name: "Monitoring Cuti yang bisa diambil",
-			icon: <ListCollapseIcon className={defaultIconClassName} />,
-			role: ["ADMIN"],
-		},
+		// {
+		// 	path: "/cuti/monitoring",
+		// 	name: "Monitoring Cuti yang bisa diambil",
+		// 	icon: <ListCollapseIcon className={defaultIconClassName} />,
+		// 	role: ["ADMIN"],
+		// },
 	],
-};
+}

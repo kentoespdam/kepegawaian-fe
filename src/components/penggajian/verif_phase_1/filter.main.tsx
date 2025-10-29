@@ -290,4 +290,4 @@ const VerifPhase1MainFilter = ({
 	)
 }
 
-export default React.memo(VerifPhase1MainFilter)
+export default VerifPhase1MainFilter
