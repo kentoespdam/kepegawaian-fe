@@ -1,11 +1,12 @@
-import FormCard from "@components/form/form.card";
-import { getDataById } from "@helpers/action";
 import type { JenisKeahlian } from "@_types/master/jenis_keahlian";
+import FormCard from "@components/form/form.card";
 import JenisKeahlianFormComponent from "@components/master/jenis_keahlian/form.index";
+import { getDataById } from "@helpers/action";
 
 export const metadata = {
     title: "Edit Jenis Keahlian"
 }
+export const dynamic = "force-dynamic";
 const EditJenisKeahlianPage = async ({ params }: { params: { id: number } }) => {
     const data = await getDataById<JenisKeahlian>({
         path: "jenis_keahlian",
@@ -13,10 +14,10 @@ const EditJenisKeahlianPage = async ({ params }: { params: { id: number } }) => 
     })
 
     return (
-        <FormCard metadata={metadata}>
-            <JenisKeahlianFormComponent data={data} />
-        </FormCard>
-    );
+					<FormCard metadata={metadata}>
+						<JenisKeahlianFormComponent data={data} />
+					</FormCard>
+				);
 }
 
 export default EditJenisKeahlianPage;

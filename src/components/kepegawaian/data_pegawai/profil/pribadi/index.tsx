@@ -7,6 +7,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
 	DialogTitle,
 } from "@components/ui/dialog";
@@ -77,6 +78,7 @@ const EditProfilPribadiFormComponent = ({
 			<DialogContent className="min-w-[80%] max-h-screen">
 				<DialogHeader>
 					<DialogTitle>Edit Profil Karyawan</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<div className="h-full overflow-auto">
 					<Form {...form}>

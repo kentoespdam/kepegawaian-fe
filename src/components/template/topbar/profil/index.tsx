@@ -1,5 +1,4 @@
-import type { Pegawai } from "@_types/pegawai";
-import { Avatar, AvatarFallback } from "@components/ui/avatar";
+import { Avatar, AvatarFallback } from "@components/ui/avatar"
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -7,29 +6,22 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "@components/ui/dropdown-menu";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { getCurrentUser } from "@lib/appwrite/user";
-import { KeyRoundIcon } from "lucide-react";
-import Image from "next/image";
-import LogoutButton from "./button/logout";
-import ThemeButton from "./button/theme";
+} from "@components/ui/dropdown-menu"
+import { KeyRoundIcon } from "lucide-react"
+import Image from "next/image"
+import LogoutButton from "./button/logout"
+import ThemeButton from "./button/theme"
+import { TopBarProps } from "@components/template/topbar"
 
-const ProfileComponent = async () => {
-	const user = await getCurrentUser();
-	const pegawai = await getDataByIdEnc<Pegawai>({
-		path: encodeString("pegawai"),
-		id: encodeString(user.$id),
-		isRoot: true,
-		isString: true,
-	});
-
+const ProfileComponent = async ({ appData }: TopBarProps) => {
+	const { pegawai } = appData ?? {}
 	return (
 		<div className="flex items-center gap-3 py-2">
 			<div className="hidden md:block lg:block">
 				<div className="flex flex-col">
-					<h6 className="font-medium text-foreground">{user.name}</h6>
+					<h6 className="font-medium text-foreground">
+						{pegawai?.biodata.nama}
+					</h6>
 					<span className="text-[10pt] font-normal text-foreground">
 						{pegawai?.jabatan.nama}
 					</span>
@@ -49,7 +41,9 @@ const ProfileComponent = async () => {
 					</Avatar>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent align="end">
-					<DropdownMenuLabel>{user.name}</DropdownMenuLabel>
+					<DropdownMenuLabel>
+						{pegawai?.biodata.nama}
+					</DropdownMenuLabel>
 					<DropdownMenuSeparator />
 					<DropdownMenuItem className="cursor-pointer hover:bg-accent">
 						<KeyRoundIcon className="mr-2 h-[1.2rem] w-[1.2rem]" />
@@ -61,7 +55,7 @@ const ProfileComponent = async () => {
 				</DropdownMenuContent>
 			</DropdownMenu>
 		</div>
-	);
-};
+	)
+}
 
-export default ProfileComponent;
+export default ProfileComponent

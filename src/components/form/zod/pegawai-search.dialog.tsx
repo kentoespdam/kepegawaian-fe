@@ -11,7 +11,9 @@ import {
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
+	DialogTitle,
 	DialogTrigger,
 } from "@components/ui/dialog";
 import {
@@ -22,7 +24,7 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData, getListDataEnc } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
 import { useQuery } from "@tanstack/react-query";
 import { SearchIcon } from "lucide-react";
@@ -63,7 +65,10 @@ const PegawaiContent = ({ handleSelect }: PegawaiContentProps) => {
 
 	return (
 		<DialogContent className="md:max-w-[700px] lg:max-w-[900px] sm:max-w-[425px]">
-			<DialogHeader>Cari Penandatangan</DialogHeader>
+			<DialogHeader>
+				<DialogTitle>Cari Penandatangan</DialogTitle>
+				<DialogDescription className="sr-only" />
+			</DialogHeader>
 			<div>
 				<Command>
 					<CommandInput

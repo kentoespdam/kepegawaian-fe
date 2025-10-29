@@ -5,6 +5,7 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@components/ui/form";
+import { dateToYMD } from "@helpers/tanggal";
 import { useState } from "react";
 import type { FieldValues } from "react-hook-form";
 import Datepicker, { type DateValueType } from "react-tailwindcss-datepicker";
@@ -47,7 +48,7 @@ const DatePickerZod = <TData extends FieldValues>({
 								value={value}
 								onChange={(val) => {
 									setValue(val);
-									field.onChange(val?.startDate?.toString());
+									field.onChange(dateToYMD(val?.startDate?.toString()));
 								}}
 							/>
 						</FormControl>

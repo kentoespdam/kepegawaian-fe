@@ -1,40 +1,54 @@
-import type { PegawaiDetail } from "@_types/pegawai";
-import LampiranSkContent from "@components/kepegawaian/detail/lampiran";
-import { AccordionItem, AccordionTrigger } from "@components/ui/accordion";
-import { AccordionContent } from "@radix-ui/react-accordion";
-import KananDataMutasiTable from "./kanan.mutasi.table";
+import LampiranSkContent from "@components/kepegawaian/detail/lampiran"
+import { AccordionItem, AccordionTrigger } from "@components/ui/accordion"
+import { AccordionContent } from "@radix-ui/react-accordion"
+import KananDataMutasiTable from "./kanan.mutasi.table"
+import { DashboardPanelKananComponentProps } from "@components/dashboard/pegawai/kanan/index"
 
-const KananDataMutasi = ({ pegawai }: { pegawai: PegawaiDetail }) => {
+const KananDataMutasi = ({
+	pegawai,
+	isKaryawanAktif,
+}: DashboardPanelKananComponentProps) => {
+	const { id, nipam, biodata } = pegawai
 	return (
 		<AccordionItem value="data-mutasi">
-			<AccordionTrigger className="p-2 bg-primary text-primary-foreground">
+			<AccordionTrigger className="bg-primary p-2 text-primary-foreground">
 				Data Mutasi pekerjaan
 			</AccordionTrigger>
 			<AccordionContent className="grid border-t p-0">
 				<div className="grid min-h-full w-full">
-					<div className="border-t border-r border-b gap-0">
+					<div className="gap-0 border-b border-r border-t">
 						<div className="grid">
-							<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+							<header className="flex h-10 items-center justify-between border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
 								<span className="text-md font-semibold">
-									Data Mutasi Pekerjaan [{pegawai?.nipam}] (
-									{pegawai?.biodata.nama})
+									Data Mutasi Pekerjaan [{nipam}] (
+									{biodata.nama})
 								</span>
 							</header>
 							<main className="flex flex-1 flex-col">
-								<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-									<KananDataMutasiTable pegawaiId={pegawai.id} />
+								<div
+									className="grid flex-1"
+									x-chunk="dashboard-02-chunk-1"
+								>
+									<KananDataMutasiTable pegawaiId={id} />
 								</div>
 							</main>
 						</div>
 					</div>
-					<div className="border-t border-r border-b gap-0">
+					<div className="gap-0 border-b border-r border-t">
 						<div className="grid">
-							<header className="flex justify-between h-10 items-center border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
-								<span className="text-md font-semibold">Lampiran</span>
+							<header className="flex h-10 items-center justify-between border-b bg-muted/40 px-4 lg:h-[60px] lg:px-6">
+								<span className="text-md font-semibold">
+									Lampiran
+								</span>
 							</header>
 							<main className="flex flex-1 flex-col">
-								<div className="grid flex-1" x-chunk="dashboard-02-chunk-1">
-									<LampiranSkContent pegawaiId={pegawai.id} />
+								<div
+									className="grid flex-1"
+									x-chunk="dashboard-02-chunk-1"
+								>
+									<LampiranSkContent
+										isKaryawanAktif={isKaryawanAktif}
+									/>
 								</div>
 							</main>
 						</div>
@@ -42,7 +56,7 @@ const KananDataMutasi = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 				</div>
 			</AccordionContent>
 		</AccordionItem>
-	);
-};
+	)
+}
 
-export default KananDataMutasi;
+export default KananDataMutasi

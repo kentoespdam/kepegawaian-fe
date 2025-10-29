@@ -1,39 +1,45 @@
-"use client";
+"use client"
 
-import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
-	type ChartConfig,
 	ChartContainer,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Pie, PieChart } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Pie, PieChart } from "recharts"
 
 const StatistikJenisKelaminPie = ({
 	data,
-}: { data: StatistikJenisKelamin[] }) => {
-	const chartData = data.map((item, index) => ({
-		label: item.jenis_kelamin,
-		value: item.persen,
-		fill: `hsl(var(--chart-${index + 1}))`,
-	}));
-
-	let chartConfig = {} satisfies ChartConfig;
-	data.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[item.jenis_kelamin]: {
+}: {
+	data: StatistikJenisKelamin[]
+}) => {
+	const chartData = useMemo(
+		() =>
+			data.map((item, index) => ({
 				label: item.jenis_kelamin,
-				color: `hsl(var(--chart-${index + 1}))`,
-			},
-		};
-	});
+				value: item.persen,
+				fill: `hsl(var(--chart-${index + 1}))`,
+			})),
+		[data]
+	)
+
+	const chartConfig = useMemo(() => {
+		const cfg: Record<string, { label: string; color?: string }> = {}
+		for (const item of data) {
+			cfg[item.jenis_kelamin] = {
+				label: item.jenis_kelamin,
+				color: `hsl(var(--chart-${data.indexOf(item) + 1}))`,
+			}
+		}
+		return cfg
+	}, [data])
 
 	if (data.length === 0) {
-		return null;
+		return null
 	}
 	return (
-		<ChartContainer config={chartConfig} className="w-[600px] mx-auto">
+		<ChartContainer config={chartConfig} className="mx-auto w-[600px]">
 			<PieChart accessibilityLayer>
 				<ChartTooltip content={<ChartTooltipContent />} />
 				<Pie
@@ -57,7 +63,7 @@ const StatistikJenisKelaminPie = ({
 				/>
 			</PieChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikJenisKelaminPie;
+export default StatistikJenisKelaminPie

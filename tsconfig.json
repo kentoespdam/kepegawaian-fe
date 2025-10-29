@@ -1,11 +1,7 @@
 {
 	"compilerOptions": {
 		"target": "ES2017",
-		"lib": [
-			"dom",
-			"dom.iterable",
-			"esnext"
-		],
+		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": true,
 		"skipLibCheck": true,
 		"strict": true,
@@ -26,49 +22,22 @@
 		],
 		"paths": {
 			// "@/*": ["./src/*"]
-			"@components/*": [
-				"./src/components/*"
-			],
-			"@ui": [
-				"./src/components/ui/*"
-			],
-			"@utils/*": [
-				"./src/utils/*"
-			],
-			"@helpers/*": [
-				"./src/helpers/*"
-			],
-			"@store/*": [
-				"./src/store/*"
-			],
-			"@_types/*": [
-				"./src/types/*"
-			],
-			"@provider/*": [
-				"./src/components/provider/*"
-			],
-			"@lib/*": [
-				"./src/lib/*"
-			],
-			"@app/*": [
-				"./src/app/*"
-			],
-			"@public/*": [
-				"./public/*"
-			],
-			"@/*": [
-				"./src/*"
-			]
+			"@components/*": ["./src/components/*"],
+			"@ui": ["./src/components/ui/*"],
+			"@utils/*": ["./src/utils/*"],
+			"@helpers/*": ["./src/helpers/*"],
+			"@store/*": ["./src/store/*"],
+			"@_types/*": ["./src/types/*"],
+			"@provider/*": ["./src/components/provider/*"],
+			"@lib/*": ["./src/lib/*"],
+			"@hooks/*": ["./src/hooks/*"],
+			"@app/*": ["./src/app/*"],
+			"@public/*": ["./public/*"]
+			//			"@/*": [
+			//				"./src/*"
+			//			]
 		}
 	},
-	"include": [
-		"next-env.d.ts",
-		"**/*.ts",
-		"**/*.tsx",
-		".next/types/**/*.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"@radix-ui/**"
-	]
+	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"exclude": ["node_modules", "@radix-ui/**"]
 }

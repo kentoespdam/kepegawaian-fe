@@ -1,29 +1,32 @@
+import { type JenisGaji, getKeyJenisGaji } from "@_types/enums/jenis_gaji";
 import {
-    type JenisGaji,
-    getKeyJenisGaji
-} from "@_types/enums/jenis_gaji";
-import {
-    type GajiBatchMasterProses,
-    gajiBatchMasterProsesColumns,
+	type GajiBatchMasterProses,
+	gajiBatchMasterProsesColumns,
 } from "@_types/gaji_batch_master_process";
 import {
-    TableBody,
-    TableCell,
-    TableFooter,
-    TableRow,
+	TableBody,
+	TableCell,
+	TableFooter,
+	TableRow,
 } from "@components/ui/table";
 import { rupiah } from "@helpers/number";
+import { cn } from "@lib/utils";
 
 interface GajiBatchMasterProsesTableBodyProps {
 	data: GajiBatchMasterProses[];
 	jenisGaji: JenisGaji;
+	isApproval?: boolean;
 }
 const GajiBatchMasterProsesTableBody = ({
 	data,
 	jenisGaji,
+	isApproval = false,
 }: GajiBatchMasterProsesTableBodyProps) => {
-	const filtered = data.filter(
-		(item) => item.jenisGaji === getKeyJenisGaji(jenisGaji),
+	const filtered = data.filter((item) =>
+		isApproval
+			? item.jenisGaji === getKeyJenisGaji(jenisGaji)
+			: item.jenisGaji === getKeyJenisGaji(jenisGaji) &&
+				!item.kode.startsWith("ADD_"),
 	);
 	const penghasilan = filtered.reduce((total, item) => total + item.nilai, 0);
 	let urut = 1;
@@ -35,8 +38,21 @@ const GajiBatchMasterProsesTableBody = ({
 						<TableCell className="border-x" align="right" width={45}>
 							{urut++}
 						</TableCell>
-						<TableCell className="border-x">{item.nama}</TableCell>
-						<TableCell className="border-x" align="right">
+						<TableCell
+							className={cn(
+								"border-x",
+								item.kode.startsWith("ADD_") && "text-info",
+							)}
+						>
+							{item.nama}
+						</TableCell>
+						<TableCell
+							className={cn(
+								"border-x",
+								item.kode.startsWith("ADD_") && "text-info",
+							)}
+							align="right"
+						>
 							{rupiah(item.nilai)}
 						</TableCell>
 					</TableRow>

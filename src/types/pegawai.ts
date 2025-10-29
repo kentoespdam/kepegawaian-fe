@@ -1,130 +1,126 @@
-import { z } from "zod";
-import type { CustomColumnDef } from ".";
-import type { RiwayatSk } from "./kepegawaian/riwayat_sk";
-import type { Golongan } from "./master/golongan";
-import type { Grade } from "./master/grade";
-import type { JabatanMini } from "./master/jabatan";
-import type { Organisasi, OrganisasiMini } from "./master/organisasi";
-import type { Profesi } from "./master/profesi";
-import type { RumahDinas } from "./master/rumah_dinas";
-import type { PendapatanNonPajak } from "./penggajian/pendapatan_non_pajak";
-import type { ProfilGaji } from "./penggajian/profil";
-import {
-	type Biodata,
-	type BiodataMini,
-	BiodataSchema,
-} from "./profil/biodata";
+import { z } from "zod"
+import type { CustomColumnDef } from "."
+import type { RiwayatSk } from "./kepegawaian/riwayat_sk"
+import type { Golongan } from "./master/golongan"
+import type { Grade } from "./master/grade"
+import type { JabatanMini } from "./master/jabatan"
+import type { Organisasi, OrganisasiMini } from "./master/organisasi"
+import type { Profesi } from "./master/profesi"
+import type { RumahDinas } from "./master/rumah_dinas"
+import type { PendapatanNonPajak } from "./penggajian/pendapatan_non_pajak"
+import type { ProfilGaji } from "./penggajian/profil"
+import { type Biodata, type BiodataMini, BiodataSchema } from "./profil/biodata"
 
 export interface PegawaiMini {
-	id: number;
-	nipam: string;
-	nama: string;
-	statusPegawai: string;
-	jabatan: string;
-	organisasi: string;
+	id: number
+	nipam: string
+	nama: string
+	statusPegawai: string
+	jabatan: string
+	organisasi: string
 }
 
 export interface BasePegawai {
-	id: number;
-	nipam: string;
-	statusPegawai: string;
-	statusKerja: string;
-	nomorSk: string;
-	tmtKerja: string | null;
-	biodata: BiodataMini;
-	organisasi: Organisasi;
-	jabatan: JabatanMini;
-	profesi: Profesi;
-	golongan: Golongan;
-	grade: Grade;
-	tmtPensiun: string | null;
-	gajiPokok: number;
-	phdp: number;
-	jmlTanggungan: number;
-	mkgTahun: number;
-	mkgBulan: number;
-	absensiId: number;
-	isAskes: boolean;
-	kodePajak: PendapatanNonPajak | null;
-	email: string;
-	notes: string | null;
+	id: number
+	nipam: string
+	statusPegawai: string
+	statusKerja: string
+	nomorSk: string
+	tmtKerja: string | null
+	biodata: BiodataMini
+	organisasi: Organisasi
+	jabatan: JabatanMini
+	profesi: Profesi
+	golongan: Golongan
+	grade: Grade
+	tmtPensiun: string | null
+	gajiPokok: number
+	phdp: number
+	jmlTanggungan: number
+	mkgTahun: number
+	mkgBulan: number
+	absensiId: number
+	isAskes: boolean
+	kodePajak: PendapatanNonPajak | null
+	email: string
+	notes: string | null
 }
 
 export interface PegawaiDetail extends BasePegawai {
-	biodata: Biodata;
-	skCapeg: RiwayatSk | null;
-	skPegawai: RiwayatSk | null;
-	skGolongan: RiwayatSk | null;
-	skJabatan: RiwayatSk | null;
-	skMutasi: RiwayatSk | null;
-	skKontrak: RiwayatSk | null;
-	skGajiBerkala: RiwayatSk | null;
-	tanggalSk: string;
-	tmtKontrakSelesai: string;
-	gajiProfil: ProfilGaji | null;
-	rumahDinas: RumahDinas | null;
+	biodata: Biodata
+	skCapeg: RiwayatSk | null
+	skPegawai: RiwayatSk | null
+	skGolongan: RiwayatSk | null
+	skJabatan: RiwayatSk | null
+	skMutasi: RiwayatSk | null
+	skKontrak: RiwayatSk | null
+	skGajiBerkala: RiwayatSk | null
+	tanggalSk: string
+	tmtKontrakSelesai: string
+	gajiProfil: ProfilGaji | null
+	rumahDinas: RumahDinas | null
 }
 
 export interface Pegawai extends BasePegawai {
-	refSkCapegId: number;
-	tmtKerja: string | null;
-	tmtPensiun: string | null;
-	refSkPegawaiId: number;
-	tmtPegawai: string | null;
-	refSkGolonganId: number;
-	tmtGolongan: string | null;
-	refSkJabatanId: number;
-	tmtJabatan: string | null;
-	refSkMutasiId: number;
-	tmtMutasi: string | null;
+	refSkCapegId: number
+	tmtKerja: string | null
+	tmtPensiun: string | null
+	refSkPegawaiId: number
+	tmtPegawai: string | null
+	refSkGolonganId: number
+	tmtGolongan: string | null
+	refSkJabatanId: number
+	tmtJabatan: string | null
+	refSkMutasiId: number
+	tmtMutasi: string | null
 }
 
 export interface PegawaiList {
-	id: number;
-	nipam: string;
-	nama: string;
-	statusPegawai: string;
-	organisasi: OrganisasiMini;
-	jabatan: JabatanMini;
-	golongan: Golongan;
+	id: number
+	nipam: string
+	nama: string
+	statusPegawai: string
+	organisasi: OrganisasiMini
+	jabatan: JabatanMini
+	golongan: Golongan
 }
 
 export interface PegawaiRingkas {
-	id: number;
-	nipam: string;
-	nama: string;
-	jenisKelamin: string;
-	tempatLahir: string;
-	tanggalLahir: string;
-	statusKawin: string;
-	alamat: string;
-	nik: string;
-	agama: string;
-	telp: string;
-	email: string;
-	kodePajak: string;
-	ibuKandung: string;
-	pendidikanTerakhir: string;
-	lembagaPendidikan: string;
-	tahunLulus: number;
-	statusPegawai: string;
-	pangkatGolongan: string;
-	tmtGolongan: string;
-	mkg: string;
-	unitKerja: string;
-	jabatan: string;
-	profesi: string;
-	grade: string;
-	tmtKerja: string;
-	tmtPegawai: string;
-	tmtPensiun: string;
-	isAskes: boolean | null;
-	absesniId: number | null;
-	noKontrak: string;
-	noNpwp: string;
-	noJamsostek: string;
-	noBpjs: string;
-	noIdCard: string;
+	id: number
+	nipam: string
+	nama: string
+	jenisKelamin: string
+	tempatLahir: string
+	tanggalLahir: string
+	statusKawin: string
+	alamat: string
+	nik: string
+	agama: string
+	telp: string
+	email: string
+	kodePajak: string
+	ibuKandung: string
+	pendidikanTerakhir: string
+	lembagaPendidikan: string
+	tahunLulus: number
+	statusPegawai: string
+	pangkatGolongan: string
+	tmtGolongan: string
+	mkg: string
+	unitKerja: string
+	jabatan: string
+	profesi: string
+	grade: string
+	tmtKerja: string
+	tmtPegawai: string
+	tmtPensiun: string
+	isAskes: boolean | null
+	absensiId: number | null
+	noKontrak: string
+	noNpwp: string
+	noJamsostek: string
+	noBpjs: string
+	noIdCard: string
 }
 
 export const PegawaiSchema = BiodataSchema.extend({
@@ -143,56 +139,56 @@ export const PegawaiSchema = BiodataSchema.extend({
 	tmtKontrakSelesai: z.string().optional(),
 	gajiPokok: z.number().default(0),
 }).superRefine((val, ctx) => {
-	if (val.statusPegawai === "NON_PEGAWAI") return;
+	if (val.statusPegawai === "NON_PEGAWAI") return
 
 	if (!val.nipam || val.nipam === "")
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Nipam wajib diisi",
 			path: ["nipam"],
-		});
+		})
 
 	if (!val.organisasiId || val.organisasiId <= 1)
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Organisasi wajib diisi",
 			path: ["organisasiId"],
-		});
+		})
 
 	if (!val.jabatanId || val.jabatanId <= 1)
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Jabatan wajib diisi",
 			path: ["jabatanId"],
-		});
+		})
 
 	if (!val.profesiId || val.profesiId <= 1)
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Profesi wajib diisi",
 			path: ["profesiId"],
-		});
+		})
 
 	if (!val.nomorSk || val.nomorSk === "")
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Nomor SK wajib diisi",
 			path: ["nomorSk"],
-		});
+		})
 
 	if (!val.tmtBerlakuSk || val.tmtBerlakuSk === "")
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Tgl. Berlaku wajib diisi",
 			path: ["tmtBerlaku"],
-		});
+		})
 
 	if (!val.tanggalSk || val.tanggalSk === "")
 		ctx.addIssue({
 			code: z.ZodIssueCode.custom,
 			message: "Tgl. SK wajib diisi",
 			path: ["tanggalSk"],
-		});
+		})
 
 	if (
 		["CAPEG", "PEGAWAI"].includes(val.statusPegawai) &&
@@ -202,7 +198,7 @@ export const PegawaiSchema = BiodataSchema.extend({
 			code: z.ZodIssueCode.custom,
 			message: "Golongan wajib diisi",
 			path: ["golonganId"],
-		});
+		})
 	}
 	if (val.statusPegawai === "KONTRAK" && !val.tmtKontrakSelesai) {
 		if (!val.tmtKontrakSelesai) {
@@ -210,12 +206,12 @@ export const PegawaiSchema = BiodataSchema.extend({
 				code: z.ZodIssueCode.custom,
 				message: "Tgl. Kontrak Selesai wajib diisi",
 				path: ["tmtKontrakSelesai"],
-			});
+			})
 		}
 	}
-});
+})
 
-export type PegawaiSchema = z.infer<typeof PegawaiSchema>;
+export type PegawaiSchema = z.infer<typeof PegawaiSchema>
 
 export const pegawaiTableColumns: CustomColumnDef[] = [
 	{
@@ -243,6 +239,9 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 	{
 		id: "jenisKelamin",
 		label: "J/K",
+		sortable: true,
+		search: true,
+		searchType: "jenisKelamin",
 	},
 	{
 		id: "golonganId",
@@ -296,7 +295,7 @@ export const pegawaiTableColumns: CustomColumnDef[] = [
 		id: "statusPegawaiId",
 		label: "Status Pegawai",
 	},
-];
+]
 
 export const ProfilGajiPegawaiSchema = z.object({
 	id: z.number().default(0),
@@ -318,9 +317,9 @@ export const ProfilGajiPegawaiSchema = z.object({
 	rumahDinasId: z.number(),
 	phdp: z.number(),
 	isAskes: z.boolean(),
-});
+})
 
-export type ProfilGajiPegawaiSchema = z.infer<typeof ProfilGajiPegawaiSchema>;
+export type ProfilGajiPegawaiSchema = z.infer<typeof ProfilGajiPegawaiSchema>
 
 export const ProfilPribadiSchema = z.object({
 	id: z.number().default(0),
@@ -339,6 +338,6 @@ export const ProfilPribadiSchema = z.object({
 	jabatanId: z.number(),
 	profesiId: z.number().optional(),
 	absensiId: z.number(),
-});
+})
 
-export type ProfilPribadiSchema = z.infer<typeof ProfilPribadiSchema>;
+export type ProfilPribadiSchema = z.infer<typeof ProfilPribadiSchema>

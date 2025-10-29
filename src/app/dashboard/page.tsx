@@ -1,42 +1,23 @@
-import type { PegawaiDetail } from "@_types/pegawai";
-import DashboardPanelKananComponent from "@components/dashboard/pegawai/kanan";
-import DashboardPanelKiriComponent from "@components/dashboard/pegawai/kiri";
-import {
-	ResizableHandle,
-	ResizablePanel,
-	ResizablePanelGroup,
-} from "@components/ui/resizable";
-import { getDataByIdEnc } from "@helpers/action";
-import { encodeString } from "@helpers/number";
-import { getCurrentUser } from "@lib/appwrite/user";
+import type { StatistikGolongan } from "@_types/laporan/kepegawaian/lap_statistik";
+import DashboardCardSection from "@components/dashboard/main/card-section";
+import DasboardStatistikPegawai from "@components/dashboard/main/statistik";
+import { Separator } from "@components/ui/separator";
+import { globalGetData } from "@helpers/action";
+import getAppData from "@lib/app-data";
 
 export const metadata = { title: "Dashboard Pegawai" };
 const DashboardPage = async () => {
-	const user = await getCurrentUser();
-	const pegawai = await getDataByIdEnc<PegawaiDetail>({
-		path: encodeString("pegawai"),
-		id: encodeString(user.$id),
-		isRoot: true,
-		isString: true,
+	const { user, pegawai } = await getAppData();
+
+	const statistikData = await globalGetData<StatistikGolongan[]>({
+		path: "laporan/kepegawaian/statistik/golongan",
 	});
 	return (
-		<>
-			<div className="grid gap-2">
-				<ResizablePanelGroup
-					direction="horizontal"
-					className="w-full rounded-lg border"
-				>
-					<ResizablePanel defaultSize={30}>
-						<DashboardPanelKiriComponent pegawai={pegawai} />
-					</ResizablePanel>
-					<ResizableHandle withHandle />
-					<ResizablePanel>
-						<DashboardPanelKananComponent pegawai={pegawai} />
-					</ResizablePanel>
-				</ResizablePanelGroup>
-			</div>
-			<div id="clone-gaji-content" className="p-4" />
-		</>
+		<div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+			<DashboardCardSection user={user} pegawai={pegawai} />
+			<Separator />
+			<DasboardStatistikPegawai slug="golongan" statistikData={statistikData} />
+		</div>
 	);
 };
 

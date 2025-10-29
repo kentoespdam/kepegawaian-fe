@@ -17,10 +17,13 @@ import { usePathname } from "next/navigation";
 type MenuListBuilderProps = {
 	menu: IMenu;
 	roles: string[];
+	levelJabatan: number
 };
-const MenulistBuilder = (props: MenuListBuilderProps) => {
+const MenuListBuilder = (props: MenuListBuilderProps) => {
 	const pathName = usePathname();
 	const menuPath = props.menu.path.split("?")[0];
+
+	if(props.menu.path==="/cuti/persetujuan" && props.levelJabatan===7 && !props.roles.includes("ADMIN")) return null
 
 	return props.menu.type === "group" ? (
 		props.roles.some((role) => props.menu.role.includes(role)) ? (
@@ -28,15 +31,18 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
 				{props.menu.subMenu?.length === 0
 					? null
 					: props.menu.subMenu?.map((menu) => (
-							<MenulistBuilder
+							<MenuListBuilder
 								menu={menu}
 								key={`${menu.name}-${menu.path}`}
 								roles={props.roles}
+								levelJabatan={props.levelJabatan}
 							/>
 						))}
 			</CommandGroup>
 		) : null
-	) : props.roles.some((role) => props.menu.role.includes(role)) ? (
+	) : props.roles.some((role) => props.menu.role.includes(role)) ?
+	// props.menu.path==="/cuti/persetujuan"  
+	(
 		<SheetClose asChild>
 			<Link href={props.menu.path} className="cursor pointer">
 				<CommandItem
@@ -60,18 +66,20 @@ const MenulistBuilder = (props: MenuListBuilderProps) => {
 
 interface SheetMenuCommandProps {
 	roles: string[];
+	levelJabatan: number
 }
-const SheetMenuCommand = ({ roles }: SheetMenuCommandProps) => {
+const SheetMenuCommand = ({ roles, levelJabatan }: SheetMenuCommandProps) => {
 	return (
 		<Command className="h-full">
 			<CommandInput placeholder="Type to search..." />
 			<CommandList className="h-screen max-h-[100%]">
 				<CommandEmpty>No results found.</CommandEmpty>
 				{menus.map((menu) => (
-					<MenulistBuilder
+					<MenuListBuilder
 						menu={menu}
 						key={`${menu.name}-${menu.path}`}
 						roles={roles}
+						levelJabatan={levelJabatan}
 					/>
 				))}
 			</CommandList>

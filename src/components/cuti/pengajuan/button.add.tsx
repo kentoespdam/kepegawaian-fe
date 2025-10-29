@@ -7,16 +7,16 @@ import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { PlusCircleIcon } from "lucide-react";
 
 const AddPengajuanCutiButton = ({ pegawai }: { pegawai: PegawaiDetail }) => {
-	const { setOpen, setPegawaiValue } = usePengajuanCutiStore((state) => ({
+	const { setOpen, setDefaultValue } = usePengajuanCutiStore((state) => ({
 		setOpen: state.setOpen,
-		setPegawaiValue: state.setPegawaiValue,
+		setDefaultValue: state.setDefaultValue,
 	}));
 
 	return (
 		<TooltipBuilder text="Add Tunjangan" delayDuration={100}>
 			<Button
 				onClick={() => {
-					setPegawaiValue(pegawai);
+					setDefaultValue(pegawai);
 					setOpen(true);
 				}}
 				variant={"ghost"}

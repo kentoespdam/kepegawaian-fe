@@ -1,9 +1,10 @@
-import { TableCell } from "@components/ui/table";
-import type { MutasiRowProps } from "./table.body";
+import { TableCell } from "@components/ui/table"
+import type { MutasiRowProps } from "./table.body"
+import { memo } from "react"
 
-const MutasiOrganisasiCell = ({ row }: MutasiRowProps) => {
+const MutasiOrganisasiCell = memo(({ row }: MutasiRowProps) => {
 	return (
-		<TableCell className="border-x whitespace-nowrap">
+		<TableCell className="whitespace-nowrap border-x">
 			<div className="flex gap-2">
 				<div className="grid">
 					<span>Lama</span>
@@ -15,7 +16,8 @@ const MutasiOrganisasiCell = ({ row }: MutasiRowProps) => {
 				</div>
 			</div>
 		</TableCell>
-	);
-};
+	)
+})
+MutasiOrganisasiCell.displayName = "MutasiOrganisasiCell"
 
-export default MutasiOrganisasiCell;
+export default MutasiOrganisasiCell

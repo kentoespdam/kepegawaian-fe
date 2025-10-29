@@ -1,11 +1,15 @@
 "use client";
 
 import { GajiBatchMasterProsesSchema } from "@_types/penggajian/gaji_batch_master_proses";
+import { LoadingButtonClient } from "@components/builder/loading-button-client";
+import TooltipBuilder from "@components/builder/tooltip";
 import InputZod from "@components/form/zod/input";
+import SelectJenisGajiZod from "@components/form/zod/jenis_gaji";
 import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -14,13 +18,10 @@ import { Form } from "@components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGajiBatchMasterProsesStore } from "@store/penggajian/gaji_batch_master_proses";
 import { useGlobalMutation } from "@store/query-store";
+import type { QueryKey } from "@tanstack/react-query";
+import { SaveIcon, XCircleIcon } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { saveGajiBatchMasterProses } from "./action";
-import SelectJenisGajiZod from "@components/form/zod/jenis_gaji";
-import TooltipBuilder from "@components/builder/tooltip";
-import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import { SaveIcon, XCircleIcon } from "lucide-react";
-import type { QueryKey } from "@tanstack/react-query";
 
 interface GajiBatchMasterProsesFormProps {
 	qKey: QueryKey[];
@@ -67,6 +68,7 @@ const GajiBatchMasterProsesForm = (props: GajiBatchMasterProsesFormProps) => {
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Tambah Komponen Gaji</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
 					<form

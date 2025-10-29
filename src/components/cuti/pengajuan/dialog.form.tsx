@@ -14,6 +14,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -23,6 +24,7 @@ import { Form } from "@components/ui/form";
 import { Separator } from "@components/ui/separator";
 import { getListDataEnc, globalGetDataEnc } from "@helpers/action";
 import { encodeString } from "@helpers/number";
+import { dateToYMD } from "@helpers/tanggal";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usePengajuanCutiStore } from "@store/cuti/pengajuan";
 import { useGlobalMutation } from "@store/query-store";
@@ -129,6 +131,7 @@ const PengajuanCutiFormDialog = ({ pegawai }: { pegawai: PegawaiDetail }) => {
 			<DialogContent className="max-h-screen p-2 max-w-full sm:max-w-screen md:w-[650px] lg:w-[650px]">
 				<DialogHeader>
 					<DialogTitle>Pengajuan Cuti</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
 					<form

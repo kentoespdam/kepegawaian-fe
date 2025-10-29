@@ -3,6 +3,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -27,6 +28,7 @@ const CutiPengajuanInfoDialog = ({
 			<DialogContent className="mx-h-screen p-2 max-w-full sm:max-w-screen md:w-[650px] lg:w-[650px]">
 				<DialogHeader>
 					<DialogTitle>Detail Pengajuan Cuti</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Tabs defaultValue="informasiCuti">
 					<TabsList>

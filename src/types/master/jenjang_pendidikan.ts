@@ -9,9 +9,11 @@ export interface JenjangPendidikan {
 
 export const JenjangPendidikanSchema = z.object({
 	id: z.number(),
-	nama: z.string().min(3, { message: "Nama Jenis Kitas Wajib Diisi" }),
+	nama: z.string().min(2, { message: "Nama Jenjang Pendidikan Wajib Diisi" }),
 	seq: z.number().min(1, "Urut Wajib Diisi"),
 });
+
+export type JenjangPendidikanSchema = z.infer<typeof JenjangPendidikanSchema>;
 
 export const jenjangPendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },

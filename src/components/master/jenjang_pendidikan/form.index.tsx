@@ -1,86 +1,98 @@
 "use client";
-import type { SaveErrorStatus } from "@_types/index";
-import type { JenjangPendidikan } from "@_types/master/jenjang_pendidikan";
-import AlertBuilder from "@components/builder/alert";
+import {
+    type JenjangPendidikan,
+    JenjangPendidikanSchema,
+} from "@_types/master/jenjang_pendidikan";
 import { LoadingButtonClient } from "@components/builder/loading-button-client";
-import InputTextComponent from "@components/form/input";
-import { buttonVariants } from "@components/ui/button";
-import { cn } from "@lib/utils";
-import { useMutation } from "@tanstack/react-query";
+import InputZod from "@components/form/zod/input";
+import { Button } from "@components/ui/button";
+import { Form } from "@components/ui/form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { memo, useCallback, useMemo } from "react";
+import { useForm } from "react-hook-form";
 import { saveJenjangPendidikan } from "./action";
 
 type JenjangPendidikanFormComponentProps = {
-    data?: JenjangPendidikan
-}
-const JenjangPendidikanFormComponent = ({ data }: JenjangPendidikanFormComponentProps) => {
-    const [errState, setErrState] = useState<SaveErrorStatus | null>(null)
-    const { push } = useRouter()
+	data?: JenjangPendidikan;
+};
+const JenjangPendidikanFormComponent = memo(({
+	data,
+}: JenjangPendidikanFormComponentProps) => {
+	const { back } = useRouter();
 
-    const mutation = useMutation({
-        mutationFn: saveJenjangPendidikan,
-        onSuccess: (result: SaveErrorStatus) => {
-            if (!result.success) {
-                setErrState(result)
-                return
-            }
-            push("/master/jenjang_pendidikan")
-        }
-    })
+	const defaultValues = useMemo(() => {
+		const result = data
+			? {
+					id: data.id,
+					nama: data.nama,
+					seq: data.seq,
+				}
+			: {
+					id: 0,
+					nama: "",
+					seq: 0,
+				};
+		return result as JenjangPendidikan;
+	}, [data]);
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        mutation.mutate(new FormData(e.currentTarget))
-    }
+	const form = useForm<JenjangPendidikanSchema>({
+		resolver: zodResolver(JenjangPendidikanSchema),
+		defaultValues: defaultValues,
+		values: defaultValues,
+	});
 
-    return (
-        <>
-            {errState?.error ? (
-                <div className="mb-2">
-                    {Object.entries(errState.error).map(([key, value]) => (
-                        <AlertBuilder
-                            key={key}
-                            message={String(value)}
-                            variant="destructive"
-                            untitled
-                        />
-                    ))}
-                </div>
-            ) : null}
+	const mutation = useGlobalMutation({
+		mutationFunction: saveJenjangPendidikan,
+		queryKeys: [["jenjang_pendidikan", ""]],
+		redirectTo: "/master/jenjang_pendidikan",
+	});
 
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-                <div className="grid w-full items-center gap-1.5">
-                    <InputTextComponent
-                        id="nama"
-                        label="Nama Jenjang Pendidikan"
-                        defaultValue={data?.nama}
-                        required
-                    />
-                </div>
-                <div className="grid w-full items-center gap-1.5">
-                    <InputTextComponent
-                        id="seq"
-                        label="Urut Jenjang Pendidikan"
-                        type="number"
-                        defaultValue={data?.seq.toString()}
-                        required
-                    />
-                </div>
-                <div className="flex flex-row justify-end gap-2">
-                    <Link href="/master/jenjang_pendidikan" className={cn(buttonVariants({
-                        variant: "destructive"
-                    }))} >
-                        Cancel
-                    </Link>
-                    <LoadingButtonClient pending={mutation.isPending} title="Save" icon={<SaveIcon />} />
-                    <input type="hidden" name="id" value={data?.id} />
-                </div>
-            </form>
-        </>
-    );
-}
+	const onSubmit = useCallback(
+		(value: JenjangPendidikanSchema) => {
+			mutation.mutate(value);
+		},
+		[mutation],
+	);
+
+	const cancelHandler = useCallback(() => {
+		form.reset();
+		back();
+	}, [form, back]);
+
+	return (
+		<Form {...form}>
+			<form
+				className="space-y-4 md:space-y-6"
+				onSubmit={form.handleSubmit(onSubmit)}
+			>
+				<InputZod id="id" form={form} className="hidden" />
+				<InputZod id="nama" label="Nama Jenjang Pendidikan" form={form} />
+				<InputZod
+					id="seq"
+					label="Urut Jenjang Pendidikan"
+					type="number"
+					form={form}
+				/>
+				<div className="flex flex-row justify-end gap-2">
+					<LoadingButtonClient
+						type="submit"
+						title="Save"
+						pending={mutation.isPending}
+						icon={<SaveIcon />}
+					/>
+					<Button type="reset" variant="destructive" onClick={cancelHandler}>
+						Cancel
+					</Button>
+					<input type="hidden" name="id" value={data?.id} />
+				</div>
+			</form>
+		</Form>
+	);
+});
+
+JenjangPendidikanFormComponent.displayName = "JenjangPendidikanFormComponent";
 
 export default JenjangPendidikanFormComponent;

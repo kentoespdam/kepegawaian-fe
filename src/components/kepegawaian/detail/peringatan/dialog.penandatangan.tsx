@@ -12,7 +12,9 @@ import {
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogHeader,
+	DialogTitle,
 	DialogTrigger,
 } from "@components/ui/dialog";
 import { getListDataEnc } from "@helpers/action";
@@ -57,7 +59,10 @@ const PegawaiContent = ({ form, setOpen }: PegawaiContentProps) => {
 
 	return (
 		<DialogContent className="md:max-w-[700px] lg:max-w-[900px] sm:max-w-[425px]">
-			<DialogHeader>Cari Penandatangan</DialogHeader>
+			<DialogHeader>
+				<DialogTitle>Cari Penandatangan</DialogTitle>
+				<DialogDescription className="sr-only" />
+			</DialogHeader>
 			<Command>
 				<CommandInput
 					placeholder="Ketik NIPAM / Nama"

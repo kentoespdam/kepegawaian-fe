@@ -27,6 +27,7 @@ export const ProfesiSchema = z.object({
 	id: z.number(),
 	organisasiId: z.number().min(1, "Organisasi wajib diisi"),
 	jabatanId: z.number().min(1, "Jabatan wajib diisi"),
+	levelId:z.number(),
 	gradeId: z.number().min(1, "Grade wajib diisi"),
 	nama: z
 		.string({ required_error: "Nama wajib diisi" })

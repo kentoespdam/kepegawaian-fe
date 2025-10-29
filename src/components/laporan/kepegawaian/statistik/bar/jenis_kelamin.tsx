@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikJenisKelamin } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,32 +8,39 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikJenisKelaminBar = ({
 	data,
-}: { data: StatistikJenisKelamin[] }) => {
-	let chartConfig = {} satisfies ChartConfig;
-	data.forEach((item, index) => {
-		chartConfig = {
-			...chartConfig,
-			[item.jenis_kelamin]: {
+}: {
+	data: StatistikJenisKelamin[]
+}) => {
+	const chartConfig = useMemo(() => {
+		const cfg: Record<string, { label: string; color: string }> = {}
+		for (const item of data) {
+			cfg[item.jenis_kelamin] = {
 				label: item.jenis_kelamin,
-				color: `hsl(var(--chart-${index + 1}))`,
-			},
-		};
-	});
+				color: `hsl(var(--chart-${data.indexOf(item) + 1}))`,
+			}
+		}
+		return cfg as unknown as ChartConfig
+	}, [data])
 
-	const chartData = data.map((item) => ({
-		nama: item.jenis_kelamin,
-		total: item.total,
-	}));
+	const chartData = useMemo(
+		() =>
+			data.map((item) => ({
+				nama: item.jenis_kelamin,
+				total: item.total,
+			})),
+		[data]
+	)
 
 	return data.length === 0 ? null : (
 		<ChartContainer
 			config={chartConfig}
-			className="min-h-[200px] max-h-[400px] w-[800px] flex-2"
+			className="flex-2 max-h-[400px] min-h-[200px] w-[800px]"
 		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
@@ -44,7 +51,7 @@ const StatistikJenisKelaminBar = ({
 					tickLine={false}
 					tickMargin={10}
 					axisLine={false}
-					className="text-nowrap w-auto"
+					className="w-auto text-nowrap"
 				/>
 				<ChartTooltip content={<ChartTooltipContent />} />
 				<ChartLegend content={<ChartLegendContent />} />
@@ -56,7 +63,7 @@ const StatistikJenisKelaminBar = ({
 				/>
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikJenisKelaminBar;
+export default StatistikJenisKelaminBar

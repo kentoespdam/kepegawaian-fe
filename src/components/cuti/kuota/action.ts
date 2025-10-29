@@ -1,10 +1,10 @@
 "use server";
 
-import type { CutiKuotaSchema } from "@_types/cuti/kuota";
-import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action";
-import { setAuthorizeHeader } from "@helpers/index";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { CutiKuotaSchema } from "@_types/cuti/kuota"
+import type { LampiranFile } from "@app/kepegawaian/profil/lampiran/action"
+import { setAuthorizeHeader } from "@helpers/index"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
 
 export const saveKuotaCuti = async (formData: CutiKuotaSchema) => {
 	const headers = setAuthorizeHeader(cookies());
@@ -18,8 +18,8 @@ export const saveKuotaCuti = async (formData: CutiKuotaSchema) => {
 		headers: headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 export const saveKuotaCutiBatch = async (formData: FormData) => {
@@ -32,8 +32,8 @@ export const saveKuotaCutiBatch = async (formData: FormData) => {
 		},
 		body: formData,
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 export const downloadCutiKuotaTemplate = async () => {

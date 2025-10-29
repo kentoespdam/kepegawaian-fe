@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikPendidikan1 } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,25 +8,35 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import { useMemo } from "react"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikPendidikan1Bar = ({
 	data,
-}: { data: StatistikPendidikan1[] }) => {
-	const chartConfig = {
-		total: {
-			label: "Jumlah",
-			color: "hsl(var(--chart-2))",
-		},
-	} satisfies ChartConfig;
+}: {
+	data: StatistikPendidikan1[]
+}) => {
+	const chartConfig = useMemo(
+		() =>
+			({
+				total: {
+					label: "Jumlah",
+					color: "hsl(var(--chart-2))",
+				},
+			}) satisfies ChartConfig,
+		[]
+	)
 
 	if (data.length === 0) {
-		return null;
+		return null
 	}
 
 	return (
-		<ChartContainer config={chartConfig} className="w-[800px] lg:w-[1000px] min-h-[200px] max-h-[400px]">
+		<ChartContainer
+			config={chartConfig}
+			className="max-h-[400px] min-h-[200px] w-[800px] lg:w-[1000px]"
+		>
 			<BarChart accessibilityLayer data={data} layout="vertical">
 				<CartesianGrid horizontal={true} />
 				<XAxis type="number" dataKey="total" />
@@ -50,7 +60,7 @@ const StatistikPendidikan1Bar = ({
 				/>
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikPendidikan1Bar;
+export default StatistikPendidikan1Bar

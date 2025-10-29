@@ -1,14 +1,10 @@
 "use server";
 
-import type {
-	BatalCutiPegawaiSchema,
-	CutiPegawaiSchema,
-	KlaimCutiPegawaiSchema,
-} from "@_types/cuti/cuti_pegawai";
-import { setAuthorizeHeader } from "@helpers/index";
-import { decodeId } from "@helpers/number";
-import { API_URL } from "@lib/utils";
-import { cookies } from "next/headers";
+import type { BatalCutiPegawaiSchema, CutiPegawaiSchema, KlaimCutiPegawaiSchema, } from "@_types/cuti/cuti_pegawai"
+import { setAuthorizeHeader } from "@helpers/index"
+import { decodeId } from "@helpers/number"
+import { API_URL } from "@lib/utils"
+import { cookies } from "next/headers"
 
 export const savePengajuanCuti = async (formData: CutiPegawaiSchema) => {
 	const headers = setAuthorizeHeader(cookies());
@@ -22,8 +18,8 @@ export const savePengajuanCuti = async (formData: CutiPegawaiSchema) => {
 		headers: headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 export const saveKlaimCutiPegawai = async (
@@ -37,8 +33,8 @@ export const saveKlaimCutiPegawai = async (
 		headers: headers,
 		body: JSON.stringify(formData),
 	});
-	const result = await req.json();
-	return result;
+
+	return await req.json()
 };
 
 export const batalPengajuanCuti = async (formData: BatalCutiPegawaiSchema) => {

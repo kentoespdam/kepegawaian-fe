@@ -1,23 +1,26 @@
-import { type QueryKey, useQueryClient } from "@tanstack/react-query";
-import { RefreshCcwIcon } from "lucide-react";
-import { LoadingButtonClient } from "../loading-button-client";
-import TooltipBuilder from "../tooltip";
+import { type QueryKey, useQueryClient } from "@tanstack/react-query"
+import { RefreshCcwIcon } from "lucide-react"
+import { LoadingButtonClient } from "../loading-button-client"
+import TooltipBuilder from "../tooltip"
+import { useCallback } from "react"
 
 interface RefreshSearchComponentProps {
-	pending?: boolean;
-	qKey?: QueryKey;
+	pending?: boolean
+	qKey?: QueryKey
 }
 const RefreshSearchComponent = ({
 	pending,
 	qKey,
 }: RefreshSearchComponentProps) => {
-	const qc = useQueryClient();
+	const qc = useQueryClient()
 
-	const refreshSearch = () => {
-		qc.invalidateQueries({
-			queryKey: qKey,
-		});
-	};
+	const refreshSearch = useCallback(
+		async () =>
+			await qc.invalidateQueries({
+				queryKey: qKey,
+			}),
+		[qc, qKey]
+	)
 
 	return (
 		<TooltipBuilder
@@ -32,7 +35,7 @@ const RefreshSearchComponent = ({
 				onClick={refreshSearch}
 			/>
 		</TooltipBuilder>
-	);
-};
+	)
+}
 
-export default RefreshSearchComponent;
+export default RefreshSearchComponent

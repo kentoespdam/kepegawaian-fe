@@ -45,6 +45,15 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 		},
 	});
 
+	const getSelectedOrganisasi=(organisasiId: string) => {
+		if (query.data) {
+			const organisasi=findOrganisasiValue(query.data, organisasiId);
+			return organisasi.nama;
+		}
+		if(query.isLoading || query.isFetching) return "Loading...";
+		return "No Data (Pilih Organisasi)";
+	}
+
 	return (
 		<FormField
 			control={form.control}
@@ -59,16 +68,7 @@ const SelectOrganisasiZod = <TData extends FieldValues>({
 								id={id}
 								className="cursor-pointer"
 								onClick={handleOpenDialog}
-								value={
-									query.isLoading || query.isFetching
-										? "Loading..."
-										: field.value
-											? `${
-													findOrganisasiValue(query.data ?? [], field.value)
-														?.nama
-												} - ${findOrganisasiValue(query.data ?? [], field.value).kode}`
-											: "Pilih Organisasi"
-								}
+								value={getSelectedOrganisasi(field.value)}
 							/>
 							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
 						</div>

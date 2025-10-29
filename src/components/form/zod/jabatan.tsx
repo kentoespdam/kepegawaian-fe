@@ -15,14 +15,14 @@ import {
 	FormMessage,
 } from "@components/ui/form";
 import { Input } from "@components/ui/input";
-import { getListData, getListDataEnc } from "@helpers/action";
+import { getListDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
 import { cn } from "@lib/utils";
 import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import type { FieldValues, Path } from "react-hook-form";
 import type { InputZodProps } from "./iface";
-import { encodeString } from "@helpers/number";
 
 const SelectJabatanZod = <TData extends FieldValues>({
 	id,
@@ -46,6 +46,15 @@ const SelectJabatanZod = <TData extends FieldValues>({
 		enabled: !!organisasiId && organisasiId > 0,
 	});
 
+	const getSelectedJabatan=(jabatanId: number) => {
+		if (query.data) {
+			const jabatan=findJabatanValue(query.data, jabatanId);
+			return jabatan.nama;
+		}
+		if(query.isLoading || query.isFetching) return "Loading...";
+		return "No Data (Pilih Organisasi)";
+	}
+
 	return (
 		<FormField
 			control={form.control}
@@ -60,15 +69,7 @@ const SelectJabatanZod = <TData extends FieldValues>({
 								id={id}
 								className="cursor-pointer"
 								onClick={handleOpenDialog}
-								value={
-									!query.data
-										? "No Data (Pilih Organisasi)"
-										: query.isLoading || query.isFetching
-											? "Loading..."
-											: field.value
-												? `${findJabatanValue(query.data, field.value).nama} (${findJabatanValue(query.data, field.value).kode})`
-												: "Pilih Jabatan"
-								}
+								value={getSelectedJabatan(Number(field.value))}
 							/>
 							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
 						</div>

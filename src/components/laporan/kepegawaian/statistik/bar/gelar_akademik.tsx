@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import type { StatistikGelarAkademik } from "@_types/laporan/kepegawaian/LapStatistik";
+import type { StatistikGelarAkademik } from "@_types/laporan/kepegawaian/lap_statistik"
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,28 +8,39 @@ import {
 	ChartLegendContent,
 	ChartTooltip,
 	ChartTooltipContent,
-} from "@components/ui/chart";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+} from "@components/ui/chart"
+import React, { useMemo } from "react"
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts"
 
 const StatistikGelarAkademikBar = ({
 	data,
-}: { data: StatistikGelarAkademik[] }) => {
-	const chartConfig = {
-		jumlah: {
-			label: "Jumlah",
-		},
-	} satisfies ChartConfig;
+}: {
+	data: StatistikGelarAkademik[]
+}) => {
+	const chartConfig = useMemo(
+		() =>
+			({
+				jumlah: {
+					label: "Jumlah",
+				},
+			}) satisfies ChartConfig,
+		[]
+	)
 
-	const chartData = data.map((item, index) => ({
-		index: index,
-		nama: `${item.jenjang} - ${item.gelar}`,
-		total: item.total,
-	}));
+	const chartData = useMemo(
+		() =>
+			data.map((item, index) => ({
+				index: index,
+				nama: `${item.jenjang} - ${item.gelar}`,
+				total: item.total,
+			})),
+		[data]
+	)
 
 	return data.length === 0 ? null : (
 		<ChartContainer
 			config={chartConfig}
-			className="w-[800px] min-h-[200px] max-h-[400px]"
+			className="max-h-[400px] min-h-[200px] w-[800px]"
 		>
 			<BarChart accessibilityLayer data={chartData} layout="vertical">
 				<CartesianGrid horizontal={true} />
@@ -39,11 +50,15 @@ const StatistikGelarAkademikBar = ({
 					type="category"
 					tickLine={false}
 					tickMargin={10}
-					className="text-nowrap w-auto"
+					className="w-auto text-nowrap"
 					width={300}
 				/>
-				<ChartTooltip content={<ChartTooltipContent nameKey="jumlah" />} />
-				<ChartLegend content={<ChartLegendContent nameKey="jumlah" />} />
+				<ChartTooltip
+					content={<ChartTooltipContent nameKey="jumlah" />}
+				/>
+				<ChartLegend
+					content={<ChartLegendContent nameKey="jumlah" />}
+				/>
 				<Bar
 					dataKey="total"
 					stackId="a"
@@ -52,7 +67,7 @@ const StatistikGelarAkademikBar = ({
 				/>
 			</BarChart>
 		</ChartContainer>
-	);
-};
+	)
+}
 
-export default StatistikGelarAkademikBar;
+export default StatistikGelarAkademikBar

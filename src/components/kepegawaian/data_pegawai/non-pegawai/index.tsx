@@ -1,46 +1,76 @@
-import type { Pageable } from "@_types/index";
 import { type Biodata, biodataTableColumns } from "@_types/profil/biodata";
 import SearchBuilder from "@components/builder/search";
 import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@components/ui/card";
+import PaginationBuilder from "@components/builder/table/pagination";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardHeader,
+	CardTitle,
+} from "@components/ui/card";
 import { Table } from "@components/ui/table";
 import { TabsContent } from "@components/ui/tabs";
-import { useQueryClient } from "@tanstack/react-query";
+import { getPageDataEnc } from "@helpers/action";
+import { encodeString } from "@helpers/number";
+import { useDataPegawaiStore } from "@store/kepegawaian/data_pegawai/data_pegawai-store";
+import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
+import { useMemo } from "react";
 import NonPegawaiTableBody from "./body";
 
 const TabBiodataNonPegawai = () => {
-    const searchParams = useSearchParams()
-    const params = new URLSearchParams(searchParams)
+	const { tab } = useDataPegawaiStore((state) => ({
+		tab: state.tab,
+	}));
+	const searchParams = useSearchParams();
+	const search = useMemo(
+		() => new URLSearchParams(searchParams).toString(),
+		[searchParams],
+	);
+	const qKey = useMemo(() => ["data-biodata", search], [search]);
 
-    const qc = useQueryClient()
-    const qs = qc.getQueryState<Pageable<Biodata>>(["data-biodata", params.toString()])
+	const { data, isLoading, isFetching } = useQuery({
+		queryKey: qKey,
+		queryFn: async () =>
+			await getPageDataEnc<Biodata>({
+				path: encodeString("profil/biodata"),
+				searchParams: search,
+				isRoot: true,
+			}),
+		enabled: tab === "non-pegawai",
+		staleTime: 1000 * 60 * 5,
+	});
 
-    return (
-        <TabsContent value="non-pegawai" x-chunk="dashboard-05-chunk-3">
-            <Card>
-                <CardHeader className="px-7">
-                    <CardTitle>Daftar Biodata</CardTitle>
-                    <CardDescription>
-                        Daftar Biodata Non Pegawai
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="grid">
-                    <SearchBuilder columns={biodataTableColumns} />
-                    <Table>
-                        <TableHeadBuilder columns={biodataTableColumns} />
-                        {qs?.status === "pending" ?
-                            <LoadingTable columns={biodataTableColumns} isLoading={true} /> :
-                            !qs?.data || qs?.status === "error" ?
-                                <LoadingTable columns={biodataTableColumns} isSuccess={false} error={qs?.error?.message} /> :
-                                <NonPegawaiTableBody data={qs.data} />
-                        }
-                    </Table>
-                </CardContent>
-            </Card>
-        </TabsContent>
-    );
-}
+	const showLoading = isLoading || isFetching;
+	const isEmptyData = !data || data.empty;
+
+	return (
+		<TabsContent value="non-pegawai" x-chunk="dashboard-05-chunk-3">
+			<Card>
+				<CardHeader className="px-7">
+					<CardTitle>Daftar Biodata</CardTitle>
+					<CardDescription>Daftar Biodata Non Pegawai</CardDescription>
+				</CardHeader>
+				<CardContent className="grid">
+					<SearchBuilder columns={biodataTableColumns} />
+					<Table>
+						<TableHeadBuilder columns={biodataTableColumns} />
+						{showLoading || isEmptyData ? (
+							<LoadingTable
+								columns={biodataTableColumns}
+								isLoading={showLoading}
+							/>
+						) : (
+							<NonPegawaiTableBody data={data} />
+						)}
+					</Table>
+					<PaginationBuilder data={data} />
+				</CardContent>
+			</Card>
+		</TabsContent>
+	);
+};
 
 export default TabBiodataNonPegawai;

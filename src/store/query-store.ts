@@ -1,20 +1,20 @@
-import type { BaseResult } from "@_types/index";
+import type { BaseResult } from "@_types/index"
 import {
-	type UseMutationResult,
-	useMutation,
-	useQueryClient,
 	type QueryKey,
-} from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+	useMutation,
+	type UseMutationResult,
+	useQueryClient,
+} from "@tanstack/react-query"
+import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 
 interface GlobalMutationProps<TData, TVariables> {
-	mutationFunction: (variables: TVariables) => Promise<TData>;
-	queryKeys: QueryKey[];
-	redirectTo?: string;
-	actHandler?: () => void;
-	refreshPage?: boolean;
-	refreshCsrf?: () => void;
+	mutationFunction: (variables: TVariables) => Promise<TData>
+	queryKeys: QueryKey[]
+	redirectTo?: string
+	actHandler?: () => void
+	refreshPage?: boolean
+	refreshCsrf?: () => void
 }
 
 export function useGlobalMutation<TData, TVariables>({
@@ -30,35 +30,36 @@ export function useGlobalMutation<TData, TVariables>({
 	TVariables,
 	unknown
 > {
-	const { push, refresh } = useRouter();
-	const queryClient = useQueryClient();
+	const { push, refresh } = useRouter()
+	const queryClient = useQueryClient()
 
-	const mutation = useMutation({
+	return useMutation({
 		mutationFn: mutationFunction,
-		onSuccess: (data) => {
-			const result = data as BaseResult<unknown>;
+		onSuccess: async (data) => {
+			const result = data as BaseResult<unknown>
 			if (result.status !== 200 && result.status !== 201)
-				throw new Error(JSON.stringify(result));
+				throw new Error(JSON.stringify(result))
 
-			if (refreshPage) refresh();
+			if (refreshPage) refresh()
 
 			toast.success(`${result.status} Success`, {
 				description: result.message,
 				className: "bg-primary text-primary-foreground",
-			});
+			})
 
 			for (const queryKey of queryKeys) {
-				queryClient.invalidateQueries({ queryKey });
+				await queryClient.invalidateQueries({ queryKey })
 			}
 
-			if (redirectTo) push(redirectTo);
+			if (redirectTo) push(redirectTo)
 
-			if (actHandler) actHandler();
+			if (actHandler) actHandler()
 		},
 		onError: (error) => {
-			const result = JSON.parse(error.message) as BaseResult<unknown>;
+			const result = JSON.parse(error.message) as BaseResult<unknown>
 			if (result.status === 401)
-				result.errors = result.errors || "Network Error. please try again";
+				result.errors =
+					result.errors || "Network Error. please try again"
 
 			// if (result.status === 400) result.errors = result.message;
 
@@ -67,16 +68,14 @@ export function useGlobalMutation<TData, TVariables>({
 					toast.error(`Error ${result.status}`, {
 						description: message,
 						duration: 3000,
-					});
+					})
 				}
 			else
 				toast.error(`Error ${result.errors}`, {
 					description: result.errors,
 					duration: 3000,
-				});
-			if (refreshCsrf) refreshCsrf();
+				})
+			if (refreshCsrf) refreshCsrf()
 		},
-	});
-
-	return mutation;
+	})
 }

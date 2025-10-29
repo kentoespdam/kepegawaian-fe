@@ -1,33 +1,35 @@
 import {
-	Command,
 	CommandDialog,
 	CommandEmpty,
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@components/ui/command";
+} from "@components/ui/command"
 import {
 	FormControl,
 	FormField,
 	FormItem,
 	FormLabel,
 	FormMessage,
-} from "@components/ui/form";
-import { Input } from "@components/ui/input";
-import { NAMA_BULAN, getNamaBulan } from "@helpers/tanggal";
-import { cn } from "@lib/utils";
-import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
-import type { FieldValues } from "react-hook-form";
-import type { InputZodProps } from "./iface";
+} from "@components/ui/form"
+import { Input } from "@components/ui/input"
+import { getNamaBulan, NAMA_BULAN } from "@helpers/tanggal"
+import { cn } from "@lib/utils"
+import { CheckIcon, ChevronDownIcon } from "@radix-ui/react-icons"
+import { useCallback, useState } from "react"
+import type { FieldValues } from "react-hook-form"
+import type { InputZodProps } from "./iface"
 
 const SelectBulanZod = <TData extends FieldValues>({
 	id,
 	label,
 	form,
 }: InputZodProps<TData>) => {
-	const [openDialog, setOpenDialog] = useState(false);
-	const handleOpenDialog = () => setOpenDialog((prev) => !prev);
+	const [openDialog, setOpenDialog] = useState(false)
+	const handleOpenDialog = useCallback(
+		() => setOpenDialog((prev) => !prev),
+		[setOpenDialog]
+	)
 
 	return (
 		<FormField
@@ -49,37 +51,44 @@ const SelectBulanZod = <TData extends FieldValues>({
 										: "Pilih Bulan"
 								}
 							/>
-							<ChevronDownIcon className="absolute right-4 top-1/2 transform -translate-y-1/2 opacity-50" />
+							<ChevronDownIcon className="absolute right-4 top-1/2 -translate-y-1/2 transform opacity-50" />
 						</div>
 					</FormControl>
-					<CommandDialog open={openDialog} onOpenChange={handleOpenDialog}>
+					<CommandDialog
+						open={openDialog}
+						onOpenChange={handleOpenDialog}
+					>
 						<CommandInput placeholder="Pencarian..." />
 						<CommandList>
 							<CommandEmpty>No results found.</CommandEmpty>
 							{NAMA_BULAN.map((bulan, index) => {
 								const bulanString =
-									index < 10 ? `0${index + 1}` : `${index + 1}`;
+									index < 9 ? `0${index + 1}` : `${index + 1}`
+								const valueString =
+									Number(field.value) < 10
+										? `0${Number(field.value)}`
+										: `${field.value}`
 								return (
 									<CommandItem
 										key={bulan}
 										value={bulanString}
 										onSelect={() => {
-											field.onChange(bulanString);
-											handleOpenDialog();
+											field.onChange(bulanString)
+											handleOpenDialog()
 										}}
 									>
 										<CheckIcon
 											className={cn(
 												"mr-2 h-4 w-4",
-												bulanString === field.value
+												bulanString === valueString
 													? "opacity-100"
-													: "opacity-0",
+													: "opacity-0"
 											)}
 											aria-hidden
 										/>
 										{bulan}
 									</CommandItem>
-								);
+								)
 							})}
 						</CommandList>
 					</CommandDialog>
@@ -87,7 +96,7 @@ const SelectBulanZod = <TData extends FieldValues>({
 				</FormItem>
 			)}
 		/>
-	);
-};
+	)
+}
 
-export default SelectBulanZod;
+export default SelectBulanZod

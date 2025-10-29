@@ -3,6 +3,7 @@ import { Button } from "@components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
@@ -19,20 +20,24 @@ import { Input } from "@components/ui/input";
 import { encodeId } from "@helpers/number";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useGlobalMutation } from "@store/query-store";
+import type { QueryKey } from "@tanstack/react-query";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { patchDeleteSanksiJenisSp } from "../sanksi/action";
-import type { QueryKey } from "@tanstack/react-query";
 
 interface DeleteSanksiJenisSpFormDialogProps {
 	id: number;
 	openDelete: boolean;
 	setOpenDelete: (value: boolean) => void;
-	queryKeys: QueryKey;
+	queryKeys: QueryKey[];
 }
 
-const DeleteSanksiJenisSpFormDialog = (
-	props: DeleteSanksiJenisSpFormDialogProps,
-) => {
+const DeleteSanksiJenisSpFormDialog = ({
+	id,
+	openDelete,
+	setOpenDelete,
+	queryKeys,
+}: DeleteSanksiJenisSpFormDialogProps) => {
 	const form = useForm<BaseDelete>({
 		resolver: zodResolver(BaseDelete),
 		defaultValues: {
@@ -47,25 +52,33 @@ const DeleteSanksiJenisSpFormDialog = (
 
 	const mutation = useGlobalMutation({
 		mutationFunction: patchDeleteSanksiJenisSp,
-		queryKeys: [props.queryKeys],
+		queryKeys: queryKeys,
 		actHandler: () => {
-			props.setOpenDelete(false);
+			setOpenDelete(false);
 		},
 	});
 
-	const onSubmit = (values: BaseDelete) => {
-		values.unique = encodeId(props.id);
-		mutation.mutate(values);
-	};
+	const onSubmit = useCallback(
+		(values: BaseDelete) => {
+			values.unique = encodeId(id);
+			mutation.mutate(values);
+		},
+		[id, mutation],
+	);
 
 	return (
-		<Dialog open={props.openDelete} onOpenChange={props.setOpenDelete}>
+		<Dialog open={openDelete} onOpenChange={setOpenDelete}>
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>Yakin akan menghapus data?</DialogTitle>
+					<DialogDescription className="sr-only" />
 				</DialogHeader>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-4"
+					>
 						<FormField
 							control={form.control}
 							name="id"
@@ -77,7 +90,7 @@ const DeleteSanksiJenisSpFormDialog = (
 										<br />
 										Ketik {""}
 										<code className="font-normal bg-orange-300 text-gray-700 dark:text-gray-900 border px-1">
-											DELETE-{props.id}
+											DELETE-{id}
 										</code>
 									</FormDescription>
 									<FormControl>

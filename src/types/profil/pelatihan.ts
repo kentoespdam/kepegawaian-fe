@@ -1,22 +1,21 @@
-import { z } from "zod";
-import type { CustomColumnDef } from "..";
-import type { BiodataMini } from "./biodata";
-import type { JenisPelatihan } from "@_types/master/jenis_pelatihan";
+import { z } from "zod"
+import type { CustomColumnDef } from ".."
+import type { BiodataMini } from "./biodata"
+import type { JenisPelatihan } from "@_types/master/jenis_pelatihan"
 
 export interface Pelatihan {
-	id: number;
-	biodata: BiodataMini;
-	jenisPelatihan: JenisPelatihan;
-	nama: string;
-	lembaga: string;
-	nilai: number;
-	lulus: boolean;
-	tanggalMulai: string;
-	tanggalSelesai: string;
-	ikatanDinas:boolean;
-	tanggalAkhirIkatan?:string;
-	notes: string;
-	disetujui: boolean;
+	id: number
+	biodata: BiodataMini
+	jenisPelatihan: JenisPelatihan
+	nama: string
+	lembaga: string
+	nilai: number
+	lulus: boolean
+	tanggalMulai: string
+	tanggalSelesai: string
+	ikatanDinas: boolean
+	tanggalAkhirIkatan?: string
+	notes: string
 }
 
 export const PelatihanSchema = z.object({
@@ -32,9 +31,9 @@ export const PelatihanSchema = z.object({
 	ikatanDinas: z.boolean().default(false),
 	tanggalAkhirIkatan: z.string().optional(),
 	notes: z.string().optional(),
-});
+})
 
-export type PelatihanSchema = z.infer<typeof PelatihanSchema>;
+export type PelatihanSchema = z.infer<typeof PelatihanSchema>
 
 export const pelatihanTableColumns: CustomColumnDef[] = [
 	{ id: "urut", label: "No" },
@@ -48,6 +47,5 @@ export const pelatihanTableColumns: CustomColumnDef[] = [
 	{ id: "tanggalSelesai", label: "Tgl. Selesai" },
 	{ id: "ikatanDinas", label: "Ikatan Dinas" },
 	{ id: "tanggalAkhirIkatan", label: "Tgl. Akhir Ikatan" },
-	{ id: "disetujui", label: "Disetujui" },
 	{ id: "notes", label: "Notes" },
-];
+]
