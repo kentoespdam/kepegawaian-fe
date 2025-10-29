@@ -6,12 +6,13 @@ import { Button } from "@components/ui/button";
 import { cn } from "@lib/utils";
 import { useSanksiStore } from "@store/master/sanksi";
 import { CircleXIcon, SquarePlusIcon } from "lucide-react";
+import { memo, useCallback } from "react";
 
 interface SanksiBadgeProps {
 	sanksi: Sanksi;
 	jenisSpId: number;
 }
-const SanksiBadge = ({ sanksi, jenisSpId }: SanksiBadgeProps) => {
+const SanksiBadge = memo(({ sanksi, jenisSpId }: SanksiBadgeProps) => {
 	const { setSanksiId, setJenisSpId, setOpenDelete } = useSanksiStore(
 		(state) => ({
 			setSanksiId: state.setSanksiId,
@@ -19,18 +20,18 @@ const SanksiBadge = ({ sanksi, jenisSpId }: SanksiBadgeProps) => {
 			setOpenDelete: state.setOpenDelete,
 		}),
 	);
-	const deleteHandler = () => {
+	const deleteHandler = useCallback(() => {
 		setJenisSpId(jenisSpId);
 		setSanksiId(sanksi.id);
 		setOpenDelete(true);
-	};
+	}, [jenisSpId, sanksi.id, setJenisSpId, setOpenDelete, setSanksiId]);
 	return (
 		<Badge variant={"outline"} className="flex justify-between">
 			<span className="mr-2">
 				{sanksi.kode} : {sanksi.keterangan}
 			</span>
 			<TooltipBuilder
-				text="Delete APD"
+				text="Delete Sanksi"
 				className="bg-destructive text-destructive-foreground"
 			>
 				<Button
@@ -45,12 +46,14 @@ const SanksiBadge = ({ sanksi, jenisSpId }: SanksiBadgeProps) => {
 			</TooltipBuilder>
 		</Badge>
 	);
-};
+});
+
+SanksiBadge.displayName = "SanksiBadge";
 
 interface JenisSpTableActionProps {
 	row: JenisSp;
 }
-const JenisSpSanksiCell = ({ row }: JenisSpTableActionProps) => {
+const JenisSpSanksiCell = memo(({ row }: JenisSpTableActionProps) => {
 	const { setSanksiId, setJenisSpId, setOpenSanksiForm } = useSanksiStore(
 		(state) => ({
 			setSanksiId: state.setSanksiId,
@@ -94,6 +97,8 @@ const JenisSpSanksiCell = ({ row }: JenisSpTableActionProps) => {
 			</div>
 		</div>
 	);
-};
+})
+
+JenisSpSanksiCell.displayName = "JenisSpSanksiCell";
 
 export default JenisSpSanksiCell;

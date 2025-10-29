@@ -65,6 +65,7 @@
 		"zustand": "^4.5.2"
 	},
 	"devDependencies": {
+		"@biomejs/biome": "2.3.2",
 		"@eslint/eslintrc": "^3.3.1",
 		"@tailwindcss/postcss": "^4.1.6",
 		"@tanstack/eslint-plugin-query": "^5.62.1",

@@ -16,7 +16,7 @@ import { useJenisSpStore } from "@store/master/jenis_sp.store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon, XCircleIcon } from "lucide-react";
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { saveJenisSp } from "./action";
 
@@ -42,10 +42,10 @@ const JenisSpFormDialog = () => {
 		values: defaultValues,
 	});
 
-	const onReset = () => {
+	const onReset = useCallback(() => {
 		form.reset();
 		setOpenJenisSpForm(false);
-	};
+	}, [form, setOpenJenisSpForm]);
 
 	const mutation = useGlobalMutation({
 		mutationFunction: saveJenisSp,
@@ -55,14 +55,17 @@ const JenisSpFormDialog = () => {
 		},
 	});
 
-	const onSubmit = (values: JenisSpSchema) => {
-		mutation.mutate(values);
-	};
+	const onSubmit = useCallback(
+		(values: JenisSpSchema) => {
+			mutation.mutate(values);
+		},
+		[mutation],
+	);
 
-	const openChangeHandler = () => {
+	const openChangeHandler = useCallback(() => {
 		form.reset();
 		setOpenJenisSpForm(!openJenisSpForm);
-	};
+	}, [form, openJenisSpForm, setOpenJenisSpForm]);
 
 	useEffect(() => {
 		if (jenisSp) setDefaultValues(jenisSp);
@@ -71,19 +74,23 @@ const JenisSpFormDialog = () => {
 	return (
 		<Dialog open={openJenisSpForm} onOpenChange={openChangeHandler}>
 			<DialogContent>
-				<DialogTitle>Add Roles</DialogTitle>
+				<DialogTitle>ADD / EDIT Jenis SP</DialogTitle>
 				<Form {...form}>
-					<form name="form" onSubmit={form.handleSubmit(onSubmit)} className="grid gap-2">
+					<form
+						name="form"
+						onSubmit={form.handleSubmit(onSubmit)}
+						className="grid gap-2"
+					>
 						<div className="grid gap-2">
 							<InputZod
 								id="id"
 								label="ID"
 								form={form}
-								// readonly
-								// className="hidden"
+								readonly
+								className="hidden"
 							/>
-							<InputZod id="kode" label="Kode" form={form} />
-							<InputZod id="nama" label="Nama" form={form} />
+							<InputZod id="kode" label="Kode Jenis SP" form={form} />
+							<InputZod id="nama" label="Nama Jenis SP" form={form} />
 						</div>
 						<DialogFooter className="mt-2">
 							<LoadingButtonClient

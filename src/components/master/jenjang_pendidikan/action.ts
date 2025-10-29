@@ -1,7 +1,6 @@
 "use server";
 
-import type { SaveErrorStatus } from "@_types/index";
-import { JenjangPendidikanSchema } from "@_types/master/jenjang_pendidikan";
+import type { JenjangPendidikanSchema } from "@_types/master/jenjang_pendidikan";
 import { setAuthorizeHeader } from "@helpers/index";
 import { API_URL } from "@lib/utils";
 import axios from "axios";
@@ -13,39 +12,21 @@ import { cookies } from "next/headers";
  * @returns A Promise that resolves to an object with an optional error property.
  */
 export const saveJenjangPendidikan = async (
-	formData: FormData,
-): Promise<SaveErrorStatus> => {
+	formData: JenjangPendidikanSchema,
+) => {
 	const headers = setAuthorizeHeader(cookies());
-	try {
-		const validate = JenjangPendidikanSchema.safeParse({
-			id: Number(formData.get("id")),
-			nama: formData.get("nama"),
-			seq: Number(formData.get("seq")),
-		});
+	const url =
+		formData.id > 0
+			? `${API_URL}/master/jenjang-pendidikan/${formData.id}`
+			: `${API_URL}/master/jenjang-pendidikan`;
 
-		if (!validate.success)
-			return {
-				success: false,
-				error: validate.error.flatten().fieldErrors,
-			};
+	const req = await fetch(url, {
+		method: formData.id ? "PUT" : "POST",
+		headers: headers,
+		body: JSON.stringify(formData),
+	});
 
-		const apiUrl =
-			validate.data.id > 0
-				? `${API_URL}/master/jenjang-pendidikan/${validate.data.id}`
-				: `${API_URL}/master/jenjang-pendidikan`;
-
-		await axios.request({
-			method: validate.data.id ? "PUT" : "POST",
-			url: apiUrl,
-			data: formData,
-			headers: headers,
-		});
-
-		return { success: true };
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
-	} catch (err: any) {
-		return { success: false, error: { message: err.response.data.message } };
-	}
+	return await req.json();
 };
 
 /**
@@ -72,7 +53,7 @@ export const hapus = async (
 			headers: setAuthorizeHeader(cookies()),
 		});
 		return { success: true };
-		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		// biome-ignore lint/suspicious/noExplicitAny: false positive
 	} catch (err: any) {
 		console.error(err.response?.data);
 		return {

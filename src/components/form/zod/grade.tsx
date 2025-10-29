@@ -47,7 +47,7 @@ const SelectGradeZod = <TData extends FieldValues>({
 		if (!query.data) return "Grade tidak ditemukan";
 		if (value === null || value === "" || value === 0) return "Pilih Grade";
 		const grade = findGradeValue(query.data, value);
-		return `${grade.level.nama} - Grade ${grade.grade} - level id ${levelId}`;
+		return `Grade ${grade.grade}`;
 	};
 
 	return (

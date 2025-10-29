@@ -15,7 +15,7 @@ import { Input } from "@components/ui/input"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { DeleteIcon } from "lucide-react"
 import { useSearchParams } from "next/navigation"
-import React, { useState } from "react"
+import React, { memo, useState } from "react"
 import { LoadingButtonClient } from "../loading-button-client"
 import TooltipBuilder from "../tooltip"
 
@@ -32,7 +32,7 @@ type ButtonDeleteBuilderProps = {
 }
 
 const deleteText = "DELETE-"
-const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
+const ButtonDeleteBuilder = memo((props: ButtonDeleteBuilderProps) => {
 	const { action } = props
 	const [state, setState] = useState<{
 		success: boolean
@@ -136,7 +136,8 @@ const ButtonDeleteBuilder = (props: ButtonDeleteBuilderProps) => {
 			</AlertDialogContent>
 		</AlertDialog>
 	)
-}
+})
+ButtonDeleteBuilder.displayName = "ButtonDeleteBuilder"
 
 export default ButtonDeleteBuilder
 
