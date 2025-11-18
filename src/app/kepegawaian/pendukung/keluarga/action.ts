@@ -46,21 +46,3 @@ export const deleteProfilKeluarga = async (
 
 	return await req.json();
 };
-
-export const acceptKeluarga = async ({
-	id,
-	nik,
-}: { id: number; nik: string }) => {
-	const headers = setAuthorizeHeader(cookies());
-	const url = `${API_URL}/profil/keluarga/${id}/accept`;
-
-	const req = await fetch(url, {
-		method: "PUT",
-		headers: headers,
-		body: JSON.stringify({
-			biodataId: nik,
-		}),
-	});
-
-	return await req.json();
-};

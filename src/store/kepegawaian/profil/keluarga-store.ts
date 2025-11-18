@@ -39,7 +39,7 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 		tanggungan: true,
 		pendidikanId: 0,
 		statusPendidikan: "SEKOLAH",
-		statusKawin: "BELUM_KAWIN",
+		statusKawin: false,
 		notes: "",
 	},
 	setDefaultValues: (biodata, keluarga) =>
@@ -59,7 +59,7 @@ export const useKeluargaStore = create<KeluargaStore>((set) => ({
 				tanggungan: keluarga?.tanggungan ?? true,
 				pendidikanId: keluarga?.pendidikan?.id ?? 0,
 				statusPendidikan: keluarga?.statusPendidikan ?? "SEKOLAH",
-				statusKawin: keluarga?.statusKawin ?? "BELUM_KAWIN",
+				statusKawin: keluarga?.statusKawin ?? false,
 				notes: keluarga?.notes ?? "",
 			},
 		})),

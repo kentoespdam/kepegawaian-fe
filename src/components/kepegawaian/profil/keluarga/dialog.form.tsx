@@ -7,8 +7,8 @@ import SelectHubunganKeluargaZod from "@components/form/zod/hubungan-keluarga";
 import InputZod from "@components/form/zod/input";
 import RadioJenisKelaminZod from "@components/form/zod/jenis-kelamin";
 import JenjangPendidikanZod from "@components/form/zod/jenjang-pendidikan";
-import SelectStatusKawinZod from "@components/form/zod/status-kawin";
 import SelectStatusPendidikanZod from "@components/form/zod/status_pendidikan";
+import SelectStatusNikahZod from "@components/form/zod/status-nikah";
 import TextAreaZod from "@components/form/zod/textarea";
 import YesNoZod from "@components/form/zod/yes-no";
 import { Button } from "@components/ui/button";
@@ -27,6 +27,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
 import { useGlobalMutation } from "@store/query-store";
 import { SaveIcon } from "lucide-react";
+import { useCallback } from "react";
 import { useForm } from "react-hook-form";
 
 const FormKeluargaDialog = () => {
@@ -51,17 +52,12 @@ const FormKeluargaDialog = () => {
 		},
 	});
 
-	// useEffect(() => {
-	// 	if (mutation.isSuccess) {
-	// 		mutation.reset();
-	// 		form.reset();
-	// 		setOpen(false);
-	// 	}
-	// }, [mutation, form, setOpen]);
-
-	const onSubmit = (values: KeluargaSchema) => {
-		mutation.mutate(values);
-	};
+	const onSubmit = useCallback(
+		(values: KeluargaSchema) => {
+			mutation.mutate(values);
+		},
+		[mutation],
+	);
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogContent className="p-0">
@@ -99,7 +95,7 @@ const FormKeluargaDialog = () => {
 							<YesNoZod id="tanggungan" label="Tanggungan" form={form} />
 							<JenjangPendidikanZod id="pendidikanId" form={form} />
 							<SelectStatusPendidikanZod id="statusPendidikan" form={form} />
-							<SelectStatusKawinZod id="statusKawin" form={form} />
+							<SelectStatusNikahZod id="statusKawin" form={form} />
 							<TextAreaZod id="notes" label="Notes" form={form} />
 						</div>
 						<Separator />

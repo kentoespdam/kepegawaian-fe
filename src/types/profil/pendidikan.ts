@@ -1,23 +1,23 @@
 import type { JenjangPendidikan } from "@_types/master/jenjang_pendidikan";
-import type { Biodata, BiodataMini } from "./biodata";
 import { z } from "zod";
 import type { CustomColumnDef } from "..";
+import type { BiodataMini } from "./biodata";
 
 export interface Pendidikan {
-	id: number;
-	biodata: BiodataMini;
-	jenjangPendidikan: JenjangPendidikan;
-	gelarDepan: string;
-	gelarBelakang: string;
-	jurusan: string;
-	institusi: string;
-	kota: string;
-	tahunMasuk: number;
-	tahunLulus: number;
-	gpa: number;
-	isLatest: boolean;
-	disetujui: boolean;
-}
+		id: number;
+		biodata: BiodataMini;
+		jenjangPendidikan: JenjangPendidikan;
+		gelarDepan: string;
+		gelarBelakang: string;
+		jurusan: string;
+		institusi: string;
+		kota: string;
+		tahunMasuk: number;
+		tahunLulus: number;
+		isLulus: boolean;
+		gpa: number;
+		isLatest: boolean;
+	}
 
 export const PendidikanSchema = z.object({
 	id: z.number(),
@@ -31,6 +31,7 @@ export const PendidikanSchema = z.object({
 	kota: z.string().min(3, "Kota wajib diisi"),
 	tahunMasuk: z.number(),
 	tahunLulus: z.number(),
+	isLulus: z.boolean(),
 	gpa: z.number(),
 	isLatest: z.boolean().default(false),
 });
@@ -52,8 +53,8 @@ export const pendidikanTableColumns: CustomColumnDef[] = [
 	{ id: "tahunMasuk", label: "Tahun Masuk" },
 	{ id: "tahunLulus", label: "Tahun Lulus" },
 	{ id: "gpa", label: "GPA" },
+	{ id: "isLulus", label: "Lulus?" },
 	{ id: "gelarDepan", label: "Gelar Depan" },
 	{ id: "gelarBelakang", label: "Gelar Belakang" },
-	{ id: "disetujui", label: "Disetujui" },
 	{ id: "isLatest", label: "terakhir" },
 ];

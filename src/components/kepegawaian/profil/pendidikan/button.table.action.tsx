@@ -1,6 +1,5 @@
 import type { Biodata } from "@_types/profil/biodata";
 import type { Pendidikan } from "@_types/profil/pendidikan";
-import { acceptPendidikan } from "@app/kepegawaian/pendukung/pendidikan/action";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -10,10 +9,8 @@ import {
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
-import { useGlobalMutation } from "@store/query-store";
 import type { QueryKey } from "@tanstack/react-query";
-import { CheckIcon, DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
 
 interface ProfilPendidikanActionProps {
 	biodata: Biodata;
@@ -22,7 +19,6 @@ interface ProfilPendidikanActionProps {
 }
 
 const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
-	const pathname = usePathname();
 	const store = usePendidikanStore();
 
 	const editHandler = () => {
@@ -34,23 +30,6 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 		store.setDefaultValues(props.biodata);
 		store.setPendidikanId(props.data.id);
 		store.setOpenDelete(true);
-	};
-
-	const accMutation = useGlobalMutation({
-		mutationFunction: acceptPendidikan,
-		queryKeys: [props.qKey],
-	});
-
-	const acceptHandler = () => {
-		const konfirmasi = confirm(
-			"Apakah anda yakin ingin menyetujui pendidikan ini?",
-		);
-		if (!konfirmasi) return;
-
-		accMutation.mutate({
-			id: props.data.id,
-			nik: props.biodata.nik,
-		});
 	};
 
 	return (
@@ -77,15 +56,6 @@ const ProfilPendidikanAction = (props: ProfilPendidikanActionProps) => {
 						<DeleteIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Delete</span>
 					</DropdownMenuItem>
-					{pathname === "/dashboard" ? null : (
-						<DropdownMenuItem
-							className="flex flex-row items-center cursor-pointer text-info"
-							onClick={acceptHandler}
-						>
-							<CheckIcon className="mr-2 h-[1rem] w-[1rem]" />
-							<span>Setujui Data</span>
-						</DropdownMenuItem>
-					)}
 				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>

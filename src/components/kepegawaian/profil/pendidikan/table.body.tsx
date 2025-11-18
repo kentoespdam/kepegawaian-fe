@@ -1,44 +1,26 @@
 import type { Pageable } from "@_types/index"
 import type { Biodata } from "@_types/profil/biodata"
 import type { Pendidikan } from "@_types/profil/pendidikan"
-import TooltipBuilder from "@components/builder/tooltip"
+import { Button } from "@components/ui/button"
 import { TableBody, TableCell, TableRow } from "@components/ui/table"
 import { getUrut } from "@helpers/number"
 import { cn } from "@lib/utils"
 import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store"
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store"
+import type { QueryKey } from "@tanstack/react-query"
 import {
 	CheckCircleIcon,
-	CircleDashedIcon,
-	CircleDotIcon,
-	EllipsisIcon,
+	EllipsisIcon
 } from "lucide-react"
 import { memo, useCallback, useEffect, useMemo } from "react"
 import ProfilPendidikanAction from "./button.table.action"
-import type { QueryKey } from "@tanstack/react-query"
-import { Button } from "@components/ui/button"
 
 interface ProfilPendidikanTableBodyProps {
-	biodata: Biodata
-	data: Pageable<Pendidikan>
-	qKey: QueryKey
-	isKaryawanAktif: boolean
+	biodata: Biodata;
+	data: Pageable<Pendidikan>;
+	qKey: QueryKey;
+	isKaryawanAktif: boolean;
 }
-
-const ApprovalStatusIcon = memo(({ disetujui }: { disetujui: boolean }) => (
-	<TooltipBuilder
-		text={disetujui ? "Disetujui" : "Belum Disetujui"}
-		className="bg-white text-black shadow-md"
-	>
-		{disetujui ? (
-			<CircleDotIcon className="size-5 text-green-500" />
-		) : (
-			<CircleDashedIcon className="size-5 text-red-500" />
-		)}
-	</TooltipBuilder>
-))
-
-ApprovalStatusIcon.displayName = "ApprovalStatusIcon"
 
 const LatestEducationIcon = memo(({ isLatest }: { isLatest: boolean }) =>
 	isLatest ? <CheckCircleIcon className="size-4 text-primary" /> : null
@@ -154,14 +136,11 @@ const ProfilPendidikanTableBody = ({
 					<TableCell className="border-x">{row.tahunMasuk}</TableCell>
 					<TableCell className="border-x">{row.tahunLulus}</TableCell>
 					<TableCell className="border-x">{row.gpa}</TableCell>
+					<TableCell className="border-x" align="center">{row.isLulus? "Ya" : "Tidak"}</TableCell>
 					<TableCell className="border-x">{row.gelarDepan}</TableCell>
 					<TableCell className="border-x">
 						{row.gelarBelakang}
 					</TableCell>
-					<TableCell className="border-x" align="center">
-						<ApprovalStatusIcon disetujui={row.disetujui} />
-					</TableCell>
-
 					<TableCell className="border-x" align="center">
 						<LatestEducationIcon isLatest={row.isLatest} />
 					</TableCell>

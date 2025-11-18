@@ -15,6 +15,7 @@ const defaultValues = {
 	tahunMasuk: 0,
 	tahunLulus: 0,
 	gpa: 0,
+	isLulus: false,
 	isLatest: false,
 };
 
@@ -58,6 +59,7 @@ export const usePendidikanStore = create<PendidikanStore>((set) => ({
 				tahunMasuk: pendidikan?.tahunMasuk || 0,
 				tahunLulus: pendidikan?.tahunLulus || 0,
 				gpa: pendidikan?.gpa || 0,
+				isLulus: pendidikan?.isLulus || false,
 				isLatest: pendidikan?.isLatest || false,
 			},
 		})),

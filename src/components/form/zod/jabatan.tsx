@@ -1,5 +1,5 @@
 "use client";
-import { type JabatanMini, findJabatanValue } from "@_types/master/jabatan";
+import { findJabatanValue, type JabatanMini } from "@_types/master/jabatan";
 import {
 	CommandDialog,
 	CommandEmpty,

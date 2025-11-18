@@ -6,7 +6,7 @@ import {
 	pendidikanTableColumns,
 } from "@_types/profil/pendidikan"
 import SearchBuilder from "@components/builder/search"
-import TableHeadBuilder from "@components/builder/table/head"
+import TableHeadBuilder from "@components/builder/table/head";
 import LoadingTable from "@components/builder/table/loading"
 import PaginationBuilder from "@components/builder/table/pagination"
 import { Table } from "@components/ui/table"
@@ -14,10 +14,10 @@ import { getPageDataEnc } from "@helpers/action"
 import { encodeString } from "@helpers/number"
 import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
+import { useMemo } from "react"
 import DeletePendidikanDialog from "./dialog.delete"
 import FormProfilPendidikanDialog from "./dialog.form"
 import ProfilPendidikanTableBody from "./table.body"
-import { useMemo } from "react"
 
 interface ProfilPendidikanContentComponentProps {
 	biodata: Biodata

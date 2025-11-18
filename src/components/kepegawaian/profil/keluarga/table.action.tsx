@@ -1,6 +1,5 @@
 import type { Biodata } from "@_types/profil/biodata";
 import type { Keluarga } from "@_types/profil/keluarga";
-import { acceptKeluarga } from "@app/kepegawaian/pendukung/keluarga/action";
 import { Button } from "@components/ui/button";
 import {
 	DropdownMenu,
@@ -10,18 +9,17 @@ import {
 	DropdownMenuTrigger,
 } from "@components/ui/dropdown-menu";
 import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
-import { useGlobalMutation } from "@store/query-store";
 import { DeleteIcon, EllipsisIcon, PencilIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
 interface KeluargaTableActionProps {
 	biodata: Biodata;
 	data: Keluarga;
-	editHandler: (id: number, data: Keluarga) => void;
 }
-const KeluargaTableAction = (props: KeluargaTableActionProps) => {
-	const params = useSearchParams();
-	const search = new URLSearchParams(params);
+const KeluargaTableAction = ({
+	biodata,
+	data,
+}: KeluargaTableActionProps) => {
 	const { setKeluargaId, setDefaultValues, setOpen, setOpenDelete } =
 		useKeluargaStore((state) => ({
 			setKeluargaId: state.setKeluargaId,
@@ -30,34 +28,25 @@ const KeluargaTableAction = (props: KeluargaTableActionProps) => {
 			setOpenDelete: state.setOpenDelete,
 		}));
 
-	// const editHandler = () => {
-	// 	setKeluargaId(props.data.id);
-	// 	setDefaultValues(props.biodata, props.data);
-	// 	setOpen(true);
-	// };
+	const editHandler = useCallback(() => {
+		if (data.changedStatus) {
+			alert("Data masih menunggu persetujuan. Tidak dapat diedit.");
+			return;
+		}
+		setKeluargaId(data.id);
+		setDefaultValues(biodata, data);
+		setOpen(true);
+	}, [data, biodata, setKeluargaId, setDefaultValues, setOpen]);
 
-	const deleteHadler = () => {
-		setDefaultValues(props.biodata);
-		setKeluargaId(props.data.id);
+	const deleteHadler = useCallback(() => {
+		if (data.changedStatus) {
+			alert("Data masih menunggu persetujuan. Tidak dapat diedit.");
+			return;
+		}
+		setDefaultValues(biodata);
+		setKeluargaId(data.id);
 		setOpenDelete(true);
-	};
-
-	const accMutation = useGlobalMutation({
-		mutationFunction: acceptKeluarga,
-		queryKeys: [["profil-keluarga", props.biodata.nik, search.toString()]],
-	});
-
-	const acceptHandler = () => {
-		const konfirmasi = confirm(
-			"Apakah anda yakin ingin menyetujui keluarga ini?",
-		);
-		if (!konfirmasi) return;
-
-		accMutation.mutate({
-			id: props.data.id,
-			nik: props.biodata.nik,
-		});
-	};
+	}, [data, setDefaultValues, biodata, setKeluargaId, setOpenDelete]);
 
 	return (
 		<DropdownMenu>
@@ -70,7 +59,7 @@ const KeluargaTableAction = (props: KeluargaTableActionProps) => {
 				<DropdownMenuGroup>
 					<DropdownMenuItem
 						className="flex flex-row items-center cursor-pointer text-primary"
-						onClick={() => props.editHandler(props.data.id, props.data)}
+						onClick={editHandler}
 					>
 						<PencilIcon className="mr-2 h-[1rem] w-[1rem]" />
 						<span>Edit</span>

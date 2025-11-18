@@ -38,21 +38,3 @@ export const deleteProfilPendidikan = async (formData: BaseDelete) => {
 	return await req.json();
 };
 
-export const acceptPendidikan = async ({
-	id,
-	nik,
-}: { id: number; nik: string }) => {
-	const headers = setAuthorizeHeader(cookies());
-	const url = `${API_URL}/profil/pendidikan/${id}/accept`;
-
-	const req = await fetch(url, {
-		method: "PUT",
-		headers: headers,
-		body: JSON.stringify({
-			biodataId: nik,
-			isLatest: true,
-		}),
-	});
-
-	return await req.json();
-};

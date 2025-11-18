@@ -11,11 +11,7 @@ export const JenisGaji = z.nativeEnum(JENIS_GAJI);
 export type JenisGaji = z.infer<typeof JenisGaji>;
 
 export const getKeyJenisGaji = (jenis: JenisGaji): string => {
-	const keys = Object.keys(JENIS_GAJI) as (keyof typeof JENIS_GAJI)[];
-	for (const key of keys) {
-		if (JENIS_GAJI[key] === jenis) {
-			return key;
-		}
-	}
-	return "";
+	return (
+		Object.entries(JENIS_GAJI).find(([, value]) => value === jenis)?.[0] ?? ""
+	);
 };

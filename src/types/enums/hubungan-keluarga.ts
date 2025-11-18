@@ -17,6 +17,6 @@ export const findHubunganKeluargaIndex = (
 	hubunganKeluarga?: HubunganKeluarga,
 ) => {
 	if (!hubunganKeluarga) return 0;
-	const result = HUBUNGAN_KELUARGA.findIndex((hub) => hub === hubunganKeluarga);
+	const result = HUBUNGAN_KELUARGA.indexOf(hubunganKeluarga);
 	return result === -1 ? 0 : result;
 };

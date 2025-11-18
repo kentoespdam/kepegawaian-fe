@@ -1,21 +1,21 @@
-import type { Pageable } from "@_types/index"
-import type { Biodata } from "@_types/profil/biodata"
-import type { Keluarga } from "@_types/profil/keluarga"
-import TooltipBuilder from "@components/builder/tooltip"
-import { TableBody, TableCell, TableRow } from "@components/ui/table"
-import { getUrut } from "@helpers/number"
-import { cn } from "@lib/utils"
-import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store"
-import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store"
-import { CheckIcon, EllipsisIcon, XIcon } from "lucide-react"
-import { memo, useCallback, useEffect, useMemo } from "react"
-import KeluargaTableAction from "./table.action"
-import { Button } from "@components/ui/button"
+import type { Pageable } from "@_types/index";
+import type { Biodata } from "@_types/profil/biodata";
+import type { Keluarga } from "@_types/profil/keluarga";
+import TooltipBuilder from "@components/builder/tooltip";
+import { Button } from "@components/ui/button";
+import { TableBody, TableCell, TableRow } from "@components/ui/table";
+import { getUrut } from "@helpers/number";
+import { cn } from "@lib/utils";
+import { useKeluargaStore } from "@store/kepegawaian/profil/keluarga-store";
+import { useLampiranProfilStore } from "@store/kepegawaian/profil/lampiran-profil-store";
+import { CheckIcon, EllipsisIcon, XIcon } from "lucide-react";
+import { memo, useCallback, useEffect, useMemo } from "react";
+import KeluargaTableAction from "./table.action";
 
 interface KeluargaTableBodyProps {
-	biodata: Biodata
-	data: Pageable<Keluarga>
-	isKaryawanAktif: boolean
+	biodata: Biodata;
+	data: Pageable<Keluarga>;
+	isKaryawanAktif: boolean;
 }
 
 const TableActionButton = memo(
@@ -23,20 +23,14 @@ const TableActionButton = memo(
 		isKaryawanAktif,
 		biodata,
 		row,
-		editHandler,
 	}: {
-		isKaryawanAktif: boolean
-		biodata: Biodata
-		row: Keluarga
-		editHandler: (id: number, data: Keluarga) => void
+		isKaryawanAktif: boolean;
+		biodata: Biodata;
+		row: Keluarga;
 	}) => (
 		<TableCell className="border-x p-0" align="center">
 			{isKaryawanAktif ? (
-				<KeluargaTableAction
-					biodata={biodata}
-					data={row}
-					editHandler={editHandler}
-				/>
+				<KeluargaTableAction biodata={biodata} data={row} />
 			) : (
 				<Button
 					variant="secondary"
@@ -48,82 +42,63 @@ const TableActionButton = memo(
 				</Button>
 			)}
 		</TableCell>
-	)
-)
+	),
+);
 
-TableActionButton.displayName = "TableActionButton"
+TableActionButton.displayName = "TableActionButton";
 
 const DitanggungIcon = memo(({ isDitanggung }: { isDitanggung: boolean }) => {
-	const tanggunganText = isDitanggung ? "Ditanggung" : "Tidak Ditanggung"
-	const IconComponent = isDitanggung ? CheckIcon : XIcon
-	const iconStyle = isDitanggung ? "text-green-500" : "text-red-500"
+	const tanggunganText = isDitanggung ? "Ditanggung" : "Tidak Ditanggung";
+	const IconComponent = isDitanggung ? CheckIcon : XIcon;
+	const iconStyle = isDitanggung ? "text-green-500" : "text-red-500";
 	return (
 		<TableCell className="border-x" align="center">
-			<TooltipBuilder
-				text={tanggunganText}
-				className="bg-white text-black"
-			>
+			<TooltipBuilder text={tanggunganText} className="bg-white text-black">
 				<IconComponent className={`size-5 ${iconStyle}`} />
 			</TooltipBuilder>
 		</TableCell>
-	)
-})
+	);
+});
 
-DitanggungIcon.displayName = "DitanggungIcon"
+DitanggungIcon.displayName = "DitanggungIcon";
 
 const KeluargaTableBody = ({
 	biodata,
 	data,
 	isKaryawanAktif,
 }: KeluargaTableBodyProps) => {
-	const { nik } = biodata
-	const {
-		selectedKeluargaId,
-		setSelectedKeluargaId,
-		setKeluargaId,
-		setDefaultValues,
-		setOpen,
-	} = useKeluargaStore((state) => ({
-		selectedKeluargaId: state.selectedKeluargaId,
-		setSelectedKeluargaId: state.setSelectedKeluargaId,
-		setKeluargaId: state.setKeluargaId,
-		setDefaultValues: state.setDefaultValues,
-		setOpen: state.setOpen,
-	}))
+	const { nik } = biodata;
+	const { selectedKeluargaId, setSelectedKeluargaId } = useKeluargaStore(
+		(state) => ({
+			selectedKeluargaId: state.selectedKeluargaId,
+			setSelectedKeluargaId: state.setSelectedKeluargaId,
+		}),
+	);
 	const { setRefId, setNik } = useLampiranProfilStore((state) => ({
 		setRefId: state.setRefId,
 		setNik: state.setNik,
-	}))
+	}));
 
 	const handleSelect = useCallback(
 		(id: number) => {
-			setSelectedKeluargaId(selectedKeluargaId === id ? 0 : id)
-			setNik(nik)
+			setSelectedKeluargaId(selectedKeluargaId === id ? 0 : id);
+			setNik(nik);
 		},
-		[nik, selectedKeluargaId, setSelectedKeluargaId, setNik]
-	)
-
-	const editHandler = useCallback(
-		(id: number, data: Keluarga) => {
-			setKeluargaId(id)
-			setDefaultValues(biodata, data)
-			setOpen(true)
-		},
-		[biodata, setKeluargaId, setDefaultValues, setOpen]
-	)
+		[nik, selectedKeluargaId, setSelectedKeluargaId, setNik],
+	);
 
 	useEffect(() => {
-		if (selectedKeluargaId) setRefId(selectedKeluargaId)
-	}, [setRefId, selectedKeluargaId])
+		if (selectedKeluargaId) setRefId(selectedKeluargaId);
+	}, [setRefId, selectedKeluargaId]);
 
 	const tableRows = useMemo(() => {
-		const urutStart = getUrut(data)
+		const urutStart = getUrut(data);
 		return data.content.map((row, index) => ({
 			...row,
 			urut: urutStart + index,
 			isSelected: selectedKeluargaId === row.id,
-		}))
-	}, [data, selectedKeluargaId])
+		}));
+	}, [data, selectedKeluargaId]);
 
 	return (
 		<TableBody>
@@ -135,7 +110,10 @@ const KeluargaTableBody = ({
 						{
 							"bg-green-200 odd:bg-green-300 hover:bg-green-200":
 								row.isSelected,
-						}
+						},
+						{
+							"text-info": row.changedStatus,
+						},
 					)}
 					onClick={() => handleSelect(row.id)}
 				>
@@ -145,7 +123,6 @@ const KeluargaTableBody = ({
 					<TableActionButton
 						row={row}
 						biodata={biodata}
-						editHandler={editHandler}
 						isKaryawanAktif={isKaryawanAktif}
 					/>
 					<TableCell className="whitespace-nowrap border-x">
@@ -185,7 +162,7 @@ const KeluargaTableBody = ({
 				</TableRow>
 			))}
 		</TableBody>
-	)
-}
+	);
+};
 
-export default KeluargaTableBody
+export default KeluargaTableBody;

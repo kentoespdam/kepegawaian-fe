@@ -1,18 +1,16 @@
-import type { Biodata } from "@_types/profil/biodata";
-import type { Pendidikan } from "@_types/profil/pendidikan";
 import TooltipBuilder from "@components/builder/tooltip";
 import { Dialog, DialogTrigger } from "@components/ui/dialog";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { PencilIcon } from "lucide-react";
+import { memo } from "react";
 
-interface EditProfilPendidikanButtonProps {
-	biodata: Biodata;
-	pendidikan: Pendidikan;
-}
-const EditProfilPendidikanButton = (props: EditProfilPendidikanButtonProps) => {
-	const store = usePendidikanStore();
+const EditProfilPendidikanButton = memo(() => {
+	const { open, setOpen } = usePendidikanStore((state) => ({
+		open: state.open,
+		setOpen: state.setOpen,
+	}));
 	return (
-		<Dialog open={store.open} onOpenChange={store.setOpen}>
+		<Dialog open={open} onOpenChange={setOpen}>
 			<TooltipBuilder
 				text="Tambah Pendidikan"
 				className="bg-primary text-primary-foreground"
@@ -22,9 +20,9 @@ const EditProfilPendidikanButton = (props: EditProfilPendidikanButtonProps) => {
 					<span>Edit</span>
 				</DialogTrigger>
 			</TooltipBuilder>
-			{/* <ProfilPendidikanForm biodata={props.biodata} /> */}
 		</Dialog>
 	);
-};
+});
+EditProfilPendidikanButton.displayName = "EditProfilPendidikanButton";
 
 export default EditProfilPendidikanButton;

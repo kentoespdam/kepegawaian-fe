@@ -7,30 +7,13 @@ import { Button } from "@components/ui/button";
 import { useBiodataQuery } from "@store/kepegawaian/biodata/biodata-store";
 import { usePendidikanStore } from "@store/kepegawaian/profil/pendidikan-store";
 import { LoaderCircle, PlusCircleIcon } from "lucide-react";
+import { memo } from "react";
 
-interface AddProfilPendidikanButtonProps {
-	nik: string;
-}
-const AddProfilPendidikanButton = ({ nik }: AddProfilPendidikanButtonProps) => {
+const AddButtonCompoent = memo(({data}:{data:Biodata}) => {
 	const { setDefaultValues, setOpen } = usePendidikanStore((state) => ({
 		setDefaultValues: state.setDefaultValues,
 		setOpen: state.setOpen,
 	}));
-
-	const query = useBiodataQuery<Biodata>(nik);
-
-	if (query.isFetching || query.isLoading)
-		return (
-			<LoadingButtonClient
-				pending={query.isLoading || query.isFetching}
-				variant={"ghost"}
-				size={"icon"}
-				icon={<LoaderCircle />}
-			/>
-		);
-
-	if (query.isError) return null;
-	if (!query.data) return null;
 
 	return (
 		<TooltipBuilder
@@ -42,14 +25,44 @@ const AddProfilPendidikanButton = ({ nik }: AddProfilPendidikanButtonProps) => {
 				className="text-primary hover:opacity-75"
 				size={"icon"}
 				onClick={() => {
-					setDefaultValues(query.data);
-					setOpen(true);
+					if (data) {
+						setDefaultValues(data);
+						setOpen(true);
+					}
 				}}
 			>
 				<PlusCircleIcon className=" h-5 w-5" />
 			</Button>
 		</TooltipBuilder>
-	);
-};
+	);})
+
+AddButtonCompoent.displayName = "AddButtonCompoent";
+
+interface AddProfilPendidikanButtonProps {
+	nik: string;
+}
+const AddProfilPendidikanButton = memo(
+	({ nik }: AddProfilPendidikanButtonProps) => {
+		
+
+		const query = useBiodataQuery<Biodata>(nik);
+
+		const showLoading=query.isFetching || query.isLoading;
+		const isEmptyData=!query.isError && query.data===undefined;
+
+		return isEmptyData ? null : showLoading ? (
+			<LoadingButtonClient
+				pending={showLoading}
+				variant={"ghost"}
+				size={"icon"}
+				icon={<LoaderCircle />}
+			/>
+		) : (
+			<AddButtonCompoent data={query.data as Biodata} />
+		);
+	},
+);
+
+AddProfilPendidikanButton.displayName = "AddProfilPendidikanButton";
 
 export default AddProfilPendidikanButton;
