@@ -1,0 +1,171 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kepegawaian Rest API",
+    "description": "Need JWT Token for execute this API",
+    "contact": {
+      "name": "Kent-Os",
+      "email": "kentoes.pdam@gmail.com"
+    },
+    "license": {
+      "name": "License of API",
+      "url": "API license URL"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.1.211:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuthentication": []
+    }
+  ],
+  "paths": {
+    "/master/jabatan/{id}": {
+      "get": {
+        "tags": [
+          "jabatan-controller"
+        ],
+        "operationId": "findById_10",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "jabatan-controller"
+        ],
+        "operationId": "update_10",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JabatanPutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "jabatan-controller"
+        ],
+        "operationId": "deleteById_10",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "JabatanPutRequest": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parentId": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "organisasiId": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "levelId": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "nama": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "kode",
+          "nama"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuthentication": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

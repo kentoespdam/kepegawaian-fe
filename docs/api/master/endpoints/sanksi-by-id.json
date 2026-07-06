@@ -1,0 +1,190 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kepegawaian Rest API",
+    "description": "Need JWT Token for execute this API",
+    "contact": {
+      "name": "Kent-Os",
+      "email": "kentoes.pdam@gmail.com"
+    },
+    "license": {
+      "name": "License of API",
+      "url": "API license URL"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://192.168.1.211:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "security": [
+    {
+      "BearerAuthentication": []
+    }
+  ],
+  "paths": {
+    "/master/sanksi/{id}": {
+      "get": {
+        "tags": [
+          "sanksi-controller"
+        ],
+        "operationId": "findById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "sanksi-controller"
+        ],
+        "operationId": "update",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SanksiPutRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "sanksi-controller"
+        ],
+        "operationId": "deleteById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "SanksiPutRequest": {
+        "type": "object",
+        "properties": {
+          "kode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keterangan": {
+            "type": "string",
+            "minLength": 1
+          },
+          "jenisSpId": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "potTkk": {
+            "type": "boolean"
+          },
+          "jmlPotTkk": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPendingPangkat": {
+            "type": "boolean"
+          },
+          "isPendingGaji": {
+            "type": "boolean"
+          },
+          "isTurunPangkat": {
+            "type": "boolean"
+          },
+          "isTurunJabatan": {
+            "type": "boolean"
+          },
+          "isSuspension": {
+            "type": "boolean"
+          },
+          "isTerminateDh": {
+            "type": "boolean"
+          },
+          "isTerminateTh": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "jenisSpId",
+          "keterangan",
+          "kode"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "BearerAuthentication": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
