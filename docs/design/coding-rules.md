@@ -14,6 +14,10 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - **Aksesibilitas = syarat fungsional**, bukan nice-to-have (±70% pengguna lansia). Gate di
   visual-foundation §2 berlaku ke SETIAP komponen.
 - **Bahasa UI = Bahasa Indonesia.** Label bahasa manusia, bukan nama field mentah.
+- **Plan dulu, baru implementasi.** Sebelum menulis kode: `bd show <id>` → baca modul DESIGN relevan →
+  **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan ingatan) → susun rencana
+  singkat (file yang disentuh, primitive yang dipakai, urutan langkah). Baru koding. **JANGAN** langsung
+  ngetik dari asumsi — asumsi basi = bug diam & rework.
 
 ---
 
@@ -43,8 +47,10 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - Middleware = **`proxy.ts`** (bukan `middleware.ts`), **Node runtime**, `export default function proxy()`.
 - React **19.2.4** dengan **React Compiler aktif** (`babel-plugin-react-compiler`) — JANGAN
   micro-optimize manual (`useMemo`/`useCallback` defensif) yang sudah ditangani compiler.
-- **Gunakan context7** untuk dokumentasi library/framework/API/CLI (React, Next, Tailwind, TanStack,
-  Appwrite, RHF, Zod, dll). context7 > web search. Jawab berdasarkan docs yang di-fetch.
+- **WAJIB `context7` sebelum pakai library apa pun** — ambil **source & best-practice terbaru** untuk
+  dokumentasi library/framework/API/CLI (React, Next, Tailwind, TanStack, Appwrite, RHF, Zod, dll).
+  Data internal/ingatan bisa **basi**; context7 > web search. Alur: `resolve-library-id` → `query-docs`
+  → **koding hanya berdasarkan docs yang di-fetch**, bukan asumsi. Ini bagian dari "plan dulu" (§0).
 
 ---
 
