@@ -38,6 +38,21 @@ nilai karangan.**
 > tetap valid; gunakan tabel di atas untuk memetakan § ke file. Peta ketertelusuran § → sumber
 > CONTEXT/ADR ada di [architecture.md](./docs/design/architecture.md) (Lampiran).
 
+## Temuan implementasi — quick reference (agar tak perlu baca ulang source)
+
+Ringkasan pola konkret dari source code untuk agen yang akan datang. **Baca cepat sebelum
+menulis; detail ada di modul masing-masing.**
+
+| Temuan | Detail | Modul |
+|--------|--------|-------|
+| **Dua routing proxy** | `/api/proxy/v1/*` → Appwrite (`forwardToAppwrite`, tanpa Bearer). `/api/proxy/master/*` → Backend (`forwardToBackend`, Bearer JWT). | [auth-proxy.md](./docs/design/auth-proxy.md) §4.1 |
+| **Auth via proxy** | Login: `POST /api/proxy/v1/account/sessions/email` (fetch langsung, bukan `api` client). Ganti password: `PATCH /api/proxy/v1/account/password`. Logout: `DELETE /api/proxy/v1/account/sessions/current`. | [auth-proxy.md](./docs/design/auth-proxy.md) §4.1 |
+| **Cookie sesi Appwrite** | `a_session_<projectId>` (primary) + `_legacy` fallback. Dibaca via `readSession()`. BUKAN `mail_session`. | [auth-proxy.md](./docs/design/auth-proxy.md) §4.1 |
+| **Zod v4 + hookform** | Zod v4 tipe `ZodType<unknown,unknown>` tak cocok hookform `FieldValues`. WAJIB cast: `resolver: zodResolver(schema as never)`. | [forms.md](./docs/design/forms.md) §10 |
+| **Password reveal toggle** | Lucide `Eye`/`EyeOff`, button absolute posisi `right-2.5 top-1/2`, aria-label dinamis. Input `pr-10` untuk ruang ikon. | [login-and-profile.md](./docs/design/login-and-profile.md) §14/§15 |
+| **Card Base UI** | Gunakan `data-slot="card"`, `data-slot="card-header"`, dll. BUKAN className tradisional. | [architecture.md](./docs/design/architecture.md) §19 |
+| **Halaman profil pattern** | Server component panggil `verifySession()` → render read-only card + client component form. | [login-and-profile.md](./docs/design/login-and-profile.md) §15 |
+
 ## Dokumen sumber (baca bila butuh dasar keputusan)
 
 - `CONTEXT-MAP.md` — **inti multi-context**: ubiquitous language + semua keputusan lintas-modul yang sudah diresolusi (sumber kebenaran; DESIGN diturunkan darinya). **Baca ini dulu.**

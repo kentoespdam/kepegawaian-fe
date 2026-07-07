@@ -4,7 +4,7 @@ import { ChangePasswordForm } from "./change-password-form";
 
 export default async function ProfilPage() {
   const user = await verifySession();
-  const roles = user.labels;
+  const roles = user.prefs.roles;
 
   return (
     <div className="mx-auto max-w-lg space-y-6">

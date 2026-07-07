@@ -9,15 +9,36 @@
 
 ## 4. Autentikasi & `proxy.ts` (ADR 0001, CONTEXT §Identity bridge/Route protection/Session expiry)
 
-### 4.1 Identity bridge — satu `proxy.ts` (pola mail-fe)
+### 4.1 Identity bridge — satu `proxy.ts` — dua routing strategy
 
 Ada **SATU** proxy: `proxy.ts` (rename dari `middleware.ts` di Next 16; `export default
 function proxy()`; **Node.js runtime**). Dua tugas: (1) route guard, (2) data forwarding
-`/api/proxy/*` → Backend via `rewrite` dengan `Bearer` di-attach server-side. **Tidak ada**
+`/api/proxy/*` via `rewrite` dengan dua strategy berbeda tergantung prefix path. **Tidak ada**
 lapisan `app/api/**/route.ts`.
 
+**Dua strategy forwarding:**
+
+| Prefix | Fungsi | Target | Auth header |
+|--------|--------|--------|-------------|
+| `/api/proxy/v1/*` | `forwardToAppwrite()` | Appwrite langsung | `X-Appwrite-Project` (BUKAN Bearer) |
+| `/api/proxy/master/*` dll | `forwardToBackend()` | Spring Boot backend | `Bearer <JWT>` via cookie `token` |
+
+- `forwardToAppwrite()` — cocok untuk operasi auth: login, ganti password, logout, GET account.
+  Cukup rewrite + header project. **Tanpa JWT**.
+- `forwardToBackend()` — semua CRUD master. Rewrite + Bearer JWT. JWT di-refresh otomatis
+  via hot/cold path di `resolveToken()`.
+
+**Contoh endpoint Appwrite via proxy:**
+| Metode | Path | Guna |
+|--------|------|------|
+| GET | `/api/proxy/v1/account` | Info akun (dipakai DAL `verifySession()`) |
+| POST | `/api/proxy/v1/account/sessions/email` | Login |
+| PATCH | `/api/proxy/v1/account/password` | Ganti password |
+| DELETE | `/api/proxy/v1/account/sessions/current` | Logout |
+
 **Dua cookie:**
-- `mail_session`-equiv = sesi Appwrite terenkripsi (JWE) — sumber kebenaran.
+- `a_session_<projectId>` (+ `_legacy`) = sesi Appwrite httpOnly — sumber kebenaran.
+  `readSession()` coba primary dulu, fallback ke `_legacy` untuk plain HTTP (dev).
 - `token` = httpOnly cookie berisi Appwrite JWT saat ini, `maxAge` dari `exp` JWT.
 
 **Hot path (~99%, nol network):** baca cookie `token` → decode `exp` (base64, TANPA verify

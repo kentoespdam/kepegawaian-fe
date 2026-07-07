@@ -3,7 +3,7 @@ import type { AppwriteUser } from "@/types/auth";
 import { type Action, PERMISSIONS } from "./permissions";
 
 export function getRoles(user: AppwriteUser): string[] {
-  return user.labels;
+  return user.prefs.roles;
 }
 
 export function can(roles: string[], action: Action, entity: string): boolean {
