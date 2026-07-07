@@ -7,14 +7,16 @@ import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
 export interface FormField {
   name: string;
   label: string;
-  type?: "text" | "email" | "password" | "number" | "textarea";
+  type?: "text" | "email" | "password" | "number" | "textarea" | "select";
   placeholder?: string;
   required?: boolean;
+  options?: { value: string; label: string; disabled?: boolean }[];
 }
 
 interface CrudFormProps {
@@ -41,6 +43,8 @@ export function CrudForm({
   const {
     register,
     handleSubmit,
+    setValue,
+    watch,
     formState: { errors, isSubmitting },
   } = useForm<Record<string, unknown>>({
     // ponytail: Zod v4 ZodType<unknown,unknown> vs hookform FieldValues — cast diperlukan
@@ -52,29 +56,48 @@ export function CrudForm({
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      {fields.map((field) => (
-        <div key={field.name} className="space-y-1.5">
-          <Label htmlFor={field.name} className="text-sm font-medium">
-            {field.label}
-            {field.required && <span className="ml-0.5 text-destructive">*</span>}
-          </Label>
-          {field.type === "textarea" ? (
-            <Textarea id={field.name} className="min-h-24" {...register(field.name)} placeholder={field.placeholder} />
-          ) : (
-            <Input
-              id={field.name}
-              type={field.type ?? "text"}
-              {...register(field.name)}
-              placeholder={field.placeholder}
-              aria-invalid={!!errors[field.name]}
-              className="h-11"
-            />
-          )}
-          {errors[field.name] && (
-            <p className="text-xs text-destructive">{String(errors[field.name]?.message ?? "")}</p>
-          )}
-        </div>
-      ))}
+      {fields.map((field) => {
+        const err = errors[field.name];
+        return (
+          <div key={field.name} className="space-y-1.5">
+            <Label htmlFor={field.name} className="text-sm font-medium">
+              {field.label}
+              {field.required && <span className="ml-0.5 text-destructive">*</span>}
+            </Label>
+            {field.type === "textarea" ? (
+              <Textarea
+                id={field.name}
+                className="min-h-24"
+                {...register(field.name)}
+                placeholder={field.placeholder}
+              />
+            ) : field.type === "select" ? (
+              <Select value={String(watch(field.name) ?? "")} onValueChange={(v) => setValue(field.name, v)}>
+                <SelectTrigger className="h-11 w-full" aria-invalid={!!err}>
+                  <SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`} />
+                </SelectTrigger>
+                <SelectContent>
+                  {field.options?.map((opt) => (
+                    <SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
+                      {opt.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input
+                id={field.name}
+                type={field.type ?? "text"}
+                {...register(field.name)}
+                placeholder={field.placeholder}
+                aria-invalid={!!err}
+                className="h-11"
+              />
+            )}
+            {err && <p className="text-xs text-destructive">{String(err.message ?? "")}</p>}
+          </div>
+        );
+      })}
 
       {error && <p className="text-sm text-destructive">{error}</p>}
 

@@ -57,12 +57,12 @@ bisa dikerjakan **paralel** oleh beberapa agen.
 Semua Master butuh 5 primitive di atas. **Urutan internal karena FK** (kerjakan yang jadi sumber
 `/list` lebih dulu supaya bisa dites end-to-end):
 
-**4a. Master tanpa FK (boleh langsung, paralel):**
+**4a. Master tanpa FK (boleh langsung, paralel):** ✅
 | ✓ | ID | Entitas |
 |---|---|---|
-| [ ] | `kepegawaian-fe-cf5` | Golongan |
-| [ ] | `kepegawaian-fe-rts` | Level |
-| [ ] | `kepegawaian-fe-435` | Jenjang Pendidikan |
+| [x] | `kepegawaian-fe-cf5` | Golongan |
+| [x] | `kepegawaian-fe-rts` | Level |
+| [x] | `kepegawaian-fe-435` | Jenjang Pendidikan |
 | [x] | `kepegawaian-fe-6bg` | Jenis Keahlian |
 | [x] | `kepegawaian-fe-fsl` | Jenis Kitas |
 | [x] | `kepegawaian-fe-6s8` | Jenis Pelatihan |
@@ -70,17 +70,17 @@ Semua Master butuh 5 primitive di atas. **Urutan internal karena FK** (kerjakan 
 | [x] | `kepegawaian-fe-6hx` | Alasan Berhenti |
 | [x] | `kepegawaian-fe-dsm` | Hari Libur |
 | [x] | `kepegawaian-fe-scn` | Rumah Dinas |
-| [ ] | `kepegawaian-fe-9ve` | Organisasi (tree, `parentId`) |
-| [ ] | `kepegawaian-fe-4t3` | Jabatan (tree, `parentId`) |
+| [x] | `kepegawaian-fe-9ve` | Organisasi (tree, `parentId`) |
+| [x] | `kepegawaian-fe-4t3` | Jabatan (tree, `parentId`) |
 
-**4b. Master ber-FK (kerjakan setelah sumber FK-nya ada):**
+**4b. Master ber-FK (kerjakan setelah sumber FK-nya ada):** ✅
 | ✓ | ID | Entitas | FK → (kerjakan dulu) |
 |---|---|---|---|
-| [ ] | `kepegawaian-fe-ecm` | Grade | Level (`rts`) |
-| [ ] | `kepegawaian-fe-rs3` | Sanksi (heavy-form) | Jenis SP (`pvl`) |
-| [ ] | `kepegawaian-fe-bro` | Profesi (heavy-form) | Organisasi (`9ve`), Jabatan (`4t3`), Grade (`ecm`) |
-| [ ] | `kepegawaian-fe-cj7` | APD | Profesi (`bro`) |
-| [ ] | `kepegawaian-fe-e1v` | Alat Kerja | Profesi (`bro`) |
+| [x] | `kepegawaian-fe-ecm` | Grade | Level (`rts`) |
+| [x] | `kepegawaian-fe-rs3` | Sanksi (heavy-form) | Jenis SP (`pvl`) |
+| [x] | `kepegawaian-fe-bro` | Profesi (heavy-form) | Organisasi (`9ve`), Jabatan (`4t3`), Grade (`ecm`) |
+| [x] | `kepegawaian-fe-cj7` | APD | Profesi (`bro`) |
+| [x] | `kepegawaian-fe-e1v` | Alat Kerja | Profesi (`bro`) |
 
 > FK di 4b sudah dikunci sebagai dependency `bd` (mis. `bro` blocked sampai `9ve`,`4t3`,`ecm` close),
 > jadi `bd ready` otomatis menahannya. Ikuti `bd ready` — jangan asal ambil dari tabel ini.
