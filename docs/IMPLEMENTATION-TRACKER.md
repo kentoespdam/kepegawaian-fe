@@ -36,11 +36,11 @@ bisa dikerjakan **paralel** oleh beberapa agen.
 | [x] | `kepegawaian-fe-374` | DAL `verifySession()` | gate render, `cache()` |
 | [x] | `kepegawaian-fe-shl` | Sonner `<Toaster>` | satu global, bottom-right |
 
-### Wave 2 — Lapis di atas fondasi
+### Wave 2 — Lapis di atas fondasi ✅
 | ✓ | ID | Issue | ← depends on |
 |---|---|---|---|
-| [ ] | `kepegawaian-fe-5tp` | RBAC `can()` + `<Can>` | DAL |
-| [ ] | `kepegawaian-fe-g79` | API client + `useResource` | proxy.ts |
+| [x] | `kepegawaian-fe-5tp` | RBAC `can()` + `<Can>` | DAL |
+| [x] | `kepegawaian-fe-g79` | API client + `useResource` | proxy.ts |
 
 ### Wave 3 — Shared primitives + Auth pages
 | ✓ | ID | Issue | ← depends on |
