@@ -42,15 +42,15 @@ bisa dikerjakan **paralel** oleh beberapa agen.
 | [x] | `kepegawaian-fe-5tp` | RBAC `can()` + `<Can>` | DAL |
 | [x] | `kepegawaian-fe-g79` | API client + `useResource` | proxy.ts |
 
-### Wave 3 — Shared primitives + Auth pages
+### Wave 3 — Shared primitives + Auth pages ✅
 | ✓ | ID | Issue | ← depends on |
 |---|---|---|---|
-| [ ] | `kepegawaian-fe-z55` | `<DataTable>` | API client, tema |
-| [ ] | `kepegawaian-fe-xhe` | `<CrudForm>` | API client, tema |
-| [ ] | `kepegawaian-fe-fzg` | `<ConfirmDeleteDialog>` | API client, sonner |
-| [ ] | `kepegawaian-fe-9j9` | App shell (sidebar/top bar/landing) | tema, RBAC, DAL |
-| [ ] | `kepegawaian-fe-2l1` | Login page | proxy.ts, tema, DAL |
-| [ ] | `kepegawaian-fe-5r4` | Profil page | DAL, `<CrudForm>`, sonner |
+| [x] | `kepegawaian-fe-z55` | `<DataTable>` | API client, tema |
+| [x] | `kepegawaian-fe-xhe` | `<CrudForm>` | API client, tema |
+| [x] | `kepegawaian-fe-fzg` | `<ConfirmDeleteDialog>` | API client, sonner |
+| [x] | `kepegawaian-fe-9j9` | App shell (sidebar/top bar/landing) | tema, RBAC, DAL |
+| [x] | `kepegawaian-fe-2l1` | Login page | proxy.ts, tema, DAL |
+| [x] | `kepegawaian-fe-5r4` | Profil page | DAL, `<CrudForm>`, sonner |
 
 ### Wave 4 — Master entities (← DataTable, CrudForm, ConfirmDeleteDialog, RBAC, App shell)
 
