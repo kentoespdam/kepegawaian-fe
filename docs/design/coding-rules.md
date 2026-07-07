@@ -35,6 +35,10 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   (fetching, mutation, state turunan, event handler non-trivial, kalkulasi) diangkat ke custom hook
   di `src/hooks/` (mis. `useGolonganTable`, `useCrudForm`, `useAuthSession`). Komponen memanggil hook
   → mudah dites, dipakai ulang, dan dibaca. Hindari blok logika gemuk inline di dalam JSX component.
+- **Pisahkan `type`/`interface` → `src/types/`.** Definisi tipe bersama (model entitas, DTO, response
+  API, props lintas-komponen) diletakkan di `src/types/` (mis. `src/types/golongan.ts`), lalu di-import
+  di tempat pakai. Komponen/hook fokus ke logika, bukan deklarasi tipe gemuk inline. Pengecualian:
+  tipe lokal sepele yang hanya dipakai di satu file (mis. props kecil satu komponen) boleh tetap inline.
 - Satu file = satu tanggung jawab jelas; file kecil & fokus lebih baik daripada file raksasa.
 
 ---
