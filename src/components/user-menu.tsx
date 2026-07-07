@@ -1,0 +1,59 @@
+"use client";
+
+import { LogOut, User } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type { AppwriteUser } from "@/types/auth";
+
+export function UserMenu({ user }: { user: AppwriteUser }) {
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+  const initial = user.name.charAt(0).toUpperCase();
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    try {
+      await fetch("/api/proxy/v1/account/sessions/current", { method: "DELETE" });
+    } catch {
+      // proceed even if fetch fails — clear client-side
+    }
+    router.push("/login");
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-muted outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
+        <Avatar size="sm">
+          <AvatarFallback>{initial}</AvatarFallback>
+        </Avatar>
+        <span className="hidden text-sm font-medium sm:inline text-foreground">{user.name}</span>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>
+          <div className="flex flex-col gap-0.5">
+            <span className="font-medium text-foreground">{user.name}</span>
+            <span className="text-xs font-normal text-muted-foreground">{user.email}</span>
+          </div>
+        </DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={() => router.push("/profil")}>
+          <User className="size-4" />
+          Profil
+        </DropdownMenuItem>
+        <DropdownMenuItem variant="destructive" onClick={handleLogout} disabled={loggingOut}>
+          <LogOut className="size-4" />
+          {loggingOut ? "Keluar…" : "Keluar"}
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
