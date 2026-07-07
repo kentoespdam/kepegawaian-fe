@@ -42,6 +42,7 @@ export function CrudForm({
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<Record<string, unknown>>({
+    // ponytail: Zod v4 ZodType<unknown,unknown> vs hookform FieldValues — cast diperlukan
     resolver: zodResolver(schema as never),
     defaultValues,
   });

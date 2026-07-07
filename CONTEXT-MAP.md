@@ -41,13 +41,14 @@ task touches**; this core is always in scope.
 - **Backend / Kepegawaian API** — the Spring Boot REST API at `http://192.168.1.211:8080`. Consumes a Bearer JWT on every call; does **not** issue one.
 - **Proxy** — the Next.js `proxy.ts` edge middleware that is the *only* thing allowed to talk to the Backend. Resolves the session, mints/caches the Appwrite JWT, and forwards `/api/proxy/*` upstream via `rewrite` with `Bearer` attached server-side. Hides the internal IP from the browser.
 - **Identity bridge** — how a user's Appwrite identity becomes a Backend-accepted JWT. Resolved: the Backend trusts Appwrite-issued JWTs; `proxy.ts` mints the Appwrite JWT and forwards it as `Bearer`.
+- **Appwrite Session module** (`lib/auth/appwriteSession`) — the single module that *owns* what an Appwrite session **is**: the session cookie names (the `Secure` primary `a_session_<projectId>` **and** its non-`Secure` `_legacy` fallback), the Appwrite base URL + `X-Appwrite-Project` header, the authenticated-request primitive (attach `Cookie: <name>=<value>`), plus `readSession` / `fetchAccount` / `mintJWT` and the token-cookie policy. Both `proxy.ts` and the DAL `verifySession` are thin callers of it — session knowledge lives in **one** place, not duplicated across the two files. `readSession(get)` takes an injected cookie-lookup so the module imports neither `next/server` nor `next/headers` (unit-testable).
 - **Modul** — one functional area of the app (master, kepegawaian, cuti, penggajian, laporan, sistem). Each owns a Tier-1 rail icon (`### App shell`) and — once grilled — a `docs/context/<modul>.md` delta. The **Master module** (reference/master-data) is defined in [`docs/context/master.md`](docs/context/master.md).
 
 ## Naming — "proxy" means one thing here (mail-fe pattern)
 
 Since we adopted the **mail-fe pattern**, there is **one** proxy, not two: the Next.js `proxy.ts` middleware does *both* the route guard *and* the data forwarding. There is **no** separate `app/api/**/route.ts` route-handler layer.
 
-- **`proxy.ts`** — Next.js 16's renamed middleware (was `middleware.ts`); `export default function proxy()`. Runs on the **Node.js runtime** (needs JWE crypto). Two jobs: (1) **route guard** — redirect unauth → `/login`, auth-away-from `/login`; (2) **data path** — `rewrite` `/api/proxy/*` to the Backend with a server-minted `Bearer`.
+- **`proxy.ts`** — Next.js 16's renamed middleware (was `middleware.ts`); `export default function proxy()`. Runs on the **Node.js runtime** (for `fetch`-mint + in-memory dedup `Map`; *not* JWE crypto — see `### Identity bridge` correction). Two jobs: (1) **route guard** — redirect unauth → `/login`, auth-away-from `/login`; (2) **data path** — `rewrite` `/api/proxy/*` to the Backend with a server-minted `Bearer`.
 - **`/api/proxy/*`** — the client-facing URL prefix the browser calls; it is *rewritten* (not handled) by `proxy.ts`. The browser never sees the internal IP.
 When a doc/issue says "proxy", it means `proxy.ts` — the single edge file.
 
@@ -72,15 +73,30 @@ with `Bearer`.
 ### Identity bridge — Appwrite JWT minted & cached in `proxy.ts` (mail-fe pattern)
 The Backend accepts and validates Appwrite-issued JWTs. Flow: browser → `proxy.ts` → Backend. `proxy.ts` resolves the session and forwards the Appwrite JWT as `Bearer` server-side; the internal IP never reaches the browser.
 
+> **Correction (2026-07-07) — cookie-forwarding, not JWE-decrypt.** This section (and ADR-0001)
+> originally described mail-fe's **JWE session decryption**. The code does **not** decrypt anything
+> and there is no `jose`/JWE dependency: the Appwrite session cookie value is **forwarded verbatim**
+> as a `Cookie:` header to mint (`POST /v1/account/jwt`) and to verify (`GET /v1/account`). The
+> lifecycle (hot/cold path, dedup, hardenings) stands; only "how the session is read" is corrected
+> below. This knowledge now lives in the **Appwrite Session module** (see Glossary).
+
+**Two Appwrite session cookies (browser reality).** Appwrite sets the session as **two** cookies:
+`a_session_<projectId>` (**`Secure; SameSite=None`**) and `a_session_<projectId>_legacy` (**no
+`Secure` flag**, an HTTP fallback for browsers/contexts that reject the first). **Over plain HTTP
+the browser silently drops the `Secure` one and keeps only `_legacy`** — so any reader that looks up
+only the primary name finds nothing and bounces the user to `/login` with no error (this was the
+login bug). The Appwrite Session module therefore reads **both names** (primary, then `_legacy`).
+Dev = HTTP so `_legacy` is what survives; prod = HTTPS so the `Secure` primary is accepted.
+
 **JWT lifecycle (adopted from the production `mail-fe/proxy.ts`, with 4 hardenings):**
-- **Two cookies.** `mail_session`-equivalent = the encrypted Appwrite session (JWE, source of truth). `token` = a cached httpOnly cookie holding the current Appwrite JWT, `maxAge` set from the JWT `exp`.
+- **Two app cookies (distinct from the pair above).** The Appwrite **session** cookie (source of truth, sent by Appwrite) + `token` = a cached httpOnly cookie holding the current Appwrite JWT, `maxAge` set from the JWT `exp`. The `token` cookie is `secure` **only in production** (dev runs HTTP).
 - **Hot path (≈99% of requests, zero network):** read the `token` cookie → decode its `exp` (base64, *no* signature verify, *no* Appwrite call) → if still valid past the refresh buffer, attach `Bearer` and `rewrite`. Pure CPU, microseconds.
-- **Cold path (≈once per JWT lifetime per user):** `token` missing/near-expiry → decrypt `mail_session` (JWE) → `POST /v1/account/jwt` to mint → `Set-Cookie: token`. At ~4 mints/hour/user this uses ~0.07% of Appwrite's 120/60s rate limit.
-- **Dedup cache:** a short-TTL in-memory `Map` (≈5s) collapses concurrent decrypt/mint when several requests fire at once (e.g. a dashboard hitting 6 endpoints), cleaned via `event.waitUntil`.
-- **Trade-off accepted:** the JWT *does* live in a browser httpOnly cookie (`token`), not purely server-side. Acceptable because it's httpOnly+secure+sameSite, short-lived, and this is the same battle-tested production pattern.
+- **Cold path (≈once per JWT lifetime per user):** `token` missing/near-expiry → forward the session cookie verbatim to `POST /v1/account/jwt` to mint → `Set-Cookie: token`. At ~4 mints/hour/user this uses ~0.07% of Appwrite's 120/60s rate limit.
+- **Dedup cache:** a short-TTL in-memory `Map` (≈5s) collapses concurrent mints when several requests fire at once (e.g. a dashboard hitting 6 endpoints).
+- **Trade-off accepted:** the JWT *does* live in a browser httpOnly cookie (`token`), not purely server-side. Acceptable because it's httpOnly+secure(prod)+sameSite, short-lived, and this is the same battle-tested production pattern.
 
 **4 hardenings over raw mail-fe (see [ADR 0001](docs/adr/0001-jwt-minted-and-forwarded-in-proxy.md)):**
-1. **Pin `proxy.ts` to the Node.js runtime** (JWE `compactDecrypt` needs it; verify at setup).
+1. **Pin `proxy.ts` to the Node.js runtime** *(originally for JWE `compactDecrypt`; corrected — no JWE decrypt exists, kept for `fetch`-mint + in-memory dedup `Map`)*.
 2. **`try/catch` fail-safe** — if minting throws, redirect to `/login`, never emit a 500. Because *all* API traffic flows through `proxy.ts`, an unguarded throw would take every API down at once.
 3. **Clear the `token` cookie on logout** (not just the session cookie) — else a still-`exp`-valid `token` could be replayed for up to one JWT lifetime after logout.
 4. **Refresh buffer ≈30s and `duration: 3600`** — a 30s buffer (vs mail-fe's 10s) protects against slow-backend requests arriving after expiry; a 1-hour mint duration means 4× fewer cold-path mints.
@@ -96,8 +112,8 @@ Protection is **two layers**. With the mail-fe pattern the data path *is* `proxy
 ### Session expiry mid-use — distinguish JWT expiry (silent refresh) from session/refresh-token expiry (redirect)
 Two different expiries, two different behaviours. The user must **never** see a broken table just because a short-lived JWT lapsed; they **only** get bounced to `/login` when the underlying Appwrite session itself is gone.
 
-- **JWT (`token` cookie) expired → silent, invisible refresh in `proxy.ts`.** When an `/api/proxy/*` request arrives and the cached `token` is missing/past the refresh buffer, `proxy.ts` takes the **cold path** — decrypt the still-valid `mail_session` → `POST /v1/account/jwt` to mint a fresh JWT → `Set-Cookie: token` → forward with the new `Bearer`. The browser sees **one normal 200**; no toast, no redirect, no user-visible event. This is the common case and is fully handled by the existing JWT lifecycle above.
-- **Appwrite session (`mail_session`, the "refresh token") expired/revoked → toast + redirect to `/login`.** When the cold path *cannot* mint (session cookie missing, JWE decrypt fails, or Appwrite rejects the mint), there is no way to recover in place. `proxy.ts` responds to the `/api/proxy/*` call with **401** (and, for a page navigation, redirects to `/login` per Layer 1).
+- **JWT (`token` cookie) expired → silent, invisible refresh in `proxy.ts`.** When an `/api/proxy/*` request arrives and the cached `token` is missing/past the refresh buffer, `proxy.ts` takes the **cold path** — forward the still-valid Appwrite session cookie → `POST /v1/account/jwt` to mint a fresh JWT → `Set-Cookie: token` → forward with the new `Bearer`. The browser sees **one normal 200**; no toast, no redirect, no user-visible event. This is the common case and is fully handled by the existing JWT lifecycle above.
+- **Appwrite session (the "refresh token") expired/revoked → toast + redirect to `/login`.** When the cold path *cannot* mint (session cookie missing or Appwrite rejects the mint), there is no way to recover in place. `proxy.ts` responds to the `/api/proxy/*` call with **401** (and, for a page navigation, redirects to `/login` per Layer 1).
 - **Client-side 401 handling (single, centralized).** One global handler in the QueryClient (`QueryCache`/`MutationCache` `onError`) catches **401** from any `/api/proxy/*` response → **one calm toast** "Sesi berakhir, silakan masuk kembali" (deduped by a flag so simultaneous failing queries don't stack toasts) → clear the Query cache → redirect to **`/login?next=<pathname+search>`**. After a successful login the app returns the user to that exact URL (table filters live in the URL, so context is preserved). This is *not* handled per-`useQuery` — it lives in one place.
 - **Status-code contract (locked).** **401** = session gone → toast + `/login`. **403** = authenticated but unauthorized → `forbidden` page per RBAC (never a login bounce). **409** = data conflict (e.g. delete with dependents) → inline per Delete UX. Only 401 triggers the session-expiry flow.
 

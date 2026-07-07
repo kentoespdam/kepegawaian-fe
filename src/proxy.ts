@@ -1,17 +1,11 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { mintJWT, readSession, TOKEN_COOKIE, tokenCookieOptions } from "@/lib/auth/appwriteSession";
 
 const APPWRITE_URL = process.env.APPWRITE_URL ?? "";
 const APPWRITE_PROJECT = process.env.APPWRITE_PROJECT_ID ?? "";
-const BACKEND_URL = "http://192.168.1.211:8080";
-const JWT_DURATION = 3600;
+const BACKEND_URL = process.env.BACKEND_URL ?? "";
 const REFRESH_BUFFER = 30;
-
-const SESSION_COOKIE = `a_session_${APPWRITE_PROJECT}`;
-const TOKEN_COOKIE = "token";
-
-// ponytail: module-level Map for dedup, cleared after 5s
-const mintCache = new Map<string, Promise<string>>();
 
 export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
@@ -19,7 +13,7 @@ export const config = {
 
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const session = request.cookies.get(SESSION_COOKIE)?.value;
+  const session = readSession((name) => request.cookies.get(name)?.value);
 
   // Route guard — page navigations
   if (!pathname.startsWith("/api/proxy")) {
@@ -33,11 +27,11 @@ export async function proxy(request: NextRequest) {
   try {
     // Forward Appwrite API calls (/api/proxy/v1/* → Appwrite)
     if (pathname.startsWith("/api/proxy/v1/")) {
-      return forwardToAppwrite(request, session);
+      return forwardToAppwrite(request);
     }
 
     // Forward backend calls (/api/proxy/master/* etc. → Backend Spring Boot)
-    const jwt = await resolveToken(request);
+    const jwt = await resolveToken(request, session);
     if (!jwt) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
@@ -48,11 +42,8 @@ export async function proxy(request: NextRequest) {
 }
 
 // ponytail: rewrite instead of manual fetch — Next.js handles method/body/headers
-function forwardToAppwrite(request: NextRequest, _session: string | undefined) {
-  const url = new URL(
-    request.nextUrl.pathname.replace("/api/proxy", "") + request.nextUrl.search,
-    `https://${APPWRITE_URL}`,
-  );
+function forwardToAppwrite(request: NextRequest) {
+  const url = new URL(request.nextUrl.pathname.replace("/api/proxy", "") + request.nextUrl.search, `${APPWRITE_URL}`);
   const headers = new Headers(request.headers);
   headers.set("X-Appwrite-Project", APPWRITE_PROJECT);
   return NextResponse.rewrite(url, { request: { headers } });
@@ -63,17 +54,11 @@ function forwardToBackend(request: NextRequest, token: string) {
   const headers = new Headers(request.headers);
   headers.set("Authorization", `Bearer ${token}`);
   const response = NextResponse.rewrite(url, { request: { headers } });
-  response.cookies.set(TOKEN_COOKIE, token, {
-    httpOnly: true,
-    secure: true,
-    sameSite: "lax",
-    maxAge: JWT_DURATION,
-    path: "/",
-  });
+  response.cookies.set(TOKEN_COOKIE, token, tokenCookieOptions());
   return response;
 }
 
-async function resolveToken(request: NextRequest) {
+async function resolveToken(request: NextRequest, session: string | undefined) {
   const token = request.cookies.get(TOKEN_COOKIE)?.value;
 
   // Hot path: decode exp, no signature verify, zero network
@@ -88,30 +73,7 @@ async function resolveToken(request: NextRequest) {
     }
   }
 
-  // Cold path: mint new JWT via Appwrite
-  const session = request.cookies.get(SESSION_COOKIE)?.value;
+  // Cold path: mint new JWT via Appwrite (dedup handled inside the module)
   if (!session) return null;
-
-  // Dedup concurrent mints for same session
-  let mint = mintCache.get(session);
-  if (!mint) {
-    mint = mintJWT(session);
-    mintCache.set(session, mint);
-    mint.catch(() => {}).then(() => setTimeout(() => mintCache.delete(session), 5000));
-  }
-  return mint;
-}
-
-async function mintJWT(session: string) {
-  const res = await fetch(`https://${APPWRITE_URL}/v1/account/jwt`, {
-    method: "POST",
-    headers: {
-      "X-Appwrite-Project": APPWRITE_PROJECT,
-      "Content-Type": "application/json",
-      Cookie: `${SESSION_COOKIE}=${session}`,
-    },
-  });
-  if (!res.ok) throw new Error("Mint failed");
-  const data = await res.json();
-  return data.jwt;
+  return mintJWT(session);
 }

@@ -4,9 +4,9 @@ import { LoginForm } from "./login-form";
 export default function LoginPage() {
   return (
     <div className="flex min-h-screen">
-      <div className="hidden w-[45%] flex-col items-center justify-center gap-4 bg-gradient-to-b from-[oklch(0.4_0.13_235)] to-[oklch(0.55_0.13_235)] p-8 text-center text-white md:flex">
+      <div className="hidden w-[45%] flex-col items-center justify-center gap-4 bg-linear-to-b from-[oklch(0.4_0.13_235)] to-[oklch(0.55_0.13_235)] p-8 text-center text-white md:flex">
         <div className="relative size-full overflow-hidden rounded-2xl opacity-30">
-          <div className="absolute inset-0 animate-water bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,255,255,0.3)_0%,transparent_60%),radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,0.2)_0%,transparent_50%),radial-gradient(ellipse_at_50%_70%,rgba(255,255,255,0.15)_0%,transparent_40%)] bg-[length:200%_200%]" />
+          <div className="absolute inset-0 animate-water bg-[radial-gradient(ellipse_at_30%_50%,rgba(255,255,255,0.3)_0%,transparent_60%),radial-gradient(ellipse_at_70%_30%,rgba(255,255,255,0.2)_0%,transparent_50%),radial-gradient(ellipse_at_50%_70%,rgba(255,255,255,0.15)_0%,transparent_40%)] bg-size-[200%_200%]" />
         </div>
         <div className="relative z-10">
           <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-white/20 text-2xl font-bold">

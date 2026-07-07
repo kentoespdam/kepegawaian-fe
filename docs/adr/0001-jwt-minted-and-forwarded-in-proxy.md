@@ -1,7 +1,20 @@
 # 1. JWT minted, cached, and forwarded inside `proxy.ts` (mail-fe pattern)
 
 Date: 2026-07-06
-Status: Accepted
+Status: Accepted — **corrected 2026-07-07** (see "Correction" below)
+
+> **Correction (2026-07-07).** This ADR was written describing mail-fe's **JWE session
+> decryption** (`compactDecrypt`) on the cold path. The implementation does **not** decrypt
+> anything and there is no `jose`/JWE dependency: the Appwrite session is an httpOnly cookie
+> whose value is **forwarded verbatim** as a `Cookie:` header to `POST /v1/account/jwt` to mint,
+> and to `GET /v1/account` to verify — **cookie-forwarding**, not JWE-decrypt. The decision
+> (single `proxy.ts` owns the identity bridge; hot/cold path; dedup cache; the 4 hardenings) still
+> holds; only the "how the session is read" mechanism differs. Hardening #1 (Node.js runtime) was
+> justified by JWE crypto that doesn't exist, so it is **no longer load-bearing** for that reason
+> (see revised note below). Cookie identity, base URL, and the authenticated-request primitive are
+> now owned by the **Appwrite Session module** (`lib/auth/appwriteSession`, see
+> [CONTEXT-MAP `### Identity bridge`](../../CONTEXT-MAP.md)) rather than duplicated across
+> `proxy.ts` and the DAL.
 
 ## Context
 
@@ -22,10 +35,10 @@ Two candidate architectures were on the table:
 The user runs the mail-fe pattern in production and wanted it here, but was unsure about its
 **server load** and **future risk**. We analysed both.
 
-**Load.** The mail-fe hot path (≈99% of requests) reads the `token` cookie and *decodes* its
+**Load.** The hot path (≈99% of requests) reads the `token` cookie and *decodes* its
 `exp` claim — base64, no signature verification, no network — then attaches `Bearer` and
-rewrites. Pure CPU, microseconds. The cold path (≈once per JWT lifetime per user) decrypts the
-session (JWE) and calls Appwrite `POST /v1/account/jwt` once. At ~4 mints/hour/user this is
+rewrites. Pure CPU, microseconds. The cold path (≈once per JWT lifetime per user) forwards the
+session cookie verbatim to Appwrite `POST /v1/account/jwt` once. At ~4 mints/hour/user this is
 ~0.07% of Appwrite's 120/60s per-user rate limit. This is **lighter** than the DAL pattern,
 which does an `account.get()` network call on every protected navigation.
 
@@ -40,7 +53,10 @@ layer.
 
 Adopt it **with four hardenings** over the raw pattern:
 
-1. **Pin `proxy.ts` to the Node.js runtime** — JWE `compactDecrypt` needs it (verify at setup).
+1. **Pin `proxy.ts` to the Node.js runtime.** *(Original rationale: JWE `compactDecrypt` needs
+   it. Corrected 2026-07-07 — there is no JWE decrypt, so this is no longer required for crypto.
+   Node runtime is still used because `proxy.ts` mints via `fetch` and manages an in-memory dedup
+   `Map`; revisit if pure-edge deployment is wanted.)*
 2. **`try/catch` fail-safe** — a mint failure redirects to `/login`, never a 500. Because all
    API traffic flows through `proxy.ts`, an unguarded throw would down every API at once.
 3. **Clear the `token` cookie on logout** (not just the session cookie) — otherwise a still

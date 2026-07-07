@@ -220,15 +220,31 @@ export function DataTable<T>({
                     </td>
                   ))}
                   {(onEdit || onDelete) && (
-                    <td className="px-3 py-3 align-middle text-right" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-3 py-3 align-middle text-right">
                       <div className="inline-flex items-center gap-1">
                         {onEdit && (
-                          <Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onEdit(item);
+                            }}
+                            aria-label="Edit"
+                          >
                             <Pencil className="size-4" />
                           </Button>
                         )}
                         {onDelete && (
-                          <Button variant="ghost" size="icon" onClick={() => onDelete(item)} aria-label="Hapus">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onDelete(item);
+                            }}
+                            aria-label="Hapus"
+                          >
                             <Trash2 className="size-4 text-destructive" />
                           </Button>
                         )}
