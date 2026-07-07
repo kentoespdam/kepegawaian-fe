@@ -1,9 +1,9 @@
 import { notFound } from "next/navigation";
-import type { AppwriteUser } from "@/types/auth";
-import { type Action, PERMISSIONS } from "./permissions";
+import type { Action, AppwriteUser } from "@/types/auth";
+import { PERMISSIONS } from "./permissions";
 
 export function getRoles(user: AppwriteUser): string[] {
-  return user.prefs.roles;
+  return user.prefs?.roles ?? [];
 }
 
 export function can(roles: string[], action: Action, entity: string): boolean {

@@ -7,6 +7,7 @@ import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 
 export interface FormField {
   name: string;
@@ -58,12 +59,7 @@ export function CrudForm({
             {field.required && <span className="ml-0.5 text-destructive">*</span>}
           </Label>
           {field.type === "textarea" ? (
-            <textarea
-              id={field.name}
-              {...register(field.name)}
-              className="h-20 w-full min-w-0 rounded-lg border border-input bg-transparent px-2.5 py-2 text-base transition-colors outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive md:text-sm"
-              placeholder={field.placeholder}
-            />
+            <Textarea id={field.name} className="min-h-24" {...register(field.name)} placeholder={field.placeholder} />
           ) : (
             <Input
               id={field.name}

@@ -2,7 +2,6 @@
 
 import { LogOut, User } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -12,22 +11,13 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useLogout } from "@/hooks/useLogout";
 import type { AppwriteUser } from "@/types/auth";
 
 export function UserMenu({ user }: { user: AppwriteUser }) {
   const router = useRouter();
-  const [loggingOut, setLoggingOut] = useState(false);
+  const logout = useLogout();
   const initial = user.name.charAt(0).toUpperCase();
-
-  const handleLogout = async () => {
-    setLoggingOut(true);
-    try {
-      await fetch("/api/proxy/v1/account/sessions/current", { method: "DELETE" });
-    } catch {
-      // proceed even if fetch fails — clear client-side
-    }
-    router.push("/login");
-  };
 
   return (
     <DropdownMenu>
@@ -49,9 +39,9 @@ export function UserMenu({ user }: { user: AppwriteUser }) {
           <User className="size-4" />
           Profil
         </DropdownMenuItem>
-        <DropdownMenuItem variant="destructive" onClick={handleLogout} disabled={loggingOut}>
+        <DropdownMenuItem variant="destructive" onClick={() => logout.mutate()} disabled={logout.isPending}>
           <LogOut className="size-4" />
-          {loggingOut ? "Keluar…" : "Keluar"}
+          {logout.isPending ? "Keluar…" : "Keluar"}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

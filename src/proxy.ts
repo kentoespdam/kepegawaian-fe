@@ -11,7 +11,7 @@ export const config = {
   matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
 };
 
-export async function proxy(request: NextRequest) {
+export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const session = readSession((name) => request.cookies.get(name)?.value);
 
@@ -27,7 +27,12 @@ export async function proxy(request: NextRequest) {
   try {
     // Forward Appwrite API calls (/api/proxy/v1/* → Appwrite)
     if (pathname.startsWith("/api/proxy/v1/")) {
-      return forwardToAppwrite(request);
+      const response = forwardToAppwrite(request);
+      // Clear token cookie on logout (DELETE current session) to prevent replay
+      if (request.method === "DELETE" && pathname === "/api/proxy/v1/account/sessions/current") {
+        response.cookies.set(TOKEN_COOKIE, "", { maxAge: 0, path: "/" });
+      }
+      return response;
     }
 
     // Forward backend calls (/api/proxy/master/* etc. → Backend Spring Boot)

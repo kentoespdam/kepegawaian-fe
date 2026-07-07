@@ -1,10 +1,10 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { verifySession } from "@/lib/auth";
+import { getRoles, verifySession } from "@/lib/auth";
 import { ChangePasswordForm } from "./change-password-form";
 
 export default async function ProfilPage() {
   const user = await verifySession();
-  const roles = user.prefs.roles;
+  const roles = getRoles(user);
 
   return (
     <div className="mx-auto max-w-lg space-y-6">

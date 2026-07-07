@@ -1,27 +1,38 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin } from "@/hooks/useLogin";
 
+const schema = z.object({
+  email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),
+  password: z.string().min(1, "Password wajib diisi"),
+});
+
+type Data = z.infer<typeof schema>;
+
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const login = useLogin();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login.mutate({ email, password });
-  };
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Data>({
+    resolver: zodResolver(schema as never),
+  });
 
   return (
     <>
       <h2 className="mb-6 text-xl font-semibold text-foreground">Masuk</h2>
-      <form onSubmit={handleSubmit} className="space-y-5">
+      <form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-5">
         <div className="space-y-1.5">
           <Label htmlFor="email" className="text-sm font-medium">
             Email
@@ -29,12 +40,12 @@ export function LoginForm() {
           <Input
             id="email"
             type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
             placeholder="nama@perumdam.com"
-            required
             className="h-11"
+            aria-invalid={!!errors.email}
+            {...register("email")}
           />
+          {errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
         </div>
 
         <div className="space-y-1.5">
@@ -45,11 +56,10 @@ export function LoginForm() {
             <Input
               id="password"
               type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
               placeholder="Password"
-              required
               className="h-11 pr-10"
+              aria-invalid={!!errors.password}
+              {...register("password")}
             />
             <button
               type="button"
@@ -60,9 +70,14 @@ export function LoginForm() {
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
             </button>
           </div>
+          {errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
         </div>
 
-        {login.error && <p className="text-sm text-destructive">{login.error.message}</p>}
+        {login.error && (
+          <p className="text-sm text-destructive" role="alert">
+            {login.error.message}
+          </p>
+        )}
 
         <Button type="submit" className="w-full h-11" disabled={login.isPending}>
           {login.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}

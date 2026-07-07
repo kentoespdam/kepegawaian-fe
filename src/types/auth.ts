@@ -9,3 +9,5 @@ export interface AppwriteUser {
   labels: string[];
   prefs: Prefs;
 }
+
+export type Action = "view" | "create" | "update" | "delete";

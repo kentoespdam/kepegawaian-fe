@@ -215,7 +215,7 @@ export function DataTable<T>({
                   onClick={() => onEdit?.(item)}
                 >
                   {columns.map((col) => (
-                    <td key={col.id} className="px-3 py-3 align-middle whitespace-nowrap">
+                    <td key={col.id} className="px-3 py-3 align-middle whitespace-nowrap tabular-nums">
                       {col.cell ? col.cell(item) : String(item[col.id as keyof T] ?? "")}
                     </td>
                   ))}

@@ -29,6 +29,7 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-primary-dark: var(--primary-dark);
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
@@ -62,6 +63,7 @@
   --border: oklch(0.86 0.008 85);
   --input: oklch(0.86 0.008 85);
   --ring: oklch(0.55 0.13 235);
+  --primary-dark: oklch(0.4 0.13 235);
   --radius: 0.5rem;
 }
 

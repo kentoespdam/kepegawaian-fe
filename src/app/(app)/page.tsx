@@ -1,31 +1,11 @@
 import Link from "next/link";
-import { verifySession } from "@/lib/auth";
-import { can } from "@/lib/auth/can";
-
-const ENTITIES = [
-  { id: "golongan", label: "Golongan" },
-  { id: "grade", label: "Grade" },
-  { id: "level", label: "Level" },
-  { id: "jabatan", label: "Jabatan" },
-  { id: "organisasi", label: "Organisasi" },
-  { id: "profesi", label: "Profesi" },
-  { id: "sanksi", label: "Sanksi" },
-  { id: "jenjang-pendidikan", label: "Jenjang Pendidikan" },
-  { id: "jenis-keahlian", label: "Jenis Keahlian" },
-  { id: "jenis-kitas", label: "Jenis Kitas" },
-  { id: "jenis-pelatihan", label: "Jenis Pelatihan" },
-  { id: "jenis-sp", label: "Jenis SP" },
-  { id: "alasan-berhenti", label: "Alasan Berhenti" },
-  { id: "alat-kerja", label: "Alat Kerja" },
-  { id: "apd", label: "APD" },
-  { id: "hari-libur", label: "Hari Libur" },
-  { id: "rumah-dinas", label: "Rumah Dinas" },
-];
+import { MASTER_ENTITIES } from "@/config/entities";
+import { can, getRoles, verifySession } from "@/lib/auth";
 
 export default async function Home() {
   const user = await verifySession();
-  const roles = user.prefs.roles;
-  const visible = ENTITIES.filter((e) => can(roles, "view", e.id));
+  const roles = getRoles(user);
+  const visible = MASTER_ENTITIES.filter((e) => can(roles, "view", e.id));
 
   return (
     <div className="mx-auto max-w-4xl">

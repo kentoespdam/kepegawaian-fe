@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { can } from "@/lib/auth/can";
-import type { Action } from "@/lib/auth/permissions";
+import type { Action } from "@/types/auth";
 
 export function Can({
   roles,

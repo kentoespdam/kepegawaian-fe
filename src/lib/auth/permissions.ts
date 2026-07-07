@@ -1,4 +1,4 @@
-export type Action = "view" | "create" | "update" | "delete";
+import type { Action } from "@/types/auth";
 
 const ALL: Action[] = ["view", "create", "update", "delete"];
 const VIEW: Action[] = ["view"];

@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { UserMenu } from "@/components/user-menu";
-import { can } from "@/lib/auth/can";
+import { MASTER_ENTITIES } from "@/config/entities";
+import { can, getRoles } from "@/lib/auth/can";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
 
@@ -15,25 +16,7 @@ const MODULES = [
     id: "master",
     label: "Master",
     icon: LayoutGrid,
-    entities: [
-      { id: "golongan", label: "Golongan" },
-      { id: "grade", label: "Grade" },
-      { id: "jabatan", label: "Jabatan" },
-      { id: "organisasi", label: "Organisasi" },
-      { id: "level", label: "Level" },
-      { id: "profesi", label: "Profesi" },
-      { id: "sanksi", label: "Sanksi" },
-      { id: "jenjang-pendidikan", label: "Jenjang Pendidikan" },
-      { id: "jenis-keahlian", label: "Jenis Keahlian" },
-      { id: "jenis-kitas", label: "Jenis Kitas" },
-      { id: "jenis-pelatihan", label: "Jenis Pelatihan" },
-      { id: "jenis-sp", label: "Jenis SP" },
-      { id: "alasan-berhenti", label: "Alasan Berhenti" },
-      { id: "alat-kerja", label: "Alat Kerja" },
-      { id: "apd", label: "APD" },
-      { id: "hari-libur", label: "Hari Libur" },
-      { id: "rumah-dinas", label: "Rumah Dinas" },
-    ],
+    entities: MASTER_ENTITIES,
   },
   { id: "kepegawaian", label: "Kepegawaian", icon: Users, entities: [] },
   { id: "cuti", label: "Cuti", icon: CalendarRange, entities: [] },
@@ -48,7 +31,7 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
   const pathname = usePathname();
   const [panelCollapsed, setPanelCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const roles = user.labels;
+  const roles = getRoles(user);
 
   const activeModule = MODULES.find((m) => m.entities.some((e) => pathname.startsWith(`/master/${e.id}`)));
   const activeEntity = MODULE_ENTITY_MAP.find((e) => pathname === `/master/${e.id}`);
