@@ -152,6 +152,12 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 13. Session close (MANDATORY — kerja belum selesai sampai `git push` sukses)
 
+**Sebelum commit & push, update checklist dulu:**
+- **Update `docs/*.md`** — centang `[x]` issue/wave yang selesai, sinkron dengan
+  status `bd` (jangan biarkan tracker basi vs `bd ready`/`bd list`).
+- **Update checklist Definition of Done** issue terkait — pastikan semua item tercentang sebelum
+  `bd close`.
+
 ```bash
 git pull --rebase
 bd dolt push
