@@ -63,13 +63,13 @@ Semua Master butuh 5 primitive di atas. **Urutan internal karena FK** (kerjakan 
 | [ ] | `kepegawaian-fe-cf5` | Golongan |
 | [ ] | `kepegawaian-fe-rts` | Level |
 | [ ] | `kepegawaian-fe-435` | Jenjang Pendidikan |
-| [ ] | `kepegawaian-fe-6bg` | Jenis Keahlian |
-| [ ] | `kepegawaian-fe-fsl` | Jenis Kitas |
-| [ ] | `kepegawaian-fe-6s8` | Jenis Pelatihan |
-| [ ] | `kepegawaian-fe-pvl` | Jenis SP |
-| [ ] | `kepegawaian-fe-6hx` | Alasan Berhenti |
-| [ ] | `kepegawaian-fe-dsm` | Hari Libur |
-| [ ] | `kepegawaian-fe-scn` | Rumah Dinas |
+| [x] | `kepegawaian-fe-6bg` | Jenis Keahlian |
+| [x] | `kepegawaian-fe-fsl` | Jenis Kitas |
+| [x] | `kepegawaian-fe-6s8` | Jenis Pelatihan |
+| [x] | `kepegawaian-fe-pvl` | Jenis SP |
+| [x] | `kepegawaian-fe-6hx` | Alasan Berhenti |
+| [x] | `kepegawaian-fe-dsm` | Hari Libur |
+| [x] | `kepegawaian-fe-scn` | Rumah Dinas |
 | [ ] | `kepegawaian-fe-9ve` | Organisasi (tree, `parentId`) |
 | [ ] | `kepegawaian-fe-4t3` | Jabatan (tree, `parentId`) |
 

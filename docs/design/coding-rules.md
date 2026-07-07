@@ -18,6 +18,10 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan ingatan) → susun rencana
   singkat (file yang disentuh, primitive yang dipakai, urutan langkah). Baru koding. **JANGAN** langsung
   ngetik dari asumsi — asumsi basi = bug diam & rework.
+- **Buat rencana sebelum benar-benar mengerjakan.** Untuk tugas non-trivial, WAJIB susun rencana tertulis
+  (masuk *plan mode* / tulis di `--design` atau `--notes` issue `bd`) **lalu sampaikan & minta konfirmasi
+  ke pengguna sebelum mengeksekusi**. Baru mulai koding setelah rencana disepakati. Perubahan sepele
+  (typo, satu baris, rename lokal) boleh langsung — sisanya: rencana dulu, eksekusi belakangan.
 
 ---
 
