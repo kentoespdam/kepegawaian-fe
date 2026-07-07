@@ -26,15 +26,15 @@ bisa dikerjakan **paralel** oleh beberapa agen.
 ### Wave 0 — Fondasi tunggal (blocker semua)
 | ✓ | ID | Issue | Catatan |
 |---|---|---|---|
-| [ ] | `kepegawaian-fe-831` | Scaffold proyek + tooling | Bun, Biome 120, Tailwind v4, struktur folder + `src/hooks/` |
+| [x] | `kepegawaian-fe-831` | Scaffold proyek + tooling | Bun, Biome 120, Tailwind v4, struktur folder + `src/hooks/` |
 
-### Wave 1 — Fondasi inti (← Scaffold)
+### Wave 1 — Fondasi inti (← Scaffold) ✅
 | ✓ | ID | Issue | Catatan |
 |---|---|---|---|
-| [ ] | `kepegawaian-fe-43s` | Visual foundation / tema | token OKLCH, `globals.css`, Inter |
-| [ ] | `kepegawaian-fe-i0l` | `proxy.ts` | **paling ketat** — try/catch fail-safe, Node runtime, ADR 0001 |
-| [ ] | `kepegawaian-fe-374` | DAL `verifySession()` | gate render, `cache()` |
-| [ ] | `kepegawaian-fe-shl` | Sonner `<Toaster>` | satu global, bottom-right |
+| [x] | `kepegawaian-fe-43s` | Visual foundation / tema | token OKLCH, `globals.css`, Inter |
+| [x] | `kepegawaian-fe-i0l` | `proxy.ts` | **paling ketat** — try/catch fail-safe, Node runtime, ADR 0001 |
+| [x] | `kepegawaian-fe-374` | DAL `verifySession()` | gate render, `cache()` |
+| [x] | `kepegawaian-fe-shl` | Sonner `<Toaster>` | satu global, bottom-right |
 
 ### Wave 2 — Lapis di atas fondasi
 | ✓ | ID | Issue | ← depends on |
