@@ -1,12 +1,6 @@
 import { notFound } from "next/navigation";
+import type { AppwriteUser } from "@/types/auth";
 import { type Action, PERMISSIONS } from "./permissions";
-
-export interface AppwriteUser {
-  $id: string;
-  email: string;
-  name: string;
-  labels: string[];
-}
 
 export function getRoles(user: AppwriteUser): string[] {
   return user.labels;

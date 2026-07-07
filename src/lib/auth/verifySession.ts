@@ -1,17 +1,11 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { cache } from "react";
+import type { AppwriteUser } from "@/types/auth";
 
 const APPWRITE_URL = process.env.APPWRITE_URL ?? "";
 const APPWRITE_PROJECT = process.env.APPWRITE_PROJECT_ID ?? "";
 const SESSION_COOKIE = `a_session_${APPWRITE_PROJECT}`;
-
-interface AppwriteUser {
-  $id: string;
-  email: string;
-  name: string;
-  labels: string[];
-}
 
 export const verifySession = cache(async (): Promise<AppwriteUser> => {
   const cookieStore = await cookies();
