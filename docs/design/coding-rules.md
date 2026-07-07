@@ -53,6 +53,9 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - shadcn di-init dengan **Base UI** (`npx shadcn init -b base`). **WAJIB verifikasi setiap prop ke
   docs Base UI**, bukan Radix. Nama prop berbeda (mis. **`keepMounted` default `false`** vs Radix
   `forceMount`). Salah asumsi Radix = bug diam.
+- **Tambah komponen shadcn = WAJIB lewat CLI** (`npx shadcn add <komponen>`), **JANGAN** tulis file
+  komponen manual sendiri. CLI menarik versi resmi dari registry Base UI (prop/struktur benar,
+  konsisten). Setelah `add`, kustomisasi seperlunya di file hasil generate — bukan bikin dari nol.
 - Dialog/Sheet content **lazy by default** — manfaatkan (jangan paksa mount).
 
 ---
