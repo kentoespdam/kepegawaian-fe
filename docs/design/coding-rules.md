@@ -28,7 +28,10 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 ## 1. Struktur & kualitas kode
 
 - **Max line length = 120 karakter.** Baris lebih panjang WAJIB dipecah. Setel di Biome
-  (`formatter.lineWidth: 120`) agar dipaksa otomatis, bukan sekadar konvensi manual.
+  (`formatter.lineWidth: 120`) agar dipaksa otomatis, bukan sekadar konvensi manual. **Bila file/komponen
+  membengkak melebihi batas wajar** (rule of thumb ~120 baris untuk komponen — bila terus tumbuh), WAJIB
+  **pecah jadi beberapa file/komponen** (angkat sub-komponen, ekstrak logika ke hook `src/hooks/`, tipe ke
+  `src/types/`) — jangan biarkan jadi file raksasa. Sejalan dengan "satu file = satu tanggung jawab".
 - **DRY** — jangan duplikasi logika. Ekstrak pola berulang jadi shared primitive / helper / hook
   (lihat architecture §18: `<DataTable>`, `<CrudForm>`, `<ConfirmDeleteDialog>`, `<Can>`,
   `useResource`). Duplikasi hanya boleh di glue tipis per-entitas, TAK PERNAH di logika

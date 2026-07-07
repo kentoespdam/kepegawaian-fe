@@ -62,7 +62,6 @@ function forwardToBackend(request: NextRequest, token: string) {
   response.cookies.set(TOKEN_COOKIE, token, tokenCookieOptions());
   return response;
 }
-
 async function resolveToken(request: NextRequest, session: string | undefined) {
   const token = request.cookies.get(TOKEN_COOKIE)?.value;
 

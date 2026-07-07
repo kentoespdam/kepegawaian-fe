@@ -97,13 +97,17 @@ export function MasterPageClient() {
     enabled: fkSources.length > 2,
     staleTime: 300_000,
   });
-  const fkQueries = [fkQ1, fkQ2, fkQ3];
 
   // Build FK lookup map
   const fkLookup = useMemo(() => {
     const map = new Map<string, Map<string, Record<string, unknown>>>();
+    const allData = [
+      fkQ1.data as Record<string, unknown>[] | undefined,
+      fkQ2.data as Record<string, unknown>[] | undefined,
+      fkQ3.data as Record<string, unknown>[] | undefined,
+    ];
     for (let i = 0; i < fkSources.length; i++) {
-      const data = (fkQueries[i]?.data ?? []) as Record<string, unknown>[];
+      const data = allData[i] ?? [];
       const m = new Map<string, Record<string, unknown>>();
       for (const item of data) m.set(String(item.$id), item);
       map.set(fkSources[i]?.field, m);
