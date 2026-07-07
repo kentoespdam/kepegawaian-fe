@@ -2,8 +2,9 @@
 
 Rujukan desain tunggal untuk **Autentikasi + modul Master** (grilling round 1). Ini **file index
 ramping** (progressive disclosure): muat HANYA modul yang relevan dengan task Anda untuk menghemat
-token — **jangan** muat semuanya sekaligus. Setiap spec diturunkan dari `CONTEXT.md`,
-`docs/color-rationale.md`, dan ADR di `docs/adr/`. **Tidak ada nilai karangan.**
+token — **jangan** muat semuanya sekaligus. Setiap spec diturunkan dari `CONTEXT-MAP.md` (inti) +
+`docs/context/<modul>.md` (delta), `docs/color-rationale.md`, dan ADR di `docs/adr/`. **Tidak ada
+nilai karangan.**
 
 > **Sifat dokumen:** rujukan desain, bukan kode. Nilai OKLCH = **baseline**, boleh di-fine-tune
 > **ASAL lolos gate kontras** (visual-foundation.md §2). Sebelum menulis kode: baca
@@ -39,7 +40,8 @@ token — **jangan** muat semuanya sekaligus. Setiap spec diturunkan dari `CONTE
 
 ## Dokumen sumber (baca bila butuh dasar keputusan)
 
-- `CONTEXT.md` — ubiquitous language + semua keputusan yang sudah diresolusi (sumber kebenaran; DESIGN diturunkan darinya).
+- `CONTEXT-MAP.md` — **inti multi-context**: ubiquitous language + semua keputusan lintas-modul yang sudah diresolusi (sumber kebenaran; DESIGN diturunkan darinya). **Baca ini dulu.**
+- `docs/context/<modul>.md` — **delta per-modul** (baca bila task menyentuh modul itu); round 1 = `docs/context/master.md`. `CONTEXT.md` kini hanya stub redirect + peta seksi lama → lokasi baru.
 - `docs/color-rationale.md` — justifikasi WCAG/mata-lansia untuk tiap nilai OKLCH.
 - `docs/adr/0001-jwt-minted-and-forwarded-in-proxy.md` — pola `proxy.ts` + 4 hardening.
 - `docs/adr/0002-react-hook-form-zod-for-crud-forms.md` — pilihan RHF+Zod via `<CrudForm>`.
