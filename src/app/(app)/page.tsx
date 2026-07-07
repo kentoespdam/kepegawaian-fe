@@ -24,7 +24,7 @@ const ENTITIES = [
 
 export default async function Home() {
   const user = await verifySession();
-  const roles = user.labels;
+  const roles = user.prefs.roles;
   const visible = ENTITIES.filter((e) => can(roles, "view", e.id));
 
   return (
