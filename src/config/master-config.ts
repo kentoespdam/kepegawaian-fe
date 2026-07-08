@@ -2,10 +2,7 @@ import { z } from "zod";
 import type { FormField } from "@/components/crud-form";
 import type { Column } from "@/components/data-table";
 
-export interface PaginatedResponse<T> {
-  data: T[];
-  total: number;
-}
+export type { Page } from "@/lib/api/types";
 
 export interface EntityConfig {
   label: string;

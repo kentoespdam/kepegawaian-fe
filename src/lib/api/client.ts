@@ -1,3 +1,5 @@
+import type { ApiEnvelope } from "@/lib/api/types";
+
 const BASE = "/api/proxy/master";
 
 export class ApiError extends Error {
@@ -9,13 +11,18 @@ export class ApiError extends Error {
   }
 }
 
+/**
+ * Unwrap amplop backend: SEMUA endpoint dibungkus { data, message, ... }.
+ * Mengembalikan `.data` → pemanggil `api.*` bicara payload asli, bukan amplop.
+ */
 async function handle<T>(res: Response): Promise<T> {
   if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
+    const body = (await res.json().catch(() => ({}))) as Partial<ApiEnvelope<unknown>> & { error?: string };
     throw new ApiError(res.status, body.message ?? body.error);
   }
   if (res.status === 204) return undefined as T;
-  return res.json();
+  const body = (await res.json()) as ApiEnvelope<T>;
+  return body.data;
 }
 
 export const api = {

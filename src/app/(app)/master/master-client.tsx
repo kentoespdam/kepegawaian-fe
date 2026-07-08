@@ -8,10 +8,11 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
-import { MASTER_ENTITY_CONFIGS, type PaginatedResponse } from "@/config/master-config";
+import { MASTER_ENTITY_CONFIGS, type Page } from "@/config/master-config";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
 import { useResource } from "@/hooks/useResource";
+import { fromPage, toApiParams } from "@/lib/paging";
 import { EntityFormModal } from "./entity-form-modal";
 
 export function MasterPageClient() {
@@ -27,22 +28,23 @@ export function MasterPageClient() {
   const [error, setError] = useState<string | null>(null);
   const isCreate = editing === null;
 
-  const { list, listAll, create, update, remove } = useResource<PaginatedResponse<Record<string, unknown>>>(entity, {
-    page: String(page),
-    size: String(size),
-    ...(sortBy && { sortBy, sortDirection: sortDir }),
-  });
+  const { list, listAll, create, update, remove } = useResource<Page<Record<string, unknown>>>(
+    entity,
+    toApiParams({ page, size, sortBy, sortDir }),
+  );
 
   const treeItems = (listAll.data as unknown as Record<string, unknown>[]) ?? [];
 
+  const pageView = fromPage(list.data);
+
   const { resolvedItems, formFields } = useMasterTable({
     cfg,
-    listData: list.data?.data,
+    listData: pageView.rows,
     treeItems,
     editing,
   });
 
-  const total = list.data?.total ?? 0;
+  const total = pageView.total;
 
   const openCreate = () => {
     setEditing(null);
@@ -116,6 +118,9 @@ export function MasterPageClient() {
             page={page}
             size={size}
             total={total}
+            totalPages={pageView.totalPages}
+            first={pageView.first}
+            last={pageView.last}
             onPageChange={(p) => setP("page", String(p))}
             onSizeChange={(s) => {
               setP("size", String(s));
