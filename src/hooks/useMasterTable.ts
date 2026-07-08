@@ -60,12 +60,12 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
   // Resolve FK display names + tree parent name in table items
   const resolvedItems = useMemo(
     () =>
-      (listData ?? []).map((item) => {
+      (Array.isArray(listData) ? listData : []).map((item) => {
         const e = { ...item };
         if (cfg.treeField) {
           const pid = String(item[cfg.treeField] ?? "");
           e._parentName = pid
-            ? String((treeItems as Record<string, unknown>[]).find((x) => String(x.$id) === pid)?.nama ?? pid)
+            ? String((Array.isArray(treeItems) ? treeItems : []).find((x) => String(x.$id) === pid)?.nama ?? pid)
             : "";
         }
         for (const fk of fkSources) {
