@@ -65,7 +65,7 @@ export function MasterPageClient() {
     setError(null);
     try {
       if (isCreate) await create.mutateAsync(data);
-      else await update.mutateAsync({ id: String(editing?.$id), data });
+      else await update.mutateAsync({ id: String(editing?.id), data });
       setDialogOpen(false);
       toast.success(isCreate ? `${cfg.label} berhasil ditambah` : `${cfg.label} berhasil diubah`);
     } catch (e: unknown) {
@@ -77,7 +77,7 @@ export function MasterPageClient() {
     if (!deleting) return;
     setDeleteError(null);
     try {
-      await remove.mutateAsync(String(deleting.$id));
+      await remove.mutateAsync(String(deleting.id));
       toast.success(`${cfg.label} berhasil dihapus`);
     } catch (e: unknown) {
       setDeleteError(e instanceof Error ? e.message : "Gagal menghapus");
@@ -112,7 +112,7 @@ export function MasterPageClient() {
         }}
         onEdit={openEdit}
         onDelete={openDelete}
-        getRowId={(i) => String(i.$id ?? "")}
+        getRowId={(i) => String(i.id ?? "")}
         pagination={
           <DataTablePagination
             page={page}

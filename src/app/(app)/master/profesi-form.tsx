@@ -40,15 +40,15 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
   const jabData = jabQ.data as Record<string, unknown>[] | undefined;
   const gradeData = gradeQ.data as Record<string, unknown>[] | undefined;
   const orgOpts = useMemo(
-    () => (orgData ?? []).map((i) => ({ value: String(i.$id), label: String(i.nama ?? "") })),
+    () => (orgData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
     [orgData],
   );
   const jabOpts = useMemo(
-    () => (jabData ?? []).map((i) => ({ value: String(i.$id), label: String(i.nama ?? "") })),
+    () => (jabData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
     [jabData],
   );
   const gradeOpts = useMemo(
-    () => (gradeData ?? []).map((i) => ({ value: String(i.$id), label: String(i.nama ?? "") })),
+    () => (gradeData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
     [gradeData],
   );
 

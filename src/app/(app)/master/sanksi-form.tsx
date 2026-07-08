@@ -66,7 +66,7 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
   const jenisSpOpts = useMemo(
     () =>
       (jenisSpList.data ?? []).map((i: Record<string, unknown>) => ({
-        value: String(i.$id),
+        value: String(i.id),
         label: String(i.nama ?? ""),
       })),
     [jenisSpList.data],

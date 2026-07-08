@@ -6,7 +6,7 @@ export function computeSubtreeIds(items: Record<string, unknown>[], startId: str
   const ids = new Set([startId]);
   for (const i of items)
     if (String(i[pf] ?? "") === startId) {
-      for (const id of computeSubtreeIds(items, String(i.$id), pf)) ids.add(id);
+      for (const id of computeSubtreeIds(items, String(i.id), pf)) ids.add(id);
     }
   return ids;
 }
@@ -28,7 +28,7 @@ export function buildTreeOptions(
     for (const i of items
       .filter((x) => String(x[pf] ?? "") === pid)
       .sort((a, b) => String(a.nama ?? "").localeCompare(String(b.nama ?? "")))) {
-      const id = String(i.$id);
+      const id = String(i.id);
       out.push({
         value: id,
         label: "\u00A0\u00A0".repeat(d) + String(i.nama ?? ""),

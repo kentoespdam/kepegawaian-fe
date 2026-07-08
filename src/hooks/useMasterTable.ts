@@ -51,7 +51,7 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
     for (let i = 0; i < fkSources.length; i++) {
       const data = allData[i] ?? [];
       const m = new Map<string, Record<string, unknown>>();
-      for (const item of data) m.set(String(item.$id), item);
+      for (const item of data) m.set(String(item.id), item);
       map.set(fkSources[i]?.field, m);
     }
     return map;
@@ -65,7 +65,7 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
         if (cfg.treeField) {
           const pid = String(item[cfg.treeField] ?? "");
           e._parentName = pid
-            ? String((Array.isArray(treeItems) ? treeItems : []).find((x) => String(x.$id) === pid)?.nama ?? pid)
+            ? String((Array.isArray(treeItems) ? treeItems : []).find((x) => String(x.id) === pid)?.nama ?? pid)
             : "";
         }
         for (const fk of fkSources) {
@@ -83,7 +83,7 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
   const formFields = useMemo(() => {
     let ff = [...cfg.fields];
     if (cfg.treeField) {
-      const opts = buildTreeOptions(treeItems, editing?.$id as string | undefined, cfg.treeField);
+      const opts = buildTreeOptions(treeItems, editing?.id as string | undefined, cfg.treeField);
       ff = [...ff, { name: cfg.treeField, label: "Parent", type: "select" as const, options: opts }];
     }
     return ff.map((f) => {
