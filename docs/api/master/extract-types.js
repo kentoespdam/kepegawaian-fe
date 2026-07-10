@@ -201,6 +201,17 @@ function domainOf(endpointPath) {
 }
 
 /**
+ * Kebijakan penempatan (output-shape) — SUMBER TUNGGAL aturan "shared vs lokal".
+ * Sebuah tipe dengan tepat satu domain-pemilik tinggal bersama pemiliknya
+ * (lokal); selain itu — dipakai banyak domain, atau tanpa pemilik jelas (n=0,
+ * mis. enum orphan) — masuk ke commons `_shared`. Dipakai oleh keputusan schema
+ * MAUPUN enum agar keduanya tak pernah menyimpang.
+ */
+function placementOf(domainCount) {
+  return domainCount === 1 ? "local" : "shared";
+}
+
+/**
  * Urutkan schema secara topologis (dependency lebih dulu). Cycle aman.
  */
 function topoSort(names, schemas) {
@@ -341,7 +352,7 @@ function plan(spec) {
       (usage[name] ??= new Set()).add(domain);
     }
   }
-  const sharedNames = new Set(Object.keys(usage).filter((n) => usage[n].size >= 2));
+  const sharedNames = new Set(Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared"));
 
   // 3. Rencanakan alias enum (dedup enum identik yang berulang) via kebijakan
   //    frekuensi + registry KNOWN_ENUMS. Penempatan mengikuti aturan schema:
@@ -478,8 +489,9 @@ function planEnumAliases(schemas, domainSchemas) {
     enumAlias.set(enumSignature(e.values), name);
     const decl = buildEnumAliasDecl(name, e.values, comment);
 
+    // Penempatan mengikuti kebijakan yang sama dengan schema (placementOf):
     // 1 domain → alias lokal; selain itu (lintas-domain / orphan) → _shared.
-    if (e.domains.size === 1) {
+    if (placementOf(e.domains.size) === "local") {
       const domain = [...e.domains][0];
       if (!domainAliasDecls.has(domain)) domainAliasDecls.set(domain, []);
       domainAliasDecls.get(domain).push(decl);
@@ -561,5 +573,5 @@ function main() {
 if (require.main === module) {
   main();
 } else {
-  module.exports = { plan, render, schemaToDeclaration, schemaToTsType, renderEnumUnion, topoSort, domainOf };
+  module.exports = { plan, render, schemaToDeclaration, schemaToTsType, renderEnumUnion, topoSort, domainOf, placementOf };
 }

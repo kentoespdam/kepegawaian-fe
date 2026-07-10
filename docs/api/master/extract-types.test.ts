@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 // Generator adalah CommonJS; vitest meng-interop named export-nya.
 import {
   domainOf,
+  placementOf,
   plan,
   render,
   renderEnumUnion,
@@ -129,6 +130,21 @@ describe("domainOf & topoSort — utilitas graf", () => {
     };
     const ordered = topoSort(["Parent", "Child"], schemas);
     expect(ordered.indexOf("Child")).toBeLessThan(ordered.indexOf("Parent"));
+  });
+});
+
+describe("placementOf — sumber tunggal aturan shared-vs-lokal (#4)", () => {
+  it("tepat 1 domain-pemilik → lokal (tinggal bersama pemiliknya)", () => {
+    expect(placementOf(1)).toBe("local");
+  });
+
+  it(">= 2 domain (lintas-domain) → shared", () => {
+    expect(placementOf(2)).toBe("shared");
+    expect(placementOf(5)).toBe("shared");
+  });
+
+  it("0 domain (orphan, mis. enum tanpa pemilik jelas) → shared", () => {
+    expect(placementOf(0)).toBe("shared");
   });
 });
 
