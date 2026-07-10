@@ -243,12 +243,15 @@ function renderDomainFile(d, schemas, enumAlias) {
     `Endpoint : ${d.endpoints.join(", ")}`,
   ]);
 
+  // Alias enum yang berulang HANYA di domain ini (bukan lintas-domain) →
+  // dideklarasi lokal, sebelum schema. Kosong bila tak ada.
+  const aliasBlock = d.aliasDecls.length ? `${d.aliasDecls.join("\n")}\n\n` : "";
   const body = d.local.map((name) => schemaToDeclaration(name, schemas[name], enumAlias)).join("\n");
 
   const importLine = d.imports.length ? `${buildImport("import", d.imports)}\n\n` : "";
   const reExportLine = d.reExports.length ? `\n${buildImport("export", d.reExports)}\n` : "";
 
-  return normalizeTrailing(`${header}\n${importLine}${body}${reExportLine}`);
+  return normalizeTrailing(`${header}\n${importLine}${aliasBlock}${body}${reExportLine}`);
 }
 
 /** True bila nama tipe muncul sebagai identifier utuh (word-boundary) di teks. */
@@ -299,8 +302,9 @@ function renderSharedFile(shared, schemas) {
  *     schemas,                       // rujukan schema mentah utk renderer
  *     enumAlias,                     // Map<signature, aliasTypeName>
  *     shared:  { names, aliasDecls, enumAlias },
- *     domains: [{ domain, endpoints, local, imports, reExports }],
- *     stats:   { totalDomain, totalSchema, sharedCount },
+ *     domains: [{ domain, endpoints, local, aliasDecls, imports, reExports }],
+ *     warnings: [string],            // enum berulang tanpa nama di KNOWN_ENUMS
+ *     stats:   { totalDomain, totalSchema, sharedCount, hasHttpStatus },
  *   }
  */
 function plan(spec) {
@@ -332,19 +336,14 @@ function plan(spec) {
   }
   const sharedNames = new Set(Object.keys(usage).filter((n) => usage[n].size >= 2));
 
-  // 3. Deteksi enum yang identik & berulang → jadikan alias bersama.
-  //    Fokus: enum HTTP status (statusText) yang muncul di banyak wrapper.
-  const enumAlias = new Map(); // signature → aliasTypeName
-  const aliasDecls = [];
-  const httpStatus = findHttpStatusEnum(schemas);
-  if (httpStatus) {
-    enumAlias.set(enumSignature(httpStatus), "HttpStatusText");
-    aliasDecls.push(
-      `/** Semua status HTTP (dipakai oleh field statusText di wrapper response). */\nexport type HttpStatusText =\n  | ${httpStatus.map(toLiteral).join("\n  | ")};`,
-    );
-  }
+  // 3. Rencanakan alias enum (dedup enum identik yang berulang) via kebijakan
+  //    frekuensi + registry KNOWN_ENUMS. Penempatan mengikuti aturan schema:
+  //    enum lintas-domain → _shared.ts; enum berulang dalam 1 domain → alias
+  //    lokal di file domain itu.
+  const enumPlan = planEnumAliases(schemas, domainSchemas);
+  const { enumAlias, sharedAliasDecls, sharedAliasNames, domainAliasDecls } = enumPlan;
 
-  // 4. Keputusan per domain: schema lokal (topo-sort), lalu import & re-export.
+  // 4. Keputusan per domain: schema lokal (topo-sort), alias lokal, import & re-export.
   const domains = Object.keys(domainSchemas)
     .sort()
     .map((domain) => {
@@ -354,49 +353,136 @@ function plan(spec) {
         schemas,
       );
       const sharedUsed = all.filter((n) => sharedNames.has(n));
+      const aliasDecls = domainAliasDecls.get(domain) || [];
 
-      // Import: tipe shared + alias enum yang BENAR-BENAR dirujuk deklarasi
-      // lokal (bukan sekadar ada di closure endpoint) → hindari unused import.
-      const localBody = local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias)).join("\n");
-      const candidates = new Set([...sharedUsed, ...enumAlias.values()]);
+      // Body lokal = alias lokal + deklarasi schema lokal; dipakai untuk
+      // mendeteksi import yang BENAR-BENAR dirujuk (hindari unused import).
+      const localBody = [...aliasDecls, ...local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias))].join("\n");
+      // Import hanya schema shared + alias enum SHARED (alias lokal dideklarasi di
+      // file ini, jadi tak di-import). Kandidat difilter oleh referencedIn.
+      const candidates = new Set([...sharedUsed, ...sharedAliasNames]);
       const imports = [...candidates].filter((n) => referencedIn(localBody, n)).sort();
 
       // Re-export seluruh schema shared milik domain ini → file domain jadi SATU
-      // pintu import untuk konsumen. HttpStatusText sengaja tidak di-re-export
-      // (alias internal, bukan schema).
+      // pintu import untuk konsumen. Alias enum (mis. HttpStatusText) sengaja tak
+      // di-re-export (alias internal, bukan schema).
       const reExports = [...sharedUsed].sort();
 
-      return { domain, endpoints: domainEndpoints[domain].sort(), local, imports, reExports };
+      return { domain, endpoints: domainEndpoints[domain].sort(), local, aliasDecls, imports, reExports };
     });
 
   return {
     schemas,
     enumAlias,
-    shared: { names: topoSort([...sharedNames], schemas), aliasDecls, enumAlias },
+    shared: { names: topoSort([...sharedNames], schemas), aliasDecls: sharedAliasDecls, enumAlias },
     domains,
+    warnings: enumPlan.warnings,
     stats: {
       totalDomain: Object.keys(domainSchemas).length,
       totalSchema: Object.keys(schemas).length,
       sharedCount: sharedNames.size,
-      hasHttpStatus: Boolean(httpStatus),
+      hasHttpStatus: sharedAliasNames.has("HttpStatusText"),
     },
   };
 }
 
+// ── Kebijakan dedup enum ──────────────────────────────────────────────
+
+/** Ambang: enum yang muncul >= sekian kali dianggap "berulang" & di-hoist. */
+const ENUM_DEDUP_THRESHOLD = 2;
+
 /**
- * Cari nilai enum HTTP status (dikenali dari kehadiran "200 OK") di schema
- * mana pun, untuk dijadikan satu alias HttpStatusText. Mengembalikan array
- * nilai enum, atau null bila tidak ada.
+ * Registry enum bernama — dikenali dari KONTEN (bukan nama properti, yang tak
+ * bisa diandalkan). Enum berulang yang cocok salah satu `detect` memakai nama
+ * & komentar yang ditentukan di sini. Tambahkan entri saat spec memperkenalkan
+ * enum berulang baru agar nama tetap bermakna (lihat `warnings` dari plan()).
  */
-function findHttpStatusEnum(schemas) {
-  for (const schema of Object.values(schemas)) {
+const KNOWN_ENUMS = [
+  {
+    name: "HttpStatusText",
+    comment: "Semua status HTTP (dipakai oleh field statusText di wrapper response).",
+    detect: (values) => values.includes("200 OK"),
+  },
+];
+
+/** Bangun deklarasi TypeScript untuk satu alias enum (multi-line, satu nilai/baris). */
+function buildEnumAliasDecl(name, values, comment) {
+  const doc = comment ? `/** ${comment} */\n` : "";
+  return `${doc}export type ${name} =\n  | ${values.map(toLiteral).join("\n  | ")};`;
+}
+
+/**
+ * Rencanakan alias untuk enum yang identik & berulang (>= ENUM_DEDUP_THRESHOLD).
+ * Kebijakan (bukan magic-string):
+ *   - Nama: dari KNOWN_ENUMS bila kontennya dikenali; jika tidak, nama auto
+ *     `Enum{n}` + peringatan agar diberi nama di registry (tak pernah diam-diam
+ *     terduplikasi — selalu ter-hoist).
+ *   - Penempatan (mengikuti aturan schema): enum yang tersebar >= 2 domain →
+ *     _shared.ts; enum berulang dalam 1 domain → alias lokal di file domain itu.
+ * Mengembalikan:
+ *   { enumAlias:Map<sig,name>, sharedAliasDecls:[], sharedAliasNames:Set,
+ *     domainAliasDecls:Map<domain,[]>, warnings:[] }
+ */
+function planEnumAliases(schemas, domainSchemas) {
+  // schemaName → Set<domain> (schema tunggal bisa dipakai banyak domain).
+  const schemaDomains = {};
+  for (const [domain, set] of Object.entries(domainSchemas)) {
+    for (const name of set) (schemaDomains[name] ??= new Set()).add(domain);
+  }
+
+  // signature → { values, count, domains:Set } — sebaran & frekuensi tiap enum.
+  const enums = new Map();
+  for (const [sname, schema] of Object.entries(schemas)) {
     for (const prop of Object.values(schema.properties || {})) {
-      if (Array.isArray(prop.enum) && prop.enum.includes("200 OK")) {
-        return prop.enum;
-      }
+      if (!Array.isArray(prop.enum)) continue;
+      const sig = enumSignature(prop.enum);
+      if (!enums.has(sig)) enums.set(sig, { values: prop.enum, count: 0, domains: new Set() });
+      const e = enums.get(sig);
+      e.count++;
+      for (const d of schemaDomains[sname] || []) e.domains.add(d);
     }
   }
-  return null;
+
+  const enumAlias = new Map();
+  const sharedAliasDecls = [];
+  const sharedAliasNames = new Set();
+  const domainAliasDecls = new Map(); // domain → [decl]
+  const warnings = [];
+  let autoCounter = 0;
+
+  // Deterministik: yang paling sering dulu (stabil terhadap urutan objek spec).
+  const repeated = [...enums.values()].filter((e) => e.count >= ENUM_DEDUP_THRESHOLD).sort((a, b) => b.count - a.count);
+
+  for (const e of repeated) {
+    const known = KNOWN_ENUMS.find((k) => k.detect(e.values));
+    let name;
+    let comment;
+    if (known) {
+      name = known.name;
+      comment = known.comment;
+    } else {
+      autoCounter++;
+      name = `Enum${autoCounter}`;
+      comment = "";
+      warnings.push(
+        `Enum berulang (${e.count}×) tanpa nama di KNOWN_ENUMS → dialiaskan "${name}". Tambahkan entri detect di KNOWN_ENUMS agar namanya bermakna.`,
+      );
+    }
+    enumAlias.set(enumSignature(e.values), name);
+    const decl = buildEnumAliasDecl(name, e.values, comment);
+
+    // 1 domain → alias lokal; selain itu (lintas-domain / orphan) → _shared.
+    if (e.domains.size === 1) {
+      const domain = [...e.domains][0];
+      if (!domainAliasDecls.has(domain)) domainAliasDecls.set(domain, []);
+      domainAliasDecls.get(domain).push(decl);
+    } else {
+      sharedAliasDecls.push(decl);
+      sharedAliasNames.add(name);
+    }
+  }
+
+  return { enumAlias, sharedAliasDecls, sharedAliasNames, domainAliasDecls, warnings };
 }
 
 // ── Render: Plan → daftar file (string) ──────────────────────────────
@@ -423,6 +509,8 @@ function main() {
     const spec = JSON.parse(fs.readFileSync(INPUT_FILE, "utf-8"));
 
     const p = plan(spec);
+
+    for (const w of p.warnings) console.warn(`⚠️  ${w}`);
 
     // Filter opsional 1 domain dari argumen CLI (plan tetap total; shell memilih).
     const arg = process.argv[2];
