@@ -45,6 +45,16 @@ function toLiteral(value) {
   return JSON.stringify(value);
 }
 
+/**
+ * Sumber tunggal "enum → union tipe TS". Dua bentuk keluaran:
+ *   - inline  (multiline:false): `"a" | "b"`         — dipakai di ekspresi tipe
+ *   - hoisted (multiline:true) : `\n  | "a"\n  | "b"` — dipakai di alias top-level
+ */
+function renderEnumUnion(values, { multiline = false } = {}) {
+  if (multiline) return `\n  | ${values.map(toLiteral).join("\n  | ")}`;
+  return values.map(toLiteral).join(" | ");
+}
+
 /** Segmen terakhir dari sebuah $ref → nama tipe. */
 function refName(ref) {
   return ref.replace(/^#\/components\/schemas\//, "");
@@ -60,7 +70,7 @@ function schemaToTsType(schema) {
   if (schema.$ref) return refName(schema.$ref);
 
   if (Array.isArray(schema.enum)) {
-    return schema.enum.map(toLiteral).join(" | ");
+    return renderEnumUnion(schema.enum);
   }
 
   switch (schema.type) {
@@ -116,11 +126,8 @@ function describeProp(propSchema) {
  * dipakai untuk mengganti enum berulang dengan referensi tipe tunggal.
  */
 function schemaToDeclaration(name, schema, enumAlias) {
-  if (Array.isArray(schema.enum)) {
-    const union = schema.enum.map(toLiteral).join(" | ");
-    return `export type ${name} = ${union};\n`;
-  }
-
+  // Enum bernama top-level ditangani oleh cabang fallback di bawah lewat
+  // schemaToTsType (hasilnya identik) — tak perlu cabang enum terpisah di sini.
   if (schema.type === "object" || schema.properties) {
     const required = new Set(schema.required || []);
     const props = Object.entries(schema.properties || {});
@@ -408,7 +415,7 @@ const KNOWN_ENUMS = [
 /** Bangun deklarasi TypeScript untuk satu alias enum (multi-line, satu nilai/baris). */
 function buildEnumAliasDecl(name, values, comment) {
   const doc = comment ? `/** ${comment} */\n` : "";
-  return `${doc}export type ${name} =\n  | ${values.map(toLiteral).join("\n  | ")};`;
+  return `${doc}export type ${name} =${renderEnumUnion(values, { multiline: true })};`;
 }
 
 /**
