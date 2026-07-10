@@ -561,5 +561,5 @@ function main() {
 if (require.main === module) {
   main();
 } else {
-  module.exports = { plan, render, schemaToDeclaration, schemaToTsType, topoSort, domainOf };
+  module.exports = { plan, render, schemaToDeclaration, schemaToTsType, renderEnumUnion, topoSort, domainOf };
 }

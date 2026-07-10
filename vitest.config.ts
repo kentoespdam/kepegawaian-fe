@@ -9,7 +9,7 @@ export default defineConfig({
   },
   test: {
     environment: "node",
-    include: ["src/**/*.test.ts"],
+    include: ["src/**/*.test.ts", "docs/api/master/**/*.test.ts"],
     // Module captures these at import time — fix them so cookie names / base URL are deterministic.
     env: {
       APPWRITE_URL: "http://appwrite.test",
