@@ -46,7 +46,7 @@ Graf FK inilah yang membuat **combobox-of-id filter** (`### DataTable filtering`
 di Master: mis. memfilter `profesi` per `organisasiId`, atau `apd` per `profesiId`. Value yang
 dikirim ke backend = **id** opsi, bukan teksnya.
 
-## Master build strategy — bespoke files di atas shared primitives (BUKAN engine config-driven)
+## Master build strategy — bespoke files di atas shared primitives + typed EntityConfig
 
 Tiap entitas Master punya **file konkret sendiri** (page, columns, form) → perbedaan tampilan
 per-entitas mudah dibaca & diubah — **bukan** satu engine generik yang digerakkan config. DRY
@@ -55,6 +55,12 @@ dipaksa lewat **shared primitives** yang tiap entitas compose (semua didefinisik
 `<ConfirmDeleteDialog>`, `<Can>`, hook proxy/`useResource`, helper API client bertipe. Duplikasi
 hanya di **glue tipis per-entitas** (columns + skema Zod + config toolbar) — tak pernah di logika
 table/fetch/CRUD. Ke-17 entitas CRUD memakai anatomi layar daftar & presentasi form yang sama.
+
+**Fully typed (ADR 0003).** Tipe OpenAPI tiap entitas di-generate ke `src/types/master/` (22 file
+entity + `_shared.ts`), ditambah `_computed.ts` untuk field hasil resolve FK (`_organisasiName`,
+`_jabatanName`, dll. — 6 field `_*Name`). `EntityConfig<TQuery, TReq>` generik meniadakan
+`Record<string, unknown>`: tiap entitas punya config bertipe yang me-wire endpoint, queryKey,
+kolom tabel, dan skema Zod form. Map entitas di-widen tanpa switch, di-factory oleh `makeConfig`.
 
 ## Entitas tree — organisasi & jabatan (`parentId`)
 
