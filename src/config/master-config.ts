@@ -4,9 +4,14 @@ import type { Column } from "@/components/data-table";
 
 export type { Page } from "@/lib/api/types";
 
-export interface EntityConfig {
+/**
+ * Generic config untuk satu entitas Master.
+ * @template TQuery — tipe response query (paginated / single) — dipakai di `columns`.
+ * @template _TReq — cadangan untuk request body (create/update). Default = TQuery.
+ */
+export interface EntityConfig<TQuery = Record<string, unknown>, _TReq = TQuery> {
   label: string;
-  columns: Column<Record<string, unknown>>[];
+  columns: Column<TQuery>[];
   fields: FormField[];
   schema: z.ZodType;
   container?: "dialog" | "sheet";
@@ -25,28 +30,32 @@ const nameCol: Column<Record<string, unknown>> = {
 
 const nameField: FormField = { name: "nama", label: "Nama", required: true };
 
-const makeConfig = (
+/** Factory dengan inferensi tipe — panggil tanpa type arg untuk untyped, atau supply <TQuery>. */
+function makeConfig<TQuery, _TReq = TQuery>(
   schema: z.ZodType,
   fields: FormField[],
-  columns: Column<Record<string, unknown>>[],
+  columns: Column<TQuery>[],
   label: string,
   opts?: {
     container?: "dialog" | "sheet";
     treeField?: string;
     fkSources?: { field: string; entity: string; label: string }[];
   },
-): EntityConfig => ({
-  label,
-  columns,
-  fields,
-  schema,
-  container: opts?.container,
-  treeField: opts?.treeField,
-  fkSources: opts?.fkSources,
-});
+): EntityConfig<TQuery, _TReq> {
+  return {
+    label,
+    columns,
+    fields,
+    schema,
+    container: opts?.container,
+    treeField: opts?.treeField,
+    fkSources: opts?.fkSources,
+  };
+}
 
 const simpleNameSchema = z.object({ nama: namaWajib });
 
+// ponytail: map di-widen ke default type — tanpa switch, index via string key
 export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig> = {
   // — Flat entities (name only) —
   golongan: makeConfig(simpleNameSchema, [nameField], [nameCol], "Golongan"),
