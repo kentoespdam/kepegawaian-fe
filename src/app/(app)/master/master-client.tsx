@@ -48,7 +48,6 @@ export function MasterPageClient<TEntity extends MasterEntityName>({
 
   const { resolvedItems, formFields } = useMasterTable({
     cfg,
-    // ponytail: GolonganQuery dkk tanpa index signature — cast diperlukan
     listData: pageView.rows as Record<string, unknown>[],
     treeItems,
     editing: editing as Record<string, unknown> | null,

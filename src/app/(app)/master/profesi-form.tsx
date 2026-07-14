@@ -5,26 +5,27 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api/client";
+import { profesiSchema, profesiDefaults, type ProfesiFormValues } from "./profesi-schema";
 
-// — Schema co-located —
+// — Helpers —
 
-const profesiSchema = z.object({
-  nama: z.string().min(1, "Nama wajib diisi"),
-  detail: z.string().min(1, "Detail wajib diisi"),
-  resiko: z.string().min(1, "Resiko wajib diisi"),
-  organisasiId: z.coerce.number().optional(),
-  jabatanId: z.coerce.number().optional(),
-  gradeId: z.coerce.number().optional(),
-});
-
-type ProfesiFormValues = z.infer<typeof profesiSchema>;
+function useFkOptions(entity: string) {
+  const query = useQuery({
+    queryKey: [entity, "list"],
+    queryFn: () => api.listAll<Record<string, unknown>>(entity),
+    staleTime: 300_000,
+  });
+  return useMemo(
+    () => ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
+    [query.data],
+  );
+}
 
 // — Props (compatible with EntityFormModal) —
 
@@ -38,42 +39,9 @@ interface ProfesiFormProps {
 }
 
 export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, submit }: ProfesiFormProps) {
-  // — FK source queries —
-
-  const orgQ = useQuery({
-    queryKey: ["organisasi", "list"],
-    queryFn: () => api.listAll<Record<string, unknown>>("organisasi"),
-    staleTime: 300_000,
-  });
-  const jabQ = useQuery({
-    queryKey: ["jabatan", "list"],
-    queryFn: () => api.listAll<Record<string, unknown>>("jabatan"),
-    staleTime: 300_000,
-  });
-  const gradeQ = useQuery({
-    queryKey: ["grade", "list"],
-    queryFn: () => api.listAll<Record<string, unknown>>("grade"),
-    staleTime: 300_000,
-  });
-
-  const orgData = orgQ.data as Record<string, unknown>[] | undefined;
-  const jabData = jabQ.data as Record<string, unknown>[] | undefined;
-  const gradeData = gradeQ.data as Record<string, unknown>[] | undefined;
-
-  const orgOpts = useMemo(
-    () => (orgData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
-    [orgData],
-  );
-  const jabOpts = useMemo(
-    () => (jabData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
-    [jabData],
-  );
-  const gradeOpts = useMemo(
-    () => (gradeData ?? []).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
-    [gradeData],
-  );
-
-  // — Form —
+  const orgOpts = useFkOptions("organisasi");
+  const jabOpts = useFkOptions("jabatan");
+  const gradeOpts = useFkOptions("grade");
 
   const {
     register,
@@ -82,19 +50,9 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
     watch,
     formState: { errors: rhfErrors },
   } = useForm<ProfesiFormValues>({
-    // ponytail: Zod v4 vs hookform — cast diperlukan
     resolver: zodResolver(profesiSchema as never),
-    defaultValues: {
-      nama: String(editing?.nama ?? ""),
-      detail: String(editing?.detail ?? ""),
-      resiko: String(editing?.resiko ?? ""),
-      organisasiId: Number(editing?.organisasiId ?? 0) || undefined,
-      jabatanId: Number(editing?.jabatanId ?? 0) || undefined,
-      gradeId: Number(editing?.gradeId ?? 0) || undefined,
-    },
+    defaultValues: profesiDefaults(editing),
   });
-
-  // — Submit handler —
 
   const onFormSubmit = async (values: ProfesiFormValues) => {
     setError(null);
@@ -113,8 +71,6 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
     }
   };
 
-  // — Render helpers —
-
   const fieldError = (name: keyof ProfesiFormValues) => {
     const e = rhfErrors[name];
     return e ? <p className="text-xs text-destructive">{String(e.message ?? "")}</p> : null;
@@ -129,12 +85,7 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
             <Label className="text-sm font-medium">
               Nama <span className="text-destructive">*</span>
             </Label>
-            <Input
-              {...register("nama")}
-              className="h-11"
-              placeholder="Nama profesi"
-              aria-invalid={!!rhfErrors.nama}
-            />
+            <Input {...register("nama")} className="h-11" placeholder="Nama profesi" aria-invalid={!!rhfErrors.nama} />
             {fieldError("nama")}
           </div>
           <div className="space-y-1.5">

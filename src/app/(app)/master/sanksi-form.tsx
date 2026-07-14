@@ -4,96 +4,18 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { MasterSwitch } from "@/components/master-switch";
 import { useResource } from "@/hooks/useResource";
-import { cn } from "@/lib/utils";
-
-// — Schema co-located —
-
-const sanksiSchema = z
-  .object({
-    kode: z.string().min(1, "Kode wajib diisi"),
-    keterangan: z.string().min(1, "Keterangan wajib diisi"),
-    jenisSpId: z.coerce.number(),
-    potTkk: z.boolean(),
-    jmlPotTkk: z.coerce.number().optional(),
-    isPendingPangkat: z.boolean(),
-    isPendingGaji: z.boolean(),
-    isTurunPangkat: z.boolean(),
-    isTurunJabatan: z.boolean(),
-    isSuspension: z.boolean(),
-    isTerminateDh: z.boolean(),
-    isTerminateTh: z.boolean(),
-  })
-  .superRefine((data, ctx) => {
-    if (data.potTkk && !data.jmlPotTkk) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        path: ["jmlPotTkk"],
-        message: "Jumlah potong TKK wajib diisi saat potTkk aktif",
-      });
-    }
-  });
-
-type SanksiFormValues = z.infer<typeof sanksiSchema>;
-
-// — Switch labels config —
-
-const SWITCH_LABELS: { field: keyof SanksiFormValues; label: string }[] = [
-  { field: "potTkk", label: "Potong TKK" },
-  { field: "isPendingPangkat", label: "Tunda kenaikan pangkat" },
-  { field: "isPendingGaji", label: "Tunda kenaikan gaji berkala" },
-  { field: "isTurunPangkat", label: "Turunkan pangkat" },
-  { field: "isTurunJabatan", label: "Turunkan jabatan" },
-  { field: "isSuspension", label: "Skorsing (suspension)" },
-  { field: "isTerminateDh", label: "PHK dengan hormat" },
-  { field: "isTerminateTh", label: "PHK tidak dengan hormat" },
-];
-
-// — Switch UI component —
-
-function Switch({
-  checked,
-  onChange,
-  label,
-}: {
-  checked: boolean;
-  onChange: (v: boolean) => void;
-  label: string;
-}) {
-  return (
-    <div className="flex items-center justify-between py-2">
-      <span className="text-sm text-foreground">{label}</span>
-      <button
-        type="button"
-        role="switch"
-        aria-checked={checked}
-        onClick={() => onChange(!checked)}
-        className={cn(
-          "relative inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full",
-          "border-2 border-transparent transition-colors",
-          "focus-visible:outline-none focus-visible:ring-3 focus-visible:ring-ring/50",
-          "disabled:cursor-not-allowed disabled:opacity-50",
-          "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input",
-        )}
-        data-state={checked ? "checked" : "unchecked"}
-      >
-        <span
-          className={cn(
-            "pointer-events-none block size-5 rounded-full bg-white shadow-sm ring-0",
-            "transition-transform data-[state=checked]:translate-x-5",
-            "data-[state=unchecked]:translate-x-0.5",
-          )}
-          data-state={checked ? "checked" : "unchecked"}
-        />
-      </button>
-    </div>
-  );
-}
+import {
+  sanksiSchema,
+  SWITCH_LABELS,
+  sanksiDefaults,
+  type SanksiFormValues,
+} from "./sanksi-schema";
 
 // — Props (compatible with EntityFormModal) —
 
@@ -125,27 +47,11 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
     watch,
     formState: { errors: rhfErrors },
   } = useForm<SanksiFormValues>({
-    // ponytail: Zod v4 vs hookform — cast diperlukan
     resolver: zodResolver(sanksiSchema as never),
-    defaultValues: {
-      kode: String(editing?.kode ?? ""),
-      keterangan: String(editing?.keterangan ?? ""),
-      jenisSpId: Number(editing?.jenisSpId ?? 0) || undefined,
-      potTkk: Boolean(editing?.potTkk ?? false),
-      jmlPotTkk: Number(editing?.jmlPotTkk ?? 0) || undefined,
-      isPendingPangkat: Boolean(editing?.isPendingPangkat ?? false),
-      isPendingGaji: Boolean(editing?.isPendingGaji ?? false),
-      isTurunPangkat: Boolean(editing?.isTurunPangkat ?? false),
-      isTurunJabatan: Boolean(editing?.isTurunJabatan ?? false),
-      isSuspension: Boolean(editing?.isSuspension ?? false),
-      isTerminateDh: Boolean(editing?.isTerminateDh ?? false),
-      isTerminateTh: Boolean(editing?.isTerminateTh ?? false),
-    },
+    defaultValues: sanksiDefaults(editing),
   });
 
   const watchPotTkk = watch("potTkk");
-
-  // — Submit handler: validate → submit to parent —
 
   const onFormSubmit = async (values: SanksiFormValues) => {
     setError(null);
@@ -172,8 +78,6 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
     }
   };
 
-  // — Render —
-
   const fieldError = (name: keyof SanksiFormValues) => {
     const e = rhfErrors[name];
     return e ? <p className="text-xs text-destructive">{String(e.message ?? "")}</p> : null;
@@ -190,12 +94,7 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
               <Label className="text-sm font-medium">
                 Kode <span className="text-destructive">*</span>
               </Label>
-              <Input
-                {...register("kode")}
-                className="h-11"
-                placeholder="Kode sanksi"
-                aria-invalid={!!rhfErrors.kode}
-              />
+              <Input {...register("kode")} className="h-11" placeholder="Kode sanksi" aria-invalid={!!rhfErrors.kode} />
               {fieldError("kode")}
             </div>
             <div className="space-y-1.5">
@@ -242,7 +141,7 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
           <div className="divide-y divide-border rounded-lg border border-border">
             {SWITCH_LABELS.map((sw) => (
               <div key={sw.field}>
-                <Switch
+                <MasterSwitch
                   checked={Boolean(watch(sw.field))}
                   onChange={(v) => setValue(sw.field, v, { shouldValidate: true })}
                   label={sw.label}
