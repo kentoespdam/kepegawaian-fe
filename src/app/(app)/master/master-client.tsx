@@ -7,20 +7,16 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
+import type { EntityConfig } from "@/config/master-config";
 import { MASTER_ENTITY_CONFIGS } from "@/config/master-config";
 import type { MasterEntityName, MasterEntityTypes } from "@/config/master-entity-types";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
 import { useResource } from "@/hooks/useResource";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { EntityConfig } from "@/config/master-config";
 import { EntityFormModal } from "./entity-form-modal";
 
-export function MasterPageClient<TEntity extends MasterEntityName>({
-  entity,
-}: {
-  entity: TEntity;
-}) {
+export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: { entity: TEntity }) {
   type TItem = MasterEntityTypes[TEntity]["TItem"];
   type TPage = MasterEntityTypes[TEntity]["TPage"];
   type TReq = MasterEntityTypes[TEntity]["TReq"];

@@ -6,12 +6,7 @@ import type { EnumOption, ListResultEnumOption } from "@/types/master/_shared";
 import type { ListResultStatusPegawaiResponse, StatusPegawaiResponse } from "@/types/master/status-pegawai";
 
 /** 5 enum entities whose GET /list endpoint returns EnumOption[]. */
-export type EnumEntity =
-  | "status-pegawai"
-  | "status-kerja"
-  | "jenis-mutasi"
-  | "jenis-sk"
-  | "jenis-kontrak";
+export type EnumEntity = "status-pegawai" | "status-kerja" | "jenis-mutasi" | "jenis-sk" | "jenis-kontrak";
 
 /**
  * Typed hook for fetching master-reference enum entities.

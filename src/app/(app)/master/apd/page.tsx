@@ -7,7 +7,7 @@ export default async function ApdPage() {
   const user = await verifySession();
   const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["apd"]) notFound();
+  if (!MASTER_ENTITY_CONFIGS.apd) notFound();
   if (!can(roles, "view", "apd")) forbidden();
 
   return <MasterPageClient entity="apd" />;

@@ -7,7 +7,7 @@ export default async function ProfesiPage() {
   const user = await verifySession();
   const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["profesi"]) notFound();
+  if (!MASTER_ENTITY_CONFIGS.profesi) notFound();
   if (!can(roles, "view", "profesi")) forbidden();
 
   return <MasterPageClient entity="profesi" />;

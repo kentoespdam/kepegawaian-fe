@@ -57,8 +57,19 @@ const simpleNameSchema = z.object({ nama: namaWajib });
 
 // ponytail: map di-widen ke default type — tanpa switch, index via string key
 export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig> = {
-  // — Flat entities (name only) —
-  golongan: makeConfig(simpleNameSchema, [nameField], [nameCol], "Golongan"),
+  // — Flat entities —
+  golongan: makeConfig(
+    z.object({ golongan: namaWajib, pangkat: z.string().min(1, "Pangkat wajib diisi") }),
+    [
+      { name: "golongan", label: "Golongan", required: true },
+      { name: "pangkat", label: "Pangkat", required: true },
+    ],
+    [
+      { id: "golongan", header: "Golongan", sortable: true, cell: (item) => String(item.golongan ?? "") },
+      { id: "pangkat", header: "Pangkat", cell: (item) => String(item.pangkat ?? "") },
+    ],
+    "Golongan",
+  ),
   level: makeConfig(simpleNameSchema, [nameField], [nameCol], "Level"),
   "jenjang-pendidikan": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenjang Pendidikan"),
   "jenis-keahlian": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis Keahlian"),
@@ -68,11 +79,17 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig> = {
   "alasan-berhenti": makeConfig(simpleNameSchema, [nameField], [nameCol], "Alasan Berhenti"),
 
   "hari-libur": makeConfig(
-    z.object({ nama: namaWajib, tanggal: z.string().min(1, "Tanggal wajib diisi") }),
-    [nameField, { name: "tanggal", label: "Tanggal", required: true }],
+    z.object({
+      tanggal: z.string().min(1, "Tanggal wajib diisi"),
+      jenisLibur: z.string().min(1, "Jenis libur wajib diisi"),
+    }),
     [
-      { id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-      { id: "tanggal", header: "Tanggal", cell: (item) => String(item.tanggal ?? "") },
+      { name: "tanggal", label: "Tanggal", required: true },
+      { name: "jenisLibur", label: "Jenis Libur", required: true },
+    ],
+    [
+      { id: "tanggal", header: "Tanggal", sortable: true, cell: (item) => String(item.tanggal ?? "") },
+      { id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
     ],
     "Hari Libur",
   ),
@@ -112,10 +129,18 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig> = {
 
   // — FK entities —
   grade: makeConfig(
-    z.object({ nama: namaWajib }),
-    [nameField, { name: "levelId", label: "Level", type: "select", required: true }],
+    z.object({
+      grade: z.coerce.number().min(1, "Grade wajib diisi"),
+      tukin: z.coerce.number().min(100000, "Tukin minimal 100.000"),
+      levelId: z.coerce.number(),
+    }),
     [
-      { id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
+      { name: "grade", label: "Grade", type: "number", required: true },
+      { name: "tukin", label: "Tukin", type: "number", required: true },
+      { name: "levelId", label: "Level", type: "select", required: true },
+    ],
+    [
+      { id: "grade", header: "Grade", sortable: true, cell: (item) => String(item.grade ?? "") },
       { id: "_levelName", header: "Level", cell: (item) => String(item._levelName ?? "-") },
     ],
     "Grade",

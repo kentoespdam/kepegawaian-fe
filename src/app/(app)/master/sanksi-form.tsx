@@ -4,18 +4,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { MasterSwitch } from "@/components/master-switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MasterSwitch } from "@/components/master-switch";
 import { useResource } from "@/hooks/useResource";
-import {
-  sanksiSchema,
-  SWITCH_LABELS,
-  sanksiDefaults,
-  type SanksiFormValues,
-} from "./sanksi-schema";
+import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./sanksi-schema";
 
 // — Props (compatible with EntityFormModal) —
 

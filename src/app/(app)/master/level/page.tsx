@@ -7,7 +7,7 @@ export default async function LevelPage() {
   const user = await verifySession();
   const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["level"]) notFound();
+  if (!MASTER_ENTITY_CONFIGS.level) notFound();
   if (!can(roles, "view", "level")) forbidden();
 
   return <MasterPageClient entity="level" />;

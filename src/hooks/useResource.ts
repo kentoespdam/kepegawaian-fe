@@ -1,10 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 
-export function useResource<TQuery, TReq = TQuery>(
-  entity: string,
-  params?: Record<string, string>,
-) {
+export function useResource<TQuery, TReq = TQuery>(entity: string, params?: Record<string, string>) {
   const qc = useQueryClient();
   const base = [entity];
 

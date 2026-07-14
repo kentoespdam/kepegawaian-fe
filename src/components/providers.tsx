@@ -1,10 +1,10 @@
 "use client";
 
 import { MutationCache, QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiError } from "@/lib/api/client";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 /** Dedup flag — prevents multiple toasts when several queries fail 401 simultaneously. */
 let sessionExpiredHandled = false;

@@ -7,7 +7,7 @@ export default async function GradePage() {
   const user = await verifySession();
   const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["grade"]) notFound();
+  if (!MASTER_ENTITY_CONFIGS.grade) notFound();
   if (!can(roles, "view", "grade")) forbidden();
 
   return <MasterPageClient entity="grade" />;

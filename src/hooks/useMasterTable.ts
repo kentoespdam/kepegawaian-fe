@@ -19,7 +19,12 @@ interface UseMasterTableOpts<TQuery extends Record<string, unknown>> {
  * Orchestrates FK source queries, lookup maps, resolved table items,
  * and enriched form fields for a master entity CRUD page.
  */
-export function useMasterTable<TQuery extends Record<string, unknown>>({ cfg, listData, treeItems, editing }: UseMasterTableOpts<TQuery>) {
+export function useMasterTable<TQuery extends Record<string, unknown>>({
+  cfg,
+  listData,
+  treeItems,
+  editing,
+}: UseMasterTableOpts<TQuery>) {
   const fkSources = cfg.fkSources ?? [];
 
   // ponytail: up to 3 FK queries — declared unconditionally, enabled per-entity

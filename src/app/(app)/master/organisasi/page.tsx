@@ -7,7 +7,7 @@ export default async function OrganisasiPage() {
   const user = await verifySession();
   const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["organisasi"]) notFound();
+  if (!MASTER_ENTITY_CONFIGS.organisasi) notFound();
   if (!can(roles, "view", "organisasi")) forbidden();
 
   return <MasterPageClient entity="organisasi" />;

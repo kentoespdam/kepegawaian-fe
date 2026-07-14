@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api/client";
-import { profesiSchema, profesiDefaults, type ProfesiFormValues } from "./profesi-schema";
+import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./profesi-schema";
 
 // — Helpers —
 
@@ -22,7 +22,11 @@ function useFkOptions(entity: string) {
     staleTime: 300_000,
   });
   return useMemo(
-    () => ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({ value: String(i.id), label: String(i.nama ?? "") })),
+    () =>
+      ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
+        value: String(i.id),
+        label: String(i.nama ?? ""),
+      })),
     [query.data],
   );
 }
