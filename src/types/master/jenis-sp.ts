@@ -11,63 +11,63 @@
 import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
 
 export interface JenisSpQuery {
-  id?: number; // int64
-  kode?: string;
-  nama?: string;
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
 }
 
 export interface SingleResultJenisSpQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: JenisSpQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: JenisSpQuery;
+	timestamp?: string; // date-time
 }
 
 export interface JenisSpPutRequest {
-  kode?: string;
-  nama?: string;
+	kode?: string;
+	nama?: string;
 }
 
 export interface PageJenisSpQuery {
-  totalElements?: number; // int64
-  totalPages?: number; // int32
-  size?: number; // int32
-  content?: JenisSpQuery[];
-  number?: number; // int32
-  numberOfElements?: number; // int32
-  pageable?: PageableObject;
-  sort?: SortObject;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+	totalElements?: number; // int64
+	totalPages?: number; // int32
+	size?: number; // int32
+	content?: JenisSpQuery[];
+	number?: number; // int32
+	numberOfElements?: number; // int32
+	pageable?: PageableObject;
+	sort?: SortObject;
+	first?: boolean;
+	last?: boolean;
+	empty?: boolean;
 }
 
 export interface PageResultPageJenisSpQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  data?: PageJenisSpQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	data?: PageJenisSpQuery;
+	timestamp?: string; // date-time
 }
 
 export interface JenisSpPostRequest {
-  kode?: string;
-  nama?: string;
+	kode?: string;
+	nama?: string;
 }
 
 export interface JenisSpListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export interface ListResultJenisSpListResponse {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: JenisSpListResponse[];
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: JenisSpListResponse[];
+	timestamp?: string; // date-time
 }
 
 export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";

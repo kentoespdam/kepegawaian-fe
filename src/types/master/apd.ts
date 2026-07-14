@@ -11,23 +11,23 @@
 import type { HttpStatusText } from "./_shared";
 
 export interface ApdQuery {
-  id?: number; // int64
-  nama?: string;
-  profesiId?: number; // int64
+	id?: number; // int64
+	nama?: string;
+	profesiId?: number; // int64
 }
 
 export interface SingleResultApdQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: ApdQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: ApdQuery;
+	timestamp?: string; // date-time
 }
 
 export interface ApdPostRequest {
-  profesiId: number; // int64
-  nama: string; // minLength 1
+	profesiId: number; // int64
+	nama: string; // minLength 1
 }
 
 export type { DeletedResult, SavedResultLong } from "./_shared";

@@ -11,16 +11,16 @@
 import type { HttpStatusText } from "./_shared";
 
 export interface StatusPegawaiResponse {
-  id?: string;
-  nama?: string;
-  urut?: number; // int32
+	id?: string;
+	nama?: string;
+	urut?: number; // int32
 }
 
 export interface ListResultStatusPegawaiResponse {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: StatusPegawaiResponse[];
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: StatusPegawaiResponse[];
+	timestamp?: string; // date-time
 }

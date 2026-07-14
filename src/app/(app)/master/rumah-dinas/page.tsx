@@ -4,11 +4,11 @@ import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
 import { MasterPageClient } from "../master-client";
 
 export default async function RumahDinasPage() {
-  const user = await verifySession();
-  const roles = getRoles(user);
+	const user = await verifySession();
+	const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["rumah-dinas"]) notFound();
-  if (!can(roles, "view", "rumah-dinas")) forbidden();
+	if (!MASTER_ENTITY_CONFIGS["rumah-dinas"]) notFound();
+	if (!can(roles, "view", "rumah-dinas")) forbidden();
 
-  return <MasterPageClient entity="rumah-dinas" />;
+	return <MasterPageClient entity="rumah-dinas" />;
 }

@@ -11,23 +11,23 @@
 import type { HttpStatusText } from "./_shared";
 
 export interface AlatKerjaQuery {
-  id?: number; // int64
-  nama?: string;
-  profesiId?: number; // int64
+	id?: number; // int64
+	nama?: string;
+	profesiId?: number; // int64
 }
 
 export interface SingleResultAlatKerjaQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: AlatKerjaQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: AlatKerjaQuery;
+	timestamp?: string; // date-time
 }
 
 export interface AlatKerjaPostRequest {
-  profesiId: number; // int64
-  nama: string; // minLength 1
+	profesiId: number; // int64
+	nama: string; // minLength 1
 }
 
 export type { DeletedResult, SavedResultLong } from "./_shared";

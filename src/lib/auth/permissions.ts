@@ -5,6 +5,6 @@ const VIEW: Action[] = ["view"];
 
 // ponytail: seed default role — rilis 1, user isi matriks per-label nanti
 export const PERMISSIONS: Record<string, Record<string, Action[]>> = {
-  admin: { "*": ALL },
-  viewer: { "*": VIEW },
+	admin: { "*": ALL },
+	viewer: { "*": VIEW },
 };

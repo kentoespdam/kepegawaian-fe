@@ -4,11 +4,11 @@ import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
 import { MasterPageClient } from "../master-client";
 
 export default async function SanksiPage() {
-  const user = await verifySession();
-  const roles = getRoles(user);
+	const user = await verifySession();
+	const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS.sanksi) notFound();
-  if (!can(roles, "view", "sanksi")) forbidden();
+	if (!MASTER_ENTITY_CONFIGS.sanksi) notFound();
+	if (!can(roles, "view", "sanksi")) forbidden();
 
-  return <MasterPageClient entity="sanksi" />;
+	return <MasterPageClient entity="sanksi" />;
 }

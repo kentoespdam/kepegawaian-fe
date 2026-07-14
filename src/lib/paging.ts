@@ -7,10 +7,10 @@ import type { Page } from "@/lib/api/types";
 
 /** State paging manusiawi (1-based), sumber kebenaran = URL search params. */
 export interface PageParams {
-  page: number;
-  size: number;
-  sortBy?: string;
-  sortDir?: "asc" | "desc";
+	page: number;
+	size: number;
+	sortBy?: string;
+	sortDir?: "asc" | "desc";
 }
 
 /**
@@ -18,21 +18,21 @@ export interface PageParams {
  * `Math.max(0, …)` menjaga page 0/negatif dari URL rusak tak menembus jadi negatif.
  */
 export function toApiParams(p: PageParams): Record<string, string> {
-  return {
-    page: String(Math.max(0, p.page - 1)),
-    size: String(p.size),
-    ...(p.sortBy && { sortBy: p.sortBy, sortDirection: p.sortDir ?? "asc" }),
-  };
+	return {
+		page: String(Math.max(0, p.page - 1)),
+		size: String(p.size),
+		...(p.sortBy && { sortBy: p.sortBy, sortDirection: p.sortDir ?? "asc" }),
+	};
 }
 
 /** View-model paging untuk UI (page dikembalikan ke 1-based). */
 export interface PageView<T> {
-  rows: T[];
-  total: number;
-  totalPages: number;
-  page: number;
-  first: boolean;
-  last: boolean;
+	rows: T[];
+	total: number;
+	totalPages: number;
+	page: number;
+	first: boolean;
+	last: boolean;
 }
 
 /**
@@ -40,13 +40,13 @@ export interface PageView<T> {
  * jadi keadaan kosong yang aman, sehingga pemanggil tak perlu guard nullish.
  */
 export function fromPage<T>(page: Page<T> | undefined | null): PageView<T> {
-  if (!page) return { rows: [], total: 0, totalPages: 0, page: 1, first: true, last: true };
-  return {
-    rows: page.content ?? [],
-    total: page.totalElements ?? 0,
-    totalPages: page.totalPages ?? 0,
-    page: (page.number ?? 0) + 1,
-    first: page.first ?? true,
-    last: page.last ?? true,
-  };
+	if (!page) return { rows: [], total: 0, totalPages: 0, page: 1, first: true, last: true };
+	return {
+		rows: page.content ?? [],
+		total: page.totalElements ?? 0,
+		totalPages: page.totalPages ?? 0,
+		page: (page.number ?? 0) + 1,
+		first: page.first ?? true,
+		last: page.last ?? true,
+	};
 }

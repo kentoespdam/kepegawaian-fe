@@ -11,56 +11,56 @@
 import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
 
 export interface JenisPelatihanQuery {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export interface SingleResultJenisPelatihanQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: JenisPelatihanQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: JenisPelatihanQuery;
+	timestamp?: string; // date-time
 }
 
 export interface JenisPelatihanPostRequest {
-  nama: string; // minLength 1
+	nama: string; // minLength 1
 }
 
 export interface PageJenisPelatihanQuery {
-  totalElements?: number; // int64
-  totalPages?: number; // int32
-  size?: number; // int32
-  content?: JenisPelatihanQuery[];
-  number?: number; // int32
-  numberOfElements?: number; // int32
-  pageable?: PageableObject;
-  sort?: SortObject;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+	totalElements?: number; // int64
+	totalPages?: number; // int32
+	size?: number; // int32
+	content?: JenisPelatihanQuery[];
+	number?: number; // int32
+	numberOfElements?: number; // int32
+	pageable?: PageableObject;
+	sort?: SortObject;
+	first?: boolean;
+	last?: boolean;
+	empty?: boolean;
 }
 
 export interface PageResultPageJenisPelatihanQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  data?: PageJenisPelatihanQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	data?: PageJenisPelatihanQuery;
+	timestamp?: string; // date-time
 }
 
 export interface JenisPelatihanListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export interface ListResultJenisPelatihanListResponse {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: JenisPelatihanListResponse[];
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: JenisPelatihanListResponse[];
+	timestamp?: string; // date-time
 }
 
 export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";

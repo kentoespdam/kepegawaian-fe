@@ -11,18 +11,18 @@
 
 /** 6 field display name hasil resolve FK (paling umum di modul Master). */
 export interface Computed {
-  /** Nama organisasi (FK: organisasi → OrganisasiMiniResponse.nama). */
-  _organisasiName: string;
-  /** Nama jabatan (FK: jabatan → JabatanMiniResponse.nama). */
-  _jabatanName: string;
-  /** Nama grade (FK: grade → GradeMiniResponse.grade). */
-  _gradeName: string;
-  /** Nama level (FK: level → LevelResponse.nama). */
-  _levelName: string;
-  /** Nama profesi (FK: profesi → ProfesiListResponse.nama). */
-  _profesiName: string;
-  /** Nama jenis sanksi (FK: sanksi → JenisSpMiniResponse.nama). */
-  _jenisSpName: string;
+	/** Nama organisasi (FK: organisasi → OrganisasiMiniResponse.nama). */
+	_organisasiName: string;
+	/** Nama jabatan (FK: jabatan → JabatanMiniResponse.nama). */
+	_jabatanName: string;
+	/** Nama grade (FK: grade → GradeMiniResponse.grade). */
+	_gradeName: string;
+	/** Nama level (FK: level → LevelResponse.nama). */
+	_levelName: string;
+	/** Nama profesi (FK: profesi → ProfesiListResponse.nama). */
+	_profesiName: string;
+	/** Nama jenis sanksi (FK: sanksi → JenisSpMiniResponse.nama). */
+	_jenisSpName: string;
 }
 
 /**

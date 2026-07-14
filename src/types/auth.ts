@@ -1,13 +1,13 @@
 export interface Prefs {
-  roles: string[];
+	roles: string[];
 }
 
 export interface AppwriteUser {
-  $id: string;
-  email: string;
-  name: string;
-  labels: string[];
-  prefs: Prefs;
+	$id: string;
+	email: string;
+	name: string;
+	labels: string[];
+	prefs: Prefs;
 }
 
 export type Action = "view" | "create" | "update" | "delete";

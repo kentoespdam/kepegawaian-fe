@@ -11,108 +11,108 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 
 export interface FormField {
-  name: string;
-  label: string;
-  type?: "text" | "email" | "password" | "number" | "textarea" | "select";
-  placeholder?: string;
-  required?: boolean;
-  options?: { value: string; label: string; disabled?: boolean }[];
+	name: string;
+	label: string;
+	type?: "text" | "email" | "password" | "number" | "textarea" | "select";
+	placeholder?: string;
+	required?: boolean;
+	options?: { value: string; label: string; disabled?: boolean }[];
 }
 
 interface CrudFormProps<TValues extends Record<string, unknown> = Record<string, unknown>> {
-  schema: z.ZodType;
-  fields: FormField[];
-  defaultValues?: TValues;
-  onSubmit: (data: TValues) => Promise<void>;
-  onCancel?: () => void;
-  submitLabel?: string;
-  isSubmitting?: boolean;
-  error?: string | null;
+	schema: z.ZodType;
+	fields: FormField[];
+	defaultValues?: TValues;
+	onSubmit: (data: TValues) => Promise<void>;
+	onCancel?: () => void;
+	submitLabel?: string;
+	isSubmitting?: boolean;
+	error?: string | null;
 }
 
 export function CrudForm<TValues extends Record<string, unknown> = Record<string, unknown>>({
-  schema,
-  fields,
-  defaultValues,
-  onSubmit,
-  onCancel,
-  submitLabel = "Simpan",
-  isSubmitting: externalSubmitting,
-  error,
+	schema,
+	fields,
+	defaultValues,
+	onSubmit,
+	onCancel,
+	submitLabel = "Simpan",
+	isSubmitting: externalSubmitting,
+	error,
 }: CrudFormProps<TValues>) {
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    formState: { errors, isSubmitting },
-  } = useForm<Record<string, unknown>>({
-    // ponytail: Zod v4 ZodType vs hookform FieldValues — cast diperlukan
-    resolver: zodResolver(schema as never),
-    defaultValues: defaultValues as Record<string, unknown> | undefined,
-  });
+	const {
+		register,
+		handleSubmit,
+		setValue,
+		watch,
+		formState: { errors, isSubmitting },
+	} = useForm<Record<string, unknown>>({
+		// ponytail: Zod v4 ZodType vs hookform FieldValues — cast diperlukan
+		resolver: zodResolver(schema as never),
+		defaultValues: defaultValues as Record<string, unknown> | undefined,
+	});
 
-  const submitting = externalSubmitting ?? isSubmitting;
-  const onFormSubmit = (data: Record<string, unknown>) => onSubmit(data as TValues);
+	const submitting = externalSubmitting ?? isSubmitting;
+	const onFormSubmit = (data: Record<string, unknown>) => onSubmit(data as TValues);
 
-  return (
-    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
-      {fields.map((field) => {
-        const err = errors[field.name];
-        return (
-          <div key={field.name} className="space-y-1.5">
-            <Label htmlFor={field.name} className="text-sm font-medium">
-              {field.label}
-              {field.required && <span className="ml-0.5 text-destructive">*</span>}
-            </Label>
-            {field.type === "textarea" ? (
-              <Textarea
-                id={field.name}
-                className="min-h-24"
-                {...register(field.name)}
-                placeholder={field.placeholder}
-              />
-            ) : field.type === "select" ? (
-              <Select value={String(watch(field.name) ?? "")} onValueChange={(v) => setValue(field.name, v)}>
-                <SelectTrigger className="h-11 w-full" aria-invalid={!!err}>
-                  <SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`} />
-                </SelectTrigger>
-                <SelectContent>
-                  {field.options?.map((opt) => (
-                    <SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            ) : (
-              <Input
-                id={field.name}
-                type={field.type ?? "text"}
-                {...register(field.name)}
-                placeholder={field.placeholder}
-                aria-invalid={!!err}
-                className="h-11"
-              />
-            )}
-            {err && <p className="text-xs text-destructive">{String(err.message ?? "")}</p>}
-          </div>
-        );
-      })}
+	return (
+		<form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
+			{fields.map((field) => {
+				const err = errors[field.name];
+				return (
+					<div key={field.name} className="space-y-1.5">
+						<Label htmlFor={field.name} className="text-sm font-medium">
+							{field.label}
+							{field.required && <span className="ml-0.5 text-destructive">*</span>}
+						</Label>
+						{field.type === "textarea" ? (
+							<Textarea
+								id={field.name}
+								className="min-h-24"
+								{...register(field.name)}
+								placeholder={field.placeholder}
+							/>
+						) : field.type === "select" ? (
+							<Select value={String(watch(field.name) ?? "")} onValueChange={(v) => setValue(field.name, v)}>
+								<SelectTrigger className="h-11 w-full" aria-invalid={!!err}>
+									<SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`} />
+								</SelectTrigger>
+								<SelectContent>
+									{field.options?.map((opt) => (
+										<SelectItem key={opt.value} value={opt.value} disabled={opt.disabled}>
+											{opt.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						) : (
+							<Input
+								id={field.name}
+								type={field.type ?? "text"}
+								{...register(field.name)}
+								placeholder={field.placeholder}
+								aria-invalid={!!err}
+								className="h-11"
+							/>
+						)}
+						{err && <p className="text-xs text-destructive">{String(err.message ?? "")}</p>}
+					</div>
+				);
+			})}
 
-      {error && <p className="text-sm text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 
-      <div className="flex items-center justify-end gap-2 pt-2">
-        {onCancel && (
-          <Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
-            Batal
-          </Button>
-        )}
-        <Button type="submit" disabled={submitting}>
-          {submitting && <Loader2 className="mr-1.5 size-4 animate-spin" />}
-          {submitting ? "Menyimpan…" : submitLabel}
-        </Button>
-      </div>
-    </form>
-  );
+			<div className="flex items-center justify-end gap-2 pt-2">
+				{onCancel && (
+					<Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
+						Batal
+					</Button>
+				)}
+				<Button type="submit" disabled={submitting}>
+					{submitting && <Loader2 className="mr-1.5 size-4 animate-spin" />}
+					{submitting ? "Menyimpan…" : submitLabel}
+				</Button>
+			</div>
+		</form>
+	);
 }

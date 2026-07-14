@@ -6,12 +6,12 @@
 
 /** Amplop global backend. `data` = payload asli (objek, array, atau Page<T>). */
 export interface ApiEnvelope<T> {
-  data: T;
-  message?: string;
-  errors?: unknown[];
-  status: number;
-  statusText: string;
-  timestamp: string;
+	data: T;
+	message?: string;
+	errors?: unknown[];
+	status: number;
+	statusText: string;
+	timestamp: string;
 }
 
 /**
@@ -20,13 +20,13 @@ export interface ApiEnvelope<T> {
  * dihitung backend → UI memakainya, tidak menghitung ulang.
  */
 export interface Page<T> {
-  content: T[];
-  number: number;
-  size: number;
-  totalElements: number;
-  totalPages: number;
-  first: boolean;
-  last: boolean;
-  numberOfElements: number;
-  empty: boolean;
+	content: T[];
+	number: number;
+	size: number;
+	totalElements: number;
+	totalPages: number;
+	first: boolean;
+	last: boolean;
+	numberOfElements: number;
+	empty: boolean;
 }

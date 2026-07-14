@@ -13,16 +13,16 @@ import { fetchAccount, readSession } from "./appwriteSession";
  * `_legacy`), base URL, and the authenticated GET `/v1/account`. See ADR-0001 + CONTEXT-MAP.
  */
 export const verifySession = cache(async (): Promise<AppwriteUser> => {
-  const cookieStore = await cookies();
-  const session = readSession((name) => cookieStore.get(name)?.value);
+	const cookieStore = await cookies();
+	const session = readSession((name) => cookieStore.get(name)?.value);
 
-  if (!session) {
-    redirect("/login");
-  }
+	if (!session) {
+		redirect("/login");
+	}
 
-  try {
-    return await fetchAccount(session);
-  } catch {
-    redirect("/login");
-  }
+	try {
+		return await fetchAccount(session);
+	} catch {
+		redirect("/login");
+	}
 });

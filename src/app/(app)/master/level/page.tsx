@@ -4,11 +4,11 @@ import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
 import { MasterPageClient } from "../master-client";
 
 export default async function LevelPage() {
-  const user = await verifySession();
-  const roles = getRoles(user);
+	const user = await verifySession();
+	const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS.level) notFound();
-  if (!can(roles, "view", "level")) forbidden();
+	if (!MASTER_ENTITY_CONFIGS.level) notFound();
+	if (!can(roles, "view", "level")) forbidden();
 
-  return <MasterPageClient entity="level" />;
+	return <MasterPageClient entity="level" />;
 }

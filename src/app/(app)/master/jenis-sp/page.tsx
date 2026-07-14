@@ -4,11 +4,11 @@ import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
 import { MasterPageClient } from "../master-client";
 
 export default async function JenisSpPage() {
-  const user = await verifySession();
-  const roles = getRoles(user);
+	const user = await verifySession();
+	const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS["jenis-sp"]) notFound();
-  if (!can(roles, "view", "jenis-sp")) forbidden();
+	if (!MASTER_ENTITY_CONFIGS["jenis-sp"]) notFound();
+	if (!can(roles, "view", "jenis-sp")) forbidden();
 
-  return <MasterPageClient entity="jenis-sp" />;
+	return <MasterPageClient entity="jenis-sp" />;
 }

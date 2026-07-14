@@ -11,58 +11,58 @@
 import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
 
 export interface AlasanBerhentiQuery {
-  id?: number; // int64
-  nama?: string;
-  notes?: string;
+	id?: number; // int64
+	nama?: string;
+	notes?: string;
 }
 
 export interface SingleResultAlasanBerhentiQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: AlasanBerhentiQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: AlasanBerhentiQuery;
+	timestamp?: string; // date-time
 }
 
 export interface AlasanBerhentiPostRequest {
-  nama: string; // minLength 1
-  notes?: string;
+	nama: string; // minLength 1
+	notes?: string;
 }
 
 export interface PageAlasanBerhentiQuery {
-  totalElements?: number; // int64
-  totalPages?: number; // int32
-  size?: number; // int32
-  content?: AlasanBerhentiQuery[];
-  number?: number; // int32
-  numberOfElements?: number; // int32
-  pageable?: PageableObject;
-  sort?: SortObject;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
+	totalElements?: number; // int64
+	totalPages?: number; // int32
+	size?: number; // int32
+	content?: AlasanBerhentiQuery[];
+	number?: number; // int32
+	numberOfElements?: number; // int32
+	pageable?: PageableObject;
+	sort?: SortObject;
+	first?: boolean;
+	last?: boolean;
+	empty?: boolean;
 }
 
 export interface PageResultPageAlasanBerhentiQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  data?: PageAlasanBerhentiQuery;
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	data?: PageAlasanBerhentiQuery;
+	timestamp?: string; // date-time
 }
 
 export interface AlasanBerhentiListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export interface ListResultAlasanBerhentiListResponse {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: AlasanBerhentiListResponse[];
-  timestamp?: string; // date-time
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: AlasanBerhentiListResponse[];
+	timestamp?: string; // date-time
 }
 
 export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";

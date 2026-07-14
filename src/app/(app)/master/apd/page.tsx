@@ -4,11 +4,11 @@ import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
 import { MasterPageClient } from "../master-client";
 
 export default async function ApdPage() {
-  const user = await verifySession();
-  const roles = getRoles(user);
+	const user = await verifySession();
+	const roles = getRoles(user);
 
-  if (!MASTER_ENTITY_CONFIGS.apd) notFound();
-  if (!can(roles, "view", "apd")) forbidden();
+	if (!MASTER_ENTITY_CONFIGS.apd) notFound();
+	if (!can(roles, "view", "apd")) forbidden();
 
-  return <MasterPageClient entity="apd" />;
+	return <MasterPageClient entity="apd" />;
 }
