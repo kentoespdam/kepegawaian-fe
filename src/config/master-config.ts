@@ -3,10 +3,10 @@ import type { FormField } from "@/components/crud-form";
 import type { Column } from "@/components/data-table";
 import type { Resolved } from "@/types/master/_computed";
 import type { GradeQuery } from "@/types/master/grade";
-import type { OrganisasiQuery } from "@/types/master/organisasi";
 import type { JabatanQuery } from "@/types/master/jabatan";
-import type { SanksiQuery } from "@/types/master/sanksi";
+import type { OrganisasiQuery } from "@/types/master/organisasi";
 import type { ProfesiQuery } from "@/types/master/profesi";
+import type { SanksiQuery } from "@/types/master/sanksi";
 
 export type { Page } from "@/lib/api/types";
 
@@ -61,7 +61,9 @@ function makeConfig<TQuery, _TReq = TQuery>(
 
 const simpleNameSchema = z.object({ nama: namaWajib });
 
-// ponytail: map di-widen ke default type — tanpa switch, index via string key
+// Map heterogen: tiap entity punya TQuery berbeda. `cell` (posisi param → kontravarian)
+// membuat widening ke Record<string, unknown> gagal; consumer cast via `as unknown` (master-client.tsx).
+// biome-ignore lint/suspicious/noExplicitAny: heterogeneous entity map, element type not trusted (cast at consumer)
 export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
 	// — Flat entities —
 	golongan: makeConfig(
