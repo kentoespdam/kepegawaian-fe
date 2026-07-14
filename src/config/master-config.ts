@@ -2,10 +2,15 @@ import { z } from "zod";
 import type { FormField } from "@/components/crud-form";
 import type { Column } from "@/components/data-table";
 import type { Resolved } from "@/types/master/_computed";
+import type { AlatKerjaQuery } from "@/types/master/alat-kerja";
+import type { ApdQuery } from "@/types/master/apd";
+import type { GolonganQuery } from "@/types/master/golongan";
 import type { GradeQuery } from "@/types/master/grade";
+import type { HariLiburQuery } from "@/types/master/hari-libur";
 import type { JabatanQuery } from "@/types/master/jabatan";
 import type { OrganisasiQuery } from "@/types/master/organisasi";
 import type { ProfesiQuery } from "@/types/master/profesi";
+import type { RumahDinasQuery } from "@/types/master/rumah-dinas";
 import type { SanksiQuery } from "@/types/master/sanksi";
 
 export type { Page } from "@/lib/api/types";
@@ -61,12 +66,12 @@ function makeConfig<TQuery, _TReq = TQuery>(
 
 const simpleNameSchema = z.object({ nama: namaWajib });
 
-// Map heterogen: tiap entity punya TQuery berbeda. `cell` (posisi param → kontravarian)
-// membuat widening ke Record<string, unknown> gagal; consumer cast via `as unknown` (master-client.tsx).
-// biome-ignore lint/suspicious/noExplicitAny: heterogeneous entity map, element type not trusted (cast at consumer)
-export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
+// Map heterogen: tiap entity punya TQuery berbeda. Karena TQuery hanya muncul di posisi
+// kontravarian (`cell` param), `EntityConfig<never>` adalah supertype dari semua EntityConfig<T>.
+// Consumer meng-cast ke tipe konkret via `as unknown` (master-client.tsx).
+export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<never>> = {
 	// — Flat entities —
-	golongan: makeConfig(
+	golongan: makeConfig<GolonganQuery>(
 		z.object({ golongan: namaWajib, pangkat: z.string().min(1, "Pangkat wajib diisi") }),
 		[
 			{ name: "golongan", label: "Golongan", required: true },
@@ -86,7 +91,7 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
 	"jenis-sp": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis SP"),
 	"alasan-berhenti": makeConfig(simpleNameSchema, [nameField], [nameCol], "Alasan Berhenti"),
 
-	"hari-libur": makeConfig(
+	"hari-libur": makeConfig<HariLiburQuery>(
 		z.object({
 			tanggal: z.string().min(1, "Tanggal wajib diisi"),
 			jenisLibur: z.string().min(1, "Jenis libur wajib diisi"),
@@ -102,12 +107,12 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
 		"Hari Libur",
 	),
 
-	"rumah-dinas": makeConfig(
-		z.object({ nama: namaWajib, alamat: z.string().min(1, "Alamat wajib diisi") }),
-		[nameField, { name: "alamat", label: "Alamat", type: "textarea", required: true }],
+	"rumah-dinas": makeConfig<RumahDinasQuery>(
+		z.object({ nama: namaWajib, nilai: z.coerce.number().min(0, "Nilai wajib diisi") }),
+		[nameField, { name: "nilai", label: "Nilai", type: "number", required: true }],
 		[
 			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "alamat", header: "Alamat", cell: (item) => String(item.alamat ?? "") },
+			{ id: "nilai", header: "Nilai", cell: (item) => String(item.nilai ?? "") },
 		],
 		"Rumah Dinas",
 	),
@@ -155,7 +160,7 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
 		{ fkSources: [{ field: "levelId", entity: "level", label: "Level" }] },
 	),
 
-	apd: makeConfig(
+	apd: makeConfig<ApdQuery>(
 		z.object({ nama: namaWajib }),
 		[nameField, { name: "profesiId", label: "Profesi", type: "select", required: true }],
 		[
@@ -166,7 +171,7 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<any>> = {
 		{ fkSources: [{ field: "profesiId", entity: "profesi", label: "Profesi" }] },
 	),
 
-	"alat-kerja": makeConfig(
+	"alat-kerja": makeConfig<AlatKerjaQuery>(
 		z.object({ nama: namaWajib }),
 		[nameField, { name: "profesiId", label: "Profesi", type: "select", required: true }],
 		[
