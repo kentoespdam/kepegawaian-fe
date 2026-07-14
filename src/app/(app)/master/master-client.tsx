@@ -28,12 +28,12 @@ export function MasterPageClient() {
   const [error, setError] = useState<string | null>(null);
   const isCreate = editing === null;
 
-  const { list, listAll, create, update, remove } = useResource<Page<Record<string, unknown>>>(
-    entity,
-    toApiParams({ page, size, sortBy, sortDir }),
-  );
+  const { list, listAll, create, update, remove } = useResource<
+    Page<Record<string, unknown>>,
+    Record<string, unknown>
+  >(entity, toApiParams({ page, size, sortBy, sortDir }));
 
-  const treeItems = (listAll.data as unknown as Record<string, unknown>[]) ?? [];
+  const treeItems = (listAll.data as Record<string, unknown>[] | undefined) ?? [];
 
   const pageView = fromPage(list.data);
 

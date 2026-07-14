@@ -6,9 +6,11 @@ import type { EntityConfig } from "@/config/master-config";
 import { api } from "@/lib/api/client";
 import { buildTreeOptions } from "@/lib/master/tree-utils";
 
-interface UseMasterTableOpts {
-  cfg: EntityConfig;
-  listData: Record<string, unknown>[] | undefined;
+import type { Resolved } from "@/types/master/_computed";
+
+interface UseMasterTableOpts<TQuery extends Record<string, unknown>> {
+  cfg: EntityConfig<TQuery>;
+  listData: TQuery[] | undefined;
   treeItems: Record<string, unknown>[];
   editing: Record<string, unknown> | null;
 }
@@ -17,7 +19,7 @@ interface UseMasterTableOpts {
  * Orchestrates FK source queries, lookup maps, resolved table items,
  * and enriched form fields for a master entity CRUD page.
  */
-export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterTableOpts) {
+export function useMasterTable<TQuery extends Record<string, unknown>>({ cfg, listData, treeItems, editing }: UseMasterTableOpts<TQuery>) {
   const fkSources = cfg.fkSources ?? [];
 
   // ponytail: up to 3 FK queries — declared unconditionally, enabled per-entity
@@ -61,7 +63,7 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
   const resolvedItems = useMemo(
     () =>
       (Array.isArray(listData) ? listData : []).map((item) => {
-        const e = { ...item };
+        const e: Record<string, unknown> = { ...item } as Record<string, unknown>;
         if (cfg.treeField) {
           const pid = String(item[cfg.treeField] ?? "");
           e._parentName = pid
@@ -74,10 +76,10 @@ export function useMasterTable({ cfg, listData, treeItems, editing }: UseMasterT
           const lookupMap = fkLookup.get(fk.field);
           if (lookupMap && fkId) e[nameField] = String(lookupMap.get(fkId)?.nama ?? fkId);
         }
-        return e;
+        return e as Resolved<TQuery>;
       }),
     [listData, treeItems, cfg.treeField, fkSources, fkLookup],
-  );
+  ) as Resolved<TQuery>[];
 
   // Enrich form fields with tree parent + FK dropdown options
   const formFields = useMemo(() => {

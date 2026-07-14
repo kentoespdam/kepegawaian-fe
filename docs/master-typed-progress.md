@@ -24,10 +24,10 @@ Tujuan: seluruh modul master typed, memakai tipe hasil generate di `docs/api/mas
 
 ## Gelombang 1 — Konsumen tipe (butuh `cu9` / `u8a`)
 
-- [ ] **`qyy`** · 4/9 · P2 · Blok: `cu9` · *`useResource<TQuery, TReq = TQuery>` — type payload create/update*
-- [ ] **`7pk`** · 8/9 · P2 · Blok: `cu9` · *`useEnum` typed helper untuk 5 entity enum (status-pegawai, status-kerja, jenis-mutasi, jenis-sk, jenis-kontrak); TIDAK ubah call site lintas-modul*
+- [x] **`qyy`** · 4/9 · P2 · Blok: `cu9` · *`useResource<TQuery, TReq = TQuery>` — type payload create/update*
+- [x] **`7pk`** · 8/9 · P2 · Blok: `cu9` · *`useEnum` typed helper untuk 5 entity enum (status-pegawai, status-kerja, jenis-mutasi, jenis-sk, jenis-kontrak); TIDAK ubah call site lintas-modul*
 - [x] **`m11`** · 3/9 · P2 · Blok: `cu9`, `u8a` · *`master-config.ts`: generic `EntityConfig<TQuery,TReq>` + `makeConfig`; map di-widen; tanpa switch*
-- [ ] **`l4a`** · 5/9 · P2 · Blok: `cu9`, `u8a` · *`useMasterTable`: type opts, fkLookup, `resolvedItems: Resolved<TQuery>[]`*
+- [x] **`l4a`** · 5/9 · P2 · Blok: `cu9`, `u8a` · *`useMasterTable`: type opts, fkLookup, `resolvedItems: Resolved<TQuery>[]`*
 
 ## Gelombang 2 — Bergantung pada Gelombang 1
 
