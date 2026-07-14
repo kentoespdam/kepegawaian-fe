@@ -1,7 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -9,7 +12,38 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useResource } from "@/hooks/useResource";
 import { cn } from "@/lib/utils";
 
-const SWITCH_LABELS: { field: string; label: string }[] = [
+// — Schema co-located —
+
+const sanksiSchema = z
+  .object({
+    kode: z.string().min(1, "Kode wajib diisi"),
+    keterangan: z.string().min(1, "Keterangan wajib diisi"),
+    jenisSpId: z.coerce.number(),
+    potTkk: z.boolean(),
+    jmlPotTkk: z.coerce.number().optional(),
+    isPendingPangkat: z.boolean(),
+    isPendingGaji: z.boolean(),
+    isTurunPangkat: z.boolean(),
+    isTurunJabatan: z.boolean(),
+    isSuspension: z.boolean(),
+    isTerminateDh: z.boolean(),
+    isTerminateTh: z.boolean(),
+  })
+  .superRefine((data, ctx) => {
+    if (data.potTkk && !data.jmlPotTkk) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        path: ["jmlPotTkk"],
+        message: "Jumlah potong TKK wajib diisi saat potTkk aktif",
+      });
+    }
+  });
+
+type SanksiFormValues = z.infer<typeof sanksiSchema>;
+
+// — Switch labels config —
+
+const SWITCH_LABELS: { field: keyof SanksiFormValues; label: string }[] = [
   { field: "potTkk", label: "Potong TKK" },
   { field: "isPendingPangkat", label: "Tunda kenaikan pangkat" },
   { field: "isPendingGaji", label: "Tunda kenaikan gaji berkala" },
@@ -20,7 +54,17 @@ const SWITCH_LABELS: { field: string; label: string }[] = [
   { field: "isTerminateTh", label: "PHK tidak dengan hormat" },
 ];
 
-function Switch({ checked, onChange, label }: { checked: boolean; onChange: (v: boolean) => void; label: string }) {
+// — Switch UI component —
+
+function Switch({
+  checked,
+  onChange,
+  label,
+}: {
+  checked: boolean;
+  onChange: (v: boolean) => void;
+  label: string;
+}) {
   return (
     <div className="flex items-center justify-between py-2">
       <span className="text-sm text-foreground">{label}</span>
@@ -51,6 +95,8 @@ function Switch({ checked, onChange, label }: { checked: boolean; onChange: (v: 
   );
 }
 
+// — Props (compatible with EntityFormModal) —
+
 interface SanksiFormProps {
   editing: Record<string, unknown> | null;
   onCancel: () => void;
@@ -72,59 +118,71 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
     [jenisSpList.data],
   );
 
-  const [kode, setKode] = useState(String(editing?.kode ?? ""));
-  const [keterangan, setKeterangan] = useState(String(editing?.keterangan ?? ""));
-  const [jenisSpId, setJenisSpId] = useState(String(editing?.jenisSpId ?? ""));
-  const [switches, setSwitches] = useState<Record<string, boolean>>(() => {
-    const s: Record<string, boolean> = {};
-    for (const sw of SWITCH_LABELS) s[sw.field] = Boolean((editing as Record<string, unknown>)?.[sw.field] ?? false);
-    return s;
+  const {
+    register,
+    handleSubmit: rhfSubmit,
+    setValue,
+    watch,
+    formState: { errors: rhfErrors },
+  } = useForm<SanksiFormValues>({
+    // ponytail: Zod v4 vs hookform — cast diperlukan
+    resolver: zodResolver(sanksiSchema as never),
+    defaultValues: {
+      kode: String(editing?.kode ?? ""),
+      keterangan: String(editing?.keterangan ?? ""),
+      jenisSpId: Number(editing?.jenisSpId ?? 0) || undefined,
+      potTkk: Boolean(editing?.potTkk ?? false),
+      jmlPotTkk: Number(editing?.jmlPotTkk ?? 0) || undefined,
+      isPendingPangkat: Boolean(editing?.isPendingPangkat ?? false),
+      isPendingGaji: Boolean(editing?.isPendingGaji ?? false),
+      isTurunPangkat: Boolean(editing?.isTurunPangkat ?? false),
+      isTurunJabatan: Boolean(editing?.isTurunJabatan ?? false),
+      isSuspension: Boolean(editing?.isSuspension ?? false),
+      isTerminateDh: Boolean(editing?.isTerminateDh ?? false),
+      isTerminateTh: Boolean(editing?.isTerminateTh ?? false),
+    },
   });
-  const [jmlPotTkk, setJmlPotTkk] = useState(String((editing as Record<string, unknown>)?.jmlPotTkk ?? ""));
-  const [localError, setLocalError] = useState<string | null>(null);
 
-  const displayError = error || localError;
+  const watchPotTkk = watch("potTkk");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLocalError(null);
+  // — Submit handler: validate → submit to parent —
 
-    const collected: Record<string, unknown> = {
-      kode: kode.trim(),
-      keterangan: keterangan.trim(),
-      jenisSpId,
-      ...switches,
-    };
-    if (switches.potTkk && jmlPotTkk) collected.jmlPotTkk = Number(jmlPotTkk);
-
-    if (!collected.kode) {
-      setLocalError("Kode wajib diisi");
-      return;
-    }
-    if (!collected.keterangan) {
-      setLocalError("Keterangan wajib diisi");
-      return;
-    }
-    if (!collected.jenisSpId) {
-      setLocalError("Jenis SP wajib dipilih");
-      return;
-    }
-    if (switches.potTkk && !jmlPotTkk) {
-      setLocalError("Jumlah potong TKK wajib diisi");
-      return;
-    }
-
+  const onFormSubmit = async (values: SanksiFormValues) => {
+    setError(null);
     try {
-      await submit(collected);
+      const payload: Record<string, unknown> = {
+        kode: values.kode,
+        keterangan: values.keterangan,
+        jenisSpId: values.jenisSpId,
+        potTkk: values.potTkk,
+        isPendingPangkat: values.isPendingPangkat,
+        isPendingGaji: values.isPendingGaji,
+        isTurunPangkat: values.isTurunPangkat,
+        isTurunJabatan: values.isTurunJabatan,
+        isSuspension: values.isSuspension,
+        isTerminateDh: values.isTerminateDh,
+        isTerminateTh: values.isTerminateTh,
+      };
+      if (values.potTkk && values.jmlPotTkk !== undefined) {
+        payload.jmlPotTkk = values.jmlPotTkk;
+      }
+      await submit(payload);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Terjadi kesalahan");
     }
   };
 
+  // — Render —
+
+  const fieldError = (name: keyof SanksiFormValues) => {
+    const e = rhfErrors[name];
+    return e ? <p className="text-xs text-destructive">{String(e.message ?? "")}</p> : null;
+  };
+
   return (
-    <form onSubmit={handleSubmit} className="flex flex-col gap-0">
+    <form onSubmit={rhfSubmit(onFormSubmit)} className="flex flex-col gap-0">
       <div className="flex-1 overflow-y-auto px-4 pb-4">
-        {/* ponytail: section IDENTITAS */}
+        {/* IDENTITAS */}
         <div className="mb-4">
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">Identitas</h3>
           <div className="space-y-3">
@@ -133,29 +191,34 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
                 Kode <span className="text-destructive">*</span>
               </Label>
               <Input
-                value={kode}
-                onChange={(e) => setKode(e.target.value)}
+                {...register("kode")}
                 className="h-11"
                 placeholder="Kode sanksi"
+                aria-invalid={!!rhfErrors.kode}
               />
+              {fieldError("kode")}
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">
                 Keterangan <span className="text-destructive">*</span>
               </Label>
               <Input
-                value={keterangan}
-                onChange={(e) => setKeterangan(e.target.value)}
+                {...register("keterangan")}
                 className="h-11"
                 placeholder="Keterangan sanksi"
+                aria-invalid={!!rhfErrors.keterangan}
               />
+              {fieldError("keterangan")}
             </div>
             <div className="space-y-1.5">
               <Label className="text-sm font-medium">
                 Jenis SP <span className="text-destructive">*</span>
               </Label>
-              <Select value={jenisSpId} onValueChange={(v) => setJenisSpId(v ?? "")}>
-                <SelectTrigger className="h-11 w-full">
+              <Select
+                value={String(watch("jenisSpId") ?? "")}
+                onValueChange={(v) => setValue("jenisSpId", Number(v), { shouldValidate: true })}
+              >
+                <SelectTrigger className="h-11 w-full" aria-invalid={!!rhfErrors.jenisSpId}>
                   <SelectValue placeholder="Pilih jenis SP" />
                 </SelectTrigger>
                 <SelectContent>
@@ -166,32 +229,34 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
                   ))}
                 </SelectContent>
               </Select>
+              {fieldError("jenisSpId")}
             </div>
           </div>
         </div>
 
-        {/* ponytail: section KONSEKUENSI SANKSI */}
+        {/* KONSEKUENSI SANKSI */}
         <div>
           <h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             Konsekuensi Sanksi
           </h3>
           <div className="divide-y divide-border rounded-lg border border-border">
             {SWITCH_LABELS.map((sw) => (
-              <div key={sw.field} className={sw.field === "potTkk" ? "" : ""}>
+              <div key={sw.field}>
                 <Switch
-                  checked={switches[sw.field] ?? false}
-                  onChange={(v) => setSwitches((p) => ({ ...p, [sw.field]: v }))}
+                  checked={Boolean(watch(sw.field))}
+                  onChange={(v) => setValue(sw.field, v, { shouldValidate: true })}
                   label={sw.label}
                 />
-                {sw.field === "potTkk" && switches.potTkk && (
+                {sw.field === "potTkk" && watchPotTkk && (
                   <div className="ml-4 pb-2">
                     <Input
                       type="number"
-                      value={jmlPotTkk}
-                      onChange={(e) => setJmlPotTkk(e.target.value)}
+                      {...register("jmlPotTkk")}
                       className="h-11 tabular-nums"
                       placeholder="Jumlah potong TKK"
+                      aria-invalid={!!rhfErrors.jmlPotTkk}
                     />
+                    {fieldError("jmlPotTkk")}
                   </div>
                 )}
               </div>
@@ -199,7 +264,9 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
           </div>
         </div>
 
-        {displayError && <p className="mt-3 text-sm text-destructive">{displayError}</p>}
+        {(error || rhfErrors.root?.message) && (
+          <p className="mt-3 text-sm text-destructive">{error || rhfErrors.root?.message}</p>
+        )}
       </div>
 
       <div className="sticky bottom-0 flex items-center justify-end gap-2 border-t border-border bg-popover p-4">

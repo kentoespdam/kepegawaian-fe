@@ -19,18 +19,18 @@ export interface FormField {
   options?: { value: string; label: string; disabled?: boolean }[];
 }
 
-interface CrudFormProps {
+interface CrudFormProps<TValues extends Record<string, unknown> = Record<string, unknown>> {
   schema: z.ZodType;
   fields: FormField[];
-  defaultValues?: Record<string, unknown>;
-  onSubmit: (data: Record<string, unknown>) => Promise<void>;
+  defaultValues?: TValues;
+  onSubmit: (data: TValues) => Promise<void>;
   onCancel?: () => void;
   submitLabel?: string;
   isSubmitting?: boolean;
   error?: string | null;
 }
 
-export function CrudForm({
+export function CrudForm<TValues extends Record<string, unknown> = Record<string, unknown>>({
   schema,
   fields,
   defaultValues,
@@ -39,7 +39,7 @@ export function CrudForm({
   submitLabel = "Simpan",
   isSubmitting: externalSubmitting,
   error,
-}: CrudFormProps) {
+}: CrudFormProps<TValues>) {
   const {
     register,
     handleSubmit,
@@ -47,15 +47,16 @@ export function CrudForm({
     watch,
     formState: { errors, isSubmitting },
   } = useForm<Record<string, unknown>>({
-    // ponytail: Zod v4 ZodType<unknown,unknown> vs hookform FieldValues — cast diperlukan
+    // ponytail: Zod v4 ZodType vs hookform FieldValues — cast diperlukan
     resolver: zodResolver(schema as never),
-    defaultValues,
+    defaultValues: defaultValues as Record<string, unknown> | undefined,
   });
 
   const submitting = externalSubmitting ?? isSubmitting;
+  const onFormSubmit = (data: Record<string, unknown>) => onSubmit(data as TValues);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onFormSubmit)} className="space-y-4">
       {fields.map((field) => {
         const err = errors[field.name];
         return (

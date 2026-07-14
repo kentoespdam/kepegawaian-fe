@@ -86,7 +86,7 @@ export function EntityFormModal({
           <DialogTitle>{isCreate ? `Tambah ${cfg.label}` : `Edit ${cfg.label}`}</DialogTitle>
         </DialogHeader>
         <CrudForm
-          schema={cfg.schema}
+          schema={cfg.schema as never /* ponytail: Zod4 unknown vs hookform FieldValues — cast aman */}
           fields={formFields}
           defaultValues={editing ?? undefined}
           onSubmit={onSubmit}

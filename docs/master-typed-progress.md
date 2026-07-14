@@ -29,10 +29,10 @@ Tujuan: seluruh modul master typed, memakai tipe hasil generate di `docs/api/mas
 - [x] **`m11`** · 3/9 · P2 · Blok: `cu9`, `u8a` · *`master-config.ts`: generic `EntityConfig<TQuery,TReq>` + `makeConfig`; map di-widen; tanpa switch*
 - [x] **`l4a`** · 5/9 · P2 · Blok: `cu9`, `u8a` · *`useMasterTable`: type opts, fkLookup, `resolvedItems: Resolved<TQuery>[]`*
 
-## Gelombang 2 — Bergantung pada Gelombang 1
+## Gelombang 2 — Bergantung pada Gelombang 1 ✅
 
-- [ ] **`193`** · 6/9 · P2 · Blok: `cu9`, `m11` · *`crud-form.tsx`: generic `CrudForm<TValues extends FieldValues>`; cast pindah ke call site*
-- [ ] **`i9k`** · 7/9 · P2 · Blok: `cu9`, `qyy` · *Refactor sanksi-form & profesi-form ke zod+rhf; `z.coerce.number()` fix bug id string→number*
+- [x] **`193`** · 6/9 · P2 · Blok: `cu9`, `m11` · *`crud-form.tsx`: generic `CrudForm<TValues extends FieldValues>`; cast pindah ke call site*
+- [x] **`i9k`** · 7/9 · P2 · Blok: `cu9`, `qyy` · *Refactor sanksi-form & profesi-form ke zod+rhf; `z.coerce.number()` fix bug id string→number*
 
 ---
 
