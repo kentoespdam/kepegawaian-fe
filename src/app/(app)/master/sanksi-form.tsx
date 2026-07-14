@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useResource } from "@/hooks/useResource";
+import { useEnum } from "@/hooks/useEnum";
 import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./sanksi-schema";
 
 // — Props (compatible with EntityFormModal) —
@@ -24,15 +24,11 @@ interface SanksiFormProps {
 }
 
 export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, submit }: SanksiFormProps) {
-  const { listAll: jenisSpList } = useResource<Record<string, unknown>[]>("jenis-sp");
+  const { options: jenisSpOptions } = useEnum("jenis-sp");
 
   const jenisSpOpts = useMemo(
-    () =>
-      (jenisSpList.data ?? []).map((i: Record<string, unknown>) => ({
-        value: String(i.id),
-        label: String(i.nama ?? ""),
-      })),
-    [jenisSpList.data],
+    () => jenisSpOptions.map((o) => ({ value: o.id ?? "", label: o.nama ?? "" })),
+    [jenisSpOptions],
   );
 
   const {

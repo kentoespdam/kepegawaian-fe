@@ -3,37 +3,49 @@
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 import type { EnumOption, ListResultEnumOption } from "@/types/master/_shared";
+import type { ListResultJenisSpListResponse, JenisSpListResponse } from "@/types/master/jenis-sp";
 import type { ListResultStatusPegawaiResponse, StatusPegawaiResponse } from "@/types/master/status-pegawai";
 
-/** 5 enum entities whose GET /list endpoint returns EnumOption[]. */
-export type EnumEntity = "status-pegawai" | "status-kerja" | "jenis-mutasi" | "jenis-sk" | "jenis-kontrak";
+/** Enum entities whose GET /list endpoint returns normalized EnumOption[]. */
+export type EnumEntity =
+  | "status-pegawai"
+  | "status-kerja"
+  | "jenis-mutasi"
+  | "jenis-sk"
+  | "jenis-kontrak"
+  | "jenis-sp";
+
+type EnumResponse = ListResultEnumOption | ListResultStatusPegawaiResponse | ListResultJenisSpListResponse;
 
 /**
  * Typed hook for fetching master-reference enum entities.
  *
- * - `status-pegawai` uses `StatusPegawaiResponse` shape (id, nama, urut)
- *   → maps to normalized `EnumOption[]`.
- * - 4 others (`status-kerja`, `jenis-mutasi`, `jenis-sk`, `jenis-kontrak`)
- *   return `EnumOption[]` directly.
+ * - `status-pegawai` → `StatusPegawaiResponse[]` → maps to `EnumOption[]`
+ * - `jenis-sp` → `JenisSpListResponse[]` → maps to `EnumOption[]`
+ * - 4 others return `EnumOption[]` directly.
  */
 export function useEnum(entity: EnumEntity) {
-  const isStatusPegawai = entity === "status-pegawai";
-
-  const query = useQuery<ListResultEnumOption | ListResultStatusPegawaiResponse>({
+  const query = useQuery<EnumResponse>({
     queryKey: [entity, "list"],
-    queryFn: () => api.listAll<ListResultEnumOption | ListResultStatusPegawaiResponse>(entity),
+    queryFn: () => api.listAll<EnumResponse>(entity),
     staleTime: 300_000,
   });
 
-  // Normalise both shapes to EnumOption[]
-  const options: EnumOption[] = isStatusPegawai
-    ? ((query.data as ListResultStatusPegawaiResponse | undefined)?.data ?? []).map(
-        (item: StatusPegawaiResponse): EnumOption => ({
-          id: item.id,
-          nama: item.nama,
-        }),
-      )
-    : ((query.data as ListResultEnumOption | undefined)?.data ?? []);
+  const options: EnumOption[] = (() => {
+    const raw = query.data;
+    if (!raw) return [];
+    if (entity === "status-pegawai") {
+      return ((raw as ListResultStatusPegawaiResponse).data ?? []).map(
+        (item: StatusPegawaiResponse): EnumOption => ({ id: item.id, nama: item.nama }),
+      );
+    }
+    if (entity === "jenis-sp") {
+      return ((raw as ListResultJenisSpListResponse).data ?? []).map(
+        (item: JenisSpListResponse): EnumOption => ({ id: String(item.id ?? ""), nama: item.nama }),
+      );
+    }
+    return ((raw as ListResultEnumOption).data ?? []);
+  })();
 
   return { options, isLoading: query.isLoading };
 }
