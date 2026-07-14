@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { SanksiQuery } from "@/types/master/sanksi";
 import { type EntityConfig, makeConfig } from "./_config-kit";
-import type { SanksiQuery } from "./sanksi";
 
 export const sanksiConfig: EntityConfig<SanksiQuery> = makeConfig<SanksiQuery>(
 	z.object({}),

@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { GradeQuery } from "@/types/master/grade";
 import { type EntityConfig, makeConfig } from "./_config-kit";
-import type { GradeQuery } from "./grade";
 
 export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
 	z.object({

@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { ProfesiQuery } from "@/types/master/profesi";
 import { type EntityConfig, makeConfig } from "./_config-kit";
-import type { ProfesiQuery } from "./profesi";
 
 export const profesiConfig: EntityConfig<ProfesiQuery> = makeConfig<ProfesiQuery>(
 	z.object({}),

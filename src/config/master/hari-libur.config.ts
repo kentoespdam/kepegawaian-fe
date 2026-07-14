@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { HariLiburQuery } from "@/types/master/hari-libur";
 import { type EntityConfig, makeConfig } from "./_config-kit";
-import type { HariLiburQuery } from "./hari-libur";
 
 export const hariLiburConfig: EntityConfig<HariLiburQuery> = makeConfig<HariLiburQuery>(
 	z.object({

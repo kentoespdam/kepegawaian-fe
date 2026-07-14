@@ -1,6 +1,6 @@
 import { z } from "zod";
+import type { JabatanQuery } from "@/types/master/jabatan";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
-import type { JabatanQuery } from "./jabatan";
 
 export const jabatanConfig: EntityConfig<JabatanQuery> = makeConfig<JabatanQuery>(
 	z.object({ nama: namaWajib }),

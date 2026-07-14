@@ -12,7 +12,7 @@
 import { z } from "zod";
 import type { FormField } from "@/components/crud-form";
 import type { Column } from "@/components/data-table";
-import type { Resolved } from "./_computed";
+import type { Resolved } from "@/types/master/_computed";
 
 /**
  * Generic config untuk satu entitas Master.
