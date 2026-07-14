@@ -1,6 +1,5 @@
 "use client";
 
-import { useParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
@@ -8,40 +7,51 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
-import { MASTER_ENTITY_CONFIGS, type Page } from "@/config/master-config";
+import { MASTER_ENTITY_CONFIGS } from "@/config/master-config";
+import type { MasterEntityName, MasterEntityTypes } from "@/config/master-entity-types";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
 import { useResource } from "@/hooks/useResource";
 import { fromPage, toApiParams } from "@/lib/paging";
+import type { EntityConfig } from "@/config/master-config";
 import { EntityFormModal } from "./entity-form-modal";
 
-export function MasterPageClient() {
-  const params = useParams<{ entity: string }>();
-  const entity = params.entity;
-  const cfg = MASTER_ENTITY_CONFIGS[entity];
+export function MasterPageClient<TEntity extends MasterEntityName>({
+  entity,
+}: {
+  entity: TEntity;
+}) {
+  type TItem = MasterEntityTypes[TEntity]["TItem"];
+  type TPage = MasterEntityTypes[TEntity]["TPage"];
+  type TReq = MasterEntityTypes[TEntity]["TReq"];
+
+  // ponytail: map di-widen ke EntityConfig — cast via unknown karena tipe tidak overlapping
+  const cfg = MASTER_ENTITY_CONFIGS[entity] as unknown as EntityConfig<TItem, TReq>;
   const { page, size, sortBy, sortDir, setP } = useMasterSearchParams(entity);
 
-  const [editing, setEditing] = useState<Record<string, unknown> | null>(null);
+  const [editing, setEditing] = useState<TItem | null>(null);
   const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const isCreate = editing === null;
 
-  const { list, listAll, create, update, remove } = useResource<
-    Page<Record<string, unknown>>,
-    Record<string, unknown>
-  >(entity, toApiParams({ page, size, sortBy, sortDir }));
+  const { list, listAll, create, update, remove } = useResource<TPage, TReq>(
+    entity as string,
+    toApiParams({ page, size, sortBy, sortDir }),
+  );
 
+  // ponytail: listAll return typed sebagai TPage tapi runtime TList — cast
   const treeItems = (listAll.data as Record<string, unknown>[] | undefined) ?? [];
 
   const pageView = fromPage(list.data);
 
   const { resolvedItems, formFields } = useMasterTable({
     cfg,
-    listData: pageView.rows,
+    // ponytail: GolonganQuery dkk tanpa index signature — cast diperlukan
+    listData: pageView.rows as Record<string, unknown>[],
     treeItems,
-    editing,
+    editing: editing as Record<string, unknown> | null,
   });
 
   const total = pageView.total;
@@ -52,7 +62,7 @@ export function MasterPageClient() {
     setDialogOpen(true);
   };
   const openEdit = (item: Record<string, unknown>) => {
-    setEditing(item);
+    setEditing(item as TItem);
     setError(null);
     setDialogOpen(true);
   };
@@ -61,11 +71,15 @@ export function MasterPageClient() {
     setDeleteError(null);
   };
 
-  const handleSubmit = async (data: Record<string, unknown>) => {
+  const handleSubmit = async (data: TReq) => {
     setError(null);
     try {
       if (isCreate) await create.mutateAsync(data);
-      else await update.mutateAsync({ id: String(editing?.id), data });
+      else
+        await update.mutateAsync({
+          id: String((editing as Record<string, unknown> | null)?.id ?? ""),
+          data,
+        });
       setDialogOpen(false);
       toast.success(isCreate ? `${cfg.label} berhasil ditambah` : `${cfg.label} berhasil diubah`);
     } catch (e: unknown) {
@@ -112,7 +126,7 @@ export function MasterPageClient() {
         }}
         onEdit={openEdit}
         onDelete={openDelete}
-        getRowId={(i) => String(i.id ?? "")}
+        getRowId={(i) => String((i as Record<string, unknown>).id ?? "")}
         pagination={
           <DataTablePagination
             page={page}
@@ -131,17 +145,17 @@ export function MasterPageClient() {
       />
 
       <EntityFormModal
-        entity={entity}
-        cfg={cfg}
+        entity={entity as string}
+        cfg={cfg as unknown as EntityConfig}
         dialogOpen={dialogOpen}
         setDialogOpen={setDialogOpen}
         isCreate={isCreate}
-        editing={editing}
+        editing={editing as Record<string, unknown> | null}
         formFields={formFields}
         error={error}
         setError={setError}
         isSubmitting={create.isPending || update.isPending}
-        onSubmit={handleSubmit}
+        onSubmit={handleSubmit as (data: Record<string, unknown>) => Promise<void>}
       />
 
       <ConfirmDeleteDialog
