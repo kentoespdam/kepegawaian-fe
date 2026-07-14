@@ -1,0 +1,15 @@
+import { z } from "zod";
+import { type EntityConfig, makeConfig } from "./_config-kit";
+import type { SanksiQuery } from "./sanksi";
+
+export const sanksiConfig: EntityConfig<SanksiQuery> = makeConfig<SanksiQuery>(
+	z.object({}),
+	[],
+	[
+		{ id: "kode", header: "Kode", cell: (item) => String(item.kode ?? "") },
+		{ id: "keterangan", header: "Keterangan", cell: (item) => String(item.keterangan ?? "") },
+		{ id: "jenisSp", header: "Jenis SP", cell: (item) => item.jenisSp?.nama ?? "-" },
+	],
+	"Sanksi",
+	{ container: "sheet", fkSources: [{ field: "jenisSpId", entity: "jenis-sp", label: "Jenis SP" }] },
+);

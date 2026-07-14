@@ -1,216 +1,45 @@
-import { z } from "zod";
-import type { FormField } from "@/components/crud-form";
-import type { Column } from "@/components/data-table";
-import type { Resolved } from "@/types/master/_computed";
-import type { AlatKerjaQuery } from "@/types/master/alat-kerja";
-import type { ApdQuery } from "@/types/master/apd";
-import type { GolonganQuery } from "@/types/master/golongan";
-import type { GradeQuery } from "@/types/master/grade";
-import type { HariLiburQuery } from "@/types/master/hari-libur";
-import type { JabatanQuery } from "@/types/master/jabatan";
-import type { OrganisasiQuery } from "@/types/master/organisasi";
-import type { ProfesiQuery } from "@/types/master/profesi";
-import type { RumahDinasQuery } from "@/types/master/rumah-dinas";
-import type { SanksiQuery } from "@/types/master/sanksi";
+import { alasanBerhentiConfig } from "@/types/master/alasan-berhenti.config";
+import { alatKerjaConfig } from "@/types/master/alat-kerja.config";
+import { apdConfig } from "@/types/master/apd.config";
+import { golonganConfig } from "@/types/master/golongan.config";
+import { gradeConfig } from "@/types/master/grade.config";
+import { hariLiburConfig } from "@/types/master/hari-libur.config";
+import { jabatanConfig } from "@/types/master/jabatan.config";
+import { jenisKeahlianConfig } from "@/types/master/jenis-keahlian.config";
+import { jenisKitasConfig } from "@/types/master/jenis-kitas.config";
+import { jenisPelatihanConfig } from "@/types/master/jenis-pelatihan.config";
+import { jenisSpConfig } from "@/types/master/jenis-sp.config";
+import { jenjangPendidikanConfig } from "@/types/master/jenjang-pendidikan.config";
+import { levelConfig } from "@/types/master/level.config";
+import { organisasiConfig } from "@/types/master/organisasi.config";
+import { profesiConfig } from "@/types/master/profesi.config";
+import { rumahDinasConfig } from "@/types/master/rumah-dinas.config";
+import { sanksiConfig } from "@/types/master/sanksi.config";
 
 export type { Page } from "@/lib/api/types";
+export type { EntityConfig } from "@/types/master/_config-kit";
 
-/**
- * Generic config untuk satu entitas Master.
- * @template TQuery — tipe response query (paginated / single) — dipakai di `columns`.
- * @template _TReq — cadangan untuk request body (create/update). Default = TQuery.
- */
-export interface EntityConfig<TQuery = Record<string, unknown>, _TReq = TQuery> {
-	label: string;
-	columns: Column<Resolved<TQuery>>[];
-	fields: FormField[];
-	schema: z.ZodType;
-	container?: "dialog" | "sheet";
-	treeField?: string;
-	fkSources?: { field: string; entity: string; label: string }[];
-}
-
-const namaWajib = z.string().min(1, "Nama wajib diisi");
-
-const nameCol: Column<Record<string, unknown>> = {
-	id: "nama",
-	header: "Nama",
-	sortable: true,
-	cell: (item) => String(item.nama ?? ""),
-};
-
-const nameField: FormField = { name: "nama", label: "Nama", required: true };
-
-/** Factory dengan inferensi tipe — panggil tanpa type arg untuk untyped, atau supply <TQuery>. */
-function makeConfig<TQuery, _TReq = TQuery>(
-	schema: z.ZodType,
-	fields: FormField[],
-	columns: Column<Resolved<TQuery>>[],
-	label: string,
-	opts?: {
-		container?: "dialog" | "sheet";
-		treeField?: string;
-		fkSources?: { field: string; entity: string; label: string }[];
-	},
-): EntityConfig<TQuery, _TReq> {
-	return {
-		label,
-		columns,
-		fields,
-		schema,
-		container: opts?.container,
-		treeField: opts?.treeField,
-		fkSources: opts?.fkSources,
-	};
-}
-
-const simpleNameSchema = z.object({ nama: namaWajib });
+import type { EntityConfig } from "@/types/master/_config-kit";
 
 // Map heterogen: tiap entity punya TQuery berbeda. Karena TQuery hanya muncul di posisi
 // kontravarian (`cell` param), `EntityConfig<never>` adalah supertype dari semua EntityConfig<T>.
 // Consumer meng-cast ke tipe konkret via `as unknown` (master-client.tsx).
 export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<never>> = {
-	// — Flat entities —
-	golongan: makeConfig<GolonganQuery>(
-		z.object({ golongan: namaWajib, pangkat: z.string().min(1, "Pangkat wajib diisi") }),
-		[
-			{ name: "golongan", label: "Golongan", required: true },
-			{ name: "pangkat", label: "Pangkat", required: true },
-		],
-		[
-			{ id: "golongan", header: "Golongan", sortable: true, cell: (item) => String(item.golongan ?? "") },
-			{ id: "pangkat", header: "Pangkat", cell: (item) => String(item.pangkat ?? "") },
-		],
-		"Golongan",
-	),
-	level: makeConfig(simpleNameSchema, [nameField], [nameCol], "Level"),
-	"jenjang-pendidikan": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenjang Pendidikan"),
-	"jenis-keahlian": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis Keahlian"),
-	"jenis-pelatihan": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis Pelatihan"),
-	"jenis-kitas": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis Kitas"),
-	"jenis-sp": makeConfig(simpleNameSchema, [nameField], [nameCol], "Jenis SP"),
-	"alasan-berhenti": makeConfig(simpleNameSchema, [nameField], [nameCol], "Alasan Berhenti"),
-
-	"hari-libur": makeConfig<HariLiburQuery>(
-		z.object({
-			tanggal: z.string().min(1, "Tanggal wajib diisi"),
-			jenisLibur: z.string().min(1, "Jenis libur wajib diisi"),
-		}),
-		[
-			{ name: "tanggal", label: "Tanggal", required: true },
-			{ name: "jenisLibur", label: "Jenis Libur", required: true },
-		],
-		[
-			{ id: "tanggal", header: "Tanggal", sortable: true, cell: (item) => String(item.tanggal ?? "") },
-			{ id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
-		],
-		"Hari Libur",
-	),
-
-	"rumah-dinas": makeConfig<RumahDinasQuery>(
-		z.object({ nama: namaWajib, nilai: z.coerce.number().min(0, "Nilai wajib diisi") }),
-		[nameField, { name: "nilai", label: "Nilai", type: "number", required: true }],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "nilai", header: "Nilai", cell: (item) => String(item.nilai ?? "") },
-		],
-		"Rumah Dinas",
-	),
-
-	// — Tree entities (parentId) —
-	organisasi: makeConfig<OrganisasiQuery>(
-		z.object({ nama: namaWajib }),
-		[nameField],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "parent", header: "Parent", cell: (item) => item.parent?.nama ?? "-" },
-		],
-		"Organisasi",
-		{ treeField: "parentId" },
-	),
-
-	jabatan: makeConfig<JabatanQuery>(
-		z.object({ nama: namaWajib }),
-		[nameField],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "parent", header: "Parent", cell: (item) => item.parent?.nama ?? "-" },
-		],
-		"Jabatan",
-		{ treeField: "parentId" },
-	),
-
-	// — FK entities —
-	grade: makeConfig<GradeQuery>(
-		z.object({
-			grade: z.coerce.number().min(1, "Grade wajib diisi"),
-			tukin: z.coerce.number().min(100000, "Tukin minimal 100.000"),
-			levelId: z.coerce.number(),
-		}),
-		[
-			{ name: "grade", label: "Grade", type: "number", required: true },
-			{ name: "tukin", label: "Tukin", type: "number", required: true },
-			{ name: "levelId", label: "Level", type: "select", required: true },
-		],
-		[
-			{ id: "grade", header: "Grade", sortable: true, cell: (item) => `Grade ${item.grade}` },
-			{ id: "level", header: "Level", cell: (item) => item.level?.nama ?? "-" },
-		],
-		"Grade",
-		{ fkSources: [{ field: "levelId", entity: "level", label: "Level" }] },
-	),
-
-	apd: makeConfig<ApdQuery>(
-		z.object({ nama: namaWajib }),
-		[nameField, { name: "profesiId", label: "Profesi", type: "select", required: true }],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "_profesiName", header: "Profesi", cell: (item) => String(item._profesiName ?? "-") },
-		],
-		"APD",
-		{ fkSources: [{ field: "profesiId", entity: "profesi", label: "Profesi" }] },
-	),
-
-	"alat-kerja": makeConfig<AlatKerjaQuery>(
-		z.object({ nama: namaWajib }),
-		[nameField, { name: "profesiId", label: "Profesi", type: "select", required: true }],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "_profesiName", header: "Profesi", cell: (item) => String(item._profesiName ?? "-") },
-		],
-		"Alat Kerja",
-		{ fkSources: [{ field: "profesiId", entity: "profesi", label: "Profesi" }] },
-	),
-
-	// — Heavy-form entities (Sheet) —
-	sanksi: makeConfig<SanksiQuery>(
-		z.object({}),
-		[],
-		[
-			{ id: "kode", header: "Kode", cell: (item) => String(item.kode ?? "") },
-			{ id: "keterangan", header: "Keterangan", cell: (item) => String(item.keterangan ?? "") },
-			{ id: "jenisSp", header: "Jenis SP", cell: (item) => item.jenisSp?.nama ?? "-" },
-		],
-		"Sanksi",
-		{ container: "sheet", fkSources: [{ field: "jenisSpId", entity: "jenis-sp", label: "Jenis SP" }] },
-	),
-
-	profesi: makeConfig<ProfesiQuery>(
-		z.object({}),
-		[],
-		[
-			{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
-			{ id: "organisasi", header: "Organisasi", cell: (item) => item.organisasi?.nama ?? "-" },
-			{ id: "jabatan", header: "Jabatan", cell: (item) => item.jabatan?.nama ?? "-" },
-		],
-		"Profesi",
-		{
-			container: "sheet",
-			fkSources: [
-				{ field: "organisasiId", entity: "organisasi", label: "Organisasi" },
-				{ field: "jabatanId", entity: "jabatan", label: "Jabatan" },
-				{ field: "gradeId", entity: "grade", label: "Grade" },
-			],
-		},
-	),
+	golongan: golonganConfig,
+	level: levelConfig,
+	"jenjang-pendidikan": jenjangPendidikanConfig,
+	"jenis-keahlian": jenisKeahlianConfig,
+	"jenis-pelatihan": jenisPelatihanConfig,
+	"jenis-kitas": jenisKitasConfig,
+	"jenis-sp": jenisSpConfig,
+	"alasan-berhenti": alasanBerhentiConfig,
+	"hari-libur": hariLiburConfig,
+	"rumah-dinas": rumahDinasConfig,
+	organisasi: organisasiConfig,
+	jabatan: jabatanConfig,
+	grade: gradeConfig,
+	apd: apdConfig,
+	"alat-kerja": alatKerjaConfig,
+	sanksi: sanksiConfig,
+	profesi: profesiConfig,
 };

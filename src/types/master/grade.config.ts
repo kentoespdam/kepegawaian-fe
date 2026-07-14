@@ -1,0 +1,22 @@
+import { z } from "zod";
+import { type EntityConfig, makeConfig } from "./_config-kit";
+import type { GradeQuery } from "./grade";
+
+export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
+	z.object({
+		grade: z.coerce.number().min(1, "Grade wajib diisi"),
+		tukin: z.coerce.number().min(100000, "Tukin minimal 100.000"),
+		levelId: z.coerce.number(),
+	}),
+	[
+		{ name: "grade", label: "Grade", type: "number", required: true },
+		{ name: "tukin", label: "Tukin", type: "number", required: true },
+		{ name: "levelId", label: "Level", type: "select", required: true },
+	],
+	[
+		{ id: "grade", header: "Grade", sortable: true, cell: (item) => `Grade ${item.grade}` },
+		{ id: "level", header: "Level", cell: (item) => item.level?.nama ?? "-" },
+	],
+	"Grade",
+	{ fkSources: [{ field: "levelId", entity: "level", label: "Level" }] },
+);
