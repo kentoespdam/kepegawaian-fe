@@ -49,5 +49,36 @@ Pakai **`EntityConfig<TQuery, TReq>` generik** dengan `makeConfig` factory funct
 - Factory memperkenalkan satu lapisan abstraksi — diterima karena mengurangi boilerplate
   17× lipat.
 
-**Tinjau ulang jika:** jumlah entitas > 30 (map lookup mulai terasa berat), atau jika TypeScript
-mendukung mapped type yang mempertahankan type safety per-key tanpa widening.
+**Evolusi (2026-07-14) — 17 typed pages + type-level map.**
+
+Setelah `EntityConfig` + `makeConfig` diimplementasi, dua masalah tersisa:
+
+1. **`EntityConfig<unknown, unknown>`** saat lookup dari map kehilangan type safety
+   per-entitas — kolom tabel `item.nama` tidak diverifikasi terhadap tipe entitas konkret.
+2. **`Record<string, unknown>`** masih muncul di komponen bridge (`EntityFormModal`, state
+   `editing`/`deleting`, tree `items`), karena tipe konkret belum sampai ke titik-titik itu.
+
+**Solusi — dua lapis typing:**
+- **`src/config/master-entity-types.ts`** — type-level map `MasterEntityTypes` dengan
+  `MasterEntityName → { TItem, TPage, TReq, TList }`, memetakan setiap entity name literal
+  ke tipe konkret hasil generate (17 entitas).
+- **`MasterPageClient<TEntity extends MasterEntityName>`** — generic component yang infer
+  `TItem`/`TPage`/`TReq` dari `MasterEntityTypes[TEntity]`, bukan dari map config.
+- **17 halaman per-entitas** — server component tipis dengan literal entity name (bukan
+  `useParams()`), sehingga TypeScript bisa narrow tipe.
+- Dynamic route `[entity]/page.tsx` dihapus.
+
+Dengan ini, **`Record<string, unknown>` direduksi ke titik-titik bridge** (state
+`editing`/`deleting`, tree `items`, props `<EntityFormModal>`). Satu cast
+`as unknown as EntityConfig<TItem, TReq>` terjadi di titik lookup config —
+diterima sebagai trade-off karena TypeScript belum bisa narrow mapped type
+per-key pada runtime value.
+
+**Tinjau ulang jika:** jumlah entitas > 30, atau jika TypeScript mendukung mapped type yang
+mempertahankan type safety per-key tanpa widening.
+
+File terkait:
+- `src/config/master-entity-types.ts`
+- `src/app/(app)/master/master-client.tsx` — `MasterPageClient<TEntity>`
+- `src/app/(app)/master/{entity}/page.tsx` — 17 halaman
+- `src/types/master/*.ts` — tipe per-entitas

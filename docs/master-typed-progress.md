@@ -1,38 +1,46 @@
-# Monitoring — Master Module Fully Typed
+# Monitoring — Master Module Fully Typed ✅
 
 Epic: **`kepegawaian-fe-8ir`** — *Master module fully typed (eliminate `Record<string, unknown>`)*
 Tujuan: seluruh modul master typed, memakai tipe hasil generate di `docs/api/master/types/` yang disalin ke `src/types/master/`.
 
-> Cara pakai: centang `[x]` saat sebuah issue **selesai** (`bd close <id>`). Kolom "Blok" = harus selesai lebih dulu.
-> Sumber kebenaran tetap beads — sinkronkan via `bd ready` / `bd blocked` / `bd show <id>`.
+> **Status: ✅ SELESAI — Semua gelombang closed + 17 typed pages.**
 
 ---
 
 ## Progres keseluruhan
 
-`4 / 9 selesai`
-
-- [ ] **4 / 9 issue closed** (Gelombang 0 ✅ + m11 ✅)
+`✅ 9 / 9 selesai` + **bonus: 17 typed pages**
 
 ---
 
 ## Gelombang 0 — Fondasi tipe ✅
 
-- [x] **`cu9`** · 1/9 · P1 · *Copy 22 file tipe + `_shared.ts` → `src/types/master/`; hapus stray `src/types/golongan.ts`; JANGAN sentuh `auth.ts`*
-- [x] **`u8a`** · 2/9 · P1 · *Buat hand-written `src/types/master/_computed.ts` — `Computed` (6 field `_*Name`) + `Resolved<T> = T & Partial<Computed>`*
-- [x] **`cu1`** · 9/9 · P2 · *Docs-only: ADR 0003 (generic `EntityConfig`) + koreksi `docs/context/master.md`* — boleh paralel, tanpa blocker kode
+- [x] **`cu9`** · 1/9 · P1 · *Copy 22 file tipe + `_shared.ts` → `src/types/master/`; hapus stray `src/types/golongan.ts`*
+- [x] **`u8a`** · 2/9 · P1 · *Buat hand-written `src/types/master/_computed.ts` — `Computed` (6 field `_*Name`) + `Resolved<T>`*
+- [x] **`cu1`** · 9/9 · P2 · *Docs-only: ADR 0003 + koreksi `docs/context/master.md`*
 
-## Gelombang 1 — Konsumen tipe (butuh `cu9` / `u8a`)
+## Gelombang 1 — Konsumen tipe ✅
 
-- [x] **`qyy`** · 4/9 · P2 · Blok: `cu9` · *`useResource<TQuery, TReq = TQuery>` — type payload create/update*
-- [x] **`7pk`** · 8/9 · P2 · Blok: `cu9` · *`useEnum` typed helper untuk 5 entity enum (status-pegawai, status-kerja, jenis-mutasi, jenis-sk, jenis-kontrak); TIDAK ubah call site lintas-modul*
-- [x] **`m11`** · 3/9 · P2 · Blok: `cu9`, `u8a` · *`master-config.ts`: generic `EntityConfig<TQuery,TReq>` + `makeConfig`; map di-widen; tanpa switch*
-- [x] **`l4a`** · 5/9 · P2 · Blok: `cu9`, `u8a` · *`useMasterTable`: type opts, fkLookup, `resolvedItems: Resolved<TQuery>[]`*
+- [x] **`qyy`** · 4/9 · P2 · *`useResource<TQuery, TReq = TQuery>`*
+- [x] **`7pk`** · 8/9 · P2 · *`useEnum` typed helper untuk 5+1 entity enum* (ditambah `jenis-sp`)
+- [x] **`m11`** · 3/9 · P2 · *`EntityConfig<TQuery,TReq>` + `makeConfig`*
+- [x] **`l4a`** · 5/9 · P2 · *`useMasterTable`: type opts, fkLookup, `Resolved<TQuery>[]`*
 
-## Gelombang 2 — Bergantung pada Gelombang 1 ✅
+## Gelombang 2 — Halaman typed per-entitas ✅
 
-- [x] **`193`** · 6/9 · P2 · Blok: `cu9`, `m11` · *`crud-form.tsx`: generic `CrudForm<TValues extends FieldValues>`; cast pindah ke call site*
-- [x] **`i9k`** · 7/9 · P2 · Blok: `cu9`, `qyy` · *Refactor sanksi-form & profesi-form ke zod+rhf; `z.coerce.number()` fix bug id string→number*
+- [x] **`193`** · 6/9 · P2 · *`crud-form.tsx`: generic `CrudForm<TValues>`*
+- [x] **`i9k`** · 7/9 · P2 · *Refactor sanksi-form & profesi-form ke zod+rhf*
+
+## Bonus — 17 typed pages + type-level map (post-epic) ✅
+
+- [x] **`master-entity-types.ts`** — type-level map `MasterEntityTypes` (17 entity → `TItem`/`TPage`/`TReq`/`TList`)
+- [x] **`MasterPageClient<TEntity>`** — generic component dengan inference dari type map
+- [x] **17 halaman per-entitas** — server component tipis, literal entity name, auth guard
+- [x] **Hapus `[entity]/page.tsx`** — dynamic route dihapus
+- [x] **Fix field API** — golongan/grade/hari-libur: API response tidak punya `nama`
+- [x] **Ekstraksi komponen** — master-switch, sanksi-schema, profesi-schema (kepatuhan ≤120 baris)
+- [x] **useEnum + `jenis-sp`** — integrasi ke `sanksi-form.tsx`
+- [x] **Biome compliance** — `bunx biome check` zero issues ✅
 
 ---
 
@@ -40,27 +48,25 @@ Tujuan: seluruh modul master typed, memakai tipe hasil generate di `docs/api/mas
 
 ```
 cu9 ──┬─► qyy ─► i9k
-      ├─► 7pk
-      ├─► m11 ─► 193
+      ├─► 7pk ──► (ditambah jenis-sp) ──► sanksi-form
+      ├─► m11 ──► 193 ──► master-entity-types.ts ──► 17 typed pages
       └─► l4a
-u8a ──┴─► m11 (juga), l4a (juga)
-cu1  (mandiri, docs-only)
+u8a ──┴─► m11, l4a
+cu1  (mandiri)
 ```
 
 ## Catatan penting untuk agent pelaksana
 
 - **Baca dulu** `node_modules/next/dist/docs/` sebelum tulis kode — versi Next.js ini punya breaking changes.
-- File tipe hasil generate membawa header `JANGAN diedit manual` — perlakukan read-only juga di `src/types/master/`. Bila spec berubah: jalankan ulang generator ke `docs/`, lalu copy — bukan edit tangan.
-- `extract-types.js` = external tool, JANGAN diubah.
-- Wajib `gitnexus_impact` sebelum edit simbol; `gitnexus_detect_changes` sebelum commit; rename via `gitnexus_rename` (bukan find-and-replace).
-- Model baca vs tulis sanksi berbeda: read `SanksiQuery.jenisSp` (nested object) ≠ write `SanksiPostRequest.jenisSpId: number` (flat int64) — dasar fix bug `i9k`.
+- File tipe hasil generate membawa header `JANGAN diedit manual` — perlakukan read-only.
+- Wajib `gitnexus_impact` sebelum edit simbol; `gitnexus_detect_changes` sebelum commit.
+- Model baca vs tulis sanksi berbeda: read `SanksiQuery.jenisSp` (nested object) ≠ write `SanksiPostRequest.jenisSpId: number`.
+- Dynamic route `[entity]/page.tsx` sudah dihapus — jangan gunakan `useParams()` untuk lookup entity.
+- Master page baru = 1 file server component + otomatis terdaftar di `master-entity-types.ts` + `master-config.ts`.
 
 ## Perintah cepat
 
 ```bash
 bd ready                 # apa yang bisa dikerjakan sekarang
-bd blocked               # apa yang masih terhalang + penghalangnya
-bd show kepegawaian-fe-cu9
-bd update kepegawaian-fe-cu9 --claim
-bd close kepegawaian-fe-cu9
+bd show kepegawaian-fe-8ir  # detail epic
 ```

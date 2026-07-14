@@ -46,21 +46,50 @@ Graf FK inilah yang membuat **combobox-of-id filter** (`### DataTable filtering`
 di Master: mis. memfilter `profesi` per `organisasiId`, atau `apd` per `profesiId`. Value yang
 dikirim ke backend = **id** opsi, bukan teksnya.
 
-## Master build strategy — bespoke files di atas shared primitives + typed EntityConfig
+## Master build strategy — 17 typed pages di atas shared primitives
 
-Tiap entitas Master punya **file konkret sendiri** (page, columns, form) → perbedaan tampilan
-per-entitas mudah dibaca & diubah — **bukan** satu engine generik yang digerakkan config. DRY
-dipaksa lewat **shared primitives** yang tiap entitas compose (semua didefinisikan di core):
+Tiap entitas Master punya **halaman sendiri** (file page konkret per-entitas, bukan 1 dynamic
+route) + form sendiri (sanksi/profesi bespoke, sisanya generic lewat `<EntityFormModal>`).
+DRY dipaksa lewat **shared primitives** yang tiap entitas compose (semua didefinisikan di core):
 `<DataTable>` + `<DataTableToolbar>` + `<DataTablePagination>`, `<CrudForm>`,
 `<ConfirmDeleteDialog>`, `<Can>`, hook proxy/`useResource`, helper API client bertipe. Duplikasi
 hanya di **glue tipis per-entitas** (columns + skema Zod + config toolbar) — tak pernah di logika
 table/fetch/CRUD. Ke-17 entitas CRUD memakai anatomi layar daftar & presentasi form yang sama.
 
-**Fully typed (ADR 0003).** Tipe OpenAPI tiap entitas di-generate ke `src/types/master/` (22 file
-entity + `_shared.ts`), ditambah `_computed.ts` untuk field hasil resolve FK (`_organisasiName`,
-`_jabatanName`, dll. — 6 field `_*Name`). `EntityConfig<TQuery, TReq>` generik meniadakan
-`Record<string, unknown>`: tiap entitas punya config bertipe yang me-wire endpoint, queryKey,
-kolom tabel, dan skema Zod form. Map entitas di-widen tanpa switch, di-factory oleh `makeConfig`.
+**Fully typed (ADR 0003 + Gelombang 2).** Tipe OpenAPI tiap entitas di-generate ke
+`src/types/master/` (22 file entity + `_shared.ts`), ditambah `_computed.ts` untuk field hasil
+resolve FK (`_organisasiName`, `_jabatanName`, dll. — 6 field `_*Name`).
+
+`EntityConfig<TItem, TReq>` generik meniadakan `Record<string, unknown>` di level config.
+Map entitas di-widen tanpa switch, di-factory oleh `makeConfig`. Lapisan di atasnya:
+
+- **`src/config/master-entity-types.ts`** — type-level map `MasterEntityTypes` yang memetakan
+  setiap `MasterEntityName` ke `{ TItem, TPage, TReq, TList }` dari tipe entitas konkret.
+- **`MasterPageClient<TEntity>`** (`master-client.tsx`) — generic component yang menerima
+  literal entity name sebagai prop, infer `TItem`/`TPage`/`TReq` dari `MasterEntityTypes`, dan
+  me-wire `useResource<TPage, TReq>` + `EntityConfig<TItem, TReq>` + `<DataTable>` secara typed.
+- **17 halaman per-entitas** (`src/app/(app)/master/{entity}/page.tsx`) — server component
+  tipis yang panggil `verifySession()` + `can()`, lalu render `<MasterPageClient entity="…" />`
+  dengan literal entity name. Dynamic route `[entity]/page.tsx` dihapus — Next.js 404 untuk
+  rute tak dikenal.
+
+Dengan arsitektur ini, **`Record<string, unknown>` direduksi ke titik-titik bridge** — aliran
+data utama (list via `useResource<TPage>`, submit via `handleSubmit<TReq>`) sudah typed.
+Cast `as unknown as EntityConfig<TItem, TReq>` hanya terjadi di satu titik — lookup config
+dari map — karena TypeScript belum bisa narrow mapped type per-key. State `editing`/`deleting`
+dan bridge `<EntityFormModal>` masih memakai `Record<string, unknown>` untuk kompatibilitas
+mundur.
+
+**Ekstraksi komponen (kepatuhan max lines ~120):**
+- `sanksi-schema.ts` — schema Zod + tipe + defaults untuk sanksi (diekstrak dari `sanksi-form.tsx`)
+- `profesi-schema.ts` — schema Zod + tipe + defaults untuk profesi (diekstrak dari `profesi-form.tsx`)
+- `master-switch.tsx` — reusable switch boolean (diekstrak dari `sanksi-form.tsx`)
+- `useFkOptions` helper lokal di `profesi-form.tsx` — mereduksi duplikasi 3 FK query jadi
+  3 baris.
+
+**Biome compliance:** `bunx biome check --write --unsafe` telah dijalankan dengan zero issues.
+`useLiteralKeys` otomatis diterapkan untuk 8 page entity single-word (`config.apd` jadi
+`config.apd` tanpa bracket). Entity hyphenated (`jenjang-pendidikan`, dll.) tetap pakai bracket.
 
 ## Entitas tree — organisasi & jabatan (`parentId`)
 
