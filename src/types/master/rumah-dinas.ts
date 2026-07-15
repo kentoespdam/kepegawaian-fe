@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/rumah-dinas/{id}, GET /master/rumah-dinas, GET /master/rumah-dinas/list, GET /master/rumah-dinas/{id}, POST /master/rumah-dinas, PUT /master/rumah-dinas/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface RumahDinasQuery {
 	id?: number; // int64
@@ -65,4 +65,4 @@ export interface ListResultRumahDinasListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

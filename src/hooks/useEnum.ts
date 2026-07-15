@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
-import type { EnumOption, ListResultEnumOption } from "@/types/master/_shared";
+import type { EnumOption, ListResultEnumOption } from "@/types/_shared";
 import type { JenisSpListResponse, ListResultJenisSpListResponse } from "@/types/master/jenis-sp";
 import type { ListResultStatusPegawaiResponse, StatusPegawaiResponse } from "@/types/master/status-pegawai";
 

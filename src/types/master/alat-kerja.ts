@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/alat-kerja/{id}, GET /master/alat-kerja/{id}, POST /master/alat-kerja, PUT /master/alat-kerja/{id}
  */
 
-import type { HttpStatusText } from "./_shared";
+import type { HttpStatusText } from "../_shared";
 
 export interface AlatKerjaQuery {
 	id?: number; // int64
@@ -30,4 +30,4 @@ export interface AlatKerjaPostRequest {
 	nama: string; // minLength 1
 }
 
-export type { DeletedResult, SavedResultLong } from "./_shared";
+export type { DeletedResult, SavedResultLong } from "../_shared";

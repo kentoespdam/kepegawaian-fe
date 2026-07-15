@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-sp/{id}, GET /master/jenis-sp, GET /master/jenis-sp/list, GET /master/jenis-sp/{id}, POST /master/jenis-sp, PUT /master/jenis-sp/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface JenisSpQuery {
 	id?: number; // int64
@@ -70,4 +70,4 @@ export interface ListResultJenisSpListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

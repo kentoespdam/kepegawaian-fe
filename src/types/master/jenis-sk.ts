@@ -8,4 +8,4 @@
  * Endpoint : GET /master/jenis-sk
  */
 
-export type { EnumOption, ListResultEnumOption } from "./_shared";
+export type { EnumOption, ListResultEnumOption } from "../_shared";

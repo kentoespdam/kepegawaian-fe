@@ -8,7 +8,7 @@
  * Endpoint : GET /master/status-pegawai/list
  */
 
-import type { HttpStatusText } from "./_shared";
+import type { HttpStatusText } from "../_shared";
 
 export interface StatusPegawaiResponse {
 	id?: string;

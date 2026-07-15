@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/hari-libur/{id}, GET /master/hari-libur, GET /master/hari-libur/list, GET /master/hari-libur/{id}, POST /master/hari-libur, PUT /master/hari-libur/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface HariLiburQuery {
 	id?: number; // int64
@@ -68,4 +68,4 @@ export interface ListResultHariLiburListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

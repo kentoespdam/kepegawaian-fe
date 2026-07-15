@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/level/{id}, GET /master/level, GET /master/level/list, GET /master/level/{id}, POST /master/level, POST /master/level/batch, PUT /master/level/{id}
  */
 
-import type { HttpStatusText, LevelResponse, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, LevelResponse, PageableObject, SortObject } from "../_shared";
 
 export interface SingleResultLevelResponse {
 	status?: number; // int32
@@ -60,4 +60,4 @@ export type {
 	SavedResultListLong,
 	SavedResultLong,
 	SortObject,
-} from "./_shared";
+} from "../_shared";

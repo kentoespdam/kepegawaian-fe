@@ -425,7 +425,9 @@
           "message": {
             "type": "string"
           },
-          "data": {},
+          "data": {
+            "type": "string"
+          },
           "timestamp": {
             "type": "string",
             "format": "date-time"

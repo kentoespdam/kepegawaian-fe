@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/grade/{id}, GET /master/grade, GET /master/grade/level/{id}, GET /master/grade/list, GET /master/grade/{id}, POST /master/grade, PUT /master/grade/{id}
  */
 
-import type { HttpStatusText, LevelResponse, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, LevelResponse, PageableObject, SortObject } from "../_shared";
 
 export interface GradeQuery {
 	id?: number; // int64
@@ -76,4 +76,4 @@ export interface ListResultGradeQuery {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, LevelResponse, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, LevelResponse, PageableObject, SavedResultLong, SortObject } from "../_shared";

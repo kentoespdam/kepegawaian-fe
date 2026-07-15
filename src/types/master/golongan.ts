@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/golongan/{id}, GET /master/golongan, GET /master/golongan/list, GET /master/golongan/{id}, POST /master/golongan, PUT /master/golongan/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface GolonganQuery {
 	id?: number; // int64
@@ -66,4 +66,4 @@ export interface ListResultGolonganListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

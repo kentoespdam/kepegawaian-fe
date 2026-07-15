@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenjang-pendidikan/{id}, GET /master/jenjang-pendidikan, GET /master/jenjang-pendidikan/list, GET /master/jenjang-pendidikan/{id}, POST /master/jenjang-pendidikan, POST /master/jenjang-pendidikan/batch, PUT /master/jenjang-pendidikan/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface JenjangPendidikanResponse {
 	id?: number; // int64
@@ -71,4 +71,4 @@ export interface ListResultJenjangPendidikanResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultListLong, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultListLong, SavedResultLong, SortObject } from "../_shared";

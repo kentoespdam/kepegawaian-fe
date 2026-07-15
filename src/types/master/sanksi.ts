@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/sanksi/{id}, GET /master/sanksi, GET /master/sanksi/jenis-sp/{id}, GET /master/sanksi/list, GET /master/sanksi/{id}, PATCH /master/sanksi/{id}/jenis-sp, POST /master/sanksi, PUT /master/sanksi/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface SanksiMiniResponse {
 	id?: number; // int64
@@ -145,4 +145,4 @@ export interface ListResultSanksiJenisSpList {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

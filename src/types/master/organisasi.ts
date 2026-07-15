@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/organisasi/{id}, GET /master/organisasi, GET /master/organisasi/list, GET /master/organisasi/{id}, GET /master/organisasi/{id}/parent, POST /master/organisasi, PUT /master/organisasi/{id}
  */
 
-import type { HttpStatusText, OrganisasiMiniResponse, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, OrganisasiMiniResponse, PageableObject, SortObject } from "../_shared";
 
 export interface OrganisasiQuery {
 	id?: number; // int64
@@ -91,4 +91,4 @@ export interface ListResultOrganisasiListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, OrganisasiMiniResponse, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, OrganisasiMiniResponse, PageableObject, SavedResultLong, SortObject } from "../_shared";

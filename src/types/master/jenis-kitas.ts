@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-kitas/{id}, GET /master/jenis-kitas, GET /master/jenis-kitas/list, GET /master/jenis-kitas/{id}, POST /master/jenis-kitas, PUT /master/jenis-kitas/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface JenisKitasQuery {
 	id?: number; // int64
@@ -63,4 +63,4 @@ export interface ListResultJenisKitasListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

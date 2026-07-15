@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-keahlian/{id}, GET /master/jenis-keahlian, GET /master/jenis-keahlian/list, GET /master/jenis-keahlian/{id}, POST /master/jenis-keahlian, PUT /master/jenis-keahlian/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
 
 export interface JenisKeahlianQuery {
 	id?: number; // int64
@@ -63,4 +63,4 @@ export interface ListResultJenisKeahlianListResponse {
 	timestamp?: string; // date-time
 }
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
+export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

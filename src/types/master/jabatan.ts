@@ -15,7 +15,7 @@ import type {
 	OrganisasiMiniResponse,
 	PageableObject,
 	SortObject,
-} from "./_shared";
+} from "../_shared";
 
 export interface JabatanQuery {
 	id?: number; // int64
@@ -103,4 +103,4 @@ export type {
 	PageableObject,
 	SavedResultLong,
 	SortObject,
-} from "./_shared";
+} from "../_shared";

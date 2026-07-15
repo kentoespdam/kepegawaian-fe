@@ -148,3 +148,12 @@ export interface ListResultEnumOption {
 	data?: EnumOption[];
 	timestamp?: string; // date-time
 }
+
+export interface ResponseWrapper<T> {
+	status?: number; // int32
+	statusText?: HttpStatusText;
+	errors?: string[];
+	message?: string;
+	data?: T;
+	timestamp?: string; // date-time
+}
