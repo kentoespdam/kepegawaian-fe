@@ -88,7 +88,7 @@ export interface DeletedResult {
   statusText?: HttpStatusText;
   errors?: string[];
   message?: string;
-  data?: unknown;
+  data?: string;
   timestamp?: string; // date-time
 }
 
