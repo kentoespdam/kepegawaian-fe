@@ -15,7 +15,9 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 | 1 | bo3 | Repoint `src/lib/api/types.ts` → `_shared.ts` | runtime | — | ⬜ open |
 | 2 | c8z | `client.ts handle()` narrowing union | runtime | bo3 | ⛔ blocked |
 | 3 | 05q | Verifikasi `Page<T>` optional + quality gates | runtime | bo3, c8z | ⛔ blocked |
-| 4 | 5eo | Candidate 2: query-param filter types | extract-types.js | — | ✅ DONE |
+| 4 | 5eo | Candidate 2: query-param filter types (generate) | extract-types.js | — | ✅ DONE |
+| 5 | wkk | Wire `{Entity}SearchParams` filters URL→API (plumbing) | runtime | bo3 | ⛔ blocked |
+| 6 | 5ad | Filter table UI per-entity | runtime/UI | wkk | ⛔ blocked |
 
 ---
 
@@ -24,7 +26,13 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 1. **bo3** — repoint types.ts (tidak diblokir, mulai dari sini)
 2. **c8z** — narrowing client.ts (setelah bo3)
 3. **05q** — verifikasi + quality gates (setelah bo3 & c8z)
-4. **5eo** — Candidate 2 (independen, tapi **grill desain dengan user dulu**)
+4. **5eo** — Candidate 2 generate (independen) ✅ selesai
+5. **wkk** — plumbing filter URL→API (setelah bo3, karena menyentuh `paging.ts`/`types.ts`)
+6. **5ad** — filter table UI (setelah wkk)
+
+> **Catatan pemakaian (consumption):** 5eo hanya meng-*generate* tipe `{Entity}SearchParams`.
+> Belum ada consumer — `useMasterSearchParams`/`paging.ts`/`master-client.tsx` baru kenal
+> page/size/sort. wkk menyambungkan filter ke API, 5ad membangun UI-nya.
 
 ---
 
@@ -82,3 +90,19 @@ Desain terkunci: naming `{Entity}SearchParams`, pagination di-hoist ke `PageQuer
 - [x] Sync manual ke `src/types/` + `biome check --write`
 - [x] `npx tsc --noEmit` (exit 0) + `npm test` (62 pass) hijau
 - [x] `bd close kepegawaian-fe-5eo` → push
+
+### wkk — Wire `{Entity}SearchParams` filters URL→API (plumbing)
+Menyambungkan tipe hasil 5eo ke jalur data. BUKAN UI.
+- [ ] `useMasterSearchParams` kembalikan juga filter values (keys non-pagination `{Entity}SearchParams`) — URL tetap source of truth
+- [ ] `paging.ts` `PageParams` + `toApiParams()` teruskan filter extra ke query params kabel (skip undefined/empty)
+- [ ] `master-client.tsx` gabungkan filter ke arg `useResource`
+- [ ] Unit test `paging` (toApiParams meloloskan filter, skip kosong)
+- [ ] `npx tsc --noEmit` hijau
+- [ ] `bd close kepegawaian-fe-wkk` → push
+
+### 5ad — Filter table UI per-entity
+- [ ] Render input filter per-entity di `DataTableToolbar` berdasarkan field filter entity
+- [ ] Tulis ke URL via `setP` (debounce untuk teks), reset `page=1` saat filter berubah
+- [ ] Definisi field filter (kemungkinan tambah ke `EntityConfig`) — **konfirmasi pola dgn user dulu**
+- [ ] Verifikasi manual browser (ketik filter → refetch; clear → penuh) + tsc/biome hijau
+- [ ] `bd close kepegawaian-fe-5ad` → push
