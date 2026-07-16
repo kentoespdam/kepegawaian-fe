@@ -11,7 +11,7 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 
 | # | Beads | Judul | Scope | Depends on | Status |
 |---|-------|-------|-------|-----------|--------|
-| 0 | oon | Generic amplop collapse (Candidate 1) | extract-types.js | — | ✅ DONE (uncommitted) |
+| 0 | oon | Generic amplop collapse (Candidate 1) | extract-types.js | — | ✅ DONE (pushed `9b9540f`) |
 | 1 | bo3 | Repoint `src/lib/api/types.ts` → `_shared.ts` | runtime | — | ⬜ open |
 | 2 | c8z | `client.ts handle()` narrowing union | runtime | bo3 | ⛔ blocked |
 | 3 | 05q | Verifikasi `Page<T>` optional + quality gates | runtime | bo3, c8z | ⛔ blocked |
