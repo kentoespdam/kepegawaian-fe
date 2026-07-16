@@ -11,17 +11,21 @@ export interface PageParams {
 	size: number;
 	sortBy?: string;
 	sortDir?: "asc" | "desc";
+	/** Filter tambahan dari URL (non-pagination keys), dilewatkan langsung ke kabel. */
+	filters?: Record<string, string>;
 }
 
 /**
  * KIRIM: state UI 1-based → query params kabel 0-based.
  * `Math.max(0, …)` menjaga page 0/negatif dari URL rusak tak menembus jadi negatif.
+ * Filter tambahan di-spread langsung ke output.
  */
 export function toApiParams(p: PageParams): Record<string, string> {
 	return {
 		page: String(Math.max(0, p.page - 1)),
 		size: String(p.size),
 		...(p.sortBy && { sortBy: p.sortBy, sortDirection: p.sortDir ?? "asc" }),
+		...(p.filters ?? {}),
 	};
 }
 

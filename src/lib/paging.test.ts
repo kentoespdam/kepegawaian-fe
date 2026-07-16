@@ -23,6 +23,34 @@ describe("toApiParams — UI 1-based → wire 0-based", () => {
 		expect(toApiParams({ page: 1, size: 10 })).not.toHaveProperty("sortBy");
 	});
 });
+describe("toApiParams — filter pass-through", () => {
+	it("meloloskan filter extra ke query params kabel", () => {
+		expect(toApiParams({ page: 1, size: 10, filters: { organisasiId: "42", nama: "test" } })).toMatchObject({
+			organisasiId: "42",
+			nama: "test",
+		});
+	});
+
+	it("filter tidak mengganggu pagination/sort", () => {
+		const result = toApiParams({
+			page: 3,
+			size: 20,
+			sortBy: "nama",
+			sortDir: "desc",
+			filters: { levelId: "5" },
+		});
+		expect(result.page).toBe("2");
+		expect(result.size).toBe("20");
+		expect(result.sortBy).toBe("nama");
+		expect(result.sortDirection).toBe("desc");
+		expect(result.levelId).toBe("5");
+	});
+
+	it("filters kosong (undefined) — tidak nambah properti", () => {
+		expect(toApiParams({ page: 1, size: 10 })).not.toHaveProperty("filters");
+		expect(toApiParams({ page: 1, size: 10, filters: {} })).not.toHaveProperty("filters");
+	});
+});
 
 describe("fromPage — Spring Page<T> → view-model UI", () => {
 	const page: Page<{ id: number }> = {

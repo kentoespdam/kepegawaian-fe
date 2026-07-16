@@ -23,7 +23,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	// ponytail: map di-widen ke EntityConfig — cast via unknown karena tipe tidak overlapping
 	const cfg = MASTER_ENTITY_CONFIGS[entity] as unknown as EntityConfig<TItem, TReq>;
-	const { page, size, sortBy, sortDir, setP } = useMasterSearchParams(entity);
+	const { page, size, sortBy, sortDir, filters, setP } = useMasterSearchParams(entity);
 
 	const [editing, setEditing] = useState<TItem | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
@@ -34,7 +34,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	const { list, listAll, create, update, remove } = useResource<TPage, TReq>(
 		entity as string,
-		toApiParams({ page, size, sortBy, sortDir }),
+		toApiParams({ page, size, sortBy, sortDir, filters }),
 	);
 
 	// ponytail: listAll return typed sebagai TPage tapi runtime TList — cast

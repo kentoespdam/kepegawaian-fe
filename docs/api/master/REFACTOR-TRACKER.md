@@ -93,12 +93,12 @@ Desain terkunci: naming `{Entity}SearchParams`, pagination di-hoist ke `PageQuer
 
 ### wkk — Wire `{Entity}SearchParams` filters URL→API (plumbing)
 Menyambungkan tipe hasil 5eo ke jalur data. BUKAN UI.
-- [ ] `useMasterSearchParams` kembalikan juga filter values (keys non-pagination `{Entity}SearchParams`) — URL tetap source of truth
-- [ ] `paging.ts` `PageParams` + `toApiParams()` teruskan filter extra ke query params kabel (skip undefined/empty)
-- [ ] `master-client.tsx` gabungkan filter ke arg `useResource`
-- [ ] Unit test `paging` (toApiParams meloloskan filter, skip kosong)
-- [ ] `npx tsc --noEmit` hijau
-- [ ] `bd close kepegawaian-fe-wkk` → push
+- [x] `useMasterSearchParams` kembalikan `filters: Record<string, string>` — semua key URL non-pagination, pre-filter empty
+- [x] `paging.ts` `PageParams.filters?` + `toApiParams()` spread `p.filters ?? {}` ke output
+- [x] `master-client.tsx` destructure `filters`, teruskan ke `toApiParams({ ..., filters })`
+- [x] Unit test `paging` (3 test: loloskan filter, combined with sort, empty/undefined)
+- [x] `npx tsc --noEmit` hijau
+- [x] `bd close kepegawaian-fe-wkk` → push
 
 ### 5ad — Filter table UI per-entity
 - [ ] Render input filter per-entity di `DataTableToolbar` berdasarkan field filter entity

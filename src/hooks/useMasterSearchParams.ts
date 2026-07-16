@@ -3,8 +3,11 @@
 import { useRouter, useSearchParams } from "next/navigation";
 
 /**
- * Manages pagination + sort state via URL search params for master entity pages.
+ * Manages pagination + sort + filter state via URL search params for master entity pages.
  * URL = source of truth (bukan state komponen).
+ *
+ * `filters` = semua key URL kecuali page/size/sortBy/sortDirection —
+ * langsung dari URL, belum divalidasi terhadap {Entity}SearchParams.
  */
 export function useMasterSearchParams(entity: string) {
 	const sp = useSearchParams();
@@ -15,6 +18,15 @@ export function useMasterSearchParams(entity: string) {
 	const sortBy = sp.get("sortBy") ?? undefined;
 	const sortDir = sp.get("sortDirection") as "asc" | "desc" | undefined;
 
+	// Semua key non-pagination = filter values (sudah string dari URL)
+	const paginationKeys = new Set(["page", "size", "sortBy", "sortDirection"]);
+	const filters: Record<string, string> = {};
+	for (const [k, v] of sp.entries()) {
+		if (!paginationKeys.has(k) && v) {
+			filters[k] = v;
+		}
+	}
+
 	const setP = (k: string, v: string | undefined) => {
 		const p = new URLSearchParams(sp.toString());
 		if (v) p.set(k, v);
@@ -22,5 +34,5 @@ export function useMasterSearchParams(entity: string) {
 		router.replace(`/master/${entity}?${p.toString()}`);
 	};
 
-	return { page, size, sortBy, sortDir, setP };
+	return { page, size, sortBy, sortDir, filters, setP };
 }
