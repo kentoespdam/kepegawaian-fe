@@ -29,9 +29,11 @@
   - Gate: grep nol hardcoded `font-size`/`text-[..px]`, lint/tsc/build hijau, visual check manual di `/master/profesi` atau `/master/golongan` (before/after screenshot).
   - **Status:** ✅ Done — implemented by Buffy (2026-07-16).
   - **Changes:** zebra bump `bg-muted/30`→`bg-muted`, hover fix zebra rows, cell `px-3 py-3`→`px-4 py-2`, thead `border-b-2`, toolbar compact `py-2.5`+`gap-2`+`max-w-[200px]`, responsive mobile stack, pagination compact `py-2.5`.
-- [ ] **[2] `kepegawaian-fe-qza`** — QA F/Z + whitespace + regresi visual (pilot golongan)
+- [x] **[2] `kepegawaian-fe-qza`** — QA F/Z + whitespace + regresi visual (pilot golongan)
   - Gate: F/Z hot-spots terverifikasi, whitespace/proximity oke, nol regresi aksesibilitas (≥16px, ≥44px, contrast lolos), before/after screenshot captured.
-  - **Status:** 🟡 Blocked by [1] — needs `kepegawaian-fe-v5p` selesai dulu.
+  - **Status:** ✅ Done — QA by Buffy (2026-07-16).
+  - **Hasil:** F/Z-shape ✅ whitespace ✅ regresi ✅ komponen ✅ aksesibilitas ✅ mobile ✅ 0 console errors ✅
+  - **Rekomendasi:** Option B — fan-out QA gabung QA akhir modul master.
 
 ## Detail acceptance — `kepegawaian-fe-v5p` (Implement)
 
