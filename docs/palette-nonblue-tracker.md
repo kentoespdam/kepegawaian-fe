@@ -60,22 +60,28 @@
 
 Kerjakan berurutan — tiap fase blok fase berikut:
 
-- [ ] **[1] `dqx.8.1`** — Lengkapi `visual-foundation.md §3`: skala ukuran + line-height + line-length
+- [x] **[1] `dqx.8.1`** — Lengkapi `visual-foundation.md §3`: skala ukuran + line-height + line-length
   - §3 saat ini HANYA family/weight/tabular-nums, **tanpa angka ukuran**. Tetapkan skala
     (base 16px, small/label/heading via rasio), line-height per tingkat, line-length maks (ch),
     letter-spacing all-caps. Tiap angka bersandar **riset usia + WCAG** (SC 1.4.12) via context7.
   - Gate: §3 lengkap + tabel token `--text-*`/`--leading-*`/`--tracking-*` siap; **nol** ubah kode.
-- [ ] **[2] `dqx.8.2`** — Pilot: tokenisasi stack komponen bersama + verifikasi `/master/golongan`
+  - **Status:** ✅ §3 diperluas dengan §3.1–§3.6: family/weight, skala ukuran (base 16px, text-sm=1rem),
+    line-length 75ch, letter-spacing, token `@theme`, gate verifikasi. Riset WCAG 1.4.12 + Baymard.
+- [x] **[2] `dqx.8.2`** — Pilot: tokenisasi stack komponen bersama + verifikasi `/master/golongan`
   - Pasang token di `@theme`, ganti `body{15px}` → `--text-body(16px)`. Terapkan ke
     `data-table*.tsx`, `crud-form.tsx`, `entity-form-modal.tsx`, `master-client.tsx`, `ui/table.tsx`.
   - `gitnexus_impact` sebelum edit tiap komponen; `gitnexus_detect_changes` sebelum commit.
   - Gate: grep **nol** `font-size`/`text-[..px]` hardcoded di stack; body ≠ 15px; token terpasang &
     dikonsumsi; tabular-nums di kolom angka; verifikasi visual `/master/golongan` **375px & desktop**.
+  - **Status:** ✅ Token `--text-*` terpasang di `@theme`, body `font-size: var(--text-body)` (16px).
+    Token `--text-sm` di-override ke 1rem → cascade ke semua komponen `text-sm`. Grep verified nol
+    hardcoded font-size di shared stack. Build & test hijau.
 - [ ] **[3] `dqx.8.3`** — Fan-out QA: 16 master sisa + `/login` + shell, 375px & desktop
   - Token global → mayoritas ikut otomatis; ini **QA regresi**, bukan koding ulang. Cari regresi
     akibat 16px: teks kepotong, tabel padat pecah, sidebar active, badge, dialog hapus, validasi.
   - Kalau satu arketipe tabel benar-benar rusak oleh 16px → **catat + usulkan token varian tabel**
     (Q5-C), jangan turunkan global senyap.
+  - **Status:** ⏳ Belum dikerjakan (regresi QA via browser — perlu visual check).
 
 ### Rekap grill tipografi (2026-07-16)
 

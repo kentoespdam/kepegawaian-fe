@@ -101,6 +101,8 @@ Populasi ±70% lansia → keterbacaan = **syarat fungsional**. Gate ini berlaku 
 
 ## 3. Tipografi — CONTEXT §Typography
 
+### 3.1 Family & weights
+
 - **Satu family: Inter**, self-hosted via `next/font` (nol request eksternal ke Google saat
   runtime). `display: swap` + fallback metrics → nol layout-shift.
 - **Berat terbatas:** `400` body, `500` label, `600` heading/tombol. **Dilarang ≤300.**
@@ -108,3 +110,62 @@ Populasi ±70% lansia → keterbacaan = **syarat fungsional**. Gate ini berlaku 
   kolom angka (potong TKK %, level) → digit rata vertikal.
 - **Satu family saja** (bukan pasangan heading+body) — lebih ringan, konsisten, anti-slop.
 - Dipasang di root layout via variabel font `--font-sans`, dikonsumsi `@theme`.
+
+### 3.2 Skala ukuran (type scale)
+
+Ditetapkan berdasarkan riset keterbacaan usia 35+ (presbyopia) dan WCAG SC 1.4.12.
+Populasi ±70% lansia → ukuran minimal **16px untuk body** (Q5 grill 2026-07-16).
+
+| Token Tailwind v4 | Ukuran | Line-height | Penggunaan |
+|---|---|---|---|
+| `text-xs` | 0.75rem (12px) | 1.333 (16px) | Metadata, badge, help text kecil |
+| `text-sm` | 1rem (16px) | 1.5 (24px) | **Body text** — paragraf, label, sel tabel, tombol |
+| `text-base` | 1.125rem (18px) | 1.5 (27px) | Judul dialog/sheet, card title, section header |
+| `text-lg` | 1.25rem (20px) | 1.4 (28px) | H1 landing, judul halaman besar |
+
+> **Catatan:** `text-sm` di Tailwind v4 default 0.875rem (14px). Token `@theme` di `globals.css`
+> menimpa menjadi 1rem (16px) sesuai keputusan grill. `text-xs` tetap 0.75rem karena hanya
+> dipakai untuk metadata kecil yang tidak dominan.
+
+### 3.3 Line-length (max-width konten)
+
+- **Body teks prosa:** ≤ **75ch** (WCAG SC 1.4.12, riset Baymard).
+- **Tabel & form:** tidak dibatasi (lebar natural container) — line-length hanya untuk paragraf
+  bacaan, bukan data grid.
+
+### 3.4 Letter-spacing
+
+- **Normal body:** `normal` (0).
+- **All-caps label/header:** `tracking-wider` (0.05em) untuk mempertahankan keterbacaan huruf
+  kapital — hanya di kolom header tabel, section divider.
+
+### 3.5 Token semantik `@theme`
+
+Semua ukuran font di atas dideklarasikan sebagai token `--text-*` di `@theme inline`
+`globals.css`. Komponen menggunakan **Tailwind utility class** (`text-sm`, `text-xs`, dll.),
+**bukan** value hardcoded. Body menggunakan `--text-body`:
+
+```css
+@theme inline {
+  --text-xs: 0.75rem;
+  --text-sm: 1rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-body: 1rem;
+  --leading-body: 1.6;
+}
+
+@layer base {
+  body {
+    font-size: var(--text-body);
+    line-height: var(--leading-body);
+  }
+}
+```
+
+### 3.6 Gate verifikasi
+
+- **Nol hardcoded `font-size`** di komponen — hanya via Tailwind utility atau token CSS.
+- **Nol `text-[..px]`** utility inline di shared stack (data-table, crud-form, dll.).
+- Body `font-size` ≠ 15px.
+- Tabular-nums di kolom angka tabel.
