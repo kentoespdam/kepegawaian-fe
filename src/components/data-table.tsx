@@ -222,29 +222,13 @@ export function DataTable<T>({
 										<td className="px-4 py-2 align-middle text-right">
 											<div className="inline-flex items-center gap-1">
 												{onEdit && (
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={(e) => {
-															e.stopPropagation();
-															onEdit(item);
-														}}
-														aria-label="Edit"
-													>
+													<Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit">
 														{" "}
 														<Pencil className="size-5" />
 													</Button>
 												)}
 												{onDelete && (
-													<Button
-														variant="ghost"
-														size="icon"
-														onClick={(e) => {
-															e.stopPropagation();
-															onDelete(item);
-														}}
-														aria-label="Hapus"
-													>
+													<Button variant="ghost" size="icon" onClick={() => onDelete(item)} aria-label="Hapus">
 														{" "}
 														<Trash2 className="size-5 text-destructive" />
 													</Button>
