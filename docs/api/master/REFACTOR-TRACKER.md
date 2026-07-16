@@ -66,10 +66,10 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 - [x] `bd close kepegawaian-fe-bo3` → push (sedang dikerjakan)
 
 ### c8z — `client.ts handle()` narrowing
-- [ ] Narrow union di `handle<T>()`: cabang `!res.ok` akses `body.errors` tanpa `?.`; cabang ok `return body.data`
-- [ ] Pertahankan `ApiError(status, message)` & branch 204
-- [ ] `npx tsc --noEmit` hijau
-- [ ] `bd close kepegawaian-fe-c8z` → push
+- [x] Narrow union di `handle<T>()`: cabang `!res.ok` cast `{ errors: string | string[]; message?: string }` (errors required, akses tanpa `?.`); cabang ok cast `{ data: T }` + `return body.data` (tanpa `as T`)
+- [x] Pertahankan `ApiError(status, message)` & branch 204
+- [x] `npx tsc --noEmit` hijau
+- [x] `bd close kepegawaian-fe-c8z` → push
 
 ### 05q — Verifikasi `Page<T>` optional + gates
 - [ ] Telusuri akses field Page (`.content/.number/.totalElements/.first/.last/.totalPages/.numberOfElements/.size/.empty`) di `src/` → null-safe
