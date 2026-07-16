@@ -35,6 +35,22 @@
   - **Hasil:** F/Z-shape ✅ whitespace ✅ regresi ✅ komponen ✅ aksesibilitas ✅ mobile ✅ 0 console errors ✅
   - **Rekomendasi:** Option B — fan-out QA gabung QA akhir modul master.
 
+### Follow-up refinements (post-implementasi screenshot feedback)
+
+- [ ] **[3] `kepegawaian-fe-l2h`** — Polish toolbar: combobox max-width + button proporsi
+  - **Issue:** Screenshot 2026-07-16 15:33 menunjukkan combobox filter terlalu lebar (tidak constrained `max-w-[200px]`), button "+ Tambah" tidak proporsional (height/padding mismatch dengan combobox).
+  - **Target:** DataTableToolbar — tambah `max-w-[200px]` ke combobox wrapper, ensure button `h-11` match combobox height.
+  - **Gate:** Visual check `/master/profesi` — combobox 200px width, button proporsional, zona separation `gap-4` jelas.
+  - **Status:** 🟡 Open — needs agent delegation.
+  - **Screenshot baseline:** `~/Pictures/Screenshots/Screenshot from 2026-07-16 15:33-28.png` (before fix).
+
+- [ ] **[4] `kepegawaian-fe-if8`** — App shell 60:30:10 differentiation + copyright footer
+  - **Issue:** Screenshot 2026-07-16 15:33 menunjukkan struktur 30% (topbar/sidebar) blend monoton dengan canvas 60% (semua putih) — tidak cukup differentiation. Missing app footer dengan copyright text.
+  - **Target:** (1) Topbar — tambah `bg-card` atau `border-b border-border` untuk subtle separation dari content; (2) Sidebar — tambah `bg-card` (netral sedikit gelap); (3) Footer bar baru — sticky bottom, `bg-card`, `text-center`, `py-3`, `text-xs text-muted-foreground`, "© Perumdam Tirta Satria 2026".
+  - **Gate:** Visual check `/master/profesi` — topbar/sidebar/footer terpisah jelas dari content (60% vs 30% distinction), footer visible di bottom semua halaman app.
+  - **Status:** 🟡 Open — needs agent delegation.
+  - **Context:** CONTEXT-MAP spec 60% canvas (`--background` off-white), 30% struktur (`--card`/`--muted` netral), 10% aksen (Evergreen hijau). Saat ini 60%+30% semua sama warna → perlu differentiation.
+
 ## Detail acceptance — `kepegawaian-fe-v5p` (Implement)
 
 ### 1. Table Typography Hierarchy
