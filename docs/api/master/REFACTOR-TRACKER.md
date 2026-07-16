@@ -59,11 +59,11 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 ## Checklist per issue
 
 ### bo3 — Repoint `src/lib/api/types.ts`
-- [ ] Hapus interface `ApiEnvelope<T>` & `Page<T>` hand-written di `src/lib/api/types.ts`
-- [ ] Re-export dari `@/types/_shared`: `Envelope`, `Page`, `PageEnvelope` (+ alias `ApiEnvelope` bila importer masih pakai nama itu)
-- [ ] Pastikan importer langsung tetap kompilasi: `paging.ts`, `master-entity-types.ts`, `master-config.ts`, `client.ts`
-- [ ] `npx tsc --noEmit` hijau
-- [ ] `bd close kepegawaian-fe-bo3` → push
+- [x] Hapus interface `ApiEnvelope<T>` & `Page<T>` hand-written di `src/lib/api/types.ts`
+- [x] Re-export dari `@/types/_shared`: `Envelope`, `Page`, `PageEnvelope` (+ alias `ApiEnvelope`)
+- [x] Pastikan importer langsung tetap kompilasi: `paging.ts`, `master-entity-types.ts`, `master-config.ts`, `client.ts`
+- [x] `npx tsc --noEmit` hijau
+- [x] `bd close kepegawaian-fe-bo3` → push (sedang dikerjakan)
 
 ### c8z — `client.ts handle()` narrowing
 - [ ] Narrow union di `handle<T>()`: cabang `!res.ok` akses `body.errors` tanpa `?.`; cabang ok `return body.data`

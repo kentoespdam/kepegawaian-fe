@@ -22,7 +22,7 @@ async function handle<T>(res: Response): Promise<T> {
 	}
 	if (res.status === 204) return undefined as T;
 	const body = (await res.json()) as ApiEnvelope<T>;
-	return body.data;
+	return body.data!;
 }
 
 export const api = {
