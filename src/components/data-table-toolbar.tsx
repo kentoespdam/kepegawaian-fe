@@ -53,7 +53,7 @@ export function DataTableToolbar({
 						key={fk.field}
 						value={values[fk.field] ?? ""}
 						onChange={(e) => onFilterChange?.(fk.field, e.target.value || undefined)}
-						className="h-9 rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+						className="h-11 rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 					>
 						<option value="">Semua {fk.label}</option>
 						{(fkOptions?.[fk.field] ?? []).map((o) => (
@@ -99,7 +99,7 @@ function DebouncedInput({
 				debouncedOnChange(v);
 			}}
 			type={type}
-			className="h-9 w-48"
+			className="h-11 w-48"
 		/>
 	);
 }
