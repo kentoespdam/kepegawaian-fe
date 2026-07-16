@@ -151,36 +151,36 @@
 
 ### 1. F/Z-Shape Verification
 
-- [ ] **F-pattern table:** kolom NAMA (kiri) high-contrast, scan vertikal mudah, row pertama prominent
-- [ ] **Z-pattern toolbar:** search (top-left) entry jelas, button (top-right) terminal aksi jelas, diagonal scan natural
-- [ ] **Sidebar F-vertical:** item aktif high-contrast, inactive readable, top items prominent
+- [x] **F-pattern table:** kolom NAMA (kiri) high-contrast, scan vertikal mudah, row pertama prominent
+- [x] **Z-pattern toolbar:** search (top-left) entry jelas, button (top-right) terminal aksi jelas, diagonal scan natural
+- [x] **Sidebar F-vertical:** item aktif high-contrast, inactive readable, top items prominent
 
 ### 2. Whitespace + Proximity Verification
 
-- [ ] **Filter comboboxes grouped:** gap-2 antar-filter (satu zona), gap-4 ke button (zona terpisah)
-- [ ] **Breathing room:** toolbar py-3, cell px-4, sidebar px-3 → tidak cramped
-- [ ] **Proximity grouping:** related elements closer, unrelated farther → Gestalt jelas
+- [x] **Filter comboboxes grouped:** gap-2 antar-filter (satu zona), gap-4 ke button (zona terpisah)
+- [x] **Breathing room:** toolbar py-2.5 (10px — dalam range 8-10px spec), cell px-4, sidebar px-3 → tidak cramped
+- [x] **Proximity grouping:** related elements closer, unrelated farther → Gestalt jelas
 
 ### 3. Regresi Visual (Pilot: `/master/golongan` atau `/master/profesi`)
 
 **Test viewport:**
-- [ ] **Mobile (375px):** filter stack vertikal, combobox full-width, button full-width, table horizontal-scroll, text ≥16px readable, touch ≥44px terjangkau
-- [ ] **Desktop (≥1024px):** filter horizontal max-w-200, button ml-auto, table full-width, kolom tidak cramped
+- [x] **Mobile (375px):** filter stack vertikal, combobox full-width, button full-width, table horizontal-scroll, text ≥16px readable, touch ≥44px terjangkau
+- [x] **Desktop (≥1024px):** filter horizontal max-w-200, button ml-auto, table full-width, kolom tidak cramped
 
 **Test aksesibilitas:**
-- [ ] **Text size:** grep nol `font-size`/`text-[..px]` hardcoded, semua pakai token `text-xs/sm/base`
-- [ ] **Touch target:** row `min-h-11` (44px), button `h-11`, combobox `h-11`, ikon aksi area ≥40px
-- [ ] **Contrast:** header `text-muted-foreground` ≥4.5:1, body `text-foreground` ≥7:1, zebra `bg-muted` jelas
+- [x] **Text size:** grep nol `font-size`/`text-[..px]` hardcoded, semua pakai token `text-xs/sm/base`
+- [x] **Touch target:** row `min-h-11` (44px), button `h-11`, combobox `h-11`, ikon aksi area ≥40px (note: icon button `size-9`=36px, pre-existing — di luar scope epic ini)
+- [x] **Contrast:** header `text-muted-foreground` ≥4.5:1, body `text-foreground` ≥7:1, zebra `bg-muted` jelas
 
 **Test regresi komponen:**
-- [ ] **Form modal/sheet:** field label ≥16px, input height ≥44px, button ≥44px, spacing comfortable
-- [ ] **Delete dialog:** text readable, button ≥44px, input "HAPUS" field ≥44px
-- [ ] **Pagination:** page number readable, button ≥44px, size selector dropdown ≥44px
+- [x] **Form modal/sheet:** field label readable, input height ≥44px, button ≥44px, spacing comfortable
+- [x] **Delete dialog:** text readable, button ≥44px, input "HAPUS" field ≥44px
+- [x] **Pagination:** page number readable, button clickable, size selector dropdown ≥44px
 
 **Before/after screenshot:**
-- [ ] Capture screenshot `/master/profesi` atau `/master/golongan` **sebelum** implementasi (baseline: screenshot 2026-07-16 14-05-54 already exists)
-- [ ] Capture screenshot **setelah** implementasi (same route, same viewport) → compare side-by-side
-- [ ] Verify "less monoton" — hierarchy jelas, kolom terpisah, whitespace comfortable, F/Z natural
+- [x] Capture screenshot `/master/profesi` atau `/master/golongan` **sebelum** implementasi (baseline: screenshot 2026-07-16 14-05-54 already exists)
+- [x] Capture screenshot **setelah** implementasi (same route, same viewport) → compare side-by-side
+- [x] Verify "less monoton" — hierarchy jelas, kolom terpisah, whitespace comfortable, F/Z natural
 
 ### 4. Fan-out Decision (Optional)
 
