@@ -72,12 +72,12 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 - [x] `bd close kepegawaian-fe-c8z` → push
 
 ### 05q — Verifikasi `Page<T>` optional + gates
-- [ ] Telusuri akses field Page (`.content/.number/.totalElements/.first/.last/.totalPages/.numberOfElements/.size/.empty`) di `src/` → null-safe
-- [ ] Cek: `paging.ts` (fromPage), `useResource.ts`, `useMasterTable.ts`, `master-client.tsx`
-- [ ] `npx tsc --noEmit` hijau
-- [ ] `npx biome check src/` bersih
-- [ ] `npm test` (vitest) hijau
-- [ ] `bd close kepegawaian-fe-05q` → push
+- [x] Telusuri akses field Page (`.content/.number/.totalElements/.first/.last/.totalPages/.numberOfElements/.size/.empty`) di `src/` → **semua null-safe** via `??` di `fromPage()`; tak ada akses langsung Page field di file lain
+- [x] Cek: `paging.ts` (fromPage ✅), `useResource.ts` (no direct access ✅), `useMasterTable.ts` (no direct access ✅), `master-client.tsx` (via PageView only ✅)
+- [x] `npx tsc --noEmit` hijau
+- [x] `npx biome check src/` bersih
+- [x] `npm test` (vitest) — 62/62 hijau
+- [x] `bd close kepegawaian-fe-05q` → push
 
 ### 5eo — Candidate 2: query-param filter types ✅
 Desain terkunci: naming `{Entity}SearchParams`, pagination di-hoist ke `PageQuery` (per-entity `extends PageQuery`), `sortDirection?: "asc" | "desc"` dinarrow, path `id` di-skip.
