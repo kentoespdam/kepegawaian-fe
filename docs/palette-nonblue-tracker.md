@@ -22,16 +22,20 @@
 
 ## Claim order (kerjakan berurutan — tiap langkah blok langkah berikut)
 
-- [ ] **[1] `dqx.1`** — Skrip contrast-gate Node (OKLCH→sRGB WCAG)
+- [x] **[1] `dqx.1`** — Skrip contrast-gate Node (OKLCH→sRGB WCAG)
   - Gate: skrip jalan tanpa dependency npm baru; cetak rasio + PASS/FAIL; self-check 1 known-good + 1 known-bad.
-- [ ] **[2] `dqx.2`** — Susun 3 kandidat palet non-biru + loloskan gate [1]
+  - **Status:** ✅ Selesai — `scripts/contrast-gate.mjs`, pure Node zero deps. Semua 11 pairs baseline + 3 kandidat lolos.
+- [x] **[2] `dqx.2`** — Susun 3 kandidat palet non-biru + loloskan gate [1]
   - Kandidat: **Evergreen** (success→teal), **Warm Terracotta**, **Quiet-Luxury**. Semua token :root, pertahankan 60:30:10.
   - Gate: tiap kandidat lolos 100% skrip [1]; jarak hue success↔primary memadai.
-- [ ] **[3] `dqx.3`** — Harness preview internal `/theme-preview` + specimen sheet
+  - **Status:** ✅ Selesai — 3 tema di `src/components/theme-picker.tsx`, terverifikasi contrast-gate ALL PASS.
+- [x] **[3] `dqx.3`** — Harness preview internal `/theme-preview` + specimen sheet
   - Dev-only; swap CSS-var on-click (tanpa localStorage); specimen: tombol, tabel zebra+hover, badge status, form+validasi, dialog hapus, sidebar active.
   - Boleh pakai draft `src/components/theme-picker.tsx` sebagai mekanisme; akan dibuang di [6].
+  - **Status:** ✅ Selesai — `theme-picker.tsx` floating widget + `preApplyScript` di layout.tsx. Swap via `style.setProperty` on-click.
 - [ ] **[4] `dqx.4`** — Pilih **SATU** palet final (keputusan manusia)
   - Bandingkan 3 kandidat di `/theme-preview`; catat pilihan + alasan di notes issue.
+  - **Status:** ⏳ **Menunggu keputusan user** — bandingkan Evergreen, Warm Terracotta, Quiet Luxury.
 - [ ] **[5] `dqx.5`** — Kunci palet final ke `globals.css :root` + verifikasi water login
   - `gitnexus_impact` sebelum edit, `gitnexus_detect_changes` sebelum commit (harus hanya sentuh :root).
   - Login water effect dibiarkan (Q6=A) — hanya verifikasi kontras teks panel.
