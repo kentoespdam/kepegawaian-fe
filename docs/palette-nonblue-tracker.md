@@ -47,8 +47,49 @@
 
 - [x] **`dqx.7`** — Isi `.dark {}` + aktifkan `next-themes` (Q4=B, ditunda ~2026-08-01).
   - **Status:** ✅ `.dark` terisi Evergreen dark tokens, contrast-gate ALL PASS. `ThemeProvider` via `next-themes`. Toggle tema di UserMenu.
-- [x] **`dqx.8`** — Audit tipografi keterbacaan 35+/lansia (Q10=A, ditunda ~2026-08-01).
-  - **Status:** ✅ Body font-size 15px di globals.css. Button default h-11 (44px). Input default h-11 (44px). tabular-nums sudah ada. Font-weight >= 400 sudah.
+## Tipografi 35+ — `dqx.8` (dibuka kembali 2026-07-16)
+
+> `dqx.8` sempat di-CLOSE prematur ("body 15px oke"). **Dibuka lagi**: grill 2026-07-16
+> memutuskan base **15px → 16px** wajib (presbyopia). Defer dicabut, dikerjakan sekarang.
+> Scope = **tipografi murni** (Q1=A); density & ikonografi di luar scope (issue lain nanti).
+>
+> **Temuan kunci:** 17 route master berbagi `MasterPageClient` → **komponen bersama**
+> (`data-table`, `crud-form`, `entity-form-modal`). Perbaiki tipografi di komponen **sekali**
+> → 17 master ikut otomatis. `body{font-size:15px}` di `globals.css` = hardcoded, target
+> migrasi ke token `--text-body`. Tailwind v4 (`@theme inline`) mendukung token tipografi.
+
+Kerjakan berurutan — tiap fase blok fase berikut:
+
+- [ ] **[1] `dqx.8.1`** — Lengkapi `visual-foundation.md §3`: skala ukuran + line-height + line-length
+  - §3 saat ini HANYA family/weight/tabular-nums, **tanpa angka ukuran**. Tetapkan skala
+    (base 16px, small/label/heading via rasio), line-height per tingkat, line-length maks (ch),
+    letter-spacing all-caps. Tiap angka bersandar **riset usia + WCAG** (SC 1.4.12) via context7.
+  - Gate: §3 lengkap + tabel token `--text-*`/`--leading-*`/`--tracking-*` siap; **nol** ubah kode.
+- [ ] **[2] `dqx.8.2`** — Pilot: tokenisasi stack komponen bersama + verifikasi `/master/golongan`
+  - Pasang token di `@theme`, ganti `body{15px}` → `--text-body(16px)`. Terapkan ke
+    `data-table*.tsx`, `crud-form.tsx`, `entity-form-modal.tsx`, `master-client.tsx`, `ui/table.tsx`.
+  - `gitnexus_impact` sebelum edit tiap komponen; `gitnexus_detect_changes` sebelum commit.
+  - Gate: grep **nol** `font-size`/`text-[..px]` hardcoded di stack; body ≠ 15px; token terpasang &
+    dikonsumsi; tabular-nums di kolom angka; verifikasi visual `/master/golongan` **375px & desktop**.
+- [ ] **[3] `dqx.8.3`** — Fan-out QA: 16 master sisa + `/login` + shell, 375px & desktop
+  - Token global → mayoritas ikut otomatis; ini **QA regresi**, bukan koding ulang. Cari regresi
+    akibat 16px: teks kepotong, tabel padat pecah, sidebar active, badge, dialog hapus, validasi.
+  - Kalau satu arketipe tabel benar-benar rusak oleh 16px → **catat + usulkan token varian tabel**
+    (Q5-C), jangan turunkan global senyap.
+
+### Rekap grill tipografi (2026-07-16)
+
+| Q | Keputusan |
+|---|---|
+| Q1 | Scope = tipografi murni (density & ikon dipisah). |
+| Q2 | B-sempit: lengkapi §3 dulu (ada lubang ukuran), baru audit+terapkan. |
+| Q3 | Angka skala bersandar standar keterbacaan usia + WCAG (context7), bukan tebakan. |
+| Q4 | Token semantik `--text-*` di `@theme` (Tailwind v4 terverifikasi), bukan utility tebar. |
+| Q5 | Base body **15px → 16px** (presbyopia); varian tabel hanya jika QA buktikan rusak. |
+| Q6 | Pilot dulu, kunci pola, baru fan-out. |
+| Q7 | Pilot = **stack komponen bersama** (17 master share `MasterPageClient`), verifikasi via `golongan`. |
+| Q8 | Gate mekanis (grep nol hardcoded) + visual (375px & desktop). |
+| Q9 | Pecah `dqx.8` jadi 3 anak berantai; defer dicabut; kerjakan sekarang. |
 
 ## Utang teknis yang dibereskan di jalur ini
 
