@@ -208,11 +208,10 @@ export function DataTable<T>({
 								<tr
 									key={getRowId ? getRowId(item) : i}
 									className={cn(
-										"border-b transition-colors hover:bg-muted/50 cursor-pointer",
+										"border-b transition-colors hover:bg-muted/50",
 										i % 2 === 1 && "bg-muted hover:bg-muted/80",
 										isPlaceholder && "opacity-50 pointer-events-none",
 									)}
-									onClick={() => onEdit?.(item)}
 								>
 									{columns.map((col) => (
 										<td key={col.id} className="px-4 py-2 align-middle whitespace-nowrap tabular-nums">
@@ -232,7 +231,8 @@ export function DataTable<T>({
 														}}
 														aria-label="Edit"
 													>
-														<Pencil className="size-4" />
+														{" "}
+														<Pencil className="size-5" />
 													</Button>
 												)}
 												{onDelete && (
@@ -245,7 +245,8 @@ export function DataTable<T>({
 														}}
 														aria-label="Hapus"
 													>
-														<Trash2 className="size-4 text-destructive" />
+														{" "}
+														<Trash2 className="size-5 text-destructive" />
 													</Button>
 												)}
 											</div>

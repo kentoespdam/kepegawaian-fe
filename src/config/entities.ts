@@ -19,8 +19,8 @@ export const MASTER_ENTITIES: Entity[] = [
 	{ id: "jenis-pelatihan", label: "Jenis Pelatihan" },
 	{ id: "jenis-sp", label: "Jenis SP" },
 	{ id: "alasan-berhenti", label: "Alasan Berhenti" },
-	{ id: "alat-kerja", label: "Alat Kerja" },
-	{ id: "apd", label: "APD" },
+	// { id: "alat-kerja", label: "Alat Kerja" },
+	// { id: "apd", label: "APD" },
 	{ id: "hari-libur", label: "Hari Libur" },
 	{ id: "rumah-dinas", label: "Rumah Dinas" },
 ];
