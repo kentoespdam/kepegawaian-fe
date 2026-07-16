@@ -13,4 +13,10 @@ export const golonganConfig: EntityConfig<GolonganQuery> = makeConfig<GolonganQu
 		{ id: "pangkat", header: "Pangkat", cell: (item) => String(item.pangkat ?? "") },
 	],
 	"Golongan",
+	{
+		searchFields: [
+			{ name: "golongan", label: "Golongan" },
+			{ name: "pangkat", label: "Pangkat" },
+		],
+	},
 );

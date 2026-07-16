@@ -101,8 +101,8 @@ Menyambungkan tipe hasil 5eo ke jalur data. BUKAN UI.
 - [x] `bd close kepegawaian-fe-wkk` → push
 
 ### 5ad — Filter table UI per-entity
-- [ ] Render input filter per-entity di `DataTableToolbar` berdasarkan field filter entity
-- [ ] Tulis ke URL via `setP` (debounce untuk teks), reset `page=1` saat filter berubah
-- [ ] Definisi field filter (kemungkinan tambah ke `EntityConfig`) — **konfirmasi pola dgn user dulu**
-- [ ] Verifikasi manual browser (ketik filter → refetch; clear → penuh) + tsc/biome hijau
-- [ ] `bd close kepegawaian-fe-5ad` → push
+- [x] Render input filter per-entity di `DataTableToolbar`: debounced text input (`searchFields`) + FK select (`fkSources` + `fkOptions`)
+- [x] Tulis ke URL via `setFilter` (single URL replace — filter + page=1, cegah stale sp.toString()). Debounce 400ms untuk teks
+- [x] Definisi field filter: `searchFields?: { name, label, type? }[]` di EntityConfig — **dikonfirmasi user**: searchFields + fkSources
+- [x] Verifikasi manual browser (ketik filter → refetch; clear → penuh) + tsc/biome hijau (0 errors, 0 warnings, 65 tests)
+- [x] `bd close kepegawaian-fe-5ad` → push

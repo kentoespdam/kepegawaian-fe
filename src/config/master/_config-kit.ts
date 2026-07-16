@@ -27,6 +27,8 @@ export interface EntityConfig<TQuery = Record<string, unknown>, _TReq = TQuery> 
 	container?: "dialog" | "sheet";
 	treeField?: string;
 	fkSources?: { field: string; entity: string; label: string }[];
+	/** Filter teks/number di toolbar — dirender sebagai input debounced + ditulis ke URL. */
+	searchFields?: { name: string; label: string; type?: "text" | "number" }[];
 }
 
 export const namaWajib = z.string().min(1, "Nama wajib diisi");
@@ -52,6 +54,7 @@ export function makeConfig<TQuery, _TReq = TQuery>(
 		container?: "dialog" | "sheet";
 		treeField?: string;
 		fkSources?: { field: string; entity: string; label: string }[];
+		searchFields?: { name: string; label: string; type?: "text" | "number" }[];
 	},
 ): EntityConfig<TQuery, _TReq> {
 	return {
@@ -62,5 +65,6 @@ export function makeConfig<TQuery, _TReq = TQuery>(
 		container: opts?.container,
 		treeField: opts?.treeField,
 		fkSources: opts?.fkSources,
+		searchFields: opts?.searchFields,
 	};
 }

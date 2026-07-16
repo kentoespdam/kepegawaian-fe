@@ -103,5 +103,18 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 		});
 	}, [cfg.fields, cfg.treeField, treeItems, editing, fkSources, fkLookup]);
 
-	return { resolvedItems, formFields };
+	// FK options for filter toolbar — keyed by FK field name
+	const fkOptions = useMemo(() => {
+		const result: Record<string, { value: string; label: string }[]> = {};
+		for (let i = 0; i < fkSources.length; i++) {
+			const fk = fkSources[i];
+			const lm = fkLookup.get(fk.field);
+			result[fk.field] = lm
+				? [...lm.entries()].map(([value, item]) => ({ value, label: String(item.nama ?? value) }))
+				: [];
+		}
+		return result;
+	}, [fkSources, fkLookup]);
+
+	return { resolvedItems, formFields, fkOptions };
 }

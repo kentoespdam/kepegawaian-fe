@@ -23,7 +23,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	// ponytail: map di-widen ke EntityConfig — cast via unknown karena tipe tidak overlapping
 	const cfg = MASTER_ENTITY_CONFIGS[entity] as unknown as EntityConfig<TItem, TReq>;
-	const { page, size, sortBy, sortDir, filters, setP } = useMasterSearchParams(entity);
+	const { page, size, sortBy, sortDir, filters, setP, setFilter } = useMasterSearchParams(entity);
 
 	const [editing, setEditing] = useState<TItem | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
@@ -42,7 +42,11 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	const pageView = fromPage(list.data);
 
-	const { resolvedItems, formFields } = useMasterTable({
+	const handleFilterChange = (name: string, value: string | undefined) => {
+		setFilter(name, value);
+	};
+
+	const { resolvedItems, formFields, fkOptions } = useMasterTable({
 		cfg,
 		listData: pageView.rows as Record<string, unknown>[],
 		treeItems,
@@ -96,7 +100,13 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	return (
 		<div>
-			<DataTableToolbar>
+			<DataTableToolbar
+				searchFields={cfg.searchFields}
+				fkSources={cfg.fkSources}
+				fkOptions={fkOptions}
+				values={filters}
+				onFilterChange={handleFilterChange}
+			>
 				<Button size="sm" onClick={openCreate}>
 					+ Tambah
 				</Button>

@@ -18,5 +18,6 @@ export const profesiConfig: EntityConfig<ProfesiQuery> = makeConfig<ProfesiQuery
 			{ field: "jabatanId", entity: "jabatan", label: "Jabatan" },
 			{ field: "gradeId", entity: "grade", label: "Grade" },
 		],
+		searchFields: [{ name: "nama", label: "Nama" }],
 	},
 );

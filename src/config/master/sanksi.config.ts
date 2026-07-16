@@ -11,5 +11,12 @@ export const sanksiConfig: EntityConfig<SanksiQuery> = makeConfig<SanksiQuery>(
 		{ id: "jenisSp", header: "Jenis SP", cell: (item) => item.jenisSp?.nama ?? "-" },
 	],
 	"Sanksi",
-	{ container: "sheet", fkSources: [{ field: "jenisSpId", entity: "jenis-sp", label: "Jenis SP" }] },
+	{
+		container: "sheet",
+		fkSources: [{ field: "jenisSpId", entity: "jenis-sp", label: "Jenis SP" }],
+		searchFields: [
+			{ name: "kode", label: "Kode" },
+			{ name: "keterangan", label: "Keterangan" },
+		],
+	},
 );

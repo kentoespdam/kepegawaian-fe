@@ -5,4 +5,5 @@ export const alasanBerhentiConfig: EntityConfig = makeConfig(
 	[nameField],
 	[nameCol],
 	"Alasan Berhenti",
+	{ searchFields: [{ name: "nama", label: "Nama" }] },
 );

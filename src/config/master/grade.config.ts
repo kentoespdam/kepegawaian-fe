@@ -18,5 +18,8 @@ export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
 		{ id: "level", header: "Level", cell: (item) => item.level?.nama ?? "-" },
 	],
 	"Grade",
-	{ fkSources: [{ field: "levelId", entity: "level", label: "Level" }] },
+	{
+		fkSources: [{ field: "levelId", entity: "level", label: "Level" }],
+		searchFields: [{ name: "grade", label: "Grade", type: "number" }],
+	},
 );

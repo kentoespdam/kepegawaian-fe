@@ -34,5 +34,14 @@ export function useMasterSearchParams(entity: string) {
 		router.replace(`/master/${entity}?${p.toString()}`);
 	};
 
-	return { page, size, sortBy, sortDir, filters, setP };
+	/** Set filter + reset page=1 dalam satu URL replace (cegah race setP berantai). */
+	const setFilter = (k: string, v: string | undefined) => {
+		const p = new URLSearchParams(sp.toString());
+		if (v) p.set(k, v);
+		else p.delete(k);
+		p.set("page", "1");
+		router.replace(`/master/${entity}?${p.toString()}`);
+	};
+
+	return { page, size, sortBy, sortDir, filters, setP, setFilter };
 }

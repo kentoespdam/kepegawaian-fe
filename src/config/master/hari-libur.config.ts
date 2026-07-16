@@ -16,4 +16,11 @@ export const hariLiburConfig: EntityConfig<HariLiburQuery> = makeConfig<HariLibu
 		{ id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
 	],
 	"Hari Libur",
+	{
+		searchFields: [
+			{ name: "tahun", label: "Tahun", type: "number" },
+			{ name: "bulan", label: "Bulan", type: "number" },
+			{ name: "jenisLibur", label: "Jenis Libur" },
+		],
+	},
 );

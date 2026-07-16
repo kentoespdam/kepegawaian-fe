@@ -10,5 +10,11 @@ export const jabatanConfig: EntityConfig<JabatanQuery> = makeConfig<JabatanQuery
 		{ id: "parent", header: "Parent", cell: (item) => item.parent?.nama ?? "-" },
 	],
 	"Jabatan",
-	{ treeField: "parentId" },
+	{
+		treeField: "parentId",
+		searchFields: [
+			{ name: "kode", label: "Kode" },
+			{ name: "nama", label: "Nama" },
+		],
+	},
 );

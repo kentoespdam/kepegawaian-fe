@@ -10,4 +10,5 @@ export const rumahDinasConfig: EntityConfig<RumahDinasQuery> = makeConfig<RumahD
 		{ id: "nilai", header: "Nilai", cell: (item) => String(item.nilai ?? "") },
 	],
 	"Rumah Dinas",
+	{ searchFields: [{ name: "nama", label: "Nama" }] },
 );

@@ -10,5 +10,13 @@ export const organisasiConfig: EntityConfig<OrganisasiQuery> = makeConfig<Organi
 		{ id: "parent", header: "Parent", cell: (item) => item.parent?.nama ?? "-" },
 	],
 	"Organisasi",
-	{ treeField: "parentId" },
+	{
+		treeField: "parentId",
+		searchFields: [
+			{ name: "kode", label: "Kode" },
+			{ name: "nama", label: "Nama" },
+			{ name: "levelOrg", label: "Level", type: "number" },
+			{ name: "category", label: "Kategori" },
+		],
+	},
 );

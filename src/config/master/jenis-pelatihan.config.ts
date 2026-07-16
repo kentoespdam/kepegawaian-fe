@@ -5,4 +5,5 @@ export const jenisPelatihanConfig: EntityConfig = makeConfig(
 	[nameField],
 	[nameCol],
 	"Jenis Pelatihan",
+	{ searchFields: [{ name: "nama", label: "Nama" }] },
 );
