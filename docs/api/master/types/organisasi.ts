@@ -8,7 +8,15 @@
  * Endpoint : DELETE /master/organisasi/{id}, GET /master/organisasi, GET /master/organisasi/list, GET /master/organisasi/{id}, GET /master/organisasi/{id}/parent, POST /master/organisasi, PUT /master/organisasi/{id}
  */
 
-import type { Envelope, OrganisasiMiniResponse, PageEnvelope } from "./_shared";
+import type { Envelope, OrganisasiMiniResponse, PageEnvelope, PageQuery } from "./_shared";
+
+export interface OrganisasiSearchParams extends PageQuery {
+  kode?: string;
+  nama?: string;
+  parentId?: number; // int64
+  levelOrg?: number; // int32
+  category?: string;
+}
 
 export interface OrganisasiQuery {
   id?: number; // int64

@@ -8,7 +8,12 @@
  * Endpoint : DELETE /master/grade/{id}, GET /master/grade, GET /master/grade/level/{id}, GET /master/grade/list, GET /master/grade/{id}, POST /master/grade, PUT /master/grade/{id}
  */
 
-import type { Envelope, LevelResponse, PageEnvelope } from "../_shared";
+import type { Envelope, LevelResponse, PageEnvelope, PageQuery } from "../_shared";
+
+export interface GradeSearchParams extends PageQuery {
+	levelId?: number; // int64
+	grade?: number; // int32
+}
 
 export interface GradeQuery {
 	id?: number; // int64

@@ -8,7 +8,12 @@
  * Endpoint : DELETE /master/golongan/{id}, GET /master/golongan, GET /master/golongan/list, GET /master/golongan/{id}, POST /master/golongan, PUT /master/golongan/{id}
  */
 
-import type { Envelope, PageEnvelope } from "../_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+
+export interface GolonganSearchParams extends PageQuery {
+	golongan?: string;
+	pangkat?: string;
+}
 
 export interface GolonganQuery {
 	id?: number; // int64

@@ -15,7 +15,7 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 | 1 | bo3 | Repoint `src/lib/api/types.ts` → `_shared.ts` | runtime | — | ⬜ open |
 | 2 | c8z | `client.ts handle()` narrowing union | runtime | bo3 | ⛔ blocked |
 | 3 | 05q | Verifikasi `Page<T>` optional + quality gates | runtime | bo3, c8z | ⛔ blocked |
-| 4 | 5eo | Candidate 2: query-param filter types | extract-types.js | — (perlu grill desain) | ⬜ open |
+| 4 | 5eo | Candidate 2: query-param filter types | extract-types.js | — | ✅ DONE |
 
 ---
 
@@ -71,13 +71,14 @@ Tracker ini adalah papan monitoring untuk agent yang mengerjakan sisa pekerjaan.
 - [ ] `npm test` (vitest) hijau
 - [ ] `bd close kepegawaian-fe-05q` → push
 
-### 5eo — Candidate 2: query-param filter types
-- [ ] **Grill desain dengan user** (naming, optionality, generic `PageQuery<T>` vs per-entity, mana yang di-hoist)
-- [ ] `plan()` step 1: berhenti membuang `parameters` GET
-- [ ] Pisahkan path param `id`(int64) dari query params
-- [ ] Hoist param pagination berulang (`page`/`size`/`sortBy`/`sortDirection`) ke `_shared.ts`
-- [ ] Emit tipe filter per-entity ke `docs/api/master/types/`
-- [ ] Tambah test di `extract-types.test.ts`
-- [ ] Sync manual ke `src/types/` + `biome check --write`
-- [ ] `npx tsc --noEmit` + `npm test` hijau
-- [ ] `bd close kepegawaian-fe-5eo` → push
+### 5eo — Candidate 2: query-param filter types ✅
+Desain terkunci: naming `{Entity}SearchParams`, pagination di-hoist ke `PageQuery` (per-entity `extends PageQuery`), `sortDirection?: "asc" | "desc"` dinarrow, path `id` di-skip.
+- [x] **Grill desain dengan user** (naming, optionality, hoist PageQuery, narrow sortDirection, skip id)
+- [x] `plan()` step 1: berhenti membuang `parameters` GET (`domainPaths` + `collectQueryParams`)
+- [x] Pisahkan path param `id` dari query params (`in:"query"` only)
+- [x] Hoist pagination quartet ke `PageQuery` di `_shared.ts`
+- [x] Emit `{Entity}SearchParams extends PageQuery` per-entity (15 entity) ke `docs/api/master/types/`
+- [x] Tambah 7 test di `extract-types.test.ts` (43 pass)
+- [x] Sync manual ke `src/types/` + `biome check --write`
+- [x] `npx tsc --noEmit` (exit 0) + `npm test` (62 pass) hijau
+- [x] `bd close kepegawaian-fe-5eo` → push

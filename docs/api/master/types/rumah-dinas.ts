@@ -8,7 +8,11 @@
  * Endpoint : DELETE /master/rumah-dinas/{id}, GET /master/rumah-dinas, GET /master/rumah-dinas/list, GET /master/rumah-dinas/{id}, POST /master/rumah-dinas, PUT /master/rumah-dinas/{id}
  */
 
-import type { Envelope, PageEnvelope } from "./_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
+
+export interface RumahDinasSearchParams extends PageQuery {
+  nama?: string;
+}
 
 export interface RumahDinasQuery {
   id?: number; // int64

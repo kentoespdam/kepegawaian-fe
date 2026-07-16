@@ -8,7 +8,13 @@
  * Endpoint : DELETE /master/sanksi/{id}, GET /master/sanksi, GET /master/sanksi/jenis-sp/{id}, GET /master/sanksi/list, GET /master/sanksi/{id}, PATCH /master/sanksi/{id}/jenis-sp, POST /master/sanksi, PUT /master/sanksi/{id}
  */
 
-import type { Envelope, PageEnvelope } from "../_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+
+export interface SanksiSearchParams extends PageQuery {
+	kode?: string;
+	keterangan?: string;
+	jenisSpId?: number; // int64
+}
 
 export interface SanksiMiniResponse {
 	id?: number; // int64

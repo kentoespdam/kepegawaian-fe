@@ -8,7 +8,11 @@
  * Endpoint : DELETE /master/jenis-keahlian/{id}, GET /master/jenis-keahlian, GET /master/jenis-keahlian/list, GET /master/jenis-keahlian/{id}, POST /master/jenis-keahlian, PUT /master/jenis-keahlian/{id}
  */
 
-import type { Envelope, PageEnvelope } from "./_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
+
+export interface JenisKeahlianSearchParams extends PageQuery {
+  nama?: string;
+}
 
 export interface JenisKeahlianQuery {
   id?: number; // int64

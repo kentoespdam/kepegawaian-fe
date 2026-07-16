@@ -8,7 +8,11 @@
  * Endpoint : DELETE /master/jenis-pelatihan/{id}, GET /master/jenis-pelatihan, GET /master/jenis-pelatihan/list, GET /master/jenis-pelatihan/{id}, POST /master/jenis-pelatihan, PUT /master/jenis-pelatihan/{id}
  */
 
-import type { Envelope, PageEnvelope } from "../_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+
+export interface JenisPelatihanSearchParams extends PageQuery {
+	nama?: string;
+}
 
 export interface JenisPelatihanQuery {
 	id?: number; // int64

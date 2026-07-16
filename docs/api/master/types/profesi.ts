@@ -8,7 +8,22 @@
  * Endpoint : DELETE /master/profesi/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, PUT /master/profesi/{id}
  */
 
-import type { Envelope, JabatanMiniResponse, LevelResponse, OrganisasiMiniResponse, PageEnvelope } from "./_shared";
+import type {
+  Envelope,
+  JabatanMiniResponse,
+  LevelResponse,
+  OrganisasiMiniResponse,
+  PageEnvelope,
+  PageQuery,
+} from "./_shared";
+
+export interface ProfesiSearchParams extends PageQuery {
+  organisasiId?: number; // int64
+  jabatanId?: number; // int64
+  levelId?: number; // int64
+  gradeId?: number; // int64
+  nama?: string;
+}
 
 export interface GradeMiniResponse {
   id?: number; // int64

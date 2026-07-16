@@ -8,7 +8,11 @@
  * Endpoint : DELETE /master/level/{id}, GET /master/level, GET /master/level/list, GET /master/level/{id}, POST /master/level, POST /master/level/batch, PUT /master/level/{id}
  */
 
-import type { Envelope, LevelResponse, PageEnvelope } from "../_shared";
+import type { Envelope, LevelResponse, PageEnvelope, PageQuery } from "../_shared";
+
+export interface LevelSearchParams extends PageQuery {
+	nama?: string;
+}
 
 export type SingleResultLevelResponse = Envelope<LevelResponse>;
 

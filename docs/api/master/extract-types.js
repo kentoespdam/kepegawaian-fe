@@ -185,7 +185,10 @@ function enumSignature(values) {
 // supaya keluarga generic Envelope<T>/PageEnvelope<T>/Page<T> cukup ditulis
 // SEKALI di _shared.ts; tiap entity hanya beda pada `data`.
 
-const GENERIC_NAMES = ["Envelope", "PageEnvelope", "Page"];
+const GENERIC_NAMES = ["Envelope", "PageEnvelope", "Page", "PageQuery"];
+// Query-param pagination quartet — di-hoist ke PageQuery (_shared); tiap entity
+// hanya menyisakan filter spesifiknya via `extends PageQuery`.
+const PAGE_QUERY_KEYS = ["page", "size", "sortBy", "sortDirection"];
 const ENVELOPE_KEYS = ["status", "statusText", "errors", "message", "data", "timestamp"];
 const PAGE_ENVELOPE_KEYS = ["status", "statusText", "data", "timestamp"];
 const PAGE_MARKER_KEYS = ["content", "pageable", "totalElements", "totalPages"];
@@ -265,6 +268,14 @@ const GENERIC_FAMILY = [
   "  data?: Page<T>;",
   "  timestamp?: string; // date-time",
   "}",
+  "",
+  "/** Query params pagination standar; di-extends oleh tiap {Entity}SearchParams. */",
+  "export interface PageQuery {",
+  "  page?: number; // int32",
+  "  size?: number; // int32",
+  "  sortBy?: string;",
+  '  sortDirection?: "asc" | "desc";',
+  "}",
 ].join("\n");
 
 // ── Utility: graf schema & domain ────────────────────────────────────
@@ -299,6 +310,44 @@ function schemaClosure(name, schemas, acc = new Set()) {
 /** Domain = segmen pertama path setelah "/master/". */
 function domainOf(endpointPath) {
   return endpointPath.replace(/^\/master\//, "").split("/")[0];
+}
+
+/** kebab-case domain → PascalCase entity (mis. "jenis-sp" → "JenisSp"). */
+function pascalCase(kebab) {
+  return kebab.split("-").map((s) => s.charAt(0).toUpperCase() + s.slice(1)).join("");
+}
+
+/**
+ * Kumpulkan query params (in:"query") dari SEMUA GET endpoint sebuah domain,
+ * dedup by-name. Path params (mis. id) diabaikan. Kembalikan [] bila tak ada.
+ */
+function collectQueryParams(pathsForDomain) {
+  const byName = new Map();
+  for (const pathItem of pathsForDomain) {
+    const params = (pathItem.get && pathItem.get.parameters) || [];
+    for (const p of params) {
+      if (p.in === "query" && !byName.has(p.name)) byName.set(p.name, p);
+    }
+  }
+  return [...byName.values()];
+}
+
+/**
+ * Bangun deklarasi `{Entity}SearchParams` — filter query-param per entity untuk
+ * table. Pagination quartet (page/size/sortBy/sortDirection) di-hoist ke
+ * PageQuery (extends), jadi di sini hanya filter spesifik entity. Semua opsional
+ * (spec menandai required:false). Kembalikan null bila tak ada filter spesifik.
+ */
+function buildSearchParamsDecl(domain, queryParams) {
+  const filters = queryParams.filter((p) => !PAGE_QUERY_KEYS.includes(p.name));
+  if (filters.length === 0) return null;
+  const name = `${pascalCase(domain)}SearchParams`;
+  const lines = filters.map((p) => {
+    const optional = p.required ? "" : "?";
+    const comment = describeProp(p.schema);
+    return `  ${p.name}${optional}: ${schemaToTsType(p.schema)};${comment}`;
+  });
+  return `export interface ${name} extends PageQuery {\n${lines.join("\n")}\n}\n`;
 }
 
 /**
@@ -365,12 +414,13 @@ function renderDomainFile(d, schemas, enumAlias) {
   // Alias enum yang berulang HANYA di domain ini (bukan lintas-domain) →
   // dideklarasi lokal, sebelum schema. Kosong bila tak ada.
   const aliasBlock = d.aliasDecls.length ? `${d.aliasDecls.join("\n")}\n\n` : "";
+  const searchBlock = d.searchParams ? `${d.searchParams}\n` : "";
   const body = d.local.map((name) => schemaToDeclaration(name, schemas[name], enumAlias, schemas)).join("\n");
 
   const importLine = d.imports.length ? `${buildImport("import", d.imports)}\n\n` : "";
   const reExportLine = d.reExports.length ? `\n${buildImport("export", d.reExports)}\n` : "";
 
-  return normalizeTrailing(`${header}\n${importLine}${aliasBlock}${body}${reExportLine}`);
+  return normalizeTrailing(`${header}\n${importLine}${aliasBlock}${searchBlock}${body}${reExportLine}`);
 }
 
 /** True bila nama tipe muncul sebagai identifier utuh (word-boundary) di teks. */
@@ -437,10 +487,12 @@ function plan(spec) {
   // 1. Petakan domain → daftar path & closure schema-nya.
   const domainEndpoints = {}; // domain → ["GET /master/x", ...]
   const domainSchemas = {}; // domain → Set<schemaName>
+  const domainPaths = {}; // domain → [pathItem] (utk ekstraksi query params GET)
   for (const endpointPath of Object.keys(paths)) {
     const domain = domainOf(endpointPath);
     domainEndpoints[domain] ??= [];
     domainSchemas[domain] ??= new Set();
+    (domainPaths[domain] ??= []).push(paths[endpointPath]);
 
     for (const method of Object.keys(paths[endpointPath])) {
       domainEndpoints[domain].push(`${method.toUpperCase()} ${endpointPath}`);
@@ -483,9 +535,17 @@ function plan(spec) {
       const sharedUsed = all.filter((n) => sharedNames.has(n));
       const aliasDecls = domainAliasDecls.get(domain) || [];
 
-      // Body lokal = alias lokal + deklarasi schema lokal; dipakai untuk
-      // mendeteksi import yang BENAR-BENAR dirujuk (hindari unused import).
-      const localBody = [...aliasDecls, ...local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias, schemas))].join("\n");
+      // Query-param filter type per entity (GET). null bila tak ada filter
+      // spesifik (mis. endpoint /{id}-only atau /list tanpa query).
+      const searchParams = buildSearchParamsDecl(domain, collectQueryParams(domainPaths[domain]));
+
+      // Body lokal = alias lokal + SearchParams + deklarasi schema lokal; dipakai
+      // untuk mendeteksi import yang BENAR-BENAR dirujuk (hindari unused import).
+      const localBody = [
+        ...aliasDecls,
+        ...(searchParams ? [searchParams] : []),
+        ...local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias, schemas)),
+      ].join("\n");
       // Import: schema shared + alias enum SHARED + generic family (Envelope/
       // PageEnvelope/Page) yang dirujuk oleh alias wrapper hasil collapse. Alias
       // lokal dideklarasi di file ini, jadi tak di-import. Difilter referencedIn.
@@ -497,7 +557,7 @@ function plan(spec) {
       // di-re-export (alias internal, bukan schema).
       const reExports = [...sharedUsed].sort();
 
-      return { domain, endpoints: domainEndpoints[domain].sort(), local, aliasDecls, imports, reExports };
+      return { domain, endpoints: domainEndpoints[domain].sort(), local, aliasDecls, searchParams, imports, reExports };
     });
 
   return {

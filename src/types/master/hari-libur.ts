@@ -8,7 +8,13 @@
  * Endpoint : DELETE /master/hari-libur/{id}, GET /master/hari-libur, GET /master/hari-libur/list, GET /master/hari-libur/{id}, POST /master/hari-libur, PUT /master/hari-libur/{id}
  */
 
-import type { Envelope, PageEnvelope } from "../_shared";
+import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+
+export interface HariLiburSearchParams extends PageQuery {
+	tahun?: number; // int32
+	bulan?: number; // int32
+	jenisLibur?: string;
+}
 
 export interface HariLiburQuery {
 	id?: number; // int64

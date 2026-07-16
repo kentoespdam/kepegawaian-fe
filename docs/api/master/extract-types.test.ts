@@ -359,6 +359,76 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
   });
 });
 
+describe("query params GET → {Entity}SearchParams extends PageQuery (#Candidate2)", () => {
+  // Spec minimal dgn parameters GET; makeSpec tak menaruh parameters, jadi bangun manual.
+  const specWithParams = (route: string, params: unknown[], ref = "Foo") => ({
+    paths: {
+      [route]: {
+        get: {
+          parameters: params,
+          responses: { 200: { content: { "*/*": { schema: { $ref: `#/components/schemas/${ref}` } } } } },
+        },
+      },
+    },
+    components: { schemas: { Foo: { type: "object", properties: { id: { type: "integer" } } } } },
+  });
+  const qp = (name: string, schema: unknown, where = "query") => ({ name, in: where, required: false, schema });
+
+  it("filter query-param jadi interface {Entity}SearchParams extends PageQuery", () => {
+    const p = plan(specWithParams("/master/golongan", [qp("golongan", { type: "string" }), qp("pangkat", { type: "string" })]));
+    const g = pick(p.domains, (d: { domain: string }) => d.domain === "golongan", "domain golongan");
+    expect(g.searchParams).toContain("export interface GolonganSearchParams extends PageQuery {");
+    expect(g.searchParams).toContain("golongan?: string;");
+    expect(g.searchParams).toContain("pangkat?: string;");
+  });
+
+  it("pagination quartet (page/size/sortBy/sortDirection) di-hoist → TIDAK diulang di SearchParams", () => {
+    const p = plan(
+      specWithParams("/master/golongan", [
+        qp("golongan", { type: "string" }),
+        qp("page", { type: "integer" }),
+        qp("size", { type: "integer" }),
+        qp("sortBy", { type: "string" }),
+        qp("sortDirection", { type: "string" }),
+      ]),
+    );
+    const g = pick(p.domains, (d: { domain: string }) => d.domain === "golongan", "domain golongan");
+    expect(g.searchParams).not.toContain("page?");
+    expect(g.searchParams).not.toContain("sortDirection?");
+  });
+
+  it("path param (id) diabaikan — endpoint /{id}-only → searchParams null", () => {
+    const p = plan(specWithParams("/master/golongan/{id}", [qp("id", { type: "integer", format: "int64" }, "path")]));
+    const g = pick(p.domains, (d: { domain: string }) => d.domain === "golongan", "domain golongan");
+    expect(g.searchParams).toBeNull();
+  });
+
+  it("endpoint tanpa query filter (mis. /list) → searchParams null", () => {
+    const p = plan(specWithParams("/master/golongan/list", []));
+    const g = pick(p.domains, (d: { domain: string }) => d.domain === "golongan", "domain golongan");
+    expect(g.searchParams).toBeNull();
+  });
+
+  it("hanya pagination quartet, tanpa filter spesifik → searchParams null", () => {
+    const p = plan(specWithParams("/master/golongan", [qp("page", { type: "integer" }), qp("sortBy", { type: "string" })]));
+    const g = pick(p.domains, (d: { domain: string }) => d.domain === "golongan", "domain golongan");
+    expect(g.searchParams).toBeNull();
+  });
+
+  it("PageQuery ada di _shared dengan sortDirection dinarrow ke \"asc\" | \"desc\"", () => {
+    const shared = pick(render(plan(specWithParams("/master/golongan", []))), (f: { filename: string }) => f.filename === "_shared.ts", "_shared.ts").contents;
+    expect(shared).toContain("export interface PageQuery {");
+    expect(shared).toContain('sortDirection?: "asc" | "desc";');
+  });
+
+  it("file domain meng-import PageQuery dari ./_shared saat ada SearchParams", () => {
+    const aFile = pick(render(plan(specWithParams("/master/golongan", [qp("golongan", { type: "string" })]))), (f: { filename: string }) => f.filename === "golongan.ts", "golongan.ts").contents;
+    expect(aFile).toContain("PageQuery");
+    expect(aFile).toContain('from "./_shared"');
+    expect(aFile).toContain("GolonganSearchParams extends PageQuery");
+  });
+});
+
 describe("smoke: master.json nyata → output stabil & konsisten", () => {
   const spec = JSON.parse(readFileSync(join(__dirname, "master.json"), "utf8"));
 

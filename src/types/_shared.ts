@@ -107,6 +107,14 @@ export interface PageEnvelope<T> {
 	timestamp?: string; // date-time
 }
 
+/** Query params pagination standar; di-extends oleh tiap {Entity}SearchParams. */
+export interface PageQuery {
+	page?: number; // int32
+	size?: number; // int32
+	sortBy?: string;
+	sortDirection?: "asc" | "desc";
+}
+
 export type SavedResultLong = Envelope<number>;
 
 export type DeletedResult = Envelope<string>;

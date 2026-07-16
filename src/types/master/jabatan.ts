@@ -8,7 +8,22 @@
  * Endpoint : DELETE /master/jabatan/{id}, GET /master/jabatan, GET /master/jabatan/list, GET /master/jabatan/organisasi/{id}, GET /master/jabatan/{id}, GET /master/jabatan/{id}/parent, POST /master/jabatan, PUT /master/jabatan/{id}
  */
 
-import type { Envelope, JabatanMiniResponse, LevelResponse, OrganisasiMiniResponse, PageEnvelope } from "../_shared";
+import type {
+	Envelope,
+	JabatanMiniResponse,
+	LevelResponse,
+	OrganisasiMiniResponse,
+	PageEnvelope,
+	PageQuery,
+} from "../_shared";
+
+export interface JabatanSearchParams extends PageQuery {
+	kode?: string;
+	nama?: string;
+	parentId?: number; // int64
+	organisasiId?: number; // int64
+	levelId?: number; // int64
+}
 
 export interface JabatanQuery {
 	id?: number; // int64
