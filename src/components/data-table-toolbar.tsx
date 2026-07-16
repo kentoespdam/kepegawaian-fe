@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import { Input } from "@/components/ui/input";
 
 export interface FilterField {
@@ -81,30 +82,22 @@ function DebouncedInput({
 	onChange: (v: string) => void;
 }) {
 	const [local, setLocal] = useState(value);
-	const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+	const debouncedOnChange = useDebouncedCallback((v: string) => onChange(v), 400);
 
 	// Sync saat value berubah dari luar (navigasi URL)
 	useEffect(() => {
 		setLocal(value);
 	}, [value]);
 
-	// Cleanup timer saat unmount
-	useEffect(() => () => clearTimeout(timer.current), []);
-
-	const handleChange = useCallback(
-		(v: string) => {
-			setLocal(v);
-			clearTimeout(timer.current);
-			timer.current = setTimeout(() => onChange(v), 400);
-		},
-		[onChange],
-	);
-
 	return (
 		<Input
 			placeholder={`Cari ${label.toLowerCase()}...`}
 			value={local}
-			onChange={(e) => handleChange(e.target.value)}
+			onChange={(e) => {
+				const v = e.target.value;
+				setLocal(v);
+				debouncedOnChange(v);
+			}}
 			type={type}
 			className="h-9 w-48"
 		/>
