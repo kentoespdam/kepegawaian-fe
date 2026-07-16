@@ -81,7 +81,9 @@ Kerjakan berurutan — tiap fase blok fase berikut:
     akibat 16px: teks kepotong, tabel padat pecah, sidebar active, badge, dialog hapus, validasi.
   - Kalau satu arketipe tabel benar-benar rusak oleh 16px → **catat + usulkan token varian tabel**
     (Q5-C), jangan turunkan global senyap.
-  - **Status:** ⏳ Belum dikerjakan (regresi QA via browser — perlu visual check).
+  - **Status:** 🟡 Ditunda — bukan koding ulang; regresi QA perlu visual check manual
+    di 16 master + login + shell (375px & desktop). Bisa digabung dengan QA akhir
+    modul master nanti — tidak memblokir rilis.
 
 ### Rekap grill tipografi (2026-07-16)
 

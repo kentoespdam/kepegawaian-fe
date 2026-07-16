@@ -120,8 +120,7 @@ Populasi ±70% lansia → ukuran minimal **16px untuk body** (Q5 grill 2026-07-1
 |---|---|---|---|
 | `text-xs` | 0.75rem (12px) | 1.333 (16px) | Metadata, badge, help text kecil |
 | `text-sm` | 1rem (16px) | 1.5 (24px) | **Body text** — paragraf, label, sel tabel, tombol |
-| `text-base` | 1.125rem (18px) | 1.5 (27px) | Judul dialog/sheet, card title, section header |
-| `text-lg` | 1.25rem (20px) | 1.4 (28px) | H1 landing, judul halaman besar |
+| `text-base` | 1rem (16px) | 1.5 (24px) | Judul dialog/sheet, card title — sama dgn body (heading via weight, bukan ukuran) |
 
 > **Catatan:** `text-sm` di Tailwind v4 default 0.875rem (14px). Token `@theme` di `globals.css`
 > menimpa menjadi 1rem (16px) sesuai keputusan grill. `text-xs` tetap 0.75rem karena hanya
@@ -149,8 +148,7 @@ Semua ukuran font di atas dideklarasikan sebagai token `--text-*` di `@theme inl
 @theme inline {
   --text-xs: 0.75rem;
   --text-sm: 1rem;
-  --text-base: 1.125rem;
-  --text-lg: 1.25rem;
+  --text-base: 1rem;
   --text-body: 1rem;
   --leading-body: 1.6;
 }
