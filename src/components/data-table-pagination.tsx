@@ -29,7 +29,7 @@ export function DataTablePagination({
 	const to = Math.min(page * size, total);
 
 	return (
-		<div className="flex items-center justify-between py-3 text-sm text-muted-foreground">
+		<div className="flex items-center justify-between py-2.5 text-sm text-muted-foreground">
 			<span>
 				Menampilkan {from}–{to} dari {total}
 			</span>

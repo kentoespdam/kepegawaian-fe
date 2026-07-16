@@ -97,13 +97,13 @@ export function DataTable<T>({
 								{columns.map((col) => (
 									<th
 										key={col.id}
-										className="h-11 px-3 text-left align-middle font-medium text-xs uppercase tracking-wider"
+										className="h-11 px-4 text-left align-middle font-medium text-xs uppercase tracking-wider"
 									>
 										{col.header}
 									</th>
 								))}
 								{(onEdit || onDelete) && (
-									<th className="h-11 px-3 text-right w-24">
+									<th className="h-11 px-4 text-right w-24">
 										<span className="text-xs font-medium uppercase tracking-wider">Aksi</span>
 									</th>
 								)}
@@ -113,12 +113,12 @@ export function DataTable<T>({
 							{Array.from({ length: 10 }, (_, i) => i).map((i) => (
 								<tr key={`skeleton-${i}`} className="border-b">
 									{columns.map((col) => (
-										<td key={col.id} className="px-3 py-3 align-middle">
+										<td key={col.id} className="px-4 py-2 align-middle">
 											<Skeleton className="h-4 w-3/4" />
 										</td>
 									))}
 									{(onEdit || onDelete) && (
-										<td className="px-3 py-3 align-middle text-right">
+										<td className="px-4 py-2 align-middle text-right">
 											<div className="flex justify-end gap-1">
 												<Skeleton className="size-8 rounded-md" />
 												<Skeleton className="size-8 rounded-md" />
@@ -169,13 +169,13 @@ export function DataTable<T>({
 			<div className="relative">
 				<div className="rounded-lg border overflow-auto max-h-[75vh]">
 					<table className="w-full caption-bottom text-sm">
-						<thead className="sticky top-0 z-10 bg-card shadow-[inset_0_-1px_0_hsl(var(--border))]">
+						<thead className="sticky top-0 z-10 bg-card border-b-2 border-border">
 							<tr>
 								{columns.map((col) => (
 									<th
 										key={col.id}
 										className={cn(
-											"h-11 px-3 text-left align-middle font-medium text-xs uppercase tracking-wider text-muted-foreground",
+											"h-11 px-4 text-left align-middle font-medium text-xs uppercase tracking-wider text-muted-foreground",
 											col.sortable && "cursor-pointer select-none hover:text-foreground",
 										)}
 										onClick={() => col.sortable && onSort?.(col.id)}
@@ -197,7 +197,7 @@ export function DataTable<T>({
 									</th>
 								))}
 								{(onEdit || onDelete) && (
-									<th className="h-11 px-3 text-right w-24">
+									<th className="h-11 px-4 text-right w-24">
 										<span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi</span>
 									</th>
 								)}
@@ -209,18 +209,18 @@ export function DataTable<T>({
 									key={getRowId ? getRowId(item) : i}
 									className={cn(
 										"border-b transition-colors hover:bg-muted/50 cursor-pointer",
-										i % 2 === 1 && "bg-muted/30",
+										i % 2 === 1 && "bg-muted hover:bg-muted/80",
 										isPlaceholder && "opacity-50 pointer-events-none",
 									)}
 									onClick={() => onEdit?.(item)}
 								>
 									{columns.map((col) => (
-										<td key={col.id} className="px-3 py-3 align-middle whitespace-nowrap tabular-nums">
+										<td key={col.id} className="px-4 py-2 align-middle whitespace-nowrap tabular-nums">
 											{col.cell ? col.cell(item) : String(item[col.id as keyof T] ?? "")}
 										</td>
 									))}
 									{(onEdit || onDelete) && (
-										<td className="px-3 py-3 align-middle text-right">
+										<td className="px-4 py-2 align-middle text-right">
 											<div className="inline-flex items-center gap-1">
 												{onEdit && (
 													<Button
