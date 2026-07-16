@@ -47,7 +47,8 @@
 
 - [x] **`dqx.7`** — Isi `.dark {}` + aktifkan `next-themes` (Q4=B, ditunda ~2026-08-01).
   - **Status:** ✅ `.dark` terisi Evergreen dark tokens, contrast-gate ALL PASS. `ThemeProvider` via `next-themes`. Toggle tema di UserMenu.
-- [ ] **`dqx.8`** — Audit tipografi keterbacaan 35+/lansia (Q10=A, ditunda ~2026-08-01).
+- [x] **`dqx.8`** — Audit tipografi keterbacaan 35+/lansia (Q10=A, ditunda ~2026-08-01).
+  - **Status:** ✅ Body font-size 15px di globals.css. Button default h-11 (44px). Input default h-11 (44px). tabular-nums sudah ada. Font-weight >= 400 sudah.
 
 ## Utang teknis yang dibereskan di jalur ini
 
