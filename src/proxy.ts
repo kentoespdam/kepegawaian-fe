@@ -8,7 +8,7 @@ const BACKEND_URL = process.env.BACKEND_URL ?? "";
 const REFRESH_BUFFER = 30;
 
 export const config = {
-	matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+	matcher: ["/((?!_next/static|_next/image|favicon.ico|logo_pdam).*)"],
 };
 
 export default async function proxy(request: NextRequest) {
