@@ -68,7 +68,30 @@
 }
 
 .dark {
-	/* ponytail: dark-mode scaffold kosong — diisi saat dark mode ditambah */
+	--background: oklch(0.13 0.01 160);
+	--foreground: oklch(0.93 0.01 100);
+	--card: oklch(0.16 0.01 160);
+	--card-foreground: oklch(0.93 0.01 100);
+	--popover: oklch(0.16 0.01 160);
+	--popover-foreground: oklch(0.93 0.01 100);
+	--primary: oklch(0.62 0.09 158);
+	--primary-foreground: oklch(0.13 0.01 160);
+	--secondary: oklch(0.22 0.01 160);
+	--secondary-foreground: oklch(0.93 0.01 100);
+	--muted: oklch(0.22 0.01 160);
+	--muted-foreground: oklch(0.62 0.01 100);
+	--accent: oklch(0.25 0.03 75);
+	--accent-foreground: oklch(0.93 0.03 75);
+	--destructive: oklch(0.6 0.2 25);
+	--destructive-foreground: oklch(0.13 0.01 20);
+	--success: oklch(0.62 0.1 195);
+	--success-foreground: oklch(0.13 0.01 160);
+	--warning: oklch(0.72 0.15 75);
+	--warning-foreground: oklch(0.13 0.01 160);
+	--border: oklch(0.28 0.01 160);
+	--input: oklch(0.28 0.01 160);
+	--ring: oklch(0.62 0.09 158);
+	--primary-dark: oklch(0.52 0.09 158);
 }
 
 @keyframes water {

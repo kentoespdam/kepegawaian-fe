@@ -53,31 +53,58 @@ function parseOklch(str) {
 
 // ---- Token pairs to verify ----
 
-// Tokens from src/app/globals.css :root
+// Tokens from src/app/globals.css :root (Evergreen light)
 const TOKENS = {
-	"--background": parseOklch("oklch(0.99 0.008 85)"),
+	"--background": parseOklch("oklch(0.99 0.008 95)"),
 	"--foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--card": parseOklch("oklch(0.965 0.006 85)"),
+	"--card": parseOklch("oklch(0.97 0.008 95)"),
 	"--card-foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--popover": parseOklch("oklch(0.99 0.008 85)"),
+	"--popover": parseOklch("oklch(0.99 0.008 95)"),
 	"--popover-foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--primary": parseOklch("oklch(0.55 0.13 235)"),
-	"--primary-foreground": parseOklch("oklch(0.99 0.008 85)"),
+	"--primary": parseOklch("oklch(0.48 0.09 158)"),
+	"--primary-foreground": parseOklch("oklch(0.99 0.008 95)"),
 	"--secondary": parseOklch("oklch(0.965 0.006 85)"),
 	"--secondary-foreground": parseOklch("oklch(0.22 0.01 260)"),
 	"--muted": parseOklch("oklch(0.965 0.006 85)"),
-	"--muted-foreground": parseOklch("oklch(0.42 0.01 260)"),
-	"--accent": parseOklch("oklch(0.965 0.006 85)"),
-	"--accent-foreground": parseOklch("oklch(0.22 0.01 260)"),
+	"--muted-foreground": parseOklch("oklch(0.4 0.01 260)"),
+	"--accent": parseOklch("oklch(0.94 0.03 75)"),
+	"--accent-foreground": parseOklch("oklch(0.3 0.06 60)"),
 	"--destructive": parseOklch("oklch(0.52 0.2 25)"),
 	"--destructive-foreground": parseOklch("oklch(0.99 0.008 85)"),
-	"--success": parseOklch("oklch(0.5 0.15 150)"),
+	"--success": parseOklch("oklch(0.52 0.1 195)"),
 	"--success-foreground": parseOklch("oklch(0.99 0.008 85)"),
 	"--warning": parseOklch("oklch(0.68 0.15 75)"),
 	"--warning-foreground": parseOklch("oklch(0.22 0.01 260)"),
 	"--border": parseOklch("oklch(0.86 0.008 85)"),
 	"--input": parseOklch("oklch(0.86 0.008 85)"),
-	"--ring": parseOklch("oklch(0.55 0.13 235)"),
+	"--ring": parseOklch("oklch(0.48 0.09 158)"),
+};
+
+// Tokens from src/app/globals.css .dark (Evergreen dark)
+const DARK_TOKENS = {
+	"--background": parseOklch("oklch(0.13 0.01 160)"),
+	"--foreground": parseOklch("oklch(0.93 0.01 100)"),
+	"--card": parseOklch("oklch(0.16 0.01 160)"),
+	"--card-foreground": parseOklch("oklch(0.93 0.01 100)"),
+	"--popover": parseOklch("oklch(0.16 0.01 160)"),
+	"--popover-foreground": parseOklch("oklch(0.93 0.01 100)"),
+	"--primary": parseOklch("oklch(0.62 0.09 158)"),
+	"--primary-foreground": parseOklch("oklch(0.13 0.01 160)"),
+	"--secondary": parseOklch("oklch(0.22 0.01 160)"),
+	"--secondary-foreground": parseOklch("oklch(0.93 0.01 100)"),
+	"--muted": parseOklch("oklch(0.22 0.01 160)"),
+	"--muted-foreground": parseOklch("oklch(0.62 0.01 100)"),
+	"--accent": parseOklch("oklch(0.25 0.03 75)"),
+	"--accent-foreground": parseOklch("oklch(0.93 0.03 75)"),
+	"--destructive": parseOklch("oklch(0.6 0.2 25)"),
+	"--destructive-foreground": parseOklch("oklch(0.13 0.01 20)"),
+	"--success": parseOklch("oklch(0.62 0.1 195)"),
+	"--success-foreground": parseOklch("oklch(0.13 0.01 160)"),
+	"--warning": parseOklch("oklch(0.72 0.15 75)"),
+	"--warning-foreground": parseOklch("oklch(0.13 0.01 160)"),
+	"--border": parseOklch("oklch(0.28 0.01 160)"),
+	"--input": parseOklch("oklch(0.28 0.01 160)"),
+	"--ring": parseOklch("oklch(0.62 0.09 158)"),
 };
 
 // Pairs: [foreground token name, background token name, label, minRatio]
@@ -94,42 +121,6 @@ const PAIRS = [
 	["--success-foreground", "--success", "success teks di success bg", 4.5],
 	["--warning-foreground", "--warning", "warning teks di warning bg", 4.5],
 ];
-
-// Candidate theme overrides (from theme-picker.tsx)
-const CANDIDATES = {
-	Evergreen: {
-		"--primary": parseOklch("oklch(0.48 0.09 158)"),
-		"--primary-foreground": parseOklch("oklch(0.99 0.01 95)"),
-		"--ring": parseOklch("oklch(0.48 0.09 158)"),
-		"--accent": parseOklch("oklch(0.94 0.03 75)"),
-		"--accent-foreground": parseOklch("oklch(0.30 0.06 60)"),
-		"--success": parseOklch("oklch(0.52 0.10 195)"),
-		"--background": parseOklch("oklch(0.99 0.008 95)"),
-		"--card": parseOklch("oklch(0.97 0.008 95)"),
-		"--muted-foreground": parseOklch("oklch(0.40 0.01 260)"),
-	},
-	"Warm Terracotta": {
-		"--primary": parseOklch("oklch(0.55 0.12 45)"),
-		"--primary-foreground": parseOklch("oklch(0.99 0.01 80)"),
-		"--ring": parseOklch("oklch(0.55 0.12 45)"),
-		"--accent": parseOklch("oklch(0.93 0.04 55)"),
-		"--accent-foreground": parseOklch("oklch(0.34 0.09 45)"),
-		"--background": parseOklch("oklch(0.99 0.01 70)"),
-		"--card": parseOklch("oklch(0.97 0.012 70)"),
-		"--muted-foreground": parseOklch("oklch(0.40 0.01 60)"),
-	},
-	"Quiet Luxury": {
-		"--primary": parseOklch("oklch(0.45 0.06 165)"),
-		"--primary-foreground": parseOklch("oklch(0.99 0.005 95)"),
-		"--ring": parseOklch("oklch(0.45 0.06 165)"),
-		"--accent": parseOklch("oklch(0.92 0.01 90)"),
-		"--accent-foreground": parseOklch("oklch(0.28 0.02 90)"),
-		"--background": parseOklch("oklch(0.98 0.004 90)"),
-		"--card": parseOklch("oklch(0.955 0.004 90)"),
-		"--foreground": parseOklch("oklch(0.20 0.01 60)"),
-		"--muted-foreground": parseOklch("oklch(0.40 0.01 60)"),
-	},
-};
 
 // ---- Runner ----
 
@@ -183,11 +174,8 @@ selfCheck();
 
 let ok = true;
 
-ok = runSuite("globals.css (current)") && ok;
-
-for (const [name, overrides] of Object.entries(CANDIDATES)) {
-	ok = runSuite(name, overrides) && ok;
-}
+ok = runSuite("Evergreen — Light (:root)") && ok;
+ok = runSuite("Evergreen — Dark (.dark)", DARK_TOKENS) && ok;
 
 console.log(`\n${ok ? "✅ ALL PASS" : "❌ SOME FAILED"}`);
 process.exit(ok ? 0 : 1);
