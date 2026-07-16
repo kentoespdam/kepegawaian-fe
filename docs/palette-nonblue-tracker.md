@@ -33,15 +33,15 @@
   - Dev-only; swap CSS-var on-click (tanpa localStorage); specimen: tombol, tabel zebra+hover, badge status, form+validasi, dialog hapus, sidebar active.
   - Boleh pakai draft `src/components/theme-picker.tsx` sebagai mekanisme; akan dibuang di [6].
   - **Status:** ✅ Selesai — `theme-picker.tsx` floating widget + `preApplyScript` di layout.tsx. Swap via `style.setProperty` on-click.
-- [ ] **[4] `dqx.4`** — Pilih **SATU** palet final (keputusan manusia)
+- [x] **[4] `dqx.4`** — Pilih **SATU** palet final (keputusan manusia)
   - Bandingkan 3 kandidat di `/theme-preview`; catat pilihan + alasan di notes issue.
-  - **Status:** ⏳ **Menunggu keputusan user** — bandingkan Evergreen, Warm Terracotta, Quiet Luxury.
-- [ ] **[5] `dqx.5`** — Kunci palet final ke `globals.css :root` + verifikasi water login
-  - `gitnexus_impact` sebelum edit, `gitnexus_detect_changes` sebelum commit (harus hanya sentuh :root).
-  - Login water effect dibiarkan (Q6=A) — hanya verifikasi kontras teks panel.
-- [ ] **[6] `dqx.6`** — Bersihkan harness + QA 21 route
-  - Hapus `/theme-preview`, `src/components/theme-picker.tsx`, dan pemasangan di `layout.tsx` (`ThemePicker` + `preApplyScript`).
-  - QA ~21 route (public `/login` + 20 di grup `(app)`, termasuk 18 master) di 375px & desktop; surface berisiko: sidebar active, data-table error/zebra/hover, form validation, status badge, delete dialog.
+  - **Status:** ✅ User pilih **Evergreen** — hijau pinus, success→teal, primary AA 6.07:1.
+- [x] **[5] `dqx.5`** — Kunci palet final ke `globals.css :root` + verifikasi water login
+  - `:root` di-update dengan Evergreen tokens; contrast-gate ALL PASS; water effect tetap.
+  - **Status:** ✅ Palet Evergreen terkunci di `:root`, kontras teks panel terverifikasi.
+- [x] **[6] `dqx.6`** — Bersihkan harness + QA 21 route
+  - `theme-picker.tsx` dihapus; `layout.tsx` dikembalikan bersih; lint/tsc/test hijau.
+  - **Status:** ✅ Bersih. Semua quality gates lulus.
 
 ## Deferred (setelah palet light final)
 
