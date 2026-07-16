@@ -125,7 +125,20 @@ function describeProp(propSchema) {
  * enumAlias: peta nama-enum → nama tipe alias (mis. HttpStatusText),
  * dipakai untuk mengganti enum berulang dengan referensi tipe tunggal.
  */
-function schemaToDeclaration(name, schema, enumAlias) {
+function schemaToDeclaration(name, schema, enumAlias, schemas) {
+  // Wrapper collapse (BY-STRUCTURE): ganti interface wrapper per-entity dengan
+  // satu referensi generic dari _shared.ts (Envelope<T>/PageEnvelope<T>). Hanya
+  // aktif saat peta `schemas` tersedia (renderer/plan); pemanggil lama 3-arg
+  // (mis. unit test schema polos) tak terpengaruh.
+  if (schemas) {
+    if (isPageEnvelopeSchema(schema)) {
+      return `export type ${name} = PageEnvelope<${pageEnvelopeInner(schema, schemas)}>;\n`;
+    }
+    if (isEnvelopeSchema(schema)) {
+      return `export type ${name} = Envelope<${envelopeInner(schema)}>;\n`;
+    }
+  }
+
   // Enum bernama top-level ditangani oleh cabang fallback di bawah lewat
   // schemaToTsType (hasilnya identik) — tak perlu cabang enum terpisah di sini.
   if (schema.type === "object" || schema.properties) {
@@ -165,6 +178,94 @@ function resolveEnumAlias(propSchema, enumAlias) {
 function enumSignature(values) {
   return JSON.stringify(values);
 }
+
+// ── Deteksi wrapper BY-STRUCTURE (bukan by-name) ─────────────────────
+// Wrapper standar Spring dikenali dari BENTUK property-set-nya, bukan dari
+// namanya (SingleResult*/ListResult*/SavedResult*/PageResult*/DeletedResult),
+// supaya keluarga generic Envelope<T>/PageEnvelope<T>/Page<T> cukup ditulis
+// SEKALI di _shared.ts; tiap entity hanya beda pada `data`.
+
+const GENERIC_NAMES = ["Envelope", "PageEnvelope", "Page"];
+const ENVELOPE_KEYS = ["status", "statusText", "errors", "message", "data", "timestamp"];
+const PAGE_ENVELOPE_KEYS = ["status", "statusText", "data", "timestamp"];
+const PAGE_MARKER_KEYS = ["content", "pageable", "totalElements", "totalPages"];
+
+function propKeySet(schema) {
+  return new Set(Object.keys((schema && schema.properties) || {}));
+}
+function hasExactKeys(schema, keys) {
+  const ks = propKeySet(schema);
+  return ks.size === keys.length && keys.every((k) => ks.has(k));
+}
+function hasAllKeys(schema, keys) {
+  const ks = propKeySet(schema);
+  return keys.every((k) => ks.has(k));
+}
+
+/** Envelope penuh: tepat 6 field {status,statusText,errors,message,data,timestamp}. */
+function isEnvelopeSchema(schema) {
+  return hasExactKeys(schema, ENVELOPE_KEYS);
+}
+/** PageEnvelope: tepat 4 field (tanpa errors/message), data → $ref schema Page. */
+function isPageEnvelopeSchema(schema) {
+  return hasExactKeys(schema, PAGE_ENVELOPE_KEYS) && !!(schema.properties.data && schema.properties.data.$ref);
+}
+/** Page (pageable): punya content[] + pageable + totalElements/totalPages. */
+function isPageSchema(schema) {
+  return hasAllKeys(schema, PAGE_MARKER_KEYS) && (schema.properties.content || {}).type === "array";
+}
+
+/** Ekspresi T untuk Envelope<T> — tipe dari property `data`. */
+function envelopeInner(schema) {
+  return schemaToTsType(schema.properties.data);
+}
+/** Ekspresi elemen untuk Page<T> — tipe elemen dari `content[]`. */
+function pageInner(schema) {
+  const content = schema.properties.content || {};
+  return schemaToTsType(content.items || {});
+}
+/** Ekspresi T untuk PageEnvelope<T> — elemen content dari schema Page yang dirujuk `data`. */
+function pageEnvelopeInner(schema, schemas) {
+  const ref = schema.properties.data && schema.properties.data.$ref;
+  const pageSchema = ref && schemas ? schemas[refName(ref)] : null;
+  return pageSchema && isPageSchema(pageSchema) ? pageInner(pageSchema) : "unknown";
+}
+
+/**
+ * Keluarga generic yang menggantikan wrapper per-entity. Ditulis SEKALI di
+ * _shared.ts. Envelope<T> = union 2 cabang agar caller tak perlu `?.` di error:
+ *   - 2xx  : message wajib, data ada, errors?: never
+ *   - error: errors wajib (string | string[]), data?: never
+ * PageEnvelope<T> mengikuti spec pageable (tanpa errors/message; backend selalu
+ * balas pageable dengan content:[] walau kosong).
+ */
+const GENERIC_FAMILY = [
+  "/** Wrapper standar semua response. Union: sukses (data + message) | error (errors). */",
+  "export type Envelope<T> =",
+  "  | { status: number; statusText?: HttpStatusText; message: string; data: T; errors?: never; timestamp?: string } // 2xx",
+  "  | { status: number; statusText?: HttpStatusText; message?: string; data?: never; errors: string | string[]; timestamp?: string }; // error",
+  "",
+  "export interface Page<T> {",
+  "  totalElements?: number; // int64",
+  "  totalPages?: number; // int32",
+  "  size?: number; // int32",
+  "  content?: T[];",
+  "  number?: number; // int32",
+  "  numberOfElements?: number; // int32",
+  "  pageable?: PageableObject;",
+  "  sort?: SortObject;",
+  "  first?: boolean;",
+  "  last?: boolean;",
+  "  empty?: boolean;",
+  "}",
+  "",
+  "export interface PageEnvelope<T> {",
+  "  status?: number; // int32",
+  "  statusText?: HttpStatusText;",
+  "  data?: Page<T>;",
+  "  timestamp?: string; // date-time",
+  "}",
+].join("\n");
 
 // ── Utility: graf schema & domain ────────────────────────────────────
 
@@ -264,7 +365,7 @@ function renderDomainFile(d, schemas, enumAlias) {
   // Alias enum yang berulang HANYA di domain ini (bukan lintas-domain) →
   // dideklarasi lokal, sebelum schema. Kosong bila tak ada.
   const aliasBlock = d.aliasDecls.length ? `${d.aliasDecls.join("\n")}\n\n` : "";
-  const body = d.local.map((name) => schemaToDeclaration(name, schemas[name], enumAlias)).join("\n");
+  const body = d.local.map((name) => schemaToDeclaration(name, schemas[name], enumAlias, schemas)).join("\n");
 
   const importLine = d.imports.length ? `${buildImport("import", d.imports)}\n\n` : "";
   const reExportLine = d.reExports.length ? `\n${buildImport("export", d.reExports)}\n` : "";
@@ -305,9 +406,13 @@ function renderSharedFile(shared, schemas) {
   const header = fileHeader("shared — tipe lintas-domain (dipakai >= 2 module)");
 
   const aliasBlock = shared.aliasDecls.length ? `${shared.aliasDecls.join("\n")}\n\n` : "";
-  const body = shared.names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias)).join("\n");
+  // Keluarga generic (Envelope/Page/PageEnvelope) ditulis SEKALI di sini; tipe
+  // TS di-hoist jadi urutan relatif thd PageableObject/SortObject/HttpStatusText
+  // tak masalah. Ditaruh sebelum body agar mudah ditemukan pembaca.
+  const genericBlock = `${GENERIC_FAMILY}\n\n`;
+  const body = shared.names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas)).join("\n");
 
-  return normalizeTrailing(`${header}\n${aliasBlock}${body}`);
+  return normalizeTrailing(`${header}\n${aliasBlock}${genericBlock}${body}`);
 }
 
 // ── Plan: keputusan murni (tanpa I/O) ────────────────────────────────
@@ -352,7 +457,12 @@ function plan(spec) {
       (usage[name] ??= new Set()).add(domain);
     }
   }
-  const sharedNames = new Set(Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared"));
+  // Schema Page (pageable) di-inline ke generic Page<T> di _shared.ts → jangan
+  // ditulis sebagai interface tersendiri di mana pun (lokal maupun shared).
+  const isSuppressed = (n) => isPageSchema(schemas[n]);
+  const sharedNames = new Set(
+    Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared" && !isSuppressed(n)),
+  );
 
   // 3. Rencanakan alias enum (dedup enum identik yang berulang) via kebijakan
   //    frekuensi + registry KNOWN_ENUMS. Penempatan mengikuti aturan schema:
@@ -367,7 +477,7 @@ function plan(spec) {
     .map((domain) => {
       const all = [...domainSchemas[domain]];
       const local = topoSort(
-        all.filter((n) => !sharedNames.has(n)),
+        all.filter((n) => !sharedNames.has(n) && !isSuppressed(n)),
         schemas,
       );
       const sharedUsed = all.filter((n) => sharedNames.has(n));
@@ -375,10 +485,11 @@ function plan(spec) {
 
       // Body lokal = alias lokal + deklarasi schema lokal; dipakai untuk
       // mendeteksi import yang BENAR-BENAR dirujuk (hindari unused import).
-      const localBody = [...aliasDecls, ...local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias))].join("\n");
-      // Import hanya schema shared + alias enum SHARED (alias lokal dideklarasi di
-      // file ini, jadi tak di-import). Kandidat difilter oleh referencedIn.
-      const candidates = new Set([...sharedUsed, ...sharedAliasNames]);
+      const localBody = [...aliasDecls, ...local.map((n) => schemaToDeclaration(n, schemas[n], enumAlias, schemas))].join("\n");
+      // Import: schema shared + alias enum SHARED + generic family (Envelope/
+      // PageEnvelope/Page) yang dirujuk oleh alias wrapper hasil collapse. Alias
+      // lokal dideklarasi di file ini, jadi tak di-import. Difilter referencedIn.
+      const candidates = new Set([...sharedUsed, ...sharedAliasNames, ...GENERIC_NAMES]);
       const imports = [...candidates].filter((n) => referencedIn(localBody, n)).sort();
 
       // Re-export seluruh schema shared milik domain ini → file domain jadi SATU

@@ -8,14 +8,7 @@
  * Endpoint : DELETE /master/profesi/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, PUT /master/profesi/{id}
  */
 
-import type {
-	HttpStatusText,
-	JabatanMiniResponse,
-	LevelResponse,
-	OrganisasiMiniResponse,
-	PageableObject,
-	SortObject,
-} from "../_shared";
+import type { Envelope, JabatanMiniResponse, LevelResponse, OrganisasiMiniResponse, PageEnvelope } from "../_shared";
 
 export interface GradeMiniResponse {
 	id?: number; // int64
@@ -46,14 +39,7 @@ export interface ProfesiDetail {
 	alatKerjaList?: AlatKerjaRow[];
 }
 
-export interface SingleResultProfesiDetail {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: ProfesiDetail;
-	timestamp?: string; // date-time
-}
+export type SingleResultProfesiDetail = Envelope<ProfesiDetail>;
 
 export interface ProfesiPutRequest {
 	organisasiId?: number; // int64, min 1
@@ -64,6 +50,8 @@ export interface ProfesiPutRequest {
 	resiko: string; // minLength 1
 }
 
+export type PageResultPageProfesiQuery = PageEnvelope<ProfesiQuery>;
+
 export interface ProfesiQuery {
 	id?: number; // int64
 	nama?: string;
@@ -73,27 +61,6 @@ export interface ProfesiQuery {
 	jabatan?: JabatanMiniResponse;
 	level?: LevelResponse;
 	grade?: GradeMiniResponse;
-}
-
-export interface PageProfesiQuery {
-	totalElements?: number; // int64
-	totalPages?: number; // int32
-	size?: number; // int32
-	content?: ProfesiQuery[];
-	number?: number; // int32
-	numberOfElements?: number; // int32
-	pageable?: PageableObject;
-	sort?: SortObject;
-	first?: boolean;
-	last?: boolean;
-	empty?: boolean;
-}
-
-export interface PageResultPageProfesiQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	data?: PageProfesiQuery;
-	timestamp?: string; // date-time
 }
 
 export interface ProfesiPostRequest {
@@ -110,14 +77,7 @@ export interface ProfesiListResponse {
 	nama?: string;
 }
 
-export interface ListResultProfesiListResponse {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: ProfesiListResponse[];
-	timestamp?: string; // date-time
-}
+export type ListResultProfesiListResponse = Envelope<ProfesiListResponse[]>;
 
 export type {
 	DeletedResult,

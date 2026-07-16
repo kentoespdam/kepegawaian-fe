@@ -8,7 +8,7 @@
  * Endpoint : GET /master/status-pegawai/list
  */
 
-import type { HttpStatusText } from "./_shared";
+import type { Envelope } from "./_shared";
 
 export interface StatusPegawaiResponse {
   id?: string;
@@ -16,11 +16,4 @@ export interface StatusPegawaiResponse {
   urut?: number; // int32
 }
 
-export interface ListResultStatusPegawaiResponse {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: StatusPegawaiResponse[];
-  timestamp?: string; // date-time
-}
+export type ListResultStatusPegawaiResponse = Envelope<StatusPegawaiResponse[]>;

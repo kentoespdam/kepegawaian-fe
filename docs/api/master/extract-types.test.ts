@@ -264,6 +264,101 @@ describe("render — Plan → File[] (#1, hanya string)", () => {
   });
 });
 
+describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page", () => {
+  // Envelope penuh: 6 field {status,statusText,errors,message,data,timestamp}.
+  const envelope = (dataSchema: unknown) => ({
+    type: "object",
+    properties: {
+      status: { type: "integer" },
+      statusText: { type: "string" },
+      errors: { type: "array", items: { type: "string" } },
+      message: { type: "string" },
+      data: dataSchema,
+      timestamp: { type: "string" },
+    },
+  });
+  // Page (pageable): content[] + pageable + totalElements/totalPages.
+  const page = (itemRef: string) => ({
+    type: "object",
+    properties: {
+      totalElements: { type: "integer" },
+      totalPages: { type: "integer" },
+      content: { type: "array", items: { $ref: `#/components/schemas/${itemRef}` } },
+      pageable: { $ref: "#/components/schemas/PageableObject" },
+    },
+  });
+  // PageEnvelope: 4 field (tanpa errors/message), data → $ref schema Page.
+  const pageEnvelope = (pageRef: string) => ({
+    type: "object",
+    properties: {
+      status: { type: "integer" },
+      statusText: { type: "string" },
+      data: { $ref: `#/components/schemas/${pageRef}` },
+      timestamp: { type: "string" },
+    },
+  });
+
+  it("schema Envelope object → alias Envelope<T>, bukan interface wrapper", () => {
+    const decl = schemaToDeclaration(
+      "SingleResultFoo",
+      envelope({ $ref: "#/components/schemas/Foo" }),
+      undefined,
+      { Foo: {} },
+    );
+    expect(decl).toBe("export type SingleResultFoo = Envelope<Foo>;\n");
+  });
+
+  it("schema Envelope dengan data array → Envelope<T[]>", () => {
+    const decl = schemaToDeclaration(
+      "ListResultFoo",
+      envelope({ type: "array", items: { $ref: "#/components/schemas/Foo" } }),
+      undefined,
+      { Foo: {} },
+    );
+    expect(decl).toBe("export type ListResultFoo = Envelope<Foo[]>;\n");
+  });
+
+  it("schema Envelope data primitif (int64) → Envelope<number>", () => {
+    const decl = schemaToDeclaration("SavedResultLong", envelope({ type: "integer", format: "int64" }), undefined, {});
+    expect(decl).toBe("export type SavedResultLong = Envelope<number>;\n");
+  });
+
+  it("tanpa peta schemas (pemanggil 3-arg lama) → tetap interface, tak collapse", () => {
+    const decl = schemaToDeclaration("SingleResultFoo", envelope({ $ref: "#/components/schemas/Foo" }), undefined);
+    expect(decl).toContain("export interface SingleResultFoo {");
+  });
+
+  it("plan+render: interface Page* di-suppress; wrapper → PageEnvelope<T>", () => {
+    const spec = makeSpec(
+      { "/master/a": "PageResultPageFoo" },
+      {
+        PageResultPageFoo: pageEnvelope("PageFoo"),
+        PageFoo: page("Foo"),
+        Foo: { type: "object", properties: { id: { type: "integer" } } },
+        PageableObject: { type: "object", properties: { pageNumber: { type: "integer" } } },
+      },
+    );
+    const files = render(plan(spec));
+    const aFile = pick(files, (f: { filename: string }) => f.filename === "a.ts", "a.ts").contents;
+    expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
+    expect(aFile).not.toContain("interface PageFoo"); // schema Page tak ditulis
+    expect(aFile).toContain('import type { PageEnvelope } from "./_shared"');
+  });
+
+  it("_shared.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {
+    const spec = makeSpec(
+      { "/master/a": "AResp" },
+      { AResp: { type: "object", properties: {} } },
+    );
+    const shared = pick(render(plan(spec)), (f: { filename: string }) => f.filename === "_shared.ts", "_shared.ts").contents;
+    expect(shared).toContain("export type Envelope<T> =");
+    expect(shared).toContain("errors?: never");
+    expect(shared).toContain("errors: string | string[]");
+    expect(shared).toContain("export interface Page<T> {");
+    expect(shared).toContain("export interface PageEnvelope<T> {");
+  });
+});
+
 describe("smoke: master.json nyata → output stabil & konsisten", () => {
   const spec = JSON.parse(readFileSync(join(__dirname, "master.json"), "utf8"));
 
@@ -280,5 +375,15 @@ describe("smoke: master.json nyata → output stabil & konsisten", () => {
     const shared = pick(files, (f: { filename: string }) => f.filename === "_shared.ts", "_shared.ts").contents;
     // Setiap file domain hanya boleh meng-import nama yang benar-benar diekspor _shared.
     expect(shared).toContain("export type HttpStatusText =");
+    expect(shared).toContain("export type Envelope<T> =");
+  });
+
+  it("collapse nyata: tak ada interface wrapper/Page* tersisa di output mana pun", () => {
+    const files = render(plan(spec));
+    const allContents = files.map((f: { contents: string }) => f.contents).join("\n");
+    // Wrapper per-entity harus jadi alias generic, bukan interface.
+    expect(allContents).not.toMatch(/export interface (SingleResult|ListResult|SavedResult|PageResult|DeletedResult)/);
+    // Schema Page* pageable di-inline ke Page<T>; hanya generic Page<T>/PageEnvelope<T> yang boleh ada.
+    expect(allContents).not.toMatch(/export interface Page[A-Z]\w*Query/);
   });
 });

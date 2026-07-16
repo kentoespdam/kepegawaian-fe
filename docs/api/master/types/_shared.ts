@@ -74,23 +74,35 @@ export type HttpStatusText =
   | "510 NOT_EXTENDED"
   | "511 NETWORK_AUTHENTICATION_REQUIRED";
 
-export interface SavedResultLong {
+/** Wrapper standar semua response. Union: sukses (data + message) | error (errors). */
+export type Envelope<T> =
+  | { status: number; statusText?: HttpStatusText; message: string; data: T; errors?: never; timestamp?: string } // 2xx
+  | { status: number; statusText?: HttpStatusText; message?: string; data?: never; errors: string | string[]; timestamp?: string }; // error
+
+export interface Page<T> {
+  totalElements?: number; // int64
+  totalPages?: number; // int32
+  size?: number; // int32
+  content?: T[];
+  number?: number; // int32
+  numberOfElements?: number; // int32
+  pageable?: PageableObject;
+  sort?: SortObject;
+  first?: boolean;
+  last?: boolean;
+  empty?: boolean;
+}
+
+export interface PageEnvelope<T> {
   status?: number; // int32
   statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: number; // int64
+  data?: Page<T>;
   timestamp?: string; // date-time
 }
 
-export interface DeletedResult {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: string;
-  timestamp?: string; // date-time
-}
+export type SavedResultLong = Envelope<number>;
+
+export type DeletedResult = Envelope<string>;
 
 export interface SortObject {
   empty?: boolean;
@@ -126,25 +138,11 @@ export interface JabatanMiniResponse {
   nama?: string;
 }
 
-export interface SavedResultListLong {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: number[];
-  timestamp?: string; // date-time
-}
+export type SavedResultListLong = Envelope<number[]>;
 
 export interface EnumOption {
   id?: string;
   nama?: string;
 }
 
-export interface ListResultEnumOption {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: EnumOption[];
-  timestamp?: string; // date-time
-}
+export type ListResultEnumOption = Envelope<EnumOption[]>;

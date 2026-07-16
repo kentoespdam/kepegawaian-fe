@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/alasan-berhenti/{id}, GET /master/alasan-berhenti, GET /master/alasan-berhenti/list, GET /master/alasan-berhenti/{id}, POST /master/alasan-berhenti, PUT /master/alasan-berhenti/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "../_shared";
+import type { Envelope, PageEnvelope } from "../_shared";
 
 export interface AlasanBerhentiQuery {
 	id?: number; // int64
@@ -16,53 +16,20 @@ export interface AlasanBerhentiQuery {
 	notes?: string;
 }
 
-export interface SingleResultAlasanBerhentiQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: AlasanBerhentiQuery;
-	timestamp?: string; // date-time
-}
+export type SingleResultAlasanBerhentiQuery = Envelope<AlasanBerhentiQuery>;
 
 export interface AlasanBerhentiPostRequest {
 	nama: string; // minLength 1
 	notes?: string;
 }
 
-export interface PageAlasanBerhentiQuery {
-	totalElements?: number; // int64
-	totalPages?: number; // int32
-	size?: number; // int32
-	content?: AlasanBerhentiQuery[];
-	number?: number; // int32
-	numberOfElements?: number; // int32
-	pageable?: PageableObject;
-	sort?: SortObject;
-	first?: boolean;
-	last?: boolean;
-	empty?: boolean;
-}
-
-export interface PageResultPageAlasanBerhentiQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	data?: PageAlasanBerhentiQuery;
-	timestamp?: string; // date-time
-}
+export type PageResultPageAlasanBerhentiQuery = PageEnvelope<AlasanBerhentiQuery>;
 
 export interface AlasanBerhentiListResponse {
 	id?: number; // int64
 	nama?: string;
 }
 
-export interface ListResultAlasanBerhentiListResponse {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: AlasanBerhentiListResponse[];
-	timestamp?: string; // date-time
-}
+export type ListResultAlasanBerhentiListResponse = Envelope<AlasanBerhentiListResponse[]>;
 
 export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";

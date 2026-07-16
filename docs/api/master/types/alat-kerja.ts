@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/alat-kerja/{id}, GET /master/alat-kerja/{id}, POST /master/alat-kerja, PUT /master/alat-kerja/{id}
  */
 
-import type { HttpStatusText } from "./_shared";
+import type { Envelope } from "./_shared";
 
 export interface AlatKerjaQuery {
   id?: number; // int64
@@ -16,14 +16,7 @@ export interface AlatKerjaQuery {
   profesiId?: number; // int64
 }
 
-export interface SingleResultAlatKerjaQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: AlatKerjaQuery;
-  timestamp?: string; // date-time
-}
+export type SingleResultAlatKerjaQuery = Envelope<AlatKerjaQuery>;
 
 export interface AlatKerjaPostRequest {
   profesiId: number; // int64

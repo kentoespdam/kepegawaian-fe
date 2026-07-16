@@ -8,14 +8,7 @@
  * Endpoint : DELETE /master/jabatan/{id}, GET /master/jabatan, GET /master/jabatan/list, GET /master/jabatan/organisasi/{id}, GET /master/jabatan/{id}, GET /master/jabatan/{id}/parent, POST /master/jabatan, PUT /master/jabatan/{id}
  */
 
-import type {
-	HttpStatusText,
-	JabatanMiniResponse,
-	LevelResponse,
-	OrganisasiMiniResponse,
-	PageableObject,
-	SortObject,
-} from "../_shared";
+import type { Envelope, JabatanMiniResponse, LevelResponse, OrganisasiMiniResponse, PageEnvelope } from "../_shared";
 
 export interface JabatanQuery {
 	id?: number; // int64
@@ -26,14 +19,7 @@ export interface JabatanQuery {
 	level?: LevelResponse;
 }
 
-export interface SingleResultJabatanQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: JabatanQuery;
-	timestamp?: string; // date-time
-}
+export type SingleResultJabatanQuery = Envelope<JabatanQuery>;
 
 export interface JabatanPutRequest {
 	kode: string; // minLength 1
@@ -43,26 +29,7 @@ export interface JabatanPutRequest {
 	nama: string; // minLength 1
 }
 
-export interface PageJabatanQuery {
-	totalElements?: number; // int64
-	totalPages?: number; // int32
-	size?: number; // int32
-	content?: JabatanQuery[];
-	number?: number; // int32
-	numberOfElements?: number; // int32
-	pageable?: PageableObject;
-	sort?: SortObject;
-	first?: boolean;
-	last?: boolean;
-	empty?: boolean;
-}
-
-export interface PageResultPageJabatanQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	data?: PageJabatanQuery;
-	timestamp?: string; // date-time
-}
+export type PageResultPageJabatanQuery = PageEnvelope<JabatanQuery>;
 
 export interface JabatanPostRequest {
 	kode: string; // minLength 1
@@ -72,28 +39,14 @@ export interface JabatanPostRequest {
 	nama: string; // minLength 1
 }
 
-export interface ListResultJabatanQuery {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: JabatanQuery[];
-	timestamp?: string; // date-time
-}
+export type ListResultJabatanQuery = Envelope<JabatanQuery[]>;
 
 export interface JabatanListResponse {
 	id?: number; // int64
 	nama?: string;
 }
 
-export interface ListResultJabatanListResponse {
-	status?: number; // int32
-	statusText?: HttpStatusText;
-	errors?: string[];
-	message?: string;
-	data?: JabatanListResponse[];
-	timestamp?: string; // date-time
-}
+export type ListResultJabatanListResponse = Envelope<JabatanListResponse[]>;
 
 export type {
 	DeletedResult,

@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/sanksi/{id}, GET /master/sanksi, GET /master/sanksi/jenis-sp/{id}, GET /master/sanksi/list, GET /master/sanksi/{id}, PATCH /master/sanksi/{id}/jenis-sp, POST /master/sanksi, PUT /master/sanksi/{id}
  */
 
-import type { HttpStatusText, PageableObject, SortObject } from "./_shared";
+import type { Envelope, PageEnvelope } from "./_shared";
 
 export interface SanksiMiniResponse {
   id?: number; // int64
@@ -40,14 +40,7 @@ export interface SanksiQuery {
   isTerminateTh?: boolean;
 }
 
-export interface SingleResultSanksiQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: SanksiQuery;
-  timestamp?: string; // date-time
-}
+export type SingleResultSanksiQuery = Envelope<SanksiQuery>;
 
 export interface SanksiPutRequest {
   kode: string; // minLength 1
@@ -64,26 +57,7 @@ export interface SanksiPutRequest {
   isTerminateTh?: boolean;
 }
 
-export interface PageSanksiQuery {
-  totalElements?: number; // int64
-  totalPages?: number; // int32
-  size?: number; // int32
-  content?: SanksiQuery[];
-  number?: number; // int32
-  numberOfElements?: number; // int32
-  pageable?: PageableObject;
-  sort?: SortObject;
-  first?: boolean;
-  last?: boolean;
-  empty?: boolean;
-}
-
-export interface PageResultPageSanksiQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  data?: PageSanksiQuery;
-  timestamp?: string; // date-time
-}
+export type PageResultPageSanksiQuery = PageEnvelope<SanksiQuery>;
 
 export interface SanksiPostRequest {
   kode: string; // minLength 1
@@ -105,14 +79,7 @@ export interface PatchSanksiJenisSpRequest {
   jenisSpId?: number; // int64
 }
 
-export interface ListResultSanksiQuery {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: SanksiQuery[];
-  timestamp?: string; // date-time
-}
+export type ListResultSanksiQuery = Envelope<SanksiQuery[]>;
 
 export interface JenisSpSimple {
   id?: number; // int64
@@ -136,13 +103,6 @@ export interface SanksiJenisSpList {
   isTerminateTh?: boolean;
 }
 
-export interface ListResultSanksiJenisSpList {
-  status?: number; // int32
-  statusText?: HttpStatusText;
-  errors?: string[];
-  message?: string;
-  data?: SanksiJenisSpList[];
-  timestamp?: string; // date-time
-}
+export type ListResultSanksiJenisSpList = Envelope<SanksiJenisSpList[]>;
 
 export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "./_shared";
