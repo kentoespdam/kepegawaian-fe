@@ -37,7 +37,7 @@ export function DataTableToolbar({
 	onFilterChange,
 }: DataTableToolbarProps) {
 	return (
-		<div className="rounded-lg border bg-card shadow-sm">
+		<div className="rounded-lg border bg-card shadow-sm mb-3">
 			<div className="flex items-center justify-between gap-4 px-4 py-3 max-sm:flex-col max-sm:items-stretch">
 				<div className="flex flex-1 flex-wrap items-center gap-2 max-sm:flex-col">
 					{searchFields?.map((f) => (
