@@ -16,7 +16,12 @@ export const profesiConfig: EntityConfig<ProfesiQuery> = makeConfig<ProfesiQuery
 		fkSources: [
 			{ field: "organisasiId", entity: "organisasi", label: "Organisasi" },
 			{ field: "jabatanId", entity: "jabatan", label: "Jabatan" },
-			{ field: "gradeId", entity: "grade", label: "Grade" },
+			{
+				field: "gradeId",
+				entity: "grade",
+				label: "Grade",
+				formatLabel: (item) => `Grade ${item.grade}`,
+			},
 		],
 		searchFields: [{ name: "nama", label: "Nama" }],
 	},

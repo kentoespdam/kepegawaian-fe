@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { rupiah } from "@/lib/utils";
 import type { GradeQuery } from "@/types/master/grade";
 import { type EntityConfig, makeConfig } from "./_config-kit";
 
@@ -16,6 +17,7 @@ export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
 	[
 		{ id: "grade", header: "Grade", sortable: true, primary: true, cell: (item) => `Grade ${item.grade}` },
 		{ id: "level", header: "Level", cell: (item) => item.level?.nama ?? "-" },
+		{ id: "tunkin", header: "Tunkin", sortable: true, cell: (item) => rupiah(item.tukin) },
 	],
 	"Grade",
 	{

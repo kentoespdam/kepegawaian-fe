@@ -64,6 +64,11 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 		return map;
 	}, [fkSources, fkQ1.data, fkQ2.data, fkQ3.data]);
 
+	// Helper: resolve label dari FK item, pakai formatLabel bila ada
+	function resolveFkLabel(fk: (typeof fkSources)[number], item: Record<string, unknown>): string {
+		return fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? item.id ?? "");
+	}
+
 	// Resolve FK display names + tree parent name in table items
 	const resolvedItems = useMemo(
 		() =>
@@ -79,7 +84,10 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 					const fkId = String(item[fk.field] ?? "");
 					const nameField = `_${fk.field.replace("Id", "")}Name`;
 					const lookupMap = fkLookup.get(fk.field);
-					if (lookupMap && fkId) e[nameField] = String(lookupMap.get(fkId)?.nama ?? fkId);
+					if (lookupMap && fkId) {
+						const fkItem = lookupMap.get(fkId);
+						e[nameField] = fkItem ? resolveFkLabel(fk, fkItem) : fkId;
+					}
 				}
 				return e as Resolved<TQuery>;
 			}),
@@ -98,7 +106,12 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 			const fk = fkSources.find((s) => s.field === f.name);
 			if (!fk) return f;
 			const lm = fkLookup.get(fk.field);
-			const opts = lm ? [...lm.entries()].map(([value, item]) => ({ value, label: String(item.nama ?? value) })) : [];
+			const opts = lm
+				? [...lm.entries()].map(([value, item]) => ({
+						value,
+						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
+				  }))
+				: [];
 			return { ...f, options: opts };
 		});
 	}, [cfg.fields, cfg.treeField, treeItems, editing, fkSources, fkLookup]);
@@ -110,7 +123,10 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 			const fk = fkSources[i];
 			const lm = fkLookup.get(fk.field);
 			result[fk.field] = lm
-				? [...lm.entries()].map(([value, item]) => ({ value, label: String(item.nama ?? value) }))
+				? [...lm.entries()].map(([value, item]) => ({
+						value,
+						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
+				  }))
 				: [];
 		}
 		return result;
