@@ -141,19 +141,19 @@ export function FKComboboxFilter({ label, options, value, onChange }: FKCombobox
 
 ## Checklist Pengerjaan
 
-- [ ] Buat file `src/components/fk-combobox-filter.tsx`
-- [ ] Props interface sesuai spesifikasi di atas
-- [ ] Trigger button: tampil label terpilih / fallback "Semua {label}"
-- [ ] CommandDialog terbuka saat trigger diklik
-- [ ] CommandInput dengan placeholder yang benar
-- [ ] CommandItem "Semua {label}" sebagai opsi reset
-- [ ] Semua opsi tampil dari `props.options`
-- [ ] `data-checked` terpasang pada item aktif (built-in CheckIcon muncul)
-- [ ] `onSelect` toggle off jika item yang sama diklik ulang
-- [ ] `CommandEmpty` tampil jika pencarian tidak cocok
-- [ ] Dialog tertutup setelah pilih
-- [ ] TypeScript: tidak ada `any`, tidak ada error
-- [ ] Tidak ada dependensi baru (hanya gunakan yang sudah ada)
+- [x] Buat file `src/components/fk-combobox-filter.tsx`
+- [x] Props interface sesuai spesifikasi di atas
+- [x] Trigger button: tampil label terpilih / fallback "Semua {label}"
+- [x] CommandDialog terbuka saat trigger diklik
+- [x] CommandInput dengan placeholder yang benar
+- [x] CommandItem "Semua {label}" sebagai opsi reset
+- [x] Semua opsi tampil dari `props.options`
+- [x] `data-checked` terpasang pada item aktif (built-in CheckIcon muncul)
+- [x] `onSelect` toggle off jika item yang sama diklik ulang
+- [x] `CommandEmpty` tampil jika pencarian tidak cocok
+- [x] Dialog tertutup setelah pilih
+- [x] TypeScript: tidak ada `any`, tidak ada error
+- [x] Tidak ada dependensi baru (hanya gunakan yang sudah ada)
 
 ## Kriteria Selesai (DoD)
 
