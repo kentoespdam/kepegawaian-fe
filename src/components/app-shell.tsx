@@ -152,6 +152,11 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
 
 				{/* Page content */}
 				<main className="flex-1 overflow-y-auto p-6">{children}</main>
+
+				{/* Footer */}
+				<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
+					© Perumdam Tirta Satria 2026
+				</footer>
 			</div>
 
 			{/* Desktop: if panel collapsed, show expand button */}

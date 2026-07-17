@@ -45,11 +45,12 @@
   - **Changes:** Combobox `max-w-[200px]` already implemented in v5p; button `size="sm"`→`size="default"` (`h-7`→`h-11`) to match combobox height.
   - **Screenshot baseline:** `~/Pictures/Screenshots/Screenshot from 2026-07-16 15:33-28.png` (before fix).
 
-- [ ] **[4] `kepegawaian-fe-if8`** — App shell 60:30:10 differentiation + copyright footer
+- [x] **[4] `kepegawaian-fe-if8`** — App shell 60:30:10 differentiation + copyright footer
   - **Issue:** Screenshot 2026-07-16 15:33 menunjukkan struktur 30% (topbar/sidebar) blend monoton dengan canvas 60% (semua putih) — tidak cukup differentiation. Missing app footer dengan copyright text.
   - **Target:** (1) Topbar — tambah `bg-card` atau `border-b border-border` untuk subtle separation dari content; (2) Sidebar — tambah `bg-card` (netral sedikit gelap); (3) Footer bar baru — sticky bottom, `bg-card`, `text-center`, `py-3`, `text-xs text-muted-foreground`, "© Perumdam Tirta Satria 2026".
   - **Gate:** Visual check `/master/profesi` — topbar/sidebar/footer terpisah jelas dari content (60% vs 30% distinction), footer visible di bottom semua halaman app.
-  - **Status:** 🟡 Open — needs agent delegation.
+  - **Status:** ✅ Done — implemented by Buffy (2026-07-16).
+  - **Changes:** Topbar & sidebar already had `bg-card` + `border-b border-border` (pre-existing from earlier implementation). Added footer bar: `bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0` with "© Perumdam Tirta Satria 2026".
   - **Context:** CONTEXT-MAP spec 60% canvas (`--background` off-white), 30% struktur (`--card`/`--muted` netral), 10% aksen (Evergreen hijau). Saat ini 60%+30% semua sama warna → perlu differentiation.
 
 ## Detail acceptance — `kepegawaian-fe-v5p` (Implement)
