@@ -23,7 +23,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 
 	// ponytail: map di-widen ke EntityConfig — cast via unknown karena tipe tidak overlapping
 	const cfg = MASTER_ENTITY_CONFIGS[entity] as unknown as EntityConfig<TItem, TReq>;
-	const { page, size, sortBy, sortDir, filters, setP, setFilter } = useMasterSearchParams(entity);
+	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(entity);
 
 	const [editing, setEditing] = useState<TItem | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
@@ -106,6 +106,8 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 				fkOptions={fkOptions}
 				values={filters}
 				onFilterChange={handleFilterChange}
+				hasActive={Object.keys(filters).length > 0 || !!sortBy}
+				onReset={resetAll}
 			>
 				<Button size="default" onClick={openCreate}>
 					+ Tambah

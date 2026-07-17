@@ -1,8 +1,10 @@
 "use client";
 
+import { RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
 export interface FilterField {
@@ -27,6 +29,10 @@ interface DataTableToolbarProps {
 	values?: Record<string, string>;
 	/** Dipanggil saat user mengubah filter — parent setP + reset page=1 */
 	onFilterChange?: (name: string, value: string | undefined) => void;
+	/** Ada filter atau sort aktif — tampilkan tombol Reset */
+	hasActive?: boolean;
+	/** Reset semua filter & sort */
+	onReset?: () => void;
 }
 
 export function DataTableToolbar({
@@ -36,6 +42,8 @@ export function DataTableToolbar({
 	fkOptions,
 	values = {},
 	onFilterChange,
+	hasActive,
+	onReset,
 }: DataTableToolbarProps) {
 	return (
 		<div className="rounded-lg border bg-card shadow-sm mb-3">
@@ -60,7 +68,15 @@ export function DataTableToolbar({
 						/>
 					))}
 				</div>
-				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:*:w-full">{children}</div>
+				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:*:w-full">
+					{hasActive && onReset && (
+						<Button variant="outline" size="sm" onClick={onReset}>
+							<RotateCcw className="mr-1.5 size-3.5" />
+							Reset
+						</Button>
+					)}
+					{children}
+				</div>
 			</div>
 		</div>
 	);

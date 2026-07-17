@@ -50,5 +50,10 @@ export function useMasterSearchParams(entity: string) {
 		router.replace(`/master/${entity}?${p.toString()}`);
 	};
 
-	return { page, size, sortBy, sortDir, filters, setP, setFilter };
+	/** Reset semua filter & sort ke URL bersih (page=1, tanpa filter/sort). */
+	const resetAll = () => {
+		router.replace(`/master/${entity}`);
+	};
+
+	return { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll };
 }

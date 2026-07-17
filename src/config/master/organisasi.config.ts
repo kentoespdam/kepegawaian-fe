@@ -8,7 +8,9 @@ export const organisasiConfig: EntityConfig<OrganisasiQuery> = makeConfig<Organi
 	[
 		{ id: "kode", header: "Kode", sortable: true, cell: (item) => String(item.kode ?? "") },
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
-		{ id: "parent", header: "Parent", cell: (item) => item.parent?.nama ?? "-" },
+		{ id: "parent", header: "Parent", sortable: true, cell: (item) => item.parent?.nama ?? "-" },
+		{ id: "shortName", header: "Kode Kantor", cell: (item) => item.shortName ?? "-" },
+		{ id: "category", header: "Kategori", sortable: true, cell: (item) => item.category ?? "-" },
 	],
 	"Organisasi",
 	{
@@ -16,7 +18,6 @@ export const organisasiConfig: EntityConfig<OrganisasiQuery> = makeConfig<Organi
 		searchFields: [
 			{ name: "kode", label: "Kode" },
 			{ name: "nama", label: "Nama" },
-			{ name: "levelOrg", label: "Level", type: "number" },
 			{ name: "category", label: "Kategori" },
 		],
 	},
