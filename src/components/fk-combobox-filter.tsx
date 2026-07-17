@@ -45,7 +45,7 @@ export function FKComboboxFilter({ label, options, value, onChange }: FKCombobox
 				variant="outline"
 				role="combobox"
 				aria-expanded={open}
-				className="min-w-[160px] max-w-[220px] justify-between font-normal"
+				className="min-w-40 max-w-55 justify-between font-normal"
 				onClick={() => setOpen(true)}
 			>
 				<span className="truncate">{selectedLabel ?? `Semua ${label}`}</span>
@@ -69,9 +69,9 @@ export function FKComboboxFilter({ label, options, value, onChange }: FKCombobox
 							{options.map((opt) => (
 								<CommandItem
 									key={opt.value}
-									value={opt.value}
+									value={`${opt.label} ${opt.value}`}
 									data-checked={opt.value === value}
-									onSelect={handleSelect}
+									onSelect={() => handleSelect(opt.value)}
 								>
 									{opt.label}
 								</CommandItem>
