@@ -60,7 +60,7 @@ export function DataTableToolbar({
 						/>
 					))}
 				</div>
-				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:[&>*]:w-full">{children}</div>
+				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:*:w-full">{children}</div>
 			</div>
 		</div>
 	);
@@ -96,7 +96,7 @@ function DebouncedInput({
 				debouncedOnChange(v);
 			}}
 			type={type}
-			className="h-11 w-48 max-w-[200px]"
+			className="h-11 w-48 max-w-50"
 		/>
 	);
 }

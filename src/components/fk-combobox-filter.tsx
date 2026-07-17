@@ -45,7 +45,7 @@ export function FKComboboxFilter({ label, options, value, onChange }: FKCombobox
 				variant="outline"
 				role="combobox"
 				aria-expanded={open}
-				className="min-w-40 max-w-55 justify-between font-normal"
+				className="h-11 w-48 max-w-50 justify-between font-normal bg-card"
 				onClick={() => setOpen(true)}
 			>
 				<span className="truncate">{selectedLabel ?? `Semua ${label}`}</span>

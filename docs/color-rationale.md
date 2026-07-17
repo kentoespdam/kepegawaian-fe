@@ -2,8 +2,8 @@
 
 **Untuk:** Pengajuan & alasan pemilihan warna ke atasan
 **Aplikasi:** Sistem Kepegawaian — Perumdam Tirta Satria
-**Tanggal:** 2026-07-06
-**Status:** Usulan untuk disetujui
+**Tanggal:** 2026-07-06 (diperbarui 2026-07-17)
+**Status:** Usulan untuk disetujui — **implementasi dev: Evergreen (hijau)**
 
 ---
 
@@ -16,9 +16,10 @@ pegawai berusia lanjut (orang tua).** Mata yang menua memiliki keterbatasan fisi
 hanya soal "bagus dipandang". Skema yang salah membuat pegawai cepat lelah, salah input, dan
 lambat bekerja; skema yang tepat menurunkan kelelahan mata dan kesalahan.
 
-Kami tetap memakai identitas **Tirta Blue** (biru khas air/PDAM) sebagai warna utama merek, namun
+Kami mengusulkan identitas **Tirta Blue** (biru khas air/PDAM) sebagai warna utama merek, namun
 menempatkannya secara cerdas — sebagai **aksen**, bukan sebagai warna teks kecil — sesuai temuan
-riset tentang mata lansia.
+riset tentang mata lansia. Sementara menunggu persetujuan, implementasi dev memakai
+**Evergreen (hijau pinus)** sebagai aksen sementara (lihat §4 — 10% Aksen).
 
 Prinsip penataan: **aturan 60:30:10** (60% warna dasar/kanvas, 30% warna pendukung/struktur,
 10% warna aksen) — standar desain profesional untuk komposisi yang tenang dan tidak melelahkan.
@@ -73,8 +74,13 @@ Nilai warna ditulis dalam format **OKLCH** (ruang warna modern yang lebih presis
 Angka teknis disertakan untuk tim pengembang; yang penting bagi persetujuan adalah **maksud** tiap warna.
 
 ### 60% — Kanvas / Latar utama
-- **Off-white hangat**, bukan putih menyala: `oklch(0.99 0.008 85)`
+- **Usulan: Off-white hangat**, bukan putih menyala: `oklch(0.99 0.008 85)`
+- **Implementasi dev:** Abu-abu kebiruan netral `oklch(0.94 0.005 250)` (~#EDEFF2) — latar
+  sengaja digelapkan agar card putih 'mengambang' memberikan elevation visual jelas.
 - *Alasan:* mengurangi silau untuk mata lansia; terasa bersih namun tidak melelahkan.
+
+  > **Catatan:** Nilai implementasi berbeda dari usulan dan bersifat sementara — akan
+  > diselaraskan saat palet final disetujui.
 
 ### 30% — Struktur (sidebar, kartu, header tabel, panel)
 - **Netral hangat**: `oklch(0.965 0.006 85)`
@@ -83,9 +89,15 @@ Angka teknis disertakan untuk tim pengembang; yang penting bagi persetujuan adal
   yang menyatu di mata yang lelah.
 
 ### 10% — Aksen (identitas merek)
-- **Tirta Blue**: `oklch(0.55 0.13 235)` — untuk tombol utama, item aktif, dan cincin fokus.
+- **Usulan: Tirta Blue**: `oklch(0.55 0.13 235)` — untuk tombol utama, item aktif, dan cincin fokus.
+- **Implementasi dev: Evergreen (hijau pinus)**: `oklch(0.48 0.09 158)` — dipakai sementara
+  menunggu persetujuan palet final.
 - *Alasan:* mempertahankan identitas air/PDAM. Karena hanya dipakai di area kecil, biru pekat
   justru aman dan menarik perhatian ke aksi penting. **Tidak** dipakai untuk teks kecil di atas putih.
+
+  > **Catatan:** Jika Tirta Blue disetujui, implementasi akan mengganti `--primary` dan `--ring`
+  > ke nilai biru. Semua komponen menggunakan token CSS — perubahan cukup di `globals.css`, nol
+  > perubahan komponen.
 
 ### Teks — kontras tinggi (bukan abu pucat)
 - **Teks utama**: `oklch(0.22 0.01 260)` — target AAA ≥ 7:1.
@@ -93,7 +105,8 @@ Angka teknis disertakan untuk tim pengembang; yang penting bagi persetujuan adal
 
 ### Warna status (selalu + ikon/teks, tidak mengandalkan biru↔hijau)
 - **Merah (bahaya/hapus)**: `oklch(0.52 0.20 25)`
-- **Hijau (berhasil)**: `oklch(0.50 0.15 150)` — digeser lebih gelap & jenuh agar tak tertukar dengan biru.
+- **Hijau/Teal (berhasil)**: `oklch(0.52 0.1 195)` — digeser ke teal agar tak tertukar dengan biru
+  (usulan awal: `oklch(0.50 0.15 150)`).
 - **Amber (peringatan)**: `oklch(0.68 0.15 75)`
 
 ---
@@ -104,7 +117,8 @@ Angka teknis disertakan untuk tim pengembang; yang penting bagi persetujuan adal
 - **Lebih sedikit kesalahan input** karena teks & garis terbaca jelas.
 - **Kepatuhan standar aksesibilitas** (WCAG) — nilai tambah bagi instansi pemerintah/perumda.
 - **Identitas merek terjaga** — Tirta Blue tetap menjadi warna khas aplikasi.
-- **Siap mode gelap** di masa depan tanpa membongkar ulang komponen.
+- **Mode gelap sudah aktif** — `.dark` token terisi, toggle via `next-themes` di UserMenu.
+  Warna dark mode akan menyesuaikan saat light theme final disetujui.
 
 ---
 
@@ -121,6 +135,7 @@ Angka teknis disertakan untuk tim pengembang; yang penting bagi persetujuan adal
 
 ---
 
-*Catatan teknis: nilai OKLCH di atas adalah baseline dan dapat di-fine-tune saat implementasi
-**selama tetap lolos gate kontras** (AA ≥ 4.5:1, target AAA ≥ 7:1 untuk teks utama). Palet final
-diformalkan di `DESIGN.md`.*
+*Catatan teknis: nilai OKLCH di atas adalah baseline usulan. Implementasi dev saat ini memakai
+nilai yang berbeda (lihat §4 — sub-bagian 60% Kanvas & 10% Aksen). Semua nilai — baik usulan
+maupun implementasi — wajib lolos gate kontras (AA ≥ 4.5:1, target AAA ≥ 7:1 untuk teks utama).
+Palet final diformalkan setelah pengajuan disetujui.*
