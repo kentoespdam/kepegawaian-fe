@@ -27,10 +27,17 @@ export function useMasterSearchParams(entity: string) {
 		}
 	}
 
-	const setP = (k: string, v: string | undefined) => {
+	const setP = (k: string | Record<string, string | undefined>, v?: string) => {
 		const p = new URLSearchParams(sp.toString());
-		if (v) p.set(k, v);
-		else p.delete(k);
+		if (typeof k === "object") {
+			for (const [key, val] of Object.entries(k)) {
+				if (val) p.set(key, val);
+				else p.delete(key);
+			}
+		} else {
+			if (v) p.set(k, v);
+			else p.delete(k);
+		}
 		router.replace(`/master/${entity}?${p.toString()}`);
 	};
 

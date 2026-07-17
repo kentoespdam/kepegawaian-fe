@@ -124,10 +124,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 				sortDirection={sortDir}
 				onSort={(key) => {
 					if (sortBy === key) setP("sortDirection", sortDir === "asc" ? "desc" : "asc");
-					else {
-						setP("sortBy", key);
-						setP("sortDirection", "asc");
-					}
+					else setP({ sortBy: key, sortDirection: "asc" });
 				}}
 				onEdit={openEdit}
 				onDelete={openDelete}
