@@ -27,6 +27,16 @@
 9. App shell footer (`bg-card`, `border-t`, `© Perumdam Tirta Satria 2026`)
 10. Topbar & sidebar 30% structure differentiation via `bg-card` + `border-b border-border`
 
+## Fix regresi — Filter toolbar elevation (`kepegawaian-fe-b4q`)
+
+Setelah implementasi epic `kepegawaian-fe-zez`, filter toolbar (DataTableToolbar) terlihat sunken karena hanya `<div>` tanpa card elevation, sementara `DataTable` sudah punya `shadow-md`. Toolbar blend ke gray canvas.
+
+- [x] **`kepegawaian-fe-b4q`** — Angkat filter toolbar ke permukaan card
+  - **Fix:** Wrapper card `rounded-lg border bg-card shadow-sm` di `data-table-toolbar.tsx`
+  - **Shadow hierarchy:** `shadow-sm` (toolbar) < `shadow-md` (table card) ✅
+  - **Secondary fix:** `pr-8` pada native `<select>` untuk clearance arrow dropdown
+  - **Status:** ✅ Done — implemented by Buffy (2026-07-16)
+
 **Deferred ke epic terpisah:** Sidebar-07 + RBAC menu, sidebar entity grouping, density preset toggle, column border-right.
 
 ---

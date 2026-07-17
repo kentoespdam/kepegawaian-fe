@@ -37,34 +37,36 @@ export function DataTableToolbar({
 	onFilterChange,
 }: DataTableToolbarProps) {
 	return (
-		<div className="flex items-center justify-between gap-4 py-2.5 max-sm:flex-col max-sm:items-stretch">
-			<div className="flex flex-1 flex-wrap items-center gap-2 max-sm:flex-col">
-				{searchFields?.map((f) => (
-					<DebouncedInput
-						key={f.name}
-						label={f.label}
-						type={f.type ?? "text"}
-						value={values[f.name] ?? ""}
-						onChange={(v) => onFilterChange?.(f.name, v || undefined)}
-					/>
-				))}
-				{fkSources?.map((fk) => (
-					<select
-						key={fk.field}
-						value={values[fk.field] ?? ""}
-						onChange={(e) => onFilterChange?.(fk.field, e.target.value || undefined)}
-						className="h-11 max-w-[200px] rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-					>
-						<option value="">Semua {fk.label}</option>
-						{(fkOptions?.[fk.field] ?? []).map((o) => (
-							<option key={o.value} value={o.value}>
-								{o.label}
-							</option>
-						))}
-					</select>
-				))}
+		<div className="rounded-lg border bg-card shadow-sm">
+			<div className="flex items-center justify-between gap-4 px-4 py-3 max-sm:flex-col max-sm:items-stretch">
+				<div className="flex flex-1 flex-wrap items-center gap-2 max-sm:flex-col">
+					{searchFields?.map((f) => (
+						<DebouncedInput
+							key={f.name}
+							label={f.label}
+							type={f.type ?? "text"}
+							value={values[f.name] ?? ""}
+							onChange={(v) => onFilterChange?.(f.name, v || undefined)}
+						/>
+					))}
+					{fkSources?.map((fk) => (
+						<select
+							key={fk.field}
+							value={values[fk.field] ?? ""}
+							onChange={(e) => onFilterChange?.(fk.field, e.target.value || undefined)}
+							className="h-11 max-w-[200px] rounded-lg border border-input bg-transparent px-2 pr-8 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+						>
+							<option value="">Semua {fk.label}</option>
+							{(fkOptions?.[fk.field] ?? []).map((o) => (
+								<option key={o.value} value={o.value}>
+									{o.label}
+								</option>
+							))}
+						</select>
+					))}
+				</div>
+				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:[&>*]:w-full">{children}</div>
 			</div>
-			<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:[&>*]:w-full">{children}</div>
 		</div>
 	);
 }
