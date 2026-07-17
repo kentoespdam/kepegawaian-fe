@@ -1,8 +1,35 @@
 # Visual Hierarchy + Monotony Fix — Claim Order & Monitoring
 
-> Epic: `kepegawaian-fe-zez` — Atasi tampilan datar/monoton setelah Evergreen+16px
+> Epic: `kepegawaian-fe-zez` — ✅ **CLOSED** (2026-07-16)
 > Peran: manager grill → keputusan dikunci → **agent lain** yang eksekusi (bukan diri sendiri).
 > Sumber keputusan: grill 2026-07-16 (Q1–Q5). Screenshot awal: `~/Pictures/Screenshots/Screenshot from 2026-07-16 14-05-54.png`.
+
+## Epic summary — semua 4 claim order selesai
+
+| Claim | Issue | Status | Description |
+|-------|-------|--------|-------------|
+| #1 | `kepegawaian-fe-v5p` | ✅ Done | Implement hierarchy + compact spacing (table/toolbar/sidebar) |
+| #2 | `kepegawaian-fe-qza` | ✅ Done | QA F/Z + whitespace + regresi visual (pilot golongan) |
+| #3 | `kepegawaian-fe-l2h` | ✅ Done | Polish toolbar: combobox max-width + button proporsi |
+| #4 | `kepegawaian-fe-if8` | ✅ Done | App shell 60:30:10 differentiation + copyright footer |
+
+**Total perubahan:** 4 issues, 5 files disentuh (data-table.tsx, data-table-toolbar.tsx, data-table-pagination.tsx, master-client.tsx, app-shell.tsx), 0 regresi.
+
+**Yang dicapai:**
+1. Table typography hierarchy — header `text-xs` muted vs body `text-sm` high-contrast
+2. Column padding asimetris + zebra `bg-muted/30`→`bg-muted`
+3. Compact spacing (MAINTAIN 16px + 44px)
+4. Toolbar spatial zoning (filter zone gap-2, action zone ml-auto, gap-4 antar-zona)
+5. Sidebar active state visual weight (`bg-primary/10` + `text-primary`)
+6. F/Z-shape reinforcement (hot-spot high-contrast)
+7. Whitespace + proximity (Gestalt grouping)
+8. Button height match combobox (`h-7`→`h-11`)
+9. App shell footer (`bg-card`, `border-t`, `© Perumdam Tirta Satria 2026`)
+10. Topbar & sidebar 30% structure differentiation via `bg-card` + `border-b border-border`
+
+**Deferred ke epic terpisah:** Sidebar-07 + RBAC menu, sidebar entity grouping, density preset toggle, column border-right.
+
+---
 
 ## Masalah yang diidentifikasi (dari screenshot)
 

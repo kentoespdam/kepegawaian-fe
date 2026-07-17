@@ -17,6 +17,7 @@
 			"!docs/api",
 			"!.beads",
 			"!.claude",
+			"!scripts",
 			"!src/components/ui"
 		]
 	},
