@@ -1,6 +1,6 @@
 # FK Combobox Filter — Claim Order & Monitoring
 
-> Issues: `kepegawaian-fe-ao5` · `kepegawaian-fe-p76` · `kepegawaian-fe-3td` — 🔲 **OPEN**
+> Issues: ~~`kepegawaian-fe-ao5`~~ · ~~`kepegawaian-fe-p76`~~ · `kepegawaian-fe-3td` — 🟡 **2/3 CLOSED** (QA tersisa)
 > Peran: manager grill → keputusan dikunci → **agent lain** yang eksekusi (bukan diri sendiri).
 > Sumber keputusan: riset codebase + context7 2026-07-17. `bd graph kepegawaian-fe-ao5 --compact` untuk lihat dependency chain.
 
