@@ -37,6 +37,28 @@ Setelah implementasi epic `kepegawaian-fe-zez`, filter toolbar (DataTableToolbar
   - **Secondary fix:** `pr-8` pada native `<select>` untuk clearance arrow dropdown
   - **Status:** ✅ Done — implemented by Buffy (2026-07-16)
 
+## Pagination footer dalam card tabel (`kepegawaian-fe-309`)
+
+Setelah filter toolbar diangkat (b4q), pagination masih tenggelam di kanvas abu karena dirender di luar card tabel.
+
+- [x] **`kepegawaian-fe-309`** — Tempel pagination ke card tabel sebagai footer
+  - **Fix:** Tarik `{pagination}` masuk ke dalam card tabel via `PaginationFooter` helper (`border-t shrink-0 px-4 py-2.5`)
+  - **Struktur card:** `flex flex-col max-h-[75vh] relative` → table area `overflow-auto flex-1`, footer `shrink-0` tetap terlihat saat scroll
+  - **Semua state konsisten:** error, loading, empty, data — semua render pagination dalam card ✅
+  - **Error/empty states:** dibungkus `rounded-lg border bg-card shadow-md` ✅
+  - **Select size arrow:** `pl-3 pr-8` di `data-table-pagination.tsx` ✅
+  - **Status:** ✅ Done — implemented by Buffy (2026-07-17)
+
+## Table readability: elevation + zebra/hover + NAMA emphasis (`kepegawaian-fe-vlq`)
+
+Semua perubahan vlq sudah terimplementasi dari epic dan issue sebelumnya:
+
+- [x] **1. Elevation** — Kanvas abu `--background: oklch(0.94)` (#EDEFF2), card tabel putih `bg-card` + `shadow-md` ✅
+- [x] **2. Zebra + Hover** — `--row-stripe` (oklch 0.965) + `--row-hover` (oklch 0.95 hue 158 hijau). Hover > stripe > base invariant ✅
+- [x] **3. NAMA emphasis** — `col.primary` flag → `font-semibold text-foreground`, kolom lain `text-muted-foreground` ✅
+- **Diblokir oleh 309** ✅ (309 sudah selesai, vlq bisa ditutup)
+- **Status:** ✅ Done — semua kriteria acceptance terpenuhi
+
 **Deferred ke epic terpisah:** Sidebar-07 + RBAC menu, sidebar entity grouping, density preset toggle, column border-right.
 
 ---

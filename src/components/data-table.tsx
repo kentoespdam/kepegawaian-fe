@@ -46,6 +46,12 @@ interface DataTableProps<T> {
 	pagination?: React.ReactNode;
 }
 
+/** Wrapper untuk pagination di dalam card — border-t separator + padding. */
+function PaginationFooter({ children }: { children: React.ReactNode }) {
+	if (!children) return null;
+	return <div className="border-t shrink-0 px-4 py-2.5">{children}</div>;
+}
+
 export function DataTable<T>({
 	columns,
 	data,
@@ -70,20 +76,22 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-					<div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
-						<AlertTriangle className="size-6 text-destructive" />
+				<div className="rounded-lg border bg-card shadow-md">
+					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+						<div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
+							<AlertTriangle className="size-6 text-destructive" />
+						</div>
+						<p className="text-sm font-medium text-foreground">Gagal memuat data</p>
+						{error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
+						{onRetry && (
+							<Button variant="outline" size="sm" onClick={onRetry}>
+								<RefreshCw className="mr-1.5 size-3.5" />
+								Coba lagi
+							</Button>
+						)}
 					</div>
-					<p className="text-sm font-medium text-foreground">Gagal memuat data</p>
-					{error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
-					{onRetry && (
-						<Button variant="outline" size="sm" onClick={onRetry}>
-							<RefreshCw className="mr-1.5 size-3.5" />
-							Coba lagi
-						</Button>
-					)}
+					<PaginationFooter>{pagination}</PaginationFooter>
 				</div>
-				{pagination}
 			</div>
 		);
 	}
@@ -92,47 +100,49 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="rounded-lg border bg-card shadow-md overflow-auto">
-					<table className="w-full caption-bottom text-sm">
-						<thead className="[&_tr]:border-b">
-							<tr className="border-b">
-								{columns.map((col) => (
-									<th
-										key={col.id}
-										className="h-11 px-4 text-left align-middle font-medium text-xs uppercase tracking-wider"
-									>
-										{col.header}
-									</th>
-								))}
-								{(onEdit || onDelete) && (
-									<th className="h-11 px-4 text-right w-24">
-										<span className="text-xs font-medium uppercase tracking-wider">Aksi</span>
-									</th>
-								)}
-							</tr>
-						</thead>
-						<tbody>
-							{Array.from({ length: 10 }, (_, i) => i).map((i) => (
-								<tr key={`skeleton-${i}`} className="border-b">
+				<div className="rounded-lg border bg-card shadow-md flex flex-col">
+					<div className="overflow-auto flex-1">
+						<table className="w-full caption-bottom text-sm">
+							<thead className="[&_tr]:border-b">
+								<tr className="border-b">
 									{columns.map((col) => (
-										<td key={col.id} className="px-4 py-2 align-middle">
-											<Skeleton className="h-4 w-3/4" />
-										</td>
+										<th
+											key={col.id}
+											className="h-11 px-4 text-left align-middle font-medium text-xs uppercase tracking-wider"
+										>
+											{col.header}
+										</th>
 									))}
 									{(onEdit || onDelete) && (
-										<td className="px-4 py-2 align-middle text-right">
-											<div className="flex justify-end gap-1">
-												<Skeleton className="size-8 rounded-md" />
-												<Skeleton className="size-8 rounded-md" />
-											</div>
-										</td>
+										<th className="h-11 px-4 text-right w-24">
+											<span className="text-xs font-medium uppercase tracking-wider">Aksi</span>
+										</th>
 									)}
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{Array.from({ length: 10 }, (_, i) => i).map((i) => (
+									<tr key={`skeleton-${i}`} className="border-b">
+										{columns.map((col) => (
+											<td key={col.id} className="px-4 py-2 align-middle">
+												<Skeleton className="h-4 w-3/4" />
+											</td>
+										))}
+										{(onEdit || onDelete) && (
+											<td className="px-4 py-2 align-middle text-right">
+												<div className="flex justify-end gap-1">
+													<Skeleton className="size-8 rounded-md" />
+													<Skeleton className="size-8 rounded-md" />
+												</div>
+											</td>
+										)}
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+					<PaginationFooter>{pagination}</PaginationFooter>
 				</div>
-				{pagination}
 			</div>
 		);
 	}
@@ -141,26 +151,28 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-					{isFiltered ? (
-						<>
-							<SearchX className="size-12 text-muted-foreground" />
-							<p className="text-sm font-medium text-foreground">Tidak ada hasil</p>
-							<p className="text-sm text-muted-foreground">Coba ubah filter pencarian</p>
-							{onResetFilter && (
-								<Button variant="outline" size="sm" onClick={onResetFilter}>
-									Reset filter
-								</Button>
-							)}
-						</>
-					) : (
-						<>
-							<FileX2 className="size-12 text-muted-foreground" />
-							<p className="text-sm font-medium text-foreground">{emptyMessage}</p>
-						</>
-					)}
+				<div className="rounded-lg border bg-card shadow-md">
+					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+						{isFiltered ? (
+							<>
+								<SearchX className="size-12 text-muted-foreground" />
+								<p className="text-sm font-medium text-foreground">Tidak ada hasil</p>
+								<p className="text-sm text-muted-foreground">Coba ubah filter pencarian</p>
+								{onResetFilter && (
+									<Button variant="outline" size="sm" onClick={onResetFilter}>
+										Reset filter
+									</Button>
+								)}
+							</>
+						) : (
+							<>
+								<FileX2 className="size-12 text-muted-foreground" />
+								<p className="text-sm font-medium text-foreground">{emptyMessage}</p>
+							</>
+						)}
+					</div>
+					<PaginationFooter>{pagination}</PaginationFooter>
 				</div>
-				{pagination}
 			</div>
 		);
 	}
@@ -168,8 +180,8 @@ export function DataTable<T>({
 	return (
 		<div>
 			{toolbar}
-			<div className="relative">
-				<div className="rounded-lg border bg-card shadow-md overflow-auto max-h-[75vh]">
+			<div className="rounded-lg border bg-card shadow-md flex flex-col max-h-[75vh] relative">
+				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
 						<thead className="sticky top-0 z-10 bg-card border-b-2 border-border">
 							<tr>
@@ -251,11 +263,11 @@ export function DataTable<T>({
 					</table>
 				</div>
 				{isPlaceholder && (
-					<div className="absolute top-3 right-3">
+					<div className="absolute top-3 right-3 z-10">
 						<Loader2 className="size-4 animate-spin text-primary" />
 					</div>
 				)}
-				{pagination}
+				<PaginationFooter>{pagination}</PaginationFooter>
 			</div>
 		</div>
 	);

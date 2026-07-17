@@ -29,7 +29,7 @@ export function DataTablePagination({
 	const to = Math.min(page * size, total);
 
 	return (
-		<div className="flex items-center justify-between py-2.5 text-sm text-muted-foreground">
+		<div className="flex items-center justify-between text-sm text-muted-foreground">
 			<span>
 				Menampilkan {from}–{to} dari {total}
 			</span>
@@ -37,7 +37,7 @@ export function DataTablePagination({
 				<select
 					value={size}
 					onChange={(e) => onSizeChange(Number(e.target.value))}
-					className="h-11 rounded-lg border border-input bg-transparent px-2 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+					className="h-11 rounded-lg border border-input bg-transparent pl-3 pr-8 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
 				>
 					<option value={10}>10</option>
 					<option value={20}>20</option>
