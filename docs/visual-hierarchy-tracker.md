@@ -37,11 +37,12 @@
 
 ### Follow-up refinements (post-implementasi screenshot feedback)
 
-- [ ] **[3] `kepegawaian-fe-l2h`** — Polish toolbar: combobox max-width + button proporsi
+- [x] **[3] `kepegawaian-fe-l2h`** — Polish toolbar: combobox max-width + button proporsi
   - **Issue:** Screenshot 2026-07-16 15:33 menunjukkan combobox filter terlalu lebar (tidak constrained `max-w-[200px]`), button "+ Tambah" tidak proporsional (height/padding mismatch dengan combobox).
   - **Target:** DataTableToolbar — tambah `max-w-[200px]` ke combobox wrapper, ensure button `h-11` match combobox height.
   - **Gate:** Visual check `/master/profesi` — combobox 200px width, button proporsional, zona separation `gap-4` jelas.
-  - **Status:** 🟡 Open — needs agent delegation.
+  - **Status:** ✅ Done — fixed by Buffy (2026-07-16).
+  - **Changes:** Combobox `max-w-[200px]` already implemented in v5p; button `size="sm"`→`size="default"` (`h-7`→`h-11`) to match combobox height.
   - **Screenshot baseline:** `~/Pictures/Screenshots/Screenshot from 2026-07-16 15:33-28.png` (before fix).
 
 - [ ] **[4] `kepegawaian-fe-if8`** — App shell 60:30:10 differentiation + copyright footer

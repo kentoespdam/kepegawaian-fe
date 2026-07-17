@@ -107,7 +107,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 				values={filters}
 				onFilterChange={handleFilterChange}
 			>
-				<Button size="sm" onClick={openCreate}>
+				<Button size="default" onClick={openCreate}>
 					+ Tambah
 				</Button>
 			</DataTableToolbar>
