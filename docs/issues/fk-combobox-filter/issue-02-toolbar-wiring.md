@@ -77,14 +77,14 @@ Tidak ada breaking change untuk entitas manapun yang menggunakan `DataTableToolb
 
 ## Checklist Pengerjaan
 
-- [ ] Issue #01 sudah selesai (komponen `FKComboboxFilter` tersedia)
-- [ ] Tambah import `FKComboboxFilter` di `data-table-toolbar.tsx`
-- [ ] Ganti blok `<select>` dengan `<FKComboboxFilter>`
-- [ ] Pastikan props mapping benar: `label`, `options`, `value`, `onChange`
-- [ ] Hapus CSS class lama `<select>` (tidak diperlukan lagi)
-- [ ] `DataTableToolbarProps` interface tidak diubah
-- [ ] Tidak ada import tak terpakai tertinggal
-- [ ] TypeScript bersih (`tsc --noEmit`)
+- [x] Issue #01 sudah selesai (komponen `FKComboboxFilter` tersedia)
+- [x] Tambah import `FKComboboxFilter` di `data-table-toolbar.tsx`
+- [x] Ganti blok `<select>` dengan `<FKComboboxFilter>`
+- [x] Pastikan props mapping benar: `label`, `options`, `value`, `onChange`
+- [x] Hapus CSS class lama `<select>` (tidak diperlukan lagi)
+- [x] `DataTableToolbarProps` interface tidak diubah
+- [x] Tidak ada import tak terpakai tertinggal
+- [x] TypeScript bersih (`tsc --noEmit`)
 
 ## Verifikasi Manual
 

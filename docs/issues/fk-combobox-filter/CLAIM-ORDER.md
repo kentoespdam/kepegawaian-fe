@@ -17,7 +17,7 @@ Mengganti plain HTML `<select>` di `DataTableToolbar` dengan `FKComboboxFilter` 
   - **Penting:** gunakan `data-checked={opt.value === value}` pada `CommandItem` (bukan `<Check />` manual — built-in CheckIcon di command.tsx sudah handle). Tambahkan item "Semua {label}" dengan `value=""` sebagai reset.
   - **Gate:** render tanpa error, TypeScript bersih (`tsc --noEmit`), build tidak rusak. Siap di-import oleh ao kepegawaian-fe-p76.
 
-- [ ] **[2] `kepegawaian-fe-p76`** — Ganti `<select>` di `DataTableToolbar` dengan `FKComboboxFilter`
+- [x] **[2] `kepegawaian-fe-p76`** — Ganti `<select>` di `DataTableToolbar` dengan `FKComboboxFilter`
   - **File:** `src/components/data-table-toolbar.tsx` (MODIFY)
   - **Ubah:** hapus blok `<select>` (12 baris), ganti dengan `<FKComboboxFilter key={fk.field} label={fk.label} options={fkOptions?.[fk.field] ?? []} value={values[fk.field]} onChange={(v) => onFilterChange?.(fk.field, v)} />`
   - **Tambah import:** `import { FKComboboxFilter } from "@/components/fk-combobox-filter";`
