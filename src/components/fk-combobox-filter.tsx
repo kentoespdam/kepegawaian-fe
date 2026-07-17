@@ -4,6 +4,7 @@ import { ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
+	Command,
 	CommandDialog,
 	CommandEmpty,
 	CommandGroup,
@@ -57,20 +58,27 @@ export function FKComboboxFilter({ label, options, value, onChange }: FKCombobox
 				title={`Pilih ${label}`}
 				description={`Ketik untuk mencari ${label.toLowerCase()}...`}
 			>
-				<CommandInput placeholder={`Cari ${label.toLowerCase()}...`} />
-				<CommandList>
-					<CommandEmpty>Tidak ada hasil untuk pencarian ini.</CommandEmpty>
-					<CommandGroup>
-						<CommandItem value="" data-checked={!value} onSelect={() => handleSelect("")}>
-							Semua {label}
-						</CommandItem>
-						{options.map((opt) => (
-							<CommandItem key={opt.value} value={opt.value} data-checked={opt.value === value} onSelect={handleSelect}>
-								{opt.label}
+				<Command>
+					<CommandInput placeholder={`Cari ${label.toLowerCase()}...`} />
+					<CommandList>
+						<CommandEmpty>Tidak ada hasil untuk pencarian ini.</CommandEmpty>
+						<CommandGroup>
+							<CommandItem value="" data-checked={!value} onSelect={() => handleSelect("")}>
+								Semua {label}
 							</CommandItem>
-						))}
-					</CommandGroup>
-				</CommandList>
+							{options.map((opt) => (
+								<CommandItem
+									key={opt.value}
+									value={opt.value}
+									data-checked={opt.value === value}
+									onSelect={handleSelect}
+								>
+									{opt.label}
+								</CommandItem>
+							))}
+						</CommandGroup>
+					</CommandList>
+				</Command>
 			</CommandDialog>
 		</>
 	);

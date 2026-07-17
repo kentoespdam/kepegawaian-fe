@@ -25,6 +25,9 @@ Mengganti plain HTML `<select>` di `DataTableToolbar` dengan `FKComboboxFilter` 
   - **Gate:** `tsc --noEmit` hijau, filter Grade/Profesi/Alat Kerja/Sanksi masih muncul di toolbar (tidak kosong).
 
 - [ ] **[3] `kepegawaian-fe-3td`** — QA & Regresi: verifikasi FKComboboxFilter di semua entitas
+  - **⚠️ Bug fix:** Ditemukan runtime error `TypeError: Cannot read properties of undefined (reading 'subscribe')` via MCP `get_errors` di `/master/profesi`. Akar masalah: `<Command>` wrapper hilang di `CommandDialog` — cmdk butuh context provider. 
+    - Fix: install ulang `command.tsx` dari shadcn registry + tambah `<Command>` wrapper di `FKComboboxFilter` (pola resmi: `<CommandDialog><Command>...</Command></CommandDialog>`)
+    - Verifikasi: `get_errors` setelah fix = `{configErrors:[],sessionErrors:[]}` ✅
   - **Tidak ada perubahan kode** — browser QA saja.
   - **Entitas:** Grade (Level), Profesi (3 FK), Alat Kerja (Profesi), Sanksi (Jenis SP + 2 text input)
   - **Skenario wajib:**
@@ -46,7 +49,7 @@ Mengganti plain HTML `<select>` di `DataTableToolbar` dengan `FKComboboxFilter` 
 |------|------|-------|
 | `src/components/fk-combobox-filter.tsx` | **NEW** | ao5 |
 | `src/components/data-table-toolbar.tsx` | MODIFY | p76 |
-| `src/components/ui/command.tsx` | READ-ONLY | — |
+| `src/components/ui/command.tsx` | MODIFY (shadcn registry) | ao5 |
 | `src/config/master/*.config.ts` | READ-ONLY | — |
 
 ## Referensi teknis
