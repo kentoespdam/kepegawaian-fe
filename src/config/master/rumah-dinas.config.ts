@@ -6,7 +6,7 @@ export const rumahDinasConfig: EntityConfig<RumahDinasQuery> = makeConfig<RumahD
 	z.object({ nama: namaWajib, nilai: z.coerce.number().min(0, "Nilai wajib diisi") }),
 	[nameField, { name: "nilai", label: "Nilai", type: "number", required: true }],
 	[
-		{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
+		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
 		{ id: "nilai", header: "Nilai", cell: (item) => String(item.nilai ?? "") },
 	],
 	"Rumah Dinas",

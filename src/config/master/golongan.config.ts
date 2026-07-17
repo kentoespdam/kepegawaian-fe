@@ -9,7 +9,7 @@ export const golonganConfig: EntityConfig<GolonganQuery> = makeConfig<GolonganQu
 		{ name: "pangkat", label: "Pangkat", required: true },
 	],
 	[
-		{ id: "golongan", header: "Golongan", sortable: true, cell: (item) => String(item.golongan ?? "") },
+		{ id: "golongan", header: "Golongan", sortable: true, primary: true, cell: (item) => String(item.golongan ?? "") },
 		{ id: "pangkat", header: "Pangkat", cell: (item) => String(item.pangkat ?? "") },
 	],
 	"Golongan",

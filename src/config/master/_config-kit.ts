@@ -37,6 +37,7 @@ export const nameCol: Column<Record<string, unknown>> = {
 	id: "nama",
 	header: "Nama",
 	sortable: true,
+	primary: true,
 	cell: (item) => String(item.nama ?? ""),
 };
 

@@ -6,7 +6,7 @@ export const profesiConfig: EntityConfig<ProfesiQuery> = makeConfig<ProfesiQuery
 	z.object({}),
 	[],
 	[
-		{ id: "nama", header: "Nama", sortable: true, cell: (item) => String(item.nama ?? "") },
+		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
 		{ id: "organisasi", header: "Organisasi", cell: (item) => item.organisasi?.nama ?? "-" },
 		{ id: "jabatan", header: "Jabatan", cell: (item) => item.jabatan?.nama ?? "-" },
 	],

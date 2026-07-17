@@ -14,7 +14,7 @@ export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
 		{ name: "levelId", label: "Level", type: "select", required: true },
 	],
 	[
-		{ id: "grade", header: "Grade", sortable: true, cell: (item) => `Grade ${item.grade}` },
+		{ id: "grade", header: "Grade", sortable: true, primary: true, cell: (item) => `Grade ${item.grade}` },
 		{ id: "level", header: "Level", cell: (item) => item.level?.nama ?? "-" },
 	],
 	"Grade",

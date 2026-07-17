@@ -20,6 +20,8 @@ export interface Column<T> {
 	id: string;
 	header: string;
 	sortable?: boolean;
+	/** Kolom identitas baris (mis. NAMA): weight 600 + text-foreground. Kolom lain di-mute. */
+	primary?: boolean;
 	cell?: (item: T) => React.ReactNode;
 }
 
@@ -90,7 +92,7 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="rounded-lg border overflow-auto">
+				<div className="rounded-lg border bg-card shadow-md overflow-auto">
 					<table className="w-full caption-bottom text-sm">
 						<thead className="[&_tr]:border-b">
 							<tr className="border-b">
@@ -167,7 +169,7 @@ export function DataTable<T>({
 		<div>
 			{toolbar}
 			<div className="relative">
-				<div className="rounded-lg border overflow-auto max-h-[75vh]">
+				<div className="rounded-lg border bg-card shadow-md overflow-auto max-h-[75vh]">
 					<table className="w-full caption-bottom text-sm">
 						<thead className="sticky top-0 z-10 bg-card border-b-2 border-border">
 							<tr>
@@ -208,13 +210,20 @@ export function DataTable<T>({
 								<tr
 									key={getRowId ? getRowId(item) : i}
 									className={cn(
-										"border-b transition-colors hover:bg-muted/50",
-										i % 2 === 1 && "bg-muted hover:bg-muted/80",
+										// zebra sbg pemisah (tanpa border horizontal); hover hijau menang di semua baris
+										"transition-colors hover:bg-row-hover",
+										i % 2 === 1 && "bg-row-stripe",
 										isPlaceholder && "opacity-50 pointer-events-none",
 									)}
 								>
 									{columns.map((col) => (
-										<td key={col.id} className="px-4 py-2 align-middle whitespace-nowrap tabular-nums">
+										<td
+											key={col.id}
+											className={cn(
+												"px-4 py-2 align-middle whitespace-nowrap tabular-nums",
+												col.primary ? "font-semibold text-foreground" : "text-muted-foreground",
+											)}
+										>
 											{col.cell ? col.cell(item) : String(item[col.id as keyof T] ?? "")}
 										</td>
 									))}

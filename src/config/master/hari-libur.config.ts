@@ -12,7 +12,7 @@ export const hariLiburConfig: EntityConfig<HariLiburQuery> = makeConfig<HariLibu
 		{ name: "jenisLibur", label: "Jenis Libur", required: true },
 	],
 	[
-		{ id: "tanggal", header: "Tanggal", sortable: true, cell: (item) => String(item.tanggal ?? "") },
+		{ id: "tanggal", header: "Tanggal", sortable: true, primary: true, cell: (item) => String(item.tanggal ?? "") },
 		{ id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
 	],
 	"Hari Libur",

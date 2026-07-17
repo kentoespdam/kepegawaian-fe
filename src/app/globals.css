@@ -30,6 +30,8 @@
 	--color-input: var(--input);
 	--color-ring: var(--ring);
 	--color-primary-dark: var(--primary-dark);
+	--color-row-stripe: var(--row-stripe);
+	--color-row-hover: var(--row-hover);
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);
 	--radius-lg: var(--radius);
@@ -46,9 +48,10 @@
 }
 
 :root {
-	--background: oklch(0.99 0.008 95);
+	/* Kanvas abu terbaca (~#EDEFF2) agar card putih 'mengambang' — elevation JELAS utk audiens 35+. */
+	--background: oklch(0.94 0.005 250);
 	--foreground: oklch(0.22 0.01 260);
-	--card: oklch(0.97 0.008 95);
+	--card: oklch(1 0 0);
 	--card-foreground: oklch(0.22 0.01 260);
 	--popover: oklch(0.99 0.008 95);
 	--popover-foreground: oklch(0.22 0.01 260);
@@ -70,6 +73,9 @@
 	--input: oklch(0.86 0.008 85);
 	--ring: oklch(0.48 0.09 158);
 	--primary-dark: oklch(0.36 0.08 158);
+	/* Zebra: stripe abu-biru netral (~#F4F6F8), hover tint hijau brand (~#EAF3EE). Invariant hover > stripe > base. */
+	--row-stripe: oklch(0.965 0.004 250);
+	--row-hover: oklch(0.95 0.02 158);
 	--radius: 0.5rem;
 }
 
@@ -98,6 +104,9 @@
 	--input: oklch(0.28 0.01 160);
 	--ring: oklch(0.62 0.09 158);
 	--primary-dark: oklch(0.52 0.09 158);
+	/* Dark: stripe = turunan --muted (0.22), hover = tint primary hijau gelap. Invariant hover > stripe > base. */
+	--row-stripe: oklch(0.2 0.01 160);
+	--row-hover: oklch(0.28 0.03 158);
 }
 
 @keyframes water {
