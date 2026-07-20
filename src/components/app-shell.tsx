@@ -7,6 +7,7 @@ import { useState } from "react";
 import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
+import { RolesProvider } from "@/hooks/useRoles";
 import { can, getRoles } from "@/lib/auth/can";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
@@ -111,65 +112,65 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
 	);
 
 	return (
-		<div className="flex h-screen">
-			{/* Desktop sidebar */}
-			<div className="hidden md:flex">{sidebar}</div>
+		<RolesProvider roles={roles}>
+			<div className="flex h-screen">
+				{/* Desktop sidebar */}
+				<div className="hidden md:flex">{sidebar}</div>
+				{/* Content area */}
+				<div className="flex flex-1 flex-col overflow-hidden">
+					{/* Top bar */}
+					<header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0">
+						<div className="flex items-center gap-3">
+							<Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+								<button
+									type="button"
+									onClick={() => setMobileOpen(true)}
+									className="md:hidden inline-flex items-center justify-center size-8 rounded-lg hover:bg-muted outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
+									aria-label="Menu"
+								>
+									<Menu className="size-5" />
+								</button>
+								<SheetContent side="left" className="w-72 p-0">
+									<SheetTitle className="sr-only">Navigasi</SheetTitle>
+									{sidebar}
+								</SheetContent>
+							</Sheet>
+							{pathname.startsWith("/master/") && activeEntity ? (
+								<nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-sm">
+									<span className="text-muted-foreground">{activeModule?.label ?? "Master"}</span>
+									<span className="text-muted-foreground">/</span>
+									<span className="text-foreground font-medium">{activeEntity.label}</span>
+								</nav>
+							) : (
+								<h1 className="text-sm font-medium text-foreground">
+									{pathname === "/" && "Beranda"}
+									{pathname === "/profil" && "Profil"}
+								</h1>
+							)}
+						</div>
+						<UserMenu user={user} />
+					</header>
 
-			{/* Content area */}
-			<div className="flex flex-1 flex-col overflow-hidden">
-				{/* Top bar */}
-				<header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0">
-					<div className="flex items-center gap-3">
-						<Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
-							<button
-								type="button"
-								onClick={() => setMobileOpen(true)}
-								className="md:hidden inline-flex items-center justify-center size-8 rounded-lg hover:bg-muted outline-none focus-visible:ring-3 focus-visible:ring-ring/50"
-								aria-label="Menu"
-							>
-								<Menu className="size-5" />
-							</button>
-							<SheetContent side="left" className="w-72 p-0">
-								<SheetTitle className="sr-only">Navigasi</SheetTitle>
-								{sidebar}
-							</SheetContent>
-						</Sheet>
-						{pathname.startsWith("/master/") && activeEntity ? (
-							<nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-sm">
-								<span className="text-muted-foreground">{activeModule?.label ?? "Master"}</span>
-								<span className="text-muted-foreground">/</span>
-								<span className="text-foreground font-medium">{activeEntity.label}</span>
-							</nav>
-						) : (
-							<h1 className="text-sm font-medium text-foreground">
-								{pathname === "/" && "Beranda"}
-								{pathname === "/profil" && "Profil"}
-							</h1>
-						)}
-					</div>
-					<UserMenu user={user} />
-				</header>
+					{/* Page content */}
+					<main className="flex-1 overflow-y-auto p-6">{children}</main>
 
-				{/* Page content */}
-				<main className="flex-1 overflow-y-auto p-6">{children}</main>
-
-				{/* Footer */}
-				<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
-					© Perumdam Tirta Satria 2026
-				</footer>
+					{/* Footer */}
+					<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
+						© Perumdam Tirta Satria 2026
+					</footer>
+				</div>
+				{/* Desktop: if panel collapsed, show expand button */}
+				{activeModule && panelCollapsed && (
+					<button
+						type="button"
+						onClick={() => setPanelCollapsed(false)}
+						className="hidden md:flex fixed left-14 top-1/2 -translate-y-1/2 z-10 size-6 items-center justify-center rounded-r-lg border border-l-0 border-border bg-card text-muted-foreground hover:text-foreground"
+						aria-label="Buka panel"
+					>
+						<ChevronLeft className="size-4 rotate-180" />
+					</button>
+				)}{" "}
 			</div>
-
-			{/* Desktop: if panel collapsed, show expand button */}
-			{activeModule && panelCollapsed && (
-				<button
-					type="button"
-					onClick={() => setPanelCollapsed(false)}
-					className="hidden md:flex fixed left-14 top-1/2 -translate-y-1/2 z-10 size-6 items-center justify-center rounded-r-lg border border-l-0 border-border bg-card text-muted-foreground hover:text-foreground"
-					aria-label="Buka panel"
-				>
-					<ChevronLeft className="size-4 rotate-180" />
-				</button>
-			)}
-		</div>
+		</RolesProvider>
 	);
 }

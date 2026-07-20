@@ -17,6 +17,10 @@ import type {
 	PageQuery,
 } from "@/types/_shared";
 
+// ponytail: alias untuk konsistensi dengan entitas lain (*Query)
+// ProfesiSearchParams = tipe search filter; ProfesiDetail = tipe row tabel (dengan nested FK objects)
+export type ProfesiQuery = ProfesiDetail;
+
 export interface ProfesiSearchParams extends PageQuery {
 	organisasiId?: number; // int64
 	jabatanId?: number; // int64
