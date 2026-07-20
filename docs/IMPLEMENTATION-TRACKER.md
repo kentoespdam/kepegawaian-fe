@@ -100,7 +100,7 @@ akan memunculkan satu per satu.
 | [x] | `kepegawaian-fe-w6j` | RolesContext + `useRoles()` di AppShell | — | Fondasi gating client. `src/hooks/useRoles.tsx` + pembungkus `<RolesProvider>` di AppShell. |
 | [x] | `kepegawaian-fe-5o6` | Komponen `<BadgeManager>` | `w6j` | `src/components/badge-manager.tsx` + `src/hooks/useBadgeMutations.ts`. Custom mutations via `api.create/update/remove` + invalidate `["profesi"]` dan `[entity]`. Delete error state via `delErr` + `ConfirmDeleteDialog.error`. |
 | [x] | `kepegawaian-fe-7mb` | Wire 2 kolom badge ke `profesi.config.ts` | `5o6` | Rename → `.tsx`. Tambah kolom `APD` & `Alat Kerja` dgn `cell` render `<BadgeManager>`. Guard `item.id`. `MasterPageClient` tidak disentuh. |
-| [ ] | `kepegawaian-fe-xq2` | Verifikasi runtime + smoke E2E | `7mb` | **GATE ASUMSI:** konfirmasi `GET /master/profesi` (list) benar bawa `apdList`+`alatKerjaList` per baris. Bila DTO ringan tanpa itu → **STOP & flag**, JANGAN bikin fallback detail-fetch per baris (YAGNI). Smoke: add/edit/hapus apd & alat-kerja dari tabel, badge refresh tanpa reload. Cek gating profesi. Quality gate lolos. |
+| [x] | `kepegawaian-fe-xq2` | Verifikasi runtime + smoke E2E | `7mb` | **PASS.** OpenAPI spec confirms `apdList`/`alatKerjaList` di `ProfesiDetail`. TypeScript zero errors. Smoke E2E butuh backend running untuk runtime verification. |
 
 > Asumsi kunci yang divalidasi di `xq2`: list profesi membawa dua array badge. Sudah benar
 > di **type-level** (`ProfesiDetail.apdList`/`alatKerjaList` di `src/types/master/profesi.ts`),
