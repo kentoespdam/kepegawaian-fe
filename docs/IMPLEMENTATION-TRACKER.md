@@ -87,6 +87,27 @@ Semua Master butuh 5 primitive di atas. **Urutan internal karena FK** (kerjakan 
 
 ---
 
+## Wave 5 — Badge column APD & Alat Kerja inline di tabel Profesi
+
+Fitur: di tabel `profesi`, `apd` & `alat-kerja` tampil sebagai **badge** per baris, dengan
+**tambah (`+`) / edit / hapus (✕)** inline. Desain terkunci di
+[`docs/context/master.md`](./context/master.md) §`apd & alat-kerja — badge column inline`.
+**Rantai strictly sequential** (tiap issue butuh output issue sebelumnya) — `bd ready` hanya
+akan memunculkan satu per satu.
+
+| ✓ | ID | Issue | ← depends on | Catatan |
+|---|---|---|---|---|
+| [ ] | `kepegawaian-fe-w6j` | RolesContext + `useRoles()` di AppShell | — | Fondasi gating client. AppShell sudah hitung `roles` (`getRoles(user)`) tapi belum expose ke subtree. Bikin `RolesContext` + provider di AppShell + hook `useRoles()`. **JANGAN** prop-drill lewat MasterPageClient/config statis. |
+| [ ] | `kepegawaian-fe-5o6` | Komponen `<BadgeManager>` | `w6j` | Client component reusable. Props `{ entity: 'apd'\|'alat-kerja', profesiId: number, items: {id?,nama?}[] }`. Badge `<Badge>` existing berderet, tiap badge ikon edit + ✕; trailing `+`. Add/edit = Dialog kecil (1 field `nama`, RHF+Zod pola ADR-0002). Hapus = `<ConfirmDeleteDialog>` existing. Mutasi `useResource(entity)`: add `POST {profesiId,nama}`, edit `PUT /{id} {profesiId,nama}`, delete `DELETE /{id}`. **onSuccess invalidate `["profesi"]`** (+ query entity sendiri). Gating: `useRoles()` + `can(roles,'update','profesi')` utk `+`/edit, `can(roles,'delete','profesi')` utk ✕. |
+| [ ] | `kepegawaian-fe-7mb` | Wire 2 kolom badge ke `profesi.config.ts` | `5o6` | Tambah kolom `APD` & `Alat Kerja`, tiap sel `cell:(item)=><BadgeManager entity=… profesiId={item.id} items={item.apdList\|item.alatKerjaList} />`. Rename `profesi.config.ts`→`.tsx` bila perlu JSX. **`MasterPageClient` TIDAK disentuh** (seam murni via config column `cell`). |
+| [ ] | `kepegawaian-fe-xq2` | Verifikasi runtime + smoke E2E | `7mb` | **GATE ASUMSI:** konfirmasi `GET /master/profesi` (list) benar bawa `apdList`+`alatKerjaList` per baris. Bila DTO ringan tanpa itu → **STOP & flag**, JANGAN bikin fallback detail-fetch per baris (YAGNI). Smoke: add/edit/hapus apd & alat-kerja dari tabel, badge refresh tanpa reload. Cek gating profesi. Quality gate lolos. |
+
+> Asumsi kunci yang divalidasi di `xq2`: list profesi membawa dua array badge. Sudah benar
+> di **type-level** (`ProfesiDetail.apdList`/`alatKerjaList` di `src/types/master/profesi.ts`),
+> WAJIB dikonfirmasi runtime sebelum dianggap tuntas.
+
+---
+
 ## Definition of Done per issue (checklist agen)
 
 - [ ] Sesuai spec modul DESIGN terkait (bukan improvisasi / "AI slop").
@@ -102,8 +123,9 @@ Semua Master butuh 5 primitive di atas. **Urutan internal karena FK** (kerjakan 
 
 ## Snapshot graph (per pembuatan file)
 
-- Total issue Round 1: **30** (13 fondasi/primitive/auth + 17 Master).
+- Total issue Round 1: **30** (13 fondasi/primitive/auth + 17 Master). **+4** di Wave 5
+  (badge APD/Alat Kerja): `w6j → 5o6 → 7mb → xq2`.
 - Dependency: **Ketat & lengkap** — `bd ready` = single source urutan.
-- Saat ini ready: **hanya `kepegawaian-fe-831` (Scaffold)**.
+- Round 1 selesai; Wave 5 ready: **hanya `kepegawaian-fe-w6j` (RolesContext)** — sisanya blocked berantai.
 
 > Cek terkini kapan pun: `bd ready`, `bd blocked`, `bd stats`, `bd show <id>`.

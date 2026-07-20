@@ -128,6 +128,30 @@ yang sama + tambahan section header & switch list:
   plus atribut detail lainnya.
 - Section header kapital (IDENTITAS / DETAIL) memisah blok di dalam Sheet single-column.
 
+### `apd` & `alat-kerja` — badge column inline di tabel `profesi`
+`apd` dan `alat-kerja` adalah **entity tersendiri** (punya config/page/CRUD sendiri, tiap baris
+wajib `profesiId`). Selain halaman generic-nya, keduanya **disurface sebagai kolom badge** di
+tabel `profesi` untuk kelola cepat per-profesi.
+
+- **Sumber data badge = baris list itu sendiri.** `PageResultPageProfesiDetail` sudah membawa
+  `apdList: ApdRow[]` + `alatKerjaList: AlatKerjaRow[]` per baris → badge render langsung, **tanpa
+  fetch per-baris**. (Agent WAJIB verifikasi runtime: bila list ternyata DTO ringan tanpa dua array
+  itu, hentikan & flag — JANGAN bikin fallback detail-fetch per baris tanpa bukti butuh. YAGNI.)
+- **Dua kolom baru** di `profesi.config.ts` (`APD`, `Alat Kerja`), tiap sel = komponen client
+  mandiri `<BadgeManager entity="apd|alat-kerja" profesiId={row.id} items={row.apdList} />` via
+  `cell: (item) => ReactNode`. `MasterPageClient` **tidak disentuh** (seam via config column).
+- **Layout sel:** badge (`<Badge>` existing) berderet, tiap badge punya ikon edit + tombol ✕ hapus,
+  diikuti tombol **`+`** di ujung kolom untuk tambah (lihat referensi screenshot).
+- **Tambah/edit = Dialog kecil** (1 field `nama`, RHF+Zod, pola ADR-0002). **Hapus =
+  `ConfirmDeleteDialog`** existing ("Hapus \"<nama>\"?"). Bukan toast-undo, bukan hapus senyap.
+- **Mutasi:** `<BadgeManager>` pakai `useResource("apd"|"alat-kerja")` sendiri; add
+  `POST {profesiId, nama}`, edit `PUT /{id} {profesiId, nama}`, delete `DELETE /{id}`. Setelah sukses
+  **invalidate query `["profesi"]`** supaya baris tabel (dan badge-nya) refresh.
+- **RBAC = ikut `profesi`.** `+`/edit digating `can(roles,"update","profesi")`, ✕ oleh
+  `can(roles,"delete","profesi")`. Karena sel = client component tanpa `roles` di scope, sediakan
+  `RolesContext` + `useRoles()` di `AppShell` (yang sudah menghitung `roles`), konsumsi di
+  `<BadgeManager>` — hindari prop-drill lewat config column yang statis.
+
 ## Dashboard shortcut grid — 17 kartu Master
 
 Bagian **shortcut grid** landing (lihat `### Dashboard landing` di core) untuk rilis 1 = **17
