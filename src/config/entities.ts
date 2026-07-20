@@ -6,19 +6,19 @@ export interface Entity {
 }
 
 export const MASTER_ENTITIES: Entity[] = [
-	{ id: "golongan", label: "Golongan" },
-	{ id: "grade", label: "Grade" },
 	{ id: "level", label: "Level" },
+	{ id: "grade", label: "Grade" },
 	{ id: "organisasi", label: "Organisasi" },
 	{ id: "jabatan", label: "Jabatan" },
 	{ id: "profesi", label: "Profesi" },
-	{ id: "sanksi", label: "Sanksi" },
-	{ id: "jenjang-pendidikan", label: "Jenjang Pendidikan" },
+	{ id: "golongan", label: "Golongan" },
 	{ id: "jenis-keahlian", label: "Jenis Keahlian" },
-	{ id: "jenis-kitas", label: "Jenis Kitas" },
+	{ id: "jenis-kitas", label: "Jenis Kartu Identitas" },
 	{ id: "jenis-pelatihan", label: "Jenis Pelatihan" },
+	{ id: "jenjang-pendidikan", label: "Jenjang Pendidikan" },
 	{ id: "jenis-sp", label: "Jenis SP" },
+	{ id: "sanksi", label: "Sanksi" },
 	{ id: "alasan-berhenti", label: "Alasan Berhenti" },
-	{ id: "hari-libur", label: "Hari Libur" },
 	{ id: "rumah-dinas", label: "Rumah Dinas" },
+	{ id: "hari-libur", label: "Hari Libur" },
 ];

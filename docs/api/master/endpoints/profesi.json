@@ -121,7 +121,7 @@
             "content": {
               "*/*": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageResultPageProfesiQuery"
+                  "$ref": "#/components/schemas/PageResultPageProfesiDetail"
                 }
               }
             }
@@ -160,7 +160,7 @@
   },
   "components": {
     "schemas": {
-      "PageResultPageProfesiQuery": {
+      "PageResultPageProfesiDetail": {
         "type": "object",
         "properties": {
           "status": {
@@ -237,7 +237,7 @@
             ]
           },
           "data": {
-            "$ref": "#/components/schemas/PageProfesiQuery"
+            "$ref": "#/components/schemas/PageProfesiDetail"
           },
           "timestamp": {
             "type": "string",
@@ -245,7 +245,7 @@
           }
         }
       },
-      "PageProfesiQuery": {
+      "PageProfesiDetail": {
         "type": "object",
         "properties": {
           "totalElements": {
@@ -263,7 +263,7 @@
           "content": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ProfesiQuery"
+              "$ref": "#/components/schemas/ProfesiDetail"
             }
           },
           "number": {
@@ -291,7 +291,7 @@
           }
         }
       },
-      "ProfesiQuery": {
+      "ProfesiDetail": {
         "type": "object",
         "properties": {
           "id": {
@@ -318,6 +318,18 @@
           },
           "grade": {
             "$ref": "#/components/schemas/GradeMiniResponse"
+          },
+          "apdList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ApdRow"
+            }
+          },
+          "alatKerjaList": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AlatKerjaRow"
+            }
           }
         }
       },
@@ -383,6 +395,30 @@
           "tukin": {
             "type": "number",
             "format": "double"
+          }
+        }
+      },
+      "ApdRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nama": {
+            "type": "string"
+          }
+        }
+      },
+      "AlatKerjaRow": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nama": {
+            "type": "string"
           }
         }
       },

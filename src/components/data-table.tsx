@@ -5,6 +5,8 @@ import {
 	ArrowDown,
 	ArrowUp,
 	ArrowUpDown,
+	CircleCheck,
+	CircleX,
 	FileX2,
 	Loader2,
 	Pencil,
@@ -23,6 +25,7 @@ export interface Column<T> {
 	/** Kolom identitas baris (mis. NAMA): weight 600 + text-foreground. Kolom lain di-mute. */
 	primary?: boolean;
 	cell?: (item: T) => React.ReactNode;
+	align?: "center" | "left" | "right" | "justify" | "char";
 }
 
 interface DataTableProps<T> {
@@ -46,7 +49,18 @@ interface DataTableProps<T> {
 	pagination?: React.ReactNode;
 }
 
-/** Wrapper untuk pagination di dalam card — border-t separator + padding. */
+/** Render default cell — auto-detect boolean sebagai ikon check/uncheck. */
+function cellContent(v: unknown): React.ReactNode {
+	if (typeof v === "boolean") {
+		return v ? (
+			<CircleCheck className="size-4 text-success shrink-0" aria-label="Ya" />
+		) : (
+			<CircleX className="size-4 text-muted-foreground shrink-0" aria-label="Tidak" />
+		);
+	}
+	return String(v ?? "");
+}
+
 function PaginationFooter({ children }: { children: React.ReactNode }) {
 	if (!children) return null;
 	return <div className="border-t shrink-0 px-4 py-2.5">{children}</div>;
@@ -235,8 +249,10 @@ export function DataTable<T>({
 												"px-4 py-2 align-middle whitespace-nowrap tabular-nums",
 												col.primary ? "font-semibold text-foreground" : "text-muted-foreground",
 											)}
+											align={col.align}
 										>
-											{col.cell ? col.cell(item) : String(item[col.id as keyof T] ?? "")}
+											{" "}
+											{col.cell ? col.cell(item) : cellContent(item[col.id as keyof T])}
 										</td>
 									))}
 									{(onEdit || onDelete) && (

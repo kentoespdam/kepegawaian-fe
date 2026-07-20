@@ -65,18 +65,7 @@ export interface ProfesiPutRequest {
   resiko: string; // minLength 1
 }
 
-export type PageResultPageProfesiQuery = PageEnvelope<ProfesiQuery>;
-
-export interface ProfesiQuery {
-  id?: number; // int64
-  nama?: string;
-  detail?: string;
-  resiko?: string;
-  organisasi?: OrganisasiMiniResponse;
-  jabatan?: JabatanMiniResponse;
-  level?: LevelResponse;
-  grade?: GradeMiniResponse;
-}
+export type PageResultPageProfesiDetail = PageEnvelope<ProfesiDetail>;
 
 export interface ProfesiPostRequest {
   organisasiId?: number; // int64, min 1
