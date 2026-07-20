@@ -99,7 +99,7 @@ akan memunculkan satu per satu.
 |---|---|---|---|---|
 | [x] | `kepegawaian-fe-w6j` | RolesContext + `useRoles()` di AppShell | — | Fondasi gating client. `src/hooks/useRoles.tsx` + pembungkus `<RolesProvider>` di AppShell. |
 | [x] | `kepegawaian-fe-5o6` | Komponen `<BadgeManager>` | `w6j` | `src/components/badge-manager.tsx` + `src/hooks/useBadgeMutations.ts`. Custom mutations via `api.create/update/remove` + invalidate `["profesi"]` dan `[entity]`. Delete error state via `delErr` + `ConfirmDeleteDialog.error`. |
-| [ ] | `kepegawaian-fe-7mb` | Wire 2 kolom badge ke `profesi.config.ts` | `5o6` | Tambah kolom `APD` & `Alat Kerja`, tiap sel `cell:(item)=><BadgeManager entity=… profesiId={item.id} items={item.apdList\|item.alatKerjaList} />`. Rename `profesi.config.ts`→`.tsx` bila perlu JSX. **`MasterPageClient` TIDAK disentuh** (seam murni via config column `cell`). |
+| [x] | `kepegawaian-fe-7mb` | Wire 2 kolom badge ke `profesi.config.ts` | `5o6` | Rename → `.tsx`. Tambah kolom `APD` & `Alat Kerja` dgn `cell` render `<BadgeManager>`. Guard `item.id`. `MasterPageClient` tidak disentuh. |
 | [ ] | `kepegawaian-fe-xq2` | Verifikasi runtime + smoke E2E | `7mb` | **GATE ASUMSI:** konfirmasi `GET /master/profesi` (list) benar bawa `apdList`+`alatKerjaList` per baris. Bila DTO ringan tanpa itu → **STOP & flag**, JANGAN bikin fallback detail-fetch per baris (YAGNI). Smoke: add/edit/hapus apd & alat-kerja dari tabel, badge refresh tanpa reload. Cek gating profesi. Quality gate lolos. |
 
 > Asumsi kunci yang divalidasi di `xq2`: list profesi membawa dua array badge. Sudah benar
