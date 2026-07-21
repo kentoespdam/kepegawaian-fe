@@ -127,6 +127,13 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - Semua form CRUD = **RHF v7 + Zod** (`zodResolver`) via satu primitive **`<CrudForm>`** (forms §10).
   Jangan bikin boilerplate RHF per-entitas — suplai skema Zod + daftar field.
 - Skema Zod **selaras** dengan `required`/`minLength`/`minimum` OpenAPI Backend.
+- **`fields[]` WAJIB mencerminkan `{Entity}PostRequest`/`PutRequest`.** Setiap property di
+  interface request (`src/types/master/{entity}.ts`) HARUS punya input — lewat entri `fields[]`,
+  **atau** entri `fkSources[]` untuk property `*Id` (dropdown FK = input-nya). Property yang hanya
+  muncul di `columns`/`searchFields` **TIDAK** dihitung tercakup — itu display/filter, bukan input.
+  Field yang kurang = data diam-diam hilang saat submit (mis. bug `jenis-sp`: `kode` ada di
+  `searchFields` tapi tak ada di `fields[]`, jadi form cuma kirim `nama`). `*PostRequest` hand-written
+  = sumber kebenaran field; jangan andalkan `simpleNameSchema`/`nameField` bila request > `nama`.
 - Error validasi = **inline di form**, JANGAN toast. Single-column label-on-top; input ≥44px.
 
 ---
