@@ -76,6 +76,37 @@ form yang **tidak boleh** dicontek dari toolbar:
   single-**required**; meng-uncheck jadi kosong itu bug. (Toggle-off hanya sah di *filter* toolbar
   yang bisa di-clear via "Semua".)
 
+### 10.3c FK autoselect saat edit — defaultValues WAJIB scalar id string (bug `9x2`)
+
+Combobox pre-select saat edit **hanya jalan bila `defaultValues` menyuplai id skalar yang
+string-comparable dengan option `value`**. `<FKCombobox>` mencocokkan `String(o.value) === String(value)`
+— jadi value harus id mentah (`"12"`), **bukan** nested object dan **bukan** `undefined`.
+
+**Root cause bug `9x2`.** Response list/detail membawa FK sebagai **nested MiniResponse**
+(`organisasi`, `jabatan`, `grade`, `level`, `parent`, `jenisSp` = `{id,nama}`); scalar `*Id` **hanya
+ada** di `*SearchParams`/`*PostRequest`/`*PutRequest`, **tidak** di row list. Kalau `defaultValues`
+mengoper row mentah apa adanya: nested object → `String({…})` = `"[object Object]"` (tak match), atau
+scalar `*Id` absen → `undefined` (kosong). Text field terisi karena bukan FK. Komponen benar; ini
+**caller data-shape**.
+
+**Aturan (semua form ber-FK/tree).** Sebelum masuk `defaultValues`, normalkan tiap combobox field →
+id skalar string:
+
+```
+String(editing[nestedKey]?.id ?? editing[field] ?? "") || undefined
+```
+
+- Peta nested key: `xxxId → xxx` (`organisasiId→organisasi`, `levelId→level`, `jabatanId→jabatan`,
+  `gradeId→grade`, `jenisSpId→jenisSp`). Tree: **hati-hati asimetri** — `treeField:"parent"` (organisasi,
+  object) vs `treeField:"parentId"` (jabatan, scalar). Baca `.id` bila objek, pakai apa adanya bila scalar.
+- **Create mode** (`editing == null`) → semua combobox `undefined` (placeholder, tak ada yang ter-check).
+- **Submit tak boleh regresi**: value combobox = string; saat kirim, coerce balik ke `*Id` number
+  (`Number(v)||undefined`) — pola `profesi-form.tsx` `onChange` sudah benar.
+
+**Tiga site fix** (lihat `9x2` & CLAIM-ORDER): (1) generic — derive `formDefaults` terpusat di
+`useMasterTable`, alirkan ke `CrudForm defaultValues` (bukan `editing` mentah); (2) `profesiDefaults`;
+(3) `sanksiDefaults`. **JANGAN** utak-atik `fk-combobox.tsx` — perbaikannya di sisi data, bukan komponen.
+
 ### 10.4 Heavy-form layout — labeled sections + switch list (CONTEXT §Heavy-form)
 
 Dua entitas berat di **Sheet** (~480px), tersusun **labeled sections**, bukan dump field datar.

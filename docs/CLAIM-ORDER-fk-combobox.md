@@ -138,6 +138,32 @@ Jangan sentuh `fk-combobox-filter.tsx`.
 
 Detail root-cause & acceptance: `bd show kepegawaian-fe-w96`. Aturan dikunci di forms.md §10.3b.
 
+### `kepegawaian-fe-9x2` — Autoselect gagal saat edit (BUG, P1)
+**← depends on:** `rgz` ✅, `3ym` ✅, `508` ✅ · **follow-up, bukan reopen**
+
+Dilaporkan user: "saat tombol edit diklik, semua combobox tidak autoselect mengikuti data".
+Text field terisi; **semua FK/tree combobox kosong**. Komponen `fk-combobox.tsx` **benar** —
+ini murni **caller data-shape**: `defaultValues` menyuplai FK sebagai **nested object** (`parent`,
+`organisasi`, `level`, `jabatan`, `grade`, `jenisSp` = `{id,nama}`) atau **tanpa scalar `*Id`**,
+sementara option `value` = **id skalar string**. `String(value)` tak match → kosong.
+
+Tiga site (universal, semua entitas ber-FK/tree):
+
+- [ ] **Site 1 — generic** (`useMasterTable` → `crud-form` via `entity-form-modal` `defaultValues={editing}`).
+      Fix **terpusat**: derive `formDefaults` dari `editing` — untuk tiap combobox field (`fkSources[].field`
+      + `treeField`) set `String(editing[nested]?.id ?? editing[field] ?? "") || undefined`. Nested key:
+      `xxxId → xxx` (`organisasiId→organisasi`, `levelId→level`, `parentId→parent`); `treeField:"parent"→parent`.
+      Alirkan ke `CrudForm defaultValues` (ganti `editing ?? undefined`). Cakup organisasi/jabatan/grade sekaligus.
+- [ ] **Site 2 — `profesiDefaults`**: baca `editing?.organisasi?.id` / `?.jabatan?.id` / `?.grade?.id`
+      (bukan scalar `*Id` yang absen di `ProfesiDetail`).
+- [ ] **Site 3 — `sanksiDefaults`**: baca `editing?.jenisSp?.id` (bukan `jenisSpId` absen di `SanksiQuery`).
+- [ ] **JANGAN** sentuh `fk-combobox.tsx` / `fk-combobox-filter.tsx`. Value → option **harus** string-comparable.
+- [ ] Verifikasi: edit organisasi/jabatan/grade/profesi/sanksi → semua FK pre-selected; create → kosong;
+      submit tanpa ubah FK → `*Id` lama tetap terkirim. Jabatan cascade preserve tetap jalan.
+- [ ] `gitnexus_impact` (`useMasterTable`, `CrudForm`, `profesiDefaults`, `sanksiDefaults`) + `gitnexus_detect_changes` + quality gate + `bd close`.
+
+Detail: `bd show kepegawaian-fe-9x2`. Aturan dikunci di forms.md §10.3c.
+
 ---
 
 ## Definition of Done (epic `31p`)
