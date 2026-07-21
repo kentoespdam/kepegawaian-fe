@@ -35,6 +35,7 @@ export type PageResultPageGradeQuery = PageEnvelope<GradeQuery>;
 export interface GradeListResponse {
 	id?: number; // int64
 	grade?: number; // int32
+	levelId?: number; // int64
 }
 
 export type ListResultGradeListResponse = Envelope<GradeListResponse[]>;

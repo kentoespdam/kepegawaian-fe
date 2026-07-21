@@ -153,6 +153,10 @@
 					"grade": {
 						"type": "integer",
 						"format": "int32"
+					},
+					"levelId": {
+						"type": "integer",
+						"format": "int64"
 					}
 				}
 			}

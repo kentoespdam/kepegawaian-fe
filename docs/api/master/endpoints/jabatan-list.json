@@ -152,6 +152,10 @@
 					},
 					"nama": {
 						"type": "string"
+					},
+					"levelId": {
+						"type": "integer",
+						"format": "int64"
 					}
 				}
 			}

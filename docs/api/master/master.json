@@ -5589,7 +5589,11 @@
 			},
 			"JabatanListResponse": {
 				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string" },
+					"levelId": { "type": "integer", "format": "int64" }
+				}
 			},
 			"ListResultJabatanListResponse": {
 				"type": "object",
@@ -6123,7 +6127,8 @@
 				"type": "object",
 				"properties": {
 					"id": { "type": "integer", "format": "int64" },
-					"grade": { "type": "integer", "format": "int32" }
+					"grade": { "type": "integer", "format": "int32" },
+					"levelId": { "type": "integer", "format": "int64" }
 				}
 			},
 			"ListResultGradeListResponse": {

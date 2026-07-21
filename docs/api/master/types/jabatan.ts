@@ -59,6 +59,7 @@ export type ListResultJabatanQuery = Envelope<JabatanQuery[]>;
 export interface JabatanListResponse {
 	id?: number; // int64
 	nama?: string;
+	levelId?: number; // int64
 }
 
 export type ListResultJabatanListResponse = Envelope<JabatanListResponse[]>;

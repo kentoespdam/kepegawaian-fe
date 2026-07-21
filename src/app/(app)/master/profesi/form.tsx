@@ -44,7 +44,6 @@ interface ProfesiFormProps {
 
 export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, submit }: ProfesiFormProps) {
 	const orgOpts = useFkOptions("organisasi");
-	const gradeOpts = useFkOptions("grade", (i) => `Grade ${i.grade}`);
 
 	const {
 		register,
@@ -85,6 +84,57 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 		}
 		return opts;
 	}, [jabQuery.data, preservedJabatan]);
+
+	// Cascade grade by jabatan's levelId
+	const gradeQuery = useQuery({
+		queryKey: ["grade", "list"],
+		queryFn: () => api.listAll<Record<string, unknown>>("grade"),
+		staleTime: 300_000,
+	});
+
+	// Lookup jabatan id → full item (to extract levelId)
+	const jabatanLookup = useMemo(() => {
+		const map: Record<string, Record<string, unknown>> = {};
+		for (const item of (jabQuery.data ?? []) as Record<string, unknown>[]) {
+			map[String(item.id)] = item;
+		}
+		// Preserve editing jabatan in lookup (for edit mode)
+		if (editing?.jabatan) {
+			const jab = editing.jabatan as Record<string, unknown>;
+			if (jab.id && !map[String(jab.id)]) map[String(jab.id)] = jab;
+		}
+		return map;
+	}, [jabQuery.data, editing?.jabatan]);
+
+	const watchedJabatanId = watch("jabatanId");
+
+	const selectedLevelId = useMemo(() => {
+		if (!watchedJabatanId) return undefined;
+		const item = jabatanLookup[String(watchedJabatanId)];
+		if (!item) return undefined;
+		const level = item.level as Record<string, unknown> | undefined;
+		return level?.id ? Number(level.id) : undefined;
+	}, [watchedJabatanId, jabatanLookup]);
+
+	// Preserve grade for edit mode
+	const preservedGrade = useMemo(() => {
+		if (!editing?.grade) return null;
+		const g = editing.grade as Record<string, unknown>;
+		return g.id ? { value: String(g.id), label: `Grade ${g.grade ?? ""}` } : null;
+	}, [editing?.grade]);
+
+	// Filter grade options by selectedLevelId
+	const filteredGradeOpts = useMemo(() => {
+		if (!selectedLevelId) return [];
+		const grades = ((gradeQuery.data ?? []) as Record<string, unknown>[])
+			.filter((item) => Number(item.levelId) === selectedLevelId)
+			.map((item) => ({ value: String(item.id), label: `Grade ${item.grade}` }));
+		// Include preserved grade even if level mismatch (edit mode safety)
+		if (preservedGrade && !grades.find((o) => o.value === preservedGrade.value)) {
+			grades.unshift(preservedGrade);
+		}
+		return grades;
+	}, [gradeQuery.data, selectedLevelId, preservedGrade]);
 
 	const onFormSubmit = async (values: ProfesiFormValues) => {
 		setError(null);
@@ -147,7 +197,11 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 							loading={jabQuery.isFetching}
 							emptyText={orgId ? "Tidak ada jabatan" : "Pilih organisasi dulu"}
 							invalid={!!rhfErrors.jabatanId}
-							onChange={(v) => setValue("jabatanId", Number(v) || undefined, { shouldValidate: true })}
+							onChange={(v) => {
+								setValue("jabatanId", Number(v) || undefined, { shouldValidate: true });
+								// Reset grade saat jabatan berubah
+								setValue("gradeId", undefined, { shouldValidate: true });
+							}}
 						/>
 						{fieldError("jabatanId")}
 					</div>
@@ -155,9 +209,12 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 						<Label className="text-sm font-medium">Grade</Label>
 						<FKCombobox
 							id="gradeId"
-							options={gradeOpts}
+							options={filteredGradeOpts}
 							value={watch("gradeId")}
 							placeholder="Pilih grade"
+							disabled={!selectedLevelId}
+							loading={gradeQuery.isFetching && !gradeQuery.data}
+							emptyText={selectedLevelId ? "Tidak ada grade" : "Pilih jabatan dulu"}
 							invalid={!!rhfErrors.gradeId}
 							onChange={(v) => setValue("gradeId", Number(v) || undefined, { shouldValidate: true })}
 						/>
