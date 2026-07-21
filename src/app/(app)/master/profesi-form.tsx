@@ -15,7 +15,7 @@ import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./profes
 
 // — Helpers —
 
-function useFkOptions(entity: string) {
+function useFkOptions(entity: string, labelFn?: (i: Record<string, unknown>) => string) {
 	const query = useQuery({
 		queryKey: [entity, "list"],
 		queryFn: () => api.listAll<Record<string, unknown>>(entity),
@@ -25,9 +25,9 @@ function useFkOptions(entity: string) {
 		() =>
 			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
 				value: String(i.id),
-				label: String(i.nama ?? ""),
+				label: labelFn?.(i) ?? String(i.nama ?? ""),
 			})),
-		[query.data],
+		[query.data, labelFn],
 	);
 }
 
@@ -44,7 +44,7 @@ interface ProfesiFormProps {
 
 export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, submit }: ProfesiFormProps) {
 	const orgOpts = useFkOptions("organisasi");
-	const gradeOpts = useFkOptions("grade");
+	const gradeOpts = useFkOptions("grade", (i) => `Grade ${i.grade}`);
 
 	const {
 		register,

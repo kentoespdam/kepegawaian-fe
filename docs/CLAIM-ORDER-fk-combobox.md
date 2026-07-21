@@ -174,10 +174,10 @@ memetakan tiap item FK jadi `label: String(i.nama ?? "")`, tapi **grade tak puny
 (jumlah benar) tapi semua label string kosong → baris blank. Label grade yang benar = `` `Grade ${grade}` ``
 (sama seperti kolom tabel di grade.config.ts).
 
-- [ ] `useFkOptions(entity, labelFn?)` — param label opsional; default `(i)=>String(i.nama ?? "")`.
+- [x] `useFkOptions(entity, labelFn?)` — param label opsional; default `(i)=>String(i.nama ?? "")`.
       Grade panggil `useFkOptions("grade", (i)=>\`Grade ${i.grade}\`)`. **JANGAN** ubah pemanggil organisasi.
-- [ ] `value` tetap `String(i.id)` (dipakai `gradeId` saat submit → `Number(v)||undefined`). Jangan berubah.
-- [ ] **JANGAN** sentuh `fk-combobox.tsx`, backend, atau kolom `grade.config.ts`.
+- [x] `value` tetap `String(i.id)` (dipakai `gradeId` saat submit → `Number(v)||undefined`). Jangan berubah.
+- [x] **JANGAN** sentuh `fk-combobox.tsx`, backend, atau kolom `grade.config.ts`.
 - [ ] Verifikasi bareng `9x2`: grade **tampil** (`Grade N`) DAN saat edit grade lama **ter-preselect**.
 - [ ] Organisasi/jabatan tak regresi; `gitnexus_impact` `useFkOptions` + `gitnexus_detect_changes` + quality gate + `bd close`.
 
