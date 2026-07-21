@@ -37,6 +37,8 @@ export const api = {
 
 	listAll: <T>(entity: string) => fetch(`${BASE}/${entity}/list`).then(handle<T>),
 
+	listBy: <T>(entity: string, key: string, id: string) => fetch(`${BASE}/${entity}/${key}/${id}`).then(handle<T>),
+
 	getById: <T>(entity: string, id: string) => fetch(`${BASE}/${entity}/${id}`).then(handle<T>),
 
 	create: <T>(entity: string, data: unknown) =>

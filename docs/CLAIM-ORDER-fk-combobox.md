@@ -101,19 +101,19 @@ rgz  FKCombobox component (fondasi)
 - [x] Verifikasi: edit existing → FK label benar; submit kirim FK id (number) benar.
 - [x] Quality gate + `gitnexus_detect_changes` + `bd close`.
 
-### 4. `kepegawaian-fe-bfz` — Cascade jabatan←organisasi (FEATURE, P2)
-**← depends on:** `rgz`, `508`
+### 4. `kepegawaian-fe-bfz` — Cascade jabatan←organisasi (FEATURE, P2) ✅
+**← depends on:** `rgz` ✅, `508` ✅
 
-- [ ] `src/lib/api/client.ts`: fetcher baru `GET /master/jabatan/organisasi/{orgId}` (endpoint ada —
+- [x] `src/lib/api/client.ts`: fetcher baru `GET /master/jabatan/organisasi/{orgId}` (endpoint ada —
       lihat header `src/types/master/jabatan.ts`). Ikut pola `listAll`/`handle`.
-- [ ] `profesi-form.tsx`: jabatan options = `useQuery` by `watch("organisasiId")`, `enabled:!!orgId`,
+- [x] `profesi-form.tsx`: jabatan options = `useQuery` by `watch("organisasiId")`, `enabled:!!orgId`,
       `staleTime 300_000`.
-- [ ] **3a** disabled: `disabled={!organisasiId}`, `emptyText="Pilih organisasi dulu"`.
-- [ ] **3b** reset **hanya on user-change**: di `onChange` organisasi → `setValue("jabatanId",
+- [x] **3a** disabled: `disabled={!organisasiId}`, `emptyText="Pilih organisasi dulu"`.
+- [x] **3b** reset **hanya on user-change**: di `onChange` organisasi → `setValue("jabatanId",
       undefined)`. **BUKAN** `useEffect` yang jalan saat mount (itu me-reset saat load edit).
-- [ ] **3c** preserve existing: saat load edit, fetch by organisasi awal; kalau `jabatanId` lama tak
+- [x] **3c** preserve existing: saat load edit, fetch by organisasi awal; kalau `jabatanId` lama tak
       match filter → **tetap tampilkan label lama** (jangan diam-diam hapus). **Data-loss dilarang.**
-- [ ] `gitnexus_impact` sebelum edit.
+- [x] `gitnexus_impact` sebelum edit.
 - [ ] Verifikasi: org kosong→jabatan disabled; pilih org→list menyempit; ganti org→jabatan reset;
       **edit existing→tidak ter-reset saat load, jabatan lama tak hilang**.
 - [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.

@@ -44,7 +44,6 @@ interface ProfesiFormProps {
 
 export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, submit }: ProfesiFormProps) {
 	const orgOpts = useFkOptions("organisasi");
-	const jabOpts = useFkOptions("jabatan");
 	const gradeOpts = useFkOptions("grade");
 
 	const {
@@ -57,6 +56,35 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 		resolver: zodResolver(profesiSchema as never),
 		defaultValues: profesiDefaults(editing),
 	});
+
+	const orgId = watch("organisasiId");
+
+	// Cascade jabatan by organisasi — enabled hanya jika org terpilih
+	const jabQuery = useQuery({
+		queryKey: ["jabatan", "organisasi", orgId],
+		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(orgId)),
+		enabled: !!orgId,
+		staleTime: 300_000,
+	});
+
+	// Preserve existing jabatan label during edit (3c: data-loss dilarang)
+	const preservedJabatan = editing?.jabatan
+		? {
+				value: String((editing.jabatan as Record<string, unknown>).id ?? ""),
+				label: String((editing.jabatan as Record<string, unknown>).nama ?? ""),
+			}
+		: null;
+
+	const jabOpts = useMemo(() => {
+		const opts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
+			value: String(i.id),
+			label: String(i.nama ?? ""),
+		}));
+		if (preservedJabatan && !opts.find((o) => o.value === preservedJabatan.value)) {
+			opts.unshift(preservedJabatan);
+		}
+		return opts;
+	}, [jabQuery.data, preservedJabatan]);
 
 	const onFormSubmit = async (values: ProfesiFormValues) => {
 		setError(null);
@@ -100,7 +128,11 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 							value={watch("organisasiId")}
 							placeholder="Pilih organisasi"
 							invalid={!!rhfErrors.organisasiId}
-							onChange={(v) => setValue("organisasiId", Number(v) || undefined, { shouldValidate: true })}
+							onChange={(v) => {
+								setValue("organisasiId", Number(v) || undefined, { shouldValidate: true });
+								// 3b: reset jabatan hanya on user-change (bukan on mount/edit load)
+								setValue("jabatanId", undefined, { shouldValidate: true });
+							}}
 						/>
 						{fieldError("organisasiId")}
 					</div>
@@ -111,6 +143,9 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 							options={jabOpts}
 							value={watch("jabatanId")}
 							placeholder="Pilih jabatan"
+							disabled={!orgId}
+							loading={jabQuery.isFetching}
+							emptyText={orgId ? "Tidak ada jabatan" : "Pilih organisasi dulu"}
 							invalid={!!rhfErrors.jabatanId}
 							onChange={(v) => setValue("jabatanId", Number(v) || undefined, { shouldValidate: true })}
 						/>
