@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { rupiah } from "@/lib/utils";
 import type { RumahDinasQuery } from "@/types/master/rumah-dinas";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
 
@@ -7,7 +8,7 @@ export const rumahDinasConfig: EntityConfig<RumahDinasQuery> = makeConfig<RumahD
 	[nameField, { name: "nilai", label: "Nilai", type: "number", required: true }],
 	[
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
-		{ id: "nilai", header: "Nilai", cell: (item) => String(item.nilai ?? "") },
+		{ id: "nilai", header: "Nilai", align: "right", cell: (item) => rupiah(item.nilai) },
 	],
 	"Rumah Dinas",
 	{ searchFields: [{ name: "nama", label: "Nama" }] },
