@@ -1,31 +1,44 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 
-interface SanksiPayload {
+/**
+ * Full payload untuk create/update sanksi — selaras dengan SanksiPostRequest.
+ * `jenisSpId` diisi otomatis oleh hook dari konteks jenis-sp.
+ */
+export interface FullSanksiPayload {
 	kode: string;
 	keterangan: string;
 	jenisSpId: number;
+	potTkk?: boolean;
+	jmlPotTkk?: number;
+	isPendingPangkat?: boolean;
+	isPendingGaji?: boolean;
+	isTurunPangkat?: boolean;
+	isTurunJabatan?: boolean;
+	isSuspension?: boolean;
+	isTerminateDh?: boolean;
+	isTerminateTh?: boolean;
 }
 
 /**
  * Mutation hook untuk CRUD sanksi dari konteks page jenis-sp.
  *
- * Berbeda dengan `useBadgeMutations` (nested path), sanksi menggunakan
- * endpoint direct CRUD /master/sanksi dengan `jenisSpId` di body.
+ * Mengirim payload {@link FullSanksiPayload} (kode, keterangan, boolean flags)
+ * ke endpoint direct CRUD `/master/sanksi` dengan `jenisSpId` di body.
  * Invalidasi queryKey ["jenis-sp"] agar tabel beserta badge sanksi-nya refresh.
  */
 export function useSanksiMutations(jenisSpId: number) {
 	const qc = useQueryClient();
 
 	const create = useMutation({
-		mutationFn: (data: { kode: string; keterangan: string }) =>
-			api.create<SanksiPayload>("sanksi", { ...data, jenisSpId }),
+		mutationFn: (data: Omit<FullSanksiPayload, "jenisSpId">) =>
+			api.create<FullSanksiPayload>("sanksi", { ...data, jenisSpId }),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["jenis-sp"] }),
 	});
 
 	const update = useMutation({
-		mutationFn: ({ id, data }: { id: string; data: { kode: string; keterangan: string } }) =>
-			api.update<SanksiPayload>("sanksi", id, { ...data, jenisSpId }),
+		mutationFn: ({ id, data }: { id: string; data: Omit<FullSanksiPayload, "jenisSpId"> }) =>
+			api.update<FullSanksiPayload>("sanksi", id, { ...data, jenisSpId }),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["jenis-sp"] }),
 	});
 

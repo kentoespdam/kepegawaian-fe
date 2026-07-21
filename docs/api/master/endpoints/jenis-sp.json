@@ -271,6 +271,27 @@
 					},
 					"nama": {
 						"type": "string"
+					},
+					"sanksiList": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SanksiRow"
+						}
+					}
+				}
+			},
+			"SanksiRow": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"kode": {
+						"type": "string"
+					},
+					"keterangan": {
+						"type": "string"
 					}
 				}
 			},

@@ -3,13 +3,12 @@
 import { Pencil, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { z } from "zod";
+import { SanksiForm } from "@/app/(app)/master/sanksi/form";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
-import { CrudForm } from "@/components/crud-form";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useRoles } from "@/hooks/useRoles";
-import { useSanksiMutations } from "@/hooks/useSanksiMutations";
+import { type FullSanksiPayload, useSanksiMutations } from "@/hooks/useSanksiMutations";
 import { can } from "@/lib/auth/can";
 
 interface SanksiRow {
@@ -23,11 +22,6 @@ interface SanksiManagerProps {
 	items: SanksiRow[];
 }
 
-const sanksiSchema = z.object({
-	kode: z.string().min(1, "Kode wajib diisi"),
-	keterangan: z.string().min(1, "Keterangan wajib diisi"),
-});
-
 export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 	const roles = useRoles();
 	const { create, update, remove } = useSanksiMutations(jenisSpId);
@@ -36,25 +30,60 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 	const [deletingItem, setDeletingItem] = useState<SanksiRow | null>(null);
 	const [error, setError] = useState<string | null>(null);
 	const [delErr, setDelErr] = useState<string | null>(null);
+	const [isSubmitting, setIsSubmitting] = useState(false);
 	const canUpdate = can(roles, "update", "jenis-sp");
 	const canDelete = can(roles, "delete", "jenis-sp");
 
-	const handleSubmit = async (data: { kode: string; keterangan: string }) => {
+	const dClose = () => {
+		setDialogOpen(false);
+		setEditingItem(null);
 		setError(null);
+	};
+
+	const handleSubmit = async (data: Record<string, unknown>) => {
+		setError(null);
+		setIsSubmitting(true);
 		try {
+			const payload: Omit<FullSanksiPayload, "jenisSpId"> = {
+				kode: String(data.kode ?? ""),
+				keterangan: String(data.keterangan ?? ""),
+				potTkk: Boolean(data.potTkk),
+				jmlPotTkk: data.jmlPotTkk !== undefined ? Number(data.jmlPotTkk) : undefined,
+				isPendingPangkat: Boolean(data.isPendingPangkat),
+				isPendingGaji: Boolean(data.isPendingGaji),
+				isTurunPangkat: Boolean(data.isTurunPangkat),
+				isTurunJabatan: Boolean(data.isTurunJabatan),
+				isSuspension: Boolean(data.isSuspension),
+				isTerminateDh: Boolean(data.isTerminateDh),
+				isTerminateTh: Boolean(data.isTerminateTh),
+			};
 			if (!editingItem) {
-				await create.mutateAsync(data);
+				await create.mutateAsync(payload);
 				toast.success("Sanksi berhasil ditambah");
 			} else {
 				const itemId = editingItem.id;
 				if (!itemId) throw new Error("ID sanksi tidak valid");
-				await update.mutateAsync({ id: String(itemId), data });
+				await update.mutateAsync({ id: String(itemId), data: payload });
 				toast.success("Sanksi berhasil diubah");
 			}
-			setDialogOpen(false);
+			dClose();
 		} catch (e: unknown) {
 			setError(e instanceof Error ? e.message : "Terjadi kesalahan");
+		} finally {
+			setIsSubmitting(false);
 		}
+	};
+
+	const openCreate = () => {
+		setEditingItem(null);
+		setError(null);
+		setDialogOpen(true);
+	};
+
+	const openEdit = (item: SanksiRow) => {
+		setEditingItem(item);
+		setError(null);
+		setDialogOpen(true);
 	};
 
 	const handleDelete = async () => {
@@ -69,8 +98,6 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 		}
 	};
 
-	const dClose = () => setDialogOpen(false);
-
 	return (
 		<>
 			<div className="flex flex-wrap items-center gap-1">
@@ -82,11 +109,7 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 						{canUpdate && (
 							<button
 								type="button"
-								onClick={() => {
-									setEditingItem(item);
-									setError(null);
-									setDialogOpen(true);
-								}}
+								onClick={() => openEdit(item)}
 								className="ml-0.5 inline-flex size-3.5 items-center justify-center rounded hover:bg-muted-foreground/20"
 								aria-label={`Edit ${item.kode}`}
 							>
@@ -108,11 +131,7 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 				{canUpdate && (
 					<button
 						type="button"
-						onClick={() => {
-							setEditingItem(null);
-							setError(null);
-							setDialogOpen(true);
-						}}
+						onClick={openCreate}
 						className="inline-flex size-5 items-center justify-center rounded-full border border-dashed border-muted-foreground/40 text-muted-foreground hover:border-primary hover:text-primary transition-colors"
 						aria-label="Tambah sanksi"
 					>
@@ -120,30 +139,30 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 					</button>
 				)}
 			</div>
-			<Dialog
+			<Sheet
 				open={dialogOpen}
 				onOpenChange={(v) => {
 					if (!v) dClose();
 				}}
 			>
-				<DialogContent className="sm:max-w-sm">
-					<DialogHeader>
-						<DialogTitle>{editingItem ? "Edit Sanksi" : "Tambah Sanksi"}</DialogTitle>
-					</DialogHeader>
-					<CrudForm
-						schema={sanksiSchema}
-						fields={[
-							{ name: "kode", label: "Kode", required: true },
-							{ name: "keterangan", label: "Keterangan", required: true },
-						]}
-						defaultValues={{ kode: editingItem?.kode ?? "", keterangan: editingItem?.keterangan ?? "" }}
-						onSubmit={handleSubmit}
+				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
+					<SheetHeader className="shrink-0">
+						<SheetTitle>{editingItem ? "Edit Sanksi" : "Tambah Sanksi"}</SheetTitle>
+					</SheetHeader>
+					<SanksiForm
+						editing={
+							editingItem
+								? ({ ...editingItem, jenisSpId } as unknown as Record<string, unknown>)
+								: ({ jenisSpId } as unknown as Record<string, unknown>)
+						}
 						onCancel={dClose}
-						submitLabel={editingItem ? "Simpan" : "Tambah"}
 						error={error}
+						setError={setError}
+						isSubmitting={isSubmitting}
+						submit={handleSubmit}
 					/>
-				</DialogContent>
-			</Dialog>
+				</SheetContent>
+			</Sheet>
 			<ConfirmDeleteDialog
 				open={!!deletingItem}
 				onOpenChange={(v) => {

@@ -4290,7 +4290,8 @@
 				"properties": {
 					"id": { "type": "integer", "format": "int64" },
 					"kode": { "type": "string" },
-					"nama": { "type": "string" }
+					"nama": { "type": "string" },
+					"sanksiList": { "type": "array", "items": { "$ref": "#/components/schemas/SanksiRow" } }
 				}
 			},
 			"PageJenisSpQuery": {
@@ -4386,6 +4387,14 @@
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
+			"SanksiRow": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"kode": { "type": "string" },
+					"keterangan": { "type": "string" }
+				}
+			},
 			"SingleResultJenisSpQuery": {
 				"type": "object",
 				"properties": {
@@ -4467,7 +4476,11 @@
 			},
 			"JenisSpListResponse": {
 				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"kode": { "type": "string" },
+					"nama": { "type": "string" }
+				}
 			},
 			"ListResultJenisSpListResponse": {
 				"type": "object",

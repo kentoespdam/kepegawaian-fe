@@ -150,6 +150,9 @@
 						"type": "integer",
 						"format": "int64"
 					},
+					"kode": {
+						"type": "string"
+					},
 					"nama": {
 						"type": "string"
 					}
