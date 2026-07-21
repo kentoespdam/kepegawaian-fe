@@ -52,8 +52,29 @@
 
 ---
 
+### 3. `kepegawaian-fe-3rl` — Implement kolom sanksi inline di page jenis-sp (FEATURE, P2)
+**← depends on:** `mjy` (sanksiList type)
+
+Mirip kolom `alat-kerja` di tabel `profesi`. Tampilkan `SanksiRow[]` sebagai badge inline
+(`kode — keterangan`), dengan tombol +/edit/✕.
+
+**API pattern (direct CRUD sanksi, bukan nested path):**
+- CREATE: `POST /master/sanksi` body `{ kode, keterangan, jenisSpId }`
+- UPDATE: `PUT /master/sanksi/{id}` body `{ kode, keterangan, jenisSpId }`
+- DELETE: `DELETE /master/sanksi/{id}`
+- Invalidasi: `qc.invalidateQueries({ queryKey: ["jenis-sp"] })`
+
+- [x] Buat `src/hooks/useSanksiMutations.ts`
+- [x] Buat `src/components/sanksi-manager.tsx`
+- [x] Rename `jenis-sp.config.ts` → `.tsx`, tambah kolom sanksi
+- [x] Update `master-config.ts` import (resolve otomatis ke .tsx)
+- [x] Typecheck + lint lulus
+- [x] `bd close`
+
+---
+
 ## Batasan (JANGAN)
 
 - **JANGAN** ubah `api` client (`src/lib/api/client.ts`) — `handle<T>` sudah benar.
-- **JANGAN** ubah file selain yang disebut di atas (scope creep).
+- **JANGAN** ubah `BadgeManager`/`useBadgeMutations` — buat komponen terpisah untuk sanksi.
 - **JANGAN** ubah `docs/api/master/types/jenis-sp.ts` — itu sumber kebenaran hasil generate.
