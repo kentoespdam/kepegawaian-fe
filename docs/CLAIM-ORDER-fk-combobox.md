@@ -164,6 +164,25 @@ Tiga site (universal, semua entitas ber-FK/tree):
 
 Detail: `bd show kepegawaian-fe-9x2`. Aturan dikunci di forms.md §10.3c.
 
+### `kepegawaian-fe-y2h` — Combobox grade kosong (label blank) (BUG, P1)
+**← depends on:** `508` ✅ · **follow-up, bukan reopen**
+
+Dilaporkan user: "list grade tidak muncul" di form profesi (organisasi & jabatan normal).
+**Bukan** fetch gagal / data hilang — **label kosong**. `useFkOptions()` (profesi-form.tsx:18)
+memetakan tiap item FK jadi `label: String(i.nama ?? "")`, tapi **grade tak punya `nama`**:
+`/master/grade/list` → `{id, grade}`, `GradeQuery` → `{id, grade, tukin, level}`. Options ter-fetch
+(jumlah benar) tapi semua label string kosong → baris blank. Label grade yang benar = `` `Grade ${grade}` ``
+(sama seperti kolom tabel di grade.config.ts).
+
+- [ ] `useFkOptions(entity, labelFn?)` — param label opsional; default `(i)=>String(i.nama ?? "")`.
+      Grade panggil `useFkOptions("grade", (i)=>\`Grade ${i.grade}\`)`. **JANGAN** ubah pemanggil organisasi.
+- [ ] `value` tetap `String(i.id)` (dipakai `gradeId` saat submit → `Number(v)||undefined`). Jangan berubah.
+- [ ] **JANGAN** sentuh `fk-combobox.tsx`, backend, atau kolom `grade.config.ts`.
+- [ ] Verifikasi bareng `9x2`: grade **tampil** (`Grade N`) DAN saat edit grade lama **ter-preselect**.
+- [ ] Organisasi/jabatan tak regresi; `gitnexus_impact` `useFkOptions` + `gitnexus_detect_changes` + quality gate + `bd close`.
+
+Detail: `bd show kepegawaian-fe-y2h`.
+
 ---
 
 ## Definition of Done (epic `31p`)

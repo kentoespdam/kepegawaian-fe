@@ -157,11 +157,45 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 11. GitNexus — code intelligence (WAJIB)
 
-- **Sebelum mengedit** fungsi/class/method: jalankan `gitnexus_impact({target, direction:"upstream"})`
-  dan laporkan blast radius. **Peringatkan** bila risk HIGH/CRITICAL sebelum lanjut.
-- **Sebelum commit:** jalankan `gitnexus_detect_changes()` untuk verifikasi scope perubahan.
-- Rename simbol: pakai `gitnexus_rename`, **JANGAN** find-and-replace.
-- Eksplorasi: `gitnexus_query({query})` / `gitnexus_context({name})` alih-alih grep buta.
+### MCP tools (format panggilan, TIDAK pakai `--repo`)
+
+MCP tools `gitnexus_impact`, `gitnexus_detect_changes`, `gitnexus_query`, `gitnexus_context`,
+`gitnexus_rename` tersedia via **MCP server** (stdio). Tidak perlu argumen `--repo` — server
+sudah tahu repo aktif. Format:
+
+```
+gitnexus_impact({target: "symbolName", direction: "upstream"})
+gitnexus_detect_changes()
+gitnexus_query({query: "concept"})
+gitnexus_context({name: "symbolName"})
+gitnexus_rename({oldName: "x", newName: "y"})
+```
+
+### CLI (fallback — WAJIB `-r kepegawaian-fe`)
+
+Bila MCP tools tidak tersedia, pakai CLI. **Semua command butuh `-r kepegawaian-fe`**
+atau error "repo not found".
+
+| Tujuan | CLI |
+|--------|-----|
+| **Impact analysis** (sebelum edit) | `npx gitnexus impact <target> -d upstream -r kepegawaian-fe` |
+| **Detect changes** (sebelum commit) | `npx gitnexus detect-changes -s unstaged -r kepegawaian-fe` |
+| **Query** (cari flow) | `npx gitnexus query "<query>" -r kepegawaian-fe` |
+| **Context** (360° simbol) | `npx gitnexus context <name> -r kepegawaian-fe` |
+| **List repos** | `npx gitnexus list` |
+| **Re-index** | `npx gitnexus analyze` (tidak perlu `-r`, sudah auto-detect CWD) |
+
+> **`gitnexus rename`** tidak punya CLI equivalent — hanya lewat MCP.
+> Jangan pakai `--target`, `--query`, `--name` — itu opsi tidak dikenal di CLI.
+
+### Aturan
+
+- **Sebelum mengedit** fungsi/class/method: impact analysis → laporkan blast radius.
+  **Peringatkan** bila risk HIGH/CRITICAL sebelum lanjut.
+- **Sebelum commit:** `detect-changes` untuk verifikasi scope perubahan.
+- **Eksplorasi:** `query`/`context` alih-alih grep buta.
+- **Rename simbol:** pakai `gitnexus_rename` (MCP), **JANGAN** find-and-replace.
+- **Index stale?** `npx gitnexus analyze` dulu.
 
 ---
 
