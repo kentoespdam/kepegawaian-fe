@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api/client";
-import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./profesi-schema";
+import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./schema";
 
 // — Helpers —
 

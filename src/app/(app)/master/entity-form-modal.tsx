@@ -6,8 +6,8 @@ import { CrudForm } from "@/components/crud-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import type { EntityConfig } from "@/config/master-config";
-import { ProfesiForm } from "./profesi-form";
-import { SanksiForm } from "./sanksi-form";
+import { ProfesiForm } from "./profesi/form";
+import { SanksiForm } from "./sanksi/form";
 
 interface EntityFormModalProps {
 	entity: string;
@@ -60,7 +60,7 @@ export function EntityFormModal({
 	if (entity === "sanksi") {
 		return (
 			<Sheet open={dialogOpen} onOpenChange={handleClose}>
-				<SheetContent className="sm:max-w-[480px] flex flex-col gap-0 p-0">
+				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
 					<SheetHeader className="shrink-0">
 						<SheetTitle>{isCreate ? "Tambah Sanksi" : "Edit Sanksi"}</SheetTitle>
 					</SheetHeader>
@@ -80,7 +80,7 @@ export function EntityFormModal({
 	if (entity === "profesi") {
 		return (
 			<Sheet open={dialogOpen} onOpenChange={handleClose}>
-				<SheetContent className="sm:max-w-[480px] flex flex-col gap-0 p-0">
+				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
 					<SheetHeader className="shrink-0">
 						<SheetTitle>{isCreate ? "Tambah Profesi" : "Edit Profesi"}</SheetTitle>
 					</SheetHeader>

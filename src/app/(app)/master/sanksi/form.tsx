@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEnum } from "@/hooks/useEnum";
-import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./sanksi-schema";
+import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./schema";
 
 // — Props (compatible with EntityFormModal) —
 

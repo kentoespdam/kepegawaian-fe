@@ -127,6 +127,11 @@ yang sama + tambahan section header & switch list:
   **"Potong TKK"** aktif. Kolom angka pakai `tabular-nums` (lihat `### Typography` di core).
 - Footer Sheet sticky (Batal/Simpan) karena form panjang.
 
+**Co-location:** file form & schema heavy-form diletakkan di folder entity masing-masing
+(`profesi/form.tsx`, `profesi/schema.ts`, `sanksi/form.tsx`, `sanksi/schema.ts`), bukan di
+parent `master/`. Keputusan ini di-ADR-kan di CONTEXT.md §Pattern — form entity-specific
+bersama page entity, bukan shared component.
+
 ### `profesi` — dua section IDENTITAS + DETAIL, banyak FK
 - **IDENTITAS:** field identitas profesi (kode, nama, dst.).
 - **DETAIL:** FK ke `organisasi`, `jabatan`, `grade` (tiga FK dropdown, `/list`, combobox-of-id),
