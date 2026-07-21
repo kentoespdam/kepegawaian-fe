@@ -26,8 +26,8 @@ export const jenjangPendidikanConfig: EntityConfig<JenjangPendidikanResponse> = 
 	[
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => item.nama ?? "" },
 		{ id: "shortName", header: "Nama Singkat", cell: (item) => item.shortName ?? "-" },
-		{ id: "seq", header: "Urutan", cell: (item) => String(item.seq ?? "") },
-		{ id: "isStatistik", header: "Statistik", cell: (item) => String(item.isStatistik ?? "") },
+		{ id: "seq", header: "Urutan", align: "right", cell: (item) => String(item.seq ?? "") },
+		{ id: "isStatistik", header: "Statistik", align: "center" },
 	],
 	"Jenjang Pendidikan",
 	{ searchFields: [{ name: "nama", label: "Nama" }] },

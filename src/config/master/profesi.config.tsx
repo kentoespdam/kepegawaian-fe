@@ -18,6 +18,7 @@ export const profesiConfig: EntityConfig<ProfesiDetail> = makeConfig<ProfesiDeta
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
 		{ id: "organisasi", header: "Organisasi", cell: (item) => item.organisasi?.nama ?? "-" },
 		{ id: "jabatan", header: "Jabatan", cell: (item) => item.jabatan?.nama ?? "-" },
+		{ id: "gradeId", header: "Grade", cell: (item) => `Grade ${item.grade?.grade}` },
 		{
 			id: "apd",
 			header: "APD",
