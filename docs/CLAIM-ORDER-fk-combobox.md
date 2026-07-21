@@ -74,16 +74,16 @@ rgz  FKCombobox component (fondasi)
 - [x] `fk-combobox-filter.tsx` **TIDAK** diubah.
 - [ ] Quality gate (`bunx biome check` + build) + `gitnexus_detect_changes` + `bd close`.
 
-### 2. `kepegawaian-fe-3ym` — Wire ke generic CrudForm (TASK, P2)
-**← depends on:** `rgz`
+### 2. `kepegawaian-fe-3ym` — Wire ke generic CrudForm (TASK, P2) ✅
+**← depends on:** `rgz` ✅
 
-- [ ] `src/hooks/useMasterTable.ts` `formFields` enrich: saat inject options ke FK (blok
+- [x] `src/hooks/useMasterTable.ts` `formFields` enrich: saat inject options ke FK (blok
       `fkSources.find` + `treeField`), set `type: "combobox"`. Enum (`f.options` sudah ada → return
       lebih awal) **tak tersentuh**.
-- [ ] `src/components/crud-form.tsx`: cabang `type==='combobox'` → `<FKCombobox>`; `type==='select'`
+- [x] `src/components/crud-form.tsx`: cabang `type==='combobox'` → `<FKCombobox>`; `type==='select'`
       **tetap** `<Select>`. Tambah `"combobox"` ke union `FormField.type`.
-- [ ] **JANGAN** threshold `options.length` (angka ajaib — ditolak).
-- [ ] `gitnexus_impact` pada `useMasterTable` + `CrudForm` **sebelum** edit (blast radius tinggi —
+- [x] **JANGAN** threshold `options.length` (angka ajaib — ditolak).
+- [x] `gitnexus_impact` pada `useMasterTable` + `CrudForm` **sebelum** edit (blast radius tinggi —
       laporkan risk ke reviewer).
 - [ ] Verifikasi: form organisasi → Parent = FKCombobox; entitas enum → tetap Select; create/edit
       kirim value benar.

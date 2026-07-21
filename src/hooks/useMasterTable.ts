@@ -99,7 +99,7 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 		let ff = [...cfg.fields];
 		if (cfg.treeField) {
 			const opts = buildTreeOptions(treeItems, editing?.id as string | undefined, cfg.treeField);
-			ff = [...ff, { name: cfg.treeField, label: "Parent", type: "select" as const, options: opts }];
+			ff = [...ff, { name: cfg.treeField, label: "Parent", type: "combobox" as const, options: opts }];
 		}
 		return ff.map((f) => {
 			if (f.type !== "select" || f.options) return f;
@@ -110,9 +110,9 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 				? [...lm.entries()].map(([value, item]) => ({
 						value,
 						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
-				  }))
+					}))
 				: [];
-			return { ...f, options: opts };
+			return { ...f, type: "combobox" as const, options: opts };
 		});
 	}, [cfg.fields, cfg.treeField, treeItems, editing, fkSources, fkLookup]);
 
@@ -126,7 +126,7 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 				? [...lm.entries()].map(([value, item]) => ({
 						value,
 						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
-				  }))
+					}))
 				: [];
 		}
 		return result;

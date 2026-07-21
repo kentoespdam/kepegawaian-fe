@@ -4,16 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
+import { FKCombobox } from "@/components/fk-combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-
 export interface FormField {
 	name: string;
 	label: string;
-	type?: "text" | "email" | "password" | "number" | "textarea" | "select";
+	type?: "text" | "email" | "password" | "number" | "textarea" | "select" | "combobox";
 	placeholder?: string;
 	required?: boolean;
 	options?: { value: string; label: string; disabled?: boolean }[];
@@ -65,7 +65,16 @@ export function CrudForm<TValues extends Record<string, unknown> = Record<string
 							{field.label}
 							{field.required && <span className="ml-0.5 text-destructive">*</span>}
 						</Label>
-						{field.type === "textarea" ? (
+						{field.type === "combobox" ? (
+							<FKCombobox
+								id={field.name}
+								options={field.options ?? []}
+								value={watch(field.name) as string | number | undefined}
+								placeholder={`Pilih ${field.label.toLowerCase()}`}
+								invalid={!!err}
+								onChange={(v) => setValue(field.name, v)}
+							/>
+						) : field.type === "textarea" ? (
 							<Textarea
 								id={field.name}
 								className="min-h-24"
