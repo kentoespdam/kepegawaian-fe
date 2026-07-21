@@ -64,6 +64,18 @@ form = nilai tunggal wajib, tanpa item "Semua"). **Enum** (`type:"select"` denga
   parent terisi; reset child **hanya saat user mengubah** parent (bukan saat load edit); saat edit,
   nilai lama yang tak match filter **tetap ditampilkan** (jangan hapus diam-diam).
 
+**Trigger & perilaku (polish, bug `w96`).** FKCombobox ≠ FKComboboxFilter (toolbar) — 3 aturan
+form yang **tidak boleh** dicontek dari toolbar:
+
+- **Trigger = tampak text input**, bukan tombol solid. Match `input.tsx`: `bg-transparent
+  border-input` (placeholder `text-muted-foreground`), **jangan** biarkan fill `variant="outline"`
+  Button — itu terkesan *disabled button*. Tetap `h-11` + `aria-invalid`.
+- **Dialog punya close button** (`<CommandDialog showCloseButton>`) — user harus bisa menutup tanpa
+  memilih opsi. Prop sudah ada di `command.tsx`; cukup diteruskan.
+- **Tanpa toggle-off.** Klik item yang sudah terpilih → **tetap terpilih**, dialog tutup. Form =
+  single-**required**; meng-uncheck jadi kosong itu bug. (Toggle-off hanya sah di *filter* toolbar
+  yang bisa di-clear via "Semua".)
+
 ### 10.4 Heavy-form layout — labeled sections + switch list (CONTEXT §Heavy-form)
 
 Dua entitas berat di **Sheet** (~480px), tersusun **labeled sections**, bukan dump field datar.

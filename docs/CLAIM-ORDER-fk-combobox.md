@@ -120,6 +120,26 @@ rgz  FKCombobox component (fondasi)
 
 ---
 
+## Follow-up polish (pasca-implementasi)
+
+### `kepegawaian-fe-w96` — FKCombobox polish (BUG, P2)
+**← depends on:** `rgz` ✅ · **epic `31p` sudah CLOSED** (ini follow-up terpisah, bukan reopen)
+
+Dilaporkan user setelah delivery. Satu file (`src/components/fk-combobox.tsx`), 3 diff kecil.
+Jangan sentuh `fk-combobox-filter.tsx`.
+
+- [ ] **B1** trigger terlalu mencolok / terkesan disabled button → override className match
+      `input.tsx` (`bg-transparent border-input`), **bukan** ganti variant Button.
+- [ ] **B2** tak ada close button → teruskan `showCloseButton` ke `<CommandDialog>` (prop sudah ada
+      di `command.tsx`).
+- [ ] **B3** re-click item terpilih malah uncheck → buang ternary toggle-off (`fk-combobox.tsx:87`);
+      form single-required, tak boleh jadi kosong.
+- [ ] `gitnexus_impact` sebelum edit + `gitnexus_detect_changes` + quality gate + `bd close`.
+
+Detail root-cause & acceptance: `bd show kepegawaian-fe-w96`. Aturan dikunci di forms.md §10.3b.
+
+---
+
 ## Definition of Done (epic `31p`)
 
 - Form organisasi & FK panjang lain → CommandDialog searchable, bukan Select scroll.
