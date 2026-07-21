@@ -1,6 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -9,7 +10,8 @@ import { MasterSwitch } from "@/components/master-switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useEnum } from "@/hooks/useEnum";
+import { api } from "@/lib/api/client";
+import type { JenisSpListResponse } from "@/types/master/jenis-sp";
 import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./schema";
 
 // — Props (compatible with EntityFormModal) —
@@ -24,11 +26,19 @@ interface SanksiFormProps {
 }
 
 export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, submit }: SanksiFormProps) {
-	const { options: jenisSpOptions } = useEnum("jenis-sp");
+	const { data: jenisSpRaw } = useQuery<JenisSpListResponse[]>({
+		queryKey: ["jenis-sp", "list"],
+		queryFn: () => api.listAll<JenisSpListResponse[]>("jenis-sp"),
+		staleTime: 300_000,
+	});
 
 	const jenisSpOpts = useMemo(
-		() => jenisSpOptions.map((o) => ({ value: o.id ?? "", label: o.nama ?? "" })),
-		[jenisSpOptions],
+		() =>
+			(jenisSpRaw ?? []).map((item) => ({
+				value: String(item.id ?? ""),
+				label: item.kode ? `${item.kode} — ${item.nama}` : `${item.nama}`,
+			})),
+		[jenisSpRaw],
 	);
 
 	const {
@@ -122,7 +132,7 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
 					<h3 className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 						Konsekuensi Sanksi
 					</h3>
-					<div className="divide-y divide-border rounded-lg border border-border">
+					<div className="divide-y divide-border rounded-lg border border-border px-2">
 						{SWITCH_LABELS.map((sw) => (
 							<div key={sw.field}>
 								<MasterSwitch
