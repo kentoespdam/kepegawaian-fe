@@ -59,19 +59,19 @@ rgz  FKCombobox component (fondasi)
 
 ## Urutan claim
 
-### 1. `kepegawaian-fe-rgz` — `<FKCombobox>` komponen (TASK, P2)
+### 1. `kepegawaian-fe-rgz` — `<FKCombobox>` komponen (TASK, P2) ✅
 **← depends on:** — (ready duluan)
 
-- [ ] **New** `src/components/fk-combobox.tsx`. Copy pola CommandDialog dari `fk-combobox-filter.tsx`,
+- [x] **New** `src/components/fk-combobox.tsx`. Copy pola CommandDialog dari `fk-combobox-filter.tsx`,
       **buang** item "Semua"/toggle-off (form = single-required).
-- [ ] Interface terkunci: `options[] / value(string|number|undefined) / onChange / placeholder /
+- [x] Interface terkunci: `options[] / value(string|number|undefined) / onChange / placeholder /
       searchPlaceholder / disabled / loading / emptyText / id / invalid`.
-- [ ] Bandingkan value sebagai `String()` (FK id bisa number).
-- [ ] Search **client-side** via `CommandInput`. Tandai `ponytail: client-side filter, server-search
+- [x] Bandingkan value sebagai `String()` (FK id bisa number).
+- [x] Search **client-side** via `CommandInput`. Tandai `ponytail: client-side filter, server-search
       jika /list organisasi terbukti berat`.
-- [ ] **Tanpa** virtualization (rung-3 lazy).
-- [ ] a11y: trigger `id` (nyambung `<Label htmlFor>`), `aria-invalid={invalid}`, h-11 (forms.md §10.3).
-- [ ] `fk-combobox-filter.tsx` **TIDAK** diubah.
+- [x] **Tanpa** virtualization (rung-3 lazy).
+- [x] a11y: trigger `id` (nyambung `<Label htmlFor>`), `aria-invalid={invalid}`, h-11 (forms.md §10.3).
+- [x] `fk-combobox-filter.tsx` **TIDAK** diubah.
 - [ ] Quality gate (`bunx biome check` + build) + `gitnexus_detect_changes` + `bd close`.
 
 ### 2. `kepegawaian-fe-3ym` — Wire ke generic CrudForm (TASK, P2)
