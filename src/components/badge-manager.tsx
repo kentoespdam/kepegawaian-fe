@@ -71,7 +71,7 @@ export function BadgeManager({ entity, profesiId, items }: BadgeManagerProps) {
 		<>
 			<div className="flex flex-wrap items-center gap-1">
 				{items.map((item) => (
-					<Badge key={item.id} variant="secondary" className="gap-0.5 pr-1">
+					<Badge key={item.id} variant="outline" className="gap-0.5 pr-1">
 						<span>{item.nama}</span>
 						{canUpdate && (
 							<button
