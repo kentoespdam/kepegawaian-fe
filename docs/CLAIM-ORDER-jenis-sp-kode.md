@@ -63,15 +63,27 @@ Ubah **HANYA** `src/config/master/jenis-sp.config.ts`, inline:
 Audit tiap `src/config/master/*.config.ts` terhadap `{Entity}PostRequest`-nya. **Tidak ada
 perubahan kode produksi di task ini** — audit + filing bug issue baru saja.
 
-- [ ] Untuk tiap entity: catat property `*PostRequest`, cek tercakup di `fields[]` **atau**
+- [x] Untuk tiap entity: catat property `*PostRequest`, cek tercakup di `fields[]` **atau**
       `fkSources[]` (`*Id`). `columns`/`searchFields` **tidak** dihitung.
-- [ ] Verifikasi manual kandidat drift (grep kasar → banyak false-positive dari FK di `fkSources`):
+- [x] Verifikasi manual kandidat drift (grep kasar → banyak false-positive dari FK di `fkSources`):
       `alasan-berhenti` (`notes`), `hari-libur` (`notes`), `jenjang-pendidikan`
       (`shortName`/`seq`/`isStatistik`), `profesi` (`detail`/`resiko`), `sanksi` (flags + `potTkk`),
       `organisasi` (`parentId`/`levelOrganisasi`/`shortName`).
-- [ ] Tiap drift **nyata** → buka bug issue `bd` terpisah (jangan gabung satu commit gemuk).
-- [ ] Bila nihil selain jenis-sp → tutup task dengan catatan itu.
-- [ ] `bd close`.
+- [x] Tiap drift **nyata** → buka bug issue `bd` terpisah (jangan gabung satu commit gemuk).
+- [x] Bila nihil selain jenis-sp → tutup task dengan catatan itu.
+      **Temuan: 7 drifts nyata di luar jenis-sp. 2 critical (profesi+sanksi), 1 high (jabatan).**
+- [x] `bd close`.
+
+**Bug issues filed (7 drifts):**
+| ID | Entity | Severity |
+|---|---|---|
+| `kepegawaian-fe-1iz` | alasan-berhenti — `notes` | P2 |
+| `kepegawaian-fe-ywb` | hari-libur — `notes` | P2 |
+| `kepegawaian-fe-57j` | jenjang-pendidikan — `shortName`, `seq`, `isStatistik` | P2 |
+| `kepegawaian-fe-4vc` | jabatan — `kode` (req), `levelId` | P2 |
+| `kepegawaian-fe-qhn` | organisasi — `kode`, `levelOrganisasi`, `shortName`, `category` | P2 |
+| `kepegawaian-fe-8y6` | profesi — `nama`, `detail`, `resiko` (form kosong) | P1 |
+| `kepegawaian-fe-bjx` | sanksi — `kode`, `keterangan`, semua boolean (form kosong) | P1 |
 
 ---
 
