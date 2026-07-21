@@ -32,7 +32,7 @@ import type { JenisSpListResponse, JenisSpPostRequest, JenisSpQuery } from "@/ty
 import type { JenjangPendidikanPostRequest, JenjangPendidikanResponse } from "@/types/master/jenjang-pendidikan";
 import type { LevelPostRequest, LevelResponse } from "@/types/master/level";
 import type { OrganisasiListResponse, OrganisasiPostRequest, OrganisasiQuery } from "@/types/master/organisasi";
-import type { ProfesiListResponse, ProfesiPostRequest, ProfesiQuery } from "@/types/master/profesi";
+import type { ProfesiDetail, ProfesiListResponse, ProfesiPostRequest } from "@/types/master/profesi";
 import type { RumahDinasListResponse, RumahDinasPostRequest, RumahDinasQuery } from "@/types/master/rumah-dinas";
 import type { SanksiPostRequest, SanksiQuery } from "@/types/master/sanksi";
 
@@ -108,7 +108,7 @@ export interface MasterEntityTypes {
 	};
 	jabatan: { TItem: JabatanQuery; TPage: Page<JabatanQuery>; TReq: JabatanPostRequest; TList: JabatanListResponse[] };
 	grade: { TItem: GradeQuery; TPage: Page<GradeQuery>; TReq: GradePostRequest; TList: GradeListResponse[] };
-	profesi: { TItem: ProfesiQuery; TPage: Page<ProfesiQuery>; TReq: ProfesiPostRequest; TList: ProfesiListResponse[] };
+	profesi: { TItem: ProfesiDetail; TPage: Page<ProfesiDetail>; TReq: ProfesiPostRequest; TList: ProfesiListResponse[] };
 	sanksi: { TItem: SanksiQuery; TPage: Page<SanksiQuery>; TReq: SanksiPostRequest; TList: SanksiQuery[] };
 }
 
