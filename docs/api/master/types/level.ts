@@ -11,13 +11,13 @@
 import type { Envelope, LevelResponse, PageEnvelope, PageQuery } from "./_shared";
 
 export interface LevelSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export type SingleResultLevelResponse = Envelope<LevelResponse>;
 
 export interface LevelPostRequest {
-  nama?: string;
+	nama?: string;
 }
 
 export type PageResultPageLevelResponse = PageEnvelope<LevelResponse>;
@@ -25,10 +25,10 @@ export type PageResultPageLevelResponse = PageEnvelope<LevelResponse>;
 export type ListResultLevelResponse = Envelope<LevelResponse[]>;
 
 export type {
-  DeletedResult,
-  LevelResponse,
-  PageableObject,
-  SavedResultListLong,
-  SavedResultLong,
-  SortObject,
+	DeletedResult,
+	LevelResponse,
+	PageableObject,
+	SavedResultListLong,
+	SavedResultLong,
+	SortObject,
 } from "./_shared";

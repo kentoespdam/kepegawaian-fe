@@ -11,33 +11,33 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface JenjangPendidikanSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export interface JenjangPendidikanResponse {
-  id?: number; // int64
-  nama?: string;
-  shortName?: string;
-  seq?: number; // int32
-  isStatistik?: boolean;
+	id?: number; // int64
+	nama?: string;
+	shortName?: string;
+	seq?: number; // int32
+	isStatistik?: boolean;
 }
 
 export type SingleResultJenjangPendidikanResponse = Envelope<JenjangPendidikanResponse>;
 
 export interface JenjangPendidikanPutRequest {
-  nama: string; // minLength 1
-  shortName?: string;
-  seq?: number; // int32, min 1
-  isStatistik?: boolean;
+	nama: string; // minLength 1
+	shortName?: string;
+	seq?: number; // int32, min 1
+	isStatistik?: boolean;
 }
 
 export type PageResultPageJenjangPendidikanResponse = PageEnvelope<JenjangPendidikanResponse>;
 
 export interface JenjangPendidikanPostRequest {
-  nama: string; // minLength 1
-  shortName?: string;
-  seq?: number; // int32, min 1
-  isStatistik?: boolean;
+	nama: string; // minLength 1
+	shortName?: string;
+	seq?: number; // int32, min 1
+	isStatistik?: boolean;
 }
 
 export type ListResultJenjangPendidikanResponse = Envelope<JenjangPendidikanResponse[]>;

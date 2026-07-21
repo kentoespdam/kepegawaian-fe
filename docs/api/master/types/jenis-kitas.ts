@@ -11,25 +11,25 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface JenisKitasSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export interface JenisKitasQuery {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type SingleResultJenisKitasQuery = Envelope<JenisKitasQuery>;
 
 export interface JenisKitasPostRequest {
-  nama: string; // minLength 1
+	nama: string; // minLength 1
 }
 
 export type PageResultPageJenisKitasQuery = PageEnvelope<JenisKitasQuery>;
 
 export interface JenisKitasListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultJenisKitasListResponse = Envelope<JenisKitasListResponse[]>;

@@ -11,33 +11,33 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface JenisSpSearchParams extends PageQuery {
-  kode?: string;
-  nama?: string;
+	kode?: string;
+	nama?: string;
 }
 
 export interface JenisSpQuery {
-  id?: number; // int64
-  kode?: string;
-  nama?: string;
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
 }
 
 export type SingleResultJenisSpQuery = Envelope<JenisSpQuery>;
 
 export interface JenisSpPutRequest {
-  kode?: string;
-  nama?: string;
+	kode?: string;
+	nama?: string;
 }
 
 export type PageResultPageJenisSpQuery = PageEnvelope<JenisSpQuery>;
 
 export interface JenisSpPostRequest {
-  kode?: string;
-  nama?: string;
+	kode?: string;
+	nama?: string;
 }
 
 export interface JenisSpListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultJenisSpListResponse = Envelope<JenisSpListResponse[]>;

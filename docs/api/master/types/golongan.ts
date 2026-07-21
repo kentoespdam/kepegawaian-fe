@@ -11,29 +11,29 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface GolonganSearchParams extends PageQuery {
-  golongan?: string;
-  pangkat?: string;
+	golongan?: string;
+	pangkat?: string;
 }
 
 export interface GolonganQuery {
-  id?: number; // int64
-  golongan?: string;
-  pangkat?: string;
+	id?: number; // int64
+	golongan?: string;
+	pangkat?: string;
 }
 
 export type SingleResultGolonganQuery = Envelope<GolonganQuery>;
 
 export interface GolonganPostRequest {
-  golongan?: string;
-  pangkat?: string;
+	golongan?: string;
+	pangkat?: string;
 }
 
 export type PageResultPageGolonganQuery = PageEnvelope<GolonganQuery>;
 
 export interface GolonganListResponse {
-  id?: number; // int64
-  golongan?: string;
-  pangkat?: string;
+	id?: number; // int64
+	golongan?: string;
+	pangkat?: string;
 }
 
 export type ListResultGolonganListResponse = Envelope<GolonganListResponse[]>;

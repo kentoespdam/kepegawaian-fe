@@ -9,66 +9,66 @@
  */
 
 import type {
-  Envelope,
-  JabatanMiniResponse,
-  LevelResponse,
-  OrganisasiMiniResponse,
-  PageEnvelope,
-  PageQuery,
+	Envelope,
+	JabatanMiniResponse,
+	LevelResponse,
+	OrganisasiMiniResponse,
+	PageEnvelope,
+	PageQuery,
 } from "./_shared";
 
 export interface JabatanSearchParams extends PageQuery {
-  kode?: string;
-  nama?: string;
-  parentId?: number; // int64
-  organisasiId?: number; // int64
-  levelId?: number; // int64
+	kode?: string;
+	nama?: string;
+	parentId?: number; // int64
+	organisasiId?: number; // int64
+	levelId?: number; // int64
 }
 
 export interface JabatanQuery {
-  id?: number; // int64
-  kode?: string;
-  nama?: string;
-  parent?: JabatanMiniResponse;
-  organisasi?: OrganisasiMiniResponse;
-  level?: LevelResponse;
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
+	parent?: JabatanMiniResponse;
+	organisasi?: OrganisasiMiniResponse;
+	level?: LevelResponse;
 }
 
 export type SingleResultJabatanQuery = Envelope<JabatanQuery>;
 
 export interface JabatanPutRequest {
-  kode: string; // minLength 1
-  parentId?: number; // int64, min 1
-  organisasiId?: number; // int64, min 1
-  levelId?: number; // int64, min 1
-  nama: string; // minLength 1
+	kode: string; // minLength 1
+	parentId?: number; // int64, min 1
+	organisasiId?: number; // int64, min 1
+	levelId?: number; // int64, min 1
+	nama: string; // minLength 1
 }
 
 export type PageResultPageJabatanQuery = PageEnvelope<JabatanQuery>;
 
 export interface JabatanPostRequest {
-  kode: string; // minLength 1
-  parentId?: number; // int64, min 1
-  organisasiId?: number; // int64, min 1
-  levelId?: number; // int64, min 1
-  nama: string; // minLength 1
+	kode: string; // minLength 1
+	parentId?: number; // int64, min 1
+	organisasiId?: number; // int64, min 1
+	levelId?: number; // int64, min 1
+	nama: string; // minLength 1
 }
 
 export type ListResultJabatanQuery = Envelope<JabatanQuery[]>;
 
 export interface JabatanListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultJabatanListResponse = Envelope<JabatanListResponse[]>;
 
 export type {
-  DeletedResult,
-  JabatanMiniResponse,
-  LevelResponse,
-  OrganisasiMiniResponse,
-  PageableObject,
-  SavedResultLong,
-  SortObject,
+	DeletedResult,
+	JabatanMiniResponse,
+	LevelResponse,
+	OrganisasiMiniResponse,
+	PageableObject,
+	SavedResultLong,
+	SortObject,
 } from "./_shared";

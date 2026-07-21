@@ -11,9 +11,9 @@
 import type { Envelope } from "./_shared";
 
 export interface StatusPegawaiResponse {
-  id?: string;
-  nama?: string;
-  urut?: number; // int32
+	id?: string;
+	nama?: string;
+	urut?: number; // int32
 }
 
 export type ListResultStatusPegawaiResponse = Envelope<StatusPegawaiResponse[]>;

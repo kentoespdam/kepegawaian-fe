@@ -11,27 +11,27 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface RumahDinasSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export interface RumahDinasQuery {
-  id?: number; // int64
-  nama?: string;
-  nilai?: number; // double
+	id?: number; // int64
+	nama?: string;
+	nilai?: number; // double
 }
 
 export type SingleResultRumahDinasQuery = Envelope<RumahDinasQuery>;
 
 export interface RumahDinasPostRequest {
-  nama?: string;
-  nilai?: number; // double
+	nama?: string;
+	nilai?: number; // double
 }
 
 export type PageResultPageRumahDinasQuery = PageEnvelope<RumahDinasQuery>;
 
 export interface RumahDinasListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultRumahDinasListResponse = Envelope<RumahDinasListResponse[]>;

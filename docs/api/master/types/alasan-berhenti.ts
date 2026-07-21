@@ -11,27 +11,27 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface AlasanBerhentiSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export interface AlasanBerhentiQuery {
-  id?: number; // int64
-  nama?: string;
-  notes?: string;
+	id?: number; // int64
+	nama?: string;
+	notes?: string;
 }
 
 export type SingleResultAlasanBerhentiQuery = Envelope<AlasanBerhentiQuery>;
 
 export interface AlasanBerhentiPostRequest {
-  nama: string; // minLength 1
-  notes?: string;
+	nama: string; // minLength 1
+	notes?: string;
 }
 
 export type PageResultPageAlasanBerhentiQuery = PageEnvelope<AlasanBerhentiQuery>;
 
 export interface AlasanBerhentiListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultAlasanBerhentiListResponse = Envelope<AlasanBerhentiListResponse[]>;

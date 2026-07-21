@@ -11,102 +11,102 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface SanksiSearchParams extends PageQuery {
-  kode?: string;
-  keterangan?: string;
-  jenisSpId?: number; // int64
+	kode?: string;
+	keterangan?: string;
+	jenisSpId?: number; // int64
 }
 
 export interface SanksiMiniResponse {
-  id?: number; // int64
-  kode?: string;
-  keterangan?: string;
-  jenisSpId?: number; // int64
+	id?: number; // int64
+	kode?: string;
+	keterangan?: string;
+	jenisSpId?: number; // int64
 }
 
 export interface JenisSpMiniResponse {
-  id?: number; // int64
-  kode?: string;
-  nama?: string;
-  sanksiSp?: SanksiMiniResponse[];
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
+	sanksiSp?: SanksiMiniResponse[];
 }
 
 export interface SanksiQuery {
-  id?: number; // int64
-  kode?: string;
-  keterangan?: string;
-  jenisSp?: JenisSpMiniResponse;
-  potTkk?: boolean;
-  jmlPotTkk?: number; // int32
-  isPendingPangkat?: boolean;
-  isPendingGaji?: boolean;
-  isTurunPangkat?: boolean;
-  isTurunJabatan?: boolean;
-  isSuspension?: boolean;
-  isTerminateDh?: boolean;
-  isTerminateTh?: boolean;
+	id?: number; // int64
+	kode?: string;
+	keterangan?: string;
+	jenisSp?: JenisSpMiniResponse;
+	potTkk?: boolean;
+	jmlPotTkk?: number; // int32
+	isPendingPangkat?: boolean;
+	isPendingGaji?: boolean;
+	isTurunPangkat?: boolean;
+	isTurunJabatan?: boolean;
+	isSuspension?: boolean;
+	isTerminateDh?: boolean;
+	isTerminateTh?: boolean;
 }
 
 export type SingleResultSanksiQuery = Envelope<SanksiQuery>;
 
 export interface SanksiPutRequest {
-  kode: string; // minLength 1
-  keterangan: string; // minLength 1
-  jenisSpId: number; // int64, min 1
-  potTkk?: boolean;
-  jmlPotTkk?: number; // int32
-  isPendingPangkat?: boolean;
-  isPendingGaji?: boolean;
-  isTurunPangkat?: boolean;
-  isTurunJabatan?: boolean;
-  isSuspension?: boolean;
-  isTerminateDh?: boolean;
-  isTerminateTh?: boolean;
+	kode: string; // minLength 1
+	keterangan: string; // minLength 1
+	jenisSpId: number; // int64, min 1
+	potTkk?: boolean;
+	jmlPotTkk?: number; // int32
+	isPendingPangkat?: boolean;
+	isPendingGaji?: boolean;
+	isTurunPangkat?: boolean;
+	isTurunJabatan?: boolean;
+	isSuspension?: boolean;
+	isTerminateDh?: boolean;
+	isTerminateTh?: boolean;
 }
 
 export type PageResultPageSanksiQuery = PageEnvelope<SanksiQuery>;
 
 export interface SanksiPostRequest {
-  kode: string; // minLength 1
-  keterangan: string; // minLength 1
-  jenisSpId: number; // int64, min 1
-  potTkk?: boolean;
-  jmlPotTkk?: number; // int32
-  isPendingPangkat?: boolean;
-  isPendingGaji?: boolean;
-  isTurunPangkat?: boolean;
-  isTurunJabatan?: boolean;
-  isSuspension?: boolean;
-  isTerminateDh?: boolean;
-  isTerminateTh?: boolean;
+	kode: string; // minLength 1
+	keterangan: string; // minLength 1
+	jenisSpId: number; // int64, min 1
+	potTkk?: boolean;
+	jmlPotTkk?: number; // int32
+	isPendingPangkat?: boolean;
+	isPendingGaji?: boolean;
+	isTurunPangkat?: boolean;
+	isTurunJabatan?: boolean;
+	isSuspension?: boolean;
+	isTerminateDh?: boolean;
+	isTerminateTh?: boolean;
 }
 
 export interface PatchSanksiJenisSpRequest {
-  id?: number; // int64
-  jenisSpId?: number; // int64
+	id?: number; // int64
+	jenisSpId?: number; // int64
 }
 
 export type ListResultSanksiQuery = Envelope<SanksiQuery[]>;
 
 export interface JenisSpSimple {
-  id?: number; // int64
-  kode?: string;
-  nama?: string;
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
 }
 
 export interface SanksiJenisSpList {
-  id?: number; // int64
-  kode?: string;
-  keterangan?: string;
-  jenisSp?: JenisSpSimple;
-  potTkk?: boolean;
-  jmlPotTkk?: number; // int32
-  isPendingPangkat?: boolean;
-  isPendingGaji?: boolean;
-  isTurunPangkat?: boolean;
-  isTurunJabatan?: boolean;
-  isSuspension?: boolean;
-  isTerminateDh?: boolean;
-  isTerminateTh?: boolean;
+	id?: number; // int64
+	kode?: string;
+	keterangan?: string;
+	jenisSp?: JenisSpSimple;
+	potTkk?: boolean;
+	jmlPotTkk?: number; // int32
+	isPendingPangkat?: boolean;
+	isPendingGaji?: boolean;
+	isTurunPangkat?: boolean;
+	isTurunJabatan?: boolean;
+	isSuspension?: boolean;
+	isTerminateDh?: boolean;
+	isTerminateTh?: boolean;
 }
 
 export type ListResultSanksiJenisSpList = Envelope<SanksiJenisSpList[]>;

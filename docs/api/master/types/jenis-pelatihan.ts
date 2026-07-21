@@ -11,25 +11,25 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface JenisPelatihanSearchParams extends PageQuery {
-  nama?: string;
+	nama?: string;
 }
 
 export interface JenisPelatihanQuery {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type SingleResultJenisPelatihanQuery = Envelope<JenisPelatihanQuery>;
 
 export interface JenisPelatihanPostRequest {
-  nama: string; // minLength 1
+	nama: string; // minLength 1
 }
 
 export type PageResultPageJenisPelatihanQuery = PageEnvelope<JenisPelatihanQuery>;
 
 export interface JenisPelatihanListResponse {
-  id?: number; // int64
-  nama?: string;
+	id?: number; // int64
+	nama?: string;
 }
 
 export type ListResultJenisPelatihanListResponse = Envelope<JenisPelatihanListResponse[]>;

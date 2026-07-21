@@ -11,32 +11,32 @@
 import type { Envelope, PageEnvelope, PageQuery } from "./_shared";
 
 export interface HariLiburSearchParams extends PageQuery {
-  tahun?: number; // int32
-  bulan?: number; // int32
-  jenisLibur?: string;
+	tahun?: number; // int32
+	bulan?: number; // int32
+	jenisLibur?: string;
 }
 
 export interface HariLiburQuery {
-  id?: number; // int64
-  tanggal?: string; // date
-  jenisLibur?: string;
-  notes?: string;
+	id?: number; // int64
+	tanggal?: string; // date
+	jenisLibur?: string;
+	notes?: string;
 }
 
 export type SingleResultHariLiburQuery = Envelope<HariLiburQuery>;
 
 export interface HariLiburPostRequest {
-  tanggal: string; // date
-  jenisLibur: "LIBUR_NASIONAL" | "CUTI_BERSAMA";
-  notes?: string;
+	tanggal: string; // date
+	jenisLibur: "LIBUR_NASIONAL" | "CUTI_BERSAMA";
+	notes?: string;
 }
 
 export type PageResultPageHariLiburQuery = PageEnvelope<HariLiburQuery>;
 
 export interface HariLiburListResponse {
-  id?: number; // int64
-  tanggal?: string; // date
-  jenisLibur?: string;
+	id?: number; // int64
+	tanggal?: string; // date
+	jenisLibur?: string;
 }
 
 export type ListResultHariLiburListResponse = Envelope<HariLiburListResponse[]>;

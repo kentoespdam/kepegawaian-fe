@@ -15,6 +15,14 @@ interface UseMasterTableOpts<TQuery extends Record<string, unknown>> {
 	editing: Record<string, unknown> | null;
 }
 
+// Helper: resolve label dari FK item, pakai formatLabel bila ada
+function resolveFkLabel(
+	fk: { formatLabel?: (item: Record<string, unknown>) => string },
+	item: Record<string, unknown>,
+): string {
+	return fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? item.id ?? "");
+}
+
 /**
  * Orchestrates FK source queries, lookup maps, resolved table items,
  * and enriched form fields for a master entity CRUD page.
@@ -63,11 +71,6 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 		}
 		return map;
 	}, [fkSources, fkQ1.data, fkQ2.data, fkQ3.data]);
-
-	// Helper: resolve label dari FK item, pakai formatLabel bila ada
-	function resolveFkLabel(fk: (typeof fkSources)[number], item: Record<string, unknown>): string {
-		return fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? item.id ?? "");
-	}
 
 	// Resolve FK display names + tree parent name in table items
 	const resolvedItems = useMemo(

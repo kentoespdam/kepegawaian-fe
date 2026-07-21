@@ -114,9 +114,9 @@ rgz  FKCombobox component (fondasi)
 - [x] **3c** preserve existing: saat load edit, fetch by organisasi awal; kalau `jabatanId` lama tak
       match filter → **tetap tampilkan label lama** (jangan diam-diam hapus). **Data-loss dilarang.**
 - [x] `gitnexus_impact` sebelum edit.
-- [ ] Verifikasi: org kosong→jabatan disabled; pilih org→list menyempit; ganti org→jabatan reset;
+- [x] Verifikasi: org kosong→jabatan disabled; pilih org→list menyempit; ganti org→jabatan reset;
       **edit existing→tidak ter-reset saat load, jabatan lama tak hilang**.
-- [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.
+- [x] Quality gate + `gitnexus_detect_changes` + `bd close`.
 
 ---
 
