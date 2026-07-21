@@ -47,6 +47,23 @@ Semua form CRUD Master = **RHF v7 + Zod** (`zodResolver`) via shadcn **`<Field /
   footer) — JANGAN toast untuk validasi.
 - Rejected: two-column & horizontal-label (zigzag eye-path / pola mobile ganda).
 
+### 10.3b FK field = `<FKCombobox>` searchable, enum = `<Select>` (grill 2026-07-21, epic `31p`)
+
+FK dengan data panjang (organisasi, jabatan, grade) dirender sebagai **`<FKCombobox>`** —
+CommandDialog + search (pola sama `fk-combobox-filter.tsx` di toolbar, tapi komponen **terpisah**:
+form = nilai tunggal wajib, tanpa item "Semua"). **Enum** (`type:"select"` dengan `options`
+**hard-coded di config**, mis. kategori/level) **tetap `<Select>`** — tak kena "pajak" buka dialog.
+
+- **Beda FK vs enum ditentukan oleh asal `options`, bukan jumlahnya.** `useMasterTable.formFields`
+  menandai field jadi `type:"combobox"` **saat meng-inject** options FK (`fkSources`/`treeField`).
+  Enum yang sudah bawa `options` di config tak tersentuh → tetap `select`. **JANGAN** threshold
+  `options.length` (angka ajaib).
+- Search **client-side** (options sudah eager-loaded di `fkLookup`); server-search **defer** sampai
+  `/list` terbukti berat.
+- **Cascade** (mis. jabatan difilter organisasi di form profesi): FKCombobox `disabled` sampai
+  parent terisi; reset child **hanya saat user mengubah** parent (bukan saat load edit); saat edit,
+  nilai lama yang tak match filter **tetap ditampilkan** (jangan hapus diam-diam).
+
 ### 10.4 Heavy-form layout — labeled sections + switch list (CONTEXT §Heavy-form)
 
 Dua entitas berat di **Sheet** (~480px), tersusun **labeled sections**, bukan dump field datar.
