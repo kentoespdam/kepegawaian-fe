@@ -89,50 +89,50 @@ perubahan kode produksi di task ini** — audit + filing bug issue baru saja.
 
 ### 4. `kepegawaian-fe-ywb` — Fix form hari-libur: tambah `notes` (BUG, P2)
 
-- [ ] **schema:** Tambah `notes: z.string().optional()` — schema saat ini `{tanggal, jenisLibur}` jadi `{tanggal, jenisLibur, notes}`
-- [ ] **fields:** Tambah `{ name: "notes", label: "Catatan", type: "textarea" }` setelah `jenisLibur`
-- [ ] **columns:** Pastikan kolom `notes` tampil (atau tambah)
-- [ ] **Ketik:** `EntityConfig<HariLiburQuery>` + `makeConfig<HariLiburQuery>(...)`
-- [ ] **searchFields:** Pertahankan (`tahun`, `bulan`, `jenisLibur`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ tanggal: z.string().min(1,...), jenisLibur: z.string().min(1,...), notes: z.string().optional() })`
+- [x] **fields:** `[tanggal, jenisLibur, { name: "notes", label: "Catatan", type: "textarea" }]`
+- [x] **columns:** `tanggal` + `jenisLibur` + `notes` display
+- [x] **Ketik:** Already `EntityConfig<HariLiburQuery>` + `makeConfig<HariLiburQuery>(...)`
+- [x] **searchFields:** Pertahankan (`tahun`, `bulan`, `jenisLibur`)
+- [x] **Error validasi:** inline di form
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 5. `kepegawaian-fe-57j` — Fix form jenjang-pendidikan: tambah `shortName`, `seq`, `isStatistik` (BUG, P2)
 
-- [ ] **schema:** Ganti `simpleNameSchema` ke `z.object({ nama: namaWajib, shortName: z.string().optional(), seq: z.coerce.number().optional(), isStatistik: z.boolean().optional() })`
-- [ ] **fields:** `[nameField, { name: "shortName", label: "Nama Singkat" }, { name: "seq", label: "Urutan", type: "number" }, { name: "isStatistik", label: "Statistik", type: "select", options: [{value:"true",label:"Ya"},{value:"false",label:"Tidak"}] }]`
-- [ ] **columns:** Update — pastikan `shortName`, `seq`, `isStatistik` tampil di tabel
-- [ ] **Ketik:** `EntityConfig<JenjangPendidikanResponse>` + `makeConfig<JenjangPendidikanResponse>(...)`
-- [ ] **searchFields:** Pertahankan (`nama`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ nama: namaWajib, shortName: z.string().optional(), seq: z.coerce.number().optional(), isStatistik: z.coerce.boolean().optional() })`
+- [x] **fields:** `[nameField, shortName, seq (number), isStatistik (select Ya/Tidak)]`
+- [x] **columns:** `nama` + `shortName` + `seq` + `isStatistik`
+- [x] **Ketik:** `EntityConfig<JenjangPendidikanResponse>` + `makeConfig<JenjangPendidikanResponse>(...)`
+- [x] **searchFields:** Pertahankan (`nama`)
+- [x] **Error validasi:** inline di form
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 6. `kepegawaian-fe-4vc` — Fix form jabatan: tambah `kode` + `levelId` (BUG, P2)
 
 > **Pola identik dengan issue 2zb (jenis-sp).** `kode` required hilang dari fields; `levelId` tidak ada di fkSources.
 
-- [ ] **schema:** Ganti `z.object({ nama: namaWajib })` ke `z.object({ kode: z.string().min(1,"Kode wajib diisi"), nama: namaWajib })`
-- [ ] **fields:** `[{ name: "kode", label: "Kode", required: true }, nameField]`
-- [ ] **columns:** Pertahankan (kode, nama, levelId, parentId, organisasiId sudah tampil)
-- [ ] **fkSources:** Tambah `{ field: "levelId", entity: "level", label: "Level" }`
-- [ ] **Ketik:** `EntityConfig<JabatanQuery>` + `makeConfig<JabatanQuery>(...)` — sudah typed
-- [ ] **searchFields:** Pertahankan (`kode`, `nama`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ kode: z.string().min(1,"Kode wajib diisi"), nama: namaWajib })`
+- [x] **fields:** `[{ name: "kode", label: "Kode", required: true }, nameField]`
+- [x] **columns:** Pertahankan (kode, nama, levelId, parentId, organisasiId)
+- [x] **fkSources:** Tambah `{ field: "levelId", entity: "level", label: "Level" }`
+- [x] **Ketik:** Already `EntityConfig<JabatanQuery>` + `makeConfig<JabatanQuery>(...)`
+- [x] **searchFields:** Pertahankan (`kode`, `nama`)
+- [x] **Error validasi:** inline di form
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 7. `kepegawaian-fe-qhn` — Fix form organisasi: tambah `kode`, `levelOrganisasi`, `shortName`, `category` (BUG, P2)
 
-- [ ] **schema:** Ganti ke `z.object({ nama: namaWajib, kode: z.string().optional(), levelOrganisasi: z.coerce.number().optional(), shortName: z.string().optional(), category: z.string().optional() })`
-- [ ] **fields:** `[nameField, { name: "kode", label: "Kode" }, { name: "levelOrganisasi", label: "Level Organisasi", type: "number" }, { name: "shortName", label: "Kode Kantor" }, { name: "category", label: "Kategori" }]`
-- [ ] **columns:** Pertahankan (kode, nama, levelOrganisasi, parent, shortName, category sudah tampil)
-- [ ] **Ketik:** `EntityConfig<OrganisasiQuery>` + `makeConfig<OrganisasiQuery>(...)` — sudah typed
-- [ ] **searchFields:** Pertahankan (`kode`, `nama`, `category`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ nama: namaWajib, kode: z.string().optional(), levelOrganisasi: z.coerce.number().optional(), shortName: z.string().optional(), category: z.string().optional() })`
+- [x] **fields:** `[nameField, kode, levelOrganisasi (number), shortName, category]`
+- [x] **columns:** Pertahankan (kode, nama, levelOrganisasi, parent, shortName, category)
+- [x] **Ketik:** Already `EntityConfig<OrganisasiQuery>` + `makeConfig<OrganisasiQuery>(...)`
+- [x] **searchFields:** Pertahankan (`kode`, `nama`, `category`)
+- [x] **Error validasi:** inline di form
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 8. `kepegawaian-fe-8y6` — Fix form profesi: tambah `nama`, `detail`, `resiko` — form kosong (BUG, P1)
 

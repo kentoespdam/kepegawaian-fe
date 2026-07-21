@@ -6,14 +6,17 @@ export const hariLiburConfig: EntityConfig<HariLiburQuery> = makeConfig<HariLibu
 	z.object({
 		tanggal: z.string().min(1, "Tanggal wajib diisi"),
 		jenisLibur: z.string().min(1, "Jenis libur wajib diisi"),
+		notes: z.string().optional(),
 	}),
 	[
 		{ name: "tanggal", label: "Tanggal", required: true },
 		{ name: "jenisLibur", label: "Jenis Libur", required: true },
+		{ name: "notes", label: "Catatan", type: "textarea" },
 	],
 	[
 		{ id: "tanggal", header: "Tanggal", sortable: true, primary: true, cell: (item) => String(item.tanggal ?? "") },
 		{ id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
+		{ id: "notes", header: "Catatan", cell: (item) => item.notes ?? "-" },
 	],
 	"Hari Libur",
 	{

@@ -3,8 +3,8 @@ import type { JabatanQuery } from "@/types/master/jabatan";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
 
 export const jabatanConfig: EntityConfig<JabatanQuery> = makeConfig<JabatanQuery>(
-	z.object({ nama: namaWajib }),
-	[nameField],
+	z.object({ kode: z.string().min(1, "Kode wajib diisi"), nama: namaWajib }),
+	[{ name: "kode", label: "Kode", required: true }, nameField],
 	[
 		{ id: "kode", header: "Kode", sortable: true, cell: (item) => item.kode ?? "" },
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => item.nama ?? "" },
@@ -22,6 +22,7 @@ export const jabatanConfig: EntityConfig<JabatanQuery> = makeConfig<JabatanQuery
 		fkSources: [
 			{ field: "parentId", entity: "jabatan", label: "Parent" },
 			{ field: "organisasiId", entity: "organisasi", label: "Organisasi" },
+			{ field: "levelId", entity: "level", label: "Level" },
 		],
 	},
 );
