@@ -17,8 +17,11 @@ export function profesiDefaults(editing: Record<string, unknown> | null): Profes
 		nama: String(editing?.nama ?? ""),
 		detail: String(editing?.detail ?? ""),
 		resiko: String(editing?.resiko ?? ""),
-		organisasiId: Number(editing?.organisasiId ?? 0) || undefined,
-		jabatanId: Number(editing?.jabatanId ?? 0) || undefined,
-		gradeId: Number(editing?.gradeId ?? 0) || undefined,
+		organisasiId:
+			Number((editing?.organisasi as Record<string, unknown> | undefined)?.id ?? editing?.organisasiId ?? 0) ||
+			undefined,
+		jabatanId:
+			Number((editing?.jabatan as Record<string, unknown> | undefined)?.id ?? editing?.jabatanId ?? 0) || undefined,
+		gradeId: Number((editing?.grade as Record<string, unknown> | undefined)?.id ?? editing?.gradeId ?? 0) || undefined,
 	};
 }

@@ -57,7 +57,8 @@ export function sanksiDefaults(editing: Record<string, unknown> | null): Partial
 	return {
 		kode: String(editing?.kode ?? ""),
 		keterangan: String(editing?.keterangan ?? ""),
-		jenisSpId: Number(editing?.jenisSpId ?? 0) || undefined,
+		jenisSpId:
+			Number((editing?.jenisSp as Record<string, unknown> | undefined)?.id ?? editing?.jenisSpId ?? 0) || undefined,
 		potTkk: Boolean(editing?.potTkk ?? false),
 		jmlPotTkk: Number(editing?.jmlPotTkk ?? 0) || undefined,
 		isPendingPangkat: Boolean(editing?.isPendingPangkat ?? false),

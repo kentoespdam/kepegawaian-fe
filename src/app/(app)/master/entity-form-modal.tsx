@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import type { FormField } from "@/components/crud-form";
 import { CrudForm } from "@/components/crud-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -38,6 +39,23 @@ export function EntityFormModal({
 	const handleClose = (v: boolean) => {
 		if (!v) setDialogOpen(false);
 	};
+
+	// ponytail: semua bentuk form defaultValues ekstrak scalar id dari nested object FK
+	// Nested key = field minus trailing "Id" (organisasiId→organisasi, parentId→parent)
+	const formDefaults = useMemo(() => {
+		if (!editing) return undefined;
+		const combos = new Set<string>();
+		if (cfg.treeField) combos.add(cfg.treeField);
+		for (const fk of cfg.fkSources ?? []) combos.add(fk.field);
+		if (combos.size === 0) return editing as Record<string, unknown>;
+		const defs: Record<string, unknown> = { ...(editing as Record<string, unknown>) };
+		for (const f of combos) {
+			const nk = f.endsWith("Id") ? f.slice(0, -2) : f;
+			const v = defs[nk];
+			defs[f] = String(v && typeof v === "object" ? ((v as Record<string, unknown>).id ?? "") : (v ?? "")) || undefined;
+		}
+		return defs;
+	}, [editing, cfg.treeField, cfg.fkSources]);
 
 	if (entity === "sanksi") {
 		return (
@@ -88,7 +106,7 @@ export function EntityFormModal({
 				<CrudForm
 					schema={cfg.schema as never /* ponytail: Zod4 unknown vs hookform FieldValues — cast aman */}
 					fields={formFields}
-					defaultValues={editing ?? undefined}
+					defaultValues={formDefaults}
 					onSubmit={onSubmit}
 					onCancel={() => setDialogOpen(false)}
 					isSubmitting={isSubmitting}

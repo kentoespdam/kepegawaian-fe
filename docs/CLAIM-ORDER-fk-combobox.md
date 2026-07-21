@@ -149,18 +149,18 @@ sementara option `value` = **id skalar string**. `String(value)` tak match → k
 
 Tiga site (universal, semua entitas ber-FK/tree):
 
-- [ ] **Site 1 — generic** (`useMasterTable` → `crud-form` via `entity-form-modal` `defaultValues={editing}`).
+- [x] **Site 1 — generic** (`useMasterTable` → `crud-form` via `entity-form-modal` `defaultValues={editing}`).
       Fix **terpusat**: derive `formDefaults` dari `editing` — untuk tiap combobox field (`fkSources[].field`
       + `treeField`) set `String(editing[nested]?.id ?? editing[field] ?? "") || undefined`. Nested key:
       `xxxId → xxx` (`organisasiId→organisasi`, `levelId→level`, `parentId→parent`); `treeField:"parent"→parent`.
       Alirkan ke `CrudForm defaultValues` (ganti `editing ?? undefined`). Cakup organisasi/jabatan/grade sekaligus.
-- [ ] **Site 2 — `profesiDefaults`**: baca `editing?.organisasi?.id` / `?.jabatan?.id` / `?.grade?.id`
+- [x] **Site 2 — `profesiDefaults`**: baca `editing?.organisasi?.id` / `?.jabatan?.id` / `?.grade?.id`
       (bukan scalar `*Id` yang absen di `ProfesiDetail`).
-- [ ] **Site 3 — `sanksiDefaults`**: baca `editing?.jenisSp?.id` (bukan `jenisSpId` absen di `SanksiQuery`).
-- [ ] **JANGAN** sentuh `fk-combobox.tsx` / `fk-combobox-filter.tsx`. Value → option **harus** string-comparable.
-- [ ] Verifikasi: edit organisasi/jabatan/grade/profesi/sanksi → semua FK pre-selected; create → kosong;
+- [x] **Site 3 — `sanksiDefaults`**: baca `editing?.jenisSp?.id` (bukan `jenisSpId` absen di `SanksiQuery`).
+- [x] **JANGAN** sentuh `fk-combobox.tsx` / `fk-combobox-filter.tsx`. Value → option **harus** string-comparable.
+- [x] Verifikasi: edit organisasi/jabatan/grade/profesi/sanksi → semua FK pre-selected; create → kosong;
       submit tanpa ubah FK → `*Id` lama tetap terkirim. Jabatan cascade preserve tetap jalan.
-- [ ] `gitnexus_impact` (`useMasterTable`, `CrudForm`, `profesiDefaults`, `sanksiDefaults`) + `gitnexus_detect_changes` + quality gate + `bd close`.
+- [x] `gitnexus_impact` (`useMasterTable`, `CrudForm`, `profesiDefaults`, `sanksiDefaults`) + `gitnexus_detect_changes` + quality gate + `bd close`.
 
 Detail: `bd show kepegawaian-fe-9x2`. Aturan dikunci di forms.md §10.3c.
 
