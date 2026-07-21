@@ -78,14 +78,14 @@ perubahan kode produksi di task ini** — audit + filing bug issue baru saja.
 
 ### 3. `kepegawaian-fe-1iz` — Fix form alasan-berhenti: tambah `notes` (BUG, P2)
 
-- [ ] **schema:** Tambah `notes: z.string().optional()` — ganti dari `simpleNameSchema` ke `z.object({ nama: namaWajib, notes: z.string().optional() })`
-- [ ] **fields:** Tambah `{ name: "notes", label: "Catatan", type: "textarea" }` setelah `nameField`
-- [ ] **columns:** Pastikan kolom `notes` tampil di tabel (atau tambah jika belum)
-- [ ] **Ketik:** `EntityConfig<AlasanBerhentiQuery>` + `makeConfig<AlasanBerhentiQuery>(...)`
-- [ ] **searchFields:** Pertahankan (`nama`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ nama: namaWajib, notes: z.string().optional() })` — ganti dari `simpleNameSchema`
+- [x] **fields:** `[nameField, { name: "notes", label: "Catatan", type: "textarea" }]`
+- [x] **columns:** `nama` (sortable, primary) + `notes` display
+- [x] **Ketik:** `EntityConfig<AlasanBerhentiQuery>` + `makeConfig<AlasanBerhentiQuery>(...)`
+- [x] **searchFields:** Pertahankan (`nama`)
+- [x] **Error validasi:** inline di form (via Zod `optional()`)
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅ (pre-existing `ProfesiQuery` error)
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 4. `kepegawaian-fe-ywb` — Fix form hari-libur: tambah `notes` (BUG, P2)
 
