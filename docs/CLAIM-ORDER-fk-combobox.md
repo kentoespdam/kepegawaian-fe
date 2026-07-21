@@ -72,7 +72,7 @@ rgz  FKCombobox component (fondasi)
 - [x] **Tanpa** virtualization (rung-3 lazy).
 - [x] a11y: trigger `id` (nyambung `<Label htmlFor>`), `aria-invalid={invalid}`, h-11 (forms.md §10.3).
 - [x] `fk-combobox-filter.tsx` **TIDAK** diubah.
-- [ ] Quality gate (`bunx biome check` + build) + `gitnexus_detect_changes` + `bd close`.
+- [x] Quality gate (`bunx biome check` + build) + `gitnexus_detect_changes` + `bd close`.
 
 ### 2. `kepegawaian-fe-3ym` — Wire ke generic CrudForm (TASK, P2) ✅
 **← depends on:** `rgz` ✅
@@ -85,9 +85,9 @@ rgz  FKCombobox component (fondasi)
 - [x] **JANGAN** threshold `options.length` (angka ajaib — ditolak).
 - [x] `gitnexus_impact` pada `useMasterTable` + `CrudForm` **sebelum** edit (blast radius tinggi —
       laporkan risk ke reviewer).
-- [ ] Verifikasi: form organisasi → Parent = FKCombobox; entitas enum → tetap Select; create/edit
+- [x] Verifikasi: form organisasi → Parent = FKCombobox; entitas enum → tetap Select; create/edit
       kirim value benar.
-- [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.
+- [x] Quality gate + `gitnexus_detect_changes` + `bd close`.
 
 ### 3. `kepegawaian-fe-508` — Heavy form profesi & sanksi (TASK, P2) ✅
 **← depends on:** `rgz` ✅
@@ -98,8 +98,8 @@ rgz  FKCombobox component (fondasi)
 - [x] Pertahankan grammar heavy-form (labeled sections, sticky footer, h-11) — forms.md §10.4.
 - [x] **Scope boundary:** cascade **BUKAN** di sini — jabatan tetap tampil semua.
 - [x] `gitnexus_impact` `ProfesiForm`/`SanksiForm` sebelum edit.
-- [ ] Verifikasi: edit existing → FK label benar; submit kirim FK id (number) benar.
-- [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.
+- [x] Verifikasi: edit existing → FK label benar; submit kirim FK id (number) benar.
+- [x] Quality gate + `gitnexus_detect_changes` + `bd close`.
 
 ### 4. `kepegawaian-fe-bfz` — Cascade jabatan←organisasi (FEATURE, P2)
 **← depends on:** `rgz`, `508`
