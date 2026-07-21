@@ -59,7 +59,7 @@
         "tags": [
           "grade-controller"
         ],
-        "operationId": "update_12",
+        "operationId": "update_14",
         "parameters": [
           {
             "name": "id",

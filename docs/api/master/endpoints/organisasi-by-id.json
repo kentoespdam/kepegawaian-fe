@@ -59,7 +59,7 @@
         "tags": [
           "organisasi-controller"
         ],
-        "operationId": "update_3",
+        "operationId": "update_5",
         "parameters": [
           {
             "name": "id",

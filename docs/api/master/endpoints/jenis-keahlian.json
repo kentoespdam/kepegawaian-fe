@@ -96,7 +96,7 @@
         "tags": [
           "jenis-keahlian-controller"
         ],
-        "operationId": "save_9",
+        "operationId": "save_11",
         "requestBody": {
           "content": {
             "application/json": {

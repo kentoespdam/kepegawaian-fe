@@ -59,7 +59,7 @@
         "tags": [
           "jabatan-controller"
         ],
-        "operationId": "update_10",
+        "operationId": "update_12",
         "parameters": [
           {
             "name": "id",

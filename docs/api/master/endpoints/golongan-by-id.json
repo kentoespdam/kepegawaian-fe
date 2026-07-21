@@ -59,7 +59,7 @@
         "tags": [
           "golongan-controller"
         ],
-        "operationId": "update_13",
+        "operationId": "update_15",
         "parameters": [
           {
             "name": "id",

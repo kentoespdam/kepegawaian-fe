@@ -59,7 +59,7 @@
         "tags": [
           "hari-libur-controller"
         ],
-        "operationId": "update_11",
+        "operationId": "update_13",
         "parameters": [
           {
             "name": "id",

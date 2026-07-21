@@ -96,7 +96,7 @@
         "tags": [
           "jenjang-pendidikan-controller"
         ],
-        "operationId": "save_5",
+        "operationId": "save_7",
         "requestBody": {
           "content": {
             "application/json": {

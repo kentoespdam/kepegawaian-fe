@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/master/master.json
- * Endpoint : DELETE /master/profesi/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, PUT /master/profesi/{id}
+ * Endpoint : DELETE /master/profesi/{id}, DELETE /master/profesi/{profesiId}/alat-kerja/{id}, DELETE /master/profesi/{profesiId}/apd/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, POST /master/profesi/{profesiId}/alat-kerja, POST /master/profesi/{profesiId}/apd, PUT /master/profesi/{id}, PUT /master/profesi/{profesiId}/alat-kerja/{id}, PUT /master/profesi/{profesiId}/apd/{id}
  */
 
 import type {
@@ -15,11 +15,7 @@ import type {
 	OrganisasiMiniResponse,
 	PageEnvelope,
 	PageQuery,
-} from "@/types/_shared";
-
-// ponytail: alias untuk konsistensi dengan entitas lain (*Query)
-// ProfesiSearchParams = tipe search filter; ProfesiDetail = tipe row tabel (dengan nested FK objects)
-export type ProfesiQuery = ProfesiDetail;
+} from "../_shared";
 
 export interface ProfesiSearchParams extends PageQuery {
 	organisasiId?: number; // int64
@@ -27,6 +23,14 @@ export interface ProfesiSearchParams extends PageQuery {
 	levelId?: number; // int64
 	gradeId?: number; // int64
 	nama?: string;
+}
+
+export interface ApdPostRequest {
+	nama: string; // minLength 1
+}
+
+export interface AlatKerjaPostRequest {
+	nama: string; // minLength 1
 }
 
 export interface GradeMiniResponse {
@@ -95,4 +99,4 @@ export type {
 	PageableObject,
 	SavedResultLong,
 	SortObject,
-} from "@/types/_shared";
+} from "../_shared";

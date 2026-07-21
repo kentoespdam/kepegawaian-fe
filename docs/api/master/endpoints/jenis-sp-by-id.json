@@ -59,7 +59,7 @@
         "tags": [
           "jenis-sp-controller"
         ],
-        "operationId": "update_6",
+        "operationId": "update_8",
         "parameters": [
           {
             "name": "id",

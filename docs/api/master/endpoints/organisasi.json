@@ -130,7 +130,7 @@
         "tags": [
           "organisasi-controller"
         ],
-        "operationId": "save_3",
+        "operationId": "save_5",
         "requestBody": {
           "content": {
             "application/json": {

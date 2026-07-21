@@ -96,7 +96,7 @@
         "tags": [
           "jenis-pelatihan-controller"
         ],
-        "operationId": "save_7",
+        "operationId": "save_9",
         "requestBody": {
           "content": {
             "application/json": {

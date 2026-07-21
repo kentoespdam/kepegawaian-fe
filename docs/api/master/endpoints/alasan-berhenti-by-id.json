@@ -30,7 +30,7 @@
         "tags": [
           "alasan-berhenti-controller"
         ],
-        "operationId": "findById_16",
+        "operationId": "findById_14",
         "parameters": [
           {
             "name": "id",

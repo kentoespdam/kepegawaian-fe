@@ -96,7 +96,7 @@
         "tags": [
           "jenis-kitas-controller"
         ],
-        "operationId": "save_8",
+        "operationId": "save_10",
         "requestBody": {
           "content": {
             "application/json": {

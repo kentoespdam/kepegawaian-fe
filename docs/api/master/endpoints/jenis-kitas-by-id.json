@@ -59,7 +59,7 @@
         "tags": [
           "jenis-kitas-controller"
         ],
-        "operationId": "update_8",
+        "operationId": "update_10",
         "parameters": [
           {
             "name": "id",

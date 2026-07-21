@@ -59,7 +59,7 @@
         "tags": [
           "jenis-keahlian-controller"
         ],
-        "operationId": "update_9",
+        "operationId": "update_11",
         "parameters": [
           {
             "name": "id",

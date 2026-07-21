@@ -59,7 +59,7 @@
         "tags": [
           "level-controller"
         ],
-        "operationId": "update_4",
+        "operationId": "update_6",
         "parameters": [
           {
             "name": "id",

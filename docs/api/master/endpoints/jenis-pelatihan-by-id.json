@@ -59,7 +59,7 @@
         "tags": [
           "jenis-pelatihan-controller"
         ],
-        "operationId": "update_7",
+        "operationId": "update_9",
         "parameters": [
           {
             "name": "id",

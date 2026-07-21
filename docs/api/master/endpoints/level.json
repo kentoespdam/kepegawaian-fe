@@ -96,7 +96,7 @@
         "tags": [
           "level-controller"
         ],
-        "operationId": "save_4",
+        "operationId": "save_6",
         "requestBody": {
           "content": {
             "application/json": {

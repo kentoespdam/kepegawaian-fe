@@ -104,7 +104,7 @@
         "tags": [
           "jenis-sp-controller"
         ],
-        "operationId": "save_6",
+        "operationId": "save_8",
         "requestBody": {
           "content": {
             "application/json": {

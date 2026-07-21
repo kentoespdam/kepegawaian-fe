@@ -59,7 +59,7 @@
         "tags": [
           "profesi-controller"
         ],
-        "operationId": "update_2",
+        "operationId": "update_4",
         "parameters": [
           {
             "name": "id",

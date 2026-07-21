@@ -59,7 +59,7 @@
         "tags": [
           "jenjang-pendidikan-controller"
         ],
-        "operationId": "update_5",
+        "operationId": "update_7",
         "parameters": [
           {
             "name": "id",

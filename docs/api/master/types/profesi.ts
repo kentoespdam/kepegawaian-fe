@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/master/master.json
- * Endpoint : DELETE /master/profesi/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, PUT /master/profesi/{id}
+ * Endpoint : DELETE /master/profesi/{id}, DELETE /master/profesi/{profesiId}/alat-kerja/{id}, DELETE /master/profesi/{profesiId}/apd/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, POST /master/profesi/{profesiId}/alat-kerja, POST /master/profesi/{profesiId}/apd, PUT /master/profesi/{id}, PUT /master/profesi/{profesiId}/alat-kerja/{id}, PUT /master/profesi/{profesiId}/apd/{id}
  */
 
 import type {
@@ -23,6 +23,14 @@ export interface ProfesiSearchParams extends PageQuery {
   levelId?: number; // int64
   gradeId?: number; // int64
   nama?: string;
+}
+
+export interface ApdPostRequest {
+  nama: string; // minLength 1
+}
+
+export interface AlatKerjaPostRequest {
+  nama: string; // minLength 1
 }
 
 export interface GradeMiniResponse {

@@ -131,7 +131,7 @@
         "tags": [
           "jabatan-controller"
         ],
-        "operationId": "save_10",
+        "operationId": "save_12",
         "requestBody": {
           "content": {
             "application/json": {
