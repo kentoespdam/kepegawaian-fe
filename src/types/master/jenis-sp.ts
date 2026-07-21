@@ -15,10 +15,17 @@ export interface JenisSpSearchParams extends PageQuery {
 	nama?: string;
 }
 
+export interface SanksiRow {
+	id?: number; // int64
+	kode?: string;
+	keterangan?: string;
+}
+
 export interface JenisSpQuery {
 	id?: number; // int64
 	kode?: string;
 	nama?: string;
+	sanksiList?: SanksiRow[];
 }
 
 export type SingleResultJenisSpQuery = Envelope<JenisSpQuery>;
@@ -37,6 +44,7 @@ export interface JenisSpPostRequest {
 
 export interface JenisSpListResponse {
 	id?: number; // int64
+	kode?: string;
 	nama?: string;
 }
 

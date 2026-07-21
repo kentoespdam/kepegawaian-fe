@@ -2,14 +2,12 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
-import type { EnumOption, ListResultEnumOption } from "@/types/_shared";
-import type { JenisSpListResponse, ListResultJenisSpListResponse } from "@/types/master/jenis-sp";
-import type { ListResultStatusPegawaiResponse, StatusPegawaiResponse } from "@/types/master/status-pegawai";
+import type { EnumOption } from "@/types/_shared";
+import type { JenisSpListResponse } from "@/types/master/jenis-sp";
+import type { StatusPegawaiResponse } from "@/types/master/status-pegawai";
 
 /** Enum entities whose GET /list endpoint returns normalized EnumOption[]. */
 export type EnumEntity = "status-pegawai" | "status-kerja" | "jenis-mutasi" | "jenis-sk" | "jenis-kontrak" | "jenis-sp";
-
-type EnumResponse = ListResultEnumOption | ListResultStatusPegawaiResponse | ListResultJenisSpListResponse;
 
 /**
  * Typed hook for fetching master-reference enum entities.
@@ -17,11 +15,14 @@ type EnumResponse = ListResultEnumOption | ListResultStatusPegawaiResponse | Lis
  * - `status-pegawai` → `StatusPegawaiResponse[]` → maps to `EnumOption[]`
  * - `jenis-sp` → `JenisSpListResponse[]` → maps to `EnumOption[]`
  * - 4 others return `EnumOption[]` directly.
+ *
+ * NOTE: `api.listAll` already unwraps the envelope via `handle<T>` (returns `body.data`),
+ * so the raw data is an array, NOT an Envelope object with a `.data` property.
  */
 export function useEnum(entity: EnumEntity) {
-	const query = useQuery<EnumResponse>({
+	const query = useQuery<unknown>({
 		queryKey: [entity, "list"],
-		queryFn: () => api.listAll<EnumResponse>(entity),
+		queryFn: () => api.listAll<unknown>(entity),
 		staleTime: 300_000,
 	});
 
@@ -29,16 +30,16 @@ export function useEnum(entity: EnumEntity) {
 		const raw = query.data;
 		if (!raw) return [];
 		if (entity === "status-pegawai") {
-			return ((raw as ListResultStatusPegawaiResponse).data ?? []).map(
+			return (raw as StatusPegawaiResponse[]).map(
 				(item: StatusPegawaiResponse): EnumOption => ({ id: item.id, nama: item.nama }),
 			);
 		}
 		if (entity === "jenis-sp") {
-			return ((raw as ListResultJenisSpListResponse).data ?? []).map(
+			return (raw as JenisSpListResponse[]).map(
 				(item: JenisSpListResponse): EnumOption => ({ id: String(item.id ?? ""), nama: item.nama }),
 			);
 		}
-		return (raw as ListResultEnumOption).data ?? [];
+		return raw as EnumOption[];
 	})();
 
 	return { options, isLoading: query.isLoading };
