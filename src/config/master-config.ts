@@ -1,6 +1,4 @@
 import { alasanBerhentiConfig } from "@/config/master/alasan-berhenti.config";
-import { alatKerjaConfig } from "@/config/master/alat-kerja.config";
-import { apdConfig } from "@/config/master/apd.config";
 import { golonganConfig } from "@/config/master/golongan.config";
 import { gradeConfig } from "@/config/master/grade.config";
 import { hariLiburConfig } from "@/config/master/hari-libur.config";
@@ -38,8 +36,6 @@ export const MASTER_ENTITY_CONFIGS: Record<string, EntityConfig<never>> = {
 	organisasi: organisasiConfig,
 	jabatan: jabatanConfig,
 	grade: gradeConfig,
-	apd: apdConfig,
-	"alat-kerja": alatKerjaConfig,
 	sanksi: sanksiConfig,
 	profesi: profesiConfig,
 };

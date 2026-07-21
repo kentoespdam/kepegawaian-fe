@@ -70,12 +70,12 @@ body = {nama}      # profesiId di PATH, BUKAN di body
 
 apd & alat-kerja bukan entitas berhalaman lagi. Bersihkan.
 
-- [ ] `gitnexus_impact` upstream pada `apdConfig` **dan** `alatKerjaConfig` (`repo:"kepegawaian-fe"`). **Pastikan tak ada consumer selain `master-config.ts`.** Ada consumer tak terduga → **STOP & flag ke manager.**
-- [ ] Hapus file: `src/config/master/apd.config.ts`, `src/config/master/alat-kerja.config.ts`, `src/types/master/apd.ts`, `src/types/master/alat-kerja.ts` (tipe sudah disatukan ke `profesi.ts`).
-- [ ] `src/config/master-config.ts`: hapus import `alatKerjaConfig` (±L2) & `apdConfig` (±L3); hapus registrasi `apd` (±L41) & `"alat-kerja"` (±L42). Map 17 → 15 entry.
-- [ ] `src/config/master-entity-types.ts`: hapus import apd/alat-kerja (±L16-17) & entry type-map (±L115-121). **Verifikasi nomor baris aktual — jangan percaya buta.**
-- [ ] **JANGAN sentuh** `src/config/entities.ts` (sudah 15 entry, apd/alat-kerja memang tak ada).
-- [ ] `gitnexus_detect_changes` + typecheck + `bunx biome check` (pastikan tak ada import yatim). `bd close`.
+- [x] `gitnexus_impact` upstream pada `apdConfig` **dan** `alatKerjaConfig` (`repo:"kepegawaian-fe"`). **Pastikan tak ada consumer selain `master-config.ts`.** Ada consumer tak terduga → **STOP & flag ke manager.**
+- [x] Hapus file: `src/config/master/apd.config.ts`, `src/config/master/alat-kerja.config.ts`, `src/types/master/apd.ts`, `src/types/master/alat-kerja.ts` (tipe sudah disatukan ke `profesi.ts`).
+- [x] `src/config/master-config.ts`: hapus import `alatKerjaConfig` (±L2) & `apdConfig` (±L3); hapus registrasi `apd` (±L41) & `"alat-kerja"` (±L42). Map 17 → 15 entry.
+- [x] `src/config/master-entity-types.ts`: hapus import apd/alat-kerja (±L16-17) & entry type-map (±L115-121). **Verifikasi nomor baris aktual — jangan percaya buta.**
+- [x] **JANGAN sentuh** `src/config/entities.ts` (sudah 15 entry, apd/alat-kerja memang tak ada).
+- [x] `gitnexus_detect_changes` + typecheck + `bunx biome check` (pastikan tak ada import yatim). `bd close`.
 
 ### 4. `kepegawaian-fe-fki` — Hapus spec OpenAPI flat yang stale
 **← depends on:** — (independen)

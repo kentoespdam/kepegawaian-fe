@@ -13,8 +13,6 @@ import type {
 	AlasanBerhentiPostRequest,
 	AlasanBerhentiQuery,
 } from "@/types/master/alasan-berhenti";
-import type { AlatKerjaPostRequest, AlatKerjaQuery } from "@/types/master/alat-kerja";
-import type { ApdPostRequest, ApdQuery } from "@/types/master/apd";
 import type { GolonganListResponse, GolonganPostRequest, GolonganQuery } from "@/types/master/golongan";
 import type { GradeListResponse, GradePostRequest, GradeQuery } from "@/types/master/grade";
 import type { HariLiburListResponse, HariLiburPostRequest, HariLiburQuery } from "@/types/master/hari-libur";
@@ -112,13 +110,6 @@ export interface MasterEntityTypes {
 	grade: { TItem: GradeQuery; TPage: Page<GradeQuery>; TReq: GradePostRequest; TList: GradeListResponse[] };
 	profesi: { TItem: ProfesiQuery; TPage: Page<ProfesiQuery>; TReq: ProfesiPostRequest; TList: ProfesiListResponse[] };
 	sanksi: { TItem: SanksiQuery; TPage: Page<SanksiQuery>; TReq: SanksiPostRequest; TList: SanksiQuery[] };
-	apd: { TItem: ApdQuery; TPage: Page<ApdQuery>; TReq: ApdPostRequest; TList: ApdQuery[] };
-	"alat-kerja": {
-		TItem: AlatKerjaQuery;
-		TPage: Page<AlatKerjaQuery>;
-		TReq: AlatKerjaPostRequest;
-		TList: AlatKerjaQuery[];
-	};
 }
 
 /** Nama entitas yang valid (union literal). */
