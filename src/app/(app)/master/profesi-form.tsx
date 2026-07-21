@@ -5,10 +5,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { FKCombobox } from "@/components/fk-combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api/client";
 import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./profesi-schema";
@@ -94,59 +94,38 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 					</div>
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">Organisasi</Label>
-						<Select
-							value={String(watch("organisasiId") ?? "")}
-							onValueChange={(v) => setValue("organisasiId", Number(v) || undefined, { shouldValidate: true })}
-						>
-							<SelectTrigger className="h-11 w-full">
-								<SelectValue placeholder="Pilih organisasi" />
-							</SelectTrigger>
-							<SelectContent>
-								{orgOpts.map((o) => (
-									<SelectItem key={o.value} value={o.value}>
-										{o.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+						<FKCombobox
+							id="organisasiId"
+							options={orgOpts}
+							value={watch("organisasiId")}
+							placeholder="Pilih organisasi"
+							invalid={!!rhfErrors.organisasiId}
+							onChange={(v) => setValue("organisasiId", Number(v) || undefined, { shouldValidate: true })}
+						/>
 						{fieldError("organisasiId")}
 					</div>
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">Jabatan</Label>
-						<Select
-							value={String(watch("jabatanId") ?? "")}
-							onValueChange={(v) => setValue("jabatanId", Number(v) || undefined, { shouldValidate: true })}
-						>
-							<SelectTrigger className="h-11 w-full">
-								<SelectValue placeholder="Pilih jabatan" />
-							</SelectTrigger>
-							<SelectContent>
-								{jabOpts.map((o) => (
-									<SelectItem key={o.value} value={o.value}>
-										{o.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+						<FKCombobox
+							id="jabatanId"
+							options={jabOpts}
+							value={watch("jabatanId")}
+							placeholder="Pilih jabatan"
+							invalid={!!rhfErrors.jabatanId}
+							onChange={(v) => setValue("jabatanId", Number(v) || undefined, { shouldValidate: true })}
+						/>
 						{fieldError("jabatanId")}
 					</div>
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">Grade</Label>
-						<Select
-							value={String(watch("gradeId") ?? "")}
-							onValueChange={(v) => setValue("gradeId", Number(v) || undefined, { shouldValidate: true })}
-						>
-							<SelectTrigger className="h-11 w-full">
-								<SelectValue placeholder="Pilih grade" />
-							</SelectTrigger>
-							<SelectContent>
-								{gradeOpts.map((o) => (
-									<SelectItem key={o.value} value={o.value}>
-										{o.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
+						<FKCombobox
+							id="gradeId"
+							options={gradeOpts}
+							value={watch("gradeId")}
+							placeholder="Pilih grade"
+							invalid={!!rhfErrors.gradeId}
+							onChange={(v) => setValue("gradeId", Number(v) || undefined, { shouldValidate: true })}
+						/>
 						{fieldError("gradeId")}
 					</div>
 				</div>

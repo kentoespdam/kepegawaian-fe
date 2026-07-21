@@ -89,15 +89,15 @@ rgz  FKCombobox component (fondasi)
       kirim value benar.
 - [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.
 
-### 3. `kepegawaian-fe-508` — Heavy form profesi & sanksi (TASK, P2)
-**← depends on:** `rgz`
+### 3. `kepegawaian-fe-508` — Heavy form profesi & sanksi (TASK, P2) ✅
+**← depends on:** `rgz` ✅
 
-- [ ] `profesi-form.tsx`: 3 `<Select>` (organisasiId/jabatanId/gradeId) → `<FKCombobox>`. Options
+- [x] `profesi-form.tsx`: 3 `<Select>` (organisasiId/jabatanId/gradeId) → `<FKCombobox>`. Options
       dari `useFkOptions` existing. `onChange` coerce `Number(v)||undefined`.
-- [ ] `sanksi-form.tsx`: `jenisSpId` `<Select>` → `<FKCombobox>` (baca file, konfirmasi field).
-- [ ] Pertahankan grammar heavy-form (labeled sections, sticky footer, h-11) — forms.md §10.4.
-- [ ] **Scope boundary:** cascade **BUKAN** di sini — jabatan tetap tampil semua.
-- [ ] `gitnexus_impact` `ProfesiForm`/`SanksiForm` sebelum edit.
+- [x] `sanksi-form.tsx`: `jenisSpId` `<Select>` → `<FKCombobox>` (baca file, konfirmasi field).
+- [x] Pertahankan grammar heavy-form (labeled sections, sticky footer, h-11) — forms.md §10.4.
+- [x] **Scope boundary:** cascade **BUKAN** di sini — jabatan tetap tampil semua.
+- [x] `gitnexus_impact` `ProfesiForm`/`SanksiForm` sebelum edit.
 - [ ] Verifikasi: edit existing → FK label benar; submit kirim FK id (number) benar.
 - [ ] Quality gate + `gitnexus_detect_changes` + `bd close`.
 

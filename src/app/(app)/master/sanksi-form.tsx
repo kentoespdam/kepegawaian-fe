@@ -4,11 +4,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { FKCombobox } from "@/components/fk-combobox";
 import { MasterSwitch } from "@/components/master-switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useEnum } from "@/hooks/useEnum";
 import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./sanksi-schema";
 
@@ -104,21 +104,14 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
 							<Label className="text-sm font-medium">
 								Jenis SP <span className="text-destructive">*</span>
 							</Label>
-							<Select
-								value={String(watch("jenisSpId") ?? "")}
-								onValueChange={(v) => setValue("jenisSpId", Number(v), { shouldValidate: true })}
-							>
-								<SelectTrigger className="h-11 w-full" aria-invalid={!!rhfErrors.jenisSpId}>
-									<SelectValue placeholder="Pilih jenis SP" />
-								</SelectTrigger>
-								<SelectContent>
-									{jenisSpOpts.map((o) => (
-										<SelectItem key={o.value} value={o.value}>
-											{o.label}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
+							<FKCombobox
+								id="jenisSpId"
+								options={jenisSpOpts}
+								value={watch("jenisSpId")}
+								placeholder="Pilih jenis SP"
+								invalid={!!rhfErrors.jenisSpId}
+								onChange={(v) => setValue("jenisSpId", Number(v), { shouldValidate: true })}
+							/>
 							{fieldError("jenisSpId")}
 						</div>
 					</div>
