@@ -80,10 +80,10 @@ apd & alat-kerja bukan entitas berhalaman lagi. Bersihkan.
 ### 4. `kepegawaian-fe-fki` — Hapus spec OpenAPI flat yang stale
 **← depends on:** — (independen)
 
-- [ ] Verifikasi keempat file memang spec route **FLAT** (`/master/apd`, bukan `/master/profesi/{profesiId}/apd`).
-- [ ] Verifikasi spec **nested** yang benar SUDAH ADA di `docs/api/master/endpoints/`. Belum ada → **STOP & flag.**
-- [ ] Hapus: `docs/api/master/endpoints/{apd,alat-kerja,apd-by-id,alat-kerja-by-id}.json`.
-- [ ] **JANGAN edit file types generated** (regen via `docs/api/master/extract-types.js` bila `master.json` berubah — di luar scope ini). `bd close`.
+- [x] Verifikasi keempat file memang spec route **FLAT** (`/master/apd`, bukan `/master/profesi/{profesiId}/apd`).
+- [x] Verifikasi spec **nested** yang benar SUDAH ADA di `docs/api/master/endpoints/`. Belum ada → **STOP & flag.**
+- [x] Hapus: `docs/api/master/endpoints/{apd,alat-kerja,apd-by-id,alat-kerja-by-id}.json`.
+- [x] **JANGAN edit file types generated** (regen via `docs/api/master/extract-types.js` bila `master.json` berubah — di luar scope ini). `bd close`.
 
 ---
 
