@@ -1,11 +1,19 @@
 import { z } from "zod";
 import { BadgeManager } from "@/components/badge-manager";
 import type { ProfesiQuery } from "@/types/master/profesi";
-import { type EntityConfig, makeConfig } from "./_config-kit";
+import { type EntityConfig, makeConfig, namaWajib } from "./_config-kit";
 
 export const profesiConfig: EntityConfig<ProfesiQuery> = makeConfig<ProfesiQuery>(
-	z.object({}),
-	[],
+	z.object({
+		nama: namaWajib,
+		detail: z.string().min(1, "Detail wajib diisi"),
+		resiko: z.string().min(1, "Resiko wajib diisi"),
+	}),
+	[
+		{ name: "nama", label: "Nama", required: true },
+		{ name: "detail", label: "Detail", type: "textarea", required: true },
+		{ name: "resiko", label: "Resiko", type: "textarea", required: true },
+	],
 	[
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => String(item.nama ?? "") },
 		{ id: "organisasi", header: "Organisasi", cell: (item) => item.organisasi?.nama ?? "-" },

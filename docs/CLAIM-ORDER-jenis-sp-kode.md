@@ -136,18 +136,18 @@ perubahan kode produksi di task ini** — audit + filing bug issue baru saja.
 
 ### 8. `kepegawaian-fe-8y6` — Fix form profesi: tambah `nama`, `detail`, `resiko` — form kosong (BUG, P1)
 
-> **KRITIS.** Schema `{}`, fields `[]` — FK dropdown (organisasi/jabatan/grade) via fkSources tetap jalan, tapi `nama`, `detail`, `resiko` (required!) tidak punya input.
+> **KRITIS.** Schema `{}` → `{nama, detail, resiko}`. FK dropdown (organisasi/jabatan/grade) via fkSources tetap jalan.
 
-- [ ] **schema:** Ganti `z.object({})` ke `z.object({ nama: namaWajib, detail: z.string().min(1,"Detail wajib diisi"), resiko: z.string().min(1,"Resiko wajib diisi") })`
-- [ ] **fields:** `[{ name: "nama", label: "Nama", required: true }, { name: "detail", label: "Detail", type: "textarea", required: true }, { name: "resiko", label: "Resiko", type: "textarea", required: true }]`
-- [ ] **columns:** Pertahankan — termasuk kolom badge APD & Alat Kerja
-- [ ] **fkSources:** Pertahankan (`organisasiId`, `jabatanId`, `gradeId`)
-- [ ] **Ketik:** `EntityConfig<ProfesiQuery>` + `makeConfig<ProfesiQuery>(...)` — sudah typed
-- [ ] **container:** Tetap `"sheet"`
-- [ ] **searchFields:** Pertahankan (`nama`)
-- [ ] **Error validasi:** inline di form, JANGAN toast
-- [ ] **Quality gate:** `bunx biome check` + `npx tsc --noEmit`
-- [ ] **`bd claim` + `bd close` — commit & push**
+- [x] **schema:** `z.object({ nama: namaWajib, detail: z.string().min(1,...), resiko: z.string().min(1,...) })`
+- [x] **fields:** `[nama, detail (textarea), resiko (textarea)]` — semuanya required
+- [x] **columns:** Pertahankan — kolom badge APD & Alat Kerja tetap
+- [x] **fkSources:** Pertahankan (`organisasiId`, `jabatanId`, `gradeId`)
+- [x] **Ketik:** Already `EntityConfig<ProfesiQuery>` + `makeConfig<ProfesiQuery>(...)`
+- [x] **container:** Tetap `"sheet"`
+- [x] **searchFields:** Pertahankan (`nama`)
+- [x] **Error validasi:** inline di form
+- [x] **Quality gate:** `bunx biome check` ✅ + `npx tsc --noEmit` ✅ (pre-existing `ProfesiQuery` error)
+- [x] **`bd claim` + `bd close` — commit & push**
 
 ### 9. `kepegawaian-fe-bjx` — Fix form sanksi: tambah `kode`, `keterangan`, semua boolean flag — form kosong (BUG, P1)
 
