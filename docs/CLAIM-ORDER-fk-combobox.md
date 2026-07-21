@@ -128,13 +128,13 @@ rgz  FKCombobox component (fondasi)
 Dilaporkan user setelah delivery. Satu file (`src/components/fk-combobox.tsx`), 3 diff kecil.
 Jangan sentuh `fk-combobox-filter.tsx`.
 
-- [ ] **B1** trigger terlalu mencolok / terkesan disabled button → override className match
+- [x] **B1** trigger terlalu mencolok / terkesan disabled button → override className match
       `input.tsx` (`bg-transparent border-input`), **bukan** ganti variant Button.
-- [ ] **B2** tak ada close button → teruskan `showCloseButton` ke `<CommandDialog>` (prop sudah ada
+- [x] **B2** tak ada close button → teruskan `showCloseButton` ke `<CommandDialog>` (prop sudah ada
       di `command.tsx`).
-- [ ] **B3** re-click item terpilih malah uncheck → buang ternary toggle-off (`fk-combobox.tsx:87`);
+- [x] **B3** re-click item terpilih malah uncheck → buang ternary toggle-off (`fk-combobox.tsx:87`);
       form single-required, tak boleh jadi kosong.
-- [ ] `gitnexus_impact` sebelum edit + `gitnexus_detect_changes` + quality gate + `bd close`.
+- [x] `gitnexus_impact` sebelum edit + `gitnexus_detect_changes` + quality gate + `bd close`.
 
 Detail root-cause & acceptance: `bd show kepegawaian-fe-w96`. Aturan dikunci di forms.md §10.3b.
 

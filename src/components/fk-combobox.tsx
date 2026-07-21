@@ -12,6 +12,7 @@ import {
 	CommandItem,
 	CommandList,
 } from "@/components/ui/command";
+import { cn } from "@/lib/utils";
 
 interface FKComboboxProps {
 	options: { value: string; label: string; disabled?: boolean }[];
@@ -53,10 +54,12 @@ export function FKCombobox({
 				aria-invalid={invalid}
 				disabled={disabled}
 				id={id}
-				className="h-11 w-full justify-between font-normal"
+				className="h-11 w-full justify-between font-normal bg-transparent border-input"
 				onClick={() => setOpen(true)}
 			>
-				<span className="truncate">{selectedLabel ?? placeholder}</span>
+				<span className={cn("truncate", !selectedLabel && "text-muted-foreground")}>
+					{selectedLabel ?? placeholder}
+				</span>
 				<ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
 			</Button>
 
@@ -65,6 +68,7 @@ export function FKCombobox({
 				onOpenChange={setOpen}
 				title={placeholder}
 				description={searchPlaceholder ?? `Ketik untuk mencari ${placeholder.toLowerCase()}...`}
+				showCloseButton
 			>
 				<Command>
 					<CommandInput placeholder={searchPlaceholder ?? `Cari ${placeholder.toLowerCase()}...`} />
@@ -84,7 +88,7 @@ export function FKCombobox({
 										disabled={opt.disabled}
 										data-checked={String(opt.value) === String(value)}
 										onSelect={() => {
-											onChange(String(opt.value) === String(value) ? undefined : opt.value);
+											onChange(opt.value);
 											setOpen(false);
 										}}
 									>
