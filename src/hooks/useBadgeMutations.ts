@@ -1,25 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { api } from "@/lib/api/client";
 
-export function useBadgeMutations(entity: "apd" | "alat-kerja") {
+export function useBadgeMutations(entity: "apd" | "alat-kerja", profesiId: number) {
 	const qc = useQueryClient();
-	const invalidateAll = () => {
-		qc.invalidateQueries({ queryKey: ["profesi"] });
-		qc.invalidateQueries({ queryKey: [entity] });
-	};
+	const path = `profesi/${profesiId}/${entity}`;
 
 	const create = useMutation({
-		mutationFn: (data: { profesiId: number; nama: string }) => api.create(entity, data),
-		onSuccess: invalidateAll,
+		mutationFn: (data: { nama: string }) => api.create(path, data),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["profesi"] }),
 	});
 	const update = useMutation({
-		mutationFn: ({ id, data }: { id: string; data: { profesiId: number; nama: string } }) =>
-			api.update(entity, id, data),
-		onSuccess: invalidateAll,
+		mutationFn: ({ id, data }: { id: string; data: { nama: string } }) => api.update(path, id, data),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["profesi"] }),
 	});
 	const remove = useMutation({
-		mutationFn: (id: string) => api.remove(entity, id),
-		onSuccess: invalidateAll,
+		mutationFn: (id: string) => api.remove(path, id),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["profesi"] }),
 	});
 
 	return { create, update, remove };

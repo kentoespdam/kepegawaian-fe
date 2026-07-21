@@ -46,24 +46,24 @@ body = {nama}      # profesiId di PATH, BUKAN di body
 
 `src/hooks/useBadgeMutations.ts` masih hit route flat. Sesuaikan ke nested.
 
-- [ ] `gitnexus_impact({target:"useBadgeMutations", direction:"upstream", repo:"kepegawaian-fe"})` — lapor blast radius.
-- [ ] Signature: `useBadgeMutations(entity)` → `useBadgeMutations(entity, profesiId)`.
-- [ ] Composite path via `api.create/update/remove`:
+- [x] `gitnexus_impact({target:"useBadgeMutations", direction:"upstream", repo:"kepegawaian-fe"})` — lapor blast radius.
+- [x] Signature: `useBadgeMutations(entity)` → `useBadgeMutations(entity, profesiId)`.
+- [x] Composite path via `api.create/update/remove`:
   - create: `api.create(\`profesi/${profesiId}/${entity}\`, {nama})`
   - update: `api.update(\`profesi/${profesiId}/${entity}\`, id, {nama})`
   - remove: `api.remove(\`profesi/${profesiId}/${entity}\`, id)`
-- [ ] Body mutation DROP `profesiId` → **`{nama}` saja** (profesiId ada di path). Tipe = `ApdPostRequest`/`AlatKerjaPostRequest` (`{nama:string}`) di `src/types/master/profesi.ts`.
-- [ ] `invalidateAll`: **HAPUS** `qc.invalidateQueries({queryKey:[entity]})`, **SISAKAN HANYA** `qc.invalidateQueries({queryKey:["profesi"]})`.
-- [ ] **JANGAN ubah** `src/proxy.ts` & `src/lib/api/client.ts` — rewrite jalan di kedalaman path apa pun, `entity` diinterpolasi mentah.
-- [ ] `gitnexus_detect_changes({repo:"kepegawaian-fe"})` + typecheck. `bd close`.
+- [x] Body mutation DROP `profesiId` → **`{nama}` saja** (profesiId ada di path). Tipe = `ApdPostRequest`/`AlatKerjaPostRequest` (`{nama:string}`) di `src/types/master/profesi.ts`.
+- [x] `invalidateAll`: **HAPUS** `qc.invalidateQueries({queryKey:[entity]})`, **SISAKAN HANYA** `qc.invalidateQueries({queryKey:["profesi"]})`.
+- [x] **JANGAN ubah** `src/proxy.ts` & `src/lib/api/client.ts` — rewrite jalan di kedalaman path apa pun, `entity` diinterpolasi mentah.
+- [x] `gitnexus_detect_changes({repo:"kepegawaian-fe"})` + typecheck. `bd close`.
 
 ### 2. `kepegawaian-fe-e4y` — `BadgeManager` teruskan `profesiId` ke hook
 **← depends on:** `hd7`
 
-- [ ] `gitnexus_impact` upstream pada `BadgeManager` (`repo:"kepegawaian-fe"`).
-- [ ] `src/components/badge-manager.tsx`: panggil `useBadgeMutations(entity, profesiId)`. Prop `profesiId` sudah disuplai `profesi.config.tsx` (`profesiId={item.id}`) — verifikasi ada di props; tambahkan bila belum.
-- [ ] Payload create/edit tinggal `{nama}`.
-- [ ] `gitnexus_detect_changes` + typecheck. `bd close`.
+- [x] `gitnexus_impact` upstream pada `BadgeManager` (`repo:"kepegawaian-fe"`).
+- [x] `src/components/badge-manager.tsx`: panggil `useBadgeMutations(entity, profesiId)`. Prop `profesiId` sudah disuplai `profesi.config.tsx` (`profesiId={item.id}`) — verifikasi ada di props; tambahkan bila belum.
+- [x] Payload create/edit tinggal `{nama}`.
+- [x] `gitnexus_detect_changes` + typecheck. `bd close`.
 
 ### 3. `kepegawaian-fe-bif` — Hapus artefak standalone apd/alat-kerja
 **← depends on:** — (independen, boleh paralel dgn hd7/e4y)

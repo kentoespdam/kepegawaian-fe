@@ -25,7 +25,7 @@ interface BadgeManagerProps {
 
 export function BadgeManager({ entity, profesiId, items }: BadgeManagerProps) {
 	const roles = useRoles();
-	const { create, update, remove } = useBadgeMutations(entity);
+	const { create, update, remove } = useBadgeMutations(entity, profesiId);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<BadgeItem | null>(null);
 	const [deletingItem, setDeletingItem] = useState<BadgeItem | null>(null);
@@ -39,12 +39,12 @@ export function BadgeManager({ entity, profesiId, items }: BadgeManagerProps) {
 		setError(null);
 		try {
 			if (!editingItem) {
-				await create.mutateAsync({ profesiId, nama: data.nama });
+				await create.mutateAsync({ nama: data.nama });
 				toast.success(`${label} berhasil ditambah`);
 			} else {
 				const itemId = editingItem.id;
 				if (!itemId) throw new Error("ID item tidak valid");
-				await update.mutateAsync({ id: String(itemId), data: { profesiId, nama: data.nama } });
+				await update.mutateAsync({ id: String(itemId), data: { nama: data.nama } });
 				toast.success(`${label} berhasil diubah`);
 			}
 			setDialogOpen(false);
