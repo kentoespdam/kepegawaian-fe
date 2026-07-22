@@ -197,7 +197,7 @@ export function DataTable<T>({
 			<div className="rounded-lg border bg-card shadow-md flex flex-col max-h-[75vh] relative">
 				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
-						<thead className="sticky top-0 z-10 bg-card border-b-2 border-border">
+						<thead className="sticky top-0 z-[5] bg-card border-b-2 border-border">
 							<tr>
 								{columns.map((col) => (
 									<th
