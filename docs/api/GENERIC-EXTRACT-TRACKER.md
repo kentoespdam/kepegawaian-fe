@@ -99,7 +99,7 @@ harus dirawat).
 
 | # | Beads | Judul | Depends on | Status |
 |---|-------|-------|-----------|--------|
-| 1 | `kepegawaian-fe-q4e` | Pindah `extract-types.js` → `docs/api/` + baca semua modul (Q1,Q5) | epic | ⬜ open |
+| 1 | `kepegawaian-fe-q4e` | Pindah `extract-types.js` → `docs/api/` + baca semua modul (Q1,Q5) | epic | ✅ closed |
 | 2 | `kepegawaian-fe-7un` | Config per-folder `module.json` + `domainOf` per-strategi (Q2) | #1 | ⬜ blocked |
 | 3 | `kepegawaian-fe-kpy` | Placement lintas-modul + deteksi konflik fail-keras (Q3,Q4) | #1 | ⬜ blocked |
 | 4 | `kepegawaian-fe-fd3` | Layout output mirror `src/types/` + sync per-file idempoten (Q3,Q6) | #1 | ⬜ blocked |
@@ -135,16 +135,16 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
                           #6 xx9 (generate+sync pegawai)
 ```
 
-### ⬜ #1 — `kepegawaian-fe-q4e` — pindah + scan semua modul  · READY
-- [ ] `bd update kepegawaian-fe-q4e --claim`
-- [ ] File dipindah ke `docs/api/extract-types.js` (bukan `git mv` polos)
-- [ ] Discover semua `docs/api/*/api.json` (folder ber-`api.json` = modul)
-- [ ] `OUTPUT_DIR` → `docs/api/types/`
-- [ ] Seam `plan()`/`render()`/`main()` tetap terjaga & testable
-- [ ] Arg CLI domain-filter DIHAPUS (satu run = baca semua, tulis semua)
-- [ ] Tak ada `INPUT_FILE` single-file / regex `/^\/master\//` hardcode di jalur discovery
-- [ ] `node docs/api/extract-types.js` jalan tanpa arg
-- [ ] `bd close` + push
+### ✅ #1 — `kepegawaian-fe-q4e` — pindah + scan semua modul  · SELESAI
+- [x] `bd update kepegawaian-fe-q4e --claim`
+- [x] File dipindah ke `docs/api/extract-types.js` (bukan `git mv` polos)
+- [x] Discover semua `docs/api/*/api.json` (folder ber-`api.json` = modul) — 6 modul
+- [x] `OUTPUT_DIR` → `docs/api/types/`
+- [x] Seam `plan()`/`render()`/`main()` tetap terjaga & testable — exports sama
+- [x] Arg CLI domain-filter DIHAPUS (satu run = baca semua, tulis semua)
+- [x] Tak ada `INPUT_FILE` single-file / regex `/^\/master\//` hardcode di jalur discovery
+- [x] `node docs/api/extract-types.js` jalan tanpa arg → 48 domain dari 6 modul
+- [x] `bd close` + push
 
 ### ⬜ #2 — `kepegawaian-fe-7un` — `module.json` + `domainOf` per-strategi  · butuh #1
 - [ ] `bd update kepegawaian-fe-7un --claim`
