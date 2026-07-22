@@ -27,9 +27,9 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 |---|----|-------|---|-----------|
 | **W1** | ~~`kepegawaian-fe-0is`~~ | ✅ Generate tipe (blocker semua page) | P1 | — (ready) |
 | **W1** | ~~`kepegawaian-fe-oqp`~~ | ✅ Verifikasi backend filter status batch penggajian | P1 | — (ready) |
-| **W2** | `kepegawaian-fe-djv` | `getPegawaiSession()` opt-in | P1 | 0is |
-| **W2** | `kepegawaian-fe-hnc` | Page Data Pegawai (3 tab) | P2 | 0is |
-| **W2** | `kepegawaian-fe-vfe` | Page Terminasi (2 tab) | P2 | 0is |
+| **W2** | ~~`kepegawaian-fe-djv`~~ | ✅ `getPegawaiSession()` opt-in | P1 | 0is |
+| **W2** | ~~`kepegawaian-fe-hnc`~~ | ✅ Page Data Pegawai (3 tab) | P2 | 0is |
+| **W2** | ~~`kepegawaian-fe-vfe`~~ | ✅ Page Terminasi (2 tab) | P2 | 0is |
 | **W3** | `kepegawaian-fe-tvr` | Page Dashboard (read-only) | P2 | djv + oqp |
 | **W4** | `kepegawaian-fe-9cm` | Wiring sidebar (grup + 3 sub-item) | P2 | tvr + hnc + vfe |
 
@@ -51,22 +51,22 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
   > Guard bisa di query params: `/penggajian/batch/{periode}/periode/{status}/status` sudah ada endpoint berstatus.
   > Alternatif: filter array hasil fetch di FE (ponytail: `rows.filter(r => r.status === 'FINISHED')` cukup).
 
-### `djv` — `getPegawaiSession()`
-- [ ] `src/lib/auth/pegawaiSession.ts`: `cache()`-wrapped, panggil `verifySession()` → `GET /pegawai/{$id}`
-- [ ] Return `{ user, pegawai: PegawaiResponseDetail|null, nipam, nik }`; 404 → `pegawai:null` (bukan throw)
-- [ ] `verifySession.ts` **tak berubah** (tetap murni 1-fetch)
+### ~~`djv` — `getPegawaiSession()`~~ ✅
+- [x] `src/lib/auth/pegawaiSession.ts`: `cache()`-wrapped, panggil `verifySession()` → `GET /pegawai/{id}`
+- [x] Return `{ user, pegawai: PegawaiResponseDetail|null, nipam, nik }`; 404 → `pegawai:null` (bukan throw)
+- [x] `verifySession.ts` **tak berubah** (tetap murni 1-fetch)
 
-### `hnc` — Data Pegawai (3 tab)
-- [ ] Route `(app)/kepegawaian/data`, gate `can(roles,"view","pegawai")`
-- [ ] Tab Aktif `/pegawai?statusKerja=KARYAWAN_AKTIF`
-- [ ] Tab Non-aktif `/pegawai?statusKerja=BERHENTI_OR_KELUAR` (+`DIRUMAHKAN` bila perlu)
-- [ ] Tab Non-pegawai `/profil/biodata?isPegawai=false`
-- [ ] Paging jalan; **tak ada** tab pensiun
+### ~~`hnc` — Data Pegawai (3 tab)~~ ✅
+- [x] Route `(app)/kepegawaian/data`, gate `can(roles,"view","pegawai")`
+- [x] Tab Aktif `/api/proxy/pegawai?statusKerja=KARYAWAN_AKTIF`
+- [x] Tab Non-aktif `/api/proxy/pegawai?statusKerja=BERHENTI_OR_KELUAR` (+ DIRUMAHKAN via query filter)
+- [x] Tab Non-pegawai `/api/proxy/profil/biodata?isPegawai=false`
+- [x] Paging jalan; **tak ada** tab pensiun
 
-### `vfe` — Terminasi (2 tab)
-- [ ] Route `(app)/kepegawaian/terminasi`, gate sama
-- [ ] Tab Calon Pensiun `/kepegawaian/riwayat/terminasi/calon-pensiun?tahunPensiun=YYYY` (dropdown, default tahun berjalan)
-- [ ] Tab Sudah Terminasi `/kepegawaian/riwayat/terminasi?tahunTerminasi=YYYY` + kolom & filter `alasanTerminasi`
+### ~~`vfe` — Terminasi (2 tab)~~ ✅
+- [x] Route `(app)/kepegawaian/terminasi`, gate `can(roles,"view","pegawai")`
+- [x] Tab Calon Pensiun `/api/proxy/kepegawaian/riwayat/terminasi/calon-pensiun?tahunPensiun=YYYY` (dropdown, default tahun berjalan)
+- [x] Tab Sudah Terminasi `/api/proxy/kepegawaian/riwayat/terminasi?tahunTerminasi=YYYY` + kolom & filter `alasanTerminasi`
 
 ### `tvr` — Dashboard (read-only)
 - [ ] Route `(app)/kepegawaian/dashboard`, terbuka semua login; pakai `getPegawaiSession()`
