@@ -9,18 +9,20 @@
  */
 
 import type {
-	Enum2,
-	Enum3,
-	Enum6,
+	Agama,
 	Envelope,
+	JenisKelamin,
+	JenisProfilUpdate,
 	JenjangPendidikanResponse,
 	LampiranRow,
 	PageEnvelope,
 	PageQuery,
 } from "../_shared";
 
-export type Enum17 = "SUAMI" | "ISTRI" | "AYAH" | "IBU" | "ANAK" | "SAUDARA";
-export type Enum18 = "BELUM_SEKOLAH" | "SEKOLAH" | "SELESAI_SEKOLAH";
+/** Hubungan keluarga (SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA). */
+export type HubunganKeluarga = "SUAMI" | "ISTRI" | "AYAH" | "IBU" | "ANAK" | "SAUDARA";
+/** Status pendidikan anggota keluarga (BELUM_SEKOLAH, SEKOLAH, SELESAI_SEKOLAH). */
+export type StatusPendidikanKeluarga = "BELUM_SEKOLAH" | "SEKOLAH" | "SELESAI_SEKOLAH";
 
 export interface KeluargaSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -63,14 +65,14 @@ export interface ProfilKeluargaPutRequest {
 	biodataId: string; // minLength 1
 	nik?: string;
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
-	agama: Enum3;
-	hubunganKeluarga: Enum17;
+	jenisKelamin: JenisKelamin;
+	agama: Agama;
+	hubunganKeluarga: HubunganKeluarga;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	tanggungan: boolean;
 	pendidikanId?: number; // int64
-	statusPendidikan?: Enum18;
+	statusPendidikan?: StatusPendidikanKeluarga;
 	statusKawin: boolean;
 	notes?: string;
 }
@@ -81,20 +83,20 @@ export interface ProfilKeluargaPostRequest {
 	biodataId: string; // minLength 1
 	nik?: string;
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
-	agama: Enum3;
-	hubunganKeluarga: Enum17;
+	jenisKelamin: JenisKelamin;
+	agama: Agama;
+	hubunganKeluarga: HubunganKeluarga;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	tanggungan: boolean;
 	pendidikanId?: number; // int64
-	statusPendidikan?: Enum18;
+	statusPendidikan?: StatusPendidikanKeluarga;
 	statusKawin: boolean;
 	notes?: string;
 }
 
 export interface ProfilKeluargaLampiranPostRequest {
-	ref?: Enum6;
+	ref?: JenisProfilUpdate;
 	refId?: number; // int64, min 1
 	fileName: string; // binary
 	notes?: string;

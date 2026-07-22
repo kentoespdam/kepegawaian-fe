@@ -8,7 +8,14 @@
  * Endpoint : DELETE /profil/kartu-identitas/lampiran/{id}, DELETE /profil/kartu-identitas/{id}, GET /profil/kartu-identitas, GET /profil/kartu-identitas/lampiran/{id}, GET /profil/kartu-identitas/lampiran/{id}/file, GET /profil/kartu-identitas/{id}, GET /profil/kartu-identitas/{id}/lampiran, POST /profil/kartu-identitas, POST /profil/kartu-identitas/lampiran, PUT /profil/kartu-identitas/{id}
  */
 
-import type { Enum6, Envelope, KartuIdentitasQuery, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
+import type {
+	Envelope,
+	JenisProfilUpdate,
+	KartuIdentitasQuery,
+	LampiranRow,
+	PageEnvelope,
+	PageQuery,
+} from "../_shared";
 
 export interface KartuIdentitasSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -54,7 +61,7 @@ export interface KartuIdentitasPostRequest {
 }
 
 export interface KartuIdentitasLampiranPostRequest {
-	ref?: Enum6;
+	ref?: JenisProfilUpdate;
 	refId?: number; // int64, min 1
 	fileName: string; // binary
 	notes?: string;

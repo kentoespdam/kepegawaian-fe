@@ -9,10 +9,10 @@
  */
 
 import type {
-	Enum1,
 	Envelope,
 	GolonganResponse,
 	JabatanMiniResponse,
+	JenisSk,
 	JenisSpMiniResponse,
 	LampiranSkQuery,
 	OrganisasiMiniResponse,
@@ -23,7 +23,8 @@ import type {
 	SanksiMiniResponse,
 } from "../_shared";
 
-export type Enum11 =
+/** Jenis riwayat kepegawaian (PENGANGKATAN_PERTAMA, MUTASI_LOKER). */
+export type JenisRiwayatKepegawaian =
 	| "PENGANGKATAN_PERTAMA"
 	| "MUTASI_LOKER"
 	| "MUTASI_JABATAN"
@@ -31,7 +32,8 @@ export type Enum11 =
 	| "MUTASI_GAJI"
 	| "MUTASI_GAJI_BERKALA"
 	| "TERMINASI";
-export type Enum12 = "PERPANJANGAN" | "PENGANGKATAN" | "TERMINASI";
+/** Jenis aksi kontrak (PERPANJANGAN, PENGANGKATAN, TERMINASI). */
+export type JenisAksiKontrak = "PERPANJANGAN" | "PENGANGKATAN" | "TERMINASI";
 
 export interface RiwayatSearchParams extends PageQuery {
 	tahunPensiun?: number; // int32
@@ -85,7 +87,7 @@ export interface RiwayatSkQuery {
 	nipam?: string;
 	nama?: string;
 	nomorSk?: string;
-	jenisSk?: Enum1;
+	jenisSk?: JenisSk;
 	tanggalSk?: string; // date
 	tmtBerlaku?: string; // date
 	golongan?: GolonganResponse;
@@ -125,7 +127,7 @@ export type SingleResultRiwayatTerminasiQuery = Envelope<RiwayatTerminasiQuery>;
 export interface RiwayatTerminasiPutRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -194,7 +196,7 @@ export type SingleResultRiwayatSkQuery = Envelope<RiwayatSkQuery>;
 export interface RiwayatSkPutRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -213,7 +215,7 @@ export interface RiwayatMutasiQuery {
 	nipam?: string;
 	nama?: string;
 	skMutasi?: RiwayatSkQuery;
-	jenisMutasi?: Enum11;
+	jenisMutasi?: JenisRiwayatKepegawaian;
 	tmtBerlaku?: string; // date
 	tanggalBerakhir?: string; // date
 	golongan?: GolonganResponse;
@@ -238,7 +240,7 @@ export type SingleResultRiwayatMutasiQuery = Envelope<RiwayatMutasiQuery>;
 export interface RiwayatMutasiPutRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -253,7 +255,7 @@ export interface RiwayatMutasiPutRequest {
 	nipam?: string;
 	nama?: string;
 	tanggalBerakhir?: string; // date
-	jenisMutasi: Enum11;
+	jenisMutasi: JenisRiwayatKepegawaian;
 	organisasiId?: number; // int64
 	jabatanId?: number; // int64
 	profesiId?: number; // int64
@@ -265,7 +267,7 @@ export interface RiwayatMutasiPutRequest {
 
 export interface RiwayatKontrakQuery {
 	id?: number; // int64
-	jenisKontrak?: Enum12;
+	jenisKontrak?: JenisAksiKontrak;
 	nipam?: string;
 	nama?: string;
 	nomorKontrak?: string;
@@ -278,7 +280,7 @@ export interface RiwayatKontrakQuery {
 export type SingleResultRiwayatKontrakQuery = Envelope<RiwayatKontrakQuery>;
 
 export interface RiwayatKontrakPutRequest {
-	jenisKontrak?: Enum12;
+	jenisKontrak?: JenisAksiKontrak;
 	pegawaiId: number; // int64, min 1
 	nipam: string; // minLength 1
 	nama: string; // minLength 1
@@ -297,7 +299,7 @@ export type PageResultPageRiwayatTerminasiQuery = PageEnvelope<RiwayatTerminasiQ
 export interface RiwayatTerminasiPostRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -340,7 +342,7 @@ export type PageResultPageRiwayatSkQuery = PageEnvelope<RiwayatSkQuery>;
 export interface RiwayatSkPostRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -357,7 +359,7 @@ export interface RiwayatSkPostRequest {
 export interface RiwayatMutasiPostRequest {
 	pegawaiId: number; // int64, min 1
 	nomorSk: string; // minLength 1
-	jenisSk: Enum1;
+	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
 	golonganId?: number; // int64
@@ -372,7 +374,7 @@ export interface RiwayatMutasiPostRequest {
 	nipam?: string;
 	nama?: string;
 	tanggalBerakhir?: string; // date
-	jenisMutasi: Enum11;
+	jenisMutasi: JenisRiwayatKepegawaian;
 	organisasiId?: number; // int64
 	jabatanId?: number; // int64
 	profesiId?: number; // int64
@@ -383,7 +385,7 @@ export interface RiwayatMutasiPostRequest {
 }
 
 export interface RiwayatKontrakPostRequest {
-	jenisKontrak?: Enum12;
+	jenisKontrak?: JenisAksiKontrak;
 	pegawaiId: number; // int64, min 1
 	nipam: string; // minLength 1
 	nama: string; // minLength 1

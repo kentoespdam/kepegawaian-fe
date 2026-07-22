@@ -10,15 +10,16 @@
 
 import type {
 	CutiJenisMiniResponse,
-	Enum9,
 	Envelope,
 	JabatanMiniResponse,
 	OrganisasiMiniResponse,
 	PageEnvelope,
 	PageQuery,
+	StatusApproval,
 } from "../_shared";
 
-export type Enum14 = "PENGAJUAN_CUTI" | "KLAIM_CUTI";
+/** Jenis klaim cuti (PENGAJUAN_CUTI, KLAIM_CUTI). */
+export type KlaimCuti = "PENGAJUAN_CUTI" | "KLAIM_CUTI";
 
 export interface PengajuanSearchParams extends PageQuery {
 	id?: number; // int64
@@ -42,8 +43,8 @@ export interface CutiPengajuanMiniResponse {
 	organisasi?: OrganisasiMiniResponse;
 	jabatan?: JabatanMiniResponse;
 	tanggalPengajuan?: string; // date
-	jenisPengajuanCuti?: Enum14;
-	approvalCutiStatus?: Enum9;
+	jenisPengajuanCuti?: KlaimCuti;
+	approvalCutiStatus?: StatusApproval;
 	approvalLevel?: number; // int32
 	jenisCuti?: CutiJenisMiniResponse;
 	subJenisCuti?: CutiJenisMiniResponse;
@@ -65,8 +66,8 @@ export interface CutiPengajuanResponse {
 	organisasi?: OrganisasiMiniResponse;
 	jabatan?: JabatanMiniResponse;
 	tanggalPengajuan?: string; // date
-	jenisPengajuanCuti?: Enum14;
-	approvalCutiStatus?: Enum9;
+	jenisPengajuanCuti?: KlaimCuti;
+	approvalCutiStatus?: StatusApproval;
 	approvalLevel?: number; // int32
 	jenisCuti?: CutiJenisMiniResponse;
 	subJenisCuti?: CutiJenisMiniResponse;

@@ -9,16 +9,16 @@
  */
 
 import type {
-	Enum2,
-	Enum3,
-	Enum5,
-	Enum7,
+	Agama,
 	Envelope,
+	GolonganDarah,
+	JenisKelamin,
 	JenjangPendidikanResponse,
 	KartuIdentitasQuery,
 	PageEnvelope,
 	PageQuery,
 	PendidikanQuery,
+	StatusKawin,
 } from "../_shared";
 
 export interface BiodataSearchParams extends PageQuery {
@@ -32,16 +32,16 @@ export interface BiodataSearchParams extends PageQuery {
 export interface BiodataDetail {
 	nik?: string;
 	nama?: string;
-	jenisKelamin?: Enum2;
+	jenisKelamin?: JenisKelamin;
 	tempatLahir?: string;
 	tanggalLahir?: string; // date
 	alamat?: string;
 	telp?: string;
-	agama?: Enum3;
+	agama?: Agama;
 	ibuKandung?: string;
 	pendidikanTerakhirId?: number; // int64
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	fotoProfil?: string;
 	notes?: string;
 	isPegawai?: boolean;
@@ -54,16 +54,16 @@ export type SingleResultBiodataDetail = Envelope<BiodataDetail>;
 export interface BiodataPutRequest {
 	nik: string; // minLength 1
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
+	jenisKelamin: JenisKelamin;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	alamat: string; // minLength 1
 	telp?: string;
-	agama: Enum3;
+	agama: Agama;
 	ibuKandung: string; // minLength 1
 	pendidikanTerakhirId?: number; // int64, min 1
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	notes?: string;
 	isPegawai?: boolean;
 }
@@ -71,9 +71,9 @@ export interface BiodataPutRequest {
 export interface BiodataPatchRequest {
 	nama?: string;
 	alamat?: string;
-	jenisKelamin?: Enum2;
-	statusKawin?: Enum5;
-	agama?: Enum3;
+	jenisKelamin?: JenisKelamin;
+	statusKawin?: StatusKawin;
+	agama?: Agama;
 	tempatLahir?: string;
 	tanggalLahir?: string; // date
 	ibuKandung?: string;
@@ -85,17 +85,17 @@ export type PageResultPageBiodataQuery = PageEnvelope<BiodataQuery>;
 export interface BiodataQuery {
 	nik?: string;
 	nama?: string;
-	jenisKelamin?: Enum2;
+	jenisKelamin?: JenisKelamin;
 	tempatLahir?: string;
 	tanggalLahir?: string; // date
 	alamat?: string;
 	telp?: string;
-	agama?: Enum3;
+	agama?: Agama;
 	ibuKandung?: string;
 	pendidikanTerakhirId?: number; // int64
 	pendidikanTerakhir?: JenjangPendidikanResponse;
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	fotoProfil?: string;
 	notes?: string;
 	isPegawai?: boolean;
@@ -104,16 +104,16 @@ export interface BiodataQuery {
 export interface BiodataPostRequest {
 	nik: string; // minLength 1
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
+	jenisKelamin: JenisKelamin;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	alamat: string; // minLength 1
 	telp?: string;
-	agama: Enum3;
+	agama: Agama;
 	ibuKandung: string; // minLength 1
 	pendidikanTerakhirId?: number; // int64, min 1
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	notes?: string;
 	isPegawai?: boolean;
 }

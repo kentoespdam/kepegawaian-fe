@@ -9,24 +9,24 @@
  */
 
 import type {
-	Enum1,
-	Enum10,
-	Enum2,
-	Enum3,
-	Enum4,
-	Enum5,
-	Enum7,
+	Agama,
 	Envelope,
 	GajiPendapatanNonPajakResponse,
 	GajiProfilResponse,
+	GolonganDarah,
 	GolonganResponse,
 	JabatanMiniResponse,
+	JenisKelamin,
+	JenisSk,
 	JenjangPendidikanResponse,
 	LevelResponse,
 	OrganisasiMiniResponse,
 	PageQuery,
 	PegawaiResponse,
 	ProfesiMiniResponse,
+	StatusBerhenti,
+	StatusKawin,
+	StatusKepegawaian,
 } from "../_shared";
 
 export interface PegawaiSearchParams extends PageQuery {
@@ -65,16 +65,16 @@ export interface KartuIdentitasMiniResponse {
 export interface BiodataResponse {
 	nik?: string;
 	nama?: string;
-	jenisKelamin?: Enum2;
+	jenisKelamin?: JenisKelamin;
 	tempatLahir?: string;
 	tanggalLahir?: string; // date
 	alamat?: string;
 	telp?: string;
-	agama?: Enum3;
+	agama?: Agama;
 	ibuKandung?: string;
 	pendidikanTerakhir?: JenjangPendidikanResponse;
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	fotoProfil?: string;
 	notes?: string;
 	kartuIdentitas?: KartuIdentitasMiniResponse[];
@@ -92,7 +92,7 @@ export interface RiwayatSkResponse {
 	nipam?: string;
 	nama?: string;
 	nomorSk?: string;
-	jenisSk?: Enum1;
+	jenisSk?: JenisSk;
 	tanggalSk?: string; // date
 	tmtBerlaku?: string; // date
 	golongan?: GolonganResponse;
@@ -116,13 +116,13 @@ export interface PegawaiResponseDetail {
 	id?: number; // int64
 	nipam?: string;
 	biodata?: BiodataResponse;
-	statusPegawai?: Enum4;
+	statusPegawai?: StatusKepegawaian;
 	organisasi?: OrganisasiMiniResponse;
 	jabatan?: JabatanMiniResponse;
 	profesi?: ProfesiMiniResponse;
 	golongan?: GolonganResponse;
 	grade?: GradeResponse;
-	statusKerja?: Enum10;
+	statusKerja?: StatusBerhenti;
 	tmtKerja?: string; // date
 	skCapeg?: RiwayatSkResponse;
 	tmtPensiun?: string; // date
@@ -153,21 +153,21 @@ export type SingleResultPegawaiResponseDetail = Envelope<PegawaiResponseDetail>;
 export interface PegawaiPutRequest {
 	nik: string; // minLength 1
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
+	jenisKelamin: JenisKelamin;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	alamat: string; // minLength 1
 	telp?: string;
-	agama: Enum3;
+	agama: Agama;
 	ibuKandung: string; // minLength 1
 	pendidikanTerakhirId?: number; // int64, min 1
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	notes?: string;
 	isPegawai?: boolean;
 	nipam: string; // minLength 1
-	statusPegawai?: Enum4;
-	statusKerja?: Enum10;
+	statusPegawai?: StatusKepegawaian;
+	statusKerja?: StatusBerhenti;
 	jabatanId: number; // int64, min 1
 	organisasiId: number; // int64, min 1
 	profesiId?: number; // int64
@@ -184,21 +184,21 @@ export interface PegawaiPutRequest {
 export interface PegawaiPostRequest {
 	nik: string; // minLength 1
 	nama: string; // minLength 1
-	jenisKelamin: Enum2;
+	jenisKelamin: JenisKelamin;
 	tempatLahir: string; // minLength 1
 	tanggalLahir: string; // date
 	alamat: string; // minLength 1
 	telp?: string;
-	agama: Enum3;
+	agama: Agama;
 	ibuKandung: string; // minLength 1
 	pendidikanTerakhirId?: number; // int64, min 1
-	golonganDarah?: Enum7;
-	statusKawin?: Enum5;
+	golonganDarah?: GolonganDarah;
+	statusKawin?: StatusKawin;
 	notes?: string;
 	isPegawai?: boolean;
 	nipam: string; // minLength 1
-	statusPegawai?: Enum4;
-	statusKerja?: Enum10;
+	statusPegawai?: StatusKepegawaian;
+	statusKerja?: StatusBerhenti;
 	jabatanId: number; // int64, min 1
 	organisasiId: number; // int64, min 1
 	profesiId?: number; // int64
@@ -220,7 +220,7 @@ export interface PegawaiListResponse {
 	id?: number; // int64
 	nipam?: string;
 	nama?: string;
-	statusPegawai?: Enum4;
+	statusPegawai?: StatusKepegawaian;
 	organisasi?: OrganisasiMiniResponse;
 	jabatan?: JabatanMiniResponse;
 	golongan?: GolonganResponse;
@@ -232,9 +232,9 @@ export interface PegawaiPatchProfil {
 	id: number; // int64, min 1
 	nipam: string; // minLength 1
 	nama: string; // minLength 1
-	jenisKelamin?: Enum2;
-	statusKawin?: Enum5;
-	agama?: Enum3;
+	jenisKelamin?: JenisKelamin;
+	statusKawin?: StatusKawin;
+	agama?: Agama;
 	tempatLahir?: string;
 	tanggalLahir?: string; // date
 	alamat?: string;
@@ -251,7 +251,7 @@ export interface PegawaiPatchProfil {
 export interface PegawaiPatchGaji {
 	tmtKerja?: string; // date
 	tmtPensiun?: string; // date
-	statusPegawai: Enum4;
+	statusPegawai: StatusKepegawaian;
 	gajiPokok?: number; // double
 	phdp?: number; // double
 	isAskes?: boolean;

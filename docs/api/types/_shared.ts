@@ -73,7 +73,8 @@ export type HttpStatusText =
 	| "509 BANDWIDTH_LIMIT_EXCEEDED"
 	| "510 NOT_EXTENDED"
 	| "511 NETWORK_AUTHENTICATION_REQUIRED";
-export type Enum1 =
+/** Jenis SK kepegawaian (SK_KENAIKAN_PANGKAT_GOLONGAN, SK_CAPEG, SK_PEGAWAI_TETAP, dll). */
+export type JenisSk =
 	| "SK_KENAIKAN_PANGKAT_GOLONGAN"
 	| "SK_CAPEG"
 	| "SK_PEGAWAI_TETAP"
@@ -83,8 +84,10 @@ export type Enum1 =
 	| "SK_LAINNYA"
 	| "SK_PENYESUAIAN_GAJI"
 	| "SK_KENAIKAN_GAJI_BERKALA";
-export type Enum2 = "LAKI_LAKI" | "PEREMPUAN";
-export type Enum3 =
+/** Jenis kelamin (LAKI_LAKI, PEREMPUAN). */
+export type JenisKelamin = "LAKI_LAKI" | "PEREMPUAN";
+/** Agama (ISLAM, KRISTEN, KATOLIK, HINDU, BUDHA). */
+export type Agama =
 	| "TIDAK_TAHU"
 	| "ISLAM"
 	| "KRISTEN"
@@ -94,9 +97,12 @@ export type Enum3 =
 	| "KONGHUCHU"
 	| "ALIRAN_KEPERCAYAAN"
 	| "LAINNYA";
-export type Enum4 = "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
-export type Enum5 = "BELUM_KAWIN" | "KAWIN" | "JANDA_DUDA" | "MENIKAH_SEKANTOR" | "TIDAK_TAHU";
-export type Enum6 =
+/** Status kepegawaian (KONTRAK, CAPEG, PEGAWAI, CALON_HONORER, HONORER, NON_PEGAWAI). */
+export type StatusKepegawaian = "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
+/** Status perkawinan (BELUM_KAWIN, KAWIN, JANDA_DUDA, MENIKAH_SEKANTOR, TIDAK_TAHU). */
+export type StatusKawin = "BELUM_KAWIN" | "KAWIN" | "JANDA_DUDA" | "MENIKAH_SEKANTOR" | "TIDAK_TAHU";
+/** Jenis profil yang diupdate (PROFIL_KELUARGA, PROFIL_PENDIDIKAN). */
+export type JenisProfilUpdate =
 	| "PROFIL_KELUARGA"
 	| "PROFIL_PENDIDIKAN"
 	| "PROFIL_PELATIHAN"
@@ -104,10 +110,14 @@ export type Enum6 =
 	| "FOTO_PROFIL"
 	| "KARTU_IDENTITAS"
 	| "PROFIL_PENGALAMAN_KERJA";
-export type Enum7 = "A" | "B" | "AB" | "O";
-export type Enum8 = "NONE" | "PEMASUKAN" | "POTONGAN";
-export type Enum9 = "PENDING" | "APPROVED" | "CONFIRMED" | "REJECTED" | "CANCELED" | "RETURNED";
-export type Enum10 =
+/** Golongan darah (A, B, AB, O). */
+export type GolonganDarah = "A" | "B" | "AB" | "O";
+/** Tipe komponen penggajian (NONE, PEMASUKAN, POTONGAN). */
+export type TipeKomponen = "NONE" | "PEMASUKAN" | "POTONGAN";
+/** Status approval umum (PENDING, APPROVED, CONFIRMED, REJECTED, CANCELED, RETURNED). */
+export type StatusApproval = "PENDING" | "APPROVED" | "CONFIRMED" | "REJECTED" | "CANCELED" | "RETURNED";
+/** Status berhenti pegawai (BERHENTI_OR_KELUAR, DIRUMAHKAN). */
+export type StatusBerhenti =
 	| "BERHENTI_OR_KELUAR"
 	| "DIRUMAHKAN"
 	| "KARYAWAN_AKTIF"
@@ -257,13 +267,13 @@ export interface PegawaiResponse {
 	id?: number; // int64
 	nipam?: string;
 	biodata?: Biodata;
-	statusPegawai?: Enum4;
+	statusPegawai?: StatusKepegawaian;
 	organisasi?: Organisasi;
 	jabatan?: Jabatan;
 	profesi?: Profesi;
 	golongan?: Golongan;
 	grade?: Grade;
-	statusKerja?: Enum10;
+	statusKerja?: StatusBerhenti;
 	refSkCapegId?: number; // int64
 	tmtKerja?: string; // date
 	tmtPensiun?: string; // date
@@ -295,7 +305,7 @@ export interface GolonganResponse {
 
 export interface LampiranSkQuery {
 	id?: number; // int64
-	ref?: Enum1;
+	ref?: JenisSk;
 	refId?: number; // int64
 	fileName?: string;
 	mimeType?: string;
@@ -371,7 +381,7 @@ export interface LampiranRow {
 
 export interface LampiranProfilQuery {
 	id?: number; // int64
-	ref?: Enum6;
+	ref?: JenisProfilUpdate;
 	refId?: number; // int64
 	fileName?: string;
 	mimeType?: string;

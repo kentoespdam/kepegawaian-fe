@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pelatihan/lampiran/{id}, DELETE /profil/pelatihan/{id}, GET /profil/pelatihan, GET /profil/pelatihan/lampiran/{id}, GET /profil/pelatihan/lampiran/{id}/file, GET /profil/pelatihan/{id}, GET /profil/pelatihan/{id}/lampiran, POST /profil/pelatihan, POST /profil/pelatihan/lampiran, PUT /profil/pelatihan/{id}
  */
 
-import type { Enum6, Envelope, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenisProfilUpdate, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PelatihanSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -89,7 +89,7 @@ export interface PelatihanPostRequest {
 }
 
 export interface PelatihanLampiranPostRequest {
-	ref?: Enum6;
+	ref?: JenisProfilUpdate;
 	refId?: number; // int64, min 1
 	fileName: string; // binary
 	notes?: string;

@@ -8,9 +8,10 @@
  * Endpoint : DELETE /penggajian/batch/master/proses/{id}, DELETE /penggajian/batch/master/proses/{rootBatchId}/rollback, DELETE /penggajian/batch/{id}, GET /penggajian/batch, GET /penggajian/batch/master, GET /penggajian/batch/master/download/potongan-gaji/{rootBatchId}, GET /penggajian/batch/master/download/table-gaji/{rootBatchId}, GET /penggajian/batch/master/pegawai/{pegawaiId}, GET /penggajian/batch/master/proses, GET /penggajian/batch/master/proses/{batchMasterId}/master, GET /penggajian/batch/master/proses/{masterId}/master_batch_id/{kode}/kode, GET /penggajian/batch/master/{id}, GET /penggajian/batch/{periode}/periode/{status}/status, PATCH /penggajian/batch/master/upload/{rootBatchId}, PATCH /penggajian/batch/{id}/accept, PATCH /penggajian/batch/{id}/reprocess, PATCH /penggajian/batch/{id}/verify1, PATCH /penggajian/batch/{id}/verify2, POST /penggajian/batch, POST /penggajian/batch/master/proses
  */
 
-import type { Enum4, Enum5, Enum8, Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, PageEnvelope, PageQuery, StatusKawin, StatusKepegawaian, TipeKomponen } from "../_shared";
 
-export type Enum15 =
+/** Status batch penggajian (PENDING, PROSES). */
+export type StatusBatch =
 	| "PENDING"
 	| "PROSES"
 	| "WAIT_VERIFICATION_PHASE_1"
@@ -55,7 +56,7 @@ export interface GajiBatchRootLampiranMiniResponse {
 export interface GajiBatchRootResponse {
 	id?: string;
 	periode?: string;
-	status?: Enum15;
+	status?: StatusBatch;
 	totalPegawai?: number; // int32
 	tanggalProses?: string; // date-time
 	diProsesOleh?: string;
@@ -92,7 +93,7 @@ export interface GajiBatchMasterProsesResponse {
 	kode?: string;
 	urut?: number; // int32
 	nama?: string;
-	jenisGaji?: Enum8;
+	jenisGaji?: TipeKomponen;
 	nilai?: number; // double
 	formula?: string;
 	nilaiFormula?: string;
@@ -101,7 +102,7 @@ export interface GajiBatchMasterProsesResponse {
 export interface GajiBatchMasterProsesPostRequest {
 	batchMasterId: number; // int64, min 1
 	nama?: string;
-	jenisGaji?: Enum8;
+	jenisGaji?: TipeKomponen;
 	nilai?: number; // double
 }
 
@@ -109,7 +110,7 @@ export interface GajiBatchRootProcessRequest {
 	id?: string;
 	nama?: string;
 	jabatan?: string;
-	phase?: Enum15;
+	phase?: StatusBatch;
 }
 
 export interface GajiBatchMasterPostRequest {
@@ -123,7 +124,7 @@ export interface GajiBatchMasterResponse {
 	pegawaiId?: number; // int64
 	nipam?: string;
 	nama?: string;
-	statusPegawai?: Enum4;
+	statusPegawai?: StatusKepegawaian;
 	organisasiId?: number; // int64
 	organisasiKode?: string;
 	namaOrganisasi?: string;
@@ -136,7 +137,7 @@ export interface GajiBatchMasterResponse {
 	kodePajak?: string;
 	gajiPokok?: number; // double
 	phdp?: number; // double
-	statusKawin?: Enum5;
+	statusKawin?: StatusKawin;
 	jmlTanggungan?: number; // int32
 	jmlJiwa?: number; // int32
 	penghasilanKotor?: number; // double

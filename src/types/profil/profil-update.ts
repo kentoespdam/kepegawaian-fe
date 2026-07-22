@@ -10,7 +10,8 @@
 
 import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
 
-export type Enum16 = "REJECT" | "PENDING" | "APPROVED";
+/** Status approval update profil (REJECT, PENDING, APPROVED). */
+export type StatusUpdateProfil = "REJECT" | "PENDING" | "APPROVED";
 
 export interface ProfilUpdateSearchParams extends PageQuery {
 	nipam?: string;
@@ -29,7 +30,7 @@ export interface ProfileUpdateQuery {
 	actionType?: "UNKNOWN" | "INSERT" | "UPDATE" | "DELETE";
 	dataDescription?: string;
 	revId?: number; // int64
-	approvalStatus?: Enum16;
+	approvalStatus?: StatusUpdateProfil;
 	approvalDate?: string; // date-time
 	approvalPic?: string;
 }
@@ -43,7 +44,7 @@ export interface ProfilUpdateDetailObject {
 export type SingleResultProfilUpdateDetailObject = Envelope<ProfilUpdateDetailObject>;
 
 export interface ProfilUpdateAcceptRequest {
-	approval: Enum16;
+	approval: StatusUpdateProfil;
 	pegawaiId: number; // int64, min 1
 }
 

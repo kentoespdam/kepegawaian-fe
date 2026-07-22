@@ -162,7 +162,7 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
 - [x] Merge schema identik (deep-equal) antar spec — via `deepEqual()` di merge loop
 - [x] Nama sama + bentuk beda → `throw` + `exit 1` (bukan last-write-wins)
 - [x] 8 schema master∩pegawai muncul **hanya** di `_shared.ts` (terverifikasi)
-- [ ] `bd close` + push
+- [x] `bd close` + push
 
 ### ✅ #4 — `kepegawaian-fe-fd3` — layout mirror `src/types/` + sync idempoten  · SELESAI
 - [x] `bd update kepegawaian-fe-fd3 --claim`

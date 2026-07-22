@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/komponen/{id}, GET /penggajian/komponen/{id}/detail, GET /penggajian/komponen/{profilId}/kode, GET /penggajian/komponen/{profilId}/profil, GET /penggajian/komponen/{profilId}/profil/urut, POST /penggajian/komponen, PUT /penggajian/komponen/{id}
  */
 
-import type { Enum8, Envelope, GajiProfilResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, GajiProfilResponse, PageEnvelope, PageQuery, TipeKomponen } from "../_shared";
 
 export interface KomponenSearchParams extends PageQuery {
 	kode?: string;
@@ -19,7 +19,7 @@ export interface GajiKomponenPutRequest {
 	profilGajiId: number; // int64, min 1
 	kode: string; // minLength 1
 	nama: string; // minLength 1
-	jenisGaji?: Enum8;
+	jenisGaji?: TipeKomponen;
 	nilai?: number; // double
 	isReference?: boolean;
 	formula?: string;
@@ -30,7 +30,7 @@ export interface GajiKomponenPostRequest {
 	profilGajiId: number; // int64, min 1
 	kode: string; // minLength 1
 	nama: string; // minLength 1
-	jenisGaji?: Enum8;
+	jenisGaji?: TipeKomponen;
 	nilai?: number; // double
 	isReference?: boolean;
 	formula?: string;
@@ -44,7 +44,7 @@ export interface GajiKomponenResponse {
 	profilGaji?: GajiProfilResponse;
 	kode?: string;
 	nama?: string;
-	jenisGaji?: Enum8;
+	jenisGaji?: TipeKomponen;
 	nilai?: number; // double
 	isReference?: boolean;
 	formula?: string;

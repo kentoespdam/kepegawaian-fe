@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pengalaman-kerja/lampiran/{id}, DELETE /profil/pengalaman-kerja/{id}, GET /profil/pengalaman-kerja, GET /profil/pengalaman-kerja/lampiran/{id}/detail, GET /profil/pengalaman-kerja/lampiran/{id}/file, GET /profil/pengalaman-kerja/lampiran/{id}/list, GET /profil/pengalaman-kerja/{id}, POST /profil/pengalaman-kerja, POST /profil/pengalaman-kerja/lampiran, PUT /profil/pengalaman-kerja/{id}
  */
 
-import type { Enum6, Envelope, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenisProfilUpdate, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PengalamanKerjaSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -74,7 +74,7 @@ export interface PengalamanKerjaPostRequest {
 }
 
 export interface PengalamanLampiranPostRequest {
-	ref?: Enum6;
+	ref?: JenisProfilUpdate;
 	refId?: number; // int64, min 1
 	fileName: string; // binary
 	notes?: string;

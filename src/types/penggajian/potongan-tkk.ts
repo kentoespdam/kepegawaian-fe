@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/potongan-tkk/{id}, GET /penggajian/potongan-tkk, GET /penggajian/potongan-tkk/{id}, POST /penggajian/potongan-tkk, PUT /penggajian/potongan-tkk/{id}
  */
 
-import type { Enum4, Envelope, GolonganResponse, LevelResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, GolonganResponse, LevelResponse, PageEnvelope, PageQuery, StatusKepegawaian } from "../_shared";
 
 export interface PotonganTkkSearchParams extends PageQuery {
 	statusPegawai?: "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
@@ -18,7 +18,7 @@ export interface PotonganTkkSearchParams extends PageQuery {
 
 export interface GajiPotonganTkkResponse {
 	id?: number; // int64
-	statusPegawai?: Enum4;
+	statusPegawai?: StatusKepegawaian;
 	level?: LevelResponse;
 	golongan?: GolonganResponse;
 	nominal?: number; // double
@@ -27,7 +27,7 @@ export interface GajiPotonganTkkResponse {
 export type SingleResultGajiPotonganTkkResponse = Envelope<GajiPotonganTkkResponse>;
 
 export interface GajiPotonganTkkPutRequest {
-	statusPegawai: Enum4;
+	statusPegawai: StatusKepegawaian;
 	levelId?: number; // int64
 	golonganId?: number; // int64
 	nominal?: number; // double
@@ -36,7 +36,7 @@ export interface GajiPotonganTkkPutRequest {
 export type PageResultPageGajiPotonganTkkResponse = PageEnvelope<GajiPotonganTkkResponse>;
 
 export interface GajiPotonganTkkPostRequest {
-	statusPegawai: Enum4;
+	statusPegawai: StatusKepegawaian;
 	levelId?: number; // int64
 	golonganId?: number; // int64
 	nominal?: number; // double

@@ -10,7 +10,8 @@
 
 import type { Envelope, GolonganResponse, LevelResponse, PageEnvelope, PageQuery } from "../_shared";
 
-export type Enum13 = "JABATAN" | "KINERJA" | "BERAS" | "AIR";
+/** Jenis tunjangan (JABATAN, KINERJA, BERAS, AIR). */
+export type JenisTunjangan = "JABATAN" | "KINERJA" | "BERAS" | "AIR";
 
 export interface TunjanganSearchParams extends PageQuery {
 	levelId?: number; // int64
@@ -19,7 +20,7 @@ export interface TunjanganSearchParams extends PageQuery {
 
 export interface GajiTunjanganResponse {
 	id?: number; // int64
-	jenisTunjangan?: Enum13;
+	jenisTunjangan?: JenisTunjangan;
 	level?: LevelResponse;
 	golongan?: GolonganResponse;
 	nominal?: number; // double
@@ -28,7 +29,7 @@ export interface GajiTunjanganResponse {
 export type SingleResultGajiTunjanganResponse = Envelope<GajiTunjanganResponse>;
 
 export interface GajiTunjanganPutRequest {
-	jenisTunjangan?: Enum13;
+	jenisTunjangan?: JenisTunjangan;
 	levelId?: number; // int64
 	golonganId?: number; // int64
 	nominal?: number; // double
@@ -37,7 +38,7 @@ export interface GajiTunjanganPutRequest {
 export type PageResultPageGajiTunjanganResponse = PageEnvelope<GajiTunjanganResponse>;
 
 export interface GajiTunjanganPostRequest {
-	jenisTunjangan?: Enum13;
+	jenisTunjangan?: JenisTunjangan;
 	levelId?: number; // int64
 	golonganId?: number; // int64
 	nominal?: number; // double
