@@ -41,7 +41,15 @@ const MODULES = [
 
 export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
 
-export function AppShell({ user, children }: { user: AppwriteUser; children: React.ReactNode }) {
+export function AppShell({
+	user,
+	children,
+	defaultOpen = true,
+}: {
+	user: AppwriteUser;
+	children: React.ReactNode;
+	defaultOpen?: boolean;
+}) {
 	const pathname = usePathname();
 	const roles = getRoles(user);
 
@@ -68,7 +76,7 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
 
 	return (
 		<RolesProvider roles={roles}>
-			<SidebarProvider defaultOpen={true}>
+			<SidebarProvider defaultOpen={defaultOpen}>
 				<Sidebar collapsible="icon">
 					<SidebarHeader>
 						<SidebarMenuButton size="lg">
@@ -82,12 +90,12 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
 						{visibleModules.map((mod) => (
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
-									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg">
+									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg" className="group-data-[collapsible=icon]:justify-center">
 										<mod.icon className="size-4" />
 										<span>{mod.label}</span>
-										<ChevronDown
-											className={cn("ml-auto size-4 transition-transform", openGroups.has(mod.id) && "rotate-180")}
-										/>
+									<ChevronDown
+										className={cn("ml-auto size-4 transition-transform group-data-[collapsible=icon]:hidden", openGroups.has(mod.id) && "rotate-180")}
+									/>
 									</SidebarMenuButton>
 									{openGroups.has(mod.id) && (
 										<SidebarMenuSub>
@@ -131,7 +139,7 @@ export function AppShell({ user, children }: { user: AppwriteUser; children: Rea
 						</div>
 						<UserMenu user={user} />
 					</header>
-					<main className="flex-1 overflow-y-auto p-6">{children}</main>
+					<div className="flex-1 overflow-y-auto p-6">{children}</div>
 					<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
 						© Perumdam Tirta Satria 2026
 					</footer>
