@@ -1,25 +1,17 @@
 /**
  * jenjang-pendidikan — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/jenjang-pendidikan/{id}, GET /master/jenjang-pendidikan, GET /master/jenjang-pendidikan/list, GET /master/jenjang-pendidikan/{id}, POST /master/jenjang-pendidikan, POST /master/jenjang-pendidikan/batch, PUT /master/jenjang-pendidikan/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenjangPendidikanResponse, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenjangPendidikanSearchParams extends PageQuery {
 	nama?: string;
-}
-
-export interface JenjangPendidikanResponse {
-	id?: number; // int64
-	nama?: string;
-	shortName?: string;
-	seq?: number; // int32
-	isStatistik?: boolean;
 }
 
 export type SingleResultJenjangPendidikanResponse = Envelope<JenjangPendidikanResponse>;
@@ -42,4 +34,11 @@ export interface JenjangPendidikanPostRequest {
 
 export type ListResultJenjangPendidikanResponse = Envelope<JenjangPendidikanResponse[]>;
 
-export type { DeletedResult, PageableObject, SavedResultListLong, SavedResultLong, SortObject } from "../_shared";
+export type {
+	DeletedResult,
+	JenjangPendidikanResponse,
+	PageableObject,
+	SavedResultListLong,
+	SavedResultLong,
+	SortObject,
+} from "../_shared";

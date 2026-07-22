@@ -1,10 +1,10 @@
 /**
  * rumah-dinas — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/rumah-dinas/{id}, GET /master/rumah-dinas, GET /master/rumah-dinas/list, GET /master/rumah-dinas/{id}, POST /master/rumah-dinas, PUT /master/rumah-dinas/{id}
  */
 

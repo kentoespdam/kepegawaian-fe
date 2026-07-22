@@ -1,10 +1,10 @@
 /**
  * jenis-kontrak — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : GET /master/jenis-kontrak
  */
 

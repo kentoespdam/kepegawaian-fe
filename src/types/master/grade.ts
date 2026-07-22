@@ -1,10 +1,10 @@
 /**
  * grade — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/grade/{id}, GET /master/grade, GET /master/grade/level/{id}, GET /master/grade/list, GET /master/grade/{id}, POST /master/grade, PUT /master/grade/{id}
  */
 

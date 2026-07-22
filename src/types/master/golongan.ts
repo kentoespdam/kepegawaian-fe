@@ -1,10 +1,10 @@
 /**
  * golongan — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/golongan/{id}, GET /master/golongan, GET /master/golongan/list, GET /master/golongan/{id}, POST /master/golongan, PUT /master/golongan/{id}
  */
 

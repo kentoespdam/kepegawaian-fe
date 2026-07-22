@@ -1,10 +1,10 @@
 /**
  * jenis-kitas — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/jenis-kitas/{id}, GET /master/jenis-kitas, GET /master/jenis-kitas/list, GET /master/jenis-kitas/{id}, POST /master/jenis-kitas, PUT /master/jenis-kitas/{id}
  */
 

@@ -1,10 +1,10 @@
 /**
  * alasan-berhenti — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/alasan-berhenti/{id}, GET /master/alasan-berhenti, GET /master/alasan-berhenti/list, GET /master/alasan-berhenti/{id}, POST /master/alasan-berhenti, PUT /master/alasan-berhenti/{id}
  */
 

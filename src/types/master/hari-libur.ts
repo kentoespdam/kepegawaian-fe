@@ -1,10 +1,10 @@
 /**
  * hari-libur — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/hari-libur/{id}, GET /master/hari-libur, GET /master/hari-libur/list, GET /master/hari-libur/{id}, POST /master/hari-libur, PUT /master/hari-libur/{id}
  */
 

@@ -164,15 +164,15 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
 - [x] 8 schema master∩pegawai muncul **hanya** di `_shared.ts` (terverifikasi)
 - [ ] `bd close` + push
 
-### ⬜ #4 — `kepegawaian-fe-fd3` — layout mirror `src/types/` + sync idempoten  · butuh #1
-- [ ] `bd update kepegawaian-fe-fd3 --claim`
-- [ ] Output: `docs/api/types/_shared.ts` + `docs/api/types/{master,pegawai}/*.ts`
-- [ ] Entity file import `../_shared` (selalu di subfolder)
-- [ ] Sync = copy **per-file** (hanya file di plan) + `biome check --write src/types/`
-- [ ] TIDAK ada `rm -rf` folder tujuan
-- [ ] `src/types/master/_computed.ts` tak tersentuh (proteksi implisit)
-- [ ] Run generator 2× → idempoten (git diff kosong run kedua)
-- [ ] `bd close` + push
+### ✅ #4 — `kepegawaian-fe-fd3` — layout mirror `src/types/` + sync idempoten  · SELESAI
+- [x] `bd update kepegawaian-fe-fd3 --claim`
+- [x] Output: `docs/api/types/_shared.ts` + `docs/api/types/{master,pegawai}/*.ts`
+- [x] Entity file import `../_shared` (selalu di subfolder)
+- [x] Sync = copy **per-file** (hanya file di plan) + `biome check --write src/types/`
+- [x] TIDAK ada `rm -rf` folder tujuan
+- [x] `src/types/master/_computed.ts` tak tersentuh (proteksi implisit)
+- [x] Run generator 2× → idempoten (git diff kosong run kedua)
+- [x] `bd close` + push
 
 ### ⬜ #5 — `kepegawaian-fe-y95` — sesuaikan test multi-modul  · butuh #2,#3,#4
 - [ ] `bd update kepegawaian-fe-y95 --claim`

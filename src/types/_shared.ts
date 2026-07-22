@@ -1,10 +1,10 @@
 /**
  * shared — tipe lintas-domain (dipakai >= 2 module)
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  */
 
 /** Semua status HTTP (dipakai oleh field statusText di wrapper response). */
@@ -73,6 +73,49 @@ export type HttpStatusText =
 	| "509 BANDWIDTH_LIMIT_EXCEEDED"
 	| "510 NOT_EXTENDED"
 	| "511 NETWORK_AUTHENTICATION_REQUIRED";
+export type Enum1 =
+	| "SK_KENAIKAN_PANGKAT_GOLONGAN"
+	| "SK_CAPEG"
+	| "SK_PEGAWAI_TETAP"
+	| "SK_JABATAN"
+	| "SK_MUTASI"
+	| "SK_PENSIUN"
+	| "SK_LAINNYA"
+	| "SK_PENYESUAIAN_GAJI"
+	| "SK_KENAIKAN_GAJI_BERKALA";
+export type Enum2 = "LAKI_LAKI" | "PEREMPUAN";
+export type Enum3 =
+	| "TIDAK_TAHU"
+	| "ISLAM"
+	| "KRISTEN"
+	| "KATOLIK"
+	| "HINDU"
+	| "BUDHA"
+	| "KONGHUCHU"
+	| "ALIRAN_KEPERCAYAAN"
+	| "LAINNYA";
+export type Enum4 = "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
+export type Enum5 = "BELUM_KAWIN" | "KAWIN" | "JANDA_DUDA" | "MENIKAH_SEKANTOR" | "TIDAK_TAHU";
+export type Enum6 =
+	| "PROFIL_KELUARGA"
+	| "PROFIL_PENDIDIKAN"
+	| "PROFIL_PELATIHAN"
+	| "PROFIL_KEAHLIAN"
+	| "FOTO_PROFIL"
+	| "KARTU_IDENTITAS"
+	| "PROFIL_PENGALAMAN_KERJA";
+export type Enum7 = "A" | "B" | "AB" | "O";
+export type Enum8 = "NONE" | "PEMASUKAN" | "POTONGAN";
+export type Enum9 = "PENDING" | "APPROVED" | "CONFIRMED" | "REJECTED" | "CANCELED" | "RETURNED";
+export type Enum10 =
+	| "BERHENTI_OR_KELUAR"
+	| "DIRUMAHKAN"
+	| "KARYAWAN_AKTIF"
+	| "LAMARAN_BARU"
+	| "TAHAP_SELEKSI"
+	| "DITERIMA"
+	| "DIREKOMENDASIKAN"
+	| "DITOLAK";
 
 /** Wrapper standar semua response. Union: sukses (data + message) | error (errors). */
 export type Envelope<T> =
@@ -115,25 +158,6 @@ export interface PageQuery {
 	sortDirection?: "asc" | "desc";
 }
 
-export type SavedResultLong = Envelope<number>;
-
-export type DeletedResult = Envelope<string>;
-
-export interface SortObject {
-	empty?: boolean;
-	sorted?: boolean;
-	unsorted?: boolean;
-}
-
-export interface PageableObject {
-	offset?: number; // int64
-	paged?: boolean;
-	pageNumber?: number; // int32
-	pageSize?: number; // int32
-	sort?: SortObject;
-	unpaged?: boolean;
-}
-
 export interface OrganisasiMiniResponse {
 	id?: number; // int64
 	kode?: string;
@@ -153,7 +177,164 @@ export interface JabatanMiniResponse {
 	nama?: string;
 }
 
+export interface CutiJenisMiniResponse {
+	id?: number; // int64
+	nama?: string;
+}
+
+export type SavedResultLong = Envelope<number>;
+
+export type DeletedResult = Envelope<string>;
+
+export interface SortObject {
+	empty?: boolean;
+	sorted?: boolean;
+	unsorted?: boolean;
+}
+
+export interface PageableObject {
+	offset?: number; // int64
+	paged?: boolean;
+	pageNumber?: number; // int32
+	pageSize?: number; // int32
+	sort?: SortObject;
+	unpaged?: boolean;
+}
+
+export type SingleResultInteger = Envelope<number>;
+
+export interface PegawaiMiniResponse {
+	id?: number; // int64
+	nipam?: string;
+	nama?: string;
+	statusPegawai?: string;
+	jabatan?: string;
+	organisasi?: string;
+}
+
+export type SavedResultString = Envelope<string>;
+
+export interface Biodata {
+	nik?: string;
+	nama?: string;
+	gelarDepan?: string;
+	gelarBelakang?: string;
+}
+
+export interface Organisasi {
+	id?: number; // int64
+	nama?: string;
+}
+
+export interface Jabatan {
+	id?: number; // int64
+	nama?: string;
+}
+
+export interface Profesi {
+	id?: number; // int64
+	nama?: string;
+}
+
+export interface Golongan {
+	id?: number; // int64
+	golongan?: string;
+	pangkat?: string;
+}
+
+export interface Grade {
+	id?: number; // int64
+	grade?: number; // int32
+}
+
+export interface KodePajak {
+	id?: number; // int64
+	nama?: string;
+	kode?: string;
+}
+
+export interface PegawaiResponse {
+	id?: number; // int64
+	nipam?: string;
+	biodata?: Biodata;
+	statusPegawai?: Enum4;
+	organisasi?: Organisasi;
+	jabatan?: Jabatan;
+	profesi?: Profesi;
+	golongan?: Golongan;
+	grade?: Grade;
+	statusKerja?: Enum10;
+	refSkCapegId?: number; // int64
+	tmtKerja?: string; // date
+	tmtPensiun?: string; // date
+	refSkPegawaiId?: number; // int64
+	tmtPegawai?: string; // date
+	refSkGolId?: number; // int64
+	tmtGolongan?: string; // date
+	refSkJabatanId?: number; // int64
+	tmtJabatan?: string; // date
+	refSkMutasiId?: number; // int64
+	tmtMutasi?: string; // date
+	gajiPokok?: number; // double
+	phdp?: number; // double
+	jmlTanggungan?: number; // int32
+	kodePajak?: KodePajak;
+	isAskes?: boolean;
+	mkgTahun?: number; // int32
+	mkgBulan?: number; // int32
+	email?: string;
+	absensiId?: number; // int64
+	notes?: string;
+}
+
+export interface GolonganResponse {
+	id?: number; // int64
+	golongan?: string;
+	pangkat?: string;
+}
+
+export interface LampiranSkQuery {
+	id?: number; // int64
+	ref?: Enum1;
+	refId?: number; // int64
+	fileName?: string;
+	mimeType?: string;
+	notes?: string;
+	disetujui?: boolean;
+	disetujuiOleh?: string;
+	tanggalDisetujui?: string; // date-time
+}
+
+export interface SanksiMiniResponse {
+	id?: number; // int64
+	kode?: string;
+	keterangan?: string;
+	jenisSpId?: number; // int64
+}
+
+export interface JenisSpMiniResponse {
+	id?: number; // int64
+	kode?: string;
+	nama?: string;
+	sanksiSp?: SanksiMiniResponse[];
+}
+
+export interface ProfesiMiniResponse {
+	id?: number; // int64
+	nama?: string;
+}
+
+export type PageResultPagePegawaiResponse = PageEnvelope<PegawaiResponse>;
+
 export type SavedResultListLong = Envelope<number[]>;
+
+export interface JenjangPendidikanResponse {
+	id?: number; // int64
+	nama?: string;
+	shortName?: string;
+	seq?: number; // int32
+	isStatistik?: boolean;
+}
 
 export interface EnumOption {
 	id?: string;
@@ -161,3 +342,79 @@ export interface EnumOption {
 }
 
 export type ListResultEnumOption = Envelope<EnumOption[]>;
+
+export interface GajiPendapatanNonPajakResponse {
+	id?: number; // int64
+	kode?: string;
+	nominal?: number; // double
+	notes?: string;
+}
+
+export interface GajiProfilResponse {
+	id?: number; // int64
+	nama?: string;
+}
+
+export interface DasarGajiResponse {
+	id?: number; // int64
+	deskripsi?: string;
+	tanggalMulai?: string; // date
+	tanggalAkhir?: string; // date
+	aktif?: boolean;
+}
+
+export interface LampiranRow {
+	id?: number; // int64
+	fileName?: string;
+	mimeType?: string;
+}
+
+export interface LampiranProfilQuery {
+	id?: number; // int64
+	ref?: Enum6;
+	refId?: number; // int64
+	fileName?: string;
+	mimeType?: string;
+	notes?: string;
+	disetujui?: boolean;
+	disetujuiOleh?: string;
+	tanggalDisetujui?: string; // date-time
+}
+
+export type ListResultLampiranProfilQuery = Envelope<LampiranProfilQuery[]>;
+
+export type SingleResultLampiranProfilQuery = Envelope<LampiranProfilQuery>;
+
+export interface PendidikanQuery {
+	id?: number; // int64
+	biodataId?: string;
+	biodataNik?: string;
+	biodataNama?: string;
+	jenjangId?: number; // int64
+	jenjangPendidikan?: JenjangPendidikanResponse;
+	gelarDepan?: string;
+	gelarBelakang?: string;
+	jurusan?: string;
+	institusi?: string;
+	kota?: string;
+	tahunMasuk?: number; // int32
+	isLulus?: boolean;
+	tahunLulus?: number; // int32
+	gpa?: number; // double
+	isLatest?: boolean;
+	changedStatus?: string; // byte
+}
+
+export interface KartuIdentitasQuery {
+	id?: number; // int64
+	biodataId?: string;
+	biodataNik?: string;
+	biodataNama?: string;
+	jenisKartuId?: number; // int64
+	jenisKartuNama?: string;
+	nomorKartu?: string;
+	tanggalExpired?: string; // date
+	tanggalTerima?: string; // date
+	notes?: string;
+	changedStatus?: string; // byte
+}

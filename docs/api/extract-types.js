@@ -36,6 +36,8 @@ const path = require("node:path");
 const { execSync } = require("node:child_process");
 
 const OUTPUT_DIR = path.join(__dirname, "types");
+// Dari docs/api/extract-types.js → naik 2 level ke root, lalu ke src/types/
+const SRC_TYPES_DIR = path.join(__dirname, "..", "..", "src", "types");
 const SHARED_MODULE = "_shared";
 
 // ── Utility: schema → TypeScript ─────────────────────────────────────
@@ -722,6 +724,40 @@ function render(p) {
 
 // ── Discover modules ─────────────────────────────────────────────────
 
+/**
+ * Sync file-file hasil generate ke src/types/ — copy per-file (hanya file di plan).
+ * Tidak pernah rm -rf folder tujuan; file hand-written (_computed.ts, auth.ts, dll)
+ * aman by construction karena tidak ada di daftar file.
+ */
+function syncToSrc(files) {
+	console.log(`\n📋 Sync ke src/types/ ...`);
+	for (const f of files) {
+		const sourcePath = f.module
+			? path.join(OUTPUT_DIR, f.module, f.filename)
+			: path.join(OUTPUT_DIR, f.filename);
+		const targetDir = f.module ? path.join(SRC_TYPES_DIR, f.module) : SRC_TYPES_DIR;
+		const targetPath = path.join(targetDir, f.filename);
+
+		if (!fs.existsSync(targetDir)) {
+			fs.mkdirSync(targetDir, { recursive: true });
+			const label = f.module ? `${f.module}/` : path.basename(SRC_TYPES_DIR);
+			console.log(`   📁 Membuat folder ${label}`);
+		}
+
+		fs.copyFileSync(sourcePath, targetPath);
+		console.log(`   📄 ${f.module ? f.module + "/" : ""}${f.filename}`);
+	}
+
+	// Format dengan Biome
+	console.log(`\n🎨 Memformat src/types/ dengan Biome ...`);
+	try {
+		execSync(`npx @biomejs/biome format --write "${SRC_TYPES_DIR}"`, { stdio: "inherit" });
+		console.log(`   Format selesai.`);
+	} catch (e) {
+		console.warn(`   ⚠️  Gagal format src/types/ dengan Biome: ${e.message}`);
+	}
+}
+
 /** Temukan semua modul (folder dengan api.json) di direktori script ini. */
 function discoverModules() {
 	const entries = fs.readdirSync(__dirname, { withFileTypes: true });
@@ -820,6 +856,9 @@ function main() {
 			console.warn(`   ⚠️  Gagal format dengan Biome: ${e.message}`);
 		}
 
+		// Sync ke src/types/ (hanya file yang di-plan; file hand-written aman implisit)
+		syncToSrc(files);
+
 		console.log(`\n📊 Ringkasan:`);
 		console.log(`   Total domain      : ${p.stats.totalDomain}`);
 		console.log(`   Total schema      : ${p.stats.totalSchema}`);
@@ -839,6 +878,7 @@ if (require.main === module) {
 	module.exports = {
 		plan,
 		render,
+		syncToSrc,
 		schemaToDeclaration,
 		schemaToTsType,
 		renderEnumUnion,

@@ -1,10 +1,10 @@
 /**
  * level — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/level/{id}, GET /master/level, GET /master/level/list, GET /master/level/{id}, POST /master/level, POST /master/level/batch, PUT /master/level/{id}
  */
 

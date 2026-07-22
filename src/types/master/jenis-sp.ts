@@ -1,10 +1,10 @@
 /**
  * jenis-sp — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/jenis-sp/{id}, GET /master/jenis-sp, GET /master/jenis-sp/list, GET /master/jenis-sp/{id}, POST /master/jenis-sp, PUT /master/jenis-sp/{id}
  */
 

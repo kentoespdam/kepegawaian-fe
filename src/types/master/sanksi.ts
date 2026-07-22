@@ -1,33 +1,19 @@
 /**
  * sanksi — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/sanksi/{id}, GET /master/sanksi, GET /master/sanksi/jenis-sp/{id}, GET /master/sanksi/list, GET /master/sanksi/{id}, PATCH /master/sanksi/{id}/jenis-sp, POST /master/sanksi, PUT /master/sanksi/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenisSpMiniResponse, PageEnvelope, PageQuery } from "../_shared";
 
 export interface SanksiSearchParams extends PageQuery {
 	kode?: string;
 	keterangan?: string;
 	jenisSpId?: number; // int64
-}
-
-export interface SanksiMiniResponse {
-	id?: number; // int64
-	kode?: string;
-	keterangan?: string;
-	jenisSpId?: number; // int64
-}
-
-export interface JenisSpMiniResponse {
-	id?: number; // int64
-	kode?: string;
-	nama?: string;
-	sanksiSp?: SanksiMiniResponse[];
 }
 
 export interface SanksiQuery {
@@ -111,4 +97,11 @@ export interface SanksiJenisSpList {
 
 export type ListResultSanksiJenisSpList = Envelope<SanksiJenisSpList[]>;
 
-export type { DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";
+export type {
+	DeletedResult,
+	JenisSpMiniResponse,
+	PageableObject,
+	SanksiMiniResponse,
+	SavedResultLong,
+	SortObject,
+} from "../_shared";

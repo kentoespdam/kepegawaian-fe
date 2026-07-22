@@ -1,10 +1,10 @@
 /**
  * profesi — response & request types
  *
- * DIGENERATE OTOMATIS oleh docs/api/master/extract-types.js.
+ * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
- * Sumber: docs/api/master/master.json
+ * Sumber: docs/api/{modul}/api.json
  * Endpoint : DELETE /master/profesi/{id}, DELETE /master/profesi/{profesiId}/alat-kerja/{id}, DELETE /master/profesi/{profesiId}/apd/{id}, GET /master/profesi, GET /master/profesi/list, GET /master/profesi/{id}, POST /master/profesi, POST /master/profesi/{profesiId}/alat-kerja, POST /master/profesi/{profesiId}/apd, PUT /master/profesi/{id}, PUT /master/profesi/{profesiId}/alat-kerja/{id}, PUT /master/profesi/{profesiId}/apd/{id}
  */
 
