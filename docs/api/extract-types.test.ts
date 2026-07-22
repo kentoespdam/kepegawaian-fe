@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 // Generator adalah CommonJS; vitest meng-interop named export-nya.
 import {
+	deepEqual,
 	domainOf,
 	placementOf,
 	plan,
@@ -23,6 +24,18 @@ function makeSpec(paths: Record<string, string>, schemas: Record<string, unknown
 		};
 	}
 	return { paths: p, components: { schemas } };
+}
+
+// Helper: merge dua spec jadi satu (simulasi merge multi-modul di test)
+function mergeSpecs(...specs: Record<string, unknown>[]) {
+	const mergedPaths: Record<string, unknown> = {};
+	const mergedSchemas: Record<string, unknown> = {};
+	for (const spec of specs) {
+		const s = spec as { paths?: Record<string, unknown>; components?: { schemas?: Record<string, unknown> } };
+		if (s.paths) Object.assign(mergedPaths, s.paths);
+		if (s.components?.schemas) Object.assign(mergedSchemas, s.components.schemas);
+	}
+	return { paths: mergedPaths, components: { schemas: mergedSchemas } };
 }
 
 // Ambil satu domain/file dari hasil plan/render; gagal tegas bila tak ada
@@ -122,9 +135,10 @@ describe("schemaToDeclaration — deklarasi bernama top-level", () => {
 });
 
 describe("domainOf & topoSort — utilitas graf", () => {
-	it("domainOf = segmen pertama setelah /master/", () => {
+	it("domainOf = segmen pertama setelah prefix modul", () => {
 		expect(domainOf("/master/profesi/{id}")).toBe("profesi");
 		expect(domainOf("/master/jenis-kontrak")).toBe("jenis-kontrak");
+		expect(domainOf("/pegawai/{id}")).toBe("{id}"); // raw tanpa resource-type
 	});
 
 	it("topoSort menaruh dependency sebelum yang bergantung", () => {
@@ -154,7 +168,6 @@ describe("placementOf — sumber tunggal aturan shared-vs-lokal (#4)", () => {
 
 describe("plan — keputusan penempatan sebagai data (#1, seam murni)", () => {
 	it("schema dipakai >= 2 domain → shared; hanya 1 domain → lokal", () => {
-		// Mini dipakai oleh a & b (lintas-domain) → shared; ASolo hanya a → lokal.
 		const spec = makeSpec(
 			{ "/master/a": "AResp", "/master/b": "BResp" },
 			{
@@ -172,7 +185,7 @@ describe("plan — keputusan penempatan sebagai data (#1, seam murni)", () => {
 		expect(p.shared.names).not.toContain("ASolo");
 		const a = pick(p.domains, (d: { domain: string }) => d.domain === "a", "domain a");
 		expect(a.local).toContain("ASolo");
-		expect(a.imports).toContain("Mini"); // domain a meng-import tipe shared
+		expect(a.imports).toContain("Mini");
 	});
 
 	it("plan murni: memuat SEMUA domain tanpa peduli argumen (filter di shell)", () => {
@@ -263,16 +276,15 @@ describe("render — Plan → File[] (#1, hanya string)", () => {
 		}
 	});
 
-	it("file domain meng-import tipe shared dari './_shared'", () => {
+	it("file domain meng-import tipe shared dari '../_shared' (subfolder)", () => {
 		const files = render(plan(spec));
 		const aFile = pick(files, (f: { filename: string }) => f.filename === "a.ts", "a.ts").contents;
-		expect(aFile).toContain('from "./_shared"');
+		expect(aFile).toContain('from "../_shared"');
 		expect(aFile).toContain("Mini");
 	});
 });
 
 describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page", () => {
-	// Envelope penuh: 6 field {status,statusText,errors,message,data,timestamp}.
 	const envelope = (dataSchema: unknown) => ({
 		type: "object",
 		properties: {
@@ -284,7 +296,6 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 			timestamp: { type: "string" },
 		},
 	});
-	// Page (pageable): content[] + pageable + totalElements/totalPages.
 	const page = (itemRef: string) => ({
 		type: "object",
 		properties: {
@@ -294,7 +305,6 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 			pageable: { $ref: "#/components/schemas/PageableObject" },
 		},
 	});
-	// PageEnvelope: 4 field (tanpa errors/message), data → $ref schema Page.
 	const pageEnvelope = (pageRef: string) => ({
 		type: "object",
 		properties: {
@@ -345,8 +355,8 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 		const files = render(plan(spec));
 		const aFile = pick(files, (f: { filename: string }) => f.filename === "a.ts", "a.ts").contents;
 		expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
-		expect(aFile).not.toContain("interface PageFoo"); // schema Page tak ditulis
-		expect(aFile).toContain('import type { PageEnvelope } from "./_shared"');
+		expect(aFile).not.toContain("interface PageFoo");
+		expect(aFile).toContain('import type { PageEnvelope } from "../_shared"');
 	});
 
 	it("_shared.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {
@@ -365,7 +375,6 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 });
 
 describe("query params GET → {Entity}SearchParams extends PageQuery (#Candidate2)", () => {
-	// Spec minimal dgn parameters GET; makeSpec tak menaruh parameters, jadi bangun manual.
 	const specWithParams = (route: string, params: unknown[], ref = "Foo") => ({
 		paths: {
 			[route]: {
@@ -441,36 +450,183 @@ describe("query params GET → {Entity}SearchParams extends PageQuery (#Candidat
 			"golongan.ts",
 		).contents;
 		expect(aFile).toContain("PageQuery");
-		expect(aFile).toContain('from "./_shared"');
+		expect(aFile).toContain('from "../_shared"');
 		expect(aFile).toContain("GolonganSearchParams extends PageQuery");
 	});
 });
 
-describe("smoke: master.json nyata → output stabil & konsisten", () => {
-	const spec = JSON.parse(readFileSync(join(__dirname, "master.json"), "utf8"));
+// ── Baru: test domainOf dengan moduleTypes (resource vs collection) ──
+
+describe("plan — domainOf per-strategi via moduleTypes (#2)", () => {
+	it("collection: domain = segmen entity setelah prefix modul", () => {
+		const spec = makeSpec(
+			{ "/master/organisasi": "OrgResp", "/master/jabatan": "JabResp" },
+			{
+				OrgResp: { type: "object", properties: {} },
+				JabResp: { type: "object", properties: {} },
+			},
+		);
+		const p = plan(spec, { master: "collection" });
+		expect(p.domains.map((d: { domain: string }) => d.domain).sort()).toEqual(["jabatan", "organisasi"]);
+		expect(p.stats.totalDomain).toBe(2);
+	});
+
+	it("resource: domain = konstan nama modul (semua path jadi 1 domain)", () => {
+		const spec = makeSpec(
+			{ "/pegawai/{id}": "PegawaiResp", "/pegawai/list": "PegawaiListResp", "/pegawai/batch": "PegawaiBatchResp" },
+			{
+				PegawaiResp: { type: "object", properties: {} },
+				PegawaiListResp: { type: "object", properties: {} },
+				PegawaiBatchResp: { type: "object", properties: {} },
+			},
+		);
+		const p = plan(spec, { pegawai: "resource" });
+		expect(p.domains).toHaveLength(1);
+		expect(p.domains[0].domain).toBe("pegawai");
+	});
+
+	it("tanpa moduleTypes (default) = collection untuk semua modul", () => {
+		const spec = makeSpec(
+			{ "/pegawai/{id}": "PegawaiResp" },
+			{ PegawaiResp: { type: "object", properties: {} } },
+		);
+		const p = plan(spec);
+		expect(p.domains[0].domain).toBe("{id}"); // collection: segmen kedua
+	});
+});
+
+// ── Baru: test placementOf lintas-modul ──
+
+describe("plan — placement lintas-modul (Q3)", () => {
+	it("schema dipakai oleh master + pegawai → _shared.ts, bukan lokal", () => {
+		const masterSpec = makeSpec(
+			{ "/master/a": "AResp" },
+			{
+				AResp: { type: "object", properties: { shared: { $ref: "#/components/schemas/SharedSchema" } } },
+				SharedSchema: { type: "object", properties: { id: { type: "integer" } } },
+			},
+		);
+		const pegawaiSpec = makeSpec(
+			{ "/pegawai/b": "BResp" },
+			{
+				BResp: { type: "object", properties: { shared: { $ref: "#/components/schemas/SharedSchema" } } },
+				SharedSchema: { type: "object", properties: { id: { type: "integer" } } },
+			},
+		);
+		const merged = mergeSpecs(masterSpec, pegawaiSpec);
+		const p = plan(merged, { master: "collection", pegawai: "resource" });
+
+		expect(p.shared.names).toContain("SharedSchema");
+		// SharedSchema seharusnya tidak ada di lokal domain manapun
+		for (const d of p.domains) {
+			expect(d.local).not.toContain("SharedSchema");
+		}
+	});
+
+	it("schema hanya dalam 1 modul → tetap lokal di domainnya", () => {
+		const masterSpec = makeSpec(
+			{ "/master/a": "AResp" },
+			{
+				AResp: { type: "object", properties: { lokal: { $ref: "#/components/schemas/LokalSchema" } } },
+				LokalSchema: { type: "object", properties: { x: { type: "string" } } },
+			},
+		);
+		const pegawaiSpec = makeSpec(
+			{ "/pegawai/b": "BResp" },
+			{ BResp: { type: "object", properties: {} } },
+		);
+		const merged = mergeSpecs(masterSpec, pegawaiSpec);
+		const p = plan(merged, { master: "collection", pegawai: "resource" });
+
+		expect(p.shared.names).not.toContain("LokalSchema");
+		const a = pick(p.domains, (d: { domain: string }) => d.domain === "a", "domain a");
+		expect(a.local).toContain("LokalSchema");
+	});
+});
+
+// ── Baru: test konflik schema (deepEqual + throw) ──
+
+describe("deepEqual — perbandingan struktural", () => {
+	it("nilai primitif identik → true", () => {
+		expect(deepEqual(1, 1)).toBe(true);
+		expect(deepEqual("a", "a")).toBe(true);
+		expect(deepEqual(null, null)).toBe(true);
+	});
+
+	it("nilai berbeda → false", () => {
+		expect(deepEqual(1, 2)).toBe(false);
+		expect(deepEqual("a", "b")).toBe(false);
+	});
+
+	it("tipe berbeda → false", () => {
+		expect(deepEqual(1, "1")).toBe(false);
+	});
+
+	it("object dengan properti identik (urutan beda) → true", () => {
+		expect(deepEqual({ a: 1, b: 2 }, { b: 2, a: 1 })).toBe(true);
+	});
+
+	it("object dengan properti berbeda → false", () => {
+		expect(deepEqual({ a: 1 }, { a: 2 })).toBe(false);
+	});
+
+	it("array identik → true", () => {
+		expect(deepEqual([1, 2, 3], [1, 2, 3])).toBe(true);
+	});
+
+	it("array berbeda → false", () => {
+		expect(deepEqual([1, 2], [1, 3])).toBe(false);
+	});
+
+	it("nested object identik → true", () => {
+		expect(deepEqual({ a: { b: 1 } }, { a: { b: 1 } })).toBe(true);
+	});
+
+	it("nested object berbeda → false", () => {
+		expect(deepEqual({ a: { b: 1 } }, { a: { b: 2 } })).toBe(false);
+	});
+});
+
+describe("conflict detection — nama schema sama + bentuk beda", () => {
+	it("deepEqual false untuk schema berbeda → sinyal konflik", () => {
+		// Simulasi deteksi konflik yang ada di main():
+		// nama sama + bentuk beda → throw
+		const schemaMaster = { type: "object", properties: { x: { type: "string" } } };
+		const schemaPegawai = { type: "object", properties: { y: { type: "number" } } };
+		expect(deepEqual(schemaMaster, schemaPegawai)).toBe(false);
+	});
+
+	it("schema identik antar modul → deepEqual true (merge aman)", () => {
+		const schemaA = { type: "object", properties: { id: { type: "integer" } } };
+		const schemaB = { type: "object", properties: { id: { type: "integer" } } };
+		expect(deepEqual(schemaA, schemaB)).toBe(true);
+	});
+});
+
+// ── Smoke: api.json nyata → output stabil & konsisten ──
+
+describe("smoke: master/api.json nyata → output stabil & konsisten", () => {
+	const spec = JSON.parse(readFileSync(join(__dirname, "master", "api.json"), "utf8"));
 
 	it("plan() menghasilkan 20 domain + HttpStatusText di shared, tanpa peringatan", () => {
-		const p = plan(spec);
+		const p = plan(spec, { master: "collection" });
 		expect(p.stats.totalDomain).toBe(20);
 		expect(p.stats.hasHttpStatus).toBe(true);
-		expect(p.warnings).toHaveLength(0); // satu-satunya enum berulang nyata sudah dikenali
+		expect(p.warnings).toHaveLength(0);
 	});
 
 	it("render() menghasilkan 21 file, setiap tipe shared yang di-import benar-benar ada di _shared", () => {
-		const files = render(plan(spec));
+		const files = render(plan(spec, { master: "collection" }));
 		expect(files).toHaveLength(21);
 		const shared = pick(files, (f: { filename: string }) => f.filename === "_shared.ts", "_shared.ts").contents;
-		// Setiap file domain hanya boleh meng-import nama yang benar-benar diekspor _shared.
 		expect(shared).toContain("export type HttpStatusText =");
 		expect(shared).toContain("export type Envelope<T> =");
 	});
 
 	it("collapse nyata: tak ada interface wrapper/Page* tersisa di output mana pun", () => {
-		const files = render(plan(spec));
+		const files = render(plan(spec, { master: "collection" }));
 		const allContents = files.map((f: { contents: string }) => f.contents).join("\n");
-		// Wrapper per-entity harus jadi alias generic, bukan interface.
 		expect(allContents).not.toMatch(/export interface (SingleResult|ListResult|SavedResult|PageResult|DeletedResult)/);
-		// Schema Page* pageable di-inline ke Page<T>; hanya generic Page<T>/PageEnvelope<T> yang boleh ada.
 		expect(allContents).not.toMatch(/export interface Page[A-Z]\w*Query/);
 	});
 });

@@ -974,6 +974,7 @@ if (require.main === module) {
 		plan,
 		render,
 		syncToSrc,
+		deepEqual,
 		schemaToDeclaration,
 		schemaToTsType,
 		renderEnumUnion,

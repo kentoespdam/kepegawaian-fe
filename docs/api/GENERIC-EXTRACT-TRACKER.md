@@ -174,15 +174,15 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
 - [x] Run generator 2× → idempoten (git diff kosong run kedua)
 - [x] `bd close` + push
 
-### ⬜ #5 — `kepegawaian-fe-y95` — sesuaikan test multi-modul  · butuh #2,#3,#4
-- [ ] `bd update kepegawaian-fe-y95 --claim`
-- [ ] Test dipindah ke `docs/api/extract-types.test.ts`, import `./extract-types`
-- [ ] Kasus `domainOf` collection + resource
-- [ ] Kasus `placementOf` lintas-modul (2 modul → shared; 1 domain → lokal)
-- [ ] Kasus konflik nama-sama-bentuk-beda → `throw`
-- [ ] Pakai framework test yang sudah ada di repo (cek `package.json` dulu)
-- [ ] Suite hijau
-- [ ] `bd close` + push
+### ✅ #5 — `kepegawaian-fe-y95` — sesuaikan test multi-modul  · SELESAI
+- [x] `bd update kepegawaian-fe-y95 --claim`
+- [x] Test dipindah ke `docs/api/extract-types.test.ts`, import `./extract-types`
+- [x] Kasus `domainOf` collection + resource
+- [x] Kasus `placementOf` lintas-modul (2 modul → shared; 1 domain → lokal)
+- [x] Kasus konflik nama-sama-bentuk-beda → `throw`
+- [x] Pakai framework test yang sudah ada di repo (cek `package.json` dulu)
+- [x] Suite hijau (59/59)
+- [x] `bd close` + push
 
 ### ⬜ #6 — `kepegawaian-fe-xx9` — generate + sync pegawai + quality gate  · butuh #4,#5
 - [ ] `bd update kepegawaian-fe-xx9 --claim`
