@@ -8,7 +8,7 @@
  * Endpoint : GET /profil/profil-update, GET /profil/profil-update/{id}, PUT /profil/profil-update/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 /** Status approval update profil (REJECT, PENDING, APPROVED). */
 export type StatusUpdateProfil = "REJECT" | "PENDING" | "APPROVED";
@@ -47,6 +47,8 @@ export interface ProfilUpdateAcceptRequest {
 	approval: StatusUpdateProfil;
 	pegawaiId: number; // int64, min 1
 }
+
+export type PageProfileUpdateQuery = Page<ProfileUpdateQuery>;
 
 export type PageResultPageProfileUpdateQuery = PageEnvelope<ProfileUpdateQuery>;
 

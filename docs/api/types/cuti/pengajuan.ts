@@ -13,6 +13,7 @@ import type {
 	Envelope,
 	JabatanMiniResponse,
 	OrganisasiMiniResponse,
+	Page,
 	PageEnvelope,
 	PageQuery,
 	StatusApproval,
@@ -102,6 +103,8 @@ export interface CutiPengajuanKlaimPostRequest {
 	listHari: string[];
 }
 
+export type PageCutiPengajuanResponse = Page<CutiPengajuanResponse>;
+
 export type PageResultPageCutiPengajuanResponse = PageEnvelope<CutiPengajuanResponse>;
 
 export interface CutiPengajuanPostRequest {
@@ -115,14 +118,16 @@ export interface CutiPengajuanPostRequest {
 	alasan: string; // minLength 1
 }
 
-export type PageResultPageCutiApprovalChainResponse = PageEnvelope<CutiApprovalChainResponse>;
-
 export interface CutiApprovalChainResponse {
 	id?: number; // int64
 	approvalLevel?: number; // int32
 	readWriteStatus?: "NONE" | "READ" | "WRITE";
 	refCuti?: CutiPengajuanMiniResponse;
 }
+
+export type PageCutiApprovalChainResponse = Page<CutiApprovalChainResponse>;
+
+export type PageResultPageCutiApprovalChainResponse = PageEnvelope<CutiApprovalChainResponse>;
 
 export type {
 	CutiJenisMiniResponse,

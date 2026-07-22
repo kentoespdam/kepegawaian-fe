@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pendidikan/lampiran/{id}, DELETE /profil/pendidikan/{id}, GET /profil/pendidikan, GET /profil/pendidikan/lampiran/{id}/detail, GET /profil/pendidikan/lampiran/{id}/file, GET /profil/pendidikan/lampiran/{id}/list, GET /profil/pendidikan/{id}, POST /profil/pendidikan, POST /profil/pendidikan/lampiran, PUT /profil/pendidikan/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, PageEnvelope, PageQuery, PendidikanQuery } from "../_shared";
+import type { Envelope, JenisProfilUpdate, Page, PageEnvelope, PageQuery, PendidikanQuery } from "../_shared";
 
 export interface PendidikanSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -40,6 +40,8 @@ export interface PendidikanPutRequest {
 	gpa?: number; // double
 	isLatest?: boolean;
 }
+
+export type PagePendidikanQuery = Page<PendidikanQuery>;
 
 export type PageResultPagePendidikanQuery = PageEnvelope<PendidikanQuery>;
 

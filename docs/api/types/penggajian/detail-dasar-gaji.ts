@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/detail-dasar-gaji/{id}, GET /penggajian/detail-dasar-gaji, GET /penggajian/detail-dasar-gaji/list, GET /penggajian/detail-dasar-gaji/{golonganId}/{masaKerja}, GET /penggajian/detail-dasar-gaji/{id}, POST /penggajian/detail-dasar-gaji, POST /penggajian/detail-dasar-gaji/batch, PUT /penggajian/detail-dasar-gaji/{id}
  */
 
-import type { DasarGajiResponse, Envelope, PageQuery } from "../_shared";
+import type { DasarGajiResponse, Envelope, Page, PageQuery } from "../_shared";
 
 export interface DetailDasarGajiSearchParams extends PageQuery {
 	dasarGajiId?: number; // int64
@@ -33,6 +33,8 @@ export interface DetailDasarGajiPutRequest {
 	golonganId?: number; // int64
 	nominal?: number; // double
 }
+
+export type PageDetailDasarGajiResponse = Page<DetailDasarGajiResponse>;
 
 export type SingleResultPageDetailDasarGajiResponse = Envelope<PageDetailDasarGajiResponse>;
 

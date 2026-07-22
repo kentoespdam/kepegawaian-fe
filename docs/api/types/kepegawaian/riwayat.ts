@@ -16,6 +16,7 @@ import type {
 	JenisSpMiniResponse,
 	LampiranSkQuery,
 	OrganisasiMiniResponse,
+	Page,
 	PageEnvelope,
 	PageQuery,
 	PegawaiResponse,
@@ -294,6 +295,8 @@ export interface RiwayatKontrakPutRequest {
 	notes?: string;
 }
 
+export type PageRiwayatTerminasiQuery = Page<RiwayatTerminasiQuery>;
+
 export type PageResultPageRiwayatTerminasiQuery = PageEnvelope<RiwayatTerminasiQuery>;
 
 export interface RiwayatTerminasiPostRequest {
@@ -336,6 +339,8 @@ export interface RiwayatSpPostRequest {
 	fileName?: string; // binary
 	notes?: string;
 }
+
+export type PageRiwayatSkQuery = Page<RiwayatSkQuery>;
 
 export type PageResultPageRiwayatSkQuery = PageEnvelope<RiwayatSkQuery>;
 
@@ -399,11 +404,17 @@ export interface RiwayatKontrakPostRequest {
 	notes?: string;
 }
 
+export type PageRiwayatSpQuery = Page<RiwayatSpQuery>;
+
 export type PageResultPageRiwayatSpQuery = PageEnvelope<RiwayatSpQuery>;
 
 export type ListResultRiwayatSkQuery = Envelope<RiwayatSkQuery[]>;
 
+export type PageRiwayatMutasiQuery = Page<RiwayatMutasiQuery>;
+
 export type PageResultPageRiwayatMutasiQuery = PageEnvelope<RiwayatMutasiQuery>;
+
+export type PageRiwayatKontrakQuery = Page<RiwayatKontrakQuery>;
 
 export type PageResultPageRiwayatKontrakQuery = PageEnvelope<RiwayatKontrakQuery>;
 
@@ -421,6 +432,7 @@ export type {
 	LevelResponse,
 	Organisasi,
 	OrganisasiMiniResponse,
+	PagePegawaiResponse,
 	PageResultPagePegawaiResponse,
 	PageableObject,
 	PegawaiResponse,

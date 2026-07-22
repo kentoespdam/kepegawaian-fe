@@ -356,7 +356,9 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 		const aFile = pick(files, (f: { filename: string }) => f.filename === "a.ts", "a.ts").contents;
 		expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
 		expect(aFile).not.toContain("interface PageFoo");
-		expect(aFile).toContain('import type { PageEnvelope } from "../_shared"');
+		expect(aFile).toContain('PageEnvelope');
+		expect(aFile).toContain('from "../_shared"');
+		expect(aFile).toContain('export type PageResultPageFoo = PageEnvelope<Foo>;');
 	});
 
 	it("_shared.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {

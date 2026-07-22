@@ -8,7 +8,14 @@
  * Endpoint : GET /cuti/approval/{cutiId}, POST /cuti/approval, POST /cuti/approval/klaim
  */
 
-import type { JabatanMiniResponse, PageEnvelope, PageQuery, PegawaiMiniResponse, StatusApproval } from "../_shared";
+import type {
+	JabatanMiniResponse,
+	Page,
+	PageEnvelope,
+	PageQuery,
+	PegawaiMiniResponse,
+	StatusApproval,
+} from "../_shared";
 
 export interface ApprovalSearchParams extends PageQuery {
 	id?: number; // int64
@@ -25,8 +32,6 @@ export interface CutiApprovalPostRequest {
 	notes?: string;
 }
 
-export type PageResultPageCutiApprovalMiniResponse = PageEnvelope<CutiApprovalMiniResponse>;
-
 export interface CutiApprovalMiniResponse {
 	id?: number; // int64
 	approver?: PegawaiMiniResponse;
@@ -36,6 +41,10 @@ export interface CutiApprovalMiniResponse {
 	notes?: string;
 	createdAt?: string; // date-time
 }
+
+export type PageCutiApprovalMiniResponse = Page<CutiApprovalMiniResponse>;
+
+export type PageResultPageCutiApprovalMiniResponse = PageEnvelope<CutiApprovalMiniResponse>;
 
 export type {
 	JabatanMiniResponse,

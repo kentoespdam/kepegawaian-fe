@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pelatihan/lampiran/{id}, DELETE /profil/pelatihan/{id}, GET /profil/pelatihan, GET /profil/pelatihan/lampiran/{id}, GET /profil/pelatihan/lampiran/{id}/file, GET /profil/pelatihan/{id}, GET /profil/pelatihan/{id}/lampiran, POST /profil/pelatihan, POST /profil/pelatihan/lampiran, PUT /profil/pelatihan/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenisProfilUpdate, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PelatihanSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -53,8 +53,6 @@ export interface PelatihanPutRequest {
 	notes?: string;
 }
 
-export type PageResultPagePelatihanQuery = PageEnvelope<PelatihanQuery>;
-
 export interface PelatihanQuery {
 	id?: number; // int64
 	biodataId?: string;
@@ -73,6 +71,10 @@ export interface PelatihanQuery {
 	notes?: string;
 	changedStatus?: string; // byte
 }
+
+export type PagePelatihanQuery = Page<PelatihanQuery>;
+
+export type PageResultPagePelatihanQuery = PageEnvelope<PelatihanQuery>;
 
 export interface PelatihanPostRequest {
 	biodataId: string; // minLength 1

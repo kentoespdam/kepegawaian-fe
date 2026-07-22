@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/profil/{id}, GET /penggajian/profil, GET /penggajian/profil/list, GET /penggajian/profil/{id}, POST /penggajian/profil, PUT /penggajian/profil/{id}
  */
 
-import type { Envelope, GajiProfilResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, GajiProfilResponse, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface ProfilSearchParams extends PageQuery {
 	nama?: string;
@@ -19,6 +19,8 @@ export type SingleResultGajiProfilResponse = Envelope<GajiProfilResponse>;
 export interface GajiProfilPutRequest {
 	nama: string; // minLength 1
 }
+
+export type PageGajiProfilResponse = Page<GajiProfilResponse>;
 
 export type PageResultPageGajiProfilResponse = PageEnvelope<GajiProfilResponse>;
 

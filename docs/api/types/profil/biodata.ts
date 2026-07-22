@@ -15,6 +15,7 @@ import type {
 	JenisKelamin,
 	JenjangPendidikanResponse,
 	KartuIdentitasQuery,
+	Page,
 	PageEnvelope,
 	PageQuery,
 	PendidikanQuery,
@@ -80,8 +81,6 @@ export interface BiodataPatchRequest {
 	telp?: string;
 }
 
-export type PageResultPageBiodataQuery = PageEnvelope<BiodataQuery>;
-
 export interface BiodataQuery {
 	nik?: string;
 	nama?: string;
@@ -100,6 +99,10 @@ export interface BiodataQuery {
 	notes?: string;
 	isPegawai?: boolean;
 }
+
+export type PageBiodataQuery = Page<BiodataQuery>;
+
+export type PageResultPageBiodataQuery = PageEnvelope<BiodataQuery>;
 
 export interface BiodataPostRequest {
 	nik: string; // minLength 1

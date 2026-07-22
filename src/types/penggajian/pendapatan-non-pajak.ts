@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/pendapatan-non-pajak/{id}, GET /penggajian/pendapatan-non-pajak, GET /penggajian/pendapatan-non-pajak/list, GET /penggajian/pendapatan-non-pajak/{id}, POST /penggajian/pendapatan-non-pajak, PUT /penggajian/pendapatan-non-pajak/{id}
  */
 
-import type { Envelope, GajiPendapatanNonPajakResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, GajiPendapatanNonPajakResponse, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PendapatanNonPajakSearchParams extends PageQuery {
 	kode?: string;
@@ -21,6 +21,8 @@ export interface GajiPendapatanNonPajakPutRequest {
 	nominal: number; // double
 	notes?: string;
 }
+
+export type PageGajiPendapatanNonPajakResponse = Page<GajiPendapatanNonPajakResponse>;
 
 export type PageResultPageGajiPendapatanNonPajakResponse = PageEnvelope<GajiPendapatanNonPajakResponse>;
 

@@ -317,6 +317,7 @@ export type {
 	LevelResponse,
 	Organisasi,
 	OrganisasiMiniResponse,
+	PagePegawaiResponse,
 	PageResultPagePegawaiResponse,
 	PageableObject,
 	PegawaiResponse,

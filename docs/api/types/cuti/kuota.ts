@@ -8,7 +8,7 @@
  * Endpoint : DELETE /cuti/kuota/{id}, GET /cuti/kuota, GET /cuti/kuota/template, GET /cuti/kuota/{id}, GET /cuti/kuota/{pegawaiId}/{tahun}/sisa, POST /cuti/kuota, POST /cuti/kuota/import, PUT /cuti/kuota/{id}
  */
 
-import type { Envelope, PageQuery, PegawaiMiniResponse } from "../_shared";
+import type { Envelope, Page, PageQuery, PegawaiMiniResponse } from "../_shared";
 
 export interface KuotaSearchParams extends PageQuery {
 	pegawaiId?: number; // int64
@@ -39,6 +39,8 @@ export interface CutiKuotaPutRequest {
 	sisaKuota?: number; // int32
 	expired: string; // date
 }
+
+export type PageCutiKuotaResponse = Page<CutiKuotaResponse>;
 
 export interface CutiKuotaPegawaiResponse {
 	page?: PageCutiKuotaResponse;

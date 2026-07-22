@@ -13,6 +13,7 @@ import type {
 	JabatanMiniResponse,
 	LevelResponse,
 	OrganisasiMiniResponse,
+	Page,
 	PageEnvelope,
 	PageQuery,
 } from "../_shared";
@@ -72,6 +73,8 @@ export interface ProfesiPutRequest {
 	detail: string; // minLength 1
 	resiko: string; // minLength 1
 }
+
+export type PageProfesiDetail = Page<ProfesiDetail>;
 
 export type PageResultPageProfesiDetail = PageEnvelope<ProfesiDetail>;
 

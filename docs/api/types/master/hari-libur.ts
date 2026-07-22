@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/hari-libur/{id}, GET /master/hari-libur, GET /master/hari-libur/list, GET /master/hari-libur/{id}, POST /master/hari-libur, PUT /master/hari-libur/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface HariLiburSearchParams extends PageQuery {
 	tahun?: number; // int32
@@ -30,6 +30,8 @@ export interface HariLiburPostRequest {
 	jenisLibur: "LIBUR_NASIONAL" | "CUTI_BERSAMA";
 	notes?: string;
 }
+
+export type PageHariLiburQuery = Page<HariLiburQuery>;
 
 export type PageResultPageHariLiburQuery = PageEnvelope<HariLiburQuery>;
 

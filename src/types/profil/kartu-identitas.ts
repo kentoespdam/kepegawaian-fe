@@ -13,6 +13,7 @@ import type {
 	JenisProfilUpdate,
 	KartuIdentitasQuery,
 	LampiranRow,
+	Page,
 	PageEnvelope,
 	PageQuery,
 } from "../_shared";
@@ -48,6 +49,8 @@ export interface KartuIdentitasPutRequest {
 	tanggalTerima?: string; // date
 	notes?: string;
 }
+
+export type PageKartuIdentitasQuery = Page<KartuIdentitasQuery>;
 
 export type PageResultPageKartuIdentitasQuery = PageEnvelope<KartuIdentitasQuery>;
 

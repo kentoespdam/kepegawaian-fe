@@ -13,6 +13,7 @@ import type {
 	JabatanMiniResponse,
 	LevelResponse,
 	OrganisasiMiniResponse,
+	Page,
 	PageEnvelope,
 	PageQuery,
 } from "../_shared";
@@ -43,6 +44,8 @@ export interface JabatanPutRequest {
 	levelId?: number; // int64, min 1
 	nama: string; // minLength 1
 }
+
+export type PageJabatanQuery = Page<JabatanQuery>;
 
 export type PageResultPageJabatanQuery = PageEnvelope<JabatanQuery>;
 

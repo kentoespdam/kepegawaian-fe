@@ -8,7 +8,7 @@
  * Endpoint : DELETE /cuti/jenis/{id}, GET /cuti/jenis, GET /cuti/jenis/list, GET /cuti/jenis/{id}, POST /cuti/jenis, PUT /cuti/jenis/{id}
  */
 
-import type { CutiJenisMiniResponse, Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { CutiJenisMiniResponse, Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenisSearchParams extends PageQuery {
 	parentId?: number; // int64
@@ -31,6 +31,8 @@ export interface CutiJenisPutRequest {
 	maxHari?: number; // int32
 	potongKuotaTahunan?: boolean;
 }
+
+export type PageCutiJenisResponse = Page<CutiJenisResponse>;
 
 export type PageResultPageCutiJenisResponse = PageEnvelope<CutiJenisResponse>;
 

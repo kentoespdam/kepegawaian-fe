@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/alasan-berhenti/{id}, GET /master/alasan-berhenti, GET /master/alasan-berhenti/list, GET /master/alasan-berhenti/{id}, POST /master/alasan-berhenti, PUT /master/alasan-berhenti/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface AlasanBerhentiSearchParams extends PageQuery {
 	nama?: string;
@@ -26,6 +26,8 @@ export interface AlasanBerhentiPostRequest {
 	nama: string; // minLength 1
 	notes?: string;
 }
+
+export type PageAlasanBerhentiQuery = Page<AlasanBerhentiQuery>;
 
 export type PageResultPageAlasanBerhentiQuery = PageEnvelope<AlasanBerhentiQuery>;
 

@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/dasar-gaji/{id}, GET /penggajian/dasar-gaji, GET /penggajian/dasar-gaji/list, GET /penggajian/dasar-gaji/{id}, POST /penggajian/dasar-gaji, POST /penggajian/dasar-gaji/batch, PUT /penggajian/dasar-gaji/{id}
  */
 
-import type { DasarGajiResponse, Envelope, PageQuery } from "../_shared";
+import type { DasarGajiResponse, Envelope, Page, PageQuery } from "../_shared";
 
 export interface DasarGajiSearchParams extends PageQuery {
 	deskripsi?: string;
@@ -25,6 +25,8 @@ export interface DasarGajiPutRequest {
 	tanggalAkhir?: string; // date
 	aktif: boolean;
 }
+
+export type PageDasarGajiResponse = Page<DasarGajiResponse>;
 
 export type SingleResultPageDasarGajiResponse = Envelope<PageDasarGajiResponse>;
 

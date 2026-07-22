@@ -129,10 +129,13 @@ function describeProp(propSchema) {
  */
 function schemaToDeclaration(name, schema, enumAlias, schemas) {
 	// Wrapper collapse (BY-STRUCTURE): ganti interface wrapper per-entity dengan
-	// satu referensi generic dari _shared.ts (Envelope<T>/PageEnvelope<T>). Hanya
-	// aktif saat peta `schemas` tersedia (renderer/plan); pemanggil lama 3-arg
+	// satu referensi generic dari _shared.ts (Envelope<T>/PageEnvelope<T>/Page<T>).
+	// Hanya aktif saat peta `schemas` tersedia (renderer/plan); pemanggil lama 3-arg
 	// (mis. unit test schema polos) tak terpengaruh.
 	if (schemas) {
+		if (isPageSchema(schema)) {
+			return `export type ${name} = Page<${pageInner(schema)}>;\n`;
+		}
 		if (isPageEnvelopeSchema(schema)) {
 			return `export type ${name} = PageEnvelope<${pageEnvelopeInner(schema, schemas)}>;\n`;
 		}
@@ -533,11 +536,10 @@ function plan(spec, moduleTypes = {}) {
 			usage[name].add(domain);
 		}
 	}
-	// Schema Page (pageable) di-inline ke generic Page<T> di _shared.ts → jangan
-	// ditulis sebagai interface tersendiri di mana pun (lokal maupun shared).
-	const isSuppressed = (n) => isPageSchema(schemas[n]);
+	// Schema Page (pageable) ditulis sebagai type alias Page<T> (lihat schemaToDeclaration)
+	// sehingga harus dimasukkan ke shared/lokal seperti schema lainnya.
 	const sharedNames = new Set(
-		Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared" && !isSuppressed(n)),
+		Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared"),
 	);
 
 	// 3. Rencanakan alias enum (dedup enum identik yang berulang) via kebijakan
@@ -553,7 +555,7 @@ function plan(spec, moduleTypes = {}) {
 		.map((domain) => {
 			const all = [...domainSchemas[domain]];
 			const local = topoSort(
-				all.filter((n) => !sharedNames.has(n) && !isSuppressed(n)),
+				all.filter((n) => !sharedNames.has(n)),
 				schemas,
 			);
 			const sharedUsed = all.filter((n) => sharedNames.has(n));

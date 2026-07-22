@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-keahlian/{id}, GET /master/jenis-keahlian, GET /master/jenis-keahlian/list, GET /master/jenis-keahlian/{id}, POST /master/jenis-keahlian, PUT /master/jenis-keahlian/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenisKeahlianSearchParams extends PageQuery {
 	nama?: string;
@@ -24,6 +24,8 @@ export type SingleResultJenisKeahlianQuery = Envelope<JenisKeahlianQuery>;
 export interface JenisKeahlianPostRequest {
 	nama: string; // minLength 1
 }
+
+export type PageJenisKeahlianQuery = Page<JenisKeahlianQuery>;
 
 export type PageResultPageJenisKeahlianQuery = PageEnvelope<JenisKeahlianQuery>;
 

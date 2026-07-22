@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-kitas/{id}, GET /master/jenis-kitas, GET /master/jenis-kitas/list, GET /master/jenis-kitas/{id}, POST /master/jenis-kitas, PUT /master/jenis-kitas/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenisKitasSearchParams extends PageQuery {
 	nama?: string;
@@ -24,6 +24,8 @@ export type SingleResultJenisKitasQuery = Envelope<JenisKitasQuery>;
 export interface JenisKitasPostRequest {
 	nama: string; // minLength 1
 }
+
+export type PageJenisKitasQuery = Page<JenisKitasQuery>;
 
 export type PageResultPageJenisKitasQuery = PageEnvelope<JenisKitasQuery>;
 

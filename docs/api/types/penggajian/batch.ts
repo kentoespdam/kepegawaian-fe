@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/batch/master/proses/{id}, DELETE /penggajian/batch/master/proses/{rootBatchId}/rollback, DELETE /penggajian/batch/{id}, GET /penggajian/batch, GET /penggajian/batch/master, GET /penggajian/batch/master/download/potongan-gaji/{rootBatchId}, GET /penggajian/batch/master/download/table-gaji/{rootBatchId}, GET /penggajian/batch/master/pegawai/{pegawaiId}, GET /penggajian/batch/master/proses, GET /penggajian/batch/master/proses/{batchMasterId}/master, GET /penggajian/batch/master/proses/{masterId}/master_batch_id/{kode}/kode, GET /penggajian/batch/master/{id}, GET /penggajian/batch/{periode}/periode/{status}/status, PATCH /penggajian/batch/master/upload/{rootBatchId}, PATCH /penggajian/batch/{id}/accept, PATCH /penggajian/batch/{id}/reprocess, PATCH /penggajian/batch/{id}/verify1, PATCH /penggajian/batch/{id}/verify2, POST /penggajian/batch, POST /penggajian/batch/master/proses
  */
 
-import type { Envelope, PageEnvelope, PageQuery, StatusKawin, StatusKepegawaian, TipeKomponen } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery, StatusKawin, StatusKepegawaian, TipeKomponen } from "../_shared";
 
 /** Status batch penggajian (PENDING, PROSES). */
 export type StatusBatch =
@@ -85,8 +85,6 @@ export interface GajiBatchRootPostRequest {
 	fileName?: string; // binary
 }
 
-export type PageResultPageGajiBatchMasterProsesResponse = PageEnvelope<GajiBatchMasterProsesResponse>;
-
 export interface GajiBatchMasterProsesResponse {
 	id?: number; // int64
 	gajiBatchMasterId?: number; // int64
@@ -98,6 +96,10 @@ export interface GajiBatchMasterProsesResponse {
 	formula?: string;
 	nilaiFormula?: string;
 }
+
+export type PageGajiBatchMasterProsesResponse = Page<GajiBatchMasterProsesResponse>;
+
+export type PageResultPageGajiBatchMasterProsesResponse = PageEnvelope<GajiBatchMasterProsesResponse>;
 
 export interface GajiBatchMasterProsesPostRequest {
 	batchMasterId: number; // int64, min 1
@@ -161,6 +163,8 @@ export type SingleResultGajiBatchMasterResponse = Envelope<GajiBatchMasterRespon
 export type SingleResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse>;
 
 export type ListResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse[]>;
+
+export type PageGajiBatchMasterResponse = Page<GajiBatchMasterResponse>;
 
 export type PageResultPageGajiBatchMasterResponse = PageEnvelope<GajiBatchMasterResponse>;
 

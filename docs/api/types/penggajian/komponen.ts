@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/komponen/{id}, GET /penggajian/komponen/{id}/detail, GET /penggajian/komponen/{profilId}/kode, GET /penggajian/komponen/{profilId}/profil, GET /penggajian/komponen/{profilId}/profil/urut, POST /penggajian/komponen, PUT /penggajian/komponen/{id}
  */
 
-import type { Envelope, GajiProfilResponse, PageEnvelope, PageQuery, TipeKomponen } from "../_shared";
+import type { Envelope, GajiProfilResponse, Page, PageEnvelope, PageQuery, TipeKomponen } from "../_shared";
 
 export interface KomponenSearchParams extends PageQuery {
 	kode?: string;
@@ -36,8 +36,6 @@ export interface GajiKomponenPostRequest {
 	formula?: string;
 }
 
-export type PageResultPageGajiKomponenResponse = PageEnvelope<GajiKomponenResponse>;
-
 export interface GajiKomponenResponse {
 	id?: number; // int64
 	urut?: number; // int32
@@ -49,6 +47,10 @@ export interface GajiKomponenResponse {
 	isReference?: boolean;
 	formula?: string;
 }
+
+export type PageGajiKomponenResponse = Page<GajiKomponenResponse>;
+
+export type PageResultPageGajiKomponenResponse = PageEnvelope<GajiKomponenResponse>;
 
 export interface GajiKomponenMiniProjection {
 	nama?: string;

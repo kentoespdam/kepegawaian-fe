@@ -15,6 +15,7 @@ import type {
 	JenisProfilUpdate,
 	JenjangPendidikanResponse,
 	LampiranRow,
+	Page,
 	PageEnvelope,
 	PageQuery,
 } from "../_shared";
@@ -76,6 +77,8 @@ export interface ProfilKeluargaPutRequest {
 	statusKawin: boolean;
 	notes?: string;
 }
+
+export type PageProfilKeluargaQuery = Page<ProfilKeluargaQuery>;
 
 export type PageResultPageProfilKeluargaQuery = PageEnvelope<ProfilKeluargaQuery>;
 

@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/tunjangan/{jenis}/{id}, GET /penggajian/tunjangan, GET /penggajian/tunjangan/{jenis}, GET /penggajian/tunjangan/{jenis}/{id}, POST /penggajian/tunjangan/{jenis}, PUT /penggajian/tunjangan/{jenis}/{id}
  */
 
-import type { Envelope, GolonganResponse, LevelResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, GolonganResponse, LevelResponse, Page, PageEnvelope, PageQuery } from "../_shared";
 
 /** Jenis tunjangan (JABATAN, KINERJA, BERAS, AIR). */
 export type JenisTunjangan = "JABATAN" | "KINERJA" | "BERAS" | "AIR";
@@ -34,6 +34,8 @@ export interface GajiTunjanganPutRequest {
 	golonganId?: number; // int64
 	nominal?: number; // double
 }
+
+export type PageGajiTunjanganResponse = Page<GajiTunjanganResponse>;
 
 export type PageResultPageGajiTunjanganResponse = PageEnvelope<GajiTunjanganResponse>;
 

@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenis-sp/{id}, GET /master/jenis-sp, GET /master/jenis-sp/list, GET /master/jenis-sp/{id}, POST /master/jenis-sp, PUT /master/jenis-sp/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenisSpSearchParams extends PageQuery {
 	kode?: string;
@@ -34,6 +34,8 @@ export interface JenisSpPutRequest {
 	kode?: string;
 	nama?: string;
 }
+
+export type PageJenisSpQuery = Page<JenisSpQuery>;
 
 export type PageResultPageJenisSpQuery = PageEnvelope<JenisSpQuery>;
 

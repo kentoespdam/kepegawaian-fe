@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/parameter-setting/{id}, GET /penggajian/parameter-setting, GET /penggajian/parameter-setting/list, GET /penggajian/parameter-setting/{id}, POST /penggajian/parameter-setting, PUT /penggajian/parameter-setting/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface ParameterSettingSearchParams extends PageQuery {
 	kode?: string;
@@ -26,6 +26,8 @@ export interface GajiParameterSettingPutRequest {
 	kode: string; // minLength 1
 	nominal: number; // double
 }
+
+export type PageGajiParameterSettingResponse = Page<GajiParameterSettingResponse>;
 
 export type PageResultPageGajiParameterSettingResponse = PageEnvelope<GajiParameterSettingResponse>;
 

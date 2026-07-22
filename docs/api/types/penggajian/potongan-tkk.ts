@@ -8,7 +8,15 @@
  * Endpoint : DELETE /penggajian/potongan-tkk/{id}, GET /penggajian/potongan-tkk, GET /penggajian/potongan-tkk/{id}, POST /penggajian/potongan-tkk, PUT /penggajian/potongan-tkk/{id}
  */
 
-import type { Envelope, GolonganResponse, LevelResponse, PageEnvelope, PageQuery, StatusKepegawaian } from "../_shared";
+import type {
+	Envelope,
+	GolonganResponse,
+	LevelResponse,
+	Page,
+	PageEnvelope,
+	PageQuery,
+	StatusKepegawaian,
+} from "../_shared";
 
 export interface PotonganTkkSearchParams extends PageQuery {
 	statusPegawai?: "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
@@ -32,6 +40,8 @@ export interface GajiPotonganTkkPutRequest {
 	golonganId?: number; // int64
 	nominal?: number; // double
 }
+
+export type PageGajiPotonganTkkResponse = Page<GajiPotonganTkkResponse>;
 
 export type PageResultPageGajiPotonganTkkResponse = PageEnvelope<GajiPotonganTkkResponse>;
 

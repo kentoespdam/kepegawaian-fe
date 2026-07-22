@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/phdp/{id}, GET /penggajian/phdp, GET /penggajian/phdp/list, GET /penggajian/phdp/{id}, POST /penggajian/phdp, PUT /penggajian/phdp/{id}
  */
 
-import type { Envelope, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PhdpSearchParams extends PageQuery {
 	kondisi?: string;
@@ -28,6 +28,8 @@ export interface GajiPhdpPutRequest {
 	kondisi: string; // minLength 1
 	formula: string; // minLength 1
 }
+
+export type PageGajiPhdpResponse = Page<GajiPhdpResponse>;
 
 export type PageResultPageGajiPhdpResponse = PageEnvelope<GajiPhdpResponse>;
 

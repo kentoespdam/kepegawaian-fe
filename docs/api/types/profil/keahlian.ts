@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/keahlian/lampiran/{id}, DELETE /profil/keahlian/{id}, GET /profil/keahlian, GET /profil/keahlian/lampiran/{id}, GET /profil/keahlian/lampiran/{id}/file, GET /profil/keahlian/{id}, GET /profil/keahlian/{id}/lampiran, POST /profil/keahlian, POST /profil/keahlian/lampiran, PUT /profil/keahlian/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, LampiranRow, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenisProfilUpdate, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 /** Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP). */
 export type TingkatKemampuan = "KURANG" | "BAIK" | "CUKUP";
@@ -58,6 +58,8 @@ export interface KeahlianPutRequest {
 	tahun?: number; // int32, min 1970
 	masaBerlaku?: string;
 }
+
+export type PageKeahlianQuery = Page<KeahlianQuery>;
 
 export type PageResultPageKeahlianQuery = PageEnvelope<KeahlianQuery>;
 

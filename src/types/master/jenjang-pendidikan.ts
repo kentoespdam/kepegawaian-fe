@@ -8,7 +8,7 @@
  * Endpoint : DELETE /master/jenjang-pendidikan/{id}, GET /master/jenjang-pendidikan, GET /master/jenjang-pendidikan/list, GET /master/jenjang-pendidikan/{id}, POST /master/jenjang-pendidikan, POST /master/jenjang-pendidikan/batch, PUT /master/jenjang-pendidikan/{id}
  */
 
-import type { Envelope, JenjangPendidikanResponse, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, JenjangPendidikanResponse, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface JenjangPendidikanSearchParams extends PageQuery {
 	nama?: string;
@@ -22,6 +22,8 @@ export interface JenjangPendidikanPutRequest {
 	seq?: number; // int32, min 1
 	isStatistik?: boolean;
 }
+
+export type PageJenjangPendidikanResponse = Page<JenjangPendidikanResponse>;
 
 export type PageResultPageJenjangPendidikanResponse = PageEnvelope<JenjangPendidikanResponse>;
 
