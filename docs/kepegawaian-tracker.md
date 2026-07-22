@@ -25,8 +25,8 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 
 | # | ID | Judul | P | Prasyarat |
 |---|----|-------|---|-----------|
-| **W1** | `kepegawaian-fe-0is` | Generate tipe (blocker semua page) | P1 | — (ready) |
-| **W1** | `kepegawaian-fe-oqp` | Verifikasi backend filter status batch penggajian | P1 | — (ready) |
+| **W1** | ~~`kepegawaian-fe-0is`~~ | ✅ Generate tipe (blocker semua page) | P1 | — (ready) |
+| **W1** | ~~`kepegawaian-fe-oqp`~~ | ✅ Verifikasi backend filter status batch penggajian | P1 | — (ready) |
 | **W2** | `kepegawaian-fe-djv` | `getPegawaiSession()` opt-in | P1 | 0is |
 | **W2** | `kepegawaian-fe-hnc` | Page Data Pegawai (3 tab) | P2 | 0is |
 | **W2** | `kepegawaian-fe-vfe` | Page Terminasi (2 tab) | P2 | 0is |
@@ -35,15 +35,21 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 
 ## Checklist acceptance
 
-### `0is` — Generate tipe
-- [ ] Path dikonsumsi ada di `api.json` tiap modul; gap ke backend dicatat
-- [ ] Response type utk 5 section Dashboard + Data + Terminasi tersedia di `src/types/*`
-- [ ] `npm run typecheck` hijau
+### ~~`0is` — Generate tipe~~ ✅
+- [x] Path dikonsumsi ada di `api.json` tiap modul; gap ke backend dicatat
+- [x] Response type utk 5 section Dashboard + Data + Terminasi tersedia di `src/types/*`
+- [x] `npm run typecheck` hijau
 
-### `oqp` — Verifikasi backend batch-status
-- [ ] Konfirmasi apakah `/penggajian/batch/master/pegawai/{id}` hanya kembalikan batch final
-- [ ] Kalau tidak: minta filter status backend **atau** rancang guard FE
-- [ ] Terkonfirmasi periode draft/belum-final **tak bocor** ke pegawai (WAJIB pra go-live Dashboard)
+### ~~`oqp` — Verifikasi backend batch-status~~ ✅
+- [x] Konfirmasi apakah `/penggajian/batch/master/pegawai/{id}` hanya kembalikan batch final
+- [x] Kalau tidak: minta filter status backend **atau** rancang guard FE
+- [x] Terkonfirmasi periode draft/belum-final **tak bocor** ke pegawai (WAJIB pra go-live Dashboard)
+
+  > **Temuan:** Endpoint `/penggajian/batch/master/pegawai/{pegawaiId}` tidak punya parameter status filter.
+  > Status batch: `PENDING | PROSES | WAIT_VERIFICATION_PHASE_1 | WAIT_VERIFICATION_PHASE_2 | WAIT_APPROVAL | FINISHED | FAILED`.
+  > Backend belum support filter status → **Guard FE diperlukan** saat Dashboard: filter `FINISHED` only.
+  > Guard bisa di query params: `/penggajian/batch/{periode}/periode/{status}/status` sudah ada endpoint berstatus.
+  > Alternatif: filter array hasil fetch di FE (ponytail: `rows.filter(r => r.status === 'FINISHED')` cukup).
 
 ### `djv` — `getPegawaiSession()`
 - [ ] `src/lib/auth/pegawaiSession.ts`: `cache()`-wrapped, panggil `verifySession()` → `GET /pegawai/{$id}`
