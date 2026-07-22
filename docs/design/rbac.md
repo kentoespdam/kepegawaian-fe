@@ -34,7 +34,8 @@ daftar peran hardcoded. FE tak pernah hardcode `"admin"`.
   - **Kolom Aksi** tak dirender sama sekali bila peran tak punya `update` maupun `delete`;
     bila hanya satu, hanya ikon itu dirender.
   - **Klik-baris-ke-Edit** nonaktif saat `!can(update)` (baris tetap terbaca, non-interaktif).
-  - Entitas yang tak bisa `view` **tak muncul di Tier-2 sidebar**; DAL `forbidden()` = jaring
-    pengaman untuk URL yang diketik langsung.
+  - Entitas yang tak bisa `view` **tak muncul di sidebar** (tak dirender sebagai sub-item); grup
+    modul tanpa entitas ter-view sama sekali → tak dirender. DAL `forbidden()` = jaring pengaman
+    untuk URL yang diketik langsung.
 - **Rilis 1 tak seed peran nyata** — peta ship default masuk-akal (write role + `viewer` via `*`);
   user isi matriks per-label. Kelola peran lewat UI = ditunda ke modul `sistem`.
