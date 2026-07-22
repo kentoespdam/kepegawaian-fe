@@ -90,7 +90,7 @@ export function AppShell({
 						{visibleModules.map((mod) => (
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
-									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg" className="group-data-[collapsible=icon]:justify-center">
+									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg" className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto">
 										<mod.icon className="size-5" />
 										<span>{mod.label}</span>
 									<ChevronDown
