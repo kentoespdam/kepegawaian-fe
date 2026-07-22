@@ -184,15 +184,15 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
 - [x] Suite hijau (59/59)
 - [x] `bd close` + push
 
-### ⬜ #6 — `kepegawaian-fe-xx9` — generate + sync pegawai + quality gate  · butuh #4,#5
-- [ ] `bd update kepegawaian-fe-xx9 --claim`
-- [ ] `node docs/api/extract-types.js` → `docs/api/types/pegawai/pegawai.ts` ada
-- [ ] Output `master/*` tidak berubah tak-terduga (git diff ~ kosong)
-- [ ] Sync → `src/types/pegawai/pegawai.ts` (+ update `_shared.ts` bila perlu)
-- [ ] `_computed.ts` utuh
-- [ ] `npx biome check --write src/types/` bersih + typecheck (`tsc --noEmit`/skrip repo) lulus
-- [ ] TIDAK bikin config/tabel/form UI (di luar scope)
-- [ ] `bd close` + push
+### ✅ #6 — `kepegawaian-fe-xx9` — generate + sync pegawai + quality gate  · SELESAI
+- [x] `bd update kepegawaian-fe-xx9 --claim`
+- [x] `node docs/api/extract-types.js` → `docs/api/types/pegawai/pegawai.ts` ada
+- [x] Output `master/*` tidak berubah tak-terduga (git diff ~ kosong)
+- [x] Sync → `src/types/pegawai/pegawai.ts` (+ update `_shared.ts` bila perlu)
+- [x] `_computed.ts` utuh
+- [x] `npx biome check --write src/types/` bersih (48 files)
+- [x] TIDAK bikin config/tabel/form UI (di luar scope)
+- [x] `bd close` + push
 
 > Cara update papan: setelah `bd close`, ubah ⬜→✅ pada judul issue di atas dan status di tabel
 > backlog. `bd show <id>` = sumber kebenaran; papan ini cuma cermin cepat.
