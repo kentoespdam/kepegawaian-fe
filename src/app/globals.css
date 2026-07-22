@@ -32,6 +32,13 @@
 	--color-primary-dark: var(--primary-dark);
 	--color-row-stripe: var(--row-stripe);
 	--color-row-hover: var(--row-hover);
+	/* Sidebar tokens — dipakai oleh sidebar.tsx (shadcn sidebar-07) */
+	--color-sidebar: var(--sidebar);
+	--color-sidebar-foreground: var(--sidebar-foreground);
+	--color-sidebar-border: var(--sidebar-border);
+	--color-sidebar-accent: var(--sidebar-accent);
+	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+	--color-sidebar-ring: var(--sidebar-ring);
 	--radius-sm: calc(var(--radius) * 0.6);
 	--radius-md: calc(var(--radius) * 0.8);
 	--radius-lg: var(--radius);
@@ -77,6 +84,14 @@
 	--row-stripe: oklch(0.965 0.004 250);
 	--row-hover: oklch(0.95 0.02 158);
 	--radius: 0.5rem;
+	/* Sidebar: netral HANGAT selangkah di bawah card putih (1.00 > sidebar 0.955 > kanvas 0.94).
+	   Border tegas jadi batas zona 30%; item aktif Evergreen pekat agar pop. 60:30:10. */
+	--sidebar: oklch(0.955 0.006 85);
+	--sidebar-foreground: oklch(0.3 0.008 260);
+	--sidebar-border: oklch(0.84 0.008 85);
+	--sidebar-accent: oklch(0.92 0.045 158);
+	--sidebar-accent-foreground: oklch(0.22 0.01 260);
+	--sidebar-ring: oklch(0.48 0.09 158);
 }
 
 .dark {
@@ -107,6 +122,14 @@
 	/* Dark: stripe = turunan --muted (0.22), hover = tint primary hijau gelap. Invariant hover > stripe > base. */
 	--row-stripe: oklch(0.2 0.01 160);
 	--row-hover: oklch(0.28 0.03 158);
+	/* Sidebar dark: elevasi ringan DI ATAS card (sidebar 0.185 > card 0.16) — pisah dari card,
+	   border tegas jadi batas zona, item aktif Evergreen pop. Mirror fix light. */
+	--sidebar: oklch(0.185 0.012 160);
+	--sidebar-foreground: oklch(0.83 0.01 100);
+	--sidebar-border: oklch(0.34 0.012 160);
+	--sidebar-accent: oklch(0.3 0.045 158);
+	--sidebar-accent-foreground: oklch(0.93 0.01 100);
+	--sidebar-ring: oklch(0.62 0.09 158);
 }
 
 @keyframes water {

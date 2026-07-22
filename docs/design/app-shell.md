@@ -48,8 +48,10 @@ turut menambah primitif `collapsible` + `tooltip`.
   menampilkan grup **Master** terbuka; 5 modul lain (kepegawaian/cuti/laporan/penggajian/sistem)
   belum punya entitas → belum muncul (info fitur-mendatang ada di dashboard landing §13, bukan di
   sidebar). Modul otomatis muncul saat entitasnya di-grill & di-wire.
-- **60:30:10:** konten = 60% (near-white), sidebar = 30% (netral), Tirta Blue = 10% (modul/entitas
-  aktif, tombol primer, focus ring).
+- **60:30:10:** konten = 60% (kanvas abu terang + kartu putih mengambang), sidebar = 30% (**netral
+  hangat, selangkah lebih gelap dari kartu — bukan near-white; border tegas jadi batas zona** demi
+  mata 35+), Evergreen = 10% (modul/entitas aktif, tombol primer, focus ring). Sidebar TIDAK boleh
+  lebih terang dari kanvas konten (bug lebur — lihat `kepegawaian-fe-9y5`).
 
 **Responsif (WAJIB, bukan afterthought — staff buka di HP):**
 - Layar sempit → perilaku **off-canvas bawaan** `sidebar` (Sheet slide-in di balik hamburger =
