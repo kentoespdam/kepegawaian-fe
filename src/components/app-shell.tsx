@@ -91,10 +91,10 @@ export function AppShell({
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
 									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg" className="group-data-[collapsible=icon]:justify-center">
-										<mod.icon className="size-4" />
+										<mod.icon className="size-5" />
 										<span>{mod.label}</span>
 									<ChevronDown
-										className={cn("ml-auto size-4 transition-transform group-data-[collapsible=icon]:hidden", openGroups.has(mod.id) && "rotate-180")}
+										className={cn("ml-auto size-5 transition-transform group-data-[collapsible=icon]:hidden", openGroups.has(mod.id) && "rotate-180")}
 									/>
 									</SidebarMenuButton>
 									{openGroups.has(mod.id) && (
