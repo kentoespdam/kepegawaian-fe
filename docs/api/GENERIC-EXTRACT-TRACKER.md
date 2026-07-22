@@ -100,8 +100,8 @@ harus dirawat).
 | # | Beads | Judul | Depends on | Status |
 |---|-------|-------|-----------|--------|
 | 1 | `kepegawaian-fe-q4e` | Pindah `extract-types.js` → `docs/api/` + baca semua modul (Q1,Q5) | epic | ✅ closed |
-| 2 | `kepegawaian-fe-7un` | Config per-folder `module.json` + `domainOf` per-strategi (Q2) | #1 | ⬜ blocked |
-| 3 | `kepegawaian-fe-kpy` | Placement lintas-modul + deteksi konflik fail-keras (Q3,Q4) | #1 | ⬜ blocked |
+| 2 | `kepegawaian-fe-7un` | Config per-folder `module.json` + `domainOf` per-strategi (Q2) | #1 | ✅ closed |
+| 3 | `kepegawaian-fe-kpy` | Placement lintas-modul + deteksi konflik fail-keras (Q3,Q4) | #1 | ✅ closed |
 | 4 | `kepegawaian-fe-fd3` | Layout output mirror `src/types/` + sync per-file idempoten (Q3,Q6) | #1 | ⬜ blocked |
 | 5 | `kepegawaian-fe-y95` | Sesuaikan `extract-types.test.ts` ke multi-modul | #2,#3,#4 | ⬜ blocked |
 | 6 | `kepegawaian-fe-xx9` | Generate + sync tipe pegawai → `src/types/pegawai/` + quality gate | #4,#5 | ⬜ blocked |
@@ -146,22 +146,22 @@ Menutup satu issue akan meng-*unblock* issue di bawahnya.
 - [x] `node docs/api/extract-types.js` jalan tanpa arg → 48 domain dari 6 modul
 - [x] `bd close` + push
 
-### ⬜ #2 — `kepegawaian-fe-7un` — `module.json` + `domainOf` per-strategi  · butuh #1
-- [ ] `bd update kepegawaian-fe-7un --claim`
-- [ ] `docs/api/master/module.json` = `{ "type": "collection" }`
-- [ ] `docs/api/pegawai/module.json` = `{ "type": "resource" }`
-- [ ] `collection`: `domainOf` = segmen entity setelah `/<modul>/` (prefix dari nama folder)
-- [ ] `resource`: `domainOf` = konstan nama folder
-- [ ] `module.json` hilang → error eksplisit (tak nebak)
-- [ ] Verifikasi: master → 22 domain, pegawai → 1 domain `pegawai`
-- [ ] `bd close` + push
+### ✅ #2 — `kepegawaian-fe-7un` — `module.json` + `domainOf` per-strategi  · SELESAI
+- [x] `bd update kepegawaian-fe-7un --claim`
+- [x] `docs/api/master/module.json` = `{ "type": "collection" }`
+- [x] `docs/api/pegawai/module.json` = `{ "type": "resource" }`
+- [x] `collection`: `domainOf` = segmen entity setelah `/<modul>/` (prefix dari nama folder)
+- [x] `resource`: `domainOf` = konstan nama folder
+- [x] `module.json` hilang → error eksplisit (tak nebak)
+- [x] Verifikasi: master → 20+ domain, pegawai → 1 domain `pegawai` (1 file `pegawai.ts`)
+- [x] `bd close` + push
 
-### ⬜ #3 — `kepegawaian-fe-kpy` — placement lintas-modul + konflik fail-keras  · butuh #1
-- [ ] `bd update kepegawaian-fe-kpy --claim`
-- [ ] `placementOf` hitung domain **lintas semua modul** (≥2 → `_shared.ts`)
-- [ ] Merge schema identik (deep-equal) antar spec
-- [ ] Nama sama + bentuk beda → `throw` + `exit 1` (bukan last-write-wins)
-- [ ] 8 schema master∩pegawai muncul **hanya** di `_shared.ts`
+### ✅ #3 — `kepegawaian-fe-kpy` — placement lintas-modul + konflik fail-keras  · SELESAI
+- [x] `bd update kepegawaian-fe-kpy --claim`
+- [x] `placementOf` hitung domain **lintas semua modul** (≥2 → `_shared.ts`) — sudah berjalan sejak #1
+- [x] Merge schema identik (deep-equal) antar spec — via `deepEqual()` di merge loop
+- [x] Nama sama + bentuk beda → `throw` + `exit 1` (bukan last-write-wins)
+- [x] 8 schema master∩pegawai muncul **hanya** di `_shared.ts` (terverifikasi)
 - [ ] `bd close` + push
 
 ### ⬜ #4 — `kepegawaian-fe-fd3` — layout mirror `src/types/` + sync idempoten  · butuh #1

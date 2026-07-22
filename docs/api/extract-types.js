@@ -179,6 +179,25 @@ function enumSignature(values) {
 	return JSON.stringify(values);
 }
 
+/** Perbandingan struktural (deep-equal) untuk objek polos dan array. */
+function deepEqual(a, b) {
+	if (a === b) return true;
+	if (typeof a !== typeof b) return false;
+	if (a == null || b == null) return false;
+	if (Array.isArray(a) && Array.isArray(b)) {
+		if (a.length !== b.length) return false;
+		return a.every((v, i) => deepEqual(v, b[i]));
+	}
+	if (typeof a === "object" && typeof b === "object") {
+		const aKeys = Object.keys(a).sort();
+		const bKeys = Object.keys(b).sort();
+		if (aKeys.length !== bKeys.length) return false;
+		if (!aKeys.every((k, i) => k === bKeys[i])) return false;
+		return aKeys.every((k) => deepEqual(a[k], b[k]));
+	}
+	return false;
+}
+
 // ── Deteksi wrapper BY-STRUCTURE (bukan by-name) ─────────────────────
 // Wrapper standar Spring dikenali dari BENTUK property-set-nya, bukan dari
 // namanya (SingleResult*/ListResult*/SavedResult*/PageResult*/DeletedResult),
@@ -389,7 +408,7 @@ const GENERATED_HEADER = [
 	" * DIGENERATE OTOMATIS oleh docs/api/extract-types.js.",
 	" * JANGAN diedit manual — jalankan ulang script bila spec berubah.",
 	" *",
-	" * Sumber: docs/api/*/api.json",
+	" * Sumber: docs/api/{modul}/api.json",
 ];
 
 /** Header komentar file. */
@@ -399,9 +418,9 @@ function fileHeader(title, extraLines = []) {
 
 /**
  * Render satu file domain dari keputusan yang SUDAH diambil di plan().
- * `d` adalah entri Plan.domains: { domain, endpoints, local, imports, reExports }.
+ * `d` adalah entri Plan.domains: { domain, endpoints, local, imports, reExports, module }.
  */
-function renderDomainFile(d, schemas, enumAlias) {
+function renderDomainFile(d, schemas, enumAlias, module) {
 	const header = fileHeader(`${d.domain} — response & request types`, [`Endpoint : ${d.endpoints.join(", ")}`]);
 
 	// Alias enum yang berulang HANYA di domain ini (bukan lintas-domain) →
@@ -410,8 +429,8 @@ function renderDomainFile(d, schemas, enumAlias) {
 	const searchBlock = d.searchParams ? `${d.searchParams}\n` : "";
 	const body = d.local.map((name) => schemaToDeclaration(name, schemas[name], enumAlias, schemas)).join("\n");
 
-	const importLine = d.imports.length ? `${buildImport("import", d.imports)}\n\n` : "";
-	const reExportLine = d.reExports.length ? `\n${buildImport("export", d.reExports)}\n` : "";
+	const importLine = d.imports.length ? `${buildImport("import", d.imports, module)}\n\n` : "";
+	const reExportLine = d.reExports.length ? `\n${buildImport("export", d.reExports, module)}\n` : "";
 
 	return normalizeTrailing(`${header}\n${importLine}${aliasBlock}${searchBlock}${body}${reExportLine}`);
 }
@@ -424,13 +443,14 @@ function referencedIn(text, name) {
 /**
  * Bangun statement import/export bergaya Biome: satu baris bila muat di
  * lineWidth (120), atau multi-line (satu nama per baris) bila melebihi.
- * keyword: "import" | "export".
+ * keyword: "import" | "export". module: prefix modul untuk path relatif.
  */
-function buildImport(keyword, names) {
-	const singleLine = `${keyword} type { ${names.join(", ")} } from "./${SHARED_MODULE}";`;
+function buildImport(keyword, names, module) {
+	const from = module ? `../${SHARED_MODULE}` : `./${SHARED_MODULE}`;
+	const singleLine = `${keyword} type { ${names.join(", ")} } from "${from}";`;
 	if (singleLine.length <= 120) return singleLine;
 	const inner = names.map((n) => `  ${n},`).join("\n");
-	return `${keyword} type {\n${inner}\n} from "./${SHARED_MODULE}";`;
+	return `${keyword} type {\n${inner}\n} from "${from}";`;
 }
 
 /**
@@ -475,16 +495,20 @@ function renderSharedFile(shared, schemas) {
  *     stats:   { totalDomain, totalSchema, sharedCount, hasHttpStatus },
  *   }
  */
-function plan(spec) {
+function plan(spec, moduleTypes = {}) {
 	const schemas = spec.components?.schemas || {};
 	const paths = spec.paths || {};
 
 	// 1. Petakan domain → daftar path & closure schema-nya.
+	//    Untuk modul tipe "resource": domain = nama modul (semua path jadi 1 file)
+	//    Untuk modul tipe "collection" (default): domain = segmen entity.
 	const domainEndpoints = {}; // domain → ["GET /master/x", ...]
 	const domainSchemas = {}; // domain → Set<schemaName>
 	const domainPaths = {}; // domain → [pathItem] (utk ekstraksi query params GET)
 	for (const endpointPath of Object.keys(paths)) {
-		const domain = domainOf(endpointPath);
+		const mod = endpointPath.replace(/^\//, "").split("/")[0];
+		const type = moduleTypes[mod] || "collection";
+		const domain = type === "resource" ? mod : domainOf(endpointPath);
 		if (!domain) continue; // path root (/), skip
 		domainEndpoints[domain] ??= [];
 		domainSchemas[domain] ??= new Set();
@@ -555,7 +579,12 @@ function plan(spec) {
 			// di-re-export (alias internal, bukan schema).
 			const reExports = [...sharedUsed].sort();
 
-			return { domain, endpoints: domainEndpoints[domain].sort(), local, aliasDecls, searchParams, imports, reExports };
+			// Module = segmen pertama dari endpoint path (e.g. "master", "pegawai")
+			const endpoints = domainEndpoints[domain].sort();
+			const firstPath = endpoints[0].replace(/^(GET|POST|PUT|DELETE) /, "");
+			const module = firstPath.replace(/^\//, "").split("/")[0];
+
+			return { domain, endpoints, module, local, aliasDecls, searchParams, imports, reExports };
 		});
 
 	return {
@@ -679,13 +708,14 @@ function planEnumAliases(schemas, domainSchemas) {
 // ── Render: Plan → daftar file (string) ──────────────────────────────
 
 /**
- * Ubah Plan menjadi daftar file { domain, filename, contents } — string saja,
- * tanpa I/O. Entri _shared punya domain: null.
+ * Ubah Plan menjadi daftar file { domain, filename, module, contents } — string saja,
+ * tanpa I/O. Entri _shared punya domain: null, module: null.
+ * File domain ditulis ke subfolder per module (mirror struktur docs/api/).
  */
 function render(p) {
-	const files = [{ domain: null, filename: `${SHARED_MODULE}.ts`, contents: renderSharedFile(p.shared, p.schemas) }];
+	const files = [{ domain: null, filename: `${SHARED_MODULE}.ts`, module: null, contents: renderSharedFile(p.shared, p.schemas) }];
 	for (const d of p.domains) {
-		files.push({ domain: d.domain, filename: `${d.domain}.ts`, contents: renderDomainFile(d, p.schemas, p.enumAlias) });
+		files.push({ domain: d.domain, module: d.module, filename: `${d.domain}.ts`, contents: renderDomainFile(d, p.schemas, p.enumAlias, d.module) });
 	}
 	return files;
 }
@@ -713,19 +743,47 @@ function main() {
 
 		console.log(`📖 Membaca ${modules.length} modul: ${modules.join(", ")}`);
 
-		// Merge semua spec jadi satu (last-write-wins untuk schema identik)
+		// Merge semua spec — deteksi konflik schema (Q4):
+		// Nama sama + identik (deep-equal) → merge jadi 1 shared
+		// Nama sama + berbeda → throw (fail keras)
 		const mergedPaths = {};
 		const mergedSchemas = {};
+		const schemaSources = {}; // schemaName → module pertama
 		for (const mod of modules) {
 			const specPath = path.join(__dirname, mod, "api.json");
 			const spec = JSON.parse(fs.readFileSync(specPath, "utf-8"));
 			if (spec.paths) Object.assign(mergedPaths, spec.paths);
-			if (spec.components?.schemas) Object.assign(mergedSchemas, spec.components.schemas);
+			if (spec.components?.schemas) {
+				for (const [name, schema] of Object.entries(spec.components.schemas)) {
+					if (mergedSchemas[name] !== undefined) {
+						if (!deepEqual(mergedSchemas[name], schema)) {
+							throw new Error(
+								`${name}: konflik ${schemaSources[name]} vs ${mod} — bentuk berbeda. Periksa definisi schema di api.json masing-masing.`,
+							);
+						}
+						// Identik → merge jadi 1 definisi shared
+					} else {
+						mergedSchemas[name] = schema;
+						schemaSources[name] = mod;
+					}
+				}
+			}
 		}
 
 		const mergedSpec = { paths: mergedPaths, components: { schemas: mergedSchemas } };
 
-		const p = plan(mergedSpec);
+		// Baca module.json untuk tiap modul (collection/resource)
+		const moduleTypes = {};
+		for (const mod of modules) {
+			const configPath = path.join(__dirname, mod, "module.json");
+			if (!fs.existsSync(configPath)) {
+				throw new Error(`Modul "${mod}" tidak memiliki module.json — buat docs/api/${mod}/module.json`);
+			}
+			const config = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+			if (config.type) moduleTypes[mod] = config.type;
+		}
+
+		const p = plan(mergedSpec, moduleTypes);
 
 		for (const w of p.warnings) console.warn(`⚠️  ${w}`);
 
@@ -744,10 +802,12 @@ function main() {
 		console.log(`\n🧬 Meng-generate ${domainCount} module domain ...\n`);
 
 		for (const f of files) {
-			fs.writeFileSync(path.join(OUTPUT_DIR, f.filename), f.contents, "utf-8");
+			const dir = f.module ? path.join(OUTPUT_DIR, f.module) : OUTPUT_DIR;
+			if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+			fs.writeFileSync(path.join(dir, f.filename), f.contents, "utf-8");
 			if (f.domain !== null) {
 				const d = p.domains.find((x) => x.domain === f.domain);
-				console.log(`  ✅ ${f.filename.padEnd(28)} ${d.local.length} lokal, ${d.reExports.length} shared`);
+				console.log(`  ✅ ${(f.module ? f.module + "/" : "") + f.filename.padEnd(28)} ${d.local.length} lokal, ${d.reExports.length} shared`);
 			}
 		}
 
