@@ -17,17 +17,16 @@ task touches**; this core is always in scope.
 |---|---|---|---|
 | **Core (shared)** | `CONTEXT-MAP.md` (ini) | Bahasa + konvensi lintas-modul | **selalu** |
 | **Master** | [`docs/context/master.md`](docs/context/master.md) | Data referensi / master-data (17 entitas CRUD) | ✅ grilling round 1 |
-| Kepegawaian | `docs/context/kepegawaian.md` | Data pegawai, identitas→record pegawai | ⏳ belum di-grill |
+| Kepegawaian | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | 3 page (Dashboard/Data/Terminasi), identitas→record pegawai | ✅ grilling round 1 |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |
 | Sistem | `docs/context/sistem.md` | Manajemen role, pengaturan | ⏳ belum di-grill |
 
-> **Open question — `riwayat`.** Belum diputuskan apakah **riwayat** (mutasi/pangkat/pelatihan/
-> pendidikan pegawai) adalah **modul ke-7 tersendiri** atau **sub-area di dalam kepegawaian**.
-> Rail app-shell saat ini mendaftar **6 modul** (master, kepegawaian, cuti, laporan, penggajian,
-> sistem — lihat `### App shell`); menambah `riwayat` sebagai modul akan menjadikannya 7 dan
-> mengubah rail. ** Diputuskan saat grilling modul kepegawaian.**
+> **✅ Resolved (grilling kepegawaian) — `riwayat` = sub-area, bukan modul.** Riwayat
+> (SK/mutasi/kontrak/SP/terminasi) adalah **sub-area di dalam kepegawaian**, dikonsumsi oleh page
+> Dashboard & Terminasi — **bukan** modul ke-7. Rail app-shell tetap **6 modul** (master,
+> kepegawaian, cuti, laporan, penggajian, sistem). Lihat [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md).
 
 > **Scope catatan:** DESIGN (spec turunan, `DESIGN.md` + `docs/design/*.md`) masih memakai index
 > tunggal berbasis-concern §1–§19; **belum** dipecah per-modul. Referensi silang "CONTEXT §X" di
@@ -262,7 +261,7 @@ Top bar app-shell (sticky, di atas setiap halaman) berisi breadcrumb rata-kiri +
 - **Breadcrumb** `{Modul} / {Entitas}` (mis. "Master / Sanksi") sekaligus jadi judul halaman — halaman TIDAK mengulang `<h1>` besar. Di mobile menciut ke nama entitas aktif + hamburger `[≡]`.
 - **Menu pengguna** = tombol avatar-inisial → menu kecil berisi **nama + email** (dari DAL `account.get()`, tanpa fetch tambahan), pembatas, lalu dua aksi: **"Profil"** (→ `/profil`, lihat `### Profile page`) dan **"Keluar"** (logout → hapus cookie `token` & sesi → `/login`).
 - **Rilis 1: sumber nama/email = Appwrite `account.get()`.** Satu-satunya halaman akun adalah `/profil` (info akun read-only + ganti password); tak ada pengaturan lain di rilis 1.
-- **CATATAN LANJUTAN (modul kepegawaian, grilling berikutnya):** menu pengguna nanti diperkaya menampilkan **nama, jabatan & posisi** yang di-fetch dari **endpoint pegawai** (bukan lagi hanya dari `account.get()`). Identitas Appwrite (email) di-bridge ke record pegawai untuk mendapat jabatan/posisi. Ini menjelaskan kenapa struktur menu pengguna dibuat sebagai komponen tersendiri yang menerima data identitas — agar saat modul kepegawaian masuk, sumber datanya bisa diganti/ditambah tanpa membongkar top bar. Detail pemetaan (email Appwrite ↔ pegawai, endpoint mana, caching) dibahas saat grilling modul kepegawaian.
+- **CATATAN LANJUTAN (modul kepegawaian) — ✅ identity bridge sudah diresolusi:** menu pengguna nanti diperkaya menampilkan **nama, jabatan & posisi** yang di-fetch dari **endpoint pegawai** (bukan lagi hanya dari `account.get()`). Bridge-nya **bukan** lewat email: `session.$id` (Appwrite) **= `pegawaiId`**, dipakai langsung ke `GET /pegawai/{$id}` — via fungsi opt-in **`getPegawaiSession()`** (`cache()`-wrapped), sementara `verifySession()` tetap murni 1-fetch. Ini menjelaskan kenapa struktur menu pengguna dibuat sebagai komponen tersendiri yang menerima data identitas — sumber datanya bisa diperkaya tanpa membongkar top bar. Detail lengkap: [ADR-0006](docs/adr/0006-pegawai-session-identity-bridge.md) + [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md).
 
 ### Form engine — React Hook Form + Zod via shadcn `<Field />` (satu `<CrudForm>`)
 Semua form CRUD memakai **React Hook Form (RHF) v7 + Zod** (`zodResolver`), dirender lewat komponen **shadcn `<Field />`** (di v4 `<Field />` sudah dipisah dari state library, jadi kompatibel dengan Base UI apa pun engine-nya). Dipilih di atas TanStack Form / native Server Actions karena paling stabil, paling ringan (uncontrolled/ref-based, ~9kB, re-render minimal), dan paling mudah untuk junior dev (pola `useForm({ resolver: zodResolver(schema) })` + `handleSubmit` ada di setiap contoh shadcn). Rincian trade-off ada di **ADR 0002**.
