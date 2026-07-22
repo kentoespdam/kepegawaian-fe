@@ -621,6 +621,101 @@ const KNOWN_ENUMS = [
 		comment: "Semua status HTTP (dipakai oleh field statusText di wrapper response).",
 		detect: (values) => values.includes("200 OK"),
 	},
+	{
+		name: "JenisSk",
+		comment: "Jenis SK kepegawaian (SK_KENAIKAN_PANGKAT_GOLONGAN, SK_CAPEG, SK_PEGAWAI_TETAP, dll).",
+		detect: (values) => values.includes("SK_CAPEG"),
+	},
+	{
+		name: "JenisKelamin",
+		comment: "Jenis kelamin (LAKI_LAKI, PEREMPUAN).",
+		detect: (values) => values.includes("LAKI_LAKI"),
+	},
+	{
+		name: "Agama",
+		comment: "Agama (ISLAM, KRISTEN, KATOLIK, HINDU, BUDHA).",
+		detect: (values) => values.includes("ISLAM"),
+	},
+	{
+		name: "StatusKepegawaian",
+		comment: "Status kepegawaian (KONTRAK, CAPEG, PEGAWAI, CALON_HONORER, HONORER, NON_PEGAWAI).",
+		detect: (values) => values.includes("CALON_HONORER"),
+	},
+	{
+		name: "StatusKawin",
+		comment: "Status perkawinan (BELUM_KAWIN, KAWIN, JANDA_DUDA, MENIKAH_SEKANTOR, TIDAK_TAHU).",
+		detect: (values) => values.includes("BELUM_KAWIN"),
+	},
+	{
+		name: "JenisProfilUpdate",
+		comment: "Jenis profil yang diupdate (PROFIL_KELUARGA, PROFIL_PENDIDIKAN).",
+		detect: (values) => values.includes("PROFIL_KELUARGA"),
+	},
+	{
+		name: "GolonganDarah",
+		comment: "Golongan darah (A, B, AB, O).",
+		detect: (values) => values.includes("AB"),
+	},
+	{
+		name: "TipeKomponen",
+		comment: "Tipe komponen penggajian (NONE, PEMASUKAN, POTONGAN).",
+		detect: (values) => values.includes("PEMASUKAN"),
+	},
+	{
+		name: "StatusApproval",
+		comment: "Status approval umum (PENDING, APPROVED, CONFIRMED, REJECTED, CANCELED, RETURNED).",
+		detect: (values) => values.includes("CONFIRMED"),
+	},
+	{
+		name: "StatusBerhenti",
+		comment: "Status berhenti pegawai (BERHENTI_OR_KELUAR, DIRUMAHKAN).",
+		detect: (values) => values.includes("BERHENTI_OR_KELUAR"),
+	},
+	{
+		name: "JenisRiwayatKepegawaian",
+		comment: "Jenis riwayat kepegawaian (PENGANGKATAN_PERTAMA, MUTASI_LOKER).",
+		detect: (values) => values.includes("PENGANGKATAN_PERTAMA"),
+	},
+	{
+		name: "JenisAksiKontrak",
+		comment: "Jenis aksi kontrak (PERPANJANGAN, PENGANGKATAN, TERMINASI).",
+		detect: (values) => values.includes("TERMINASI"),
+	},
+	{
+		name: "JenisTunjangan",
+		comment: "Jenis tunjangan (JABATAN, KINERJA, BERAS, AIR).",
+		detect: (values) => values.includes("BERAS"),
+	},
+	{
+		name: "KlaimCuti",
+		comment: "Jenis klaim cuti (PENGAJUAN_CUTI, KLAIM_CUTI).",
+		detect: (values) => values.includes("PENGAJUAN_CUTI"),
+	},
+	{
+		name: "StatusBatch",
+		comment: "Status batch penggajian (PENDING, PROSES).",
+		detect: (values) => values.includes("PROSES"),
+	},
+	{
+		name: "StatusUpdateProfil",
+		comment: "Status approval update profil (REJECT, PENDING, APPROVED).",
+		detect: (values) => values.includes("REJECT"),
+	},
+	{
+		name: "HubunganKeluarga",
+		comment: "Hubungan keluarga (SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA).",
+		detect: (values) => values.includes("SUAMI"),
+	},
+	{
+		name: "StatusPendidikanKeluarga",
+		comment: "Status pendidikan anggota keluarga (BELUM_SEKOLAH, SEKOLAH, SELESAI_SEKOLAH).",
+		detect: (values) => values.includes("SELESAI_SEKOLAH"),
+	},
+	{
+		name: "TingkatKemampuan",
+		comment: "Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP).",
+		detect: (values) => values.includes("KURANG"),
+	},
 ];
 
 /** Bangun deklarasi TypeScript untuk satu alias enum (multi-line, satu nilai/baris). */
