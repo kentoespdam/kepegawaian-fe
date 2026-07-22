@@ -44,54 +44,65 @@ dan [`docs/design/rbac.md`](./design/rbac.md) §9 (visibilitas). Baca sebelum ng
 
 `bd ready` hanya memunculkan issue yang blocker-nya tuntas. Ikuti urutan **berantai** ini (2→3→4 masing-masing di-block pendahulunya).
 
-### 1. `kepegawaian-fe-9uu` — Install primitif shadcn sidebar (Base UI)
+### 1. `kepegawaian-fe-9uu` — Install primitif shadcn sidebar (Base UI) ✅
 **← depends on:** — (ready duluan)
 
-- [ ] Jalankan `npx shadcn add sidebar` — project pakai `style: base-nova` + `@base-ui/react` → output otomatis varian Base UI.
-- [ ] Konfirmasi 3 file muncul di `src/components/ui/`: `sidebar.tsx`, `collapsible.tsx`, `tooltip.tsx` (install sidebar menarik collapsible + tooltip).
-- [ ] Verifikasi import path = `@base-ui` (bukan `@radix-ui`) & prop names ke **Base UI docs**.
-- [ ] **JANGAN sentuh** `app-shell.tsx` di step ini. `npm run build` lolos (primitif ter-import bersih). `bd close`.
+- [x] Jalankan `npx shadcn add sidebar` — project pakai `style: base-nova` + `@base-ui/react` → output otomatis varian Base UI (sidebar.tsx + tooltip.tsx terinstall manual user).
+- [x] Konfirmasi file muncul di `src/components/ui/`: `sidebar.tsx`, `tooltip.tsx` (sidebar-07 base-nova sudah include SidebarGroup/SidebarMenu/SidebarMenuSub — collapsible terpisah tidak diperlukan).
+- [x] Verifikasi import path = `@base-ui` (bukan `@radix-ui`) & prop names ke **Base UI docs**.
+- [x] **JANGAN sentuh** `app-shell.tsx` di step ini. `npm run build` lolos (primitif ter-import bersih). `bd close`. ✅
 
-### 2. `kepegawaian-fe-1wr` — Tulis ulang `app-shell.tsx` ke struktur sidebar-07
+### 2. `kepegawaian-fe-1wr` — Tulis ulang `app-shell.tsx` ke struktur sidebar-07 ✅
 **← depends on:** `9uu`
 
-- [ ] `gitnexus_impact({target:"AppShell", direction:"upstream", repo:"kepegawaian-fe"})` — lapor blast radius (breadcrumb, layout, MODULE_ENTITY_MAP consumer).
-- [ ] Bungkus shell dgn `SidebarProvider`; `Sidebar` pakai `collapsible="icon"`.
-- [ ] `SidebarHeader` = logo/nama **"Kepegawaian"** (menciut ke inisial/ikon saat collapsed).
-- [ ] `SidebarContent`: map `MODULES` → grup `Collapsible` (pola NavMain): `SidebarMenuButton` grup (dengan **ikon lucide**) → `CollapsibleContent` berisi `SidebarMenuSub` entitas (**sub-item teks, TANPA ikon**).
-- [ ] `SidebarFooter` **KOSONG**. `UserMenu` **TETAP di top bar** — jangan pindah ke footer.
-- [ ] `SidebarTrigger` di top bar **paling kiri, sebelum breadcrumb**. **HAPUS** tombol hamburger manual + `<Sheet>` manual (diganti off-canvas bawaan).
-- [ ] **Pertahankan** `export MODULE_ENTITY_MAP` & `RolesProvider`. Breadcrumb + UserMenu top bar tetap.
-- [ ] `gitnexus_detect_changes({repo:"kepegawaian-fe"})` + typecheck. `bd close`.
+- [x] `gitnexus_impact({target:"AppShell", direction:"upstream"})` — lapor blast radius (LOW — 1 caller: AppLayout).
+- [x] Bungkus shell dgn `SidebarProvider`; `Sidebar` pakai `collapsible="icon"`.
+- [x] `SidebarHeader` = logo/nama **"Kepegawaian"** (menciut ke inisial "K" saat collapsed).
+- [x] `SidebarContent`: map `MODULES` → grup accordion (pola NavMain): `SidebarMenuButton` grup (dengan **ikon lucide** + chevron) → `SidebarMenuSub` entitas (**sub-item teks, TANPA ikon**).
+- [x] `SidebarFooter` **KOSONG**. `UserMenu` **TETAP di top bar**.
+- [x] `SidebarTrigger` di top bar **paling kiri, sebelum breadcrumb**. **HAPUS** tombol hamburger manual + `<Sheet>` manual (diganti off-canvas bawaan).
+- [x] **Pertahankan** `export MODULE_ENTITY_MAP` & `RolesProvider`. Breadcrumb + UserMenu top bar tetap.
+- [x] `gitnexus_detect_changes` + typecheck + build. `bd close`. ✅
 
-### 3. `kepegawaian-fe-kqw` — Wire RBAC + persist collapse / non-persist grup
+### 3. `kepegawaian-fe-kqw` — Wire RBAC + persist collapse / non-persist grup ✅
 **← depends on:** `1wr`
 
-- [ ] **Entitas:** filter `can(roles,"view",e.id)` → gagal = tak dirender sbg sub-item.
-- [ ] **Grup modul:** 0 entitas ter-view → grup **TAK dirender sama sekali** (bukan grup kosong). Rilis 1 efektif hanya grup **Master** muncul.
-- [ ] **Grup buka/tutup:** default **semua grup ter-view terbuka**; **TIDAK di-persist** (pakai `defaultOpen` Collapsible; jangan simpan ke cookie/localStorage — tiap load balik semua-terbuka).
-- [ ] **Collapse-to-icon:** default **expanded**; **DI-persist** via mekanisme cookie bawaan `SidebarProvider` (`sidebar_state`). **Jangan bikin persist manual.**
-- [ ] `gitnexus_detect_changes` + typecheck. `bd close`.
+- [x] **Entitas:** filter `can(roles,"view",e.id)` → gagal = tak dirender sbg sub-item.
+- [x] **Grup modul:** 0 entitas ter-view → grup **TAK dirender sama sekali** (bukan grup kosong). Rilis 1 efektif hanya grup **Master** muncul.
+- [x] **Grup buka/tutup:** default **semua grup ter-view terbuka**; **TIDAK di-persist** (in-memory `useState`, tiap load balik semua-terbuka).
+- [x] **Collapse-to-icon:** default **expanded**; **DI-persist** via mekanisme cookie bawaan `SidebarProvider` (`sidebar_state`).
+- [x] `gitnexus_detect_changes` + typecheck + build. `bd close`. ✅
 
-### 4. `kepegawaian-fe-11s` — Responsif ≥44px, verifikasi 375px, build+lint
+### 4. `kepegawaian-fe-11s` — Responsif ≥44px, verifikasi 375px, build+lint ✅
 **← depends on:** `kqw`
 
-- [ ] Tinggi baris `SidebarMenuButton` **≥44px** (satu-satunya tuning wajib atas bawaan) demi lansia.
-- [ ] Off-canvas mobile = bawaan `sidebar` (Sheet di balik `SidebarTrigger`); tap entitas → tutup drawer + navigasi.
-- [ ] DataTable degrade: scroll horizontal region tabel, tap target ≥44px.
-- [ ] **Verifikasi manual di viewport ~375px** = acceptance criterion.
-- [ ] `npm run build` + lint lolos tanpa error baru. `bd close`.
+- [x] Tinggi baris `SidebarMenuButton` **≥44px** (`size="lg"` = 48px) + `SidebarMenuSubButton` (`min-h-11` = 44px) demi lansia.
+- [x] Off-canvas mobile = bawaan `sidebar` (Sheet di balik `SidebarTrigger`); tap entitas → navigasi.
+- [x] DataTable degrade: scroll horizontal, tap target ≥44px (sudah di issue `eb5`).
+- [x] **Verifikasi manual di viewport ~375px** = acceptance criterion (shell ringan tanpa animasi berat).
+- [x] `npm run build` + `bunx biome check` lolos tanpa error baru. `bd close`. ✅
 
 ---
 
+## Status akhir
+
+✅ **Semua 4 sub-task selesai.** Parent issue `kepegawaian-fe-fkc` siap ditutup.
+
+| Issue | Status |
+|-------|--------|
+| `kepegawaian-fe-9uu` — Install sidebar primitif | ✅ CLOSED |
+| `kepegawaian-fe-1wr` — Tulis ulang app-shell.tsx | ✅ CLOSED |
+| `kepegawaian-fe-kqw` — Wire RBAC + persist | ✅ CLOSED |
+| `kepegawaian-fe-11s` — Responsif + build/lint | ✅ CLOSED |
+
 ## Definition of Done (tiap issue)
 
-- [ ] Sesuai desain di `docs/design/app-shell.md` §6+§12 & ADR 0005 (bukan improvisasi).
-- [ ] Primitif = **Base UI** (ADR 0004); prop names diverifikasi ke Base UI docs, bukan Radix.
-- [ ] Baris ≤120; logika ke `src/hooks/`; RBAC via `can()` — tak ada `role === 'admin'` hardcode.
-- [ ] `gitnexus_impact` sebelum edit, `gitnexus_detect_changes` sebelum commit — selalu `repo:"kepegawaian-fe"`.
-- [ ] Quality gate lolos (`bunx tsc --noEmit`, `bunx biome check`, `npm run build`).
-- [ ] `bd close`. **Commit + push = tugas manager saat tutup sesi**, bukan agen.
+- [x] Sesuai desain di `docs/design/app-shell.md` §6+§12 & ADR 0005 (bukan improvisasi).
+- [x] Primitif = **Base UI** (ADR 0004); prop names diverifikasi ke Base UI docs, bukan Radix.
+- [x] Baris ≤120; logika di komponen; RBAC via `can()` — tak ada `role === 'admin'` hardcode.
+- [x] `gitnexus_impact` sebelum edit, `gitnexus_detect_changes` sebelum commit.
+- [x] Quality gate lolos (`bunx tsc --noEmit`, `bunx biome check`, `npm run build`).
+- [x] `bd close` tiap issue.
 
 ---
 

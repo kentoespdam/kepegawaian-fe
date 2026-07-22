@@ -538,9 +538,7 @@ function plan(spec, moduleTypes = {}) {
 	}
 	// Schema Page (pageable) ditulis sebagai type alias Page<T> (lihat schemaToDeclaration)
 	// sehingga harus dimasukkan ke shared/lokal seperti schema lainnya.
-	const sharedNames = new Set(
-		Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared"),
-	);
+	const sharedNames = new Set(Object.keys(usage).filter((n) => placementOf(usage[n].size) === "shared"));
 
 	// 3. Rencanakan alias enum (dedup enum identik yang berulang) via kebijakan
 	//    frekuensi + registry KNOWN_ENUMS. Penempatan mengikuti aturan schema:
@@ -812,9 +810,16 @@ function planEnumAliases(schemas, domainSchemas) {
  * File domain ditulis ke subfolder per module (mirror struktur docs/api/).
  */
 function render(p) {
-	const files = [{ domain: null, filename: `${SHARED_MODULE}.ts`, module: null, contents: renderSharedFile(p.shared, p.schemas) }];
+	const files = [
+		{ domain: null, filename: `${SHARED_MODULE}.ts`, module: null, contents: renderSharedFile(p.shared, p.schemas) },
+	];
 	for (const d of p.domains) {
-		files.push({ domain: d.domain, module: d.module, filename: `${d.domain}.ts`, contents: renderDomainFile(d, p.schemas, p.enumAlias, d.module) });
+		files.push({
+			domain: d.domain,
+			module: d.module,
+			filename: `${d.domain}.ts`,
+			contents: renderDomainFile(d, p.schemas, p.enumAlias, d.module),
+		});
 	}
 	return files;
 }
@@ -829,9 +834,7 @@ function render(p) {
 function syncToSrc(files) {
 	console.log(`\n📋 Sync ke src/types/ ...`);
 	for (const f of files) {
-		const sourcePath = f.module
-			? path.join(OUTPUT_DIR, f.module, f.filename)
-			: path.join(OUTPUT_DIR, f.filename);
+		const sourcePath = f.module ? path.join(OUTPUT_DIR, f.module, f.filename) : path.join(OUTPUT_DIR, f.filename);
 		const targetDir = f.module ? path.join(SRC_TYPES_DIR, f.module) : SRC_TYPES_DIR;
 		const targetPath = path.join(targetDir, f.filename);
 
@@ -842,7 +845,7 @@ function syncToSrc(files) {
 		}
 
 		fs.copyFileSync(sourcePath, targetPath);
-		console.log(`   📄 ${f.module ? f.module + "/" : ""}${f.filename}`);
+		console.log(`   📄 ${f.module ? `${f.module}/` : ""}${f.filename}`);
 	}
 
 	// Format dengan Biome
@@ -940,7 +943,9 @@ function main() {
 			fs.writeFileSync(path.join(dir, f.filename), f.contents, "utf-8");
 			if (f.domain !== null) {
 				const d = p.domains.find((x) => x.domain === f.domain);
-				console.log(`  ✅ ${(f.module ? f.module + "/" : "") + f.filename.padEnd(28)} ${d.local.length} lokal, ${d.reExports.length} shared`);
+				console.log(
+					`  ✅ ${(f.module ? `${f.module}/` : "") + f.filename.padEnd(28)} ${d.local.length} lokal, ${d.reExports.length} shared`,
+				);
 			}
 		}
 
