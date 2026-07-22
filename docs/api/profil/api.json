@@ -1,0 +1,4082 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Kepegawaian Rest API",
+		"description": "Need JWT Token for execute this API",
+		"contact": { "name": "Kent-Os", "email": "kentoes.pdam@gmail.com" },
+		"license": { "name": "License of API", "url": "API license URL" },
+		"version": "1.0.0"
+	},
+	"servers": [{ "url": "http://192.168.1.211:8080", "description": "Generated server url" }],
+	"security": [{ "BearerAuthentication": [] }],
+	"paths": {
+		"/profil/profil-update/{id}": {
+			"get": {
+				"tags": ["profil-update-controller"],
+				"operationId": "show",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultProfilUpdateDetailObject" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["profil-update-controller"],
+				"operationId": "approval",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfilUpdateAcceptRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja/{id}": {
+			"get": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "findById",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultPengalamanKerjaDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "update",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PengalamanKerjaPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "delete",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan/{id}": {
+			"get": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "findById_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultPendidikanQuery" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "update_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PendidikanPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "delete_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan/{id}": {
+			"get": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "findById_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultPelatihanDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "update_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PelatihanPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "delete_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/keluarga/{id}": {
+			"get": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "findById_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultProfilKeluargaDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "update_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "delete_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/keahlian/{id}": {
+			"get": {
+				"tags": ["keahlian-controller"],
+				"operationId": "findById_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultKeahlianDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["keahlian-controller"],
+				"operationId": "update_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeahlianPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["keahlian-controller"],
+				"operationId": "delete_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/kartu-identitas/{id}": {
+			"get": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "findById_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultKartuIdentitasDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "update_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KartuIdentitasPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "delete_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/biodata/{id}": {
+			"get": {
+				"tags": ["biodata-controller"],
+				"operationId": "findById_6",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultBiodataDetail" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["biodata-controller"],
+				"operationId": "update_6",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["biodata-controller"],
+				"operationId": "deleteById",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			},
+			"patch": {
+				"tags": ["biodata-controller"],
+				"operationId": "patchBiodata",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPatchRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/profil/biodata/{id}/foto-profil": {
+			"get": {
+				"tags": ["biodata-controller"],
+				"operationId": "getFotoProfil",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			},
+			"put": {
+				"tags": ["biodata-controller"],
+				"operationId": "updateFotoProfil",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"requestBody": {
+					"content": {
+						"application/json": {
+							"schema": {
+								"type": "object",
+								"properties": { "fotoProfil": { "type": "string", "format": "binary" } },
+								"required": ["fotoProfil"]
+							}
+						}
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja": {
+			"get": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "index",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{ "name": "namaPerusahaan", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "jabatan", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPagePengalamanKerjaQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "save",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/PengalamanKerjaPostRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja/lampiran": {
+			"post": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "saveLampiran",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PengalamanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan": {
+			"get": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "index_1",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{ "name": "jenjangId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "gelarDepan", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "gelarBelakang", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "jurusan", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "institusi", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "kota", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "tahunMasuk",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32" }
+					},
+					{
+						"name": "tahunLulus",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32" }
+					},
+					{ "name": "gpa", "in": "query", "required": false, "schema": { "type": "number", "format": "double" } },
+					{ "name": "isLatest", "in": "query", "required": false, "schema": { "type": "boolean" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPagePendidikanQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "save_1",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PendidikanPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan/lampiran": {
+			"post": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "saveLampiran_1",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PendidikanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan": {
+			"get": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "index_2",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{
+						"name": "jenisPelatihanId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "lembaga", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPagePelatihanQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "save_2",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PelatihanPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan/lampiran": {
+			"post": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "saveLampiran_2",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PelatihanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/lampiran/accept": {
+			"post": {
+				"tags": ["lampiran-profil-controller"],
+				"operationId": "acceptLampiran",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/LampiranProfilAcceptRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/keluarga": {
+			"get": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "index_3",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{
+						"name": "hubunganKeluarga",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32" }
+					},
+					{
+						"name": "jenisKelamin",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32" }
+					},
+					{ "name": "isDeleted", "in": "query", "required": false, "schema": { "type": "boolean" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageProfilKeluargaQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "save_3",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/keluarga/lampiran": {
+			"post": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "saveLampiran_3",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/keahlian": {
+			"get": {
+				"tags": ["keahlian-controller"],
+				"operationId": "index_4",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{
+						"name": "jenisKeahlianId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{ "name": "disetujui", "in": "query", "required": false, "schema": { "type": "boolean" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageKeahlianQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["keahlian-controller"],
+				"operationId": "save_4",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeahlianPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/keahlian/lampiran": {
+			"post": {
+				"tags": ["keahlian-controller"],
+				"operationId": "saveLampiran_4",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/KeahlianLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/kartu-identitas": {
+			"get": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "index_5",
+				"parameters": [
+					{ "name": "biodataId", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
+					{
+						"name": "jenisKartuId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{ "name": "nomorKartu", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageKartuIdentitasQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "save_5",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KartuIdentitasPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/kartu-identitas/lampiran": {
+			"post": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "saveLampiran_5",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/KartuIdentitasLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/profil/biodata": {
+			"get": {
+				"tags": ["biodata-controller"],
+				"operationId": "index_6",
+				"parameters": [
+					{ "name": "nik", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "jenisKelamin",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] }
+					},
+					{ "name": "alamat", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "isPegawai", "in": "query", "required": false, "schema": { "type": "boolean" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageBiodataQuery" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["biodata-controller"],
+				"operationId": "save_6",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/profil/profil-update": {
+			"get": {
+				"tags": ["profil-update-controller"],
+				"operationId": "index_7",
+				"parameters": [
+					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "tanggalPengajuan",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "format": "date" }
+					},
+					{
+						"name": "approvalStatus",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["REJECT", "PENDING", "APPROVED"] }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageProfileUpdateQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja/lampiran/{id}/list": {
+			"get": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "getLampiran",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja/lampiran/{id}/file": {
+			"get": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "getFileLampiranById",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/pengalaman-kerja/lampiran/{id}/detail": {
+			"get": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "getLampiranById",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan/lampiran/{id}/list": {
+			"get": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "getLampiran_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan/lampiran/{id}/file": {
+			"get": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "getFileLampiranById_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/pendidikan/lampiran/{id}/detail": {
+			"get": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "getLampiranById_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan/{id}/lampiran": {
+			"get": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "getLampiran_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan/lampiran/{id}": {
+			"get": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "getLampiranById_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "deleteLampiran",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/pelatihan/lampiran/{id}/file": {
+			"get": {
+				"tags": ["pelatihan-controller"],
+				"operationId": "getFileLampiranById_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/lampiran/file/{jenis}/{id}": {
+			"get": {
+				"tags": ["lampiran-profil-controller"],
+				"operationId": "getFile",
+				"parameters": [
+					{
+						"name": "jenis",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PROFIL_KELUARGA",
+								"PROFIL_PENDIDIKAN",
+								"PROFIL_PELATIHAN",
+								"PROFIL_KEAHLIAN",
+								"FOTO_PROFIL",
+								"KARTU_IDENTITAS",
+								"PROFIL_PENGALAMAN_KERJA"
+							]
+						}
+					},
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/keluarga/{id}/lampiran": {
+			"get": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "getLampiran_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/keluarga/lampiran/{id}": {
+			"get": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "getLampiranById_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "deleteLampiran_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/keluarga/lampiran/{id}/file": {
+			"get": {
+				"tags": ["profil-keluarga-controller"],
+				"operationId": "getFileLampiranById_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/keahlian/{id}/lampiran": {
+			"get": {
+				"tags": ["keahlian-controller"],
+				"operationId": "getLampiran_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/keahlian/lampiran/{id}": {
+			"get": {
+				"tags": ["keahlian-controller"],
+				"operationId": "getLampiranById_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["keahlian-controller"],
+				"operationId": "deleteLampiran_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/keahlian/lampiran/{id}/file": {
+			"get": {
+				"tags": ["keahlian-controller"],
+				"operationId": "getFileLampiranById_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/kartu-identitas/{id}/lampiran": {
+			"get": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "getLampiran_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranProfilQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/kartu-identitas/lampiran/{id}": {
+			"get": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "getLampiranById_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultLampiranProfilQuery" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "deleteLampiran_3",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/kartu-identitas/lampiran/{id}/file": {
+			"get": {
+				"tags": ["kartu-identitas-controller"],
+				"operationId": "getFileLampiranById_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/profil/biodata/list": {
+			"get": {
+				"tags": ["biodata-controller"],
+				"operationId": "list",
+				"parameters": [
+					{ "name": "nik", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "jenisKelamin",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] }
+					},
+					{ "name": "alamat", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "isPegawai", "in": "query", "required": false, "schema": { "type": "boolean" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultBiodataQuery" } } }
+					}
+				}
+			}
+		},
+		"/profil/pengalaman-kerja/lampiran/{id}": {
+			"delete": {
+				"tags": ["pengalaman-kerja-controller"],
+				"operationId": "deleteLampiran_4",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/pendidikan/lampiran/{id}": {
+			"delete": {
+				"tags": ["pendidikan-controller"],
+				"operationId": "deleteLampiran_5",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/profil/lampiran/delete/{id}": {
+			"delete": {
+				"tags": ["lampiran-profil-controller"],
+				"operationId": "delete_6",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"ProfilUpdateAcceptRequest": {
+				"type": "object",
+				"properties": {
+					"approval": { "type": "string", "enum": ["REJECT", "PENDING", "APPROVED"] },
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 }
+				},
+				"required": ["approval", "pegawaiId"]
+			},
+			"SavedResultString": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "string" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PengalamanKerjaPutRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"namaPerusahaan": { "type": "string", "minLength": 1 },
+					"typePerusahaan": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"lokasi": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"tahunKeluar": { "type": "integer", "format": "int32" },
+					"notes": { "type": "string" }
+				},
+				"required": ["biodataId", "namaPerusahaan"]
+			},
+			"SavedResultLong": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "integer", "format": "int64" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PendidikanPutRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"jenjangPendidikanId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"gelarDepan": { "type": "string" },
+					"gelarBelakang": { "type": "string" },
+					"jurusan": { "type": "string" },
+					"institusi": { "type": "string", "minLength": 1 },
+					"kota": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"isLulus": { "type": "boolean" },
+					"tahunLulus": { "type": "integer", "format": "int32" },
+					"gpa": { "type": "number", "format": "double" },
+					"isLatest": { "type": "boolean" }
+				},
+				"required": ["biodataId", "institusi"]
+			},
+			"PelatihanPutRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"jenisPelatihanId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"nama": { "type": "string", "minLength": 1 },
+					"lembaga": { "type": "string", "minLength": 1 },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"lulus": { "type": "boolean" },
+					"nilai": { "type": "string", "minLength": 1 },
+					"ikatanDinas": { "type": "boolean" },
+					"tanggalAkhirIkatan": { "type": "string", "format": "date" },
+					"notes": { "type": "string" }
+				},
+				"required": ["biodataId", "lembaga", "nama", "nilai", "tanggalMulai", "tanggalSelesai"]
+			},
+			"ProfilKeluargaPutRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"nik": { "type": "string" },
+					"nama": { "type": "string", "minLength": 1 },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"hubunganKeluarga": { "type": "string", "enum": ["SUAMI", "ISTRI", "AYAH", "IBU", "ANAK", "SAUDARA"] },
+					"tempatLahir": { "type": "string", "minLength": 1 },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"tanggungan": { "type": "boolean" },
+					"pendidikanId": { "type": "integer", "format": "int64" },
+					"statusPendidikan": { "type": "string", "enum": ["BELUM_SEKOLAH", "SEKOLAH", "SELESAI_SEKOLAH"] },
+					"statusKawin": { "type": "boolean" },
+					"notes": { "type": "string" }
+				},
+				"required": [
+					"agama",
+					"biodataId",
+					"hubunganKeluarga",
+					"jenisKelamin",
+					"nama",
+					"statusKawin",
+					"tanggalLahir",
+					"tanggungan",
+					"tempatLahir"
+				]
+			},
+			"KeahlianPutRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"keahlianId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"kualifikasi": { "type": "string", "enum": ["KURANG", "BAIK", "CUKUP"] },
+					"sertifikasi": { "type": "boolean" },
+					"institusi": { "type": "string", "minLength": 1 },
+					"tahun": { "type": "integer", "format": "int32", "minimum": 1970 },
+					"masaBerlaku": { "type": "string" }
+				},
+				"required": ["biodataId", "institusi", "kualifikasi"]
+			},
+			"KartuIdentitasPutRequest": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string", "minLength": 1 },
+					"jenisKartuId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"nomorKartu": { "type": "string", "minLength": 1 },
+					"tanggalExpired": { "type": "string", "format": "date" },
+					"tanggalTerima": { "type": "string", "format": "date" },
+					"notes": { "type": "string" }
+				},
+				"required": ["nik", "nomorKartu"]
+			},
+			"BiodataPutRequest": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string", "minLength": 1 },
+					"nama": { "type": "string", "minLength": 1 },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"tempatLahir": { "type": "string", "minLength": 1 },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"alamat": { "type": "string", "minLength": 1 },
+					"telp": { "type": "string" },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"ibuKandung": { "type": "string", "minLength": 1 },
+					"pendidikanTerakhirId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"golonganDarah": { "type": "string", "enum": ["A", "B", "AB", "O"] },
+					"statusKawin": {
+						"type": "string",
+						"enum": ["BELUM_KAWIN", "KAWIN", "JANDA_DUDA", "MENIKAH_SEKANTOR", "TIDAK_TAHU"]
+					},
+					"notes": { "type": "string" },
+					"isPegawai": { "type": "boolean" }
+				},
+				"required": ["agama", "alamat", "ibuKandung", "jenisKelamin", "nama", "nik", "tanggalLahir", "tempatLahir"]
+			},
+			"PengalamanKerjaPostRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"namaPerusahaan": { "type": "string", "minLength": 1 },
+					"typePerusahaan": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"lokasi": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"tahunKeluar": { "type": "integer", "format": "int32" },
+					"notes": { "type": "string" }
+				},
+				"required": ["biodataId", "namaPerusahaan"]
+			},
+			"PengalamanLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"PendidikanPostRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"jenjangPendidikanId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"gelarDepan": { "type": "string" },
+					"gelarBelakang": { "type": "string" },
+					"jurusan": { "type": "string" },
+					"institusi": { "type": "string", "minLength": 1 },
+					"kota": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"isLulus": { "type": "boolean" },
+					"tahunLulus": { "type": "integer", "format": "int32" },
+					"gpa": { "type": "number", "format": "double" },
+					"isLatest": { "type": "boolean" }
+				},
+				"required": ["biodataId", "institusi"]
+			},
+			"PendidikanLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"PelatihanPostRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"jenisPelatihanId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"nama": { "type": "string", "minLength": 1 },
+					"lembaga": { "type": "string", "minLength": 1 },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"lulus": { "type": "boolean" },
+					"nilai": { "type": "string", "minLength": 1 },
+					"ikatanDinas": { "type": "boolean" },
+					"tanggalAkhirIkatan": { "type": "string", "format": "date" },
+					"notes": { "type": "string" }
+				},
+				"required": ["biodataId", "lembaga", "nama", "nilai", "tanggalMulai", "tanggalSelesai"]
+			},
+			"PelatihanLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"LampiranProfilAcceptRequest": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64", "minimum": 1 },
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 }
+				},
+				"required": ["id", "ref", "refId"]
+			},
+			"ProfilKeluargaPostRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"nik": { "type": "string" },
+					"nama": { "type": "string", "minLength": 1 },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"hubunganKeluarga": { "type": "string", "enum": ["SUAMI", "ISTRI", "AYAH", "IBU", "ANAK", "SAUDARA"] },
+					"tempatLahir": { "type": "string", "minLength": 1 },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"tanggungan": { "type": "boolean" },
+					"pendidikanId": { "type": "integer", "format": "int64" },
+					"statusPendidikan": { "type": "string", "enum": ["BELUM_SEKOLAH", "SEKOLAH", "SELESAI_SEKOLAH"] },
+					"statusKawin": { "type": "boolean" },
+					"notes": { "type": "string" }
+				},
+				"required": [
+					"agama",
+					"biodataId",
+					"hubunganKeluarga",
+					"jenisKelamin",
+					"nama",
+					"statusKawin",
+					"tanggalLahir",
+					"tanggungan",
+					"tempatLahir"
+				]
+			},
+			"ProfilKeluargaLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"KeahlianPostRequest": {
+				"type": "object",
+				"properties": {
+					"biodataId": { "type": "string", "minLength": 1 },
+					"keahlianId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"kualifikasi": { "type": "string", "enum": ["KURANG", "BAIK", "CUKUP"] },
+					"sertifikasi": { "type": "boolean" },
+					"institusi": { "type": "string", "minLength": 1 },
+					"tahun": { "type": "integer", "format": "int32", "minimum": 1970 },
+					"masaBerlaku": { "type": "string" }
+				},
+				"required": ["biodataId", "institusi", "kualifikasi"]
+			},
+			"KeahlianLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"KartuIdentitasPostRequest": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string", "minLength": 1 },
+					"jenisKartuId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"nomorKartu": { "type": "string", "minLength": 1 },
+					"tanggalExpired": { "type": "string", "format": "date" },
+					"tanggalTerima": { "type": "string", "format": "date" },
+					"notes": { "type": "string" }
+				},
+				"required": ["nik", "nomorKartu"]
+			},
+			"KartuIdentitasLampiranPostRequest": {
+				"type": "object",
+				"properties": {
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"fileName": { "type": "string", "format": "binary" },
+					"notes": { "type": "string" }
+				},
+				"required": ["fileName"]
+			},
+			"BiodataPostRequest": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string", "minLength": 1 },
+					"nama": { "type": "string", "minLength": 1 },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"tempatLahir": { "type": "string", "minLength": 1 },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"alamat": { "type": "string", "minLength": 1 },
+					"telp": { "type": "string" },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"ibuKandung": { "type": "string", "minLength": 1 },
+					"pendidikanTerakhirId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"golonganDarah": { "type": "string", "enum": ["A", "B", "AB", "O"] },
+					"statusKawin": {
+						"type": "string",
+						"enum": ["BELUM_KAWIN", "KAWIN", "JANDA_DUDA", "MENIKAH_SEKANTOR", "TIDAK_TAHU"]
+					},
+					"notes": { "type": "string" },
+					"isPegawai": { "type": "boolean" }
+				},
+				"required": ["agama", "alamat", "ibuKandung", "jenisKelamin", "nama", "nik", "tanggalLahir", "tempatLahir"]
+			},
+			"BiodataPatchRequest": {
+				"type": "object",
+				"properties": {
+					"nama": { "type": "string" },
+					"alamat": { "type": "string" },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"statusKawin": {
+						"type": "string",
+						"enum": ["BELUM_KAWIN", "KAWIN", "JANDA_DUDA", "MENIKAH_SEKANTOR", "TIDAK_TAHU"]
+					},
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"tempatLahir": { "type": "string" },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"ibuKandung": { "type": "string" },
+					"telp": { "type": "string" }
+				}
+			},
+			"PageProfileUpdateQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/ProfileUpdateQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageProfileUpdateQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageProfileUpdateQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PageableObject": {
+				"type": "object",
+				"properties": {
+					"offset": { "type": "integer", "format": "int64" },
+					"paged": { "type": "boolean" },
+					"pageNumber": { "type": "integer", "format": "int32" },
+					"pageSize": { "type": "integer", "format": "int32" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
+				}
+			},
+			"ProfileUpdateQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"nipam": { "type": "string" },
+					"nama": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"reqDate": { "type": "string", "format": "date-time" },
+					"tableName": {
+						"type": "string",
+						"enum": ["BIODATA", "KELUARGA", "PENDIDIKAN", "PENGALAMAN_KERJA", "PELATIHAN", "KEAHLIAN"]
+					},
+					"actionType": { "type": "string", "enum": ["UNKNOWN", "INSERT", "UPDATE", "DELETE"] },
+					"dataDescription": { "type": "string" },
+					"revId": { "type": "integer", "format": "int64" },
+					"approvalStatus": { "type": "string", "enum": ["REJECT", "PENDING", "APPROVED"] },
+					"approvalDate": { "type": "string", "format": "date-time" },
+					"approvalPic": { "type": "string" }
+				}
+			},
+			"SortObject": {
+				"type": "object",
+				"properties": {
+					"empty": { "type": "boolean" },
+					"sorted": { "type": "boolean" },
+					"unsorted": { "type": "boolean" }
+				}
+			},
+			"ProfilUpdateDetailObject": {
+				"type": "object",
+				"properties": {
+					"profileUpdate": { "$ref": "#/components/schemas/ProfileUpdateQuery" },
+					"latestRevision": {},
+					"previousRevision": {}
+				}
+			},
+			"SingleResultProfilUpdateDetailObject": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/ProfilUpdateDetailObject" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PagePengalamanKerjaQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PengalamanKerjaQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPagePengalamanKerjaQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PagePengalamanKerjaQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PengalamanKerjaQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"namaPerusahaan": { "type": "string" },
+					"typePerusahaan": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"lokasi": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"tahunKeluar": { "type": "integer", "format": "int32" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" }
+				}
+			},
+			"LampiranRow": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"fileName": { "type": "string" },
+					"mimeType": { "type": "string" }
+				}
+			},
+			"PengalamanKerjaDetail": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"namaPerusahaan": { "type": "string" },
+					"typePerusahaan": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"lokasi": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"tahunKeluar": { "type": "integer", "format": "int32" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" },
+					"lampiran": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranRow" } }
+				}
+			},
+			"SingleResultPengalamanKerjaDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/PengalamanKerjaDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"LampiranProfilQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"ref": {
+						"type": "string",
+						"enum": [
+							"PROFIL_KELUARGA",
+							"PROFIL_PENDIDIKAN",
+							"PROFIL_PELATIHAN",
+							"PROFIL_KEAHLIAN",
+							"FOTO_PROFIL",
+							"KARTU_IDENTITAS",
+							"PROFIL_PENGALAMAN_KERJA"
+						]
+					},
+					"refId": { "type": "integer", "format": "int64" },
+					"fileName": { "type": "string" },
+					"mimeType": { "type": "string" },
+					"notes": { "type": "string" },
+					"disetujui": { "type": "boolean" },
+					"disetujuiOleh": { "type": "string" },
+					"tanggalDisetujui": { "type": "string", "format": "date-time" }
+				}
+			},
+			"ListResultLampiranProfilQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranProfilQuery" } },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"SingleResultLampiranProfilQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/LampiranProfilQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"JenjangPendidikanResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string" },
+					"shortName": { "type": "string" },
+					"seq": { "type": "integer", "format": "int32" },
+					"isStatistik": { "type": "boolean" }
+				}
+			},
+			"PagePendidikanQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PendidikanQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPagePendidikanQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PagePendidikanQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PendidikanQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenjangId": { "type": "integer", "format": "int64" },
+					"jenjangPendidikan": { "$ref": "#/components/schemas/JenjangPendidikanResponse" },
+					"gelarDepan": { "type": "string" },
+					"gelarBelakang": { "type": "string" },
+					"jurusan": { "type": "string" },
+					"institusi": { "type": "string" },
+					"kota": { "type": "string" },
+					"tahunMasuk": { "type": "integer", "format": "int32" },
+					"isLulus": { "type": "boolean" },
+					"tahunLulus": { "type": "integer", "format": "int32" },
+					"gpa": { "type": "number", "format": "double" },
+					"isLatest": { "type": "boolean" },
+					"changedStatus": { "type": "string", "format": "byte" }
+				}
+			},
+			"SingleResultPendidikanQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/PendidikanQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PagePelatihanQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PelatihanQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPagePelatihanQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PagePelatihanQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PelatihanQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenisPelatihanId": { "type": "integer", "format": "int64" },
+					"jenisPelatihanNama": { "type": "string" },
+					"nama": { "type": "string" },
+					"lembaga": { "type": "string" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"lulus": { "type": "boolean" },
+					"nilai": { "type": "string" },
+					"ikatanDinas": { "type": "boolean" },
+					"tanggalAkhirIkatan": { "type": "string", "format": "date" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" }
+				}
+			},
+			"PelatihanDetail": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenisPelatihanId": { "type": "integer", "format": "int64" },
+					"jenisPelatihanNama": { "type": "string" },
+					"nama": { "type": "string" },
+					"lembaga": { "type": "string" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"lulus": { "type": "boolean" },
+					"nilai": { "type": "string" },
+					"ikatanDinas": { "type": "boolean" },
+					"tanggalAkhirIkatan": { "type": "string", "format": "date" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" },
+					"lampiran": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranRow" } }
+				}
+			},
+			"SingleResultPelatihanDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/PelatihanDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PageProfilKeluargaQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/ProfilKeluargaQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageProfilKeluargaQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageProfilKeluargaQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"ProfilKeluargaQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"nik": { "type": "string" },
+					"nama": { "type": "string" },
+					"jenisKelamin": { "type": "string" },
+					"agama": { "type": "string" },
+					"hubunganKeluarga": { "type": "string" },
+					"tempatLahir": { "type": "string" },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"tanggungan": { "type": "boolean" },
+					"pendidikanId": { "type": "integer", "format": "int64" },
+					"jenjangPendidikan": { "$ref": "#/components/schemas/JenjangPendidikanResponse" },
+					"statusPendidikan": { "type": "string" },
+					"statusKawin": { "type": "boolean" },
+					"notes": { "type": "string" },
+					"version": { "type": "integer", "format": "int32" },
+					"isDeleted": { "type": "boolean" },
+					"changedStatus": { "type": "boolean" }
+				}
+			},
+			"ProfilKeluargaDetail": {
+				"type": "object",
+				"properties": {
+					"query": { "$ref": "#/components/schemas/ProfilKeluargaQuery" },
+					"lampiran": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranRow" } }
+				}
+			},
+			"SingleResultProfilKeluargaDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/ProfilKeluargaDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"JenisKeahlianResponse": {
+				"type": "object",
+				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+			},
+			"KeahlianQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenisKeahlian": { "$ref": "#/components/schemas/JenisKeahlianResponse" },
+					"kualifikasi": { "type": "string" },
+					"sertifikasi": { "type": "boolean" },
+					"institusi": { "type": "string" },
+					"tahun": { "type": "integer", "format": "int32" },
+					"masaBerlaku": { "type": "string" },
+					"disetujui": { "type": "boolean" },
+					"tanggalPengajuan": { "type": "string", "format": "date-time" },
+					"tanggalDisetujui": { "type": "string", "format": "date-time" },
+					"disetujuiOleh": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" }
+				}
+			},
+			"PageKeahlianQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/KeahlianQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageKeahlianQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageKeahlianQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"KeahlianDetail": {
+				"type": "object",
+				"properties": {
+					"query": { "$ref": "#/components/schemas/KeahlianQuery" },
+					"lampiran": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranRow" } }
+				}
+			},
+			"SingleResultKeahlianDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/KeahlianDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"KartuIdentitasQuery": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenisKartuId": { "type": "integer", "format": "int64" },
+					"jenisKartuNama": { "type": "string" },
+					"nomorKartu": { "type": "string" },
+					"tanggalExpired": { "type": "string", "format": "date" },
+					"tanggalTerima": { "type": "string", "format": "date" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" }
+				}
+			},
+			"PageKartuIdentitasQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/KartuIdentitasQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageKartuIdentitasQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageKartuIdentitasQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"KartuIdentitasDetail": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"biodataId": { "type": "string" },
+					"biodataNik": { "type": "string" },
+					"biodataNama": { "type": "string" },
+					"jenisKartuId": { "type": "integer", "format": "int64" },
+					"jenisKartuNama": { "type": "string" },
+					"nomorKartu": { "type": "string" },
+					"tanggalExpired": { "type": "string", "format": "date" },
+					"tanggalTerima": { "type": "string", "format": "date" },
+					"notes": { "type": "string" },
+					"changedStatus": { "type": "string", "format": "byte" },
+					"lampiran": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranRow" } }
+				}
+			},
+			"SingleResultKartuIdentitasDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/KartuIdentitasDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"BiodataQuery": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string" },
+					"nama": { "type": "string" },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"tempatLahir": { "type": "string" },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"alamat": { "type": "string" },
+					"telp": { "type": "string" },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"ibuKandung": { "type": "string" },
+					"pendidikanTerakhirId": { "type": "integer", "format": "int64" },
+					"pendidikanTerakhir": { "$ref": "#/components/schemas/JenjangPendidikanResponse" },
+					"golonganDarah": { "type": "string", "enum": ["A", "B", "AB", "O"] },
+					"statusKawin": {
+						"type": "string",
+						"enum": ["BELUM_KAWIN", "KAWIN", "JANDA_DUDA", "MENIKAH_SEKANTOR", "TIDAK_TAHU"]
+					},
+					"fotoProfil": { "type": "string" },
+					"notes": { "type": "string" },
+					"isPegawai": { "type": "boolean" }
+				}
+			},
+			"PageBiodataQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/BiodataQuery" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageBiodataQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageBiodataQuery" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"BiodataDetail": {
+				"type": "object",
+				"properties": {
+					"nik": { "type": "string" },
+					"nama": { "type": "string" },
+					"jenisKelamin": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] },
+					"tempatLahir": { "type": "string" },
+					"tanggalLahir": { "type": "string", "format": "date" },
+					"alamat": { "type": "string" },
+					"telp": { "type": "string" },
+					"agama": {
+						"type": "string",
+						"enum": [
+							"TIDAK_TAHU",
+							"ISLAM",
+							"KRISTEN",
+							"KATOLIK",
+							"HINDU",
+							"BUDHA",
+							"KONGHUCHU",
+							"ALIRAN_KEPERCAYAAN",
+							"LAINNYA"
+						]
+					},
+					"ibuKandung": { "type": "string" },
+					"pendidikanTerakhirId": { "type": "integer", "format": "int64" },
+					"golonganDarah": { "type": "string", "enum": ["A", "B", "AB", "O"] },
+					"statusKawin": {
+						"type": "string",
+						"enum": ["BELUM_KAWIN", "KAWIN", "JANDA_DUDA", "MENIKAH_SEKANTOR", "TIDAK_TAHU"]
+					},
+					"fotoProfil": { "type": "string" },
+					"notes": { "type": "string" },
+					"isPegawai": { "type": "boolean" },
+					"pendidikan": { "type": "array", "items": { "$ref": "#/components/schemas/PendidikanQuery" } },
+					"kartuIdentitas": { "type": "array", "items": { "$ref": "#/components/schemas/KartuIdentitasQuery" } }
+				}
+			},
+			"SingleResultBiodataDetail": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/BiodataDetail" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"ListResultBiodataQuery": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "array", "items": { "$ref": "#/components/schemas/BiodataQuery" } },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"DeletedResult": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "string" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			}
+		},
+		"securitySchemes": { "BearerAuthentication": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } }
+	}
+}

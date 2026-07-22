@@ -1,0 +1,2130 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Kepegawaian Rest API",
+		"description": "Need JWT Token for execute this API",
+		"contact": { "name": "Kent-Os", "email": "kentoes.pdam@gmail.com" },
+		"license": { "name": "License of API", "url": "API license URL" },
+		"version": "1.0.0"
+	},
+	"servers": [{ "url": "http://192.168.1.211:8080", "description": "Generated server url" }],
+	"security": [{ "BearerAuthentication": [] }],
+	"paths": {
+		"/cuti/pengajuan/{id}": {
+			"get": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "detail",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultCutiPengajuanResponse" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "update",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiPengajuanPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "pembatalan",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan/klaim/{id}": {
+			"put": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "updateKlaim",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/CutiPengajuanKlaimPostRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/cuti/kuota/{id}": {
+			"get": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "show",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultCutiKuotaResponse" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "update_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiKuotaPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "delete",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/cuti/jenis/{id}": {
+			"get": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "show_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultCutiJenisResponse" } } }
+					}
+				}
+			},
+			"put": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "update_2",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiJenisPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "delete_1",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan": {
+			"get": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "index",
+				"parameters": [
+					{ "name": "id", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "tahun", "in": "query", "required": false, "schema": { "type": "integer", "format": "int32" } },
+					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "picSaatIniId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{
+						"name": "approvalCutiStatus",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+						}
+					},
+					{
+						"name": "jenisPengajuanCuti",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["PENGAJUAN_CUTI", "KLAIM_CUTI"] }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageCutiPengajuanResponse" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "create",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiPengajuanPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan/klaim": {
+			"post": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "klaim",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/CutiPengajuanKlaimPostRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/cuti/kuota": {
+			"get": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "index_1",
+				"parameters": [
+					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "tahun", "in": "query", "required": false, "schema": { "type": "integer", "format": "int32" } },
+					{ "name": "expired", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultCutiKuotaPegawaiResponse" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "store",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiKuotaPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/cuti/kuota/import": {
+			"post": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "importData",
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/CutiKuotaImportRequest" } } }
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/cuti/jenis": {
+			"get": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "index_2",
+				"parameters": [
+					{ "name": "parentId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageCutiJenisResponse" } } }
+					}
+				}
+			},
+			"post": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "save",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiJenisPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/cuti/approval": {
+			"post": {
+				"tags": ["cuti-approval-controller"],
+				"operationId": "saveApproval",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiApprovalPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/cuti/approval/klaim": {
+			"post": {
+				"tags": ["cuti-approval-controller"],
+				"operationId": "klaim_1",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/CutiApprovalPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan/{tanggalMulai}/{tanggalSelesai}/total-hari-kerja": {
+			"get": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "findTotalHariKerja",
+				"parameters": [
+					{ "name": "tanggalMulai", "in": "path", "required": true, "schema": { "type": "string", "format": "date" } },
+					{ "name": "tanggalSelesai", "in": "path", "required": true, "schema": { "type": "string", "format": "date" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultInteger" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan/{pegawaiId}/pegawai": {
+			"get": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "index_3",
+				"parameters": [
+					{ "name": "pegawaiId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "id", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "tahun", "in": "query", "required": false, "schema": { "type": "integer", "format": "int32" } },
+					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "picSaatIniId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{
+						"name": "approvalCutiStatus",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+						}
+					},
+					{
+						"name": "jenisPengajuanCuti",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["PENGAJUAN_CUTI", "KLAIM_CUTI"] }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageCutiPengajuanResponse" } } }
+					}
+				}
+			}
+		},
+		"/cuti/pengajuan/approval": {
+			"get": {
+				"tags": ["cuti-pengajuan-controller"],
+				"operationId": "indexApproval",
+				"parameters": [
+					{
+						"name": "tahun",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "integer", "format": "int32", "minimum": 2000 }
+					},
+					{
+						"name": "picSaatIniId",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "integer", "format": "int64", "minimum": 1 }
+					},
+					{
+						"name": "approvalCutiStatus",
+						"in": "query",
+						"required": true,
+						"schema": {
+							"type": "string",
+							"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+						}
+					},
+					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "readWriteStatus",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "enum": ["NONE", "READ", "WRITE"] }
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageCutiApprovalChainResponse" } }
+						}
+					}
+				}
+			}
+		},
+		"/cuti/kuota/{pegawaiId}/{tahun}/sisa": {
+			"get": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "showByPegawai",
+				"parameters": [
+					{ "name": "pegawaiId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "tahun", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultCutiKuotaSisa" } } }
+					}
+				}
+			}
+		},
+		"/cuti/kuota/template": {
+			"get": {
+				"tags": ["cuti-kuota-controller"],
+				"operationId": "template",
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/cuti/jenis/list": {
+			"get": {
+				"tags": ["cuti-jenis-controller"],
+				"operationId": "list",
+				"parameters": [
+					{ "name": "parentId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultCutiJenisResponse" } } }
+					}
+				}
+			}
+		},
+		"/cuti/approval/{cutiId}": {
+			"get": {
+				"tags": ["cuti-approval-controller"],
+				"operationId": "findApproval",
+				"parameters": [
+					{ "name": "cutiId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "id", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "approverId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
+					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageCutiApprovalMiniResponse" } }
+						}
+					}
+				}
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"CutiPengajuanPutRequest": {
+				"type": "object",
+				"properties": {
+					"csrfToken": { "type": "string", "minLength": 1 },
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"jenisCutiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"subJenisCutiId": { "type": "integer", "format": "int64" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"jumlahHariKerja": { "type": "integer", "format": "int32" },
+					"alasan": { "type": "string", "minLength": 1 }
+				},
+				"required": [
+					"alasan",
+					"csrfToken",
+					"jenisCutiId",
+					"jumlahHariKerja",
+					"pegawaiId",
+					"tanggalMulai",
+					"tanggalSelesai"
+				]
+			},
+			"SavedResultLong": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "integer", "format": "int64" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiPengajuanKlaimPostRequest": {
+				"type": "object",
+				"properties": {
+					"csrfToken": { "type": "string", "minLength": 1 },
+					"refCutiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"keterangan": { "type": "string" },
+					"listHari": { "type": "array", "items": { "type": "string", "format": "date" }, "minItems": 1 }
+				},
+				"required": ["csrfToken", "listHari", "pegawaiId", "refCutiId"]
+			},
+			"CutiKuotaPutRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"tahun": { "type": "integer", "format": "int32", "minimum": 2000 },
+					"kuota": { "type": "integer", "format": "int32" },
+					"kuotaTambahan": { "type": "integer", "format": "int32" },
+					"sisaKuota": { "type": "integer", "format": "int32" },
+					"expired": { "type": "string", "format": "date" }
+				},
+				"required": ["expired", "pegawaiId", "tahun"]
+			},
+			"CutiJenisPutRequest": {
+				"type": "object",
+				"properties": {
+					"parentId": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string", "minLength": 1 },
+					"maxHari": { "type": "integer", "format": "int32" },
+					"potongKuotaTahunan": { "type": "boolean" }
+				},
+				"required": ["nama"]
+			},
+			"CutiPengajuanPostRequest": {
+				"type": "object",
+				"properties": {
+					"csrfToken": { "type": "string", "minLength": 1 },
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"jenisCutiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"subJenisCutiId": { "type": "integer", "format": "int64" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"jumlahHariKerja": { "type": "integer", "format": "int32" },
+					"alasan": { "type": "string", "minLength": 1 }
+				},
+				"required": [
+					"alasan",
+					"csrfToken",
+					"jenisCutiId",
+					"jumlahHariKerja",
+					"pegawaiId",
+					"tanggalMulai",
+					"tanggalSelesai"
+				]
+			},
+			"CutiKuotaPostRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"tahun": { "type": "integer", "format": "int32", "minimum": 2000 },
+					"kuota": { "type": "integer", "format": "int32" },
+					"kuotaTambahan": { "type": "integer", "format": "int32" },
+					"sisaKuota": { "type": "integer", "format": "int32" },
+					"expired": { "type": "string", "format": "date" }
+				},
+				"required": ["expired", "pegawaiId", "tahun"]
+			},
+			"CutiKuotaImportRequest": {
+				"type": "object",
+				"properties": {
+					"tahun": { "type": "integer", "format": "int32", "minimum": 2000 },
+					"file": { "type": "string", "format": "binary" }
+				},
+				"required": ["file", "tahun"]
+			},
+			"SavedResultString": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "string" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiJenisPostRequest": {
+				"type": "object",
+				"properties": {
+					"parentId": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string", "minLength": 1 },
+					"maxHari": { "type": "integer", "format": "int32" },
+					"potongKuotaTahunan": { "type": "boolean" }
+				},
+				"required": ["nama"]
+			},
+			"CutiApprovalPostRequest": {
+				"type": "object",
+				"properties": {
+					"csrfToken": { "type": "string", "minLength": 1 },
+					"cutiId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"approverId": { "type": "integer", "format": "int64", "minimum": 1 },
+					"approvalLevel": { "type": "integer", "format": "int32", "minimum": 1 },
+					"approvalStatus": {
+						"type": "string",
+						"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+					},
+					"notes": { "type": "string" }
+				},
+				"required": ["approvalLevel", "approvalStatus", "approverId", "csrfToken", "cutiId"]
+			},
+			"CutiJenisMiniResponse": {
+				"type": "object",
+				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+			},
+			"CutiPengajuanMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"pegawaiId": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string" },
+					"nipam": { "type": "string" },
+					"pangkatGolongan": { "type": "string" },
+					"organisasi": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
+					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
+					"tanggalPengajuan": { "type": "string", "format": "date" },
+					"jenisPengajuanCuti": { "type": "string", "enum": ["PENGAJUAN_CUTI", "KLAIM_CUTI"] },
+					"approvalCutiStatus": {
+						"type": "string",
+						"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+					},
+					"approvalLevel": { "type": "integer", "format": "int32" },
+					"jenisCuti": { "$ref": "#/components/schemas/CutiJenisMiniResponse" },
+					"subJenisCuti": { "$ref": "#/components/schemas/CutiJenisMiniResponse" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"alasan": { "type": "string" },
+					"jumlahHari": { "type": "integer", "format": "int32" },
+					"jumlahHariKerja": { "type": "integer", "format": "int32" },
+					"picSaatIni": { "$ref": "#/components/schemas/JabatanMiniResponse" },
+					"isClaimed": { "type": "boolean" }
+				}
+			},
+			"CutiPengajuanResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"pegawaiId": { "type": "integer", "format": "int64" },
+					"nama": { "type": "string" },
+					"nipam": { "type": "string" },
+					"pangkatGolongan": { "type": "string" },
+					"organisasi": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
+					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
+					"tanggalPengajuan": { "type": "string", "format": "date" },
+					"jenisPengajuanCuti": { "type": "string", "enum": ["PENGAJUAN_CUTI", "KLAIM_CUTI"] },
+					"approvalCutiStatus": {
+						"type": "string",
+						"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+					},
+					"approvalLevel": { "type": "integer", "format": "int32" },
+					"jenisCuti": { "$ref": "#/components/schemas/CutiJenisMiniResponse" },
+					"subJenisCuti": { "$ref": "#/components/schemas/CutiJenisMiniResponse" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalSelesai": { "type": "string", "format": "date" },
+					"alasan": { "type": "string" },
+					"jumlahHari": { "type": "integer", "format": "int32" },
+					"jumlahHariKerja": { "type": "integer", "format": "int32" },
+					"picSaatIni": { "$ref": "#/components/schemas/JabatanMiniResponse" },
+					"isClaimed": { "type": "boolean" },
+					"refCuti": { "$ref": "#/components/schemas/CutiPengajuanMiniResponse" }
+				}
+			},
+			"JabatanMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"kode": { "type": "string" },
+					"level": { "$ref": "#/components/schemas/LevelResponse" },
+					"nama": { "type": "string" }
+				}
+			},
+			"LevelResponse": {
+				"type": "object",
+				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+			},
+			"OrganisasiMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"kode": { "type": "string" },
+					"nama": { "type": "string" },
+					"shortName": { "type": "string" }
+				}
+			},
+			"PageCutiPengajuanResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/CutiPengajuanResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageCutiPengajuanResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageCutiPengajuanResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PageableObject": {
+				"type": "object",
+				"properties": {
+					"offset": { "type": "integer", "format": "int64" },
+					"paged": { "type": "boolean" },
+					"pageNumber": { "type": "integer", "format": "int32" },
+					"pageSize": { "type": "integer", "format": "int32" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
+				}
+			},
+			"SortObject": {
+				"type": "object",
+				"properties": {
+					"empty": { "type": "boolean" },
+					"sorted": { "type": "boolean" },
+					"unsorted": { "type": "boolean" }
+				}
+			},
+			"SingleResultInteger": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "integer", "format": "int32" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"SingleResultCutiPengajuanResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/CutiPengajuanResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiApprovalChainResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"approvalLevel": { "type": "integer", "format": "int32" },
+					"readWriteStatus": { "type": "string", "enum": ["NONE", "READ", "WRITE"] },
+					"refCuti": { "$ref": "#/components/schemas/CutiPengajuanMiniResponse" }
+				}
+			},
+			"PageCutiApprovalChainResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/CutiApprovalChainResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageCutiApprovalChainResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageCutiApprovalChainResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiKuotaPegawaiResponse": {
+				"type": "object",
+				"properties": {
+					"page": { "$ref": "#/components/schemas/PageCutiKuotaResponse" },
+					"additional": { "type": "array", "items": { "$ref": "#/components/schemas/CutiKuotaResponse" } }
+				}
+			},
+			"CutiKuotaResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"pegawai": { "$ref": "#/components/schemas/PegawaiMiniResponse" },
+					"tahun": { "type": "integer", "format": "int32" },
+					"kuota": { "type": "integer", "format": "int32" },
+					"kuotaTerpakai": { "type": "integer", "format": "int32" },
+					"kuotaTambahan": { "type": "integer", "format": "int32" },
+					"sisaKuota": { "type": "integer", "format": "int32" },
+					"expired": { "type": "string", "format": "date" }
+				}
+			},
+			"PageCutiKuotaResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/CutiKuotaResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PegawaiMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"nipam": { "type": "string" },
+					"nama": { "type": "string" },
+					"statusPegawai": { "type": "string" },
+					"jabatan": { "type": "string" },
+					"organisasi": { "type": "string" }
+				}
+			},
+			"SingleResultCutiKuotaPegawaiResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/CutiKuotaPegawaiResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiKuotaSisa": {
+				"type": "object",
+				"properties": {
+					"sisaCutiTahunIni": { "type": "integer", "format": "int32" },
+					"sisaCutiTahunLalu": { "type": "integer", "format": "int32" }
+				}
+			},
+			"SingleResultCutiKuotaSisa": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/CutiKuotaSisa" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"SingleResultCutiKuotaResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/CutiKuotaResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiJenisResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"parent": { "$ref": "#/components/schemas/CutiJenisMiniResponse" },
+					"nama": { "type": "string" },
+					"maxHari": { "type": "integer", "format": "int32" },
+					"potongKuotaTahunan": { "type": "boolean" }
+				}
+			},
+			"PageCutiJenisResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/CutiJenisResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageCutiJenisResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageCutiJenisResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"SingleResultCutiJenisResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "$ref": "#/components/schemas/CutiJenisResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"ListResultCutiJenisResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "array", "items": { "$ref": "#/components/schemas/CutiJenisResponse" } },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"CutiApprovalMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"approver": { "$ref": "#/components/schemas/PegawaiMiniResponse" },
+					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
+					"approvalLevel": { "type": "integer", "format": "int32" },
+					"approvalStatus": {
+						"type": "string",
+						"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+					},
+					"notes": { "type": "string" },
+					"createdAt": { "type": "string", "format": "date-time" }
+				}
+			},
+			"PageCutiApprovalMiniResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/CutiApprovalMiniResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageCutiApprovalMiniResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageCutiApprovalMiniResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"DeletedResult": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "string" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			}
+		},
+		"securitySchemes": { "BearerAuthentication": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } }
+	}
+}

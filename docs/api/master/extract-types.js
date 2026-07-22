@@ -35,7 +35,7 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { execSync } = require("node:child_process");
 
-const INPUT_FILE = path.join(__dirname, "master.json");
+const INPUT_FILE = path.join(__dirname, "api.json");
 const OUTPUT_DIR = path.join(__dirname, "types");
 const SHARED_MODULE = "_shared";
 
