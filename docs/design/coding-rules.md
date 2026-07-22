@@ -14,9 +14,16 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - **Aksesibilitas = syarat fungsional**, bukan nice-to-have (±70% pengguna lansia). Gate di
   visual-foundation §2 berlaku ke SETIAP komponen.
 - **Bahasa UI = Bahasa Indonesia.** Label bahasa manusia, bukan nama field mentah.
-- **Plan dulu, baru implementasi.** Sebelum menulis kode: `bd show <id>` → baca modul DESIGN relevan →
-  **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan ingatan) → susun rencana
-  singkat (file yang disentuh, primitive yang dipakai, urutan langkah). Baru koding. **JANGAN** langsung
+- **Pahami project DULU via `gitnexus` & `graphify`, baru koding.** Sebelum menyentuh kode, WAJIB
+  bangun pemahaman struktur/aliran nyata dari **peta kode**, bukan tebakan: `gitnexus_query`/
+  `gitnexus_context` untuk menemukan execution flow, caller/callee, dan blast radius simbol yang akan
+  disentuh; `graphify` untuk memetakan input/dokumen jadi knowledge graph saat konteksnya lebih luas
+  dari satu simbol. **DILARANG grep buta / baca file acak** sebagai cara pertama memahami kode —
+  gitnexus/graphify lebih dulu, grep hanya pelengkap. Ini prasyarat "plan dulu" di bawah.
+- **Plan dulu, baru implementasi.** Sebelum menulis kode: `bd show <id>` → **pahami kode via
+  `gitnexus`/`graphify`** (lihat baris di atas & §11) → baca modul DESIGN relevan → **fetch docs
+  terbaru via context7** (API/prop/best-practice, jangan andalkan ingatan) → susun rencana singkat
+  (file yang disentuh, primitive yang dipakai, urutan langkah). Baru koding. **JANGAN** langsung
   ngetik dari asumsi — asumsi basi = bug diam & rework.
 - **Buat rencana sebelum benar-benar mengerjakan.** Untuk tugas non-trivial, WAJIB susun rencana tertulis
   (masuk *plan mode* / tulis di `--design` atau `--notes` issue `bd`) **lalu sampaikan & minta konfirmasi
@@ -56,7 +63,9 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - Middleware = **`proxy.ts`** (bukan `middleware.ts`), **Node runtime**, `export default function proxy()`.
 - React **19.2.4** dengan **React Compiler aktif** (`babel-plugin-react-compiler`) — JANGAN
   micro-optimize manual (`useMemo`/`useCallback` defensif) yang sudah ditangani compiler.
-- **WAJIB `gitnexus` untuk mempelajari struktur project. `context7` sebelum pakai library apa pun** — ambil **source & best-practice terbaru** untuk
+- **`gitnexus` & `graphify` untuk memahami struktur/aliran project DULU** (§0 & §11) —
+  sebelum menyentuh kode, bukan setelah kepentok.
+- **WAJIB `context7` sebelum pakai library apa pun** — ambil **source & best-practice terbaru** untuk
   dokumentasi library/framework/API/CLI (React, Next, Tailwind, TanStack, Appwrite, RHF, Zod, dll).
   Data internal/ingatan bisa **basi**; context7 > web search. Alur: `resolve-library-id` → `query-docs`
   → **koding hanya berdasarkan docs yang di-fetch**, bukan asumsi. Ini bagian dari "plan dulu" (§0).
@@ -155,9 +164,23 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ---
 
-## 11. GitNexus — code intelligence (WAJIB)
+## 11. Pahami project DULU — GitNexus + graphify (WAJIB)
 
-### MCP tools (format panggilan, TIDAK pakai `--repo`)
+**Urutan wajib sebelum koding (§0):** `gitnexus` (peta kode: flow, caller/callee, impact) →
+bila konteks lebih luas dari satu simbol, `graphify` (knowledge graph dari spec/dokumen/input) →
+baru `context7` (docs library) → baru plan → baru koding. Grep buta = pelengkap terakhir, **bukan**
+langkah pertama memahami kode.
+
+### graphify — knowledge graph (untuk pemahaman berskala luas)
+
+Skill global `graphify` (trigger **`/graphify`**) mengubah **input apa pun** (spec OpenAPI, dokumen
+desain, kumpulan file) jadi knowledge graph — memetakan entitas & relasinya saat cakupan pemahaman
+lebih besar dari yang bisa dijawab `gitnexus_context` satu simbol. Pakai saat: onboarding modul/spec
+baru (mis. `docs/api/*/api.json`), memetakan keterhubungan lintas-domain, atau menyiapkan rencana
+refactor besar. Output di `graphify-out/`. **gitnexus = peta KODE yang sudah ada; graphify = peta dari
+INPUT/spec/dokumen.** Keduanya mendahului koding, saling melengkapi.
+
+### GitNexus MCP tools (format panggilan, TIDAK pakai `--repo`)
 
 MCP tools `gitnexus_impact`, `gitnexus_detect_changes`, `gitnexus_query`, `gitnexus_context`,
 `gitnexus_rename` tersedia via **MCP server** (stdio). Tidak perlu argumen `--repo` — server
