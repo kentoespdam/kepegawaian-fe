@@ -79,7 +79,14 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 - [x] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
 - [x] Grup tanpa entity view-able tak dirender; ikon hanya di baris grup; rail tetap 6 modul
 
-## Tutup epic
+## ~~Tutup epic~~ ✅
 
-- [ ] Semua turunan closed → `bd close kepegawaian-fe-a2e`
-- [ ] `bd detect_changes`/`gitnexus_detect_changes` sebelum commit; `git push` + jsonl beads ter-commit
+- [x] ~~`kepegawaian-fe-0is`~~ ✅ — Generate tipe
+- [x] ~~`kepegawaian-fe-oqp`~~ ✅ — Verifikasi backend batch
+- [x] ~~`kepegawaian-fe-djv`~~ ✅ — `getPegawaiSession()`
+- [x] ~~`kepegawaian-fe-hnc`~~ ✅ — Data Pegawai (3 tab)
+- [x] ~~`kepegawaian-fe-vfe`~~ ✅ — Terminasi (2 tab)
+- [x] ~~`kepegawaian-fe-tvr`~~ ✅ — Dashboard (read-only)
+- [x] ~~`kepegawaian-fe-9cm`~~ ✅ — Sidebar wiring
+- [x] Semua turunan closed → `bd close kepegawaian-fe-a2e` ✅
+- [x] `bd detect_changes`/`gitnexus_detect_changes` sebelum commit; `git push` + jsonl beads ter-commit ✅
