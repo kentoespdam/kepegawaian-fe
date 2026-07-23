@@ -96,4 +96,6 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 - ✅ **W3** — Dashboard Pegawai read-only 5 section (`kepegawaian-fe-tvr`).
 - ✅ **W4** — Sidebar grup Kepegawaian + 3 sub-item (`kepegawaian-fe-9cm`).
 - ✅ **Epic tutup** — `kepegawaian-fe-a2e` closed.
+- ✅ **Sync tipe** — `PegawaiTableResponse` (table flat) & `PegawaiResponseSession` (session ringan) tersedia di `src/types/pegawai/pegawai.ts`.
+- ✅ **Modul baru** — `laporanKepegawaian` terdaftar di generator, tipe di `src/types/laporan/kepegawaian.ts`.
 - ⏳ Dashboard masih membutuhkan backend nyata untuk data lives. Guard FE `FINISHED` only di penggajian perlu diverifikasi bentuk response (field `status` mungkin belum di-capture di type).

@@ -1,0 +1,491 @@
+{
+	"openapi": "3.1.0",
+	"info": {
+		"title": "Kepegawaian Rest API",
+		"description": "Need JWT Token for execute this API",
+		"contact": { "name": "Kent-Os", "email": "kentoes.pdam@gmail.com" },
+		"license": { "name": "License of API", "url": "API license URL" },
+		"version": "1.0.0"
+	},
+	"servers": [{ "url": "http://192.168.1.211:8080", "description": "Generated server url" }],
+	"security": [{ "BearerAuthentication": [] }],
+	"paths": {
+		"/laporan/kepegawaian/statistik/umur": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikUmur",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/status_pegawai": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikStatusPegawai",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/pendidikan2/{tahun}/{bulan}": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikPendidikan2",
+				"parameters": [
+					{ "name": "tahun", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } },
+					{ "name": "bulan", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/pendidikan2/excel/{tahun}/{bulan}": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikPendidikan2Excel",
+				"parameters": [
+					{ "name": "tahun", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } },
+					{ "name": "bulan", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } }
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/statistik/pendidikan1": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikPendidikan1",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/jenis_kelamin": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikJenisKelamin",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/golongan": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikGolongan",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/gelar_akademik": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikGelarAkademik",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/statistik/agama": {
+			"get": {
+				"tags": ["laporan-statistik-controller"],
+				"operationId": "lapStatistikAgama",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/so": {
+			"get": {
+				"tags": ["laporan-so-controller"],
+				"operationId": "lapSo",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/mutasi/{from_date}/{to_date}": {
+			"get": {
+				"tags": ["laporan-mutasi-controller"],
+				"operationId": "lapMutasi",
+				"parameters": [
+					{ "name": "from_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{ "name": "to_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{
+						"name": "jenis_mutasi",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PENGANGKATAN_PERTAMA",
+								"MUTASI_LOKER",
+								"MUTASI_JABATAN",
+								"MUTASI_GOLONGAN",
+								"MUTASI_GAJI",
+								"MUTASI_GAJI_BERKALA",
+								"TERMINASI"
+							]
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/mutasi/excel/{from_date}/{to_date}": {
+			"get": {
+				"tags": ["laporan-mutasi-controller"],
+				"operationId": "lapMutasiExcel",
+				"parameters": [
+					{ "name": "from_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{ "name": "to_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{
+						"name": "jenis_mutasi",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PENGANGKATAN_PERTAMA",
+								"MUTASI_LOKER",
+								"MUTASI_JABATAN",
+								"MUTASI_GOLONGAN",
+								"MUTASI_GAJI",
+								"MUTASI_GAJI_BERKALA",
+								"TERMINASI"
+							]
+						}
+					}
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/lepas_tanggungan_anak": {
+			"get": {
+				"tags": ["laporan-lta-controller"],
+				"operationId": "lapLta",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/lepas_tanggungan_anak/excel": {
+			"get": {
+				"tags": ["laporan-lta-controller"],
+				"operationId": "lapLtaExcel",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+					}
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/lepas_tanggungan_anak/count": {
+			"get": {
+				"tags": ["laporan-lta-controller"],
+				"operationId": "lapLtaCount",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/kontrak": {
+			"get": {
+				"tags": ["laporan-kontrak-controller"],
+				"operationId": "lapKontrak",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "AKTIF",
+							"enum": ["AKTIF", "THIS_MONTH", "GTE_1_MONTH", "GTE_2_MONTH", "GTE_3_MONTH", "ENDED"]
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/kontrak/excel": {
+			"get": {
+				"tags": ["laporan-kontrak-controller"],
+				"operationId": "lapKontrakExcel",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"default": "AKTIF",
+							"enum": ["AKTIF", "THIS_MONTH", "GTE_1_MONTH", "GTE_2_MONTH", "GTE_3_MONTH", "ENDED"]
+						}
+					}
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/kenaikan_berkala": {
+			"get": {
+				"tags": ["laporan-kenaikan-berkala-controller"],
+				"operationId": "lapKenaikanBerkala",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+					},
+					{
+						"name": "jenisSk",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/kenaikan_berkala/excel": {
+			"get": {
+				"tags": ["laporan-kenaikan-berkala-controller"],
+				"operationId": "lapKenaikanBerkalaExcel",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+					},
+					{
+						"name": "jenisSk",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+					}
+				],
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/kenaikan_berkala/count": {
+			"get": {
+				"tags": ["laporan-kenaikan-berkala-controller"],
+				"operationId": "lapKenaikanBerkalaCount",
+				"parameters": [
+					{
+						"name": "filter",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+					},
+					{
+						"name": "jenisSk",
+						"in": "query",
+						"required": true,
+						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/duk": {
+			"get": {
+				"tags": ["laporan-duk-controller"],
+				"operationId": "lapDuk",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/duk/excel": {
+			"get": {
+				"tags": ["laporan-duk-controller"],
+				"operationId": "lapDukExcel",
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		},
+		"/laporan/kepegawaian/dnp": {
+			"get": {
+				"tags": ["laporan-dnp-controller"],
+				"operationId": "lapDnp",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+					}
+				}
+			}
+		},
+		"/laporan/kepegawaian/dnp/excel": {
+			"get": {
+				"tags": ["laporan-dnp-controller"],
+				"operationId": "lapDnpExcel",
+				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+			}
+		}
+	},
+	"components": {
+		"schemas": {
+			"SingleResultObject": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": {},
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			}
+		},
+		"securitySchemes": { "BearerAuthentication": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } }
+	}
+}

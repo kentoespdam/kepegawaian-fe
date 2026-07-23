@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/{modul}/api.json
- * Endpoint : DELETE /pegawai/{id}, GET /pegawai, GET /pegawai/list, GET /pegawai/{id}, GET /pegawai/{id}/ringkasan, GET /pegawai/{nipam}/nipam, PATCH /pegawai/{id}/gaji, PATCH /pegawai/{id}/profil, POST /pegawai, POST /pegawai/batch, POST /pegawai/batch-by-ids, PUT /pegawai/{id}
+ * Endpoint : DELETE /pegawai/{id}, GET /pegawai, GET /pegawai/list, GET /pegawai/{id}, GET /pegawai/{id}/ringkasan, GET /pegawai/{id}/session, GET /pegawai/{nipam}/nipam, PATCH /pegawai/{id}/gaji, PATCH /pegawai/{id}/profil, POST /pegawai, POST /pegawai/batch, POST /pegawai/batch-by-ids, PUT /pegawai/{id}
  */
 
 import type {
@@ -21,6 +21,8 @@ import type {
 	JenjangPendidikanResponse,
 	LevelResponse,
 	OrganisasiMiniResponse,
+	Page,
+	PageEnvelope,
 	PageQuery,
 	PegawaiResponse,
 	ProfesiMiniResponse,
@@ -181,6 +183,32 @@ export interface PegawaiPutRequest {
 	email?: string;
 }
 
+export interface RefMiniResponse {
+	id?: number; // int64
+	nama?: string;
+}
+
+export interface PegawaiTableResponse {
+	id?: number; // int64
+	nipam?: string;
+	nama?: string;
+	jenisKelamin?: string;
+	tanggalLahir?: string; // date
+	tmtPensiun?: string; // date
+	statusKawin?: string;
+	kodePajak?: string;
+	isBpjs?: boolean;
+	pangkatGolongan?: string;
+	statusPegawai?: string;
+	organisasi?: RefMiniResponse;
+	jabatan?: RefMiniResponse;
+	profesi?: RefMiniResponse;
+}
+
+export type PagePegawaiTableResponse = Page<PegawaiTableResponse>;
+
+export type PageResultPagePegawaiTableResponse = PageEnvelope<PegawaiTableResponse>;
+
 export interface PegawaiPostRequest {
 	nik: string; // minLength 1
 	nama: string; // minLength 1
@@ -262,6 +290,17 @@ export interface PegawaiPatchGaji {
 
 export type SingleResultPegawaiResponse = Envelope<PegawaiResponse>;
 
+export interface PegawaiResponseSession {
+	id?: number; // int64
+	nipam?: string;
+	nik?: string;
+	nama?: string;
+	jabatan?: RefMiniResponse;
+	organisasi?: RefMiniResponse;
+}
+
+export type SingleResultPegawaiResponseSession = Envelope<PegawaiResponseSession>;
+
 export interface PegawaiResponseRingkasan {
 	id?: number; // int64
 	nipam?: string;
@@ -317,8 +356,6 @@ export type {
 	LevelResponse,
 	Organisasi,
 	OrganisasiMiniResponse,
-	PagePegawaiResponse,
-	PageResultPagePegawaiResponse,
 	PageableObject,
 	PegawaiResponse,
 	Profesi,

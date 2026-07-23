@@ -334,10 +334,6 @@ export interface ProfesiMiniResponse {
 	nama?: string;
 }
 
-export type PagePegawaiResponse = Page<PegawaiResponse>;
-
-export type PageResultPagePegawaiResponse = PageEnvelope<PegawaiResponse>;
-
 export type SavedResultListLong = Envelope<number[]>;
 
 export interface JenjangPendidikanResponse {

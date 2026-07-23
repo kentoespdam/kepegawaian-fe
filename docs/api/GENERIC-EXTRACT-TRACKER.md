@@ -87,6 +87,7 @@ harus dirawat).
 |---|---|---|---|
 | `master` | `collection` | `/master/{entity}/...` (2-level) | 22 entity → 22 file |
 | `pegawai` | `resource` | `/pegawai/...` (1-level, modul = resource) | 1 domain `pegawai` → 1 file |
+| `laporanKepegawaian` | `resource` | `/laporan/kepegawaian/...` (1-level) | 1 domain `laporan` → `src/types/laporan/kepegawaian.ts` |
 
 ## Schema identik master ∩ pegawai (terverifikasi byte-for-byte → naik ke `_shared.ts`)
 

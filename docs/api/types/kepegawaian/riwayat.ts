@@ -404,6 +404,10 @@ export interface RiwayatKontrakPostRequest {
 	notes?: string;
 }
 
+export type PagePegawaiResponse = Page<PegawaiResponse>;
+
+export type PageResultPagePegawaiResponse = PageEnvelope<PegawaiResponse>;
+
 export type PageRiwayatSpQuery = Page<RiwayatSpQuery>;
 
 export type PageResultPageRiwayatSpQuery = PageEnvelope<RiwayatSpQuery>;
@@ -432,8 +436,6 @@ export type {
 	LevelResponse,
 	Organisasi,
 	OrganisasiMiniResponse,
-	PagePegawaiResponse,
-	PageResultPagePegawaiResponse,
 	PageableObject,
 	PegawaiResponse,
 	Profesi,

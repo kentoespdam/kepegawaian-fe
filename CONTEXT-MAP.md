@@ -17,7 +17,7 @@ task touches**; this core is always in scope.
 |---|---|---|---|
 | **Core (shared)** | `CONTEXT-MAP.md` (ini) | Bahasa + konvensi lintas-modul | **selalu** |
 | **Master** | [`docs/context/master.md`](docs/context/master.md) | Data referensi / master-data (17 entitas CRUD) | ✅ grilling round 1 |
-| Kepegawaian | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | 3 page (Dashboard/Data/Terminasi), identitas→record pegawai | ✅ grilling round 1 |
+| **Kepegawaian** | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | 3 page (Dashboard/Data/Terminasi), identitas→record pegawai | ✅ grilling round 1 |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |
