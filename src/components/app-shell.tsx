@@ -22,6 +22,7 @@ import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
 import { RolesProvider } from "@/hooks/useRoles";
 import { can, getRoles } from "@/lib/auth/can";
+import { entityGate, entityHref } from "@/lib/sidebar-utils";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
 
@@ -47,16 +48,7 @@ const MODULES = [
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
 	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
 	{ id: "sistem", label: "Sistem", icon: Settings, entities: [] },
-]; /** Get href for an entity — default `/master/{id}`, override via entity.href. */
-function entityHref(e: { id: string; href?: string }): string {
-	return e.href ?? `/master/${e.id}`;
-}
-
-/** Get RBAC gate entity name — default `id`, `null` = always visible. */
-function entityGate(e: { id: string; gate?: string | null }): string | null {
-	return e.gate !== undefined ? e.gate : e.id;
-}
-
+];
 export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
 
 export function AppShell({
