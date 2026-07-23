@@ -68,12 +68,12 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 - [x] Tab Calon Pensiun `/api/proxy/kepegawaian/riwayat/terminasi/calon-pensiun?tahunPensiun=YYYY` (dropdown, default tahun berjalan)
 - [x] Tab Sudah Terminasi `/api/proxy/kepegawaian/riwayat/terminasi?tahunTerminasi=YYYY` + kolom & filter `alasanTerminasi`
 
-### `tvr` — Dashboard (read-only)
-- [ ] Route `(app)/kepegawaian/dashboard`, terbuka semua login; pakai `getPegawaiSession()`
-- [ ] `pegawai:null` → empty-state "Akun ini tidak terhubung ke data pegawai"
-- [ ] 5 section: Detail kepegawaian · Riwayat karier (SK+Mutasi+Kontrak) · Riwayat Disiplin/SP (terpisah) · Biodata+Keluarga · Riwayat Penggajian
-- [ ] Slip pakai `penghasilanBersihFinal`; **sembunyikan** `*2`/`pembulatan2`/`isDifferent`
-- [ ] **Tanpa** endpoint edit (PATCH profil/gaji tidak dipasang)
+### ~~`tvr` — Dashboard (read-only)~~ ✅
+- [x] Route `(app)/kepegawaian/dashboard`, terbuka semua login; pakai `getPegawaiSession()`
+- [x] `pegawai:null` → empty-state "Akun ini tidak terhubung ke data pegawai"
+- [x] 5 section: Detail kepegawaian · Riwayat karier (SK+Mutasi+Kontrak) · Riwayat Disiplin/SP (terpisah) · Biodata+Keluarga · Riwayat Penggajian
+- [x] Slip pakai `penghasilanBersihFinal`; **sembunyikan** `*2`/`pembulatan2`/`isDifferent`
+- [x] **Tanpa** endpoint edit (PATCH profil/gaji tidak dipasang)
 
 ### `9cm` — Sidebar
 - [ ] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
