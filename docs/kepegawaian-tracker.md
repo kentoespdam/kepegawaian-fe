@@ -30,8 +30,8 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 | **W2** | ~~`kepegawaian-fe-djv`~~ | ✅ `getPegawaiSession()` opt-in | P1 | 0is |
 | **W2** | ~~`kepegawaian-fe-hnc`~~ | ✅ Page Data Pegawai (3 tab) | P2 | 0is |
 | **W2** | ~~`kepegawaian-fe-vfe`~~ | ✅ Page Terminasi (2 tab) | P2 | 0is |
-| **W3** | `kepegawaian-fe-tvr` | Page Dashboard (read-only) | P2 | djv + oqp |
-| **W4** | `kepegawaian-fe-9cm` | Wiring sidebar (grup + 3 sub-item) | P2 | tvr + hnc + vfe |
+| **W3** | ~~`kepegawaian-fe-tvr`~~ | ✅ Page Dashboard (read-only) | P2 | djv + oqp |
+| **W4** | ~~`kepegawaian-fe-9cm`~~ | ✅ Wiring sidebar (grup + 3 sub-item) | P2 | tvr + hnc + vfe |
 
 ## Checklist acceptance
 
@@ -75,9 +75,9 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 - [x] Slip pakai `penghasilanBersihFinal`; **sembunyikan** `*2`/`pembulatan2`/`isDifferent`
 - [x] **Tanpa** endpoint edit (PATCH profil/gaji tidak dipasang)
 
-### `9cm` — Sidebar
-- [ ] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
-- [ ] Grup tanpa entity view-able tak dirender; ikon hanya di baris grup; rail tetap 6 modul
+### ~~`9cm` — Sidebar~~ ✅
+- [x] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
+- [x] Grup tanpa entity view-able tak dirender; ikon hanya di baris grup; rail tetap 6 modul
 
 ## Tutup epic
 

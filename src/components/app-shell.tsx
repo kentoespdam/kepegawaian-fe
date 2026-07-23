@@ -32,12 +32,30 @@ const MODULES = [
 		icon: LayoutGrid,
 		entities: MASTER_ENTITIES,
 	},
-	{ id: "kepegawaian", label: "Kepegawaian", icon: Users, entities: [] },
+	{
+		id: "kepegawaian",
+		label: "Kepegawaian",
+		icon: Users,
+		entities: [
+			// ponytail: Dashboard = no gate (terbuka semua login)
+			{ id: "dashboard", label: "Dashboard", href: "/kepegawaian/dashboard", gate: null },
+			{ id: "pegawai", label: "Data Pegawai", href: "/kepegawaian/data", gate: "pegawai" },
+			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: "pegawai" },
+		],
+	},
 	{ id: "cuti", label: "Cuti", icon: CalendarRange, entities: [] },
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
 	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
 	{ id: "sistem", label: "Sistem", icon: Settings, entities: [] },
-];
+]; /** Get href for an entity — default `/master/{id}`, override via entity.href. */
+function entityHref(e: { id: string; href?: string }): string {
+	return e.href ?? `/master/${e.id}`;
+}
+
+/** Get RBAC gate entity name — default `id`, `null` = always visible. */
+function entityGate(e: { id: string; gate?: string | null }): string | null {
+	return e.gate !== undefined ? e.gate : e.id;
+}
 
 export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
 
@@ -53,13 +71,17 @@ export function AppShell({
 	const pathname = usePathname();
 	const roles = getRoles(user);
 
-	const activeEntity = MODULE_ENTITY_MAP.find((e) => pathname === `/master/${e.id}`);
-	const activeModule = MODULES.find((m) => m.entities.some((e) => pathname.startsWith(`/master/${e.id}`)));
+	const activeEntity = MODULE_ENTITY_MAP.find((e) => pathname === entityHref(e));
+	const activeModule = MODULES.find((m) => m.entities.some((e) => pathname.startsWith(entityHref(e))));
 
 	// Filter modules by RBAC — only show groups with at least one viewable entity
 	const visibleModules = MODULES.map((mod) => ({
 		...mod,
-		visibleEntities: mod.entities.filter((e) => can(roles, "view", e.id)),
+		visibleEntities: mod.entities.filter((e) => {
+			const gate = entityGate(e);
+			// null = no gate (always visible), otherwise check permission
+			return gate === null || can(roles, "view", gate);
+		}),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 
 	// All visible groups default to open (tidak di-persist)
@@ -90,21 +112,30 @@ export function AppShell({
 						{visibleModules.map((mod) => (
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
-									<SidebarMenuButton onClick={() => toggleGroup(mod.id)} tooltip={mod.label} size="lg" className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto">
+									<SidebarMenuButton
+										onClick={() => toggleGroup(mod.id)}
+										tooltip={mod.label}
+										size="lg"
+										className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto"
+									>
 										<mod.icon className="size-5" />
 										<span>{mod.label}</span>
-									<ChevronDown
-										className={cn("ml-auto size-5 transition-transform group-data-[collapsible=icon]:hidden", openGroups.has(mod.id) && "rotate-180")}
-									/>
+										<ChevronDown
+											className={cn(
+												"ml-auto size-5 transition-transform group-data-[collapsible=icon]:hidden",
+												openGroups.has(mod.id) && "rotate-180",
+											)}
+										/>
 									</SidebarMenuButton>
 									{openGroups.has(mod.id) && (
 										<SidebarMenuSub>
 											{mod.visibleEntities.map((entity) => {
-												const isActive = pathname === `/master/${entity.id}`;
+												const href = entityHref(entity);
+												const isActive = pathname === href;
 												return (
 													<SidebarMenuSubButton
 														key={entity.id}
-														render={<Link href={`/master/${entity.id}`} />}
+														render={<Link href={href} />}
 														isActive={isActive}
 														className="min-h-11"
 													>
@@ -124,9 +155,9 @@ export function AppShell({
 					<header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0">
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
-							{pathname.startsWith("/master/") && activeEntity ? (
+							{activeEntity && activeModule ? (
 								<nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-sm">
-									<span className="text-muted-foreground">{activeModule?.label ?? "Master"}</span>
+									<span className="text-muted-foreground">{activeModule.label}</span>
 									<span className="text-muted-foreground">/</span>
 									<span className="text-foreground font-medium">{activeEntity.label}</span>
 								</nav>

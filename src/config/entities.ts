@@ -1,8 +1,15 @@
-/** Shared entity definitions for the Master module — single source of truth. */
+/** Shared entity definitions — single source of truth. */
 
 export interface Entity {
 	id: string;
 	label: string;
+	/** Custom URL path. Default: `/master/${id}` */
+	href?: string;
+	/**
+	 * Custom RBAC gate entity name for `can(roles, "view", gate)`.
+	 * `null` = always visible (no gate). Default: `id`
+	 */
+	gate?: string | null;
 }
 
 export const MASTER_ENTITIES: Entity[] = [
