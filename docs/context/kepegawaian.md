@@ -91,5 +91,9 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 ## Status
 
 - ✅ Grilling round 1 selesai (identitas, 3 page, gating, istilah). Keputusan terkunci di doc ini + ADR-0006.
-- ⏳ Tipe `kepegawaian`/`pegawai` belum di-generate; `getPegawaiSession()`, route, tabel, UI belum ada.
-- Delegasi implementasi via beads (lihat issue kepegawaian-* — epic + turunan).
+- ✅ **W1** — Generate tipe (`kepegawaian-fe-0is`) & verifikasi backend batch (`kepegawaian-fe-oqp`).
+- ✅ **W2** — `getPegawaiSession()` (`kepegawaian-fe-djv`), Data Pegawai 3 tab (`kepegawaian-fe-hnc`), Terminasi 2 tab (`kepegawaian-fe-vfe`).
+- ✅ **W3** — Dashboard Pegawai read-only 5 section (`kepegawaian-fe-tvr`).
+- ✅ **W4** — Sidebar grup Kepegawaian + 3 sub-item (`kepegawaian-fe-9cm`).
+- ✅ **Epic tutup** — `kepegawaian-fe-a2e` closed.
+- ⏳ Dashboard masih membutuhkan backend nyata untuk data lives. Guard FE `FINISHED` only di penggajian perlu diverifikasi bentuk response (field `status` mungkin belum di-capture di type).

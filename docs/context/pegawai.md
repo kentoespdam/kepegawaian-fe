@@ -46,6 +46,8 @@ bukan diduplikasi ke `src/types/pegawai/`.
 
 ## Status
 
-- ⏳ Tipe belum di-generate (menunggu generalisasi `extract-types.js` — tracker di atas).
-- ⏳ Config/tabel/form UI belum ada. Menu user nanti fetch nama/jabatan/posisi dari endpoint ini
-  (CONTEXT-MAP §264).
+- ✅ Tipe (`src/types/pegawai/pegawai.ts`) sudah di-generate via `extract-types.js`.
+- ✅ `getPegawaiSession()` memanggil `GET /pegawai/{$id}` untuk identity bridge.
+- ✅ Data Pegawai page (3 tab) mengonsumsi `/pegawai` (Aktif/Non-aktif) & `/profil/biodata` (Non-pegawai).
+- ✅ Dashboard memakai data dari `PegawaiResponseDetail` (via `getPegawaiSession()`).
+- ⏳ Edit profil/gaji via PATCH belum dipasang di Dashboard (rencana rilis berikutnya).
