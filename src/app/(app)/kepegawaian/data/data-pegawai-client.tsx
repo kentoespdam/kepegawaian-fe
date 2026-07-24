@@ -1,12 +1,12 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { fromPage, toApiParams } from "@/lib/paging";
+import type { PegawaiTableResponse } from "@/types/pegawai/pegawai";
 import type { BiodataQuery } from "@/types/profil/biodata";
-import type { PegawaiListResponse } from "@/types/pegawai/pegawai";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const TABS = [
 	{ id: "aktif", label: "Aktif", endpoint: "/api/proxy/pegawai", filter: { statusKerja: "KARYAWAN_AKTIF" } },
@@ -15,11 +15,19 @@ const TABS = [
 ] as const;
 
 const pegawaiColumns = [
-	{ id: "nipam", header: "NIPAM", sortable: true, primary: true, cell: (i: PegawaiListResponse) => String(i.nipam ?? "") },
-	{ id: "nama", header: "Nama", sortable: true, cell: (i: PegawaiListResponse) => String(i.nama ?? "") },
-	{ id: "organisasi", header: "Organisasi", cell: (i: PegawaiListResponse) => String(i.organisasi?.nama ?? "") },
-	{ id: "jabatan", header: "Jabatan", cell: (i: PegawaiListResponse) => String(i.jabatan?.nama ?? "") },
-	{ id: "golongan", header: "Golongan", cell: (i: PegawaiListResponse) => String(i.golongan?.golongan ?? "") },
+	{
+		id: "nipam",
+		header: "NIPAM",
+		sortable: true,
+		primary: true,
+		cell: (i: PegawaiTableResponse) => String(i.nipam ?? ""),
+	},
+	{ id: "nama", header: "Nama", sortable: true, cell: (i: PegawaiTableResponse) => String(i.nama ?? "") },
+	{ id: "organisasi", header: "Organisasi", cell: (i: PegawaiTableResponse) => String(i.organisasi?.nama ?? "") },
+	{ id: "jabatan", header: "Jabatan", cell: (i: PegawaiTableResponse) => String(i.jabatan?.nama ?? "") },
+	{ id: "profesi", header: "Profesi", cell: (i: PegawaiTableResponse) => String(i.profesi?.nama ?? "") },
+	{ id: "golongan", header: "Golongan/Pangkat", cell: (i: PegawaiTableResponse) => String(i.pangkatGolongan ?? "") },
+	{ id: "statusPegawai", header: "Status Pegawai", cell: (i: PegawaiTableResponse) => String(i.statusPegawai ?? "") },
 ] as const;
 
 const biodataColumns = [
@@ -78,7 +86,9 @@ export function DataPegawaiClient() {
 						type="button"
 						onClick={() => nav({ tab: t.id, page: "1" })}
 						className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 transition-colors ${
-							tab === t.id ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+							tab === t.id
+								? "border-primary text-foreground"
+								: "border-transparent text-muted-foreground hover:text-foreground"
 						}`}
 					>
 						{t.label}

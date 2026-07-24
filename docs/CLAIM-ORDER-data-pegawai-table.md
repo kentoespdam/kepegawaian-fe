@@ -42,29 +42,29 @@ Hanya `pegawaiColumns` (baris 17–23) + import type (baris 8). Sisanya jangan d
 ### 1. `kepegawaian-fe-p9g` — konsumsi `PegawaiTableResponse` di tabel Data Pegawai
 **← depends on:** — (ready duluan)
 
-- [ ] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
-- [ ] Ganti import baris 8: `PegawaiListResponse` → `PegawaiTableResponse`.
-- [ ] `pegawaiColumns` (tipe cell → `PegawaiTableResponse`):
-  - [ ] `nipam` — `String(i.nipam ?? "")` · `sortable: true, primary: true`
-  - [ ] `nama` — `String(i.nama ?? "")` · `sortable: true`
-  - [ ] `organisasi` — `String(i.organisasi?.nama ?? "")`
-  - [ ] `jabatan` — `String(i.jabatan?.nama ?? "")`
-  - [ ] `profesi` — `String(i.profesi?.nama ?? "")` **(kolom baru)**
-  - [ ] `golongan` → **Golongan/Pangkat** — `String(i.pangkatGolongan ?? "")` (ganti `i.golongan?.golongan` yang mati)
-  - [ ] `statusPegawai` — `String(i.statusPegawai ?? "")` **(kolom baru)**
-- [ ] Hapus semua referensi `i.golongan?.golongan`.
-- [ ] **JANGAN** sentuh: `paging.ts`, `biodataColumns`, `TABS`, blok fetch/`useQuery`, `types/pegawai/pegawai.ts`.
-- [ ] `gitnexus_detect_changes()` sebelum commit (harus hanya 1 file).
-- [ ] Quality gate: `bun run tsc --noEmit` + `bunx biome check`.
+- [x] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
+- [x] Ganti import baris 8: `PegawaiListResponse` → `PegawaiTableResponse`.
+- [x] `pegawaiColumns` (tipe cell → `PegawaiTableResponse`):
+  - [x] `nipam` — `String(i.nipam ?? "")` · `sortable: true, primary: true`
+  - [x] `nama` — `String(i.nama ?? "")` · `sortable: true`
+  - [x] `organisasi` — `String(i.organisasi?.nama ?? "")`
+  - [x] `jabatan` — `String(i.jabatan?.nama ?? "")`
+  - [x] `profesi` — `String(i.profesi?.nama ?? "")` **(kolom baru)**
+  - [x] `golongan` → **Golongan/Pangkat** — `String(i.pangkatGolongan ?? "")` (ganti `i.golongan?.golongan` yang mati)
+  - [x] `statusPegawai` — `String(i.statusPegawai ?? "")` **(kolom baru)**
+- [x] Hapus semua referensi `i.golongan?.golongan`.
+- [x] **JANGAN** sentuh: `paging.ts`, `biodataColumns`, `TABS`, blok fetch/`useQuery`, `types/pegawai/pegawai.ts`.
+- [x] `gitnexus_detect_changes()` sebelum commit (harus hanya 1 file).
+- [x] Quality gate: `bun run tsc --noEmit` + `bunx biome check`.
 - [ ] `bd close kepegawaian-fe-p9g` — commit & push.
 
 ## Definition of Done
 
-- [ ] Kolom Golongan/Pangkat terisi dari `pangkatGolongan` (bukan kosong).
-- [ ] Tak ada lagi `i.golongan?.golongan` di file.
-- [ ] Hanya `data-pegawai-client.tsx` berubah.
-- [ ] `tsc --noEmit` & `biome check` lolos.
-- [ ] Tab Non-pegawai tak tersentuh.
+- [x] Kolom Golongan/Pangkat terisi dari `pangkatGolongan` (bukan kosong).
+- [x] Tak ada lagi `i.golongan?.golongan` di file.
+- [x] Hanya `data-pegawai-client.tsx` berubah.
+- [x] `tsc --noEmit` & `biome check` lolos.
+- [x] Tab Non-pegawai tak tersentuh.
 
 ## Invarian yang tak boleh dilanggar
 
