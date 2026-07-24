@@ -2,12 +2,13 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { PegawaiResponseRingkasan, PegawaiTableResponse } from "@/types/pegawai/pegawai";
 import type { BiodataQuery } from "@/types/profil/biodata";
+import { DataPegawaiToolbar } from "./data-pegawai-toolbar";
 import { SheetEditGaji } from "./edit-gaji-sheet";
 import { SheetEditProfil } from "./edit-profil-sheet";
 import { RingkasanPanel } from "./ringkasan-panel";
@@ -16,6 +17,20 @@ const TABS = [
 	{ id: "aktif", label: "Aktif", endpoint: "/api/proxy/pegawai", filter: { statusKerja: "KARYAWAN_AKTIF" } },
 	{ id: "nonaktif", label: "Non-aktif", endpoint: "/api/proxy/pegawai", filter: { statusKerja: "BERHENTI_OR_KELUAR" } },
 	{ id: "nonpegawai", label: "Non-pegawai", endpoint: "/api/proxy/profil/biodata", filter: { isPegawai: "false" } },
+] as const;
+
+const FILTER_PARAMS = [
+	"nama",
+	"nipam",
+	"nik",
+	"statusPegawai",
+	"jabatanId",
+	"organisasiId",
+	"profesiId",
+	"golonganId",
+	"gradeId",
+	"statusKerja",
+	"jenisKelamin",
 ] as const;
 
 const pegawaiColumns = [
@@ -51,7 +66,24 @@ export function DataPegawaiClient() {
 	const size = Number(sp.get("size") ?? "10");
 	const sortBy = sp.get("sortBy") ?? undefined;
 	const sortDir = sp.get("sortDirection") as "asc" | "desc" | undefined;
-	const params = { ...activeTab.filter, ...toApiParams({ page, size, sortBy, sortDir }) };
+
+	// Ambil filter values dari URL
+	const filterValues = useMemo(() => {
+		const v: Record<string, string> = {};
+		for (const key of FILTER_PARAMS) {
+			const val = sp.get(key);
+			if (val) v[key] = val;
+		}
+		return v;
+	}, [sp]);
+
+	const hasActiveFilter = Object.keys(filterValues).length > 0;
+
+	const params = {
+		...activeTab.filter,
+		...filterValues,
+		...toApiParams({ page, size, sortBy, sortDir }),
+	};
 
 	const [selectedId, setSelectedId] = useState<string | number | null>(null);
 	const [editProfilId, setEditProfilId] = useState<string | null>(null);
@@ -94,6 +126,18 @@ export function DataPegawaiClient() {
 		router.replace(`/kepegawaian/data?${p.toString()}`);
 	};
 
+	const onFilterChange = (key: string, val: string | undefined) => {
+		nav({ [key]: val, page: "1" });
+	};
+
+	const onReset = () => {
+		const p = new URLSearchParams();
+		p.set("tab", tab);
+		p.set("page", "1");
+		p.set("size", String(size));
+		router.replace(`/kepegawaian/data?${p.toString()}`);
+	};
+
 	const isPegawaiTab = tab !== "nonpegawai";
 	const getRowId = (i: unknown) => String((i as { id?: number; nik?: string }).id ?? (i as { nik?: string }).nik ?? "");
 
@@ -118,6 +162,15 @@ export function DataPegawaiClient() {
 			<div className="flex flex-col lg:flex-row gap-4">
 				<div className="lg:flex-1 min-w-0">
 					<DataTable
+						toolbar={
+							<DataPegawaiToolbar
+								values={filterValues}
+								onFilterChange={onFilterChange}
+								onReset={onReset}
+								hasActive={hasActiveFilter}
+								onAddClick={() => router.push("/kepegawaian/data/tambah")}
+							/>
+						}
 						columns={(isPegawaiTab ? pegawaiColumns : biodataColumns) as never}
 						data={(pageView.rows as never[]) ?? []}
 						isLoading={query.isPending}

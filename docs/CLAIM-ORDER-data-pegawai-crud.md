@@ -147,14 +147,15 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 ### 3. `kepegawaian-fe-7h2` — Toolbar filter
 **← depends on:** `kepegawaian-fe-9hk` (tombol "+ Tambah" → `/kepegawaian/data/tambah`).
 
-- [ ] `gitnexus_impact` sebelum edit.
-- [ ] Inline primer: **Search** (nipam/nik/nama) + **Status** (`statusPegawai` select). Semua → URL via `nav()`.
-- [ ] Popover **"Filter"** utk 8 sisa: `jabatanId, organisasiId, profesiId, golonganId, gradeId, statusKerja, jenisKelamin` (+ nik/nipam bila tak di inline). FK via `FKComboboxFilter`; `grade` labelFn `'Grade '+i.grade`.
-- [ ] **Chip filter aktif** — bisa dihapus (hapus param → refetch).
-- [ ] Tombol **"+ Tambah"** kanan → `router.push('/kepegawaian/data/tambah')`.
-- [ ] Semua param terpantul di URL searchParams (sumber kebenaran, pola `nav()` existing) & memicu refetch tabel.
-- [ ] `gitnexus_detect_changes()` + quality gate.
-- [ ] `bd close kepegawaian-fe-7h2` — commit & push.
+- [x] `gitnexus_impact` — LOW risk.
+- [x] Inline primer: **Search** (nama, debounced 400ms) + **Status** (`statusPegawai` select). Semua → URL via `nav()`.
+- [x] Popover **"Filter"** (Base UI, controlled open state) utk 7 sisa: `jabatanId, organisasiId, profesiId, golonganId, gradeId, statusKerja, jenisKelamin`. FK via `FKComboboxFilter`; `grade` labelFn `'Grade ' + i.grade`.
+- [x] **Chip filter aktif** — bisa dihapus, ditampilkan di baris terpisah di bawah toolbar.
+- [x] Tombol **"+ Tambah"** (Tirta Blue solid) kanan → `router.push('/kepegawaian/data/tambah')` via callback.
+- [x] Semua param terpantul di URL searchParams & memicu refetch tabel.
+- [x] Reuse `useFkOptions` dari `tambah/hooks` (DRY).
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-7h2` — commit & push.
 
 ---
 
