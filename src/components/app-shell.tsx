@@ -143,7 +143,7 @@ export function AppShell({
 					</SidebarContent>
 					<SidebarFooter />
 				</Sidebar>
-				<SidebarInset>
+				<SidebarInset className="min-w-0">
 					<header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0">
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
@@ -162,7 +162,7 @@ export function AppShell({
 						</div>
 						<UserMenu user={user} />
 					</header>
-					<div className="flex-1 overflow-y-auto p-6">{children}</div>
+					<div className="flex-1 overflow-y-auto p-6 min-w-0">{children}</div>
 					<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
 						© Perumdam Tirta Satria 2026
 					</footer>
