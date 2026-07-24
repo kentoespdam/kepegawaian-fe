@@ -155,7 +155,7 @@ export function DataPegawaiClient() {
 				</div>
 
 				{isPegawaiTab && (
-					<div className="lg:w-[380px] shrink-0">
+					<div className="lg:w-95 shrink-0">
 						<div className="rounded-lg border bg-card shadow-md p-4 sticky top-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
 							<h2 className="text-sm font-semibold text-foreground mb-4">Ringkasan Data Karyawan</h2>
 							<RingkasanPanel

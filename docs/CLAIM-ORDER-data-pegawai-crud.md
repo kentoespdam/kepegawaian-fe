@@ -116,18 +116,18 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 ### 1. `kepegawaian-fe-9hk` — Halaman Tambah (CREATE)
 **← depends on:** — (ready)
 
-- [ ] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
-- [ ] Buat route `src/app/(app)/kepegawaian/data/tambah/page.tsx` (server) + client form (`tambah-form.tsx` bila >120 baris).
-- [ ] RHF + zodResolver. Base schema: FK `jabatanId/organisasiId/kodePajakId` **optional**; `superRefine` paksa wajib bila `statusPegawai !== "NON_PEGAWAI"`.
-- [ ] `watch("statusPegawai")` → NON_PEGAWAI **sembunyikan seksi Kepegawaian** + set `isPegawai=false`.
-- [ ] Seksi Biodata selalu tampil (nik, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, agama, ibuKandung, nipam + optional biodata).
-- [ ] FK combobox pakai `useFkOptions` (pola profesi/form.tsx); `grade` labelFn `'Grade '+i.grade`.
-- [ ] Enum select hand-authored `{value,label}` dari daftar `_shared.ts` di atas.
-- [ ] Submit = **raw `fetch` POST `/api/proxy/pegawai`** (⛔ BUKAN `api.create`), header JSON, body payload; `values.x || undefined` utk optional kosong.
-- [ ] Sukses → `toast.success` + `router.push('/kepegawaian/data')` + `qc.invalidateQueries` key tabel pegawai. Error → set error / toast.
-- [ ] `gitnexus_detect_changes()` sebelum commit.
-- [ ] Quality gate: `bun run tsc --noEmit` + `bunx biome check`.
-- [ ] `bd close kepegawaian-fe-9hk` — commit & push.
+- [x] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
+- [x] Buat route `src/app/(app)/kepegawaian/data/tambah/page.tsx` (server) + client form (`tambah-form.tsx`).
+- [x] RHF + zodResolver. Base schema: FK `jabatanId/organisasiId/kodePajakId` **optional**; `superRefine` paksa wajib bila `statusPegawai !== "NON_PEGAWAI"`.
+- [x] `watch("statusPegawai")` → NON_PEGAWAI **sembunyikan seksi Kepegawaian** + set `isPegawai=false`.
+- [x] Seksi Biodata selalu tampil (nik, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, agama, ibuKandung, nipam + optional biodata).
+- [x] FK combobox pakai `useFkOptions` (pola profesi/form.tsx).
+- [x] Enum select hand-authored `{value,label}` dari daftar `_shared.ts` di atas.
+- [x] Submit = **raw `fetch` POST `/api/proxy/pegawai`** (⛔ BUKAN `api.create`), header JSON, body payload; `values.x || undefined` utk optional kosong.
+- [x] Sukses → `toast.success` + `router.push('/kepegawaian/data')` + `qc.invalidateQueries` key tabel pegawai. Error → set error.
+- [x] `gitnexus_detect_changes()` sebelum commit.
+- [x] Quality gate: `bun run tsc --noEmit` + `bunx biome check` ✅.
+- [x] `bd close kepegawaian-fe-9hk` — commit & push.
 
 ### 2. `kepegawaian-fe-ds5` — Edit Profil + Edit Gaji (2 Sheet, PATCH)
 **← depends on:** — (ready; paralel dgn 9hk)
