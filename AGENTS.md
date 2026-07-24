@@ -1,9 +1,14 @@
 @CLAUDE.md
 
+## Test Credentials
+
+Login test/dev ada di `.env.local` (`TEST_EMAIL` / `TEST_PASSWORD`) — gitignored, tidak di-commit.
+Server dev: `http://localhost:3000` (`bun run dev`).
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **kepegawaian-fe** (2528 symbols, 4155 relationships, 123 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project is indexed by GitNexus as **kepegawaian-fe** (2833 symbols, 4756 relationships, 147 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
 > If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
 
