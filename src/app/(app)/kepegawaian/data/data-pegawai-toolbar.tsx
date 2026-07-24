@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterX, Plus, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
 import { Button } from "@/components/ui/button";
@@ -9,7 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useFkOptions } from "./tambah/hooks";
+import { useFkOptions } from "@/hooks/useFkOptions";
 
 // ── Filter definitions ──
 
@@ -63,35 +63,35 @@ const STATUS_OPTIONS = [
 	{ value: "NON_PEGAWAI", label: "Non Pegawai" },
 ];
 
-// ── Chip labels ──
+// ── Chip label helpers ──
 
-const CHIP_LABELS: Record<string, (v: string) => string> = {
-	nama: (v) => `Nama: ${v}`,
-	nipam: (v) => `NIPAM: ${v}`,
-	statusPegawai: (v) => {
-		const m: Record<string, string> = {
-			KONTRAK: "Kontrak",
-			CAPEG: "CPNS",
-			PEGAWAI: "PNS",
-			CALON_HONORER: "Calon Honorer",
-			HONORER: "Honorer",
-			NON_PEGAWAI: "Non Pegawai",
-		};
-		return `Status: ${m[v] ?? v}`;
-	},
-	nik: (v) => `NIK: ${v}`,
-	organisasiId: () => "Organisasi terpilih",
-	jabatanId: () => "Jabatan terpilih",
-	profesiId: () => "Profesi terpilih",
-	golonganId: () => "Golongan terpilih",
-	gradeId: () => "Grade terpilih",
-	statusKerja: (v) =>
-		`Status Kerja: ${v
-			.replace(/_/g, " ")
-			.toLowerCase()
-			.replace(/\b\w/g, (c) => c.toUpperCase())}`,
-	jenisKelamin: (v) => (v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan"),
-};
+/** Build { value → label } lookup from FK options array. */
+function fkLabelMap(opts: { value: string; label: string }[]): Record<string, string> {
+	const m: Record<string, string> = {};
+	for (const o of opts) m[o.value] = o.label;
+	return m;
+}
+
+/** Chip label for statusPegawai value. */
+function statusPegawaiLabel(v: string) {
+	const m: Record<string, string> = {
+		KONTRAK: "Kontrak",
+		CAPEG: "CPNS",
+		PEGAWAI: "PNS",
+		CALON_HONORER: "Calon Honorer",
+		HONORER: "Honorer",
+		NON_PEGAWAI: "Non Pegawai",
+	};
+	return `Status: ${m[v] ?? v}`;
+}
+
+/** Chip label for statusKerja value. */
+function statusKerjaLabel(v: string) {
+	return `Status Kerja: ${v
+		.replace(/_/g, " ")
+		.toLowerCase()
+		.replace(/\b\w/g, (c) => c.toUpperCase())}`;
+}
 
 // ── Sub-components ──
 
@@ -187,20 +187,63 @@ export function DataPegawaiToolbar({
 	hasActive,
 	onAddClick,
 }: DataPegawaiToolbarProps) {
+	// Pre-fetch FK options for chip labels — call hooks at top level
+	const organisasiOpts = useFkOptions("organisasi");
+	const jabatanOpts = useFkOptions("jabatan");
+	const profesiOpts = useFkOptions("profesi");
+	const golonganOpts = useFkOptions("golongan");
+	const gradeOpts = useFkOptions("grade", (i) => `Grade ${String(i.grade ?? "")}`);
+
+	// Build chip label lookup per FK key
+	const fkChipMaps = useMemo<Record<string, Record<string, string>>>(() => {
+		const m: Record<string, Record<string, string>> = {};
+		m.organisasiId = fkLabelMap(organisasiOpts);
+		m.jabatanId = fkLabelMap(jabatanOpts);
+		m.profesiId = fkLabelMap(profesiOpts);
+		m.golonganId = fkLabelMap(golonganOpts);
+		m.gradeId = fkLabelMap(gradeOpts);
+		return m;
+	}, [organisasiOpts, jabatanOpts, profesiOpts, golonganOpts, gradeOpts]);
+
 	const [searchLocal, setSearchLocal] = useState(values.nama ?? "");
 	const debouncedFilter = useDebouncedCallback((v: string) => onFilterChange("nama", v || undefined), 400);
 	const [popoverOpen, setPopoverOpen] = useState(false);
 
+	// Sync search input when URL changes (e.g. on reset)
 	useEffect(() => {
 		setSearchLocal(values.nama ?? "");
 	}, [values.nama]);
 
-	const activeChips = Object.entries(values)
-		.filter(([, v]) => v && v !== values.nama)
-		.map(([k, v]) => ({
-			key: k,
-			label: CHIP_LABELS[k]?.(v) ?? `${k}: ${v}`,
-		}));
+	const activeChips = useMemo(
+		() =>
+			Object.entries(values)
+				.filter(([, v]) => v && v !== values.nama)
+				.map(([k, v]) => {
+					// FK fields: lookup name from options
+					if (fkChipMaps[k]) {
+						const name = fkChipMaps[k][v];
+						if (name) return { key: k, label: name };
+					}
+					// Non-FK: use static label formatters
+					switch (k) {
+						case "nama":
+							return { key: k, label: `Nama: ${v}` };
+						case "nipam":
+							return { key: k, label: `NIPAM: ${v}` };
+						case "nik":
+							return { key: k, label: `NIK: ${v}` };
+						case "statusPegawai":
+							return { key: k, label: statusPegawaiLabel(v) };
+						case "statusKerja":
+							return { key: k, label: statusKerjaLabel(v) };
+						case "jenisKelamin":
+							return { key: k, label: v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan" };
+						default:
+							return { key: k, label: v };
+					}
+				}),
+		[values, fkChipMaps],
+	);
 
 	return (
 		<div className="mb-3 space-y-2">

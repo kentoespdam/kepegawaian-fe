@@ -10,26 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./schema";
-
-// — Helpers —
-
-function useFkOptions(entity: string, labelFn?: (i: Record<string, unknown>) => string) {
-	const query = useQuery({
-		queryKey: [entity, "list"],
-		queryFn: () => api.listAll<Record<string, unknown>>(entity),
-		staleTime: 300_000,
-	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: labelFn?.(i) ?? String(i.nama ?? ""),
-			})),
-		[query.data, labelFn],
-	);
-}
 
 // — Props (compatible with EntityFormModal) —
 

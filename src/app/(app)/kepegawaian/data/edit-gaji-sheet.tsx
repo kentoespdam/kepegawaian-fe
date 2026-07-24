@@ -9,10 +9,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import { ENUMS } from "./tambah/constants";
 import { FieldFk, FieldSelect, FieldText } from "./tambah/field-renderers";
-import { useFkOptions, usePajakOptions } from "./tambah/hooks";
+import { usePajakOptions } from "./tambah/hooks";
 
 const schema = z.object({
 	statusPegawai: z.string().min(1, "Pilih status"),

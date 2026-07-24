@@ -9,11 +9,11 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import { ENUMS } from "./tambah/constants";
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./tambah/field-renderers";
-import { useFkOptions } from "./tambah/hooks";
 
 const schema = z.object({
 	nipam: z.string().min(1, "NIPAM wajib"),

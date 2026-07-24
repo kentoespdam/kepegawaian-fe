@@ -24,7 +24,7 @@ tipe generated `src/types/pegawai/pegawai.ts` + pola form/mutation yang **sudah 
 
 | Area | Keputusan |
 |---|---|
-| **Aksi baris** | 2 ikon inline: **Edit Profil** (pensil) + **Edit Gaji** (dompet), tooltip, `e.stopPropagation()`; klik baris tetap select→Ringkasan. Ceiling: pindah ke kebab menu bila ikon ≥4. |
+| **Aksi baris** | ~~2 ikon inline di kolom Aksi~~ → **DIREVISI**, lihat section **REVISI** di bawah. Action edit kini **tombol berlabel di header panel Ringkasan** (tab pegawai), kolom Aksi tabel dilepas. Klik baris tetap select→Ringkasan. |
 | **Hapus** | **OUT OF SCOPE** (via terminasi/riwayat). Jangan tambah tombol delete. |
 | **CREATE container** | **Halaman terdedikasi** `/kepegawaian/data/tambah`. Seksi Biodata selalu tampil + seksi Kepegawaian **adaptif** by `statusPegawai`. |
 | **EDIT container** | **Sheet per aksi** (Profil 17 field / Gaji 9 field). Reuse pola Sheet sanksi/profesi (`sm:max-w-120`). |
@@ -167,6 +167,33 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 - [ ] **Filter**: Search+Status inline; 8 filter popover; chip aktif; semua di URL; `+ Tambah` navigasi benar.
 - [ ] `tsc --noEmit` & `biome check` lolos di tiap issue.
 - [ ] Hapus **tidak** ditambahkan (out of scope).
+
+## 🔄 REVISI (2026-07-24) — Action edit PINDAH ke header panel Ringkasan
+
+> Follow-up setelah `ds5` (Edit Profil + Edit Gaji) COMPLETE. Merevisi keputusan **"Aksi baris"**
+> di atas + langkah `ds5` yang menaruh 2 ikon di kolom Aksi tabel. Hasil grill — **DIKUNCI**.
+> Scope **tab pegawai (Aktif/Non-aktif) SAJA**. Issue: **`kepegawaian-fe-vsr`**.
+
+**Keputusan:**
+1. **Pindah penuh, bukan dua tempat.** Kolom Aksi tabel dilepas untuk tab pegawai; action edit hidup HANYA di panel Ringkasan.
+2. **`data-table.tsx` TIDAK diubah** (shared primitive, fan-in ≥2 — non-breaking). Perubahan murni di caller:
+   `data-pegawai-client.tsx` berhenti mengoper `onEdit`/`onEditGaji` ke `<DataTable>` saat `isPegawaiTab`
+   (baris ~191-192) → `hasActions` jadi false → kolom Aksi hilang otomatis. `onRowClick`/`selectedRowId` TETAP.
+3. **2 action** (Hapus tetap out of scope, tak ada `onDelete`): **Edit Profil** (`Pencil`→`setEditProfilId`)
+   + **Edit Gaji** (`Wallet`→`setEditGajiId`). Keduanya buka Sheet yang sama seperti `ds5` — hanya pemicunya yang pindah.
+4. **Tombol BERLABEL** (ikon + teks: "Edit Profil" / "Edit Gaji") di **header** panel — bukan ikon telanjang.
+   Manfaatkan ruang `lg:w-[380px]`. (Di kolom tabel dulu terpaksa ikon-only karena sempit.)
+5. **Visibilitas tombol:** tampil saat `selectedId` ada **DAN** query ringkasan **sukses**.
+   - **Empty** (`!selectedId`): tak render. — **Loading** (`isPending`): tampil (hanya butuh `selectedId`).
+   - **Error**: **SEMBUNYI** — user "Coba lagi" dulu. Mutasi sengaja digate ke sukses-fetch panel (pilihan user).
+6. **RBAC:** tak ada — `onEdit`/`onEditGaji` tak digating `can()` (terverifikasi). Tak ada gating yang dibawa.
+7. **`e.stopPropagation()`** jadi tak relevan utk tab pegawai (tak ada tombol di baris); guard di `DataTable` generik TETAP untuk caller lain.
+
+**File berubah:** `data-pegawai-client.tsx` (cabut 2 prop action; teruskan handler ke panel) +
+`ringkasan-panel.tsx` (terima `onEditProfil`/`onEditGaji`, render 2 tombol di header sesuai state #5).
+`data-table.tsx` **TAK disentuh**. Tab Non-pegawai tak berubah.
+
+---
 
 ## Invarian yang tak boleh dilanggar
 

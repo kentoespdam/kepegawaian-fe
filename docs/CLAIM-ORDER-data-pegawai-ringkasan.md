@@ -97,6 +97,10 @@ Susun jadi **3 section** sesuai mock:
 - [x] Prop `DataTable` baru opsional & non-breaking untuk caller lain.
 - [x] `tsc --noEmit` & `biome check` lolos.
 
+> **Catatan:** keputusan #1 (action edit di kolom Aksi tabel) **DIREVISI** — action edit
+> kini pindah ke header panel Ringkasan. Lihat section **REVISI** di
+> [`CLAIM-ORDER-data-pegawai-crud.md`](./CLAIM-ORDER-data-pegawai-crud.md) (issue `kepegawaian-fe-vsr`).
+
 ## Invarian yang tak boleh dilanggar
 
 - **Tipe generated** (`src/types/pegawai/pegawai.ts`) TIDAK diedit manual.

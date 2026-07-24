@@ -8,10 +8,11 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { ENUMS } from "./constants";
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./field-renderers";
-import { useFkOptions, usePajakOptions } from "./hooks";
+import { usePajakOptions } from "./hooks";
 import { type FormValues, schema } from "./schema";
 
 export function TambahPegawaiForm() {
