@@ -133,8 +133,13 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 8. Form
 
-- Semua form CRUD = **RHF v7 + Zod** (`zodResolver`) via satu primitive **`<CrudForm>`** (forms §10).
-  Jangan bikin boilerplate RHF per-entitas — suplai skema Zod + daftar field.
+- **Default: `<CrudForm>`** — Semua form CRUD Master sederhana pakai **RHF v7 + Zod** (`zodResolver`)
+  via satu primitive **`<CrudForm>`** (forms §10). Suplai skema Zod + daftar field — jangan bikin
+  boilerplate RHF per-entitas.
+- **Deviasi: form kompleks boleh pola custom** bila punya **conditional sections**, **FK cascade**,
+  atau **`superRefine` kondisional** — `<CrudForm>` berbasis `fields[]` flat tidak mendukungnya.
+  Ikuti pola `profesi/form.tsx` / `tambah-form.tsx` (Field* renderer lokal + RHF langsung).
+  **Deviasi sadar** — tetap patuhi §1 (max ~120 baris). Lihat `forms.md §10.5` untuk struktur file.
 - Skema Zod **selaras** dengan `required`/`minLength`/`minimum` OpenAPI Backend.
 - **`fields[]` WAJIB mencerminkan `{Entity}PostRequest`/`PutRequest`.** Setiap property di
   interface request (`src/types/master/{entity}.ts`) HARUS punya input — lewat entri `fields[]`,

@@ -7,299 +7,12 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
-import { FKCombobox } from "@/components/fk-combobox";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/lib/api/client";
-
-// ── Enum options (hand-authored dari _shared.ts) ──
-
-const ENUMS = {
-	jenisKelamin: [
-		{ value: "LAKI_LAKI", label: "Laki-laki" },
-		{ value: "PEREMPUAN", label: "Perempuan" },
-	],
-	agama: [
-		{ value: "ISLAM", label: "Islam" },
-		{ value: "KRISTEN", label: "Kristen" },
-		{ value: "KATOLIK", label: "Katolik" },
-		{ value: "HINDU", label: "Hindu" },
-		{ value: "BUDHA", label: "Budha" },
-		{ value: "KONGHUCHU", label: "Konghuchu" },
-		{ value: "ALIRAN_KEPERCAYAAN", label: "Aliran Kepercayaan" },
-		{ value: "TIDAK_TAHU", label: "Tidak Tahu" },
-		{ value: "LAINNYA", label: "Lainnya" },
-	],
-	statusKawin: [
-		{ value: "BELUM_KAWIN", label: "Belum Kawin" },
-		{ value: "KAWIN", label: "Kawin" },
-		{ value: "JANDA_DUDA", label: "Janda/Duda" },
-		{ value: "MENIKAH_SEKANTOR", label: "Menikah Sekantor" },
-		{ value: "TIDAK_TAHU", label: "Tidak Tahu" },
-	],
-	golonganDarah: [
-		{ value: "A", label: "A" },
-		{ value: "B", label: "B" },
-		{ value: "AB", label: "AB" },
-		{ value: "O", label: "O" },
-	],
-	statusPegawai: [
-		{ value: "KONTRAK", label: "Kontrak" },
-		{ value: "CAPEG", label: "CPNS" },
-		{ value: "PEGAWAI", label: "PNS" },
-		{ value: "CALON_HONORER", label: "Calon Honorer" },
-		{ value: "HONORER", label: "Honorer" },
-		{ value: "NON_PEGAWAI", label: "Non Pegawai" },
-	],
-	statusKerja: [
-		{ value: "KARYAWAN_AKTIF", label: "Karyawan Aktif" },
-		{ value: "BERHENTI_OR_KELUAR", label: "Berhenti/Keluar" },
-		{ value: "DIRUMAHKAN", label: "Dirumahkan" },
-		{ value: "LAMARAN_BARU", label: "Lamaran Baru" },
-		{ value: "TAHAP_SELEKSI", label: "Tahap Seleksi" },
-		{ value: "DITERIMA", label: "Diterima" },
-		{ value: "DIREKOMENDASIKAN", label: "Direkomendasikan" },
-		{ value: "DITOLAK", label: "Ditolak" },
-	],
-} as const;
-
-// ── FK helpers ──
-
-function useFkOptions(entity: string, labelFn?: (i: Record<string, unknown>) => string) {
-	const query = useQuery({
-		queryKey: [entity, "list"],
-		queryFn: () => api.listAll<Record<string, unknown>>(entity),
-		staleTime: 300_000,
-	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: labelFn?.(i) ?? String(i.nama ?? ""),
-			})),
-		[query.data, labelFn],
-	);
-}
-
-function usePajakOptions() {
-	const query = useQuery({
-		queryKey: ["gaji-pendapatan-non-pajak", "list"],
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/penggajian/pendapatan-non-pajak/list");
-			if (!res.ok) throw new Error("Gagal memuat data pajak");
-			const body = await res.json();
-			return body.data as Record<string, unknown>[];
-		},
-		staleTime: 300_000,
-	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: `${String(i.kode ?? "")} - ${String(i.nama ?? "")}`,
-			})),
-		[query.data],
-	);
-}
-
-// ── Zod schema ──
-
-const schema = z
-	.object({
-		nik: z.string().min(1, "NIK wajib diisi"),
-		nama: z.string().min(1, "Nama wajib diisi"),
-		jenisKelamin: z.string().min(1, "Pilih jenis kelamin"),
-		tempatLahir: z.string().min(1, "Tempat lahir wajib diisi"),
-		tanggalLahir: z.string().min(1, "Tanggal lahir wajib diisi"),
-		alamat: z.string().min(1, "Alamat wajib diisi"),
-		agama: z.string().min(1, "Pilih agama"),
-		ibuKandung: z.string().min(1, "Ibu kandung wajib diisi"),
-		nipam: z.string().min(1, "NIPAM wajib diisi"),
-		telp: z.string().optional(),
-		pendidikanTerakhirId: z.string().optional(),
-		golonganDarah: z.string().optional(),
-		statusKawin: z.string().optional(),
-		email: z.string().optional(),
-		notes: z.string().optional(),
-		isPegawai: z.boolean().optional(),
-		statusPegawai: z.string().optional(),
-		statusKerja: z.string().optional(),
-		jabatanId: z.string().optional(),
-		organisasiId: z.string().optional(),
-		profesiId: z.string().optional(),
-		golonganId: z.string().optional(),
-		kodePajakId: z.string().optional(),
-		nomorSk: z.string().optional(),
-		tanggalSk: z.string().optional(),
-		tmtBerlakuSk: z.string().optional(),
-		tmtKontrakSelesai: z.string().optional(),
-		gajiPokok: z.string().optional(),
-	})
-	.superRefine((vals, ctx) => {
-		if (!vals.statusPegawai || vals.statusPegawai === "NON_PEGAWAI") return;
-		// Berkepegawaian → 3 FK wajib
-		if (!vals.jabatanId)
-			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Jabatan wajib diisi", path: ["jabatanId"] });
-		if (!vals.organisasiId)
-			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Organisasi wajib diisi", path: ["organisasiId"] });
-		if (!vals.kodePajakId)
-			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Kode pajak wajib diisi", path: ["kodePajakId"] });
-	});
-
-type FormValues = z.infer<typeof schema>;
-
-// ── Shared field renderers ──
-
-function FieldSelect({
-	label,
-	value,
-	options,
-	onChange,
-	error,
-	required,
-}: {
-	label: string;
-	value: string | undefined;
-	options: readonly { value: string; label: string }[];
-	onChange: (v: string) => void;
-	error?: string;
-	required?: boolean;
-}) {
-	return (
-		<div className="space-y-1.5">
-			<Label className="text-sm font-medium">
-				{label}
-				{required && <span className="ml-0.5 text-destructive">*</span>}
-			</Label>
-			<Select value={value ?? ""} onValueChange={(v) => onChange(v ?? "")}>
-				<SelectTrigger className="h-11 w-full" aria-invalid={!!error}>
-					<SelectValue placeholder={`Pilih ${label.toLowerCase()}`} />
-				</SelectTrigger>
-				<SelectContent>
-					{options.map((o) => (
-						<SelectItem key={o.value} value={o.value}>
-							{o.label}
-						</SelectItem>
-					))}
-				</SelectContent>
-			</Select>
-			{error && <p className="text-xs text-destructive">{error}</p>}
-		</div>
-	);
-}
-
-function FieldText({
-	label,
-	value,
-	onChange,
-	error,
-	required,
-	placeholder,
-	type,
-}: {
-	label: string;
-	value: string | undefined;
-	onChange: (v: string) => void;
-	error?: string;
-	required?: boolean;
-	placeholder?: string;
-	type?: string;
-}) {
-	return (
-		<div className="space-y-1.5">
-			<Label className="text-sm font-medium">
-				{label}
-				{required && <span className="ml-0.5 text-destructive">*</span>}
-			</Label>
-			<Input
-				type={type ?? "text"}
-				className="h-11"
-				value={value ?? ""}
-				onChange={(e) => onChange(e.target.value)}
-				placeholder={placeholder}
-				aria-invalid={!!error}
-			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
-		</div>
-	);
-}
-
-function FieldTextarea({
-	label,
-	value,
-	onChange,
-	error,
-	required,
-}: {
-	label: string;
-	value: string | undefined;
-	onChange: (v: string) => void;
-	error?: string;
-	required?: boolean;
-}) {
-	return (
-		<div className="space-y-1.5">
-			<Label className="text-sm font-medium">
-				{label}
-				{required && <span className="ml-0.5 text-destructive">*</span>}
-			</Label>
-			<Textarea
-				className="min-h-24"
-				value={value ?? ""}
-				onChange={(e) => onChange(e.target.value)}
-				aria-invalid={!!error}
-			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
-		</div>
-	);
-}
-
-function FieldFk({
-	label,
-	options,
-	value,
-	onChange,
-	error,
-	required,
-	disabled,
-	loading,
-	placeholder,
-}: {
-	label: string;
-	options: { value: string; label: string }[];
-	value: string | undefined;
-	onChange: (v: string | undefined) => void;
-	error?: string;
-	required?: boolean;
-	disabled?: boolean;
-	loading?: boolean;
-	placeholder?: string;
-}) {
-	return (
-		<div className="space-y-1.5">
-			<Label className="text-sm font-medium">
-				{label}
-				{required && <span className="ml-0.5 text-destructive">*</span>}
-			</Label>
-			<FKCombobox
-				options={options}
-				value={value}
-				onChange={onChange}
-				placeholder={placeholder ?? `Pilih ${label.toLowerCase()}`}
-				disabled={disabled}
-				loading={loading}
-				invalid={!!error}
-			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
-		</div>
-	);
-}
-
-// ── Main form ──
+import { ENUMS } from "./constants";
+import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./field-renderers";
+import { useFkOptions, usePajakOptions } from "./hooks";
+import { type FormValues, schema } from "./schema";
 
 export function TambahPegawaiForm() {
 	const router = useRouter();
@@ -343,7 +56,6 @@ export function TambahPegawaiForm() {
 		[jabQuery.data],
 	);
 
-	// Reset jabatan when organisasi changes
 	const onOrgChange = (v: string | undefined) => {
 		setValue("organisasiId", v, { shouldValidate: true });
 		setValue("jabatanId", undefined, { shouldValidate: true });
@@ -407,7 +119,6 @@ export function TambahPegawaiForm() {
 
 	return (
 		<form onSubmit={rhfSubmit(onSubmit)} className="max-w-2xl mx-auto space-y-6 py-6">
-			{/* Seksi Biodata */}
 			<div className="rounded-lg border bg-card p-6 space-y-4">
 				<h2 className="text-base font-semibold text-foreground">Biodata</h2>
 				<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -504,7 +215,6 @@ export function TambahPegawaiForm() {
 				<FieldTextarea label="Notes" value={watch("notes")} onChange={(v) => setValue("notes", v)} error={e("notes")} />
 			</div>
 
-			{/* Seksi Kepegawaian */}
 			<div className="rounded-lg border bg-card p-6 space-y-4">
 				<h2 className="text-base font-semibold text-foreground">Data Kepegawaian</h2>
 				<FieldSelect

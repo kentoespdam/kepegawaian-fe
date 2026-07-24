@@ -18,6 +18,29 @@ Semua form CRUD Master = **RHF v7 + Zod** (`zodResolver`) via shadcn **`<Field /
   input/switch/combobox Base UI.
 - Skema Zod = satu sumber kebenaran validasi client; **selaras** dengan
   `required`/`minLength`/`minimum` OpenAPI Backend tiap entitas.
+- **⚠️ Batasan `<CrudForm>`:** Primitive ini berbasis `fields[]` flat — tidak mendukung
+  **conditional sections** (sembunyikan/tampilkan grup field), **FK cascade** (filter child by parent),
+  atau **`superRefine` kondisional** (validasi berubah by field value). Form dengan kebutuhan tersebut
+  boleh menggunakan pola custom (contoh: `profesi/form.tsx`, `tambah-form.tsx`) — Field* renderer
+  lokal + RHF langsung. Ini **deviasi sadar** dari aturan "pakai CrudForm", didokumentasikan di
+  coding-rules §8 dan di CLAIM-ORDER masing-masing.
+
+### 10.5 Struktur file form kompleks
+
+Form kompleks (28+ field, conditional sections, FK cascade) WAJIB dipecah mengikuti §1 max ~120 baris:
+
+| File | Isi |
+|---|---|
+| `schema.ts` | Zod schema + `superRefine` + `FormValues` type |
+| `field-renderers.tsx` | Field* sub-komponen (FieldText, FieldSelect, FieldFk, dll) |
+| `hooks.ts` | Custom hooks (useFkOptions, dll) |
+| `constants.ts` | Enum options hand-authored *(opsional — hanya bila perlu)* |
+| `{form-name}.tsx` | Komponen form utama + imports |
+
+Pola ini mengikuti precedent `profesi/form.tsx` yang meletakkan semua logika di satu file karena
+formnya lebih kecil (<20 field). Bila form melebihi ~200 baris, WAJIB terapkan struktur di atas
+(atau subhimpunan file yang relevan — `constants.ts` hanya diperlukan untuk enum hand-authored
+spesifik form).
 
 ### 10.1 Presentasi container — Dialog default, Sheet untuk form berat
 
