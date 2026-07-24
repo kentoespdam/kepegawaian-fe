@@ -52,14 +52,15 @@ Satu issue, tanpa rantai.
 - [ ] Verifikasi: tabel **utuh** saat sidebar collapse **dan** expand.
 - [ ] Verifikasi: UserMenu pojok kanan atas **terlihat penuh** di kedua state.
 - [x] `gitnexus_detect_changes()` — pastikan hanya AppShell terdampak.
-- [x] `npm run build` lolos. `bd close kepegawaian-fe-z1f`.
+- [x] `npm run build` lolos.
+- [x] `bd close kepegawaian-fe-z1f`.
 
 ---
 
 ## Definition of Done
 
-- [ ] Scrollbar-x di kartu tabel, bukan page.
-- [ ] Tabel utuh di collapse & expand.
-- [ ] UserMenu tak terpotong di kedua state.
-- [ ] `ui/sidebar.tsx` & `data-table.tsx` tak tersentuh.
-- [ ] `npm run build` hijau, `git push` sukses.
+- [ ] Scrollbar-x di kartu tabel, bukan page. *(manual — butuh browser)*
+- [ ] Tabel utuh di collapse & expand. *(manual — butuh browser)*
+- [ ] UserMenu tak terpotong di kedua state. *(manual — butuh browser)*
+- [x] `ui/sidebar.tsx` & `data-table.tsx` tak tersentuh.
+- [x] `npm run build` hijau, `git push` sukses.
