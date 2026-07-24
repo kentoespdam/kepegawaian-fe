@@ -14,21 +14,27 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - **Aksesibilitas = syarat fungsional**, bukan nice-to-have (±70% pengguna lansia). Gate di
   visual-foundation §2 berlaku ke SETIAP komponen.
 - **Bahasa UI = Bahasa Indonesia.** Label bahasa manusia, bukan nama field mentah.
-- **Pahami project DULU via `gitnexus` & `graphify`, baru koding.** Sebelum menyentuh kode, WAJIB
-  bangun pemahaman struktur/aliran nyata dari **peta kode**, bukan tebakan: `gitnexus_query`/
-  `gitnexus_context` untuk menemukan execution flow, caller/callee, dan blast radius simbol yang akan
-  disentuh; `graphify` untuk memetakan input/dokumen jadi knowledge graph saat konteksnya lebih luas
-  dari satu simbol. **DILARANG grep buta / baca file acak** sebagai cara pertama memahami kode —
-  gitnexus/graphify lebih dulu, grep hanya pelengkap. Ini prasyarat "plan dulu" di bawah.
-- **Plan dulu, baru implementasi.** Sebelum menulis kode: `bd show <id>` → **pahami kode via
-  `gitnexus`/`graphify`** (lihat baris di atas & §11) → baca modul DESIGN relevan → **fetch docs
-  terbaru via context7** (API/prop/best-practice, jangan andalkan ingatan) → susun rencana singkat
-  (file yang disentuh, primitive yang dipakai, urutan langkah). Baru koding. **JANGAN** langsung
-  ngetik dari asumsi — asumsi basi = bug diam & rework.
-- **Buat rencana sebelum benar-benar mengerjakan.** Untuk tugas non-trivial, WAJIB susun rencana tertulis
-  (masuk *plan mode* / tulis di `--design` atau `--notes` issue `bd`) **lalu sampaikan & minta konfirmasi
-  ke pengguna sebelum mengeksekusi**. Baru mulai koding setelah rencana disepakati. Perubahan sepele
-  (typo, satu baris, rename lokal) boleh langsung — sisanya: rencana dulu, eksekusi belakangan.
+- **Pahami sebelum edit — diskalakan blast-radius (ADR-0009).** `gitnexus impact` **WAJIB** bila
+  target edit: (a) **fan-in ≥2** (di-import ≥2 modul — cek `grep -rl "import.*Nama"`), **atau**
+  (b) di **permukaan kritis**: `proxy.ts`, DAL/`verifySession`, `can()`/RBAC, shared primitive
+  (`<DataTable>`/`<CrudForm>`/`<Can>`/dst), `src/hooks/*`. Di situ, bangun pemahaman caller/callee &
+  blast radius dari **peta kode**, bukan tebakan. **Di bawah ambang** (edit 1-file lokal, config glue,
+  typo, rename lokal): **baca file langsung + grep terarah SAH sebagai langkah pertama**; gitnexus
+  opsional — ritual seragam memboroskan token agen yang justru dilindungi ADR-0007. `graphify` =
+  **on-demand** (onboarding spec/modul baru, refactor lintas-domain), bukan jalur wajib per-edit.
+  Larangan "grep buta" hanya berlaku saat memetakan flow tak dikenal berskala luas.
+- **Plan dulu, baru implementasi.** Alur persiapan: `bd show <id>` → **pahami kode** (via `gitnexus`
+  bila edit memicu ambang blast-radius di atas & §11; selain itu baca file langsung) → baca modul
+  DESIGN relevan → **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan
+  ingatan). **JANGAN** ngetik dari asumsi — asumsi basi = bug diam & rework. **Dua sumbu keputusan
+  yang TERPISAH**, jangan dicampur:
+  - **Rencana tertulis + konfirmasi user (sumbu: seberapa besar tugasnya).** Tugas **non-trivial** →
+    WAJIB rencana tertulis (masuk *plan mode* / `bd --design`/`--notes`) → **sampaikan & minta
+    konfirmasi pengguna** → baru eksekusi. Perubahan **sepele** (typo, satu baris, rename lokal) →
+    boleh langsung, tanpa plan tertulis.
+  - **Impact analysis (sumbu: seberapa jauh dampaknya — ADR-0009).** fan-in ≥2 atau permukaan kritis
+    → `gitnexus impact` WAJIB, terlepas dari besar tugas. Contoh: edit **1 baris di `proxy.ts`** =
+    sepele secara usaha (boleh skip plan tertulis) **tapi** blast-radius tinggi → impact **tetap wajib**.
 
 ---
 
@@ -186,10 +192,11 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 11. Pahami project DULU — GitNexus + graphify (WAJIB)
 
-**Urutan wajib sebelum koding (§0):** `gitnexus` (peta kode: flow, caller/callee, impact) →
-bila konteks lebih luas dari satu simbol, `graphify` (knowledge graph dari spec/dokumen/input) →
-baru `context7` (docs library) → baru plan → baru koding. Grep buta = pelengkap terakhir, **bukan**
-langkah pertama memahami kode.
+**Urutan sebelum koding (§0), diskalakan blast-radius (ADR-0009):** bila edit memicu ambang WAJIB
+(fan-in ≥2 atau permukaan kritis) → `gitnexus impact` (flow, caller/callee, blast radius) dulu.
+Selain itu → baca file langsung + grep terarah cukup. `graphify` = on-demand (spec/modul baru,
+refactor lintas-domain), bukan wajib per-edit. `context7` tetap wajib sebelum pakai library apa pun
+(§2). Larangan "grep buta" hanya untuk memetakan flow tak dikenal berskala luas.
 
 ### graphify — knowledge graph (untuk pemahaman berskala luas)
 
@@ -233,8 +240,9 @@ atau error "repo not found".
 
 ### Aturan
 
-- **Sebelum mengedit** fungsi/class/method: impact analysis → laporkan blast radius.
-  **Peringatkan** bila risk HIGH/CRITICAL sebelum lanjut.
+- **Sebelum mengedit** fungsi/class/method yang **fan-in ≥2 atau di permukaan kritis** (ADR-0009):
+  impact analysis → laporkan blast radius. **Peringatkan** bila risk HIGH/CRITICAL sebelum lanjut.
+  Edit lokal di bawah ambang: tak wajib.
 - **Sebelum commit:** `detect-changes` untuk verifikasi scope perubahan.
 - **Eksplorasi:** `query`/`context` alih-alih grep buta.
 - **Rename simbol:** pakai `gitnexus_rename` (MCP), **JANGAN** find-and-replace.
