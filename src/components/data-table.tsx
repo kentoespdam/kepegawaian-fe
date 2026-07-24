@@ -41,6 +41,8 @@ interface DataTableProps<T> {
 	onSort?: (key: string) => void;
 	onEdit?: (item: T) => void;
 	onDelete?: (item: T) => void;
+	onRowClick?: (item: T) => void;
+	selectedRowId?: string | number;
 	getRowId?: (item: T) => string | number;
 	emptyMessage?: string;
 	isFiltered?: boolean;
@@ -65,7 +67,6 @@ function PaginationFooter({ children }: { children: React.ReactNode }) {
 	if (!children) return null;
 	return <div className="border-t shrink-0 px-4 py-2.5">{children}</div>;
 }
-
 export function DataTable<T>({
 	columns,
 	data,
@@ -79,6 +80,8 @@ export function DataTable<T>({
 	onSort,
 	onEdit,
 	onDelete,
+	onRowClick,
+	selectedRowId,
 	getRowId,
 	emptyMessage = "Tidak ada data",
 	isFiltered,
@@ -235,11 +238,17 @@ export function DataTable<T>({
 							{data.map((item, i) => (
 								<tr
 									key={getRowId ? getRowId(item) : i}
+									onClick={() => onRowClick?.(item)}
 									className={cn(
 										// zebra sbg pemisah (tanpa border horizontal); hover hijau menang di semua baris
 										"transition-colors hover:bg-row-hover",
 										i % 2 === 1 && "bg-row-stripe",
 										isPlaceholder && "opacity-50 pointer-events-none",
+										onRowClick && "cursor-pointer",
+										selectedRowId !== undefined &&
+											getRowId &&
+											String(getRowId(item)) === String(selectedRowId) &&
+											"bg-row-selected",
 									)}
 								>
 									{columns.map((col) => (
@@ -259,14 +268,28 @@ export function DataTable<T>({
 										<td className="px-4 py-2 align-middle text-right">
 											<div className="inline-flex items-center gap-1">
 												{onEdit && (
-													<Button variant="ghost" size="icon" onClick={() => onEdit(item)} aria-label="Edit">
-														{" "}
+													<Button
+														variant="ghost"
+														size="icon"
+														onClick={(e) => {
+															e.stopPropagation();
+															onEdit(item);
+														}}
+														aria-label="Edit"
+													>
 														<Pencil className="size-5" />
 													</Button>
 												)}
 												{onDelete && (
-													<Button variant="ghost" size="icon" onClick={() => onDelete(item)} aria-label="Hapus">
-														{" "}
+													<Button
+														variant="ghost"
+														size="icon"
+														onClick={(e) => {
+															e.stopPropagation();
+															onDelete(item);
+														}}
+														aria-label="Hapus"
+													>
 														<Trash2 className="size-5 text-destructive" />
 													</Button>
 												)}

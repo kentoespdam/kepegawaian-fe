@@ -32,6 +32,7 @@
 	--color-primary-dark: var(--primary-dark);
 	--color-row-stripe: var(--row-stripe);
 	--color-row-hover: var(--row-hover);
+	--color-row-selected: var(--row-selected);
 	/* Sidebar tokens — dipakai oleh sidebar.tsx (shadcn sidebar-07) */
 	--color-sidebar: var(--sidebar);
 	--color-sidebar-foreground: var(--sidebar-foreground);
@@ -83,6 +84,7 @@
 	/* Zebra: stripe abu-biru netral (~#F4F6F8), hover tint hijau brand (~#EAF3EE). Invariant hover > stripe > base. */
 	--row-stripe: oklch(0.965 0.004 250);
 	--row-hover: oklch(0.95 0.02 158);
+	--row-selected: oklch(0.93 0.04 158);
 	--radius: 0.5rem;
 	/* Sidebar: netral HANGAT selangkah di bawah card putih (1.00 > sidebar 0.955 > kanvas 0.94).
 	   Border tegas jadi batas zona 30%; item aktif Evergreen pekat agar pop. 60:30:10. */
@@ -122,6 +124,7 @@
 	/* Dark: stripe = turunan --muted (0.22), hover = tint primary hijau gelap. Invariant hover > stripe > base. */
 	--row-stripe: oklch(0.2 0.01 160);
 	--row-hover: oklch(0.28 0.03 158);
+	--row-selected: oklch(0.3 0.05 158);
 	/* Sidebar dark: elevasi ringan DI ATAS card (sidebar 0.185 > card 0.16) — pisah dari card,
 	   border tegas jadi batas zona, item aktif Evergreen pop. Mirror fix light. */
 	--sidebar: oklch(0.185 0.012 160);

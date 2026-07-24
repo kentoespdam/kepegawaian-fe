@@ -69,33 +69,33 @@ Susun jadi **3 section** sesuai mock:
 **← depends on:** `kepegawaian-fe-p9g` (tabel sudah pakai `PegawaiTableResponse`) — sudah closed, siap dikerjakan.
 
 **A. `data-table.tsx` (prop generik baru):**
-- [ ] `gitnexus_impact({target:"DataTable", direction:"upstream"})` — laporkan blast radius (dipakai banyak tabel; prop OPSIONAL jadi non-breaking).
-- [ ] Tambah ke `DataTableProps<T>`: `onRowClick?: (item: T) => void;` + `selectedRowId?: string | number;`.
-- [ ] `<tr>` data: `onClick={() => onRowClick?.(item)}`, tambah `cursor-pointer` bila `onRowClick` ada, dan highlight bila `getRowId(item)` == `selectedRowId` (bandingkan `String()`-wise). Highlight menang atas zebra, kalah/koeksis dgn hover.
-- [ ] Tombol Aksi (`onEdit`/`onDelete`) → bungkus handler dengan `e.stopPropagation()`.
-- [ ] **JANGAN** ubah signature prop lain / hapus apa pun (harus non-breaking untuk semua caller lain).
+- [x] `gitnexus_impact({target:"DataTable", direction:"upstream"})` — laporkan blast radius (dipakai banyak tabel; prop OPSIONAL jadi non-breaking).
+- [x] Tambah ke `DataTableProps<T>`: `onRowClick?: (item: T) => void;` + `selectedRowId?: string | number;`.
+- [x] `<tr>` data: `onClick={() => onRowClick?.(item)}`, tambah `cursor-pointer` bila `onRowClick` ada, dan highlight bila `getRowId(item)` == `selectedRowId` (bandingkan `String()`-wise). Highlight menang atas zebra, kalah/koeksis dgn hover.
+- [x] Tombol Aksi (`onEdit`/`onDelete`) → bungkus handler dengan `e.stopPropagation()`.
+- [x] **JANGAN** ubah signature prop lain / hapus apa pun (harus non-breaking untuk semua caller lain).
 
 **B. `data-pegawai-client.tsx` (fitur):**
-- [ ] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
-- [ ] `const [selectedId, setSelectedId] = useState<string | number | null>(null)`.
-- [ ] `useQuery` ringkasan: key `["ringkasan", selectedId]`, `enabled: !!selectedId`, `staleTime: 30_000`, fetch `/api/proxy/pegawai/${selectedId}/ringkasan` → `body.data`.
-- [ ] Di `nav()` (atau di handler ganti tab & page): `setSelectedId(null)` saat tab/page berubah.
-- [ ] Pasang `onRowClick={(i)=>setSelectedId(getRowId(i))}` + `selectedRowId={selectedId ?? undefined}` **hanya** saat `isPegawaiTab`.
-- [ ] Layout: bungkus tabel + panel dalam `flex flex-col lg:flex-row gap-4`. Panel dirender **hanya** saat `isPegawaiTab`.
-- [ ] Panel Ringkasan (inline atau `ringkasan-panel.tsx`): empty-state bila `!selectedId`; skeleton/loader saat `isPending`; error state; 3 section sesuai pemetaan di atas.
-- [ ] `gitnexus_detect_changes()` sebelum commit (harus hanya file yang diharapkan: data-table.tsx, data-pegawai-client.tsx, [+ ringkasan-panel.tsx bila dipisah]).
-- [ ] Quality gate: `bun run tsc --noEmit` + `bunx biome check`.
-- [ ] `bd close kepegawaian-fe-5ip` — commit & push.
+- [x] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` sebelum edit.
+- [x] `const [selectedId, setSelectedId] = useState<string | number | null>(null)`.
+- [x] `useQuery` ringkasan: key `["ringkasan", selectedId]`, `enabled: !!selectedId`, `staleTime: 30_000`, fetch `/api/proxy/pegawai/${selectedId}/ringkasan` → `body.data`.
+- [x] Di `nav()` (atau di handler ganti tab & page): `setSelectedId(null)` saat tab/page berubah.
+- [x] Pasang `onRowClick={(i)=>setSelectedId(getRowId(i))}` + `selectedRowId={selectedId ?? undefined}` **hanya** saat `isPegawaiTab`.
+- [x] Layout: bungkus tabel + panel dalam `flex flex-col lg:flex-row gap-4`. Panel dirender **hanya** saat `isPegawaiTab`.
+- [x] Panel Ringkasan (inline atau `ringkasan-panel.tsx`): empty-state bila `!selectedId`; skeleton/loader saat `isPending`; error state; 3 section sesuai pemetaan di atas.
+- [x] `gitnexus_detect_changes()` sebelum commit (harus hanya file yang diharapkan: data-table.tsx, data-pegawai-client.tsx, ringkasan-panel.tsx).
+- [x] Quality gate: `bun run tsc --noEmit` + `bunx biome check`.
+- [x] `bd close kepegawaian-fe-5ip` — commit & push.
 
 ## Definition of Done
 
-- [ ] Klik baris (tab Aktif/Non-aktif) memuat ringkasan & mengisi panel kanan; baris terpilih ter-highlight.
-- [ ] Tab Non-pegawai tetap tabel full-width, tak bisa di-klik-select, tanpa panel.
-- [ ] Ganti tab / ganti page mereset seleksi → panel balik ke empty-state.
-- [ ] Empty-state "Pilih pegawai untuk melihat ringkasan" tampil sebelum ada seleksi.
-- [ ] Layout side-by-side di `lg`, menumpuk di mobile.
-- [ ] Prop `DataTable` baru opsional & non-breaking untuk caller lain.
-- [ ] `tsc --noEmit` & `biome check` lolos.
+- [x] Klik baris (tab Aktif/Non-aktif) memuat ringkasan & mengisi panel kanan; baris terpilih ter-highlight.
+- [x] Tab Non-pegawai tetap tabel full-width, tak bisa di-klik-select, tanpa panel.
+- [x] Ganti tab / ganti page mereset seleksi → panel balik ke empty-state.
+- [x] Empty-state "Pilih pegawai untuk melihat ringkasan" tampil sebelum ada seleksi.
+- [x] Layout side-by-side di `lg`, menumpuk di mobile.
+- [x] Prop `DataTable` baru opsional & non-breaking untuk caller lain.
+- [x] `tsc --noEmit` & `biome check` lolos.
 
 ## Invarian yang tak boleh dilanggar
 
