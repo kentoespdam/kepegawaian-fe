@@ -53,7 +53,7 @@ Sejak update spec, endpoint `GET /pegawai` (paged table) mengembalikan **`Pegawa
 
 | Tipe | Dipakai di |
 |---|---|
-| `PegawaiTableResponse` | `GET /pegawai` (tabel data pegawai) |
+| `PegawaiTableResponse` | `GET /pegawai` (tabel data pegawai) — kolom terpakai: NIPAM, Nama, Organisasi, Jabatan, Profesi, Golongan/Pangkat, Status Pegawai |
 | `PegawaiResponseSession` | `GET /pegawai/{id}/session` (identity bridge ringan) |
 | `PegawaiResponseDetail` | `GET /pegawai/{id}` (dashboard) |
 | `PegawaiResponseRingkasan` | `GET /pegawai/{id}/ringkasan` |
@@ -65,5 +65,6 @@ Sejak update spec, endpoint `GET /pegawai` (paged table) mengembalikan **`Pegawa
 - ✅ `getPegawaiSession()` memanggil `GET /pegawai/{$id}` untuk identity bridge.
 - ✅ Endpoint baru `/pegawai/{id}/session` — tipe `PegawaiResponseSession` siap untuk identity bridge ringan.
 - ✅ Data Pegawai page (3 tab) mengonsumsi `/pegawai` (Aktif/Non-aktif) & `/profil/biodata` (Non-pegawai).
+- ⏳ Tabel Data Pegawai masih menge-type kolom sebagai `PegawaiListResponse` & baca `golongan.golongan` (field mati di response baru) → kolom Golongan kosong senyap. Fix di **`kepegawaian-fe-p9g`**: swap ke `PegawaiTableResponse`, kolom Golongan/Pangkat = `pangkatGolongan` (string **sudah diformat BE**, FE tak merekonstruksi). Lihat [CLAIM-ORDER-data-pegawai-table.md](../CLAIM-ORDER-data-pegawai-table.md).
 - ✅ Dashboard memakai data dari `PegawaiResponseDetail` (via `getPegawaiSession()`).
 - ⏳ Edit profil/gaji via PATCH belum dipasang di Dashboard (rencana rilis berikutnya).
