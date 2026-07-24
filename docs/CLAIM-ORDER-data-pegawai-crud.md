@@ -132,17 +132,17 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 ### 2. `kepegawaian-fe-ds5` — Edit Profil + Edit Gaji (2 Sheet, PATCH)
 **← depends on:** — (ready; paralel dgn 9hk)
 
-- [ ] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` + impact pada `DataTable` bila tambah kolom aksi.
-- [ ] Kolom Aksi baris (tab Aktif/Non-aktif): 2 ikon — **Edit Profil** (pensil) + **Edit Gaji** (dompet), tooltip, `e.stopPropagation()`.
-- [ ] Sheet Edit Profil (`PegawaiPatchProfil`, 17 field) — pola `sm:max-w-120` entity-form-modal.tsx; header shrink-0; footer sticky (Batal outline + Simpan).
-- [ ] Sheet Edit Gaji (`PegawaiPatchGaji`, 9 field) — struktur sama.
-- [ ] defaultValues dari row/detail: FK = **id skalar string** String-comparable dgn option value (bd memory `9x2`; nested key = field minus `Id`).
-- [ ] Submit **HANYA `dirtyFields`** (useFormState) + field identitas wajib (`id/nipam/nama` utk profil; `statusPegawai/kodePajakId/gajiProfilId` utk gaji).
-- [ ] Submit = **raw `fetch` PATCH** `/api/proxy/pegawai/${id}/profil` & `/gaji` (⛔ tak ada `api.patch`), header JSON.
-- [ ] Sukses → `toast.success` + `qc.invalidateQueries` **tabel + `["ringkasan", id]`** + tutup Sheet.
-- [ ] Loader submit `<Loader2 className="mr-1.5 size-4 animate-spin"/>` + `"Menyimpan…"`.
-- [ ] `gitnexus_detect_changes()` + quality gate (`tsc --noEmit`, `biome check`).
-- [ ] `bd close kepegawaian-fe-ds5` — commit & push.
+- [x] `gitnexus_impact({target:"DataPegawaiClient", direction:"upstream"})` — LOW risk.
+- [x] Kolom Aksi baris (tab Aktif/Non-aktif): 2 ikon — **Edit Profil** (pensil) + **Edit Gaji** (dompet), tooltip, `e.stopPropagation()`.
+- [x] Sheet Edit Profil (`PegawaiPatchProfil`, 17 field) — pola `sm:max-w-120`; header shrink-0; footer sticky.
+- [x] Sheet Edit Gaji (`PegawaiPatchGaji`, 9 field) — struktur sama + `gajiProfilId` via raw fetch ke penggajian.
+- [x] FK defaults = id skalar string; normalisasi via `String(obj?.id ?? "") || undefined`.
+- [x] Submit **HANYA `dirtyFields`** + field identitas wajib (`id/nipam/nama` profil; `statusPegawai/kodePajakId/gajiProfilId` gaji).
+- [x] Submit = **raw `fetch` PATCH** `/api/proxy/pegawai/${id}/profil` & `/gaji`.
+- [x] Sukses → `toast.success` + `qc.invalidateQueries` tabel + `["ringkasan", id]` + tutup Sheet.
+- [x] Loader submit + `"Menyimpan…"` di tiap Sheet.
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-ds5` — commit & push.
 
 ### 3. `kepegawaian-fe-7h2` — Toolbar filter
 **← depends on:** `kepegawaian-fe-9hk` (tombol "+ Tambah" → `/kepegawaian/data/tambah`).

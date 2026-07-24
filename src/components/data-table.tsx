@@ -13,6 +13,7 @@ import {
 	RefreshCw,
 	SearchX,
 	Trash2,
+	Wallet,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -40,6 +41,7 @@ interface DataTableProps<T> {
 	sortDirection?: "asc" | "desc";
 	onSort?: (key: string) => void;
 	onEdit?: (item: T) => void;
+	onEditGaji?: (item: T) => void;
 	onDelete?: (item: T) => void;
 	onRowClick?: (item: T) => void;
 	selectedRowId?: string | number;
@@ -79,6 +81,7 @@ export function DataTable<T>({
 	sortDirection,
 	onSort,
 	onEdit,
+	onEditGaji,
 	onDelete,
 	onRowClick,
 	selectedRowId,
@@ -89,6 +92,8 @@ export function DataTable<T>({
 	toolbar,
 	pagination,
 }: DataTableProps<T>) {
+	const hasActions = !!(onEdit || onEditGaji || onDelete);
+
 	if (isError) {
 		return (
 			<div>
@@ -130,8 +135,8 @@ export function DataTable<T>({
 											{col.header}
 										</th>
 									))}
-									{(onEdit || onDelete) && (
-										<th className="h-11 px-4 text-right w-24">
+									{hasActions && (
+										<th className="h-11 px-4 text-right w-28">
 											<span className="text-xs font-medium uppercase tracking-wider">Aksi</span>
 										</th>
 									)}
@@ -145,7 +150,7 @@ export function DataTable<T>({
 												<Skeleton className="h-4 w-3/4" />
 											</td>
 										))}
-										{(onEdit || onDelete) && (
+										{hasActions && (
 											<td className="px-4 py-2 align-middle text-right">
 												<div className="flex justify-end gap-1">
 													<Skeleton className="size-8 rounded-md" />
@@ -197,10 +202,10 @@ export function DataTable<T>({
 	return (
 		<div>
 			{toolbar}
-			<div className="rounded-lg border bg-card shadow-md flex flex-col max-h-[75vh] relative">
+			<div className="rounded-lg border bg-card shadow-md flex flex-col max-h-[75vh] relative p-1">
 				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
-						<thead className="sticky top-0 z-[5] bg-card border-b-2 border-border">
+						<thead className="sticky top-0 z-5 bg-card border-b-2 border-border">
 							<tr>
 								{columns.map((col) => (
 									<th
@@ -227,8 +232,8 @@ export function DataTable<T>({
 										</span>
 									</th>
 								))}
-								{(onEdit || onDelete) && (
-									<th className="h-11 px-4 text-right w-24">
+								{hasActions && (
+									<th className="h-11 px-4 text-right w-28">
 										<span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi</span>
 									</th>
 								)}
@@ -240,7 +245,6 @@ export function DataTable<T>({
 									key={getRowId ? getRowId(item) : i}
 									onClick={() => onRowClick?.(item)}
 									className={cn(
-										// zebra sbg pemisah (tanpa border horizontal); hover hijau menang di semua baris
 										"transition-colors hover:bg-row-hover",
 										i % 2 === 1 && "bg-row-stripe",
 										isPlaceholder && "opacity-50 pointer-events-none",
@@ -264,26 +268,42 @@ export function DataTable<T>({
 											{col.cell ? col.cell(item) : cellContent(item[col.id as keyof T])}
 										</td>
 									))}
-									{(onEdit || onDelete) && (
+									{hasActions && (
 										<td className="px-4 py-2 align-middle text-right">
 											<div className="inline-flex items-center gap-1">
 												{onEdit && (
 													<Button
 														variant="ghost"
 														size="icon"
+														title="Edit Profil"
 														onClick={(e) => {
 															e.stopPropagation();
 															onEdit(item);
 														}}
-														aria-label="Edit"
+														aria-label="Edit Profil"
 													>
 														<Pencil className="size-5" />
+													</Button>
+												)}
+												{onEditGaji && (
+													<Button
+														variant="ghost"
+														size="icon"
+														title="Edit Gaji"
+														onClick={(e) => {
+															e.stopPropagation();
+															onEditGaji(item);
+														}}
+														aria-label="Edit Gaji"
+													>
+														<Wallet className="size-5" />
 													</Button>
 												)}
 												{onDelete && (
 													<Button
 														variant="ghost"
 														size="icon"
+														title="Hapus"
 														onClick={(e) => {
 															e.stopPropagation();
 															onDelete(item);

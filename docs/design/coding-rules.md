@@ -34,9 +34,18 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 1. Struktur & kualitas kode
 
-- **Max ~120 baris per file.** Bila 1 file melebihi batas ini, WAJIB **pecah jadi beberapa file/komponen**
-  (angkat sub-komponen, ekstrak logika ke hook `src/hooks/`, tipe ke `src/types/`) — jangan biarkan jadi
-  file raksasa. Sejalan dengan "satu file = satu tanggung jawab".
+- **Ukuran file = trigger tinjauan, BUKAN hard gate** (ADR-0007). Ambang di bawah adalah lampu kuning
+  *"berhenti & lihat"*, bukan perintah pecah. Bila file lewat ambang **tapi kohesif satu tanggung jawab**
+  (mis. form 27 field, shared primitive `<DataTable>`) → **biarkan**. Pecah HANYA bila ada **>1 alasan
+  untuk berubah** (SRP: fetch vs render vs tipe), lalu angkat sub-komponen / hook `src/hooks/` / tipe
+  `src/types/`. Ambang per-kategori:
+  - `components/ui/*` (generated) → **exempt total** (§3 larang edit manual)
+  - `src/types/*` (DTO) → **exempt** (soft ~400) · `src/config/*` → **exempt** (soft ~200) — deklaratif
+  - shared primitive → **~250** (konsolidasi DRY sengaja besar, §18) · komponen → **~180** · hook/lib → **~120** (di sini baris = logika)
+- **Anti-fragmentasi (mengikat).** DILARANG pecah file hanya demi mengejar angka. Memotong satu unit
+  kohesif jadi 2+ file yang selalu diedit bareng **menaikkan biaya konteks AI agent** (lebih banyak
+  `Read`, import graph lebih dalam) tanpa gain keterbacaan. Fragmentasi = anti-pola, sama buruknya
+  dengan file raksasa yang campur tanggung jawab.
 - **DRY** — jangan duplikasi logika. Ekstrak pola berulang jadi shared primitive / helper / hook
   (lihat architecture §18: `<DataTable>`, `<CrudForm>`, `<ConfirmDeleteDialog>`, `<Can>`,
   `useResource`). Duplikasi hanya boleh di glue tipis per-entitas, TAK PERNAH di logika
@@ -139,7 +148,8 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - **Deviasi: form kompleks boleh pola custom** bila punya **conditional sections**, **FK cascade**,
   atau **`superRefine` kondisional** — `<CrudForm>` berbasis `fields[]` flat tidak mendukungnya.
   Ikuti pola `profesi/form.tsx` / `tambah-form.tsx` (Field* renderer lokal + RHF langsung).
-  **Deviasi sadar** — tetap patuhi §1 (max ~120 baris). Lihat `forms.md §10.5` untuk struktur file.
+  **Deviasi sadar** — patuhi ambang komponen §1 (~180, trigger tinjauan bukan gate; ADR-0007) &
+  anti-fragmentasi: form kohesif banyak-field TIDAK dipecah demi angka. Lihat `forms.md §10.5`.
 - Skema Zod **selaras** dengan `required`/`minLength`/`minimum` OpenAPI Backend.
 - **`fields[]` WAJIB mencerminkan `{Entity}PostRequest`/`PutRequest`.** Setiap property di
   interface request (`src/types/master/{entity}.ts`) HARUS punya input — lewat entri `fields[]`,
@@ -148,6 +158,11 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   Field yang kurang = data diam-diam hilang saat submit (mis. bug `jenis-sp`: `kode` ada di
   `searchFields` tapi tak ada di `fields[]`, jadi form cuma kirim `nama`). `*PostRequest` hand-written
   = sumber kebenaran field; jangan andalkan `simpleNameSchema`/`nameField` bila request > `nama`.
+  **Ditegakkan compiler, bukan audit manual (ADR-0008).** `makeConfig<TQuery, TReq>` mewajibkan
+  `TReq` (mis. `makeConfig<SanksiQuery, SanksiPostRequest>(...)`); coverage-set
+  `{fields[].name} ∪ {fkSources[].field}` HARUS superset dari keys **required** `TReq` — kurang satu
+  required → `tsc` error. Property **optional** `TReq` boleh tak punya input. Grep-statis tak andal
+  (`fields` = arg posisional `makeConfig`, bukan key), jadi enforcement pindah ke tipe.
 - Error validasi = **inline di form**, JANGAN toast. Single-column label-on-top; input ≥44px.
 
 ---

@@ -8,6 +8,8 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { PegawaiResponseRingkasan, PegawaiTableResponse } from "@/types/pegawai/pegawai";
 import type { BiodataQuery } from "@/types/profil/biodata";
+import { SheetEditGaji } from "./edit-gaji-sheet";
+import { SheetEditProfil } from "./edit-profil-sheet";
 import { RingkasanPanel } from "./ringkasan-panel";
 
 const TABS = [
@@ -42,18 +44,18 @@ const biodataColumns = [
 export function DataPegawaiClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
-	// ponytail: tab from URL = source of truth, no useState desync risk
 	const tab = (sp.get("tab") as (typeof TABS)[number]["id"]) ?? "aktif";
-	const activeTab = TABS.find((t) => t.id === tab)!;
+	const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0];
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
 	const sortBy = sp.get("sortBy") ?? undefined;
 	const sortDir = sp.get("sortDirection") as "asc" | "desc" | undefined;
-
 	const params = { ...activeTab.filter, ...toApiParams({ page, size, sortBy, sortDir }) };
 
 	const [selectedId, setSelectedId] = useState<string | number | null>(null);
+	const [editProfilId, setEditProfilId] = useState<string | null>(null);
+	const [editGajiId, setEditGajiId] = useState<string | null>(null);
 
 	const query = useQuery({
 		queryKey: [activeTab.endpoint, params],
@@ -83,7 +85,7 @@ export function DataPegawaiClient() {
 	const pageView = fromPage(query.data);
 
 	const nav = (updates: Record<string, string | undefined>) => {
-		setSelectedId(null); // reset seleksi saat tab/page/sort berubah
+		setSelectedId(null);
 		const p = new URLSearchParams(sp.toString());
 		for (const [k, v] of Object.entries(updates)) {
 			if (v) p.set(k, v);
@@ -93,8 +95,6 @@ export function DataPegawaiClient() {
 	};
 
 	const isPegawaiTab = tab !== "nonpegawai";
-
-	// ponytail: local const — dipakai di onRowClick dan sebagai prop DataTable
 	const getRowId = (i: unknown) => String((i as { id?: number; nik?: string }).id ?? (i as { nik?: string }).nik ?? "");
 
 	return (
@@ -115,7 +115,6 @@ export function DataPegawaiClient() {
 					</button>
 				))}
 			</div>
-
 			<div className="flex flex-col lg:flex-row gap-4">
 				<div className="lg:flex-1 min-w-0">
 					<DataTable
@@ -136,6 +135,8 @@ export function DataPegawaiClient() {
 							? {
 									onRowClick: (i: never) => setSelectedId(getRowId(i)),
 									selectedRowId: selectedId ?? undefined,
+									onEdit: (i: never) => setEditProfilId(getRowId(i)),
+									onEditGaji: (i: never) => setEditGajiId(getRowId(i)),
 								}
 							: {})}
 						getRowId={getRowId}
@@ -153,7 +154,6 @@ export function DataPegawaiClient() {
 						}
 					/>
 				</div>
-
 				{isPegawaiTab && (
 					<div className="lg:w-95 shrink-0">
 						<div className="rounded-lg border bg-card shadow-md p-4 sticky top-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
@@ -170,6 +170,8 @@ export function DataPegawaiClient() {
 					</div>
 				)}
 			</div>
+			<SheetEditProfil pegawaiId={editProfilId} onClose={() => setEditProfilId(null)} />
+			<SheetEditGaji pegawaiId={editGajiId} onClose={() => setEditGajiId(null)} />
 		</div>
 	);
 }
