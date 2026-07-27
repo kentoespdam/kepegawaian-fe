@@ -16,7 +16,7 @@ export function usePajakOptions() {
 		() =>
 			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
 				value: String(i.id),
-				label: `${String(i.kode ?? "")} - ${String(i.nama ?? "")}`,
+				label: String(i.kode ?? ""),
 			})),
 		[query.data],
 	);
