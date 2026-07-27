@@ -1,9 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import type { BiodataDetail } from "@/types/profil/biodata";
+import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const biodata = useQuery({
@@ -31,7 +32,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 			<div className="flex items-center gap-4 px-5 py-4 border-b border-border">
 				<div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
 					{fotoProfil ? (
-						<img src={fotoProfil} alt="" className="size-full object-cover" />
+						<Image src={fotoProfil} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
 					) : (
 						<span className="text-lg font-semibold text-muted-foreground">{nama.charAt(0)}</span>
 					)}
