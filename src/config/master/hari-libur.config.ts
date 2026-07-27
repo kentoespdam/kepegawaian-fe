@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { formatDate } from "@/lib/utils";
 import type { HariLiburPostRequest, HariLiburQuery } from "@/types/master/hari-libur";
 import { type EntityConfig, makeConfig } from "./_config-kit";
 
@@ -17,7 +18,7 @@ export const hariLiburConfig: EntityConfig<HariLiburQuery, HariLiburPostRequest>
 		{ name: "notes", label: "Catatan", type: "textarea" },
 	],
 	[
-		{ id: "tanggal", header: "Tanggal", sortable: true, primary: true, cell: (item) => String(item.tanggal ?? "") },
+		{ id: "tanggal", header: "Tanggal", sortable: true, primary: true, cell: (item) => formatDate(item.tanggal) },
 		{ id: "jenisLibur", header: "Jenis Libur", cell: (item) => String(item.jenisLibur ?? "-") },
 		{ id: "notes", header: "Catatan", cell: (item) => item.notes ?? "-" },
 	],

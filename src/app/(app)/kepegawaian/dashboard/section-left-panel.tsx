@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { formatDate } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import type { BiodataDetail } from "@/types/profil/biodata";
 
@@ -62,7 +63,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 								<Field label="Nama" value={d.nama} />
 								<Field label="Jenis Kelamin" value={labelJk(d.jenisKelamin)} />
 								<Field label="Tempat Lahir" value={d.tempatLahir} />
-								<Field label="Tanggal Lahir" value={d.tanggalLahir} />
+								<Field label="Tanggal Lahir" value={formatDate(d.tanggalLahir)} />
 								<Field label="Agama" value={d.agama ? labelAgama(d.agama) : undefined} />
 								<Field label="Status Kawin" value={d.statusKawin ? labelKawin(d.statusKawin) : undefined} />
 								<Field
@@ -102,8 +103,8 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 								}
 							/>
 							<Field label="Grade" value={pegawai.grade?.grade ? `Grade ${pegawai.grade.grade}` : undefined} />
-							<Field label="TMT Kerja" value={pegawai.tmtKerja} />
-							<Field label="TMT Pensiun" value={pegawai.tmtPensiun} />
+							<Field label="TMT Kerja" value={formatDate(pegawai.tmtKerja)} />
+							<Field label="TMT Pensiun" value={formatDate(pegawai.tmtPensiun)} />
 							<Field
 								label="Masa Kerja"
 								value={pegawai.mkgTahun != null ? `${pegawai.mkgTahun} th ${pegawai.mkgBulan ?? 0} bln` : undefined}

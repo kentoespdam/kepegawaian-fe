@@ -6,6 +6,7 @@ import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { formatDate } from "@/lib/utils";
 import type { Page } from "@/types/_shared";
 
 // ponytail: helpers
@@ -92,7 +93,7 @@ const SECTIONS: SectionConf[] = [
 		columns: [
 			{ id: "nama", header: "Nama", primary: true },
 			{ id: "hubunganKeluarga", header: "Hubungan", cell: (r) => hubunganKeluarga(r.hubunganKeluarga) },
-			{ id: "tanggalLahir", header: "Tgl Lahir", cell: (r) => val(r.tanggalLahir) },
+			{ id: "tanggalLahir", header: "Tgl Lahir", cell: (r) => formatDate(r.tanggalLahir) },
 			{ id: "tanggungan", header: "Tanggungan", cell: (r) => boolStr(r.tanggungan) },
 		],
 	},
@@ -136,8 +137,8 @@ const SECTIONS: SectionConf[] = [
 		columns: [
 			{ id: "nama", header: "Nama Pelatihan", primary: true },
 			{ id: "lembaga", header: "Lembaga" },
-			{ id: "tanggalMulai", header: "Tgl Mulai", cell: (r) => val(r.tanggalMulai) },
-			{ id: "tanggalSelesai", header: "Tgl Selesai", cell: (r) => val(r.tanggalSelesai) },
+			{ id: "tanggalMulai", header: "Tgl Mulai", cell: (r) => formatDate(r.tanggalMulai) },
+			{ id: "tanggalSelesai", header: "Tgl Selesai", cell: (r) => formatDate(r.tanggalSelesai) },
 		],
 	},
 	{
@@ -148,7 +149,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "jenisMutasi", header: "Jenis", primary: true, cell: (r) => jenisMutasi(r.jenisMutasi) },
 			{ id: "namaOrganisasi", header: "Organisasi" },
 			{ id: "namaJabatan", header: "Jabatan" },
-			{ id: "tmtBerlaku", header: "TMT" },
+			{ id: "tmtBerlaku", header: "TMT", cell: (r) => formatDate(r.tmtBerlaku) },
 		],
 	},
 	{
@@ -158,8 +159,8 @@ const SECTIONS: SectionConf[] = [
 		columns: [
 			{ id: "nomorSk", header: "No. SK", primary: true },
 			{ id: "jenisSk", header: "Jenis", cell: (r) => jenisSk(r.jenisSk) },
-			{ id: "tanggalSk", header: "Tgl. SK" },
-			{ id: "tmtBerlaku", header: "TMT" },
+			{ id: "tanggalSk", header: "Tgl. SK", cell: (r) => formatDate(r.tanggalSk) },
+			{ id: "tmtBerlaku", header: "TMT", cell: (r) => formatDate(r.tmtBerlaku) },
 		],
 	},
 	{
@@ -168,8 +169,8 @@ const SECTIONS: SectionConf[] = [
 		buildUrl: (id, _, p) => `/api/proxy/kepegawaian/riwayat/kontrak/pegawai/${id}?${new URLSearchParams(p)}`,
 		columns: [
 			{ id: "nomorKontrak", header: "No. Kontrak", primary: true },
-			{ id: "tanggalMulai", header: "Tgl Mulai" },
-			{ id: "tanggalSelesai", header: "Tgl Selesai" },
+			{ id: "tanggalMulai", header: "Tgl Mulai", cell: (r) => formatDate(r.tanggalMulai) },
+			{ id: "tanggalSelesai", header: "Tgl Selesai", cell: (r) => formatDate(r.tanggalSelesai) },
 		],
 	},
 	{
@@ -194,7 +195,7 @@ const SECTIONS: SectionConf[] = [
 		columns: [
 			{ id: "nomorSp", header: "No. SP", primary: true },
 			{ id: "jenisSp", header: "Jenis SP", cell: (r) => t(r.jenisSp) },
-			{ id: "tanggalSp", header: "Tgl. SP" },
+			{ id: "tanggalSp", header: "Tgl. SP", cell: (r) => formatDate(r.tanggalSp) },
 		],
 	},
 ];

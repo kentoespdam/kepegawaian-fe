@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { formatDate } from "@/lib/utils";
 import type { RiwayatTerminasiQuery } from "@/types/kepegawaian/riwayat";
 
 const TABS = [
@@ -23,7 +24,7 @@ const columns = [
 	{ id: "nama", header: "Nama", sortable: true, cell: (i: RiwayatTerminasiQuery) => String(i.nama ?? "") },
 	{ id: "organisasi", header: "Organisasi", cell: (i: RiwayatTerminasiQuery) => String(i.namaOrganisasi ?? "") },
 	{ id: "jabatan", header: "Jabatan", cell: (i: RiwayatTerminasiQuery) => String(i.namaJabatan ?? "") },
-	{ id: "tanggal", header: "Tgl. Terminasi", cell: (i: RiwayatTerminasiQuery) => String(i.tanggalTerminasi ?? "") },
+	{ id: "tanggal", header: "Tgl. Terminasi", cell: (i: RiwayatTerminasiQuery) => formatDate(i.tanggalTerminasi) },
 	{ id: "alasan", header: "Alasan", cell: (i: RiwayatTerminasiQuery) => String(i.alasanTerminasi?.nama ?? "") },
 ] as const;
 

@@ -3,6 +3,7 @@
 import { AlertTriangle, FileX2, Pencil, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { formatDate } from "@/lib/utils";
 import type { PegawaiResponseRingkasan } from "@/types/pegawai/pegawai";
 
 interface Props {
@@ -117,7 +118,7 @@ export function RingkasanPanel({
 					<Field label="Nama" value={data.nama} />
 					<Field label="Jenis Kelamin" value={data.jenisKelamin} />
 					<Field label="Tempat Lahir" value={data.tempatLahir} />
-					<Field label="Tanggal Lahir" value={data.tanggalLahir} />
+					<Field label="Tanggal Lahir" value={formatDate(data.tanggalLahir)} />
 					<Field label="Status Kawin" value={data.statusKawin} />
 					<Field label="NIK" value={data.nik} />
 					<Field label="Agama" value={data.agama} />
@@ -149,15 +150,15 @@ export function RingkasanPanel({
 				<div className="divide-y divide-border">
 					<Field label="Status Pegawai" value={data.statusPegawai} />
 					<Field label="Pangkat/Golongan" value={data.pangkatGolongan} />
-					<Field label="TMT Golongan" value={data.tmtGolongan} />
+					<Field label="TMT Golongan" value={formatDate(data.tmtGolongan)} />
 					<Field label="MKG" value={data.mkg} />
 					<Field label="Unit Kerja" value={data.unitKerja} />
 					<Field label="Jabatan" value={data.jabatan} />
 					<Field label="Profesi" value={data.profesi} />
 					<Field label="Grade" value={data.grade} />
-					<Field label="TMT Kerja" value={data.tmtKerja} />
-					<Field label="TMT Pegawai" value={data.tmtPegawai} />
-					<Field label="TMT Pensiun" value={data.tmtPensiun} />
+					<Field label="TMT Kerja" value={formatDate(data.tmtKerja)} />
+					<Field label="TMT Pegawai" value={formatDate(data.tmtPegawai)} />
+					<Field label="TMT Pensiun" value={formatDate(data.tmtPensiun)} />
 					<Field label="No. Kontrak" value={data.noKontrak} />
 					<Field label="NPWP" value={data.noNpwp} />
 					<Field label="No. Jamsostek" value={data.noJamsostek} />
