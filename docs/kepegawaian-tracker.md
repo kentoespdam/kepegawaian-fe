@@ -188,6 +188,66 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 - [ ] Verifikasi `<lg`: stack, tak ada overflow horizontal
 - [ ] `npx tsc` hijau; `gitnexus_detect_changes` scope **hanya** `dashboard-client.tsx`
 
+## W9 — Edit biodata self-service (buka kunci READ-ONLY) (epic `kepegawaian-fe-o1o`)
+
+> User minta tombol "Edit Profil" di accordion "Data Pribadi" → `PATCH /profil/biodata/{nik}`
+> (self-edit, identity-gated ke sesi login). Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1
+> "self-edit biodata" · ADR: [`../adr/0012-...md`](../adr/0012-dashboard-self-edit-biodata.md).
+> Blast diukur: `CrudForm` = 🔴 **CRITICAL** (19 konsumen: seluruh page master + profesi — mitigasi:
+> tambah `"date"` ke union `FormField.type` **additive-only**, cabang render lama tak diubah);
+> `SectionLeftPanel` = 🟢 LOW (hanya `DashboardClient`). Manager tak ngoding `src/`.
+
+```
+crudform-date ─┐
+biodata-hook ──┼─► edit-dialog (tombol + Dialog + CrudForm) ─┐
+read-view ─────┘                                             ├─► verify (uji + responsif)
+                              (semua di atas) ───────────────┘
+```
+
+| # | ID | Judul | P | Prasyarat | Risk |
+|---|----|-------|---|-----------|------|
+| **W9** | `crudform-date` | Tambah `"date"` ke union `FormField.type` di `crud-form.tsx` (additive-only) | P2 | — (ready) | 🔴 CRITICAL |
+| **W9** | `biodata-hook` | Hook bespoke `useBiodataMutation(nik)` — raw fetch PATCH + invalidate + toast | P2 | — (ready) | 🟢 LOW |
+| **W9** | `read-view` | Tambah field **Ibu Kandung** & **Telp** ke read view Data Pribadi | P2 | — (ready) | 🟢 LOW |
+| **W9** | `edit-dialog` | Tombol "Edit Profil" + Dialog + `CrudForm` (9 field, NIK disabled, select dari `ENUMS`) | P2 | crudform-date, biodata-hook | 🟢 LOW |
+| **W9** | `verify` | Uji: submit PATCH sukses → refetch; validasi zod (hanya `nama` wajib); responsif dialog | P2 | semua di atas | 🟢 LOW |
+
+### Checklist acceptance — W9
+
+#### `crudform-date` — Tambah tipe `"date"` (🔴 CRITICAL blast, additive-only)
+- [ ] `crud-form.tsx`: tambah `"date"` ke union `FormField.type` (baris ~13-20)
+- [ ] **Cabang render existing TAK diubah** — `<Input type={field.type ?? "text"}>` sudah meneruskan `type` → native `<input type="date">` otomatis jalan; tak ada branch baru
+- [ ] Verifikasi 19 konsumen lain (page master + profesi) **tak berubah** — `gitnexus_detect_changes` scope hanya `crud-form.tsx` + file dashboard
+- [ ] **DILARANG sentuh `src/components/ui/*`** (zona regenerable shadcn)
+- [ ] `npx tsc` hijau
+
+#### `biodata-hook` — `useBiodataMutation(nik)` (pola `useChangePassword.ts`)
+- [ ] `src/hooks/useBiodataMutation.ts` baru: `useMutation` + raw `fetch` PATCH `/api/proxy/profil/biodata/${nik}`
+- [ ] Error-envelope: `if (!res.ok) { const body = await res.json().catch(()=>({})); throw new Error(body.message ?? "…"); }`
+- [ ] `onSuccess` → `invalidateQueries({ queryKey: ["/api/proxy/profil/biodata", nik] })` + `toast.success` + tutup dialog
+- [ ] Body = `BiodataPatchRequest` (9 field optional); **tak** kirim `nik`/`pendidikanTerakhirId`
+- [ ] Optimistic update **TIDAK** dipakai (YAGNI)
+
+#### `read-view` — Tampilkan Ibu Kandung & Telp
+- [ ] `section-left-panel.tsx`: tambah `<Field label="Ibu Kandung" value={d.ibuKandung} />` & `<Field label="Telp" value={d.telp} />` di grid Data Pribadi
+- [ ] `npx tsc` hijau
+
+#### `edit-dialog` — Tombol "Edit Profil" + Dialog + CrudForm
+- [ ] `section-left-panel.tsx`: tombol "Edit Profil" di header/section Data Pribadi (hanya render bila `nik` ada)
+- [ ] Dialog membungkus `CrudForm` — 9 field editable = tepat `BiodataPatchRequest`
+- [ ] **NIK `disabled`** di form (admin-only = ID BE); **Pendidikan Terakhir dikecualikan** dari form
+- [ ] Select enum (`jenisKelamin`, `agama`, `statusKawin`) di-feed dari `ENUMS` (`kepegawaian/data/tambah/constants.ts`)
+- [ ] `tanggalLahir` pakai field tipe `"date"` (dari `crudform-date`)
+- [ ] `nik` dari prop sesi `SectionLeftPanel` (bukan input) — identity-gated
+- [ ] `npx tsc` hijau
+
+#### `verify` — Uji + responsif
+- [ ] Validasi zod: **hanya `nama` wajib**; `telp` format-check bila diisi; sisanya optional
+- [ ] Submit → PATCH sukses → dialog tutup + read view refetch (invalidate jalan) + toast sukses
+- [ ] Error backend → toast error (envelope), dialog tetap terbuka
+- [ ] Dialog responsif (mobile/desktop); `bunx biome check` & `npx tsc` lulus
+- [ ] `gitnexus_detect_changes` scope hanya: `crud-form.tsx`, `useBiodataMutation.ts`, `section-left-panel.tsx`
+
 ## Checklist acceptance
 
 ### ~~`0is` — Generate tipe~~ ✅

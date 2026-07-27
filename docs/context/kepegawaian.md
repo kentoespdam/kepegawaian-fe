@@ -45,11 +45,27 @@ Fan-out `$id`/`nik` ke endpoint:
 | Biodata detail | `/profil/biodata/{nik}` | `nik` (string) |
 | Data keluarga | `/profil/keluarga?biodataId={nik}` | `nik` |
 
-## Page 1 — Dashboard Pegawai (READ-ONLY)
+## Page 1 — Dashboard Pegawai (self-edit biodata)
 
-Profil diri sendiri, difilter ke `$id` (aman by-design → tak perlu permission khusus). **Read-only**
-untuk rilis ini — endpoint edit (`PATCH /pegawai/{id}/profil`, `/gaji`, alur `profil-update`
-berbasis approval) **tidak** dipasang; menyusul setelah RBAC self-service dirancang.
+Profil diri sendiri, difilter ke `$id` (aman by-design → tak perlu permission khusus).
+
+**Edit biodata self-service** dibuka untuk **satu** endpoint: `PATCH /profil/biodata/{nik}` (biodata
+diri sendiri) — lihat [ADR-0012](../adr/0012-dashboard-self-edit-biodata.md). Tombol "Edit Profil" di
+accordion "Data Pribadi" membuka Dialog + `CrudForm`. Aman by-design: `nik` diambil dari **sesi**
+(`getPegawaiSession()`, ADR-0006), bukan input user → tak bisa mengedit biodata orang lain, jadi RBAC
+berlapis tak jadi prasyarat untuk scope sempit ini.
+
+- **9 field editable** = tepat `BiodataPatchRequest`: `nama`, `alamat`, `jenisKelamin`, `tempatLahir`,
+  `tanggalLahir`, `agama`, `statusKawin`, `ibuKandung`, `telp`. Validasi zod: **hanya `nama` wajib**;
+  `telp` format-check bila diisi; sisanya optional.
+- **NIK read-only** (`disabled` di form) — hanya admin yang boleh ubah karena NIK = ID di BE; bukan
+  bagian `BiodataPatchRequest`.
+- **Pendidikan Terakhir dikecualikan** dari form — di-update via menu "tambah pendidikan" (belum ada);
+  tetap tampil read-only di read view.
+- **Ibu Kandung & Telp ditampilkan** di read view (sebelumnya tak tampil).
+
+Alur berat yang **tetap ditunda** (bukan bagian rilis ini): `PATCH /pegawai/{id}/profil`, `/gaji`, dan
+alur `profil-update` berbasis approval — menyusul bila edit lintas-pegawai (HR) butuh RBAC nyata.
 
 ### Layout: 2 panel + accordion (revisi round 2 — lihat [ADR-0011](../adr/0011-dashboard-two-panel-accordion.md))
 
