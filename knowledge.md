@@ -42,18 +42,28 @@ bd close <id>         # Complete work
 **MANDATORY WORKFLOW:**
 
 1. **File issues for remaining work** - Create issues for anything that needs follow-up
-2. **Run quality gates** (if code changed) - Tests, linters, builds
-3. **Update issue status** - Close finished work, update in-progress items
-4. **PUSH TO REMOTE** - This is MANDATORY:
+2. **Update graphify & gitnexus** (WAJIB jika kode berubah):
+   ```bash
+   # Langkah WAJIB sebelum commit
+   # /graphify . --update  adalah skill command, bukan shell — jalankan via skill graphify
+   npx gitnexus analyze                        # re-index GitNexus
+   npx gitnexus detect-changes -s unstaged -r kepegawaian-fe  # verifikasi scope
+   ```
+   **Graphify:** jalankan `/graphify . --update` via skill graphify (bukan shell CLI).
+   Bila graphify CLI terinstall, alternatif: `graphify --update .`
+   Jika `detect-changes` menunjukkan perubahan di modul tak terduga → tunda push & telaah.
+3. **Run quality gates** (jika kode berubah) — `bunx biome check`, `bun run test`, `bun run build`
+4. **Update issue status** - Close finished work, update in-progress items
+5. **PUSH TO REMOTE** - This is MANDATORY:
    ```bash
    git pull --rebase
    bd dolt push
    git push
    git status  # MUST show "up to date with origin"
    ```
-5. **Clean up** - Clear stashes, prune remote branches
-6. **Verify** - All changes committed AND pushed
-7. **Hand off** - Provide context for next session
+6. **Clean up** - Clear stashes, prune remote branches
+7. **Verify** - All changes committed AND pushed
+8. **Hand off** - Provide context for next session
 
 **CRITICAL RULES:**
 - Work is NOT complete until `git push` succeeds
@@ -61,6 +71,40 @@ bd close <id>         # Complete work
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
 <!-- END BEADS INTEGRATION -->
+
+## Exploration Priority — WAJIB 🚨
+
+**Urutan menjelajahi kode: `graphify` → `gitnexus` → `grep` (fallback).**
+
+| Urutan | Alat | Kapan pakai |
+|--------|------|-------------|
+| **1** | **graphify** | onboarding modul baru, memahami arsitektur & relasi domain level-tinggi. Buka `graphify-out/graph.html` untuk navigasi visual, atau `/graphify query "<q>"` untuk tanya graph. |
+| **2** | **gitnexus** | impact analysis (`gitnexus_impact`), cari flow (`gitnexus_query`), context 360° simbol (`gitnexus_context`), ganti nama simbol (`gitnexus_rename`). |
+| **3** | **grep** 🚫 | **HANYA fallback** bila graphify & gitnexus tidak menjawab — misal cari literal string, file config tanpa simbol, atau pola regex ad-hoc. Jangan mulai dengan grep untuk paham kode tak dikenal. |
+
+---
+
+## Graphify — Knowledge Graph
+
+Project ini sudah memiliki knowledge graph yang telah di-build di `graphify-out/`:
+
+- **`graphify-out/graph.html`** — navigasi visual interaktif (buka di browser)
+- **`graphify-out/graph.json`** — data graph mentah (nodes: 1.031, edges: 2.824)
+- **`graphify-out/GRAPH_REPORT.md`** — laporan lengkap (god nodes, communities, gaps)
+
+### Commands
+
+| Perintah | Fungsi |
+|----------|--------|
+| `/graphify . --update` | Update graph setelah perubahan kode (inkremental — code-only tanpa LLM) |
+| `/graphify query "<question>"` | Tanya graph tentang arsitektur / relasi antar modul |
+| `graphify --update .` | CLI langsung (bila `graphify` terinstall) |
+| `/graphify explain "<concept>"` | Penjelasan satu konsep + semua koneksinya |
+
+**graphify berfungsi sebagai peta dari INPUT/spec/dokumen.** Sedangkan gitnexus (di bawah)
+adalah peta dari KODE yang sudah ada. Keduanya saling melengkapi.
+
+---
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

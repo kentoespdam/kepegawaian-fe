@@ -14,15 +14,16 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 - **Aksesibilitas = syarat fungsional**, bukan nice-to-have (±70% pengguna lansia). Gate di
   visual-foundation §2 berlaku ke SETIAP komponen.
 - **Bahasa UI = Bahasa Indonesia.** Label bahasa manusia, bukan nama field mentah.
-- **Pahami sebelum edit — diskalakan blast-radius (ADR-0009).** `gitnexus impact` **WAJIB** bila
-  target edit: (a) **fan-in ≥2** (di-import ≥2 modul — cek `grep -rl "import.*Nama"`), **atau**
+- **Pahami sebelum edit — urutan eksplorasi WAJIB: `graphify` → `gitnexus` → `grep` (fallback).**
+  graphify untuk pemahaman arsitektur level-tinggi & relasi domain (output di `graphify-out/`).
+  gitnexus untuk pelacakan simbol, impact analysis, & query flow kode. **`grep` HANYA sebagai
+  fallback** — graphify/gitnexus dulu, baru grep. Larangan "grep buta" tetap berlaku.
+- `gitnexus impact` **WAJIB** bila target edit: (a) **fan-in ≥2** (di-import ≥2 modul), **atau**
   (b) di **permukaan kritis**: `proxy.ts`, DAL/`verifySession`, `can()`/RBAC, shared primitive
   (`<DataTable>`/`<CrudForm>`/`<Can>`/dst), `src/hooks/*`. Di situ, bangun pemahaman caller/callee &
   blast radius dari **peta kode**, bukan tebakan. **Di bawah ambang** (edit 1-file lokal, config glue,
-  typo, rename lokal): **baca file langsung + grep terarah SAH sebagai langkah pertama**; gitnexus
-  opsional — ritual seragam memboroskan token agen yang justru dilindungi ADR-0007. `graphify` =
-  **on-demand** (onboarding spec/modul baru, refactor lintas-domain), bukan jalur wajib per-edit.
-  Larangan "grep buta" hanya berlaku saat memetakan flow tak dikenal berskala luas.
+  typo, rename lokal): baca file langsung + graphify/gitnexus tetap dianjurkan untuk orientasi
+  singkat, tapi boleh langsung ke kode bila perubahan sepele — ADR-0007 melindungi efisiensi agen.
 - **Plan dulu, baru implementasi.** Alur persiapan: `bd show <id>` → **pahami kode** (via `gitnexus`
   bila edit memicu ambang blast-radius di atas & §11; selain itu baca file langsung) → baca modul
   DESIGN relevan → **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan
@@ -190,13 +191,18 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ---
 
-## 11. Pahami project DULU — GitNexus + graphify (WAJIB)
+## 11. Pahami project DULU — Graphify → GitNexus → grep (fallback)
 
-**Urutan sebelum koding (§0), diskalakan blast-radius (ADR-0009):** bila edit memicu ambang WAJIB
-(fan-in ≥2 atau permukaan kritis) → `gitnexus impact` (flow, caller/callee, blast radius) dulu.
-Selain itu → baca file langsung + grep terarah cukup. `graphify` = on-demand (spec/modul baru,
-refactor lintas-domain), bukan wajib per-edit. `context7` tetap wajib sebelum pakai library apa pun
-(§2). Larangan "grep buta" hanya untuk memetakan flow tak dikenal berskala luas.
+**Urutan eksplorasi WAJIB: `graphify` → `gitnexus` → `grep` (fallback).**
+graphify untuk pemahaman arsitektur level-tinggi, relasi domain, & komunitas kode (lihat output
+di `graphify-out/graph.html`). gitnexus untuk pelacakan simbol, impact analysis, query flow,
+& context 360° simbol. **`grep` HANYA sebagai fallback** bila graphify & gitnexus tidak mencukupi
+(mis. cari literal string, file config tanpa simbol, atau pola regex ad-hoc).
+
+**Diskalakan berdasarkan blast-radius (ADR-0009):** bila edit memicu ambang WAJIB (fan-in ≥2
+atau permukaan kritis) → `gitnexus impact` (flow, caller/callee, blast radius) dulu. Selain itu →
+graphify/gitnexus tetap dianjurkan untuk orientasi singkat, lalu baca file langsung. `context7`
+tetap wajib sebelum pakai library apa pun (§2).
 
 ### graphify — knowledge graph (untuk pemahaman berskala luas)
 
@@ -206,6 +212,10 @@ lebih besar dari yang bisa dijawab `gitnexus_context` satu simbol. Pakai saat: o
 baru (mis. `docs/api/*/api.json`), memetakan keterhubungan lintas-domain, atau menyiapkan rencana
 refactor besar. Output di `graphify-out/`. **gitnexus = peta KODE yang sudah ada; graphify = peta dari
 INPUT/spec/dokumen.** Keduanya mendahului koding, saling melengkapi.
+
+**Update (`--update`):** Jalankan `/graphify . --update` setelah perubahan kode untuk re-ekstraksi
+inkremental (hanya file baru/berubah + update graph tanpa LLM untuk code-only). Atau gunakan
+`graphify hook install` untuk post-commit hook otomatis (AST-only, tanpa LLM).
 
 ### GitNexus MCP tools (format panggilan, TIDAK pakai `--repo`)
 
@@ -259,13 +269,28 @@ atau error "repo not found".
 
 ## 13. Session close (MANDATORY — kerja belum selesai sampai `git push` sukses)
 
-**Sebelum commit & push, update checklist dulu:**
+**Sebelum commit & push, update knowledge graph & index kode:**
+1. **Update graphify knowledge graph** — jalankan `/graphify . --update` (via skill graphify)
+   agar graph mencerminkan perubahan kode terbaru (inkremental, code-only = tanpa LLM).
+2. **Update GitNexus index** — `npx gitnexus analyze` agar perubahan simbol & flow tercermin
+   di index (auto-detect CWD, tidak perlu `-r`).
+3. **Detect changes GitNexus** — `gitnexus_detect_changes()` (MCP) atau CLI
+   `npx gitnexus detect-changes -s unstaged -r kepegawaian-fe` untuk verifikasi scope perubahan.
+
+**Update checklist dokumentasi:**
 - **Update `docs/*.md`** — centang `[x]` issue/wave yang selesai, sinkron dengan
   status `bd` (jangan biarkan tracker basi vs `bd ready`/`bd list`).
 - **Update checklist Definition of Done** issue terkait — pastikan semua item tercentang sebelum
   `bd close`.
 
 ```bash
+# 1. Update graphify knowledge graph
+/graphify . --update
+# 2. Update GitNexus index & detect changes
+npx gitnexus analyze
+npx gitnexus detect-changes -s unstaged -r kepegawaian-fe
+# 3. Push
+cd /mnt/DATA/html/kepegawaian-fe
 git pull --rebase
 bd dolt push
 git push
@@ -274,3 +299,7 @@ git status   # HARUS "up to date with origin"
 
 - **JANGAN** berhenti sebelum push. **JANGAN** bilang "siap push kalau Anda mau" — YOU push.
 - File issue untuk sisa kerja, update status issue, bersihkan stash, lalu hand-off konteks.
+
+> **Catatan:** `/graphify . --update` adalah perintah di skill graphify (bukan CLI shell).
+> Bila graphify CLI (`graphify`) terinstall via pip, bisa juga langsung:
+> `graphify --update .` atau pasang post-commit hook: `graphify hook install`.
