@@ -124,7 +124,7 @@ function PopoverFilterContent({
 		organisasiId: useFkOptions("organisasi"),
 		jabatanId: useFkOptions("jabatan"),
 		profesiId: useFkOptions("profesi"),
-		golonganId: useFkOptions("golongan"),
+		golonganId: useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`),
 		gradeId: useFkOptions("grade", (i) => `Grade ${String(i.grade ?? "")}`),
 	};
 
@@ -191,7 +191,7 @@ export function DataPegawaiToolbar({
 	const organisasiOpts = useFkOptions("organisasi");
 	const jabatanOpts = useFkOptions("jabatan");
 	const profesiOpts = useFkOptions("profesi");
-	const golonganOpts = useFkOptions("golongan");
+	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
 	const gradeOpts = useFkOptions("grade", (i) => `Grade ${String(i.grade ?? "")}`);
 
 	// Build chip label lookup per FK key

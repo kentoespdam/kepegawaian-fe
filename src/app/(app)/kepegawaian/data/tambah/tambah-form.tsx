@@ -37,7 +37,7 @@ export function TambahPegawaiForm() {
 	// FK options
 	const orgOpts = useFkOptions("organisasi");
 	const profesiOpts = useFkOptions("profesi");
-	const golonganOpts = useFkOptions("golongan");
+	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
 	const pendidikanOpts = useFkOptions("jenjang-pendidikan");
 	const pajakOpts = usePajakOptions();
 
