@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { BadgeManager } from "@/components/badge-manager";
-import type { ProfesiDetail } from "@/types/master/profesi";
+import type { ProfesiDetail, ProfesiPostRequest } from "@/types/master/profesi";
 import { type EntityConfig, makeConfig, namaWajib } from "./_config-kit";
 
-export const profesiConfig: EntityConfig<ProfesiDetail> = makeConfig<ProfesiDetail>(
+export const profesiConfig: EntityConfig<ProfesiDetail, ProfesiPostRequest> = makeConfig<
+	ProfesiDetail,
+	ProfesiPostRequest
+>(
 	z.object({
 		nama: namaWajib,
 		detail: z.string().min(1, "Detail wajib diisi"),

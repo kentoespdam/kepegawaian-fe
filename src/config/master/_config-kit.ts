@@ -29,7 +29,7 @@ export interface FKSource {
 /**
  * Generic config untuk satu entitas Master.
  * @template TQuery — tipe response query (paginated / single) — dipakai di `columns`.
- * @template _TReq — cadangan untuk request body (create/update). Default = TQuery.
+ * @template TReq — tipe request body (create/update). Default = TQuery.
  */
 export interface EntityConfig<TQuery = Record<string, unknown>, _TReq = TQuery> {
 	label: string;
@@ -45,7 +45,7 @@ export interface EntityConfig<TQuery = Record<string, unknown>, _TReq = TQuery> 
 
 export const namaWajib = z.string().min(1, "Nama wajib diisi");
 
-export const nameCol: Column<Record<string, unknown>> = {
+export const nameCol: Column<{ nama?: unknown }> = {
 	id: "nama",
 	header: "Nama",
 	sortable: true,
@@ -53,12 +53,17 @@ export const nameCol: Column<Record<string, unknown>> = {
 	cell: (item) => String(item.nama ?? ""),
 };
 
-export const nameField: FormField = { name: "nama", label: "Nama", required: true };
+/** nameField dengan literal "nama" agar coverage-check ADR-0008 bisa track field name. */
+export const nameField = { name: "nama", label: "Nama", required: true } as const;
 
 export const simpleNameSchema = z.object({ nama: namaWajib });
 
-/** Factory dengan inferensi tipe — panggil tanpa type arg untuk untyped, atau supply <TQuery>. */
-export function makeConfig<TQuery, _TReq = TQuery>(
+/**
+ * Factory dengan inferensi tipe — panggil dengan <TQuery, TPostRequest> untuk
+ * ADR-0008 compile-time coverage (constraint: fields[] + fkSources[] HARUS
+ * mencakup semua required key TPostRequest, atau tsc error).
+ */
+export function makeConfig<TQuery, TReq>(
 	schema: z.ZodType,
 	fields: FormField[],
 	columns: Column<Resolved<TQuery>>[],
@@ -69,7 +74,7 @@ export function makeConfig<TQuery, _TReq = TQuery>(
 		fkSources?: FKSource[];
 		searchFields?: { name: string; label: string; type?: "text" | "number" }[];
 	},
-): EntityConfig<TQuery, _TReq> {
+): EntityConfig<TQuery, TReq> {
 	return {
 		label,
 		columns,
@@ -79,5 +84,5 @@ export function makeConfig<TQuery, _TReq = TQuery>(
 		treeField: opts?.treeField,
 		fkSources: opts?.fkSources,
 		searchFields: opts?.searchFields,
-	};
+	} as EntityConfig<TQuery, TReq>;
 }

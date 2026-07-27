@@ -1,9 +1,9 @@
 import { z } from "zod";
 import { rupiah } from "@/lib/utils";
-import type { GradeQuery } from "@/types/master/grade";
+import type { GradePostRequest, GradeQuery } from "@/types/master/grade";
 import { type EntityConfig, makeConfig } from "./_config-kit";
 
-export const gradeConfig: EntityConfig<GradeQuery> = makeConfig<GradeQuery>(
+export const gradeConfig: EntityConfig<GradeQuery, GradePostRequest> = makeConfig<GradeQuery, GradePostRequest>(
 	z.object({
 		grade: z.coerce.number().min(1, "Grade wajib diisi"),
 		tukin: z.coerce.number().min(100000, "Tukin minimal 100.000"),

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import type { SanksiQuery } from "@/types/master/sanksi";
+import type { SanksiPostRequest, SanksiQuery } from "@/types/master/sanksi";
 import { type EntityConfig, makeConfig } from "./_config-kit";
 
 const boolOpt = z.preprocess((v) => (v === "true" ? true : v === "false" ? false : v), z.coerce.boolean().optional());
 
-export const sanksiConfig: EntityConfig<SanksiQuery> = makeConfig<SanksiQuery>(
+export const sanksiConfig: EntityConfig<SanksiQuery, SanksiPostRequest> = makeConfig<SanksiQuery, SanksiPostRequest>(
 	z.object({
 		kode: z.string().min(1, "Kode wajib diisi"),
 		keterangan: z.string().min(1, "Keterangan wajib diisi"),

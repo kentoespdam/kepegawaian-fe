@@ -1,8 +1,11 @@
 import { z } from "zod";
-import type { HariLiburQuery } from "@/types/master/hari-libur";
+import type { HariLiburPostRequest, HariLiburQuery } from "@/types/master/hari-libur";
 import { type EntityConfig, makeConfig } from "./_config-kit";
 
-export const hariLiburConfig: EntityConfig<HariLiburQuery> = makeConfig<HariLiburQuery>(
+export const hariLiburConfig: EntityConfig<HariLiburQuery, HariLiburPostRequest> = makeConfig<
+	HariLiburQuery,
+	HariLiburPostRequest
+>(
 	z.object({
 		tanggal: z.string().min(1, "Tanggal wajib diisi"),
 		jenisLibur: z.string().min(1, "Jenis libur wajib diisi"),

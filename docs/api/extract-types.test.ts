@@ -356,9 +356,9 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 		const aFile = pick(files, (f: { filename: string }) => f.filename === "a.ts", "a.ts").contents;
 		expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
 		expect(aFile).not.toContain("interface PageFoo");
-		expect(aFile).toContain('PageEnvelope');
+		expect(aFile).toContain("PageEnvelope");
 		expect(aFile).toContain('from "../_shared"');
-		expect(aFile).toContain('export type PageResultPageFoo = PageEnvelope<Foo>;');
+		expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
 	});
 
 	it("_shared.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {
@@ -488,10 +488,7 @@ describe("plan — domainOf per-strategi via moduleTypes (#2)", () => {
 	});
 
 	it("tanpa moduleTypes (default) = collection untuk semua modul", () => {
-		const spec = makeSpec(
-			{ "/pegawai/{id}": "PegawaiResp" },
-			{ PegawaiResp: { type: "object", properties: {} } },
-		);
+		const spec = makeSpec({ "/pegawai/{id}": "PegawaiResp" }, { PegawaiResp: { type: "object", properties: {} } });
 		const p = plan(spec);
 		expect(p.domains[0].domain).toBe("{id}"); // collection: segmen kedua
 	});
@@ -533,10 +530,7 @@ describe("plan — placement lintas-modul (Q3)", () => {
 				LokalSchema: { type: "object", properties: { x: { type: "string" } } },
 			},
 		);
-		const pegawaiSpec = makeSpec(
-			{ "/pegawai/b": "BResp" },
-			{ BResp: { type: "object", properties: {} } },
-		);
+		const pegawaiSpec = makeSpec({ "/pegawai/b": "BResp" }, { BResp: { type: "object", properties: {} } });
 		const merged = mergeSpecs(masterSpec, pegawaiSpec);
 		const p = plan(merged, { master: "collection", pegawai: "resource" });
 

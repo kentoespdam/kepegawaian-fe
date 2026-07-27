@@ -1,11 +1,11 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { RiwayatTerminasiQuery } from "@/types/kepegawaian/riwayat";
-import { useRouter, useSearchParams } from "next/navigation";
 
 const TABS = [
 	{ id: "calon-pensiun", label: "Calon Pensiun", endpoint: "/api/proxy/kepegawaian/riwayat/terminasi/calon-pensiun" },
@@ -13,7 +13,13 @@ const TABS = [
 ] as const;
 
 const columns = [
-	{ id: "nipam", header: "NIPAM", sortable: true, primary: true, cell: (i: RiwayatTerminasiQuery) => String(i.nipam ?? "") },
+	{
+		id: "nipam",
+		header: "NIPAM",
+		sortable: true,
+		primary: true,
+		cell: (i: RiwayatTerminasiQuery) => String(i.nipam ?? ""),
+	},
 	{ id: "nama", header: "Nama", sortable: true, cell: (i: RiwayatTerminasiQuery) => String(i.nama ?? "") },
 	{ id: "organisasi", header: "Organisasi", cell: (i: RiwayatTerminasiQuery) => String(i.namaOrganisasi ?? "") },
 	{ id: "jabatan", header: "Jabatan", cell: (i: RiwayatTerminasiQuery) => String(i.namaJabatan ?? "") },
@@ -26,7 +32,7 @@ export function TerminasiClient() {
 	const router = useRouter();
 	// ponytail: tab from URL = source of truth
 	const tab = (sp.get("tab") as (typeof TABS)[number]["id"]) ?? "calon-pensiun";
-	const activeTab = TABS.find((t) => t.id === tab)!;
+	const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0];
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
@@ -77,7 +83,9 @@ export function TerminasiClient() {
 						type="button"
 						onClick={() => nav({ tab: t.id, page: "1" })}
 						className={`px-4 py-2 text-sm font-medium -mb-px border-b-2 transition-colors ${
-							tab === t.id ? "border-primary text-foreground" : "border-transparent text-muted-foreground hover:text-foreground"
+							tab === t.id
+								? "border-primary text-foreground"
+								: "border-transparent text-muted-foreground hover:text-foreground"
 						}`}
 					>
 						{t.label}
@@ -87,23 +95,29 @@ export function TerminasiClient() {
 
 			<div className="flex gap-4 mb-4 flex-wrap">
 				<div>
-					<label className="text-sm font-medium mr-2">
+					<label htmlFor="tahun-filter" className="text-sm font-medium mr-2">
 						{tab === "calon-pensiun" ? "Tahun Pensiun" : "Tahun Terminasi"}
 					</label>
 					<select
+						id="tahun-filter"
 						value={tahunPensiun}
 						onChange={(e) => nav({ tahunPensiun: e.target.value, page: "1" })}
 						className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm"
 					>
 						{Array.from({ length: 10 }, (_, i) => String(new Date().getFullYear() - 2 + i)).map((y) => (
-							<option key={y} value={y}>{y}</option>
+							<option key={y} value={y}>
+								{y}
+							</option>
 						))}
 					</select>
 				</div>
 				{tab === "terminasi" && (
 					<div>
-						<label className="text-sm font-medium mr-2">Alasan Terminasi</label>
+						<label htmlFor="alasan-filter" className="text-sm font-medium mr-2">
+							Alasan Terminasi
+						</label>
 						<select
+							id="alasan-filter"
 							value={alasanTerminasiId ?? ""}
 							onChange={(e) => nav({ alasanTerminasiId: e.target.value || undefined, page: "1" })}
 							className="h-11 rounded-lg border border-input bg-transparent px-3 text-sm min-w-40"

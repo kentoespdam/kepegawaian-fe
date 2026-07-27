@@ -29,8 +29,8 @@ export const ENUMS = {
 	],
 	statusPegawai: [
 		{ value: "KONTRAK", label: "Kontrak" },
-		{ value: "CAPEG", label: "CPNS" },
-		{ value: "PEGAWAI", label: "PNS" },
+		{ value: "CAPEG", label: "Calon Pegawai" },
+		{ value: "PEGAWAI", label: "Pegawai" },
 		{ value: "CALON_HONORER", label: "Calon Honorer" },
 		{ value: "HONORER", label: "Honorer" },
 		{ value: "NON_PEGAWAI", label: "Non Pegawai" },

@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { rupiah } from "@/lib/utils";
-import type { RumahDinasQuery } from "@/types/master/rumah-dinas";
+import type { RumahDinasPostRequest, RumahDinasQuery } from "@/types/master/rumah-dinas";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
 
-export const rumahDinasConfig: EntityConfig<RumahDinasQuery> = makeConfig<RumahDinasQuery>(
+export const rumahDinasConfig: EntityConfig<RumahDinasQuery, RumahDinasPostRequest> = makeConfig<
+	RumahDinasQuery,
+	RumahDinasPostRequest
+>(
 	z.object({ nama: namaWajib, nilai: z.coerce.number().min(0, "Nilai wajib diisi") }),
 	[nameField, { name: "nilai", label: "Nilai", type: "number", required: true }],
 	[

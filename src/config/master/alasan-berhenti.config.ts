@@ -1,8 +1,11 @@
 import { z } from "zod";
-import type { AlasanBerhentiQuery } from "@/types/master/alasan-berhenti";
+import type { AlasanBerhentiPostRequest, AlasanBerhentiQuery } from "@/types/master/alasan-berhenti";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
 
-export const alasanBerhentiConfig: EntityConfig<AlasanBerhentiQuery> = makeConfig<AlasanBerhentiQuery>(
+export const alasanBerhentiConfig: EntityConfig<AlasanBerhentiQuery, AlasanBerhentiPostRequest> = makeConfig<
+	AlasanBerhentiQuery,
+	AlasanBerhentiPostRequest
+>(
 	z.object({ nama: namaWajib, notes: z.string().optional() }),
 	[nameField, { name: "notes", label: "Catatan", type: "textarea" }],
 	[

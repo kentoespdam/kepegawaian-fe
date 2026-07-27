@@ -10,8 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-export interface FormField {
-	name: string;
+export interface FormField<Name extends string = string> {
+	name: Name;
 	label: string;
 	type?: "text" | "email" | "password" | "number" | "textarea" | "select" | "combobox";
 	placeholder?: string;

@@ -1,1 +1,620 @@
-{"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/layout.tsx":{"size":275,"mtime_ns":1783996636689721772,"word_count":33},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/alasan-berhenti/page.tsx":{"size":530,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/entity-form-modal.tsx":{"size":3577,"mtime_ns":1784607909629244482,"word_count":368},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/golongan/page.tsx":{"size":500,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/grade/page.tsx":{"size":488,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/hari-libur/page.tsx":{"size":510,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jabatan/page.tsx":{"size":496,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-keahlian/page.tsx":{"size":526,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-kitas/page.tsx":{"size":514,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-pelatihan/page.tsx":{"size":530,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-sp/page.tsx":{"size":502,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenjang-pendidikan/page.tsx":{"size":542,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/level/page.tsx":{"size":488,"mtime_ns":1783996636689721772,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/master-client.tsx":{"size":5620,"mtime_ns":1784275202134493759,"word_count":552},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/organisasi/page.tsx":{"size":508,"mtime_ns":1783996636690721767,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/form.tsx":{"size":9236,"mtime_ns":1784617856260881943,"word_count":894},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/page.tsx":{"size":496,"mtime_ns":1783996636690721767,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/schema.ts":{"size":1055,"mtime_ns":1784607902912202196,"word_count":109},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/rumah-dinas/page.tsx":{"size":514,"mtime_ns":1783996636690721767,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/form.tsx":{"size":5784,"mtime_ns":1784621847677217772,"word_count":506},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/page.tsx":{"size":492,"mtime_ns":1783996636690721767,"word_count":55},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/schema.ts":{"size":2566,"mtime_ns":1784607902920202248,"word_count":273},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/page.tsx":{"size":1167,"mtime_ns":1783996636690721767,"word_count":112},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/profil/change-password-form.tsx":{"size":3712,"mtime_ns":1783996636691721762,"word_count":362},"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/profil/page.tsx":{"size":1725,"mtime_ns":1783996636691721762,"word_count":136},"/mnt/DATA/html/kepegawaian-fe/src/app/layout.tsx":{"size":826,"mtime_ns":1784177402143266691,"word_count":93},"/mnt/DATA/html/kepegawaian-fe/src/app/login/login-form.tsx":{"size":2796,"mtime_ns":1783996636691721762,"word_count":245},"/mnt/DATA/html/kepegawaian-fe/src/app/login/page.tsx":{"size":2145,"mtime_ns":1784168554772588676,"word_count":160},"/mnt/DATA/html/kepegawaian-fe/src/components/app-shell.tsx":{"size":6560,"mtime_ns":1784518566629091257,"word_count":601},"/mnt/DATA/html/kepegawaian-fe/src/components/badge-manager.tsx":{"size":4668,"mtime_ns":1784595745735784781,"word_count":460},"/mnt/DATA/html/kepegawaian-fe/src/components/can.tsx":{"size":377,"mtime_ns":1783996636691721762,"word_count":53},"/mnt/DATA/html/kepegawaian-fe/src/components/confirm-delete-dialog.tsx":{"size":1984,"mtime_ns":1783996636692721757,"word_count":170},"/mnt/DATA/html/kepegawaian-fe/src/components/crud-form.tsx":{"size":4115,"mtime_ns":1784602027910746278,"word_count":382},"/mnt/DATA/html/kepegawaian-fe/src/components/data-table-pagination.tsx":{"size":1786,"mtime_ns":1784254356474355456,"word_count":179},"/mnt/DATA/html/kepegawaian-fe/src/components/data-table-toolbar.tsx":{"size":3075,"mtime_ns":1784275236228370508,"word_count":341},"/mnt/DATA/html/kepegawaian-fe/src/components/data-table.tsx":{"size":8416,"mtime_ns":1784509309783906911,"word_count":765},"/mnt/DATA/html/kepegawaian-fe/src/components/fk-combobox-filter.tsx":{"size":2322,"mtime_ns":1784273433596253279,"word_count":230},"/mnt/DATA/html/kepegawaian-fe/src/components/fk-combobox.tsx":{"size":2754,"mtime_ns":1784604840412752731,"word_count":248},"/mnt/DATA/html/kepegawaian-fe/src/components/master-switch.tsx":{"size":1275,"mtime_ns":1783996636692721757,"word_count":104},"/mnt/DATA/html/kepegawaian-fe/src/components/providers.tsx":{"size":1664,"mtime_ns":1784177402134266727,"word_count":177},"/mnt/DATA/html/kepegawaian-fe/src/components/sanksi-manager.tsx":{"size":5474,"mtime_ns":1784621549379287140,"word_count":504},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/alert-dialog.tsx":{"size":5211,"mtime_ns":1783400253464488128,"word_count":350},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/avatar.tsx":{"size":3015,"mtime_ns":1783400253461465559,"word_count":222},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/badge.tsx":{"size":1904,"mtime_ns":1783400253465488124,"word_count":143},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/breadcrumb.tsx":{"size":2449,"mtime_ns":1783441630890758558,"word_count":201},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/button.tsx":{"size":3240,"mtime_ns":1784260433959969590,"word_count":192},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/card.tsx":{"size":2477,"mtime_ns":1783400253463488132,"word_count":194},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/command.tsx":{"size":4629,"mtime_ns":1784260469593507498,"word_count":351},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/dialog.tsx":{"size":4062,"mtime_ns":1784260434125518631,"word_count":317},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/dropdown-menu.tsx":{"size":8805,"mtime_ns":1783440842624626510,"word_count":568},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/input-group.tsx":{"size":5264,"mtime_ns":1784260434196518615,"word_count":369},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/input.tsx":{"size":1040,"mtime_ns":1784260434025518655,"word_count":79},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/label.tsx":{"size":529,"mtime_ns":1783400253470488104,"word_count":48},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/scroll-area.tsx":{"size":1543,"mtime_ns":1783400253479488067,"word_count":99},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/select.tsx":{"size":6563,"mtime_ns":1784177813855403543,"word_count":427},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/separator.tsx":{"size":545,"mtime_ns":1783400253472488095,"word_count":48},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/sheet.tsx":{"size":4234,"mtime_ns":1783440972084725159,"word_count":302},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/skeleton.tsx":{"size":246,"mtime_ns":1783400253474488087,"word_count":27},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/table.tsx":{"size":2213,"mtime_ns":1783410450471529090,"word_count":189},"/mnt/DATA/html/kepegawaian-fe/src/components/ui/textarea.tsx":{"size":842,"mtime_ns":1784260434063237928,"word_count":62},"/mnt/DATA/html/kepegawaian-fe/src/components/user-menu.tsx":{"size":2383,"mtime_ns":1784177515121370236,"word_count":221},"/mnt/DATA/html/kepegawaian-fe/src/config/entities.ts":{"size":858,"mtime_ns":1784510218060824161,"word_count":129},"/mnt/DATA/html/kepegawaian-fe/src/config/master-config.ts":{"size":2036,"mtime_ns":1784594395384560733,"word_count":183},"/mnt/DATA/html/kepegawaian-fe/src/config/master-entity-types.ts":{"size":4569,"mtime_ns":1784601877390709227,"word_count":429},"/mnt/DATA/html/kepegawaian-fe/src/config/master/_config-kit.ts":{"size":2690,"mtime_ns":1784274044175342874,"word_count":346},"/mnt/DATA/html/kepegawaian-fe/src/config/master/alasan-berhenti.config.ts":{"size":676,"mtime_ns":1784598375492170860,"word_count":86},"/mnt/DATA/html/kepegawaian-fe/src/config/master/golongan.config.ts":{"size":799,"mtime_ns":1784252915218462809,"word_count":104},"/mnt/DATA/html/kepegawaian-fe/src/config/master/grade.config.ts":{"size":1099,"mtime_ns":1784510269663575867,"word_count":144},"/mnt/DATA/html/kepegawaian-fe/src/config/master/hari-libur.config.ts":{"size":1085,"mtime_ns":1784598513250170558,"word_count":143},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jabatan.config.ts":{"size":1239,"mtime_ns":1784598513253170950,"word_count":169},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-keahlian.config.ts":{"size":288,"mtime_ns":1784168056497297169,"word_count":32},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-kitas.config.ts":{"size":272,"mtime_ns":1784167809001229255,"word_count":30},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-pelatihan.config.ts":{"size":286,"mtime_ns":1784167808999229263,"word_count":32},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-sp.config.tsx":{"size":915,"mtime_ns":1784621110110553644,"word_count":124},"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenjang-pendidikan.config.ts":{"size":1185,"mtime_ns":1784618349301152400,"word_count":145},"/mnt/DATA/html/kepegawaian-fe/src/config/master/level.config.ts":{"size":261,"mtime_ns":1784167808996229275,"word_count":29},"/mnt/DATA/html/kepegawaian-fe/src/config/master/organisasi.config.ts":{"size":1527,"mtime_ns":1784598513254171081,"word_count":195},"/mnt/DATA/html/kepegawaian-fe/src/config/master/profesi.config.tsx":{"size":1736,"mtime_ns":1784618080354469113,"word_count":217},"/mnt/DATA/html/kepegawaian-fe/src/config/master/rumah-dinas.config.ts":{"size":749,"mtime_ns":1784622131493083839,"word_count":97},"/mnt/DATA/html/kepegawaian-fe/src/config/master/sanksi.config.ts":{"size":3517,"mtime_ns":1784599049654553231,"word_count":457},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useBadgeMutations.ts":{"size":840,"mtime_ns":1784594145102365932,"word_count":106},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useChangePassword.ts":{"size":727,"mtime_ns":1783996636694212805,"word_count":84},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useEnum.ts":{"size":1334,"mtime_ns":1784621803138000121,"word_count":174},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useLogin.ts":{"size":830,"mtime_ns":1783996636694212805,"word_count":98},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useLogout.ts":{"size":1052,"mtime_ns":1783996636694212805,"word_count":126},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useMasterSearchParams.ts":{"size":1921,"mtime_ns":1784275181753567637,"word_count":262},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useMasterTable.ts":{"size":4814,"mtime_ns":1784603107649288424,"word_count":613},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useResource.ts":{"size":1234,"mtime_ns":1783996636694721747,"word_count":143},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useRoles.tsx":{"size":378,"mtime_ns":1784518507314152454,"word_count":38},"/mnt/DATA/html/kepegawaian-fe/src/hooks/useSanksiMutations.ts":{"size":1681,"mtime_ns":1784621334837386033,"word_count":192},"/mnt/DATA/html/kepegawaian-fe/src/lib/api/client.ts":{"size":1988,"mtime_ns":1784602685613367151,"word_count":231},"/mnt/DATA/html/kepegawaian-fe/src/lib/api/types.ts":{"size":84,"mtime_ns":1784166794819372277,"word_count":11},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/appwriteSession.test.ts":{"size":4406,"mtime_ns":1783996636695721742,"word_count":440},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/appwriteSession.ts":{"size":3543,"mtime_ns":1783996636694721747,"word_count":467},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/can.ts":{"size":669,"mtime_ns":1783996636694721747,"word_count":86},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/index.ts":{"size":202,"mtime_ns":1783440345789610256,"word_count":28},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/permissions.ts":{"size":338,"mtime_ns":1783996636694721747,"word_count":52},"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/verifySession.ts":{"size":994,"mtime_ns":1783996636694721747,"word_count":141},"/mnt/DATA/html/kepegawaian-fe/src/lib/master/tree-utils.ts":{"size":1416,"mtime_ns":1783996636695721742,"word_count":204},"/mnt/DATA/html/kepegawaian-fe/src/lib/paging.test.ts":{"size":2761,"mtime_ns":1784167461422726052,"word_count":349},"/mnt/DATA/html/kepegawaian-fe/src/lib/paging.ts":{"size":1719,"mtime_ns":1784167428526884575,"word_count":246},"/mnt/DATA/html/kepegawaian-fe/src/lib/utils.ts":{"size":876,"mtime_ns":1784274270448139105,"word_count":119},"/mnt/DATA/html/kepegawaian-fe/src/proxy.ts":{"size":3237,"mtime_ns":1784168670162101994,"word_count":367},"/mnt/DATA/html/kepegawaian-fe/src/types/_shared.ts":{"size":3919,"mtime_ns":1784621786232085546,"word_count":481},"/mnt/DATA/html/kepegawaian-fe/src/types/auth.ts":{"size":222,"mtime_ns":1783996636695721742,"word_count":33},"/mnt/DATA/html/kepegawaian-fe/src/types/master/_computed.ts":{"size":1256,"mtime_ns":1783996636695721742,"word_count":172},"/mnt/DATA/html/kepegawaian-fe/src/types/master/alasan-berhenti.ts":{"size":1226,"mtime_ns":1784165492561107401,"word_count":124},"/mnt/DATA/html/kepegawaian-fe/src/types/master/golongan.ts":{"size":1161,"mtime_ns":1784165492561107401,"word_count":125},"/mnt/DATA/html/kepegawaian-fe/src/types/master/grade.ts":{"size":1366,"mtime_ns":1784617651372665388,"word_count":162},"/mnt/DATA/html/kepegawaian-fe/src/types/master/hari-libur.ts":{"size":1309,"mtime_ns":1784165492561107401,"word_count":143},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jabatan.ts":{"size":1930,"mtime_ns":1784617667827593350,"word_count":217},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-keahlian.ts":{"size":1175,"mtime_ns":1784165492570107313,"word_count":120},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-kitas.ts":{"size":1124,"mtime_ns":1784165492567107342,"word_count":120},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-kontrak.ts":{"size":339,"mtime_ns":1784165492292110036,"word_count":43},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-mutasi.ts":{"size":337,"mtime_ns":1784165492295110006,"word_count":43},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-pelatihan.ts":{"size":1192,"mtime_ns":1784165492569107322,"word_count":120},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-sk.ts":{"size":329,"mtime_ns":1784165492301109947,"word_count":43},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-sp.ts":{"size":1315,"mtime_ns":1784620151526067848,"word_count":149},"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenjang-pendidikan.ts":{"size":1520,"mtime_ns":1784165492568533275,"word_count":150},"/mnt/DATA/html/kepegawaian-fe/src/types/master/level.ts":{"size":955,"mtime_ns":1784165492567107342,"word_count":100},"/mnt/DATA/html/kepegawaian-fe/src/types/master/organisasi.ts":{"size":1809,"mtime_ns":1784165492574107274,"word_count":191},"/mnt/DATA/html/kepegawaian-fe/src/types/master/profesi.ts":{"size":2628,"mtime_ns":1784536054862863388,"word_count":295},"/mnt/DATA/html/kepegawaian-fe/src/types/master/rumah-dinas.ts":{"size":1164,"mtime_ns":1784165492572107293,"word_count":125},"/mnt/DATA/html/kepegawaian-fe/src/types/master/sanksi.ts":{"size":2940,"mtime_ns":1784165492574107274,"word_count":313},"/mnt/DATA/html/kepegawaian-fe/src/types/master/status-kerja.ts":{"size":342,"mtime_ns":1784165492322109742,"word_count":43},"/mnt/DATA/html/kepegawaian-fe/src/types/master/status-pegawai.ts":{"size":503,"mtime_ns":1784165492566107352,"word_count":60}}
+{
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/layout.tsx": {
+		"size": 275,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 33
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/alasan-berhenti/page.tsx": {
+		"size": 530,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/entity-form-modal.tsx": {
+		"size": 3577,
+		"mtime_ns": 1784607909629244482,
+		"word_count": 368
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/golongan/page.tsx": {
+		"size": 500,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/grade/page.tsx": {
+		"size": 488,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/hari-libur/page.tsx": {
+		"size": 510,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jabatan/page.tsx": {
+		"size": 496,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-keahlian/page.tsx": {
+		"size": 526,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-kitas/page.tsx": {
+		"size": 514,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-pelatihan/page.tsx": {
+		"size": 530,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenis-sp/page.tsx": {
+		"size": 502,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/jenjang-pendidikan/page.tsx": {
+		"size": 542,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/level/page.tsx": {
+		"size": 488,
+		"mtime_ns": 1783996636689721772,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/master-client.tsx": {
+		"size": 5620,
+		"mtime_ns": 1784275202134493759,
+		"word_count": 552
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/organisasi/page.tsx": {
+		"size": 508,
+		"mtime_ns": 1783996636690721767,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/form.tsx": {
+		"size": 9236,
+		"mtime_ns": 1784617856260881943,
+		"word_count": 894
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/page.tsx": {
+		"size": 496,
+		"mtime_ns": 1783996636690721767,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/profesi/schema.ts": {
+		"size": 1055,
+		"mtime_ns": 1784607902912202196,
+		"word_count": 109
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/rumah-dinas/page.tsx": {
+		"size": 514,
+		"mtime_ns": 1783996636690721767,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/form.tsx": {
+		"size": 5784,
+		"mtime_ns": 1784621847677217772,
+		"word_count": 506
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/page.tsx": {
+		"size": 492,
+		"mtime_ns": 1783996636690721767,
+		"word_count": 55
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/master/sanksi/schema.ts": {
+		"size": 2566,
+		"mtime_ns": 1784607902920202248,
+		"word_count": 273
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/page.tsx": {
+		"size": 1167,
+		"mtime_ns": 1783996636690721767,
+		"word_count": 112
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/profil/change-password-form.tsx": {
+		"size": 3712,
+		"mtime_ns": 1783996636691721762,
+		"word_count": 362
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/(app)/profil/page.tsx": {
+		"size": 1725,
+		"mtime_ns": 1783996636691721762,
+		"word_count": 136
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/layout.tsx": {
+		"size": 826,
+		"mtime_ns": 1784177402143266691,
+		"word_count": 93
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/login/login-form.tsx": {
+		"size": 2796,
+		"mtime_ns": 1783996636691721762,
+		"word_count": 245
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/app/login/page.tsx": {
+		"size": 2145,
+		"mtime_ns": 1784168554772588676,
+		"word_count": 160
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/app-shell.tsx": {
+		"size": 6560,
+		"mtime_ns": 1784518566629091257,
+		"word_count": 601
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/badge-manager.tsx": {
+		"size": 4668,
+		"mtime_ns": 1784595745735784781,
+		"word_count": 460
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/can.tsx": {
+		"size": 377,
+		"mtime_ns": 1783996636691721762,
+		"word_count": 53
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/confirm-delete-dialog.tsx": {
+		"size": 1984,
+		"mtime_ns": 1783996636692721757,
+		"word_count": 170
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/crud-form.tsx": {
+		"size": 4115,
+		"mtime_ns": 1784602027910746278,
+		"word_count": 382
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/data-table-pagination.tsx": {
+		"size": 1786,
+		"mtime_ns": 1784254356474355456,
+		"word_count": 179
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/data-table-toolbar.tsx": {
+		"size": 3075,
+		"mtime_ns": 1784275236228370508,
+		"word_count": 341
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/data-table.tsx": {
+		"size": 8416,
+		"mtime_ns": 1784509309783906911,
+		"word_count": 765
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/fk-combobox-filter.tsx": {
+		"size": 2322,
+		"mtime_ns": 1784273433596253279,
+		"word_count": 230
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/fk-combobox.tsx": {
+		"size": 2754,
+		"mtime_ns": 1784604840412752731,
+		"word_count": 248
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/master-switch.tsx": {
+		"size": 1275,
+		"mtime_ns": 1783996636692721757,
+		"word_count": 104
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/providers.tsx": {
+		"size": 1664,
+		"mtime_ns": 1784177402134266727,
+		"word_count": 177
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/sanksi-manager.tsx": {
+		"size": 5474,
+		"mtime_ns": 1784621549379287140,
+		"word_count": 504
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/alert-dialog.tsx": {
+		"size": 5211,
+		"mtime_ns": 1783400253464488128,
+		"word_count": 350
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/avatar.tsx": {
+		"size": 3015,
+		"mtime_ns": 1783400253461465559,
+		"word_count": 222
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/badge.tsx": {
+		"size": 1904,
+		"mtime_ns": 1783400253465488124,
+		"word_count": 143
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/breadcrumb.tsx": {
+		"size": 2449,
+		"mtime_ns": 1783441630890758558,
+		"word_count": 201
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/button.tsx": {
+		"size": 3240,
+		"mtime_ns": 1784260433959969590,
+		"word_count": 192
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/card.tsx": {
+		"size": 2477,
+		"mtime_ns": 1783400253463488132,
+		"word_count": 194
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/command.tsx": {
+		"size": 4629,
+		"mtime_ns": 1784260469593507498,
+		"word_count": 351
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/dialog.tsx": {
+		"size": 4062,
+		"mtime_ns": 1784260434125518631,
+		"word_count": 317
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/dropdown-menu.tsx": {
+		"size": 8805,
+		"mtime_ns": 1783440842624626510,
+		"word_count": 568
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/input-group.tsx": {
+		"size": 5264,
+		"mtime_ns": 1784260434196518615,
+		"word_count": 369
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/input.tsx": {
+		"size": 1040,
+		"mtime_ns": 1784260434025518655,
+		"word_count": 79
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/label.tsx": {
+		"size": 529,
+		"mtime_ns": 1783400253470488104,
+		"word_count": 48
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/scroll-area.tsx": {
+		"size": 1543,
+		"mtime_ns": 1783400253479488067,
+		"word_count": 99
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/select.tsx": {
+		"size": 6563,
+		"mtime_ns": 1784177813855403543,
+		"word_count": 427
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/separator.tsx": {
+		"size": 545,
+		"mtime_ns": 1783400253472488095,
+		"word_count": 48
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/sheet.tsx": {
+		"size": 4234,
+		"mtime_ns": 1783440972084725159,
+		"word_count": 302
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/skeleton.tsx": {
+		"size": 246,
+		"mtime_ns": 1783400253474488087,
+		"word_count": 27
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/table.tsx": {
+		"size": 2213,
+		"mtime_ns": 1783410450471529090,
+		"word_count": 189
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/ui/textarea.tsx": {
+		"size": 842,
+		"mtime_ns": 1784260434063237928,
+		"word_count": 62
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/components/user-menu.tsx": {
+		"size": 2383,
+		"mtime_ns": 1784177515121370236,
+		"word_count": 221
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/entities.ts": {
+		"size": 858,
+		"mtime_ns": 1784510218060824161,
+		"word_count": 129
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master-config.ts": {
+		"size": 2036,
+		"mtime_ns": 1784594395384560733,
+		"word_count": 183
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master-entity-types.ts": {
+		"size": 4569,
+		"mtime_ns": 1784601877390709227,
+		"word_count": 429
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/_config-kit.ts": {
+		"size": 2690,
+		"mtime_ns": 1784274044175342874,
+		"word_count": 346
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/alasan-berhenti.config.ts": {
+		"size": 676,
+		"mtime_ns": 1784598375492170860,
+		"word_count": 86
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/golongan.config.ts": {
+		"size": 799,
+		"mtime_ns": 1784252915218462809,
+		"word_count": 104
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/grade.config.ts": {
+		"size": 1099,
+		"mtime_ns": 1784510269663575867,
+		"word_count": 144
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/hari-libur.config.ts": {
+		"size": 1085,
+		"mtime_ns": 1784598513250170558,
+		"word_count": 143
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jabatan.config.ts": {
+		"size": 1239,
+		"mtime_ns": 1784598513253170950,
+		"word_count": 169
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-keahlian.config.ts": {
+		"size": 288,
+		"mtime_ns": 1784168056497297169,
+		"word_count": 32
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-kitas.config.ts": {
+		"size": 272,
+		"mtime_ns": 1784167809001229255,
+		"word_count": 30
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-pelatihan.config.ts": {
+		"size": 286,
+		"mtime_ns": 1784167808999229263,
+		"word_count": 32
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenis-sp.config.tsx": {
+		"size": 915,
+		"mtime_ns": 1784621110110553644,
+		"word_count": 124
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/jenjang-pendidikan.config.ts": {
+		"size": 1185,
+		"mtime_ns": 1784618349301152400,
+		"word_count": 145
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/level.config.ts": {
+		"size": 261,
+		"mtime_ns": 1784167808996229275,
+		"word_count": 29
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/organisasi.config.ts": {
+		"size": 1527,
+		"mtime_ns": 1784598513254171081,
+		"word_count": 195
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/profesi.config.tsx": {
+		"size": 1736,
+		"mtime_ns": 1784618080354469113,
+		"word_count": 217
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/rumah-dinas.config.ts": {
+		"size": 749,
+		"mtime_ns": 1784622131493083839,
+		"word_count": 97
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/config/master/sanksi.config.ts": {
+		"size": 3517,
+		"mtime_ns": 1784599049654553231,
+		"word_count": 457
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useBadgeMutations.ts": {
+		"size": 840,
+		"mtime_ns": 1784594145102365932,
+		"word_count": 106
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useChangePassword.ts": {
+		"size": 727,
+		"mtime_ns": 1783996636694212805,
+		"word_count": 84
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useEnum.ts": {
+		"size": 1334,
+		"mtime_ns": 1784621803138000121,
+		"word_count": 174
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useLogin.ts": {
+		"size": 830,
+		"mtime_ns": 1783996636694212805,
+		"word_count": 98
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useLogout.ts": {
+		"size": 1052,
+		"mtime_ns": 1783996636694212805,
+		"word_count": 126
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useMasterSearchParams.ts": {
+		"size": 1921,
+		"mtime_ns": 1784275181753567637,
+		"word_count": 262
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useMasterTable.ts": {
+		"size": 4814,
+		"mtime_ns": 1784603107649288424,
+		"word_count": 613
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useResource.ts": {
+		"size": 1234,
+		"mtime_ns": 1783996636694721747,
+		"word_count": 143
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useRoles.tsx": {
+		"size": 378,
+		"mtime_ns": 1784518507314152454,
+		"word_count": 38
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/hooks/useSanksiMutations.ts": {
+		"size": 1681,
+		"mtime_ns": 1784621334837386033,
+		"word_count": 192
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/api/client.ts": {
+		"size": 1988,
+		"mtime_ns": 1784602685613367151,
+		"word_count": 231
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/api/types.ts": {
+		"size": 84,
+		"mtime_ns": 1784166794819372277,
+		"word_count": 11
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/appwriteSession.test.ts": {
+		"size": 4406,
+		"mtime_ns": 1783996636695721742,
+		"word_count": 440
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/appwriteSession.ts": {
+		"size": 3543,
+		"mtime_ns": 1783996636694721747,
+		"word_count": 467
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/can.ts": {
+		"size": 669,
+		"mtime_ns": 1783996636694721747,
+		"word_count": 86
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/index.ts": {
+		"size": 202,
+		"mtime_ns": 1783440345789610256,
+		"word_count": 28
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/permissions.ts": {
+		"size": 338,
+		"mtime_ns": 1783996636694721747,
+		"word_count": 52
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/auth/verifySession.ts": {
+		"size": 994,
+		"mtime_ns": 1783996636694721747,
+		"word_count": 141
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/master/tree-utils.ts": {
+		"size": 1416,
+		"mtime_ns": 1783996636695721742,
+		"word_count": 204
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/paging.test.ts": {
+		"size": 2761,
+		"mtime_ns": 1784167461422726052,
+		"word_count": 349
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/paging.ts": {
+		"size": 1719,
+		"mtime_ns": 1784167428526884575,
+		"word_count": 246
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/lib/utils.ts": { "size": 876, "mtime_ns": 1784274270448139105, "word_count": 119 },
+	"/mnt/DATA/html/kepegawaian-fe/src/proxy.ts": { "size": 3237, "mtime_ns": 1784168670162101994, "word_count": 367 },
+	"/mnt/DATA/html/kepegawaian-fe/src/types/_shared.ts": {
+		"size": 3919,
+		"mtime_ns": 1784621786232085546,
+		"word_count": 481
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/auth.ts": { "size": 222, "mtime_ns": 1783996636695721742, "word_count": 33 },
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/_computed.ts": {
+		"size": 1256,
+		"mtime_ns": 1783996636695721742,
+		"word_count": 172
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/alasan-berhenti.ts": {
+		"size": 1226,
+		"mtime_ns": 1784165492561107401,
+		"word_count": 124
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/golongan.ts": {
+		"size": 1161,
+		"mtime_ns": 1784165492561107401,
+		"word_count": 125
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/grade.ts": {
+		"size": 1366,
+		"mtime_ns": 1784617651372665388,
+		"word_count": 162
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/hari-libur.ts": {
+		"size": 1309,
+		"mtime_ns": 1784165492561107401,
+		"word_count": 143
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jabatan.ts": {
+		"size": 1930,
+		"mtime_ns": 1784617667827593350,
+		"word_count": 217
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-keahlian.ts": {
+		"size": 1175,
+		"mtime_ns": 1784165492570107313,
+		"word_count": 120
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-kitas.ts": {
+		"size": 1124,
+		"mtime_ns": 1784165492567107342,
+		"word_count": 120
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-kontrak.ts": {
+		"size": 339,
+		"mtime_ns": 1784165492292110036,
+		"word_count": 43
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-mutasi.ts": {
+		"size": 337,
+		"mtime_ns": 1784165492295110006,
+		"word_count": 43
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-pelatihan.ts": {
+		"size": 1192,
+		"mtime_ns": 1784165492569107322,
+		"word_count": 120
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-sk.ts": {
+		"size": 329,
+		"mtime_ns": 1784165492301109947,
+		"word_count": 43
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenis-sp.ts": {
+		"size": 1315,
+		"mtime_ns": 1784620151526067848,
+		"word_count": 149
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/jenjang-pendidikan.ts": {
+		"size": 1520,
+		"mtime_ns": 1784165492568533275,
+		"word_count": 150
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/level.ts": {
+		"size": 955,
+		"mtime_ns": 1784165492567107342,
+		"word_count": 100
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/organisasi.ts": {
+		"size": 1809,
+		"mtime_ns": 1784165492574107274,
+		"word_count": 191
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/profesi.ts": {
+		"size": 2628,
+		"mtime_ns": 1784536054862863388,
+		"word_count": 295
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/rumah-dinas.ts": {
+		"size": 1164,
+		"mtime_ns": 1784165492572107293,
+		"word_count": 125
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/sanksi.ts": {
+		"size": 2940,
+		"mtime_ns": 1784165492574107274,
+		"word_count": 313
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/status-kerja.ts": {
+		"size": 342,
+		"mtime_ns": 1784165492322109742,
+		"word_count": 43
+	},
+	"/mnt/DATA/html/kepegawaian-fe/src/types/master/status-pegawai.ts": {
+		"size": 503,
+		"mtime_ns": 1784165492566107352,
+		"word_count": 60
+	}
+}

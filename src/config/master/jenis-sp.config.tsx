@@ -1,9 +1,12 @@
 import { z } from "zod";
 import { SanksiManager } from "@/components/sanksi-manager";
-import type { JenisSpQuery } from "@/types/master/jenis-sp";
+import type { JenisSpPostRequest, JenisSpQuery } from "@/types/master/jenis-sp";
 import { type EntityConfig, makeConfig, namaWajib, nameField } from "./_config-kit";
 
-export const jenisSpConfig: EntityConfig<JenisSpQuery> = makeConfig<JenisSpQuery>(
+export const jenisSpConfig: EntityConfig<JenisSpQuery, JenisSpPostRequest> = makeConfig<
+	JenisSpQuery,
+	JenisSpPostRequest
+>(
 	z.object({ kode: z.string().min(1, "Kode wajib diisi"), nama: namaWajib }),
 	[{ name: "kode", label: "Kode", required: true }, nameField],
 	[
