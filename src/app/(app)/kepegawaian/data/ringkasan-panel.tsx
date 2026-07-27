@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, FileX2, RefreshCw } from "lucide-react";
+import { AlertTriangle, FileX2, Pencil, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { PegawaiResponseRingkasan } from "@/types/pegawai/pegawai";
@@ -12,6 +12,8 @@ interface Props {
 	error: Error | null;
 	data: PegawaiResponseRingkasan | undefined;
 	onRetry: () => void;
+	onEditProfil: () => void;
+	onEditGaji: () => void;
 }
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
@@ -34,7 +36,18 @@ function SectionSkeleton() {
 	);
 }
 
-export function RingkasanPanel({ selectedId, isPending, isError, error, data, onRetry }: Props) {
+export function RingkasanPanel({
+	selectedId,
+	isPending,
+	isError,
+	error,
+	data,
+	onRetry,
+	onEditProfil,
+	onEditGaji,
+}: Props) {
+	const showActions = !!selectedId && !isError;
+
 	if (!selectedId) {
 		return (
 			<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
@@ -47,6 +60,18 @@ export function RingkasanPanel({ selectedId, isPending, isError, error, data, on
 	if (isPending) {
 		return (
 			<div className="space-y-6 p-4">
+				{showActions && (
+					<div className="flex gap-2">
+						<Button variant="outline" size="sm" onClick={onEditProfil}>
+							<Pencil className="mr-1.5 size-3.5" />
+							Edit Profil
+						</Button>
+						<Button variant="outline" size="sm" onClick={onEditGaji}>
+							<Wallet className="mr-1.5 size-3.5" />
+							Edit Gaji
+						</Button>
+					</div>
+				)}
 				<SectionSkeleton />
 				<SectionSkeleton />
 				<SectionSkeleton />
@@ -74,6 +99,16 @@ export function RingkasanPanel({ selectedId, isPending, isError, error, data, on
 
 	return (
 		<div className="space-y-6">
+			<div className="flex gap-2">
+				<Button variant="outline" size="sm" onClick={onEditProfil}>
+					<Pencil className="mr-1.5 size-3.5" />
+					Edit Profil
+				</Button>
+				<Button variant="outline" size="sm" onClick={onEditGaji}>
+					<Wallet className="mr-1.5 size-3.5" />
+					Edit Gaji
+				</Button>
+			</div>
 			{/* Informasi Umum */}
 			<section>
 				<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Informasi Umum</h3>

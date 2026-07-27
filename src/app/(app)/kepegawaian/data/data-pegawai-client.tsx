@@ -188,8 +188,6 @@ export function DataPegawaiClient() {
 							? {
 									onRowClick: (i: never) => setSelectedId(getRowId(i)),
 									selectedRowId: selectedId ?? undefined,
-									onEdit: (i: never) => setEditProfilId(getRowId(i)),
-									onEditGaji: (i: never) => setEditGajiId(getRowId(i)),
 								}
 							: {})}
 						getRowId={getRowId}
@@ -218,6 +216,8 @@ export function DataPegawaiClient() {
 								error={ringkasanQuery.error}
 								data={ringkasanQuery.data}
 								onRetry={() => ringkasanQuery.refetch()}
+								onEditProfil={() => setEditProfilId(String(selectedId))}
+								onEditGaji={() => setEditGajiId(String(selectedId))}
 							/>
 						</div>
 					</div>
