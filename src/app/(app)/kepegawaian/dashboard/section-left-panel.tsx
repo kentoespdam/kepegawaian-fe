@@ -1,12 +1,18 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { Pencil } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { z } from "zod";
+import { CrudForm, type FormField } from "@/components/crud-form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useBiodataMutation } from "@/hooks/useBiodataMutation";
 import { cn, formatDate } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import type { BiodataDetail } from "@/types/profil/biodata";
+import type { BiodataDetail, BiodataPatchRequest } from "@/types/profil/biodata";
+import { ENUMS } from "../data/tambah/constants";
 
 // ponytail: shared afordansi trigger className
 const ACCORDION_TRIGGER_AFF =
@@ -14,6 +20,68 @@ const ACCORDION_TRIGGER_AFF =
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [formError, setFormError] = useState<string | null>(null);
+	const biodataMutation = useBiodataMutation(nik ?? "");
+
+	const biodataFormSchema = z.object({
+		nik: z.string().optional(),
+		nama: z.string().min(1, "Nama wajib diisi"),
+		jenisKelamin: z.string().optional(),
+		tempatLahir: z.string().optional(),
+		tanggalLahir: z.string().optional(),
+		agama: z.string().optional(),
+		statusKawin: z.string().optional(),
+		ibuKandung: z.string().optional(),
+		telp: z
+			.string()
+			.optional()
+			.refine((v) => !v || /^[0-9+\-\s()]{7,20}$/.test(v), "Format nomor telepon tidak valid"),
+		alamat: z.string().optional(),
+	});
+
+	const editFormFields: FormField[] = [
+		{ name: "nik", label: "NIK", type: "text", required: false },
+		{ name: "nama", label: "Nama", type: "text", required: true },
+		{
+			name: "jenisKelamin",
+			label: "Jenis Kelamin",
+			type: "select",
+			required: false,
+			options: [...ENUMS.jenisKelamin],
+		},
+		{ name: "tempatLahir", label: "Tempat Lahir", type: "text", required: false },
+		{ name: "tanggalLahir", label: "Tanggal Lahir", type: "date", required: false },
+		{ name: "agama", label: "Agama", type: "select", required: false, options: [...ENUMS.agama] },
+		{
+			name: "statusKawin",
+			label: "Status Kawin",
+			type: "select",
+			required: false,
+			options: [...ENUMS.statusKawin],
+		},
+		{ name: "ibuKandung", label: "Ibu Kandung", type: "text", required: false },
+		{ name: "telp", label: "Telp", type: "text", required: false },
+		{ name: "alamat", label: "Alamat", type: "textarea", required: false },
+	];
+
+	const handleEditSubmit = async (data: Record<string, unknown>) => {
+		setFormError(null);
+		try {
+			const payload: Record<string, unknown> = {};
+			for (const [key, v] of Object.entries(data)) {
+				if (key === "nik") continue;
+				if (v === "" || v === undefined) continue;
+				payload[key] = v;
+			}
+			await biodataMutation.mutateAsync({ nik: nik ?? "", data: payload as BiodataPatchRequest });
+			setDialogOpen(false);
+		} catch (e: unknown) {
+			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+			setFormError(msg);
+		}
+	};
+
 	const biodata = useQuery({
 		queryKey: ["/api/proxy/profil/biodata", nik],
 		queryFn: async () => {
@@ -62,20 +130,36 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 						) : biodata.isPending ? (
 							<p className="text-sm text-muted-foreground italic">Memuat...</p>
 						) : d ? (
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-								<Field label="NIK" value={d.nik} />
-								<Field label="Nama" value={d.nama} />
-								<Field label="Jenis Kelamin" value={labelJk(d.jenisKelamin)} />
-								<Field label="Tempat Lahir" value={d.tempatLahir} />
-								<Field label="Tanggal Lahir" value={formatDate(d.tanggalLahir)} />
-								<Field label="Agama" value={d.agama ? labelAgama(d.agama) : undefined} />
-								<Field label="Status Kawin" value={d.statusKawin ? labelKawin(d.statusKawin) : undefined} />
-								<Field
-									label="Pendidikan Terakhir"
-									value={d.pendidikanTerakhirId ? String(d.pendidikanTerakhirId) : undefined}
-								/>
-								<Field label="Alamat" value={d.alamat} className="sm:col-span-2" />
-							</div>
+							<>
+								{nik && (
+									<div className="flex items-center justify-end mb-2">
+										<button
+											type="button"
+											onClick={() => setDialogOpen(true)}
+											className="inline-flex items-center gap-1.5 text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+										>
+											<Pencil className="size-3" />
+											Edit Profil
+										</button>
+									</div>
+								)}
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+									<Field label="NIK" value={d.nik} />
+									<Field label="Nama" value={d.nama} />
+									<Field label="Jenis Kelamin" value={labelJk(d.jenisKelamin)} />
+									<Field label="Tempat Lahir" value={d.tempatLahir} />
+									<Field label="Tanggal Lahir" value={formatDate(d.tanggalLahir)} />
+									<Field label="Agama" value={d.agama ? labelAgama(d.agama) : undefined} />
+									<Field label="Status Kawin" value={d.statusKawin ? labelKawin(d.statusKawin) : undefined} />
+									<Field
+										label="Pendidikan Terakhir"
+										value={d.pendidikanTerakhirId ? String(d.pendidikanTerakhirId) : undefined}
+									/>
+									<Field label="Ibu Kandung" value={d.ibuKandung} />
+									<Field label="Telp" value={d.telp} />
+									<Field label="Alamat" value={d.alamat} className="sm:col-span-2" />
+								</div>
+							</>
 						) : (
 							<p className="text-sm text-muted-foreground italic">Data tidak tersedia</p>
 						)}
@@ -120,6 +204,50 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 					</AccordionContent>
 				</AccordionItem>
 			</Accordion>
+
+			{/* Edit Profil Dialog */}
+			<Dialog
+				open={dialogOpen}
+				onOpenChange={(v) => {
+					if (!v) {
+						setDialogOpen(false);
+						setFormError(null);
+					}
+				}}
+			>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Edit Profil</DialogTitle>
+					</DialogHeader>
+					<CrudForm
+						schema={biodataFormSchema as never}
+						fields={editFormFields}
+						defaultValues={
+							d
+								? ({
+										nik: d.nik ?? "",
+										nama: d.nama ?? "",
+										jenisKelamin: d.jenisKelamin ?? "",
+										tempatLahir: d.tempatLahir ?? "",
+										tanggalLahir: d.tanggalLahir ?? "",
+										agama: d.agama ?? "",
+										statusKawin: d.statusKawin ?? "",
+										ibuKandung: d.ibuKandung ?? "",
+										telp: d.telp ?? "",
+										alamat: d.alamat ?? "",
+									} as Record<string, unknown>)
+								: undefined
+						}
+						onSubmit={handleEditSubmit}
+						onCancel={() => {
+							setDialogOpen(false);
+							setFormError(null);
+						}}
+						error={formError}
+						submitLabel="Simpan Biodata"
+					/>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

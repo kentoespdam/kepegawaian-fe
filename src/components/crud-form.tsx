@@ -13,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 export interface FormField<Name extends string = string> {
 	name: Name;
 	label: string;
-	type?: "text" | "email" | "password" | "number" | "textarea" | "select" | "combobox";
+	type?: "text" | "email" | "password" | "number" | "textarea" | "select" | "combobox" | "date";
 	placeholder?: string;
 	required?: boolean;
 	options?: { value: string; label: string; disabled?: boolean }[];
