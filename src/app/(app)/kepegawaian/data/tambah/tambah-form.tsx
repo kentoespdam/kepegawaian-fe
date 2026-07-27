@@ -27,7 +27,7 @@ export function TambahPegawaiForm() {
 		setError,
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema as never),
-		defaultValues: { isPegawai: true },
+		defaultValues: { isPegawai: true, statusKerja: "KARYAWAN_AKTIF" },
 	});
 
 	const statusPegawai = watch("statusPegawai");
@@ -82,7 +82,7 @@ export function TambahPegawaiForm() {
 				notes: values.notes || undefined,
 				isPegawai: !isNonPegawai,
 				statusPegawai: values.statusPegawai || undefined,
-				statusKerja: values.statusKerja || undefined,
+				statusKerja: !isNonPegawai ? values.statusKerja || undefined : undefined,
 				jabatanId: values.jabatanId ? Number(values.jabatanId) : undefined,
 				organisasiId: values.organisasiId ? Number(values.organisasiId) : undefined,
 				profesiId: values.profesiId ? Number(values.profesiId) : undefined,
@@ -279,6 +279,7 @@ export function TambahPegawaiForm() {
 							options={ENUMS.statusKerja}
 							onChange={(v) => setValue("statusKerja", v)}
 							error={e("statusKerja")}
+							required
 						/>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 							<FieldText

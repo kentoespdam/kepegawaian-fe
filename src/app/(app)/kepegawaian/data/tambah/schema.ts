@@ -39,6 +39,8 @@ export const schema = z
 			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Organisasi wajib diisi", path: ["organisasiId"] });
 		if (!vals.kodePajakId)
 			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Kode pajak wajib diisi", path: ["kodePajakId"] });
+		if (!vals.statusKerja)
+			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Status kerja wajib diisi", path: ["statusKerja"] });
 	});
 
 export type FormValues = z.infer<typeof schema>;
