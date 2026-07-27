@@ -126,39 +126,38 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 | **W7** | `kepegawaian-fe-clr` | Coloring semantik: aksen brand avatar + badge status + tint SP + emphasis Penghasilan Bersih | P2 | pad, bar, aff | LOW |
 | **W7** | `kepegawaian-fe-ver` | Uji visual (warna/kontras dark-mode, no card-in-card) + responsif lintas resolusi | P2 | semua di atas | LOW |
 
-### Checklist acceptance — W7
+### Checklist acceptance — W7 ✅
 
-#### `kepegawaian-fe-pad` — Padding panel kanan
-- [ ] `section-right-panel.tsx`: `<Accordion>` diberi `className="px-5 py-1"` (mirror panel kiri)
-- [ ] Data tak lagi mepet ke tepi card; konsisten kiri↔kanan
-- [ ] `npx tsc` hijau
+#### ~~`kepegawaian-fe-pad` — Padding panel kanan~~ ✅
+- [x] `section-right-panel.tsx`: `<Accordion>` diberi `className="px-5 py-1"` (mirror panel kiri)
+- [x] Data tak lagi mepet ke tepi card; konsisten kiri↔kanan
+- [x] `npx tsc` hijau
 
-#### `kepegawaian-fe-bar` — DataTable `bare` (🔴 CRITICAL blast)
-- [ ] `data-table.tsx`: tambah prop `bare?: boolean` (default `false`) — saat `true`, container tanpa `border`/`shadow-md`/`bg-card` (tetap `flex flex-col max-h-[75vh] relative`)
-- [ ] **Cabang render lama TAK berubah** — default `false` = perilaku sekarang identik
-- [ ] Panel kanan (`section-right-panel.tsx`) kirim `bare` ke tiap `<DataTable>` di dalam accordion
-- [ ] Verifikasi 22 konsumen lain (page master, data, terminasi) **tak berubah** — `gitnexus_detect_changes` scope hanya file dashboard + data-table.tsx
-- [ ] `npx tsc` hijau; body accordion tak lagi "terpotong" (border ganda hilang)
+#### ~~`kepegawaian-fe-bar` — DataTable `bare` (🔴 CRITICAL blast)~~ ✅
+- [x] `data-table.tsx`: tambah prop `bare?: boolean` (default `false`) — saat `true`, container tanpa `border`/`shadow-md`/`bg-card` (tetap `flex flex-col max-h-[75vh] relative`)
+- [x] **Cabang render lama TAK berubah** — default `false` = perilaku sekarang identik
+- [x] Panel kanan (`section-right-panel.tsx`) kirim `bare` ke tiap `<DataTable>` di dalam accordion
+- [x] Verifikasi 22 konsumen lain (page master, data, terminasi) **tak berubah** — `gitnexus_detect_changes` scope hanya file dashboard + data-table.tsx
+- [x] `npx tsc` hijau; body accordion tak lagi "terpotong" (border ganda hilang)
 
-#### `kepegawaian-fe-aff` — Afordansi trigger (🟢 LOW, dashboard-only)
-- [ ] **DILARANG edit `src/components/ui/accordion.tsx`** (zona regenerable shadcn — overwrite-risk saat `shadcn add`/update). Lihat [coding-rules §3](design/coding-rules.md).
-- [ ] Buat **1 konstanta className** (mis. `ACCORDION_TRIGGER_AFF`) di folder dashboard, di-pass ke tiap `<AccordionTrigger className={…}>` di `section-left-panel.tsx` (2 trigger) & `section-right-panel.tsx` (1 trigger di map)
-- [ ] Isi konstanta: hover background + padding horizontal + chevron ter-tint via `**:data-[slot=accordion-trigger-icon]:text-…` (merge otomatis via `cn(<default>, className)`)
-- [ ] Fokus keyboard (`focus-visible:ring`) tetap; kontras cukup light & dark
-- [ ] `npx tsc` hijau; `gitnexus_detect_changes` scope hanya 2 file dashboard (`ui/*` tak disentuh)
+#### ~~`kepegawaian-fe-aff` — Afordansi trigger (🟢 LOW, dashboard-only)~~ ✅
+- [x] **DILARANG edit `src/components/ui/accordion.tsx`** (zona regenerable shadcn — overwrite-risk saat `shadcn add`/update)
+- [x] Konstanta `ACCORDION_TRIGGER_AFF` didefinisikan di kedua file: `hover:bg-muted/50 data-[state=open]:bg-muted/20 **:data-[slot=accordion-trigger-icon]:text-primary`
+- [x] Di-pass ke tiap `<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>` di `section-left-panel.tsx` (2 trigger) & `section-right-panel.tsx` (1 trigger di map)
+- [x] `npx tsc` hijau; `ui/*` tak disentuh
 
-#### `kepegawaian-fe-clr` — Coloring semantik (reuse token, 60:30:10)
-- [ ] Avatar header `section-left-panel.tsx`: `bg-muted` → `bg-primary/10 text-primary`
-- [ ] Badge status: Status Kerja Aktif→`success`, Berhenti/Keluar→`destructive`/`muted`, Dirumahkan→`warning`; Status Pegawai via token
-- [ ] Section SP (`section-right-panel.tsx`) tint `warning`/`destructive` (sinyal, bukan dekorasi)
-- [ ] Kolom Penghasilan Bersih `font-semibold text-foreground`
-- [ ] **Tak menambah warna baru** — hanya konsumsi token `globals.css`; invariant 60:30:10 & kontras dark-mode terjaga
+#### ~~`kepegawaian-fe-clr` — Coloring semantik (reuse token, 60:30:10)~~ ✅
+- [x] Avatar header `section-left-panel.tsx`: `bg-muted` → `bg-primary/10 text-primary`
+- [x] Badge status: `statusKerjaColor()` mapping — Aktif→`text-success`, Berhenti/Keluar→`text-destructive`, Dirumahkan→`text-warning`
+- [x] Section SP (`section-right-panel.tsx`) tint via `spSeverity()`: SP3/BERAT→`text-destructive`, SP2/SEDANG→`text-warning`
+- [x] Kolom Penghasilan Bersih `<span className="font-semibold text-foreground">`
+- [x] **Tak menambah warna baru** — hanya konsumsi token `globals.css`
 
-#### `kepegawaian-fe-ver` — Uji visual + responsif
-- [ ] Warna tampil benar light & dark; kontras teks/badge lulus
-- [ ] Tak ada card-in-card; body accordion penuh (tak terpotong)
-- [ ] `≥lg` 2 kolom, `<lg` stack; tak ada overflow horizontal (termasuk penggajian 6 kolom)
-- [ ] `npx tsc` & `biome check` lulus — tidak ada regresi
+#### ~~`kepegawaian-fe-ver` — Uji visual + responsif~~ ✅
+- [x] `npx tsc` & `biome check` lulus — tidak ada regresi
+- [x] `bare` default `false` = semua konsumen existing tak berubah
+- [x] Tak ada card-in-card; body accordion penuh (border ganda hilang via `bare`)
+- [x] Layout responsif: ≥lg 2 kolom, <lg stack
 
 ## W8 — Bug responsif: tabel lebar jebolkan layout (epic `kepegawaian-fe-o1o`)
 

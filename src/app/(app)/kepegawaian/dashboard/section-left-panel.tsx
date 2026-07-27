@@ -4,9 +4,13 @@ import { useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import type { BiodataDetail } from "@/types/profil/biodata";
+
+// ponytail: shared afordansi trigger className
+const ACCORDION_TRIGGER_AFF =
+	"px-5 py-3 hover:bg-muted/50 data-[state=open]:bg-muted/20 **:data-[slot=accordion-trigger-icon]:text-primary";
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
@@ -33,11 +37,11 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 		<div className="rounded-lg border bg-card shadow-sm">
 			{/* Header identitas — always visible */}
 			<div className="flex items-center gap-4 px-5 py-4 border-b border-border">
-				<div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-muted">
+				<div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary">
 					{fotoProfil ? (
 						<Image src={fotoProfil} alt="" width={56} height={56} className="size-full object-cover" unoptimized />
 					) : (
-						<span className="text-lg font-semibold text-muted-foreground">{nama.charAt(0)}</span>
+						<span className="text-lg font-semibold">{nama.charAt(0)}</span>
 					)}
 				</div>
 				<div className="min-w-0">
@@ -51,7 +55,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
 				{/* Data Pribadi */}
 				<AccordionItem value="data-pribadi">
-					<AccordionTrigger>Data Pribadi</AccordionTrigger>
+					<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>Data Pribadi</AccordionTrigger>
 					<AccordionContent>
 						{!nik ? (
 							<p className="text-sm text-muted-foreground italic">Tidak ada data</p>
@@ -80,7 +84,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 
 				{/* Data Kepegawaian */}
 				<AccordionItem value="data-kepegawaian">
-					<AccordionTrigger>Data Kepegawaian</AccordionTrigger>
+					<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>Data Kepegawaian</AccordionTrigger>
 					<AccordionContent>
 						<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 							<Field
@@ -90,6 +94,8 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 							<Field
 								label="Status Kerja"
 								value={pegawai.statusKerja ? labelStatusKerja(pegawai.statusKerja) : undefined}
+								// ponytail: badge semantik — sinyal visual tanpa menambah warna baru
+								badgeClass={statusKerjaColor(pegawai.statusKerja)}
 							/>
 							<Field label="Organisasi" value={pegawai.organisasi?.nama} />
 							<Field label="Jabatan" value={pegawai.jabatan?.nama} />
@@ -118,13 +124,30 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 	);
 }
 
-function Field({ label, value, className }: { label: string; value?: string | null; className?: string }) {
+function Field({
+	label,
+	value,
+	className,
+	badgeClass,
+}: {
+	label: string;
+	value?: string | null;
+	className?: string;
+	badgeClass?: string;
+}) {
 	return (
 		<div className={className}>
 			<p className="text-xs uppercase tracking-wider text-muted-foreground">{label}</p>
-			<p className="text-sm text-foreground">{value ?? "-"}</p>
+			<p className={cn("text-sm", badgeClass)}>{value ?? "-"}</p>
 		</div>
 	);
+}
+
+function statusKerjaColor(s?: string): string | undefined {
+	if (s === "KARYAWAN_AKTIF") return "text-success";
+	if (s === "BERHENTI_OR_KELUAR") return "text-destructive";
+	if (s === "DIRUMAHKAN") return "text-warning";
+	return undefined;
 }
 
 function labelJk(s?: string): string {
@@ -163,8 +186,8 @@ function labelStatus(s: string): string {
 		KONTRAK: "Kontrak",
 		CAPEG: "CPNS",
 		PEGAWAI: "Pegawai Tetap",
-		CALON_HONORER: "Calon Honorer",
 		HONORER: "Honorer",
+		CALON_HONORER: "Calon Honorer",
 		NON_PEGAWAI: "Non-Pegawai",
 	};
 	return map[s] ?? s;

@@ -51,6 +51,11 @@ interface DataTableProps<T> {
 	onResetFilter?: () => void;
 	toolbar?: React.ReactNode;
 	pagination?: React.ReactNode;
+	/**
+	 * Mode murni — hilangkan border/card-wrapper untuk embed di dalam card lain.
+	 * Default false = perilaku sekarang identik.
+	 */
+	bare?: boolean;
 }
 
 /** Render default cell — auto-detect boolean sebagai ikon check/uncheck. */
@@ -91,14 +96,17 @@ export function DataTable<T>({
 	onResetFilter,
 	toolbar,
 	pagination,
+	bare,
 }: DataTableProps<T>) {
 	const hasActions = !!(onEdit || onEditGaji || onDelete);
+	const cardCls = bare ? "flex flex-col" : "rounded-lg border bg-card shadow-md flex flex-col";
+	const cardStatic = bare ? "" : "rounded-lg border bg-card shadow-md";
 
 	if (isError) {
 		return (
 			<div>
 				{toolbar}
-				<div className="rounded-lg border bg-card shadow-md">
+				<div className={cardStatic}>
 					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
 						<div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
 							<AlertTriangle className="size-6 text-destructive" />
@@ -122,7 +130,7 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="rounded-lg border bg-card shadow-md flex flex-col">
+				<div className={cn(cardCls, bare && "")}>
 					<div className="overflow-auto flex-1">
 						<table className="w-full caption-bottom text-sm">
 							<thead className="[&_tr]:border-b">
@@ -173,7 +181,7 @@ export function DataTable<T>({
 		return (
 			<div>
 				{toolbar}
-				<div className="rounded-lg border bg-card shadow-md">
+				<div className={cardStatic}>
 					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
 						{isFiltered ? (
 							<>
@@ -202,7 +210,7 @@ export function DataTable<T>({
 	return (
 		<div>
 			{toolbar}
-			<div className="rounded-lg border bg-card shadow-md flex flex-col max-h-[75vh] relative p-1">
+			<div className={cn(cardCls, "max-h-[75vh] relative p-1", bare && "")}>
 				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
 						<thead className="sticky top-0 z-5 bg-card border-b-2 border-border">

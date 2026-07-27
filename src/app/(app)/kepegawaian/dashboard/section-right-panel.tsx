@@ -6,8 +6,12 @@ import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate } from "@/lib/utils";
 import type { Page } from "@/types/_shared";
+
+// ponytail: shared afordansi trigger className — hover bg + padding + chevron tint
+const ACCORDION_TRIGGER_AFF =
+	"px-5 py-3 hover:bg-muted/50 data-[state=open]:bg-muted/20 **:data-[slot=accordion-trigger-icon]:text-primary";
 
 // ponytail: helpers
 function t(s: unknown): string {
@@ -74,6 +78,15 @@ function hubunganKeluarga(s: unknown): string {
 		SAUDARA: "Saudara",
 	};
 	return map[val(s)] ?? val(s);
+}
+
+// ponytail: SP severity tint
+function spSeverity(s: unknown): string {
+	// ponytail: naive heuristic — SP3/P3/BERAT = destructive, SP2/P2 = warning, others = default
+	const raw = String(s ?? "").toLowerCase();
+	if (raw.includes("3") || raw.includes("berat")) return "text-destructive";
+	if (raw.includes("2") || raw.includes("sedang")) return "text-warning";
+	return "";
 }
 
 // ponytail: section column defs — one per section, used both in useQuery and rendering
@@ -184,7 +197,12 @@ const SECTIONS: SectionConf[] = [
 			{ id: "penghasilanKotor", header: "Penghasilan Kotor", cell: (r) => rp(r.penghasilanKotor) },
 			{ id: "totalPotongan", header: "Potongan", cell: (r) => rp(r.totalPotongan) },
 			{ id: "pajak", header: "Pajak", cell: (r) => rp(r.pajak) },
-			{ id: "penghasilanBersihFinal", header: "Penghasilan Bersih", cell: (r) => rp(r.penghasilanBersihFinal) },
+			{
+				id: "penghasilanBersihFinal",
+				header: "Penghasilan Bersih",
+				// ponytail: emphasis angka bersih — semantik actionable
+				cell: (r) => <span className="font-semibold text-foreground">{rp(r.penghasilanBersihFinal)}</span>,
+			},
 		],
 		isSingleItem: true,
 	},
@@ -194,7 +212,12 @@ const SECTIONS: SectionConf[] = [
 		buildUrl: (id, _, p) => `/api/proxy/kepegawaian/riwayat/sp/pegawai/${id}?${new URLSearchParams(p)}`,
 		columns: [
 			{ id: "nomorSp", header: "No. SP", primary: true },
-			{ id: "jenisSp", header: "Jenis SP", cell: (r) => t(r.jenisSp) },
+			{
+				id: "jenisSp",
+				header: "Jenis SP",
+				// ponytail: tint severity sebagai sinyal, bukan dekorasi
+				cell: (r) => <span className={cn(spSeverity(r.jenisSp), "font-medium")}>{t(r.jenisSp)}</span>,
+			},
 			{ id: "tanggalSp", header: "Tgl. SP", cell: (r) => formatDate(r.tanggalSp) },
 		],
 	},
@@ -341,17 +364,18 @@ export function SectionRightPanel({ pegawaiId, nik }: { pegawaiId: number; nik: 
 
 	return (
 		<div className="rounded-lg border bg-card shadow-sm">
-			<Accordion value={openValues} onValueChange={setOpenValues} multiple>
+			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
 				{SECTIONS.map((conf) => {
 					const q = queries[conf.id];
 					const s = sizeMap[conf.id] ?? 5;
 					const view = q.data;
 					return (
 						<AccordionItem key={conf.id} value={conf.id}>
-							<AccordionTrigger>{conf.label}</AccordionTrigger>
+							<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>{conf.label}</AccordionTrigger>
 							<AccordionContent>
 								{openValues.includes(conf.id) && (
 									<DataTable<Record<string, unknown>>
+										bare
 										columns={conf.columns}
 										data={view?.rows ?? []}
 										isLoading={q.isPending}
