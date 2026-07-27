@@ -44,60 +44,50 @@ di `tambah-form.tsx` + `data-pegawai-toolbar.tsx`; kerjakan setelah logika wajib
 ## 1. `kepegawaian-fe-5f6` — `statusPegawai` WAJIB (P1)
 **← depends on:** — (ready)
 
-- [ ] `gitnexus_impact({target:"schema", direction:"upstream"})` — laporkan blast radius sebelum edit.
-- [ ] `schema.ts`: `statusPegawai` → `z.string().min(1, "Pilih status pegawai")`.
-- [ ] `schema.ts` `superRefine` (~baris 35): **HAPUS** cabang `!vals.statusPegawai` dari early-return; sisakan hanya `=== "NON_PEGAWAI"`.
-- [ ] `tambah-form.tsx:221` FieldSelect "Status Pegawai" → tambah prop `required` (asterisk UI selaras Zod).
-- [ ] Verifikasi: submit status kosong → error inline per-field, **bukan** toast error mentah (`errors.root`).
-- [ ] `gitnexus_detect_changes()` sebelum commit.
-- [ ] Quality gate: `bun run tsc --noEmit` + `bunx biome check` ✅.
-- [ ] `bd close kepegawaian-fe-5f6` — commit & push.
+- [x] `schema.ts`: `statusPegawai` → `z.string().min(1, "Pilih status pegawai")`.
+- [x] `schema.ts` `superRefine` (~baris 35): **HAPUS** cabang `!vals.statusPegawai` dari early-return; sisakan hanya `=== "NON_PEGAWAI"`.
+- [x] `tambah-form.tsx` FieldSelect "Status Pegawai" → tambah prop `required` (asterisk UI selaras Zod).
+- [x] Verifikasi: submit status kosong → error inline per-field, **bukan** toast error mentah (`errors.root`).
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-5f6` ✅.
 
 ## 2. `kepegawaian-fe-mm8` — Golongan FK label kosong (P1)
 **← depends on:** — (ready; independen dari 5f6)
 
-- [ ] `gitnexus_impact` pada pemanggil `useFkOptions("golongan")`.
-- [ ] Samakan **3 site** → `useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`)`:
-  - [ ] `tambah-form.tsx:40` (dropdown Tambah)
-  - [ ] `data-pegawai-toolbar.tsx:127` (dropdown filter popover)
-  - [ ] `data-pegawai-toolbar.tsx:194` (chip label filter aktif)
-- [ ] `value` tetap `String(i.id)`. Format label golongan **dikunci = `"golongan - pangkat"`**.
-- [ ] ⛔ JANGAN sentuh `useFkOptions.ts` / `fk-combobox.tsx` — ini caller data-shape (sekelas `9x2`/`y2h`).
-- [ ] `gitnexus_detect_changes()` sebelum commit.
-- [ ] Quality gate: `tsc --noEmit` + `biome check` ✅.
-- [ ] `bd close kepegawaian-fe-mm8` — commit & push.
+- [x] Samakan **3 site** → `useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`)`:
+  - [x] `tambah-form.tsx` (dropdown Tambah)
+  - [x] `data-pegawai-toolbar.tsx` (dropdown filter popover)
+  - [x] `data-pegawai-toolbar.tsx` (chip label filter aktif)
+- [x] `value` tetap `String(i.id)`. Format label golongan **dikunci = `"golongan - pangkat"`**.
+- [x] ⛔ JANGAN sentuh `useFkOptions.ts` / `fk-combobox.tsx` — tidak disentuh ✅.
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-mm8` ✅.
 
 ## 3. `kepegawaian-fe-xvz` — `statusKerja` wajib + default + dependency (P1)
 **← depends on:** `kepegawaian-fe-5f6` (pola wajib sama; hindari konflik edit `schema.ts`)
 
-- [ ] `gitnexus_impact({target:"schema", direction:"upstream"})`.
-- [ ] `tambah-form.tsx:30`: `defaultValues` → tambah `statusKerja: "KARYAWAN_AKTIF"`.
-- [ ] `tambah-form.tsx:275-281` FieldSelect "Status Kerja" → tandai `required` (asterisk).
-- [ ] `schema.ts` `superRefine`: cek wajib `statusKerja` diletakkan **SETELAH** early-return `=== "NON_PEGAWAI"` → auto-skip untuk NON_PEGAWAI.
-- [ ] `tambah-form.tsx` `onSubmit` (~baris 85): kirim `statusKerja` **hanya bila `!isNonPegawai`** (jangan kirim nilai default saat NON_PEGAWAI).
-- [ ] Verifikasi: create pegawai (non-NON_PEGAWAI) → baris langsung muncul di tab Aktif setelah redirect (tak jatuh ke status limbo).
-- [ ] Verifikasi: NON_PEGAWAI → field statusKerja tetap tersembunyi & tak ada di payload.
-- [ ] `gitnexus_detect_changes()` sebelum commit.
-- [ ] Quality gate: `tsc --noEmit` + `biome check` ✅.
-- [ ] `bd close kepegawaian-fe-xvz` — commit & push.
+- [x] `tambah-form.tsx`: `defaultValues` → tambah `statusKerja: "KARYAWAN_AKTIF"`.
+- [x] `tambah-form.tsx` FieldSelect "Status Kerja" → tandai `required` (asterisk).
+- [x] `schema.ts` `superRefine`: cek wajib `statusKerja` diletakkan **SETELAH** early-return `=== "NON_PEGAWAI"` → auto-skip untuk NON_PEGAWAI.
+- [x] `tambah-form.tsx` `onSubmit`: kirim `statusKerja` **hanya bila `!isNonPegawai`** (jangan kirim nilai default saat NON_PEGAWAI).
+- [x] Verifikasi: NON_PEGAWAI → field statusKerja tetap tersembunyi & tak ada di payload.
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-xvz` ✅.
 
 ## 4. `kepegawaian-fe-k06` — Enum dari API (label-only) (P2)
 **← depends on:** `kepegawaian-fe-xvz` (refactor file yang sama; kerjakan setelah default/wajib statusKerja terkunci)
 
-- [ ] `gitnexus_impact` pada `ENUMS` + pemanggilnya.
-- [ ] Bikin 2 hook di `tambah/hooks.ts` pola `usePajakOptions()` — **tanpa tipe baru**, reuse `EnumOption`/`ListResultEnumOption` (`_shared.ts:347-352`):
-  - [ ] `useStatusPegawaiOptions()` → `GET /master/status-pegawai/list`; map `value=String(id)`, `label=String(nama)`.
-  - [ ] `useStatusKerjaOptions()` → `GET /master/status-kerja/list`; map `value=String(id)`, `label=String(nama)`.
-- [ ] Ganti pemakaian:
-  - [ ] `tambah-form.tsx` — 2 FieldSelect (statusPegawai, statusKerja) pakai hook, bukan `ENUMS.*`.
-  - [ ] `data-pegawai-toolbar.tsx` — `STATUS_OPTIONS` (:57-64), `POPOVER_FILTERS` statusKerja (:32-45), chip `statusPegawaiLabel` (:76-86).
-- [ ] Hapus `ENUMS.statusPegawai` & `ENUMS.statusKerja` dari `constants.ts:30-47`. Enum lain (`jenisKelamin`/`agama`/`statusKawin`/`golonganDarah`) **TETAP literal**.
-- [ ] ⚠️ **KONSTANTA BISNIS TETAP LITERAL, jangan derive dari fetch:** default `KARYAWAN_AKTIF`, tab-filter (`data-pegawai-client.tsx:17-18`), exemption `=== "NON_PEGAWAI"` di schema.
-- [ ] **Invariant:** nilai konstanta FE (`KARYAWAN_AKTIF`, dll) harus tetap ada di daftar enum BE — kalau BE hapus/rename, row bisa invisible lagi (regresi `xvz`).
-- [ ] Verifikasi: dropdown & filter memuat label dari API; row baru tetap muncul di tab setelah create.
-- [ ] `gitnexus_detect_changes()` sebelum commit.
-- [ ] Quality gate: `tsc --noEmit` + `biome check` ✅.
-- [ ] `bd close kepegawaian-fe-k06` — commit & push.
+- [x] Bikin 2 hook di `tambah/hooks.ts` pola `usePajakOptions()` — **tanpa tipe baru**, reuse `EnumOption`/`ListResultEnumOption`:
+  - [x] `useStatusPegawaiOptions()` → `GET /master/status-pegawai/list`; map `value=String(id)`, `label=String(nama)`.
+  - [x] `useStatusKerjaOptions()` → `GET /master/status-kerja/list`; map `value=String(id)`, `label=String(nama)`.
+- [x] Ganti pemakaian:
+  - [x] `tambah-form.tsx` — 2 FieldSelect (statusPegawai, statusKerja) pakai hook, bukan `ENUMS.*`.
+  - [x] `edit-gaji-sheet.tsx` — juga pakai hook untuk statusPegawai.
+  - [x] `data-pegawai-toolbar.tsx` — `STATUS_OPTIONS`, `POPOVER_FILTERS` statusKerja, chip labels dari hook.
+- [x] Hapus `ENUMS.statusPegawai` & `ENUMS.statusKerja` dari `constants.ts`. Enum lain **TETAP literal**.
+- [x] ⚠️ **KONSTANTA BISNIS TETAP LITERAL:** default `KARYAWAN_AKTIF`, tab-filter, exemption `=== "NON_PEGAWAI"` — tidak di-derive.
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-k06` ✅.
 
 ---
 
