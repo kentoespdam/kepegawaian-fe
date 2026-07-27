@@ -13,16 +13,16 @@
 - Pages & Routing
 - Sidebar & Navigation
 - Auth & Session
-- UI Primitives (Table, Avatar)
+- UI Primitives
 - Master Entity Config
-- Pegawai Types & Hooks
+- Pegawai Types
 - Tambah Pegawai Form
-- Data Pegawai Toolbar & Filter
+- Data Pegawai Toolbar
 - Edit Profil / Gaji Sheet
-- Ringkasan Panel & Actions
+- Ringkasan Panel
 - Sanksi & Badge Manager
-- CRUD Form & Confirm Delete
-- Paging & Utils
+- CRUD
+- Paging
 - FK Combobox
 - Community 14
 - Community 15
@@ -101,7 +101,7 @@ Nodes (37): DashboardClient(), DashboardPage(), labelAgama(), labelJk(), labelKa
 Cohesion: 0.07
 Nodes (45): MasterEntityName, MasterEntityTypes, AlasanBerhentiListResponse, AlasanBerhentiPostRequest, AlasanBerhentiQuery, AlasanBerhentiSearchParams, ListResultAlasanBerhentiListResponse, PageAlasanBerhentiQuery (+37 more)
 
-### Community 3 - "UI Primitives (Table, Avatar)"
+### Community 3 - "UI Primitives"
 Cohesion: 0.07
 Nodes (39): AppShell(), MODULE_ENTITY_MAP, MODULES, SheetDescription(), Sidebar(), SidebarContent(), SidebarContext, SidebarContextProps (+31 more)
 
@@ -109,7 +109,7 @@ Nodes (39): AppShell(), MODULE_ENTITY_MAP, MODULES, SheetDescription(), Sidebar(
 Cohesion: 0.06
 Nodes (43): LampiranSkAcceptRequest, LampiranSkPostRequest, ListResultLampiranSkQuery, AlasanBerhentiResponse, JenisAksiKontrak, JenisRiwayatKepegawaian, ListResultRiwayatSkQuery, PagePegawaiResponse (+35 more)
 
-### Community 5 - "Pegawai Types & Hooks"
+### Community 5 - "Pegawai Types"
 Cohesion: 0.10
 Nodes (23): ChangePasswordForm(), Data, schema, Data, LoginForm(), schema, CrudFormProps, Button() (+15 more)
 
@@ -117,7 +117,7 @@ Nodes (23): ChangePasswordForm(), Data, schema, Data, LoginForm(), schema, CrudF
 Cohesion: 0.07
 Nodes (30): BatchSearchParams, GajiBatchMasterPostRequest, GajiBatchMasterProsesPostRequest, GajiBatchMasterProsesResponse, GajiBatchRootErrorLogsResponse, GajiBatchRootLampiranMiniResponse, GajiBatchRootPostRequest, GajiBatchRootProcessRequest (+22 more)
 
-### Community 7 - "Data Pegawai Toolbar & Filter"
+### Community 7 - "Data Pegawai Toolbar"
 Cohesion: 0.14
 Nodes (21): ADR-0001, Can(), appwriteRequest(), fetchAccount(), mintCache, mintJWT(), readSession(), sessionCookieNames() (+13 more)
 
@@ -125,7 +125,7 @@ Nodes (21): ADR-0001, Can(), appwriteRequest(), fetchAccount(), mintCache, mintJ
 Cohesion: 0.10
 Nodes (21): Avatar(), AvatarBadge(), AvatarFallback(), AvatarGroup(), AvatarGroupCount(), AvatarImage(), DropdownMenu(), DropdownMenuCheckboxItem() (+13 more)
 
-### Community 9 - "Ringkasan Panel & Actions"
+### Community 9 - "Ringkasan Panel"
 Cohesion: 0.13
 Nodes (24): Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage(), BreadcrumbSeparator(), Popover() (+16 more)
 
@@ -133,11 +133,11 @@ Nodes (24): Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink
 Cohesion: 0.12
 Nodes (26): CutiApprovalMiniResponse, CutiApprovalPostRequest, PageCutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse, CutiApprovalChainResponse, CutiPengajuanKlaimPostRequest, CutiPengajuanMiniResponse, CutiPengajuanPostRequest (+18 more)
 
-### Community 11 - "CRUD Form & Confirm Delete"
+### Community 11 - "CRUD"
 Cohesion: 0.13
 Nodes (18): EntityFormModal(), SanksiForm(), SanksiFormProps, sanksiDefaults(), SanksiFormValues, sanksiSchema, SWITCH_LABELS, SwitchField (+10 more)
 
-### Community 12 - "Paging & Utils"
+### Community 12 - "Paging"
 Cohesion: 0.10
 Nodes (19): BadgeItem, BadgeManager(), BadgeManagerProps, badgeSchema, ConfirmDeleteDialog(), CrudForm(), Badge(), badgeVariants (+11 more)
 
@@ -292,7 +292,7 @@ Nodes (6): KartuIdentitasDetail, KeahlianDetail, ProfilKeluargaDetail, Pelatihan
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `Ringkasan Panel & Actions` to `Sidebar & Navigation`, `UI Primitives (Table, Avatar)`, `Pegawai Types & Hooks`, `Community 37`, `Edit Profil / Gaji Sheet`, `Community 43`, `Paging & Utils`, `CRUD Form & Confirm Delete`, `Community 14`, `Community 18`, `Community 25`, `Community 28`?**
+- **Why does `cn()` connect `Ringkasan Panel` to `Sidebar & Navigation`, `UI Primitives`, `Pegawai Types`, `Community 37`, `Edit Profil / Gaji Sheet`, `Community 43`, `Paging`, `CRUD`, `Community 14`, `Community 18`, `Community 25`, `Community 28`?**
   _High betweenness centrality (0.243) - this node is a cross-community bridge._
 - **Why does `Page` connect `Community 15` to `Pages & Routing`, `Auth & Session`, `Master Entity Config`, `Tambah Pegawai Form`, `Sanksi & Badge Manager`, `FK Combobox`, `Community 16`, `Community 19`, `Community 20`, `Community 21`, `Community 22`, `Community 24`, `Community 26`, `Community 27`, `Community 29`, `Community 30`, `Community 31`, `Community 32`, `Community 33`, `Community 34`, `Community 35`, `Community 36`, `Community 39`, `Community 40`, `Community 41`, `Community 42`, `Community 44`, `Community 45`, `Community 46`?**
   _High betweenness centrality (0.104) - this node is a cross-community bridge._
