@@ -95,7 +95,16 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   `forceMount`). Salah asumsi Radix = bug diam.
 - **Tambah komponen shadcn = WAJIB lewat CLI** (`npx shadcn add <komponen>`), **JANGAN** tulis file
   komponen manual sendiri. CLI menarik versi resmi dari registry Base UI (prop/struktur benar,
-  konsisten). Setelah `add`, kustomisasi seperlunya di file hasil generate — bukan bikin dari nol.
+  konsisten).
+- **DILARANG edit manual file hasil generate di `src/components/ui/*`.** `npx shadcn add`/update akan
+  **menimpa** file itu → kustomisasi manual hilang senyap. File `ui/*` = zona regenerable, perlakukan
+  seperti vendor code. Butuh tampilan beda? **Override lewat `className` dari call-site** — komponen
+  shadcn sudah merge `cn(<default>, className)` (tailwind-merge), jadi kelas dari pemanggil menang
+  tanpa menyentuh file generate; elemen internal (mis. ikon `data-slot=...`) ditarget via arbitrary
+  variant `**:data-[slot=...]:<kelas>` di className yang sama. Bila override tersebar di banyak
+  call-site, angkat jadi **konstanta className** atau **wrapper tipis di `src/components/`** (di LUAR
+  `ui/`) — bukan mengedit `ui/*`. (Menggantikan aturan lama "kustomisasi di file generate"; sinkron
+  dengan §1: `components/ui/*` exempt total.)
 - Dialog/Sheet content **lazy by default** — manfaatkan (jangan paksa mount).
 
 ---

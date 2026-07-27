@@ -126,10 +126,15 @@ Keputusan (semua mengubah tampilan, sebagian menyentuh komponen shared → blast
   seluruh page master + kepegawaian).** Prop additive + default `false` → 22 caller lain tak
   berubah; hanya panel kanan dashboard kirim `bare`. *Syarat mengikat agen: JANGAN ubah cabang
   render lama; default WAJIB preservasi perilaku sekarang.*
-- **Afordansi trigger accordion diperkuat** di `src/components/ui/accordion.tsx`: beri cue resting
-  yang jelas (mis. hover background + chevron lebih menonjol/ter-tint + padding horizontal), tak
-  cuma `hover:underline`. **`AccordionTrigger` = simbol LOW (hanya 2 panel dashboard yang pakai)**
-  → perubahan visual tak merembet ke modul lain.
+- **Afordansi trigger accordion diperkuat — TANPA mengedit file generate.** `accordion.tsx` ada di
+  `src/components/ui/*` = zona regenerable shadcn; mengeditnya berisiko **tertimpa** saat
+  `npx shadcn add`/update (aturan baru, lihat [coding-rules §3](../design/coding-rules.md)). Karena
+  `AccordionTrigger` sudah merge `cn(<default>, className)`, cue resting (hover background + padding
+  horizontal + chevron ter-tint via `**:data-[slot=accordion-trigger-icon]:text-…`) di-**inject lewat
+  `className` dari call-site**, bukan diubah di file generate. Semua nilai dipusatkan pada **satu
+  konstanta className** di folder dashboard, di-pass ke setiap `<AccordionTrigger className={…}>` di
+  `section-left-panel.tsx` & `section-right-panel.tsx`. Efek: scope benar-benar dashboard-only (bukan
+  sekadar "LOW blast global"), nol sentuhan `ui/*`.
 - **Coloring semantik ~10–20% (planogram 60:30:10, reuse token yang ADA — bukan asal tambah warna):**
   - **Aksen brand di focal point** — avatar header panel kiri `bg-muted` (abu) → `bg-primary/10
     text-primary`. Titik fokus eye-level dapat ~10% aksen brand Evergreen.
@@ -143,5 +148,30 @@ Keputusan (semua mengubah tampilan, sebagian menyentuh komponen shared → blast
     **mengonsumsi** token, tak menambah warna baru → invariant 60:30:10 & kontras dark-mode terjaga.
 
 Delegasi implementasi: beads **W7** (epic `kepegawaian-fe-o1o`), Manager tak ngoding `src/`.
-Blast diukur via `gitnexus_impact`: `DataTable` = CRITICAL (mitigasi: prop additive default-preserve),
-`AccordionTrigger` = LOW.
+Blast diukur via `gitnexus_impact`: `DataTable` = CRITICAL (mitigasi: prop additive default-preserve).
+Afordansi trigger: **nol perubahan simbol** — hanya className call-site di 2 file dashboard, `ui/*`
+tak disentuh (batasan baru: file generate shadcn dilarang diedit, overwrite-risk).
+
+## Addendum (2026-07-27) — bug responsif: tabel lebar jebolkan layout (grid `min-width:auto`)
+
+Setelah render 2-panel, data lebar di panel kanan (mis. nama pelatihan panjang) **mendorong kolom
+keluar viewport** → overflow horizontal merusak seluruh halaman.
+
+**Root cause — bukan bug `DataTable`.** `DataTable` sudah punya `overflow-auto`
+(`src/components/data-table.tsx:206`); yang salah ada di **grid parent**. Setiap grid item punya
+default `min-width: auto` → **menolak menyusut di bawah lebar min-content anaknya**. Track
+`lg:grid-cols-[38fr_62fr]` melar melewati jatahnya mengikuti tabel lebar → layout ke-dorong.
+`overflow-auto` DataTable tak pernah aktif karena batas lebar **tak pernah turun** dari atas —
+tersumbat di grid item paling atas. Rantai: grid item (`min-width:auto` ❌) → card → Accordion →
+`AccordionContent`(`overflow-hidden`) → card DataTable (`overflow-auto`, tak pernah nyala).
+
+**Keputusan (dari 3 opsi):** *scroll di dalam tabel* — bukan truncate+tooltip, bukan responsive-
+stack. Alasan: paling selaras dengan desain `DataTable` yang **sudah** ber-`overflow-auto`; fix cuma
+"membuka keran" yang tersumbat, bukan menambah perilaku baru. Truncate/stack = ubah cell rendering di
+komponen 23-konsumen → blast besar untuk bug lokal.
+
+**Fix (root cause, 1 baris, nol perubahan simbol):** tambah `min-w-0` ke kedua grid item di
+`dashboard-client.tsx:16` → `className="grid gap-5 lg:grid-cols-[38fr_62fr] lg:items-start [&>*]:min-w-0"`.
+`[&>*]:min-w-0` set `min-width:0` pada kedua panel → track `62fr` berhenti melar → batas lebar turun
+ke DataTable → `overflow-auto` nyala → scrollbar horizontal muncul **di dalam** kartu tabel, layout
+luar utuh. **Tak menyentuh `DataTable`, tak menyentuh `ui/*`.** Issue: `kepegawaian-fe-u8lv` (🔴 P1).

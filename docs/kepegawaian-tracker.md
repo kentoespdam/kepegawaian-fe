@@ -122,7 +122,7 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 |---|----|-------|---|-----------|------|
 | **W7** | `kepegawaian-fe-pad` | Padding panel kanan: `<Accordion className="px-5 py-1">` di `section-right-panel.tsx` | P2 | — (ready) | LOW |
 | **W7** | `kepegawaian-fe-bar` | `DataTable` prop opt-in `bare` (tanpa border/shadow) + panel kanan kirim `bare` | P2 | — (ready) | 🔴 CRITICAL |
-| **W7** | `kepegawaian-fe-aff` | Afordansi trigger accordion (`accordion.tsx`): hover bg + chevron menonjol + padding | P2 | — (ready) | LOW |
+| **W7** | `kepegawaian-fe-aff` | Afordansi trigger via **konstanta className** di 2 file dashboard (BUKAN edit `accordion.tsx`): hover bg + chevron tint + padding | P2 | — (ready) | LOW |
 | **W7** | `kepegawaian-fe-clr` | Coloring semantik: aksen brand avatar + badge status + tint SP + emphasis Penghasilan Bersih | P2 | pad, bar, aff | LOW |
 | **W7** | `kepegawaian-fe-ver` | Uji visual (warna/kontras dark-mode, no card-in-card) + responsif lintas resolusi | P2 | semua di atas | LOW |
 
@@ -141,9 +141,11 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 - [ ] `npx tsc` hijau; body accordion tak lagi "terpotong" (border ganda hilang)
 
 #### `kepegawaian-fe-aff` — Afordansi trigger (🟢 LOW, dashboard-only)
-- [ ] `accordion.tsx` `AccordionTrigger`: cue resting jelas (hover background + chevron lebih menonjol/ter-tint + padding horizontal), tak cuma `hover:underline`
+- [ ] **DILARANG edit `src/components/ui/accordion.tsx`** (zona regenerable shadcn — overwrite-risk saat `shadcn add`/update). Lihat [coding-rules §3](design/coding-rules.md).
+- [ ] Buat **1 konstanta className** (mis. `ACCORDION_TRIGGER_AFF`) di folder dashboard, di-pass ke tiap `<AccordionTrigger className={…}>` di `section-left-panel.tsx` (2 trigger) & `section-right-panel.tsx` (1 trigger di map)
+- [ ] Isi konstanta: hover background + padding horizontal + chevron ter-tint via `**:data-[slot=accordion-trigger-icon]:text-…` (merge otomatis via `cn(<default>, className)`)
 - [ ] Fokus keyboard (`focus-visible:ring`) tetap; kontras cukup light & dark
-- [ ] `npx tsc` hijau
+- [ ] `npx tsc` hijau; `gitnexus_detect_changes` scope hanya 2 file dashboard (`ui/*` tak disentuh)
 
 #### `kepegawaian-fe-clr` — Coloring semantik (reuse token, 60:30:10)
 - [ ] Avatar header `section-left-panel.tsx`: `bg-muted` → `bg-primary/10 text-primary`
@@ -157,6 +159,35 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 - [ ] Tak ada card-in-card; body accordion penuh (tak terpotong)
 - [ ] `≥lg` 2 kolom, `<lg` stack; tak ada overflow horizontal (termasuk penggajian 6 kolom)
 - [ ] `npx tsc` & `biome check` lulus — tidak ada regresi
+
+## W8 — Bug responsif: tabel lebar jebolkan layout (epic `kepegawaian-fe-o1o`)
+
+> User lapor: data lebar di panel kanan (nama pelatihan panjang) **mendorong kolom keluar
+> viewport** → overflow horizontal merusak seluruh halaman. ADR:
+> [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md) §Addendum bug responsif.
+>
+> **Root cause = bukan `DataTable`.** `DataTable` sudah punya `overflow-auto` (`data-table.tsx:206`).
+> Yang salah: grid item default `min-width:auto` → menolak menyusut di bawah min-content anaknya →
+> track `62fr` melar mengikuti tabel lebar → batas lebar tak pernah turun ke `DataTable`, jadi
+> `overflow-auto`-nya tak pernah nyala. Rantai: grid item (`min-width:auto` ❌) → card → Accordion →
+> `AccordionContent`(`overflow-hidden`) → card DataTable (`overflow-auto`, mati).
+>
+> **Keputusan** (dari 3 opsi): *scroll di dalam tabel* — bukan truncate+tooltip, bukan responsive-
+> stack (dua opsi terakhir mengubah cell rendering `DataTable` 23-konsumen → blast besar utk bug lokal).
+
+| # | ID | Judul | P | Prasyarat | Risk |
+|---|----|-------|---|-----------|------|
+| **W8** | `kepegawaian-fe-u8lv` | Fix responsif: `[&>*]:min-w-0` di grid parent `dashboard-client.tsx:16` (buka keran `overflow-auto` DataTable) | P1 | — (ready) | 🟢 LOW |
+
+### Checklist acceptance — W8
+
+#### `kepegawaian-fe-u8lv` — Fix responsif tabel lebar (nol perubahan simbol)
+- [ ] `dashboard-client.tsx:16`: tambah `[&>*]:min-w-0` → `className="grid gap-5 lg:grid-cols-[38fr_62fr] lg:items-start [&>*]:min-w-0"`
+- [ ] **DILARANG sentuh `DataTable` (`src/components/data-table.tsx`)** — sudah ber-`overflow-auto`, tak perlu diubah (23 konsumen, CRITICAL)
+- [ ] **DILARANG sentuh `src/components/ui/*`** (zona regenerable shadcn)
+- [ ] Verifikasi `≥lg`: tabel lebar → scrollbar horizontal muncul **di dalam** kartu tabel; layout luar utuh, tak ada overflow viewport
+- [ ] Verifikasi `<lg`: stack, tak ada overflow horizontal
+- [ ] `npx tsc` hijau; `gitnexus_detect_changes` scope **hanya** `dashboard-client.tsx`
 
 ## Checklist acceptance
 

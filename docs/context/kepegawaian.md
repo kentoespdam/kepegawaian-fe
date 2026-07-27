@@ -75,8 +75,10 @@ Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa
   saat panel kanan me-render tabel di dalam accordion, kirim `bare` supaya tabel tak menggambar
   border/shadow/card sendiri → body accordion tak lagi terkesan "terpotong". Konsumen `DataTable`
   lain (page master, data, terminasi) **tak berubah** (default preservasi perilaku).
-- **Afordansi trigger accordion diperkuat** (`accordion.tsx`): cue resting jelas (hover bg + chevron
-  menonjol + padding horizontal), tak cuma `hover:underline` → area jelas terlihat bisa diklik.
+- **Afordansi trigger accordion diperkuat** via **className call-site** (BUKAN edit `accordion.tsx` —
+  file generate shadcn dilarang diedit, overwrite-risk): satu konstanta className di folder dashboard
+  di-pass ke tiap `<AccordionTrigger>` → cue resting jelas (hover bg + chevron ter-tint + padding
+  horizontal), tak cuma `hover:underline`. Scope dashboard-only.
 - **Warna semantik ~10–20% (60:30:10, reuse token OKLCH `globals.css`):** aksen brand
   `bg-primary/10 text-primary` di avatar header (focal point); badge status semantik (Status Kerja
   Aktif→`success`, Berhenti→`destructive`/`muted`, Dirumahkan→`warning`); section SP tint
