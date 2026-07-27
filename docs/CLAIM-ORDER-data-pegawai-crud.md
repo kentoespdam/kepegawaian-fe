@@ -43,6 +43,7 @@ kondisional apa pun. Sudah diverifikasi vs `api.json` (array `required` = 12 fie
 `nik, nama, jenisKelamin, tempatLahir, tanggalLahir, alamat, agama, ibuKandung, nipam, jabatanId, organisasiId, kodePajakId`.
 
 **Aturan implementasi (superRefine):**
+- **`statusPegawai` WAJIB dipilih** (tak boleh kosong). User harus mengklasifikasi orangnya lebih dulu — tak ada cabang "kosong". *(Keputusan grill 2026-07-27 — lihat REVISI #2; issue `kepegawaian-fe-5f6`.)*
 - **Status berkepegawaian** (KONTRAK/CAPEG/PEGAWAI/CALON_HONORER/HONORER): wajibkan **12 field kontrak** di atas.
 - **NON_PEGAWAI**: **relax** `jabatanId` / `organisasiId` / `kodePajakId` jadi optional **+ sembunyikan seksi Kepegawaian**.
 
@@ -194,6 +195,65 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 `data-table.tsx` **TAK disentuh**. Tab Non-pegawai tak berubah.
 
 ---
+
+## 🔄 REVISI #2 (2026-07-27) — Periksa ulang: `statusPegawai` wajib + golongan label
+
+> Hasil "periksa ulang hasil grilling tambah data pegawai". Dua deviasi ditemukan antara
+> implementasi terkirim vs keputusan terkunci. Keduanya dikunci sbg keputusan baru.
+
+1. **`statusPegawai` WAJIB** (issue `kepegawaian-fe-5f6`, P1). Cabang "kosong" tak pernah
+   diputuskan saat grill awal & implementasi jatuh ke celah salah: `schema.ts:35` early-return
+   `!vals.statusPegawai` membuat status kosong lolos tanpa validasi 3 FK, padahal `isPegawai`
+   default `true` + seksi FK tampil bertanda wajib → BE tolak dgn error mentah. Fix: `statusPegawai`
+   `.min(1)` + asterisk UI; buang cabang `!statusPegawai` dari early-return (sisakan `=== NON_PEGAWAI`).
+2. **Golongan FK label kosong di 3 site** (issue `kepegawaian-fe-mm8`, P1). `useFkOptions("golongan")`
+   dipanggil tanpa `labelFn` di `tambah-form.tsx:40`, `data-pegawai-toolbar.tsx:127` & `:194`.
+   `GolonganListResponse={id,golongan,pangkat}` tak punya `nama` → baris blank (identik bug grade `y2h`).
+   Fix: `labelFn (i)=>`${i.golongan} - ${i.pangkat}``. Format label golongan **dikunci = `"golongan - pangkat"`**.
+
+3. **`statusKerja` WAJIB + default `KARYAWAN_AKTIF`** (issue `kepegawaian-fe-xvz`, P1). Tab list
+   di-*hard-filter* by `statusKerja` (`data-pegawai-client.tsx:17-18`: Aktif=`KARYAWAN_AKTIF`,
+   Non-aktif=`BERHENTI_OR_KELUAR`). Pegawai baru dgn `statusKerja` kosong (field tak `required`,
+   `tambah-form.tsx:275-281`) tak cocok tab manapun → baris **tak terlihat** setelah redirect meski
+   simpan sukses ("ke mana data saya?"). Fix: `defaultValues.statusKerja = "KARYAWAN_AKTIF"` + tandai
+   wajib (asterisk + schema). Field tetap bisa diubah utk kasus pipeline rekrutmen. **Dikunci = default
+   Aktif**, sejalan dgn keputusan `statusPegawai` wajib (#1) — create tak boleh jatuh ke status limbo.
+
+4. **`statusKerja` BERGANTUNG pada `statusPegawai`** (issue `kepegawaian-fe-xvz`, gabung dgn #3).
+   Aturan dikunci: `statusPegawai === "NON_PEGAWAI"` → `statusKerja` **optional** (field tersembunyi,
+   TIDAK dikirim ke payload); selain itu → **wajib** (default `KARYAWAN_AKTIF`). Ini pola identik
+   dgn *relax-3-FK* NON_PEGAWAI (jabatan/organisasi/kodePajak). Implementasi: cek wajib `statusKerja`
+   diletakkan di `schema.ts` `superRefine` **setelah** early-return `=== NON_PEGAWAI` (baris ~35) →
+   otomatis ter-skip utk NON_PEGAWAI; dan di `tambah-form.tsx` `onSubmit`, kirim `statusKerja` hanya
+   bila `!isNonPegawai` (field sudah tersembunyi di dalam blok `{!isNonPegawai && ...}`, tinggal
+   selaraskan payload agar tak mengirim nilai default saat NON_PEGAWAI).
+
+5. **Enum `statusPegawai`/`statusKerja` di-*fetch* dari API — label-only** (issue `kepegawaian-fe-k06`, P2).
+   Endpoint nyata ada: `GET /master/status-pegawai/list` (`ListResultStatusPegawaiResponse` →
+   `{id,nama,urut}`) & `GET /master/status-kerja/list` (`ListResultEnumOption` → `{id,nama}`), keduanya
+   `Envelope<[...]>` shape `{data:[...]}`. Mapping: `value=String(id)`, `label=String(nama)` — persis pola
+   `usePajakOptions()` (`hooks.ts`). **Tak bikin tipe baru**: `EnumOption` & `ListResultEnumOption` sudah
+   ada di `_shared.ts:347-352`. Ganti `ENUMS.statusPegawai`/`ENUMS.statusKerja` (`constants.ts:30-47`) →
+   2 hook fetch, dipakai di `tambah-form.tsx` (dropdown) + `data-pegawai-toolbar.tsx` (STATUS_OPTIONS `:57-64`
+   & POPOVER_FILTERS statusKerja `:32-45`, plus chip-label map `statusPegawaiLabel` `:76-86`).
+   **Scope = LABEL-ONLY (opsi A, dikunci):** konstanta bisnis tetap literal & TIDAK di-derive dari fetch —
+   default `KARYAWAN_AKTIF`, tab-filter (`data-pegawai-client.tsx:17-18`) Aktif/Non-aktif, exemption
+   `=== "NON_PEGAWAI"` di schema. Sumber kebenaran nilai enum tetap `StatusKepegawaian`/`StatusBerhenti`
+   (`_shared.ts`). Enum lain (`jenisKelamin`/`agama`/`statusKawin`/`golonganDarah`) TETAP literal — tak ada
+   endpoint. Risiko: bila BE hapus/rename nilai enum yang jadi konstanta FE (mis. `KARYAWAN_AKTIF`), dropdown
+   ikut berubah tapi tab-filter/default tidak → row bisa invisible lagi (regresi `xvz`). Diterima sbg
+   invariant: **nilai konstanta FE harus tetap ada di daftar enum BE.**
+
+**Terverifikasi BENAR (tak ada aksi):**
+- **Invalidasi cache** — list pakai key `["/api/proxy/pegawai", params]` (`data-pegawai-client.tsx:93`),
+  invalidasi pakai prefix `["/api/proxy/pegawai"]` (`tambah-form.tsx:108`) → prefix-match TanStack cocok
+  utk kedua tab. Baris baru muncul setelah redirect. Pola sama di edit-profil & edit-gaji sheet.
+- **`statusKerja` = `StatusBerhenti`** — `constants.ts:38-47` cocok persis dgn `_shared.ts:120-128` (8 nilai).
+  Nilai pipeline rekrutmen (`LAMARAN_BARU`/`TAHAP_SELEKSI`/`DITOLAK`) di form Tambah = sesuai kontrak, bukan bug.
+- **Payload lengkap 28 field** — `tambah-form.tsx:67-96` mencakup semua field `PegawaiPostRequest`; tak ada yang hilang.
+- **Payload tetap `Record<string, unknown>` (keputusan grill 2026-07-27):** *biarkan apa adanya*. Risiko drift kontrak
+  (BE tambah/rename field → hilang diam-diam, tanpa error TS — sekelas `master-config-fields-must-mirror-postrequest`)
+  **diterima & didokumentasikan**. Tak ada anotasi `PegawaiPostRequest`/`satisfies`/test guard. Jangan re-litigasi.
 
 ## Invarian yang tak boleh dilanggar
 
