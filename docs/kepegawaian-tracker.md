@@ -45,10 +45,10 @@ zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
 
 | # | ID | Judul | P | Prasyarat |
 |---|----|-------|---|-----------|
-| **W5** | `kepegawaian-fe-zb6` | Komponen Base UI Accordion (`src/components/ui/accordion.tsx`) | P1 | — (ready) |
-| **W5** | `kepegawaian-fe-lhg` | Panel kiri: header identitas + accordion Data Pribadi & Kepegawaian | P2 | zb6 |
-| **W5** | `kepegawaian-fe-bpk` | Panel kanan: accordion Riwayat multi-open lazy-fetch (9 section + SP) | P2 | zb6 |
-| **W5** | `kepegawaian-fe-r96` | Layout 2 panel responsif + uji lintas resolusi | P2 | lhg + bpk |
+| **W5** | ~~`kepegawaian-fe-zb6`~~ | ✅ Komponen Base UI Accordion (`src/components/ui/accordion.tsx`) | P1 | — (ready) |
+| **W5** | ~~`kepegawaian-fe-lhg`~~ | ✅ Panel kiri: header identitas + accordion Data Pribadi & Kepegawaian | P2 | zb6 |
+| **W5** | ~~`kepegawaian-fe-bpk`~~ | ✅ Panel kanan: accordion Riwayat multi-open lazy-fetch (10 section + SP) | P2 | zb6 |
+| **W5** | ~~`kepegawaian-fe-r96`~~ | ✅ Layout 2 panel responsif + uji lintas resolusi | P2 | lhg + bpk |
 
 ## Checklist acceptance
 
@@ -95,6 +95,31 @@ zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
 ### ~~`9cm` — Sidebar~~ ✅
 - [x] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
 - [x] Grup tanpa entity view-able tak dirender; ikon hanya di baris grup; rail tetap 6 modul
+
+### ~~`zb6` — Base UI Accordion~~ ✅
+- [x] `src/components/ui/accordion.tsx` di-add via `npx shadcn add accordion` (Base UI)
+- [x] Export `Accordion/AccordionItem/AccordionTrigger/AccordionContent` dengan `multiple` prop
+- [x] `npx tsc` hijau
+
+### ~~`lhg` — Panel kiri~~ ✅
+- [x] Header identitas: foto read-only (`fotoProfil` dari biodata) + nama + NIPAM + jabatan
+- [x] Accordion Data Pribadi: fetch `/profil/biodata/{nik}`
+- [x] Accordion Data Kepegawaian: dari `PegawaiResponseDetail` (status, jabatan, organisasi, golongan, grade, tmt*, masa kerja, gaji pokok)
+- [x] `npx tsc` hijau
+
+### ~~`bpk` — Panel kanan~~ ✅
+- [x] Accordion multi-open (`multiple`), section "Data Keluarga" default terbuka
+- [x] Lazy-fetch: 10 `useQuery({ enabled: isOpen })` di top level (rules of hooks compliant)
+- [x] Urutan: Keluarga → Pendidikan → Pengalaman Kerja → Keahlian → Pelatihan → Mutasi → SK → Kontrak → Penggajian → SP
+- [x] Tiap section pakai `<DataTable>` + `<DataTablePagination>`, default page size 5
+- [x] Penggajian: `FINISHED`-only guard FE; `*2`/`pembulatan2`/`isDifferent` disembunyikan
+- [x] `npx tsc` hijau
+
+### ~~`r96` — Layout responsif~~ ✅
+- [x] `dashboard-client.tsx`: `grid gap-6 lg:grid-cols-2 lg:items-start`
+- [x] `≥lg`: dua kolom berdampingan; `<lg`: stack kiri lalu kanan
+- [x] File lama (section-biodata, section-detail, section-karier, section-penggajian, _section-card) dihapus
+- [x] `npx tsc` hijau
 
 ## 🐛 Bug follow-up (2026-07-27) ✅
 

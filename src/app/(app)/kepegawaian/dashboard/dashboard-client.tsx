@@ -1,10 +1,8 @@
 "use client";
 
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import { SectionBiodata } from "./section-biodata";
-import { SectionDetail } from "./section-detail";
-import { SectionKarier } from "./section-karier";
-import { SectionPenggajian } from "./section-penggajian";
+import { SectionLeftPanel } from "./section-left-panel";
+import { SectionRightPanel } from "./section-right-panel";
 
 export function DashboardClient({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	// ponytail: pegawai guaranteed non-null by server check in page.tsx
@@ -19,11 +17,10 @@ export function DashboardClient({ pegawai, nik }: { pegawai: PegawaiResponseDeta
 				</p>
 			</div>
 
-			<div className="grid gap-6">
-				<SectionDetail pegawai={pegawai} />
-				<SectionKarier pegawaiId={pegawaiId} />
-				<SectionBiodata nik={nik} />
-				<SectionPenggajian pegawaiId={pegawaiId} />
+			{/* 2-panel layout: side-by-side at lg, stacked below */}
+			<div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+				<SectionLeftPanel pegawai={pegawai} nik={nik} />
+				<SectionRightPanel pegawaiId={pegawaiId} nik={nik} />
 			</div>
 		</div>
 	);
