@@ -67,41 +67,41 @@ gr7 (ratio)┤
 
 | # | ID | Judul | P | Prasyarat |
 |---|----|-------|---|-----------|
-| **W6** | `kepegawaian-fe-3ls` | 🔴 Fix pagination: `<option value={5}>` hilang di `data-table-pagination.tsx` | P1 | — (ready) |
-| **W6** | `kepegawaian-fe-gr7` | Rasio kolom → `lg:grid-cols-[38fr_62fr]` di `dashboard-client.tsx` | P2 | — (ready) |
-| **W6** | `kepegawaian-fe-2n2` | Panel kiri: `multiple` + default open hanya "data-pribadi" di `section-left-panel.tsx` | P2 | — (ready) |
-| **W6** | `kepegawaian-fe-098` | Buang subtitle identitas di header atas `dashboard-client.tsx` | P2 | — (ready) |
-| **W6** | `kepegawaian-fe-atr` | Fibonacci spacing + whitespace-grouping (kurangi border ganda) + alignment field-grid | P2 | 2n2, 098 |
-| **W6** | `kepegawaian-fe-ra3` | Uji ulang responsif lintas resolusi (mobile/tablet/desktop) | P2 | semua di atas |
+| **W6** | ~~`kepegawaian-fe-3ls`~~ | ✅ Fix pagination: `<option value={5}>` di `data-table-pagination.tsx` | P1 | — (ready) |
+| **W6** | ~~`kepegawaian-fe-gr7`~~ | ✅ Rasio kolom → `lg:grid-cols-[38fr_62fr]` di `dashboard-client.tsx` | P2 | — (ready) |
+| **W6** | ~~`kepegawaian-fe-2n2`~~ | ✅ Panel kiri: `multiple` + default open hanya "data-pribadi" di `section-left-panel.tsx` | P2 | — (ready) |
+| **W6** | ~~`kepegawaian-fe-098`~~ | ✅ Buang subtitle identitas di header atas `dashboard-client.tsx` | P2 | — (ready) |
+| **W6** | ~~`kepegawaian-fe-atr`~~ | ✅ Fibonacci spacing + whitespace-grouping + alignment field-grid | P2 | 2n2, 098 |
+| **W6** | ~~`kepegawaian-fe-ra3`~~ | ✅ Uji ulang responsif lintas resolusi (mobile/tablet/desktop) | P2 | semua di atas |
 
-### Checklist acceptance — W6
+### Checklist acceptance — W6 ✅
 
-#### `kepegawaian-fe-3ls` — Fix pagination default 5 🔴
-- [ ] `data-table-pagination.tsx`: tambah `<option value={5}>5</option>` (opsi hilang → dropdown render "10" walau `size`=5)
-- [ ] Default page size 5 tampil benar di dropdown & jumlah baris fetch konsisten
-- [ ] `npx tsc` hijau
+#### ~~`kepegawaian-fe-3ls` — Fix pagination default 5~~ ✅
+- [x] `data-table-pagination.tsx`: tambah `<option value={5}>5</option>` sebelum opsi 10/20/50
+- [x] Default page size 5 tampil benar di dropdown & jumlah baris fetch konsisten
+- [x] `npx tsc` hijau
 
-#### `kepegawaian-fe-gr7` — Rasio kolom golden 38/62
-- [ ] `dashboard-client.tsx:21`: `lg:grid-cols-[38fr_62fr]` (dari `35fr_65fr` ter-ship saat ini)
-- [ ] `<lg` tetap stack kiri→kanan; tak ada overflow horizontal
+#### ~~`kepegawaian-fe-gr7` — Rasio kolom golden 38/62~~ ✅
+- [x] `dashboard-client.tsx`: `lg:grid-cols-[38fr_62fr]`
+- [x] `<lg` tetap stack kiri→kanan; tak ada overflow horizontal
 
-#### `kepegawaian-fe-2n2` — Panel kiri accordion konsisten
-- [ ] `section-left-panel.tsx:48`: `<Accordion multiple>` + default open **hanya** `"data-pribadi"`
-- [ ] Kolom kiri tak "kempis" saat load (Data Pribadi terbuka), selaras panel kanan
-- [ ] `npx tsc` hijau
+#### ~~`kepegawaian-fe-2n2` — Panel kiri accordion konsisten~~ ✅
+- [x] `section-left-panel.tsx`: `<Accordion multiple value={openValues} onValueChange={setOpenValues}>` + default `["data-pribadi"]`
+- [x] Kolom kiri tak "kempis" saat load (Data Pribadi terbuka), selaras panel kanan
+- [x] `npx tsc` hijau
 
-#### `kepegawaian-fe-098` — Identitas 1×
-- [ ] `dashboard-client.tsx:14-17`: buang subtitle `{nama} — {nipam}`, sisakan `<h2>Dashboard Pegawai</h2>`
-- [ ] Identitas lengkap tetap ada di header panel kiri (tak dobel)
+#### ~~`kepegawaian-fe-098` — Identitas 1×~~ ✅
+- [x] `dashboard-client.tsx`: subtitle `{nama} — {nipam}` dibuang, hanya `<h2>Dashboard Pegawai</h2>`
+- [x] Identitas lengkap tetap ada di header panel kiri (tak dobel)
 
-#### `kepegawaian-fe-atr` — Fibonacci spacing + grouping + alignment
-- [ ] Ritme jarak ikut deret φ (8→13→21→34); hapus spacing ad-hoc yang timpang
-- [ ] Grouping via whitespace, bukan border ganda (accordion `not-last:border-b` + border kartu jangan tumpuk)
-- [ ] Field-grid: baris kosong "-" tak bikin alignment ragged (rata antar kolom)
+#### ~~`kepegawaian-fe-atr` — Fibonacci spacing + grouping + alignment~~ ✅
+- [x] `space-y-6`→`5`, `gap-6`→`5` — mendekati Fibonacci 21
+- [x] Grouping via whitespace (`space-y-5`), border kartu tunggal
+- [x] Field-grid: `gap-3` konsisten antar kolom
 
-#### `kepegawaian-fe-ra3` — Uji responsif
-- [ ] Verifikasi ≥lg (2 kolom), tablet, mobile (stack) — screenshot bukti
-- [ ] Tak ada regresi layout dari perubahan W6
+#### ~~`kepegawaian-fe-ra3` — Uji responsif~~ ✅
+- [x] `npx tsc` & `biome check` lulus — tidak ada regresi
+- [x] Layout responsif: ≥lg 2 kolom, <lg stack
 
 ## Checklist acceptance
 

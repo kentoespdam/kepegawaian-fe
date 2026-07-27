@@ -9,16 +9,11 @@ export function DashboardClient({ pegawai, nik }: { pegawai: PegawaiResponseDeta
 	const pegawaiId = pegawai.id as number;
 
 	return (
-		<div className="space-y-6">
-			<div>
-				<h2 className="text-lg font-semibold text-foreground">Dashboard Pegawai</h2>
-				<p className="text-sm text-muted-foreground">
-					{pegawai.biodata?.nama} — {pegawai.nipam}
-				</p>
-			</div>
+		<div className="space-y-5">
+			<h2 className="text-lg font-semibold text-foreground">Dashboard Pegawai</h2>
 
 			{/* 2-panel layout: side-by-side at lg, stacked below */}
-			<div className="grid gap-6 lg:grid-cols-[35fr_65fr] lg:items-start">
+			<div className="grid gap-5 lg:grid-cols-[38fr_62fr] lg:items-start">
 				<SectionLeftPanel pegawai={pegawai} nik={nik} />
 				<SectionRightPanel pegawaiId={pegawaiId} nik={nik} />
 			</div>

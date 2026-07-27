@@ -1,12 +1,14 @@
 "use client";
 
-import Image from "next/image";
 import { useQuery } from "@tanstack/react-query";
+import Image from "next/image";
+import { useState } from "react";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import type { BiodataDetail } from "@/types/profil/biodata";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
+import type { BiodataDetail } from "@/types/profil/biodata";
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
+	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
 	const biodata = useQuery({
 		queryKey: ["/api/proxy/profil/biodata", nik],
 		queryFn: async () => {
@@ -45,7 +47,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 			</div>
 
 			{/* Accordion */}
-			<Accordion className="px-5 py-1">
+			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
 				{/* Data Pribadi */}
 				<AccordionItem value="data-pribadi">
 					<AccordionTrigger>Data Pribadi</AccordionTrigger>
