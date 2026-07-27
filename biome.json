@@ -16,7 +16,9 @@
 			"!types",
 			"!.beads",
 			"!.claude",
+			"!.agents",
 			"!scripts",
+			"!graphify-out",
 			"!src/components/ui"
 		]
 	},
