@@ -93,7 +93,7 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 
 	const orgOpts = useFkOptions("organisasi");
 	const profesiOpts = useFkOptions("profesi");
-	const golonganOpts = useFkOptions("golongan");
+	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
 
 	const organisasiId = watch("organisasiId");
 	const jabQuery = useQuery({
