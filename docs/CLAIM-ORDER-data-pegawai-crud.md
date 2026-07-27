@@ -179,20 +179,21 @@ gajiPokok, phdp, isAskes, rumahDinasId`.
 1. **Pindah penuh, bukan dua tempat.** Kolom Aksi tabel dilepas untuk tab pegawai; action edit hidup HANYA di panel Ringkasan.
 2. **`data-table.tsx` TIDAK diubah** (shared primitive, fan-in ≥2 — non-breaking). Perubahan murni di caller:
    `data-pegawai-client.tsx` berhenti mengoper `onEdit`/`onEditGaji` ke `<DataTable>` saat `isPegawaiTab`
-   (baris ~191-192) → `hasActions` jadi false → kolom Aksi hilang otomatis. `onRowClick`/`selectedRowId` TETAP.
+   → `hasActions` jadi false → kolom Aksi hilang otomatis. `onRowClick`/`selectedRowId` TETAP.
 3. **2 action** (Hapus tetap out of scope, tak ada `onDelete`): **Edit Profil** (`Pencil`→`setEditProfilId`)
    + **Edit Gaji** (`Wallet`→`setEditGajiId`). Keduanya buka Sheet yang sama seperti `ds5` — hanya pemicunya yang pindah.
 4. **Tombol BERLABEL** (ikon + teks: "Edit Profil" / "Edit Gaji") di **header** panel — bukan ikon telanjang.
-   Manfaatkan ruang `lg:w-[380px]`. (Di kolom tabel dulu terpaksa ikon-only karena sempit.)
-5. **Visibilitas tombol:** tampil saat `selectedId` ada **DAN** query ringkasan **sukses**.
-   - **Empty** (`!selectedId`): tak render. — **Loading** (`isPending`): tampil (hanya butuh `selectedId`).
-   - **Error**: **SEMBUNYI** — user "Coba lagi" dulu. Mutasi sengaja digate ke sukses-fetch panel (pilihan user).
-6. **RBAC:** tak ada — `onEdit`/`onEditGaji` tak digating `can()` (terverifikasi). Tak ada gating yang dibawa.
-7. **`e.stopPropagation()`** jadi tak relevan utk tab pegawai (tak ada tombol di baris); guard di `DataTable` generik TETAP untuk caller lain.
+5. **Visibilitas tombol:** `showActions = !!selectedId && !isError`.
+   - **Empty** (`!selectedId`): tak render. — **Loading** (`isPending`): tampil.
+   - **Error**: **SEMBUNYI** — user "Coba lagi" dulu.
+6. **`e.stopPropagation()`** jadi tak relevan utk tab pegawai (tak ada tombol di baris); guard di `DataTable` generik TETAP.
 
-**File berubah:** `data-pegawai-client.tsx` (cabut 2 prop action; teruskan handler ke panel) +
-`ringkasan-panel.tsx` (terima `onEditProfil`/`onEditGaji`, render 2 tombol di header sesuai state #5).
-`data-table.tsx` **TAK disentuh**. Tab Non-pegawai tak berubah.
+- [x] `data-pegawai-client.tsx`: cabut `onEdit`/`onEditGaji` dari DataTable, teruskan handler ke RingkasanPanel.
+- [x] `ringkasan-panel.tsx`: terima `onEditProfil`/`onEditGaji`, render 2 tombol berlabel di header.
+- [x] `data-table.tsx` **TAK disentuh** ✅.
+- [x] Tab Non-pegawai tak berubah ✅.
+- [x] Quality gate: `tsc --noEmit` + `biome check` ✅.
+- [x] `bd close kepegawaian-fe-vsr` ✅.
 
 ---
 
