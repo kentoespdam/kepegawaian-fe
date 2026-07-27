@@ -33,6 +33,23 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 | **W3** | ~~`kepegawaian-fe-tvr`~~ | ✅ Page Dashboard (read-only) | P2 | djv + oqp |
 | **W4** | ~~`kepegawaian-fe-9cm`~~ | ✅ Wiring sidebar (grup + 3 sub-item) | P2 | tvr + hnc + vfe |
 
+## W5 — Dashboard re-layout 2 panel + accordion (epic `kepegawaian-fe-o1o`)
+
+> Revisi Dashboard `tvr` → 2 panel + accordion. Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1 ·
+> ADR: [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md).
+
+```
+zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
+                 └─► bpk (panel kanan) ─┴─► r96 (rakit + uji responsif)
+```
+
+| # | ID | Judul | P | Prasyarat |
+|---|----|-------|---|-----------|
+| **W5** | `kepegawaian-fe-zb6` | Komponen Base UI Accordion (`src/components/ui/accordion.tsx`) | P1 | — (ready) |
+| **W5** | `kepegawaian-fe-lhg` | Panel kiri: header identitas + accordion Data Pribadi & Kepegawaian | P2 | zb6 |
+| **W5** | `kepegawaian-fe-bpk` | Panel kanan: accordion Riwayat multi-open lazy-fetch (9 section + SP) | P2 | zb6 |
+| **W5** | `kepegawaian-fe-r96` | Layout 2 panel responsif + uji lintas resolusi | P2 | lhg + bpk |
+
 ## Checklist acceptance
 
 ### ~~`0is` — Generate tipe~~ ✅

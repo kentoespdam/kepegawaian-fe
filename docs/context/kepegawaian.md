@@ -49,20 +49,49 @@ Fan-out `$id`/`nik` ke endpoint:
 
 Profil diri sendiri, difilter ke `$id` (aman by-design → tak perlu permission khusus). **Read-only**
 untuk rilis ini — endpoint edit (`PATCH /pegawai/{id}/profil`, `/gaji`, alur `profil-update`
-berbasis approval) **tidak** dipasang; menyusul setelah RBAC self-service dirancang. Section:
+berbasis approval) **tidak** dipasang; menyusul setelah RBAC self-service dirancang.
 
-1. **Detail kepegawaian** — status, jabatan, organisasi, golongan, tmt*, dari `/pegawai/{$id}`.
-2. **Riwayat karier** (timeline netral) — SK + Mutasi + Kontrak.
-3. **Riwayat Disiplin** — SP (Surat Peringatan) di section **terpisah** (hak pegawai untuk tahu;
-   ditampilkan, tidak disembunyikan).
-4. **Biodata + Data Keluarga** — `/profil/biodata/{nik}` + `/profil/keluarga?biodataId={nik}`.
-5. **Riwayat Penggajian** — slip bulanan dari `/penggajian/batch/master/pegawai/{$id}`.
+### Layout: 2 panel + accordion (revisi round 2 — lihat [ADR-0011](../adr/0011-dashboard-two-panel-accordion.md))
+
+Ganti dari single stacked column ke **2 panel** di `≥lg` (1024px), **menumpuk** (kiri lalu kanan)
+di bawah `lg`. Keduanya pakai **Base UI Accordion** (`src/components/ui/accordion.tsx`, ADR-0004).
+Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa backend.
+
+**Panel KIRI — "Detail Pegawai"** (accordion):
+
+- **Header identitas** (selalu tampil, di atas accordion): foto profil (read-only dari
+  `GET /profil/biodata/{id}/foto-profil`, field `fotoProfil`) + nama + NIPAM + jabatan.
+- **Data Pribadi** (accordion item) — biodata dari `/profil/biodata/{nik}`.
+- **Data Kepegawaian** (accordion item) — status, jabatan, organisasi, golongan, grade, tmt*,
+  masa kerja, gaji pokok, dari `/pegawai/{$id}`.
+
+**Panel KANAN — "Riwayat"** (accordion, **multi-open + lazy fetch**, section pertama terbuka).
+Data tiap section di-fetch **hanya saat dibuka**. Urutan mengikuti gambar referensi:
+
+1. **Data Keluarga** — `/profil/keluarga?biodataId={nik}`.
+2. **Data Pendidikan** — `/profil/pendidikan?biodataId={nik}`.
+3. **Data Pengalaman Kerja** — `/profil/pengalaman-kerja?biodataId={nik}`.
+4. **Data Keahlian** — `/profil/keahlian?biodataId={nik}`.
+5. **Data Pelatihan** — `/profil/pelatihan?biodataId={nik}`.
+6. **Riwayat Mutasi** — `/kepegawaian/riwayat/mutasi/pegawai/{$id}`.
+7. **Riwayat SK** — `/kepegawaian/riwayat/sk/pegawai/{$id}`.
+8. **Riwayat Kontrak** — `/kepegawaian/riwayat/kontrak/pegawai/{$id}`.
+9. **Riwayat Penggajian** — slip bulanan dari `/penggajian/batch/master/pegawai/{$id}`.
    Kolom: Periode · Gaji Pokok · Penghasilan Kotor · Potongan · Pajak · Penghasilan Bersih.
    Pakai **`penghasilanBersihFinal`**. **Sembunyikan** `*2` / `pembulatan2` / `isDifferent`
    (artefak proses verifikasi batch, bukan urusan pegawai).
    > ⚠️ **Known-limitation:** endpoint tak punya filter status batch → tak bisa jamin hanya periode
    > *accepted* yang tampil. **Tanya backend + verifikasi sebelum go-live** (periode draft/belum-final
    > tak boleh bocor ke pegawai).
+10. **Riwayat Disiplin / SP** — `/kepegawaian/riwayat/sp/pegawai/{$id}`. Section **terpisah** di
+    **akhir** (hak pegawai untuk tahu; ditampilkan, tidak disembunyikan — sesuai keputusan round 1).
+    TIDAK digabung ke riwayat kerja.
+
+**Section list** (Keluarga, Pendidikan, Mutasi, SK, dst.) pakai `<DataTable>` +
+`<DataTablePagination>` reusable (pola halaman daftar lain), **default page size 5**.
+
+> **Skip:** **Data Rekening Bank** (di gambar referensi) — tidak ada endpoint/type. Ditunda sampai
+> backend tersedia. **Foto upload** juga ditunda; iterasi ini foto **read-only** saja.
 
 ## Page 2 — Data Pegawai (3 tab)
 
@@ -94,6 +123,7 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 - ✅ **W1** — Generate tipe (`kepegawaian-fe-0is`) & verifikasi backend batch (`kepegawaian-fe-oqp`).
 - ✅ **W2** — `getPegawaiSession()` (`kepegawaian-fe-djv`), Data Pegawai 3 tab (`kepegawaian-fe-hnc`), Terminasi 2 tab (`kepegawaian-fe-vfe`).
 - ✅ **W3** — Dashboard Pegawai read-only 5 section (`kepegawaian-fe-tvr`).
+- 🔄 **W5** — Dashboard re-layout 2 panel + accordion (ADR-0011). Grilling round 2 selesai; layout terkunci di §Page 1 + ADR-0011. Implementasi = beads issue (delegasi agen).
 - ✅ **W4** — Sidebar grup Kepegawaian + 3 sub-item (`kepegawaian-fe-9cm`).
 - ✅ **Epic tutup** — `kepegawaian-fe-a2e` closed.
 - ✅ **Sync tipe** — `PegawaiTableResponse` (table flat) & `PegawaiResponseSession` (session ringan) tersedia di `src/types/pegawai/pegawai.ts`.
