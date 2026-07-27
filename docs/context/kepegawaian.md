@@ -57,6 +57,16 @@ Ganti dari single stacked column ke **2 panel** di `≥lg` (1024px), **menumpuk*
 di bawah `lg`. Keduanya pakai **Base UI Accordion** (`src/components/ui/accordion.tsx`, ADR-0004).
 Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa backend.
 
+**Proporsi & kerapian (optimasi round 3 — golden ratio + planogram, lihat ADR-0011 §Addendum):**
+
+- **Rasio kolom `≥lg` = 38% / 62%** (`lg:grid-cols-[38fr_62fr]`), bukan 45/55 atau 50/50. Panel
+  kanan (tabel 4–6 kolom) lebih lega, panel kiri (field 2-kolom ringkas) cukup 38% — asimetri φ.
+- **Panel kiri accordion pakai `multiple`, default hanya "Data Pribadi" terbuka** — konsisten dengan
+  panel kanan (satu section pertama terbuka), tak lagi ikut default single-collapse Base UI.
+- **Identitas hanya 1×.** Header atas cukup `"Dashboard Pegawai"` tanpa subtitle nama/NIPAM;
+  identitas lengkap (foto + nama + NIPAM + jabatan) hanya di header panel kiri (satu titik fokus,
+  eye-level planogram).
+
 **Panel KIRI — "Detail Pegawai"** (accordion):
 
 - **Header identitas** (selalu tampil, di atas accordion): foto profil (read-only dari

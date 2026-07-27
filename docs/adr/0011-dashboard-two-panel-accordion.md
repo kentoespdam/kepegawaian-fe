@@ -75,6 +75,28 @@ tanpa backend.
 **Tinjau ulang jika:** backend Rekening Bank / foto-upload tersedia (tambah section/alur unggah),
 atau jumlah section tumbuh sampai accordion kanan sendiri perlu dikelompokkan/di-search.
 
+## Addendum (2026-07-27) — optimasi kerapian: golden ratio + planogram
+
+Implementasi awal 2-panel terlihat tidak rapi saat dirender. Riset dua prinsip desain
+(**golden ratio φ≈1.618** & **planogram**) memetakan 8 temuan; keputusan yang mengubah spec:
+
+- **Rasio kolom 38/62 (`lg:grid-cols-[38fr_62fr]`)**, bukan 45/55 arbitrer yang terlanjur ter-*ship*.
+  Panel kanan tabel butuh ruang horizontal; asimetri φ menaruh bobot di kanan. *Mudah dibalik (nilai
+  CSS) → tak perlu ADR terpisah, cukup addendum ini.*
+- **Panel kiri: `multiple` + default hanya "Data Pribadi" terbuka.** Tanpa `multiple` & tanpa
+  default-open, Base UI memakai single-collapse → kolom kiri "kempis" (cuma header) saat load,
+  timpang terhadap panel kanan yang sudah buka satu section. Disamakan polanya.
+- **Identitas ditampilkan 1×.** Subtitle `{nama} — {nipam}` di header atas dibuang; identitas
+  lengkap hanya di header panel kiri (eye-level, satu titik fokus).
+- **Bug pagination diperbaiki:** `<option value={5}>` hilang dari `data-table-pagination.tsx` →
+  dropdown me-render "10" walau `size` state = 5 (tak ada opsi cocok). Tambah opsi 5.
+- **Fibonacci spacing (8→13→21→34 ≈ deret φ), whitespace-grouping alih-alih border ganda, dan
+  alignment field-grid** dirapikan (planogram: proximity > garis, 80/20 anti-overcrowding).
+
+Delegasi implementasi: beads **W6** (epic `kepegawaian-fe-o1o`), Manager tak ngoding `src/`.
+Issue: `3ls` (bug pagination 🔴) · `gr7` (rasio 38/62) · `2n2` (panel kiri multiple) ·
+`098` (buang subtitle) · `atr` (Fibonacci spacing + grouping + alignment) · `ra3` (uji responsif).
+
 File terkait:
 - `docs/context/kepegawaian.md` — §Page 1 direvisi ke layout ini
 - `src/components/ui/accordion.tsx` — komponen Base UI Accordion baru (dibuat agen eksekusi)

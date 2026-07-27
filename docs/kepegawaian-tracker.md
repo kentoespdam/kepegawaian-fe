@@ -50,6 +50,59 @@ zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
 | **W5** | ~~`kepegawaian-fe-bpk`~~ | ✅ Panel kanan: accordion Riwayat multi-open lazy-fetch (10 section + SP) | P2 | zb6 |
 | **W5** | ~~`kepegawaian-fe-r96`~~ | ✅ Layout 2 panel responsif + uji lintas resolusi | P2 | lhg + bpk |
 
+## W6 — Optimasi kerapian: golden ratio + planogram (epic `kepegawaian-fe-o1o`)
+
+> Round 3: rapikan render 2-panel via prinsip **golden ratio (φ)** + **planogram**.
+> Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1 "Proporsi & kerapian" ·
+> ADR: [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md) §Addendum.
+> 8 temuan dipetakan; delegasi ke agen — Manager tak ngoding `src/`.
+
+```
+3ls (bug5) ┐
+gr7 (ratio)┤
+2n2 (left) ─┬─► atr (spacing) ─┐
+098 (ident)─┘                  ├─► ra3 (uji responsif)
+                    (semua di atas) ┘
+```
+
+| # | ID | Judul | P | Prasyarat |
+|---|----|-------|---|-----------|
+| **W6** | `kepegawaian-fe-3ls` | 🔴 Fix pagination: `<option value={5}>` hilang di `data-table-pagination.tsx` | P1 | — (ready) |
+| **W6** | `kepegawaian-fe-gr7` | Rasio kolom → `lg:grid-cols-[38fr_62fr]` di `dashboard-client.tsx` | P2 | — (ready) |
+| **W6** | `kepegawaian-fe-2n2` | Panel kiri: `multiple` + default open hanya "data-pribadi" di `section-left-panel.tsx` | P2 | — (ready) |
+| **W6** | `kepegawaian-fe-098` | Buang subtitle identitas di header atas `dashboard-client.tsx` | P2 | — (ready) |
+| **W6** | `kepegawaian-fe-atr` | Fibonacci spacing + whitespace-grouping (kurangi border ganda) + alignment field-grid | P2 | 2n2, 098 |
+| **W6** | `kepegawaian-fe-ra3` | Uji ulang responsif lintas resolusi (mobile/tablet/desktop) | P2 | semua di atas |
+
+### Checklist acceptance — W6
+
+#### `kepegawaian-fe-3ls` — Fix pagination default 5 🔴
+- [ ] `data-table-pagination.tsx`: tambah `<option value={5}>5</option>` (opsi hilang → dropdown render "10" walau `size`=5)
+- [ ] Default page size 5 tampil benar di dropdown & jumlah baris fetch konsisten
+- [ ] `npx tsc` hijau
+
+#### `kepegawaian-fe-gr7` — Rasio kolom golden 38/62
+- [ ] `dashboard-client.tsx:21`: `lg:grid-cols-[38fr_62fr]` (dari `35fr_65fr` ter-ship saat ini)
+- [ ] `<lg` tetap stack kiri→kanan; tak ada overflow horizontal
+
+#### `kepegawaian-fe-2n2` — Panel kiri accordion konsisten
+- [ ] `section-left-panel.tsx:48`: `<Accordion multiple>` + default open **hanya** `"data-pribadi"`
+- [ ] Kolom kiri tak "kempis" saat load (Data Pribadi terbuka), selaras panel kanan
+- [ ] `npx tsc` hijau
+
+#### `kepegawaian-fe-098` — Identitas 1×
+- [ ] `dashboard-client.tsx:14-17`: buang subtitle `{nama} — {nipam}`, sisakan `<h2>Dashboard Pegawai</h2>`
+- [ ] Identitas lengkap tetap ada di header panel kiri (tak dobel)
+
+#### `kepegawaian-fe-atr` — Fibonacci spacing + grouping + alignment
+- [ ] Ritme jarak ikut deret φ (8→13→21→34); hapus spacing ad-hoc yang timpang
+- [ ] Grouping via whitespace, bukan border ganda (accordion `not-last:border-b` + border kartu jangan tumpuk)
+- [ ] Field-grid: baris kosong "-" tak bikin alignment ragged (rata antar kolom)
+
+#### `kepegawaian-fe-ra3` — Uji responsif
+- [ ] Verifikasi ≥lg (2 kolom), tablet, mobile (stack) — screenshot bukti
+- [ ] Tak ada regresi layout dari perubahan W6
+
 ## Checklist acceptance
 
 ### ~~`0is` — Generate tipe~~ ✅
@@ -116,7 +169,7 @@ zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
 - [x] `npx tsc` hijau
 
 ### ~~`r96` — Layout responsif~~ ✅
-- [x] `dashboard-client.tsx`: `grid gap-6 lg:grid-cols-2 lg:items-start`
+- [x] `dashboard-client.tsx`: `grid gap-6 lg:grid-cols-[38fr_62fr] lg:items-start` (rasio direvisi di W6, lihat ADR-0011 §Addendum)
 - [x] `≥lg`: dua kolom berdampingan; `<lg`: stack kiri lalu kanan
 - [x] File lama (section-biodata, section-detail, section-karier, section-penggajian, _section-card) dihapus
 - [x] `npx tsc` hijau
