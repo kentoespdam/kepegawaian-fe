@@ -27,24 +27,4 @@ export const ENUMS = {
 		{ value: "AB", label: "AB" },
 		{ value: "O", label: "O" },
 	],
-	statusPegawai: [
-		{ value: "KONTRAK", label: "Kontrak" },
-		{ value: "CAPEG", label: "Calon Pegawai" },
-		{ value: "PEGAWAI", label: "Pegawai" },
-		{ value: "CALON_HONORER", label: "Calon Honorer" },
-		{ value: "HONORER", label: "Honorer" },
-		{ value: "NON_PEGAWAI", label: "Non Pegawai" },
-	],
-	statusKerja: [
-		{ value: "KARYAWAN_AKTIF", label: "Karyawan Aktif" },
-		{ value: "BERHENTI_OR_KELUAR", label: "Berhenti/Keluar" },
-		{ value: "DIRUMAHKAN", label: "Dirumahkan" },
-		{ value: "LAMARAN_BARU", label: "Lamaran Baru" },
-		{ value: "TAHAP_SELEKSI", label: "Tahap Seleksi" },
-		{ value: "DITERIMA", label: "Diterima" },
-		{ value: "DIREKOMENDASIKAN", label: "Direkomendasikan" },
-		{ value: "DITOLAK", label: "Ditolak" },
-	],
 } as const;
-
-export type EnumOption = (typeof ENUMS.statusPegawai)[number];

@@ -21,3 +21,32 @@ export function usePajakOptions() {
 		[query.data],
 	);
 }
+
+function useEnumOptions(url: string, queryKey: string) {
+	const query = useQuery({
+		queryKey: [queryKey, "list"],
+		queryFn: async () => {
+			const res = await fetch(url);
+			if (!res.ok) throw new Error("Gagal memuat data");
+			const body = await res.json();
+			return (body.data ?? []) as { id?: string; nama?: string }[];
+		},
+		staleTime: 300_000,
+	});
+	return useMemo(
+		() =>
+			(query.data ?? []).map((i) => ({
+				value: String(i.id),
+				label: String(i.nama ?? ""),
+			})),
+		[query.data],
+	);
+}
+
+export function useStatusPegawaiOptions() {
+	return useEnumOptions("/api/proxy/master/status-pegawai/list", "status-pegawai");
+}
+
+export function useStatusKerjaOptions() {
+	return useEnumOptions("/api/proxy/master/status-kerja/list", "status-kerja");
+}

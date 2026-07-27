@@ -11,9 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import { ENUMS } from "./tambah/constants";
 import { FieldFk, FieldSelect, FieldText } from "./tambah/field-renderers";
-import { usePajakOptions } from "./tambah/hooks";
+import { usePajakOptions, useStatusPegawaiOptions } from "./tambah/hooks";
 
 const schema = z.object({
 	statusPegawai: z.string().min(1, "Pilih status"),
@@ -99,6 +98,7 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 	});
 
 	const pajakOpts = usePajakOptions();
+	const statusPegawaiOpts = useStatusPegawaiOptions();
 	const rumahDinasOpts = useFkOptions("rumah-dinas");
 	const gajiProfilOpts = useGajiProfilOptions();
 
@@ -162,7 +162,7 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 								<FieldSelect
 									label="Status Pegawai"
 									value={watch("statusPegawai")}
-									options={ENUMS.statusPegawai}
+									options={statusPegawaiOpts}
 									onChange={(v) => setValue("statusPegawai", v, { shouldValidate: true })}
 									error={e("statusPegawai")}
 									required

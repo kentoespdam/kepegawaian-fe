@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFkOptions } from "@/hooks/useFkOptions";
+import { useStatusKerjaOptions, useStatusPegawaiOptions } from "./tambah/hooks";
 
 // ── Filter definitions ──
 
@@ -28,21 +29,7 @@ const POPOVER_FILTERS: FilterDef[] = [
 	{ key: "profesiId", label: "Profesi", type: "fk", entity: "profesi" },
 	{ key: "golonganId", label: "Golongan", type: "fk", entity: "golongan" },
 	{ key: "gradeId", label: "Grade", type: "fk", entity: "grade", labelFn: (i) => `Grade ${String(i.grade ?? "")}` },
-	{
-		key: "statusKerja",
-		label: "Status Kerja",
-		type: "select",
-		options: [
-			{ value: "KARYAWAN_AKTIF", label: "Karyawan Aktif" },
-			{ value: "BERHENTI_OR_KELUAR", label: "Berhenti/Keluar" },
-			{ value: "DIRUMAHKAN", label: "Dirumahkan" },
-			{ value: "LAMARAN_BARU", label: "Lamaran Baru" },
-			{ value: "TAHAP_SELEKSI", label: "Tahap Seleksi" },
-			{ value: "DITERIMA", label: "Diterima" },
-			{ value: "DIREKOMENDASIKAN", label: "Direkomendasikan" },
-			{ value: "DITOLAK", label: "Ditolak" },
-		],
-	},
+	{ key: "statusKerja", label: "Status Kerja", type: "select" },
 	{
 		key: "jenisKelamin",
 		label: "Jenis Kelamin",
@@ -54,43 +41,13 @@ const POPOVER_FILTERS: FilterDef[] = [
 	},
 ];
 
-const STATUS_OPTIONS = [
-	{ value: "KONTRAK", label: "Kontrak" },
-	{ value: "CAPEG", label: "CPNS" },
-	{ value: "PEGAWAI", label: "PNS" },
-	{ value: "CALON_HONORER", label: "Calon Honorer" },
-	{ value: "HONORER", label: "Honorer" },
-	{ value: "NON_PEGAWAI", label: "Non Pegawai" },
-];
-
 // ── Chip label helpers ──
 
-/** Build { value → label } lookup from FK options array. */
-function fkLabelMap(opts: { value: string; label: string }[]): Record<string, string> {
+/** Build { value → label } lookup from options array. */
+function labelMap(opts: { value: string; label: string }[]): Record<string, string> {
 	const m: Record<string, string> = {};
 	for (const o of opts) m[o.value] = o.label;
 	return m;
-}
-
-/** Chip label for statusPegawai value. */
-function statusPegawaiLabel(v: string) {
-	const m: Record<string, string> = {
-		KONTRAK: "Kontrak",
-		CAPEG: "CPNS",
-		PEGAWAI: "PNS",
-		CALON_HONORER: "Calon Honorer",
-		HONORER: "Honorer",
-		NON_PEGAWAI: "Non Pegawai",
-	};
-	return `Status: ${m[v] ?? v}`;
-}
-
-/** Chip label for statusKerja value. */
-function statusKerjaLabel(v: string) {
-	return `Status Kerja: ${v
-		.replace(/_/g, " ")
-		.toLowerCase()
-		.replace(/\b\w/g, (c) => c.toUpperCase())}`;
 }
 
 // ── Sub-components ──
@@ -127,45 +84,49 @@ function PopoverFilterContent({
 		golonganId: useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`),
 		gradeId: useFkOptions("grade", (i) => `Grade ${String(i.grade ?? "")}`),
 	};
+	const statusKerjaOpts = useStatusKerjaOptions();
 
 	return (
 		<div className="space-y-4">
-			{POPOVER_FILTERS.map((f) => (
-				<div key={f.key} className="space-y-1.5">
-					<Label className="text-sm font-medium">{f.label}</Label>
-					{f.type === "fk" ? (
-						<FKComboboxFilter
-							label={f.label}
-							options={fkOpts[f.key] ?? []}
-							value={values[f.key]}
-							onChange={(val) => {
-								onFilterChange(f.key, val ?? undefined);
-								onClosePopover();
-							}}
-						/>
-					) : (
-						<Select
-							value={values[f.key] ?? ""}
-							onValueChange={(val) => {
-								onFilterChange(f.key, val === "__all__" ? undefined : (val ?? undefined));
-								onClosePopover();
-							}}
-						>
-							<SelectTrigger className="h-11 w-full">
-								<SelectValue placeholder={`Pilih ${f.label.toLowerCase()}`} />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="__all__">Semua {f.label}</SelectItem>
-								{f.options?.map((o) => (
-									<SelectItem key={o.value} value={o.value}>
-										{o.label}
-									</SelectItem>
-								))}
-							</SelectContent>
-						</Select>
-					)}
-				</div>
-			))}
+			{POPOVER_FILTERS.map((f) => {
+				const selectOptions = f.key === "statusKerja" ? statusKerjaOpts : (f.options ?? []);
+				return (
+					<div key={f.key} className="space-y-1.5">
+						<Label className="text-sm font-medium">{f.label}</Label>
+						{f.type === "fk" ? (
+							<FKComboboxFilter
+								label={f.label}
+								options={fkOpts[f.key] ?? []}
+								value={values[f.key]}
+								onChange={(val) => {
+									onFilterChange(f.key, val ?? undefined);
+									onClosePopover();
+								}}
+							/>
+						) : (
+							<Select
+								value={values[f.key] ?? ""}
+								onValueChange={(val) => {
+									onFilterChange(f.key, val === "__all__" ? undefined : (val ?? undefined));
+									onClosePopover();
+								}}
+							>
+								<SelectTrigger className="h-11 w-full">
+									<SelectValue placeholder={`Pilih ${f.label.toLowerCase()}`} />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="__all__">Semua {f.label}</SelectItem>
+									{selectOptions.map((o) => (
+										<SelectItem key={o.value} value={o.value}>
+											{o.label}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+						)}
+					</div>
+				);
+			})}
 		</div>
 	);
 }
@@ -193,17 +154,21 @@ export function DataPegawaiToolbar({
 	const profesiOpts = useFkOptions("profesi");
 	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
 	const gradeOpts = useFkOptions("grade", (i) => `Grade ${String(i.grade ?? "")}`);
+	const statusPegawaiOpts = useStatusPegawaiOptions();
+	const statusKerjaOpts = useStatusKerjaOptions();
 
 	// Build chip label lookup per FK key
-	const fkChipMaps = useMemo<Record<string, Record<string, string>>>(() => {
+	const chipMaps = useMemo<Record<string, Record<string, string>>>(() => {
 		const m: Record<string, Record<string, string>> = {};
-		m.organisasiId = fkLabelMap(organisasiOpts);
-		m.jabatanId = fkLabelMap(jabatanOpts);
-		m.profesiId = fkLabelMap(profesiOpts);
-		m.golonganId = fkLabelMap(golonganOpts);
-		m.gradeId = fkLabelMap(gradeOpts);
+		m.organisasiId = labelMap(organisasiOpts);
+		m.jabatanId = labelMap(jabatanOpts);
+		m.profesiId = labelMap(profesiOpts);
+		m.golonganId = labelMap(golonganOpts);
+		m.gradeId = labelMap(gradeOpts);
+		m.statusPegawai = labelMap(statusPegawaiOpts);
+		m.statusKerja = labelMap(statusKerjaOpts);
 		return m;
-	}, [organisasiOpts, jabatanOpts, profesiOpts, golonganOpts, gradeOpts]);
+	}, [organisasiOpts, jabatanOpts, profesiOpts, golonganOpts, gradeOpts, statusPegawaiOpts, statusKerjaOpts]);
 
 	const [searchLocal, setSearchLocal] = useState(values.nama ?? "");
 	const debouncedFilter = useDebouncedCallback((v: string) => onFilterChange("nama", v || undefined), 400);
@@ -219,12 +184,12 @@ export function DataPegawaiToolbar({
 			Object.entries(values)
 				.filter(([, v]) => v && v !== values.nama)
 				.map(([k, v]) => {
-					// FK fields: lookup name from options
-					if (fkChipMaps[k]) {
-						const name = fkChipMaps[k][v];
-						if (name) return { key: k, label: name };
+					// Prefer label from chipMaps (FK + enum), fallback to raw value
+					if (chipMaps[k]) {
+						const name = chipMaps[k][v];
+						if (name) return { key: k, label: k === "statusPegawai" ? `Status: ${name}` : name };
 					}
-					// Non-FK: use static label formatters
+					// Remaining simple fields
 					switch (k) {
 						case "nama":
 							return { key: k, label: `Nama: ${v}` };
@@ -232,17 +197,13 @@ export function DataPegawaiToolbar({
 							return { key: k, label: `NIPAM: ${v}` };
 						case "nik":
 							return { key: k, label: `NIK: ${v}` };
-						case "statusPegawai":
-							return { key: k, label: statusPegawaiLabel(v) };
-						case "statusKerja":
-							return { key: k, label: statusKerjaLabel(v) };
 						case "jenisKelamin":
 							return { key: k, label: v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan" };
 						default:
 							return { key: k, label: v };
 					}
 				}),
-		[values, fkChipMaps],
+		[values, chipMaps],
 	);
 
 	return (
@@ -271,7 +232,7 @@ export function DataPegawaiToolbar({
 							</SelectTrigger>
 							<SelectContent>
 								<SelectItem value="__all__">Semua Status</SelectItem>
-								{STATUS_OPTIONS.map((o) => (
+								{statusPegawaiOpts.map((o) => (
 									<SelectItem key={o.value} value={o.value}>
 										{o.label}
 									</SelectItem>

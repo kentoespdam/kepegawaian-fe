@@ -12,7 +12,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { ENUMS } from "./constants";
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./field-renderers";
-import { usePajakOptions } from "./hooks";
+import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "./hooks";
 import { type FormValues, schema } from "./schema";
 
 export function TambahPegawaiForm() {
@@ -40,6 +40,8 @@ export function TambahPegawaiForm() {
 	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
 	const pendidikanOpts = useFkOptions("jenjang-pendidikan");
 	const pajakOpts = usePajakOptions();
+	const statusPegawaiOpts = useStatusPegawaiOptions();
+	const statusKerjaOpts = useStatusKerjaOptions();
 
 	// Cascade jabatan by organisasi
 	const jabQuery = useQuery({
@@ -221,7 +223,7 @@ export function TambahPegawaiForm() {
 				<FieldSelect
 					label="Status Pegawai"
 					value={watch("statusPegawai")}
-					options={ENUMS.statusPegawai}
+					options={statusPegawaiOpts}
 					onChange={(v) => setValue("statusPegawai", v, { shouldValidate: true })}
 					error={e("statusPegawai")}
 					required
@@ -276,7 +278,7 @@ export function TambahPegawaiForm() {
 						<FieldSelect
 							label="Status Kerja"
 							value={watch("statusKerja")}
-							options={ENUMS.statusKerja}
+							options={statusKerjaOpts}
 							onChange={(v) => setValue("statusKerja", v)}
 							error={e("statusKerja")}
 							required
