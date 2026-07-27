@@ -1,7 +1,14 @@
 # 6. Identitas sesi → record pegawai (`$id = pegawaiId`, augmentasi opt-in)
 
 Date: 2026-07-22
-Status: Accepted
+Status: Accepted — **bug transport ditemukan 2026-07-27** (lihat catatan di bawah)
+
+> **Bug transport (2026-07-27).** *Keputusan* ADR ini benar dan terimplementasi (bentuk return,
+> empty-state, `verifySession` murni — semua sesuai). Tapi *eksekusinya* salah: `getPegawaiSession()`
+> melakukan `fetch(\`/api/proxy/pegawai/${id}\`)` — URL **relatif** di **server component**. `/api/proxy`
+> dilayani middleware (`proxy.ts`), bukan route handler; di server, URL relatif tak resolve + cookie
+> sesi tak ter-attach → selalu masuk `catch`/401 → `pegawai: null` → Dashboard **selalu** empty-state.
+> Perbaikan: fetch backend langsung + mint JWT di server — lihat [ADR-0010](0010-server-component-backend-fetch.md).
 
 ## Konteks
 

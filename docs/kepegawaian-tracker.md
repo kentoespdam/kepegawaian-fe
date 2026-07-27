@@ -79,6 +79,14 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 - [x] Grup "Kepegawaian" di `NavMain` + 3 sub-item (Dashboard terbuka, Data & Terminasi ter-gate)
 - [x] Grup tanpa entity view-able tak dirender; ikon hanya di baris grup; rail tetap 6 modul
 
+## 🐛 Bug follow-up (2026-07-27) ✅
+
+- **~~`kepegawaian-fe-50h`~~** ✅ — `getPegawaiSession()` fetch `/api/proxy` relatif di
+  server component → Dashboard (`tvr`) **selalu** empty-state. **Fixed 2026-07-27:**
+  `resolveToken()` diekstrak ke `appwriteSession.ts`, proxy.ts jadi thin caller,
+  `getPegawaiSession()` fetch `BACKEND_URL` langsung + Bearer JWT via `resolveToken`
+  (hot path decode exp, cold path mint via Appwrite). Lihat [ADR-0010](../adr/0010-server-component-backend-fetch.md).
+
 ## ~~Tutup epic~~ ✅
 
 - [x] ~~`kepegawaian-fe-0is`~~ ✅ — Generate tipe

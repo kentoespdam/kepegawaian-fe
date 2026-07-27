@@ -1,11 +1,10 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { mintJWT, readSession, TOKEN_COOKIE, tokenCookieOptions } from "@/lib/auth/appwriteSession";
+import { readSession, resolveToken, TOKEN_COOKIE, tokenCookieOptions } from "@/lib/auth/appwriteSession";
 
 const APPWRITE_URL = process.env.APPWRITE_URL ?? "";
 const APPWRITE_PROJECT = process.env.APPWRITE_PROJECT_ID ?? "";
 const BACKEND_URL = process.env.BACKEND_URL ?? "";
-const REFRESH_BUFFER = 30;
 
 export const config = {
 	matcher: ["/((?!_next/static|_next/image|favicon.ico|logo_pdam).*)"],
@@ -36,7 +35,7 @@ export default async function proxy(request: NextRequest) {
 		}
 
 		// Forward backend calls (/api/proxy/master/* etc. → Backend Spring Boot)
-		const jwt = await resolveToken(request, session);
+		const jwt = await resolveToken((name) => request.cookies.get(name)?.value, session);
 		if (!jwt) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
@@ -61,23 +60,4 @@ function forwardToBackend(request: NextRequest, token: string) {
 	const response = NextResponse.rewrite(url, { request: { headers } });
 	response.cookies.set(TOKEN_COOKIE, token, tokenCookieOptions());
 	return response;
-}
-async function resolveToken(request: NextRequest, session: string | undefined) {
-	const token = request.cookies.get(TOKEN_COOKIE)?.value;
-
-	// Hot path: decode exp, no signature verify, zero network
-	if (token) {
-		try {
-			const payload = JSON.parse(atob(token.split(".")[1]));
-			if (payload.exp && Date.now() / 1000 < payload.exp - REFRESH_BUFFER) {
-				return token;
-			}
-		} catch {
-			// corrupted token → fall through to cold path
-		}
-	}
-
-	// Cold path: mint new JWT via Appwrite (dedup handled inside the module)
-	if (!session) return null;
-	return mintJWT(session);
 }

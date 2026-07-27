@@ -15,6 +15,9 @@ const APPWRITE_PROJECT = process.env.APPWRITE_PROJECT_ID ?? "";
 
 const JWT_DURATION = 3600;
 
+/** Refresh buffer: mint new JWT when remaining expiry < this many seconds. */
+const REFRESH_BUFFER = 30;
+
 /**
  * Appwrite sets the session as TWO cookies: the primary `a_session_<projectId>`
  * (`Secure; SameSite=None`) and a non-`Secure` `_legacy` fallback. Over plain HTTP the browser
@@ -85,4 +88,33 @@ export function mintJWT(session: string): Promise<string> {
 		mint.catch(() => {}).then(() => setTimeout(() => mintCache.delete(session), 5000));
 	}
 	return mint;
+}
+
+/**
+ * Resolve a valid JWT for backend API calls — hot path (decode exp, zero network)
+ * or cold path (mint from session). Accepts a generic cookie-getter so it works
+ * in both proxy.ts (NextRequest.cookies) and server components (cookies() from next/headers).
+ * Extracted from proxy.ts per ADR-0010.
+ */
+export async function resolveToken(
+	get: (name: string) => string | undefined,
+	session: string | undefined,
+): Promise<string | null> {
+	const token = get(TOKEN_COOKIE);
+
+	// Hot path: decode exp, no signature verify, zero network
+	if (token) {
+		try {
+			const payload = JSON.parse(atob(token.split(".")[1]));
+			if (payload.exp && Date.now() / 1000 < payload.exp - REFRESH_BUFFER) {
+				return token;
+			}
+		} catch {
+			// corrupted token → fall through to cold path
+		}
+	}
+
+	// Cold path: mint new JWT via Appwrite (dedup handled inside the module)
+	if (!session) return null;
+	return mintJWT(session);
 }
