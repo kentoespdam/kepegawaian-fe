@@ -3,6 +3,10 @@
 		"next-devtools": {
 			"command": "npx",
 			"args": ["-y", "next-devtools-mcp@latest"]
+		},
+		"context7": {
+			"command": "bash",
+			"args": ["scripts/context7-mcp.sh"]
 		}
 	}
 }

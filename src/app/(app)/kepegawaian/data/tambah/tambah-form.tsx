@@ -224,6 +224,7 @@ export function TambahPegawaiForm() {
 					options={ENUMS.statusPegawai}
 					onChange={(v) => setValue("statusPegawai", v, { shouldValidate: true })}
 					error={e("statusPegawai")}
+					required
 				/>
 
 				{!isNonPegawai && (

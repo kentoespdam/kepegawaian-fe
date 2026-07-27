@@ -18,7 +18,7 @@ export const schema = z
 		email: z.string().optional(),
 		notes: z.string().optional(),
 		isPegawai: z.boolean().optional(),
-		statusPegawai: z.string().optional(),
+		statusPegawai: z.string().min(1, "Pilih status pegawai"),
 		statusKerja: z.string().optional(),
 		jabatanId: z.string().optional(),
 		organisasiId: z.string().optional(),
@@ -32,7 +32,7 @@ export const schema = z
 		gajiPokok: z.string().optional(),
 	})
 	.superRefine((vals, ctx) => {
-		if (!vals.statusPegawai || vals.statusPegawai === "NON_PEGAWAI") return;
+		if (vals.statusPegawai === "NON_PEGAWAI") return;
 		if (!vals.jabatanId)
 			ctx.addIssue({ code: z.ZodIssueCode.custom, message: "Jabatan wajib diisi", path: ["jabatanId"] });
 		if (!vals.organisasiId)
