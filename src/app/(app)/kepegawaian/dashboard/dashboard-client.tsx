@@ -18,7 +18,7 @@ export function DashboardClient({ pegawai, nik }: { pegawai: PegawaiResponseDeta
 			</div>
 
 			{/* 2-panel layout: side-by-side at lg, stacked below */}
-			<div className="grid gap-6 lg:grid-cols-2 lg:items-start">
+			<div className="grid gap-6 lg:grid-cols-[45fr_55fr] lg:items-start">
 				<SectionLeftPanel pegawai={pegawai} nik={nik} />
 				<SectionRightPanel pegawaiId={pegawaiId} nik={nik} />
 			</div>
