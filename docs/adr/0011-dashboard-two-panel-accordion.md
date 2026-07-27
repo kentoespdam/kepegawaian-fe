@@ -102,3 +102,46 @@ File terkait:
 - `src/components/ui/accordion.tsx` — komponen Base UI Accordion baru (dibuat agen eksekusi)
 - `src/app/(app)/kepegawaian/dashboard/dashboard-client.tsx` — re-layout 2 panel
 - `src/app/(app)/kepegawaian/dashboard/section-*.tsx` — dipecah/ditambah per section, lazy-fetch
+
+## Addendum (2026-07-27) — round 4: coloring semantik + spacing panel kanan + afordansi trigger
+
+Setelah W6, tiga keluhan sisa dari user: (1) dashboard **100% grayscale** padahal
+`globals.css` sudah punya token OKLCH semantik lengkap (primary Evergreen, success teal,
+warning, destructive) — "apakah tak ada yang bisa dioptimasi, seperti coloring?"; (2) data
+panel kanan **mepet** ke container card & body accordion **terkesan terpotong**; (3) trigger
+accordion **tak terlihat bisa diklik** (afordansi lemah — satu-satunya cue = `hover:underline`
+di atas `border-transparent` + chevron `text-muted-foreground`, tanpa padding horizontal).
+
+Keputusan (semua mengubah tampilan, sebagian menyentuh komponen shared → blast diukur dulu):
+
+- **Padding panel kanan disamakan panel kiri.** Root cause "mepet": `<Accordion>` panel kanan
+  (`section-right-panel.tsx`) tak punya `px-5 py-1` yang sudah dipunya panel kiri sejak W6 `atr`
+  (asimetri tertinggal). Mirror kelas yang sama → hilangkan mepet + beri tabel ruang napas
+  (meredakan "terpotong"). *Blast rendah, file dashboard lokal.*
+- **Card-in-card diratakan via prop opt-in `bare` di `DataTable`.** "Terpotong" = `DataTable`
+  menggambar card sendiri (`rounded-lg border bg-card shadow-md … max-h-[75vh] p-1`) **di dalam**
+  `AccordionContent` yang sudah `overflow-hidden` + tinggi ter-animasi → border ganda flush terbaca
+  "terpotong". Fix = tambah prop `bare?: boolean` (default `false`) yang, saat `true`, me-render
+  tabel **tanpa** border/shadow/card sendiri. **`DataTable` = simbol CRITICAL (23 konsumen:
+  seluruh page master + kepegawaian).** Prop additive + default `false` → 22 caller lain tak
+  berubah; hanya panel kanan dashboard kirim `bare`. *Syarat mengikat agen: JANGAN ubah cabang
+  render lama; default WAJIB preservasi perilaku sekarang.*
+- **Afordansi trigger accordion diperkuat** di `src/components/ui/accordion.tsx`: beri cue resting
+  yang jelas (mis. hover background + chevron lebih menonjol/ter-tint + padding horizontal), tak
+  cuma `hover:underline`. **`AccordionTrigger` = simbol LOW (hanya 2 panel dashboard yang pakai)**
+  → perubahan visual tak merembet ke modul lain.
+- **Coloring semantik ~10–20% (planogram 60:30:10, reuse token yang ADA — bukan asal tambah warna):**
+  - **Aksen brand di focal point** — avatar header panel kiri `bg-muted` (abu) → `bg-primary/10
+    text-primary`. Titik fokus eye-level dapat ~10% aksen brand Evergreen.
+  - **Badge status semantik** — "Status Kerja" / "Status Pegawai" jadi badge berwarna via token:
+    Aktif → `success`, Berhenti/Keluar → `destructive`/`muted`, Dirumahkan → `warning`. Section
+    **SP/Disiplin** diberi tint `warning`/`destructive` (sinyal, bukan dekorasi).
+  - **Emphasis Penghasilan Bersih** — kolom hasil akhir slip gaji `font-semibold text-foreground`
+    agar menonjol dari kolom antara.
+  - Token sumber sudah ada di `globals.css` (`--primary`/`--success`/`--warning`/`--destructive`);
+    `DataTable` sudah mewarnai benar (ikon success/destructive, zebra). Rekomendasi hanya
+    **mengonsumsi** token, tak menambah warna baru → invariant 60:30:10 & kontras dark-mode terjaga.
+
+Delegasi implementasi: beads **W7** (epic `kepegawaian-fe-o1o`), Manager tak ngoding `src/`.
+Blast diukur via `gitnexus_impact`: `DataTable` = CRITICAL (mitigasi: prop additive default-preserve),
+`AccordionTrigger` = LOW.

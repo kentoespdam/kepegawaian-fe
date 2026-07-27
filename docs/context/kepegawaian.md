@@ -67,6 +67,22 @@ Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa
   identitas lengkap (foto + nama + NIPAM + jabatan) hanya di header panel kiri (satu titik fokus,
   eye-level planogram).
 
+**Coloring semantik + spacing + afordansi (optimasi round 4 — lihat ADR-0011 §Addendum round 4):**
+
+- **Padding panel kanan = panel kiri.** `<Accordion>` panel kanan diberi `px-5 py-1` (sebelumnya
+  hanya panel kiri punya sejak W6) → data tak lagi mepet ke tepi card; tabel dapat ruang napas.
+- **Card-in-card diratakan** via prop opt-in `bare` di `DataTable` (additive, default `false`):
+  saat panel kanan me-render tabel di dalam accordion, kirim `bare` supaya tabel tak menggambar
+  border/shadow/card sendiri → body accordion tak lagi terkesan "terpotong". Konsumen `DataTable`
+  lain (page master, data, terminasi) **tak berubah** (default preservasi perilaku).
+- **Afordansi trigger accordion diperkuat** (`accordion.tsx`): cue resting jelas (hover bg + chevron
+  menonjol + padding horizontal), tak cuma `hover:underline` → area jelas terlihat bisa diklik.
+- **Warna semantik ~10–20% (60:30:10, reuse token OKLCH `globals.css`):** aksen brand
+  `bg-primary/10 text-primary` di avatar header (focal point); badge status semantik (Status Kerja
+  Aktif→`success`, Berhenti→`destructive`/`muted`, Dirumahkan→`warning`); section SP tint
+  `warning`/`destructive`; kolom Penghasilan Bersih `font-semibold text-foreground`. Bukan menambah
+  warna baru — hanya mengonsumsi token yang sudah ada.
+
 **Panel KIRI — "Detail Pegawai"** (accordion):
 
 - **Header identitas** (selalu tampil, di atas accordion): foto profil (read-only dari
