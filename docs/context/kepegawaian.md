@@ -75,6 +75,8 @@ yang punya field `changedStatus?: boolean`. Fungsinya:
 - Ditampilkan sebagai **Badge outline kuning "Menunggu"** (+ ikon `Clock`) di samping judul
   AccordionTrigger "Data Pribadi" pada panel kiri.
 - **Tooltip hover:** "Perubahan biodata sedang menunggu persetujuan admin".
+- **Tombol "Edit Profil" disembunyikan** saat `changedStatus=true` — user tak bisa membuka dialog
+  edit selama ada perubahan pending, untuk mencegah tumpuk-tindih multiple pending changes.
 - Hanya berlaku untuk **biodata level dashboard** (sub-entitas seperti keluarga/pendidikan/dll.
   belum ditampilkan — ditunda ke iterasi berikutnya).
 - Tipe sudah di-generate via `extract-types.js` → `BiodataDashboardResponse.changedStatus` di

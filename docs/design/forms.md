@@ -70,7 +70,41 @@ spesifik form).
   footer) — JANGAN toast untuk validasi.
 - Rejected: two-column & horizontal-label (zigzag eye-path / pola mobile ganda).
 
-### 10.3b FK field = `<FKCombobox>` searchable, enum = `<Select>` (grill 2026-07-21, epic `31p`)
+### 10.3b-1 Enum field — label display via SelectValue render-prop
+
+**Tambahan 2026-07-28.** Base UI `<SelectValue>` di shadcn (varian Base UI) tidak otomatis
+menampilkan `children` dari `<SelectItem>` yang cocok — ia merender **raw value** yang sedang
+terpilih. Berbeda dengan Radix UI.
+
+**Fix:** Gunakan Base UI render-prop pattern pada `<SelectValue>`:
+```tsx
+<SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`}>
+  {(value: string | null) => {
+    const opt = field.options?.find((o) => o.value === value);
+    return opt?.label ?? value ?? "";
+  }}
+</SelectValue>
+```
+Ini memastikan trigger menampilkan **label** (e.g. `"Laki-laki"`) bukan value (`"LAKI_LAKI"`).
+
+**API label vs value mismatch.** Bila endpoint API mengembalikan label display (e.g. `"Laki-laki"`)
+bukan enum value (`"LAKI_LAKI"`), gunakan helper `enumValueFromLabel()` untuk konversi sebelum
+memasukkan ke `defaultValues`:
+```tsx
+function enumValueFromLabel(
+  label: string | undefined | null,
+  options: readonly { value: string; label: string }[],
+): string {
+  if (!label) return "";
+  return options.find((o) => o.label === label)?.value ?? label;
+}
+```
+
+**Aturan:** Setiap field enum dari endpoint dashboard WAJIB pake `enumValueFromLabel()` sebelum
+`defaultValues`. Saat ini diterapkan di `section-left-panel.tsx` untuk `jenisKelamin`, `agama`,
+`statusKawin`.
+
+### 10.3c FK field = `<FKCombobox>` searchable, enum = `<Select>` (grill 2026-07-21, epic `31p`)
 
 FK dengan data panjang (organisasi, jabatan, grade) dirender sebagai **`<FKCombobox>`** —
 CommandDialog + search (pola sama `fk-combobox-filter.tsx` di toolbar, tapi komponen **terpisah**:

@@ -79,6 +79,61 @@ tetap relevan bila nanti ada edit **lintas-pegawai** (HR mengedit pegawai lain) 
 **Tinjau ulang jika:** muncul kebutuhan edit lintas-pegawai (HR) → butuh RBAC nyata; atau approval
 `profil-update` di-hidupkan backend.
 
+### Addendum 1 — Enum label/value mapping & SelectValue render-prop
+
+**Tanggal:** 2026-07-28
+
+**Masalah:** API endpoint `GET /profil/biodata/{nik}/dashboard` mengembalikan field enum
+(`jenisKelamin`, `agama`, `statusKawin`) sebagai **label display** (e.g. `"Laki-laki"`), bukan
+**enum value** (e.g. `"LAKI_LAKI"`). Akibatnya:
+- Form `defaultValues` terisi label → `<Select>` tak bisa match value opsi → autofill rusak
+- Submit tanpa mengubah pilihan → mengirim label ke BE → error
+
+**Solusi:**
+
+1. **Helper `enumValueFromLabel()`** di `section-left-panel.tsx` — reverse lookup label → enum value:
+   ```tsx
+   function enumValueFromLabel(label, options) {
+     if (!label) return "";
+     return options.find((o) => o.label === label)?.value ?? label;
+   }
+   ```
+   Diterapkan di `defaultValues` untuk 3 field: `jenisKelamin`, `agama`, `statusKawin`.
+
+2. **Fix Base UI `<SelectValue>` render-prop** di `crud-form.tsx` — gunakan children sebagai fungsi
+   untuk menampilkan **label** dari opsi yang cocok, bukan raw value:
+   ```tsx
+   <SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`}>
+     {(value) => {
+       const opt = field.options?.find((o) => o.value === value);
+       return opt?.label ?? value ?? "";
+     }}
+   </SelectValue>
+   ```
+
+**Pelajaran:** API dashboard return label, bukan value. Setiap field enum dari endpoint dashboard
+wajib pake `enumValueFromLabel()` sebelum masuk `defaultValues`.
+
+### Addendum 2 — changedStatus guard pada Edit Profil
+
+**Tanggal:** 2026-07-28
+
+**Keputusan:** Saat `BiodataDashboardResponse.changedStatus === true`, tombol "Edit Profil"
+**disembunyikan** (unmount). User tak bisa membuka dialog edit selama ada perubahan yang menunggu
+persetujuan admin.
+
+**Implementasi:** Tambah kondisi `!d.changedStatus` pada render tombol:
+```tsx
+{nik && !d.changedStatus && (
+  <button onClick={() => setDialogOpen(true)}>Edit Profil</button>
+)}
+```
+
+**Konsekuensi:**
+- Positif: mencegah user membuat multiple pending changes yang tumpuk-tindih
+- User tetap lihat badge "Menunggu" sebagai indikasi status
+- Sesuai prinsip unmount-not-disable (lihat §Anti-Examples knowledge.md)
+
 ## File terkait
 
 - `docs/context/kepegawaian.md` — §Page 1: label READ-ONLY → self-edit; catat 9 field + NIK
