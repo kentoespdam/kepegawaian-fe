@@ -42,7 +42,8 @@ Fan-out `$id`/`nik` ke endpoint:
 | Riwayat karier | `/kepegawaian/riwayat/{sk\|mutasi\|kontrak}/pegawai/{$id}` | `$id` |
 | Riwayat disiplin (SP) | `/kepegawaian/riwayat/sp/pegawai/{$id}` | `$id` |
 | Slip gaji | `/penggajian/batch/master/pegawai/{$id}` | `$id` |
-| Biodata detail | `/profil/biodata/{nik}` | `nik` (string) |
+| Dashboard biodata | `/profil/biodata/{nik}/dashboard` | `nik` (string) |
+| Biodata CRUD | `/profil/biodata/{nik}` | `nik` (string) |
 | Data keluarga | `/profil/keluarga?biodataId={nik}` | `nik` |
 
 ## Page 1 — Dashboard Pegawai (self-edit biodata)
@@ -60,12 +61,34 @@ berlapis tak jadi prasyarat untuk scope sempit ini.
   `telp` format-check bila diisi; sisanya optional.
 - **NIK read-only** (`disabled` di form) — hanya admin yang boleh ubah karena NIK = ID di BE; bukan
   bagian `BiodataPatchRequest`.
-- **Pendidikan Terakhir dikecualikan** dari form — di-update via menu "tambah pendidikan" (belum ada);
-  tetap tampil read-only di read view.
-- **Ibu Kandung & Telp ditampilkan** di read view (sebelumnya tak tampil).
+- **Pendidikan Terakhir** dikecualikan dari form (via menu "tambah pendidikan" — belum ada);
+  ditampilkan read-only sebagai `{tingkat} — {jurusan} — {institusi} — {tahunLulus}` via
+  `PendidikanDashboard`.
+- **Ibu Kandung, Telp, Email, Kode Pajak** ditampilkan di read view.
+
+### Approval tracking — `changedStatus`
+
+Dashboard memakai endpoint `GET /profil/biodata/{nik}/dashboard` → `BiodataDashboardResponse`
+yang punya field `changedStatus?: boolean`. Fungsinya:
+
+- `changedStatus: true` → ada perubahan biodata dari user yang **sedang menunggu approval admin**.
+- Ditampilkan sebagai **Badge outline kuning "Menunggu"** (+ ikon `Clock`) di samping judul
+  AccordionTrigger "Data Pribadi" pada panel kiri.
+- **Tooltip hover:** "Perubahan biodata sedang menunggu persetujuan admin".
+- Hanya berlaku untuk **biodata level dashboard** (sub-entitas seperti keluarga/pendidikan/dll.
+  belum ditampilkan — ditunda ke iterasi berikutnya).
+- Tipe sudah di-generate via `extract-types.js` → `BiodataDashboardResponse.changedStatus` di
+  `src/types/profil/biodata.ts`.
+
+> ⚠️ **Alur approval ini sebelumnya "ditunda"** di ADR-0012. Sekarang BE sudah menyediakan
+> `changedStatus` di endpoint `/dashboard` dan FE menampilkan indikatornya. Alur approval penuh
+> (review + approve/reject dari admin) masih menyusul.
 
 Alur berat yang **tetap ditunda** (bukan bagian rilis ini): `PATCH /pegawai/{id}/profil`, `/gaji`, dan
-alur `profil-update` berbasis approval — menyusul bila edit lintas-pegawai (HR) butuh RBAC nyata.
+alur `profil-update` approval penuh (review + approve/reject dari admin) — menyusul bila edit lintas-pegawai (HR) butuh RBAC nyata.
+
+> **Update — `changedStatus` sudah live.** Indikator approval (badge "Menunggu") sudah tampil di dashboard
+> saat BE mengembalikan `changedStatus: true`. Alur review admin masih menyusul.
 
 ### Layout: 2 panel + accordion (revisi round 2 — lihat [ADR-0011](../adr/0011-dashboard-two-panel-accordion.md))
 
@@ -105,7 +128,8 @@ Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa
 
 - **Header identitas** (selalu tampil, di atas accordion): foto profil (read-only dari
   `GET /profil/biodata/{id}/foto-profil`, field `fotoProfil`) + nama + NIPAM + jabatan.
-- **Data Pribadi** (accordion item) — biodata dari `/profil/biodata/{nik}`.
+- **Data Pribadi** (accordion item) — biodata dari `GET /profil/biodata/{nik}/dashboard`
+  → `BiodataDashboardResponse`. Field `changedStatus` memunculkan badge "Menunggu" di title.
 - **Data Kepegawaian** (accordion item) — status, jabatan, organisasi, golongan, grade, tmt*,
   masa kerja, gaji pokok, dari `/pegawai/{$id}`.
 
@@ -172,4 +196,6 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 - ✅ **Epic tutup** — `kepegawaian-fe-a2e` closed.
 - ✅ **Sync tipe** — `PegawaiTableResponse` (table flat) & `PegawaiResponseSession` (session ringan) tersedia di `src/types/pegawai/pegawai.ts`.
 - ✅ **Modul baru** — `laporanKepegawaian` terdaftar di generator, tipe di `src/types/laporan/kepegawaian.ts`.
-- ⏳ Dashboard masih membutuhkan backend nyata untuk data lives. Guard FE `FINISHED` only di penggajian perlu diverifikasi bentuk response (field `status` mungkin belum di-capture di type).
+- ✅ **changedStatus** — endpoint dashboard migrasi ke `GET /profil/biodata/{nik}/dashboard`, badge "Menunggu" + tooltip di title "Data Pribadi". Tipe di-generate via `extract-types.js`.
+  - ⏳ Alur approval penuh dari admin (review + approve/reject) masih menyusul.
+- ⏳ Dashboard masih membutuhkan backend nyata untuk data lives.

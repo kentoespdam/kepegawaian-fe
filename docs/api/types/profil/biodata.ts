@@ -142,6 +142,7 @@ export interface BiodataDashboardResponse {
 	kodePajak?: string;
 	ibuKandung?: string;
 	detailPendidikanTerakhir?: PendidikanDashboard;
+	changedStatus?: boolean;
 }
 
 export type SingleResultBiodataDashboardResponse = Envelope<BiodataDashboardResponse>;

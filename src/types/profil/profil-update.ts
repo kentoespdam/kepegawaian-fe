@@ -29,7 +29,7 @@ export interface ProfileUpdateQuery {
 	tableName?: "BIODATA" | "KELUARGA" | "PENDIDIKAN" | "PENGALAMAN_KERJA" | "PELATIHAN" | "KEAHLIAN";
 	actionType?: "UNKNOWN" | "INSERT" | "UPDATE" | "DELETE";
 	dataDescription?: string;
-	revId?: number; // int64
+	revId?: string;
 	approvalStatus?: StatusUpdateProfil;
 	approvalDate?: string; // date-time
 	approvalPic?: string;

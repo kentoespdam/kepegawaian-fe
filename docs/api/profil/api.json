@@ -2133,11 +2133,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
-					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" }
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
 				}
 			},
 			"ProfileUpdateQuery": {
@@ -2154,7 +2154,7 @@
 					},
 					"actionType": { "type": "string", "enum": ["UNKNOWN", "INSERT", "UPDATE", "DELETE"] },
 					"dataDescription": { "type": "string" },
-					"revId": { "type": "integer", "format": "int64" },
+					"revId": { "type": "string" },
 					"approvalStatus": { "type": "string", "enum": ["REJECT", "PENDING", "APPROVED"] },
 					"approvalDate": { "type": "string", "format": "date-time" },
 					"approvalPic": { "type": "string" }
@@ -3946,7 +3946,8 @@
 					"email": { "type": "string" },
 					"kodePajak": { "type": "string" },
 					"ibuKandung": { "type": "string" },
-					"detailPendidikanTerakhir": { "$ref": "#/components/schemas/PendidikanDashboard" }
+					"detailPendidikanTerakhir": { "$ref": "#/components/schemas/PendidikanDashboard" },
+					"changedStatus": { "type": "boolean" }
 				}
 			},
 			"PendidikanDashboard": {
