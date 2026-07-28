@@ -20,6 +20,15 @@ import { ENUMS } from "../data/tambah/constants";
 const ACCORDION_TRIGGER_AFF =
 	"px-5 py-3 hover:bg-muted/50 data-[state=open]:bg-muted/20 **:data-[slot=accordion-trigger-icon]:text-primary";
 
+/** Reverse lookup: cari enum value dari label (karena API dashboard return label, bukan value) */
+function enumValueFromLabel(
+	label: string | undefined | null,
+	options: readonly { value: string; label: string }[],
+): string {
+	if (!label) return "";
+	return options.find((o) => o.label === label)?.value ?? label;
+}
+
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -150,7 +159,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 							<p className="text-sm text-muted-foreground italic">Memuat...</p>
 						) : d ? (
 							<>
-								{nik && (
+								{nik && !d.changedStatus && (
 									<div className="flex items-center justify-end mb-2">
 										<button
 											type="button"
@@ -234,10 +243,10 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 				}}
 			>
 				<DialogContent className="flex flex-col max-h-[85dvh] sm:max-w-lg p-0 gap-0 overflow-hidden">
-					<DialogHeader className="shrink-0 px-4 pt-4">
+					<DialogHeader className="shrink-0 px-4 pt-4 pb-2 shadow">
 						<DialogTitle>Edit Profil</DialogTitle>
 					</DialogHeader>
-					<div className="flex-1 overflow-y-auto px-4 pb-0 [&>form]:flex [&>form]:flex-1 [&>form]:flex-col [&>form>div:last-of-type]:mt-auto [&>form>div:last-of-type]:sticky [&>form>div:last-of-type]:bottom-0 [&>form>div:last-of-type]:bg-popover [&>form>div:last-of-type]:pt-4 [&>form>div:last-of-type]:pb-4 [&>form>div:last-of-type]:border-t [&>form>div:last-of-type]:border-border [&>form>div:last-of-type]:-mx-4 [&>form>div:last-of-type]:px-4">
+					<div className="py-2 flex-1 overflow-y-auto px-4 pb-0 [&>form]:flex [&>form]:flex-1 [&>form]:flex-col [&>form>div:last-of-type]:mt-auto [&>form>div:last-of-type]:sticky [&>form>div:last-of-type]:bottom-0 [&>form>div:last-of-type]:bg-popover [&>form>div:last-of-type]:pt-4 [&>form>div:last-of-type]:pb-4 [&>form>div:last-of-type]:border-t [&>form>div:last-of-type]:border-border [&>form>div:last-of-type]:-mx-4 [&>form>div:last-of-type]:px-4">
 						<CrudForm
 							schema={biodataFormSchema as never}
 							fields={editFormFields}
@@ -246,11 +255,11 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 									? ({
 											nik: d.nik ?? "",
 											nama: d.nama ?? "",
-											jenisKelamin: d.jenisKelamin ?? "",
+											jenisKelamin: enumValueFromLabel(d.jenisKelamin, ENUMS.jenisKelamin),
 											tempatLahir: d.tempatLahir ?? "",
 											tanggalLahir: d.tanggalLahir ?? "",
-											agama: d.agama ?? "",
-											statusKawin: d.statusKawin ?? "",
+											agama: enumValueFromLabel(d.agama, ENUMS.agama),
+											statusKawin: enumValueFromLabel(d.statusKawin, ENUMS.statusKawin),
 											ibuKandung: d.ibuKandung ?? "",
 											telp: d.noTelp ?? "",
 											alamat: d.alamat ?? "",

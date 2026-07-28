@@ -84,7 +84,13 @@ export function CrudForm<TValues extends Record<string, unknown> = Record<string
 						) : field.type === "select" ? (
 							<Select value={String(watch(field.name) ?? "")} onValueChange={(v) => setValue(field.name, v)}>
 								<SelectTrigger className="h-11 w-full" aria-invalid={!!err}>
-									<SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`} />
+									<SelectValue placeholder={`Pilih ${field.label.toLowerCase()}`}>
+										{(value: string | null) => {
+											if (!value) return null; // fallback ke placeholder
+											const opt = field.options?.find((o) => o.value === value);
+											return opt?.label ?? value;
+										}}
+									</SelectValue>
 								</SelectTrigger>
 								<SelectContent>
 									{field.options?.map((opt) => (
