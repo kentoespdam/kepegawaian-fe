@@ -34,8 +34,231 @@ bd close <id>         # Complete work
 - Use `bd` for ALL task tracking — do NOT use TodoWrite, TaskCreate, or markdown TODO lists
 - Run `bd prime` for detailed command reference and session close protocol
 - Use `bd remember` for persistent knowledge — do NOT use MEMORY.md files
+<!-- END BEADS INTEGRATION -->
 
-## Session Completion
+**Triage labels:** `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wont-fix`.
+
+---
+
+## 1. Project Identity
+
+| Item | Value |
+|------|-------|
+| Nama | `kepegawaian-fe` — Employee Management System Frontend |
+| Entitas | Perumdam Tirta Satria |
+| Type | Next.js App Router SPA (server + client components) |
+| Stack | Next.js 16.2.10, React 19.2.4, TypeScript 5, Tailwind CSS v4 |
+| UI kit | shadcn di atas Base UI (bukan Radix) |
+| Form | React Hook Form v7 + Zod v4 (`zodResolver`) |
+| Data fetching | TanStack Query v5 client-side via `/api/proxy/*` |
+| Auth | Appwrite (session httpOnly) + JWT di-mint di `proxy.ts` |
+| Backend | Spring Boot `http://192.168.1.211:8080` |
+| Notifikasi | sonner (satu `<Toaster>`) |
+| Ikon | lucide-react |
+| Font | Inter, self-hosted via `next/font` |
+| Linter/format | BiomeJS 2.2.0 |
+| Package manager | Bun |
+| Tema | Light + dark mode via `next-themes` |
+| Compiler | React Compiler aktif (`babel-plugin-react-compiler`) |
+
+---
+
+## 2. Modes of Operation
+
+Freebuff beroperasi dalam **2 mode**. Mode ditentukan oleh prompt pertama user:
+
+| Mode | Role | Output | Kapan? |
+|------|------|--------|--------|
+| **🔍 Grilling** | 🧠 **Manager** — analisis, rencana, NO CODING | Beads issue (plan implementasi) + MD file (checklist claim order) | User minta review/analisis/desain/planning |
+| **💻 Coding** | 🔧 **Engineer** — eksekusi issue sesuai aturan | Code changes + update MD file + commit & push | User minta implementasi / ngerjain issue |
+
+### 🔍 Grilling Mode
+
+> **Agent sebagai Manager.** Tidak menulis kode sama sekali.
+
+1. Analisis domain/modul yang diminta — baca CONTEXT-MAP, ADR, docs terkait
+2. Grilling → sharpen plan bareng user (tanya-jawab)
+3. Buat **beads issue** (`bd create`) berisi:
+   - Judul: `{modul}: {deskripsi singkat}`
+   - Body: implementasi plan langkah per langkah
+   - Label: sesuai triage
+4. Buat **MD file** di `docs/` berisi:
+   - Claim order checklist (step-by-step urutan ngerjain)
+   - Referensi context/docs yang relevan
+   - Dependency/urut-urutan
+5. Done — tidak perlu compile/test/push
+
+### 💻 Coding Mode
+
+> **Agent sebagai Engineer.** Mengeksekusi issue yang sudah ada plan-nya.
+
+1. **Baca MD file** terkait issue — baca **teliti & mendalam**, pahami claim order
+2. **Baca CONTEXT files** — `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR, dll. **JANGAN halu/tebak-nebak**
+3. **Aktifkan `/ponytail`** — skill untuk memaksa solusi paling sederhana, minimal, YAGNI. **WAJIB** sebelum nulis kode.
+4. **Aktifkan skill graphify** — pahami arsitektur & relasi via knowledge graph
+5. **Kerjakan issue** — ikuti workflow coding di section 8
+6. **Update MD file** — tandai step yang sudah selesai
+7. **Close issue** — `bd close <id>`
+8. **Commit & push** ke GitHub sebagai finalisasi
+
+---
+
+## 3. Build & Run
+
+```bash
+bun run dev               # Dev server (http://localhost:3000)
+bun run build             # Production build
+bun run start             # Start production server
+bun run test              # Run all tests (vitest)
+bun run test:watch        # Watch mode
+bunx biome check          # Lint entire project
+bunx biome check --write  # Auto-format
+```
+
+---
+
+## 4. Architecture
+
+### Stack Details
+
+| Aspek | Keputusan |
+|---|---|
+| Framework | Next.js 16.2.10 App Router; `middleware.ts` → `proxy.ts` (Node runtime) |
+| React | 19.2.4 (React Compiler aktif) |
+| UI kit | shadcn di atas Base UI (`npx shadcn init -b base`) — BUKAN Radix |
+| Styling | Tailwind CSS v4 (CSS-first `@theme`, token OKLCH) |
+| Form | React Hook Form v7 + Zod via shadcn `<Field />` → satu `<CrudForm>` |
+| Data fetching | TanStack Query v5 client-side via `/api/proxy/*` |
+| Auth | Appwrite session httpOnly + JWT di-mint di `proxy.ts` |
+| Backend | Spring Boot `http://192.168.1.211:8080` (Bearer JWT) |
+| Notifikasi | sonner (satu `<Toaster>`, bottom-right) |
+| Ikon | lucide-react (aksi ≥20px, area sentuh ≥40px) |
+| Font | Inter, self-hosted via `next/font` |
+| Linter/format | BiomeJS 2.2.0 |
+
+### Domain Modules
+
+| Modul | Fungsi | Status |
+|-------|--------|--------|
+| `master/` | Data referensi (15 CRUD entities: golongan, grade, jabatan, organisasi, profesi, sanksi, level, dll.) | ✅ Lengkap |
+| `kepegawaian/` | Dashboard Pegawai, Data Pegawai (3 tab), Terminasi (2 tab) | ✅ Lengkap |
+| `cuti/` | Pengajuan & saldo cuti | ⏳ Belum |
+| `penggajian/` | Payroll | ⏳ Belum |
+| `laporan/` | Pelaporan/rekap | ⏳ Belum |
+| `sistem/` | Manajemen role, pengaturan | ⏳ Belum |
+
+### Layer Pattern
+
+```
+src/
+├── app/             # Next.js App Router (page = server component by default)
+│   └── (app)/       # Protected layout (sidebar + top bar)
+│       ├── master/  # 15 CRUD pages per entity
+│       ├── kepegawaian/  # Dashboard, Data, Terminasi
+│       ├── profil/  # Profile page + change password
+│       └── page.tsx # Welcome/dashboard landing
+├── components/      # Shared UI primitives
+│   ├── ui/          # shadcn/Base UI components
+│   ├── data-table.tsx, crud-form.tsx  # Shared primitives
+│   └── app-shell.tsx, providers.tsx   # App frame
+├── hooks/           # Custom hooks (useResource, useMasterTable, useFkOptions…)
+├── lib/             # Utilities, auth, API client
+│   ├── auth/        # Appwrite session, JWT, permissions
+│   ├── api/         # Typed fetch client
+│   └── utils.ts, paging.ts
+├── config/          # Entity configs (typed, per-entity)
+├── types/           # Generated OpenAPI types
+└── proxy.ts         # Next.js middleware (route guard + JWT mint + API rewrite)
+```
+
+### Code Patterns
+
+| Aspect | Rule |
+|--------|------|
+| Pages | Server component tipis → client component `<MasterPageClient entity="…">` |
+| Tables | `<DataTable>` + `<DataTableToolbar>` + `<DataTablePagination>` — shared, reused by all entities |
+| Forms | Satu `<CrudForm>` + Zod schema per entity — DRY via shared primitive |
+| Mutations | `useMutation` + `invalidateQueries` — no optimistic removal |
+| Delete | `<ConfirmDeleteDialog>` — type `HAPUS` to enable, 409 inline |
+| RBAC | `can(roles, action, entity)` — unmount (not disable) for unauthorized actions |
+| Data fetching | Client TanStack Query via `/api/proxy/*` — `gcTime: 5min`, `staleTime: 30s` (tables) |
+| Auth proxy | `proxy.ts` — route guard (page) + JWT mint (cold/hot path) + rewrite to backend |
+| Identity | `session.$id` = `pegawaiId` → `getPegawaiSession()` (opt-in, ADR-0006) |
+| Tree entities | Flat table + "Parent" column + parent picker disables subtree |
+| Filter | Combobox-of-id via `/list` endpoint, URL searchParams as source of truth |
+| State handling | `isPending` → skeleton; `isPlaceholderData` → dim; `isError` → inline retry |
+
+### Domain Context (Lazy Read)
+
+Start with `CONTEXT-MAP.md`, then pick relevant sub-context:
+
+| If touching... | Read |
+|----------------|------|
+| Master module (data referensi) | `docs/context/master.md` — entity taxonomy, FK graph, tree entities |
+| Kepegawaian module (dashboard/data/terminasi) | `docs/context/kepegawaian.md` — 3 pages, identity bridge |
+| Pegawai terminology | `docs/context/pegawai.md` — employee identity model |
+| Cross-module decisions | `CONTEXT-MAP.md` — core glossary + resolved decisions |
+| System-wide ADRs | `docs/adr/` — 12 ADRs (auth, form, shell, identity bridge, etc.) |
+
+---
+
+## 5. Environment Variables
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `APPWRITE_URL` | ✅ | Appwrite server URL |
+| `APPWRITE_PROJECT_ID` | ✅ | Appwrite project ID |
+| `APPWRITE_API_KEY` | ✅ | Appwrite API key |
+| `BACKEND_URL` | ✅ | Spring Boot backend URL |
+| `DEFAULT_EMAIL_DOMAIN` | ⚠️ | Default email domain (perumdamts.com) |
+
+Lihat `env.example` untuk nilai default.
+
+---
+
+## 6. Common Tasks & Examples
+
+### Add a new CRUD page (Master entity)
+
+```
+Config → Page (server) → Client uses MasterPageClient
+```
+
+1. Generate OpenAPI types via `docs/api/master/extract-types.js`
+2. Buat config di `src/config/master/{entity}.config.ts` — define columns + Zod schema + toolbar
+3. Buat page di `src/app/(app)/master/{entity}/page.tsx` — server component tipis, render `<MasterPageClient entity="…" />`
+4. Daftarkan entity di `src/config/entities.ts` (entity list) + `src/config/master-entity-types.ts` (type map)
+5. Verifikasi: `bun run build` — pastikan typed references valid
+
+### Add a combobox FK filter
+
+```tsx
+// Di toolbar config, tinggal tambah: { id: "organisasiId", label: "Organisasi", entity: "organisasi" }
+// FkComboboxFilter otomatis fetch /list, cache via queryKey
+```
+
+### Debug / test a hook
+
+```bash
+bun run test -- --run src/hooks/useResource.test.ts
+bun run test -- --run src/lib/utils.test.ts
+```
+
+### Claim & ship an issue
+
+```bash
+bd update <id> --claim     # claim
+# ... code changes ...
+bun run build              # WAJIB: zero error sebelum lanjut
+bd close <id>              # complete
+git pull --rebase
+bd dolt push
+git push
+```
+
+---
+
+## 7. Session Completion (Mandatory)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
 
@@ -70,9 +293,111 @@ bd close <id>         # Complete work
 - NEVER stop before pushing - that leaves work stranded locally
 - NEVER say "ready to push when you are" - YOU must push
 - If push fails, resolve and retry until it succeeds
-<!-- END BEADS INTEGRATION -->
 
-## Exploration Priority — WAJIB 🚨
+### Pre-Ship Checklist
+
+- [ ] `bun run test` — all green
+- [ ] `bun run build` — clean build
+- [ ] `bunx biome check` — zero lint errors
+- [ ] `npx gitnexus analyze` — refresh GitNexus index
+- [ ] `npx gitnexus detect-changes -s unstaged -r kepegawaian-fe` — scope sesuai
+- [ ] `/graphify . --update` via skill — update knowledge graph
+- [ ] No out-of-scope errors resolved ad-hoc
+- [ ] `bd dolt push` + `git pull --rebase` + `git push` → verify "up to date with origin"
+
+---
+
+## 8. Workflow — Coding Mode Detail
+
+> Flow ini berlaku **hanya saat Coding Mode** (section 2). Grilling Mode punya flow sendiri.
+
+### Skill Wajib
+
+1. **WAJIB aktifkan `/ponytail`** sebelum menulis kode — memaksa solusi paling sederhana, shortest path, YAGNI.
+2. **WAJIB gunakan `graphify` & `gitnexus`** untuk eksplorasi kode — **prioritas: `graphify` → `gitnexus` → `grep`**. Grep hanya sebagai last resort.
+3. **PAHAMI CONTEXT files** sebelum edit — `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR terkait. Jangan tebak-nebak.
+
+### Sequence
+
+**Read MD → Read CONTEXT → `/ponytail` → Explore → Write → Test → Build → Update Graph → Update MD → Close → Ship**
+
+| Step | Action |
+|------|--------|
+| **Read MD** | Baca MD file terkait issue — teliti & pahami claim order |
+| **Read CONTEXT** | `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR — **jangan tebak-nebak** |
+| **Explore** | **Prioritas:** `graphify` (knowledge graph) → `gitnexus` (code intelligence: `query/impact/context`) → `grep` (last resort saja) |
+| **Write** | Maks ~120 lines/file. Split if exceeded. Follow conventions: shared primitives di `components/`, typed config di `config/`. |
+| **Test** | Unit tests **required** for new logic. `bun run test` |
+| **Build** | **WAJIB** `bun run build` — pastikan zero error sebelum lanjut |
+| **Update Graph** | `npx gitnexus analyze` (refresh GitNexus) + `/graphify --update` (update knowledge graph via skill) — pastikan graph sesuai perubahan terbaru |
+| **Update MD** | Tandai step yang sudah selesai di MD file |
+| **Close** | `bd close <id>` — complete issue |
+| **Ship** | Commit `<type>: <description>`. `git pull --rebase` → `bd dolt push` → `git push` → verify "up to date". Build & Graph WAJIB up-to-date sebelum step ini. |
+
+---
+
+## 9. Anti-Examples (Do NOT Do)
+
+| Anti-Pattern | Why |
+|--------------|-----|
+| ❌ Hardcode hex/`oklch(...)` colors inside components | Always use design tokens (`--primary`, `--muted-foreground`, etc.) via `@theme` / CSS variables |
+| ❌ `Record<string, unknown>` for typed entities | Use `EntityConfig<TItem, TReq>` generics — typed config eliminates casts |
+| ❌ Use Radix instead of Base UI | The project is init'd with `shadcn -b base`. Props differ (e.g. `keepMounted` ≠ `forceMount`). Always check Base UI docs. |
+| ❌ One `<Dialog>`/`<Sheet>` per table row | Mount form container **once** at page level, pass `editing` state — never N dialogs for N rows |
+| ❌ `gcTime: Infinity` or `staleTime: Infinity` | Memory leak hazard. Tables: `gcTime: 5min`, `staleTime: 30s`. `/list` combos: longer `staleTime`. |
+| ❌ Toast for data-load failure | Use inline "Coba lagi" panel inside the table. Toasts are for **mutation results only**. |
+| ❌ CSS-hide/disable for unauthorized actions | **Unmount** (`null`) — can't be re-enabled via inspect. Cleaner for elderly UI. |
+| ❌ Optimistic removal (remove row before 200) | Always wait for backend 200. On 409, keep dialog open with inline reason. |
+| ❌ `grep` before `graphify`/`gitnexus` | Prioritas explore: graphify → gitnexus → grep. Jangan grep dulu. |
+| ❌ Rename symbols with find-and-replace | Use `gitnexus_rename` — understands call graph. |
+| ❌ Skip `gitnexus_impact` before edit | Always check blast radius first — report to user. |
+| ❌ `git add` per-file between edits | Batched `git add` at the end only. Defeats single-batch guarantee. |
+| ❌ Amending broken commits | Policy: **never amend**. Always `fix()` commit. |
+| ❌ Resolve out-of-scope errors inline | File **new issue** instead — don't fix unrelated problems ad-hoc. |
+
+---
+
+## 10. Commit Convention
+
+```
+<type>: <description>
+```
+
+Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`, `perf`.
+
+**Policy:** never amend. Broken commit → new `fix()` commit.
+
+---
+
+## 11. Skills — Available Skills
+
+Full catalog: `.agents/skills/`. Key ones:
+
+| Skill | Use Case |
+|-------|----------|
+| `graphify` | Knowledge graph — eksplorasi/cluster project secara visual |
+| `gitnexus-*` | Code intelligence (6 skills: exploring, impact, debugging, refactoring, guide, CLI) |
+| `shadcn` | Manage shadcn components, add/search/debug UI components |
+| `frontend-design` | Visual design guidance, typography, intentional aesthetics |
+| `ponytail` / `ponytail-audit` | Force simplest solution (YAGNI) / whole-repo over-engineering audit |
+| `tdd` | Test-first development |
+| `code-review` | Review changes vs coding standards + spec |
+| `grill-me` / `grill-with-docs` | Stress-test plans + create ADRs |
+| `diagnose` / `diagnosing-bugs` | Debug / regression |
+| `prototype` | Throwaway experimental code |
+| `handoff` | Compact session → handoff doc |
+| `to-prd` / `to-issues` / `to-spec` | Convert conversation → PRD → issues / spec |
+| `domain-modeling` | DDD ubiquitous language |
+| `triage` | Move issues through state machine |
+| `wayfinder` | Plan huge chunks of work as decision tickets |
+| `implement` | Implement from spec/tickets |
+| `teach` | Teach a new skill/concept |
+| `research` | Investigate against high-trust primary sources |
+| `caveman` | Ultra-compressed communication mode |
+
+---
+
+## 12. Exploration Priority — WAJIB 🚨
 
 **Urutan menjelajahi kode: `graphify` → `gitnexus` → `grep` (fallback).**
 
@@ -84,7 +409,7 @@ bd close <id>         # Complete work
 
 ---
 
-## Graphify — Knowledge Graph
+## 13. Graphify — Knowledge Graph
 
 Project ini sudah memiliki knowledge graph yang telah di-build di `graphify-out/`:
 
@@ -107,7 +432,7 @@ adalah peta dari KODE yang sudah ada. Keduanya saling melengkapi.
 ---
 
 <!-- gitnexus:start -->
-# GitNexus — Code Intelligence
+# 14. GitNexus — Code Intelligence
 
 This project is indexed by GitNexus as **kepegawaian-fe** (3007 symbols, 5106 relationships, 153 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
 
@@ -149,3 +474,18 @@ This project is indexed by GitNexus as **kepegawaian-fe** (3007 symbols, 5106 re
 | Index, status, clean, wiki CLI commands | `.claude/skills/gitnexus/gitnexus-cli/SKILL.md` |
 
 <!-- gitnexus:end -->
+
+---
+
+## 15. Useful Links
+
+- [Next.js 16 Docs](https://nextjs.org/docs) (⚠️ read `node_modules/next/dist/docs/` first — breaking changes)
+- [Base UI React](https://base-ui.com/react) — component docs (bukan Radix!)
+- [Tailwind CSS v4](https://tailwindcss.com/docs/installation)
+- [TanStack Query v5](https://tanstack.com/query/v5)
+- [React Hook Form v7](https://react-hook-form.com/)
+- [Zod v4](https://zod.dev/)
+- [BiomeJS](https://biomejs.dev/)
+- [Appwrite Auth](https://appwrite.io/docs/products/auth)
+- [shadcn/ui (Base UI)](https://ui.shadcn.com/)
+- [Sonner Toast](https://sonner.emilkowal.ski/)
