@@ -97,7 +97,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 		staleTime: 60_000,
 	});
 
-const d = biodata.data;
+	const d = biodata.data;
 	const nama = pegawai.biodata?.nama ?? d?.nama ?? "-";
 	const nipam = pegawai.nipam ?? "-";
 	const jabatan = pegawai.jabatan?.nama ?? "-";
@@ -125,24 +125,24 @@ const d = biodata.data;
 			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
 				{/* Data Pribadi */}
 				<AccordionItem value="data-pribadi">
-<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>
-							<span className="inline-flex items-center gap-2">
-								Data Pribadi
-								{d?.changedStatus && (
-<Tooltip>
-										<TooltipTrigger>
-											<Badge variant="outline" className="gap-1 text-warning border-warning/30 bg-warning/5">
-												<Clock className="size-3" />
-												Menunggu
-											</Badge>
-										</TooltipTrigger>
-										<TooltipContent side="top" align="center">
-											Perubahan biodata sedang menunggu persetujuan admin
-										</TooltipContent>
-									</Tooltip>
-								)}
-							</span>
-						</AccordionTrigger>
+					<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>
+						<span className="inline-flex items-center gap-2">
+							Data Pribadi
+							{d?.changedStatus && (
+								<Tooltip>
+									<TooltipTrigger render={<span />}>
+										<Badge variant="outline" className="gap-1 text-warning border-warning/30 bg-warning/5">
+											<Clock className="size-3" />
+											Menunggu
+										</Badge>
+									</TooltipTrigger>
+									<TooltipContent side="top" align="center">
+										Perubahan biodata sedang menunggu persetujuan admin
+									</TooltipContent>
+								</Tooltip>
+							)}
+						</span>
+					</AccordionTrigger>
 					<AccordionContent>
 						{!nik ? (
 							<p className="text-sm text-muted-foreground italic">Tidak ada data</p>
@@ -170,10 +170,7 @@ const d = biodata.data;
 									<Field label="Tanggal Lahir" value={formatDate(d.tanggalLahir)} />
 									<Field label="Agama" value={d.agama ? labelAgama(d.agama) : undefined} />
 									<Field label="Status Kawin" value={d.statusKawin ? labelKawin(d.statusKawin) : undefined} />
-<Field
-										label="Pendidikan Terakhir"
-										value={formatPendidikan(d.detailPendidikanTerakhir)}
-									/>
+									<Field label="Pendidikan Terakhir" value={formatPendidikan(d.detailPendidikanTerakhir)} />
 									<Field label="Ibu Kandung" value={d.ibuKandung} />
 									<Field label="Email" value={d.email} />
 									<Field label="Kode Pajak" value={d.kodePajak} />
@@ -235,38 +232,39 @@ const d = biodata.data;
 						setFormError(null);
 					}
 				}}
-			><DialogContent className="flex flex-col max-h-[85dvh] sm:max-w-lg p-0 gap-0 overflow-hidden">
+			>
+				<DialogContent className="flex flex-col max-h-[85dvh] sm:max-w-lg p-0 gap-0 overflow-hidden">
 					<DialogHeader className="shrink-0 px-4 pt-4">
 						<DialogTitle>Edit Profil</DialogTitle>
 					</DialogHeader>
 					<div className="flex-1 overflow-y-auto px-4 pb-0 [&>form]:flex [&>form]:flex-1 [&>form]:flex-col [&>form>div:last-of-type]:mt-auto [&>form>div:last-of-type]:sticky [&>form>div:last-of-type]:bottom-0 [&>form>div:last-of-type]:bg-popover [&>form>div:last-of-type]:pt-4 [&>form>div:last-of-type]:pb-4 [&>form>div:last-of-type]:border-t [&>form>div:last-of-type]:border-border [&>form>div:last-of-type]:-mx-4 [&>form>div:last-of-type]:px-4">
-					<CrudForm
-						schema={biodataFormSchema as never}
-						fields={editFormFields}
-						defaultValues={
-							d
-								? ({
-										nik: d.nik ?? "",
-										nama: d.nama ?? "",
-										jenisKelamin: d.jenisKelamin ?? "",
-										tempatLahir: d.tempatLahir ?? "",
-										tanggalLahir: d.tanggalLahir ?? "",
-										agama: d.agama ?? "",
-										statusKawin: d.statusKawin ?? "",
-										ibuKandung: d.ibuKandung ?? "",
-telp: d.noTelp ?? "",
-										alamat: d.alamat ?? "",
-									} as Record<string, unknown>)
-								: undefined
-						}
-						onSubmit={handleEditSubmit}
-						onCancel={() => {
-							setDialogOpen(false);
-							setFormError(null);
-						}}
-						error={formError}
-						submitLabel="Simpan Biodata"
-					/>
+						<CrudForm
+							schema={biodataFormSchema as never}
+							fields={editFormFields}
+							defaultValues={
+								d
+									? ({
+											nik: d.nik ?? "",
+											nama: d.nama ?? "",
+											jenisKelamin: d.jenisKelamin ?? "",
+											tempatLahir: d.tempatLahir ?? "",
+											tanggalLahir: d.tanggalLahir ?? "",
+											agama: d.agama ?? "",
+											statusKawin: d.statusKawin ?? "",
+											ibuKandung: d.ibuKandung ?? "",
+											telp: d.noTelp ?? "",
+											alamat: d.alamat ?? "",
+										} as Record<string, unknown>)
+									: undefined
+							}
+							onSubmit={handleEditSubmit}
+							onCancel={() => {
+								setDialogOpen(false);
+								setFormError(null);
+							}}
+							error={formError}
+							submitLabel="Simpan Biodata"
+						/>
 					</div>
 				</DialogContent>
 			</Dialog>

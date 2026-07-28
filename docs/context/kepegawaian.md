@@ -198,4 +198,5 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 - ✅ **Modul baru** — `laporanKepegawaian` terdaftar di generator, tipe di `src/types/laporan/kepegawaian.ts`.
 - ✅ **changedStatus** — endpoint dashboard migrasi ke `GET /profil/biodata/{nik}/dashboard`, badge "Menunggu" + tooltip di title "Data Pribadi". Tipe di-generate via `extract-types.js`.
   - ⏳ Alur approval penuh dari admin (review + approve/reject) masih menyusul.
+- ✅ **Tooltip fix** — `TooltipTrigger` Base UI render sbg `<button>` secara default, bentrok dengan `AccordionTrigger` (juga `<button>`). Fix: `render={<span />}` agar valid HTML. Lihat `section-left-panel.tsx`.
 - ⏳ Dashboard masih membutuhkan backend nyata untuk data lives.
