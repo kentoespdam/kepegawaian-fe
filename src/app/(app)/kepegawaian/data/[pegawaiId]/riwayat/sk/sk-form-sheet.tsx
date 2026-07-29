@@ -9,7 +9,7 @@ import { z } from "zod";
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Field } from "@/components/ui/field";
+import { Label } from "@/components/ui/label";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_SK_OPTIONS } from "@/lib/riwayat-constants";
