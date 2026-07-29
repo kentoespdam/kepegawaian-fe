@@ -123,9 +123,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			if (values.updateMaster) payload.updateMaster = true;
 			if (values.notes) payload.notes = values.notes;
 
-			const url = editingId
-				? `/api/proxy/kepegawaian/riwayat/sk/${editingId}`
-				: "/api/proxy/kepegawaian/riwayat/sk";
+			const url = editingId ? `/api/proxy/kepegawaian/riwayat/sk/${editingId}` : "/api/proxy/kepegawaian/riwayat/sk";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {
@@ -149,7 +147,12 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	};
 
 	return (
-		<Sheet open={isOpen} onOpenChange={(v) => { if (!v) onClose(); }}>
+		<Sheet
+			open={isOpen}
+			onOpenChange={(v) => {
+				if (!v) onClose();
+			}}
+		>
 			<SheetContent className="sm:max-w-xl overflow-y-auto">
 				<SheetHeader>
 					<SheetTitle>{editingId ? "Edit Surat Keputusan" : "Tambah Surat Keputusan"}</SheetTitle>
@@ -157,9 +160,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 				<form onSubmit={rhfSubmit(onSubmit)} className="mt-6 space-y-5">
 					{errors.root && (
-						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
-							{errors.root.message}
-						</div>
+						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
 
 					<FieldSelect

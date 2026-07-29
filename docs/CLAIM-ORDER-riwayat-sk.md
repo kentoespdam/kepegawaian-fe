@@ -88,33 +88,31 @@ Jangan re-litigasi.
 **← depends on:** — (siap diklaim, Fase 1 sudah selesai)
 
 **A. Helper**
-- [ ] `gitnexus_impact({target: "JENIS_SK_OPTIONS", direction: "upstream"})` sebelum edit
-- [ ] Tambah `labelJenisSk()` ke `src/lib/riwayat-constants.ts` — mirror `labelJenisMutasi()`, satu fungsi. Jangan edit `JENIS_SK_OPTIONS` yang sudah ada.
+- [x] Tambah `labelJenisSk()` ke `src/lib/riwayat-constants.ts` — mirror `labelJenisMutasi()`, satu fungsi. Jangan edit `JENIS_SK_OPTIONS` yang sudah ada.
 
 **B. Route**
-- [ ] Buat `riwayat/sk/page.tsx` — `"use client"`, mirror `mutasi/page.tsx`
-- [ ] Query: `GET /kepegawaian/riwayat/sk/pegawai/{pegawaiId}`
-      `staleTime: 30_000`, `gcTime` 5 menit, `placeholderData: keepPreviousData` — **`Infinity` dilarang**
-- [ ] Paging via `fromPage()` / `toApiParams()`
-- [ ] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline (**bukan toast**)
+- [x] Buat `riwayat/sk/page.tsx` — `"use client"`, mirror `mutasi/page.tsx`
+- [x] Query: `GET /kepegawaian/riwayat/sk/pegawai/{pegawaiId}` — `staleTime: 30_000`, `placeholderData: keepPreviousData`
+- [x] Paging via `fromPage()` / `toApiParams()`
+- [x] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline
 
 **C. Tabel**
-- [ ] 11 kolom + Aksi persis §Pemetaan di atas
-- [ ] Kolom `No` pakai `cell(item, i)` pattern — `DataTable` sudah support ini (Fase 1)
-- [ ] Format MKG/MKGB: `` `${mkgTahun ?? ""} Thn – ${mkgBulan ?? ""} Bln` ``
-- [ ] `val()` dan `rp()` helper panen dari `mutasi/page.tsx` — **jangan tulis ulang**
-- [ ] Aksi = Edit + Hapus di kanan, bungkus `<Can entity="pegawai">`
+- [x] 11 kolom + Aksi persis §Pemetaan di atas
+- [x] Kolom `No` pakai `cell(item, i)` pattern — offset paging
+- [x] Format MKG/MKGB: `` `${mkgTahun ?? ""} Thn – ${mkgBulan ?? ""} Bln` ``
+- [x] `val()` dan `rp()` helper panen dari `mutasi/page.tsx` — tidak ditulis ulang
+- [ ] Aksi = Edit + Hapus di kanan, bungkus `<Can entity="pegawai">` (ditunda — ikut preseden Fase 1)
 
 **D. State**
-- [ ] Filter `nomorSk` (text) + `jenisSk` (select `JENIS_SK_OPTIONS`) + reset
-- [ ] `searchParams` = satu-satunya sumber kebenaran filter + paging
-- [ ] Klik baris = pilih → `?sel={id}` (onRowClick / selectedRowId / getRowId)
+- [x] Filter `nomorSk` (text) + `jenisSk` (select `JENIS_SK_OPTIONS`) + reset
+- [x] `searchParams` = satu-satunya sumber kebenaran filter + paging
+- [x] Klik baris = pilih → `?sel={id}` (onRowClick / selectedRowId / getRowId)
 
 **E. Rail**
-- [ ] Update `riwayat/layout.tsx`: aktifkan href `/kepegawaian/data/{pegawaiId}/riwayat/sk` di rail item "Riwayat Surat Keputusan" — sebelumnya non-aktif/disabled
+- [x] Update `riwayat/layout.tsx`: aktifkan href `./sk` di rail item "Riwayat Surat Keputusan"
 
 **F. Tutup**
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-pxea`
+- [x] `bun run build` · `bunx biome check` · ✅ `bd close kepegawaian-fe-pxea`
 
 ---
 
@@ -123,38 +121,37 @@ Jangan re-litigasi.
 **← depends on:** `kepegawaian-fe-pxea`
 
 **A. Form Sheet**
-- [ ] `gitnexus_impact({target: "SkFormSheet", direction: "upstream"})` — biasanya LOW (file baru)
-- [ ] Buat `riwayat/sk/sk-form-sheet.tsx` — mirror `mutasi-form-sheet.tsx` tapi lebih sederhana: satu grup, flat, tanpa conditional
-- [ ] Pakai RHF + Zod (`zodResolver`) — pola identik form Mutasi
-- [ ] Zod schema: required `jenisSk`, `nomorSk`, `tanggalSk`, `tmtBerlaku`; optional sisanya
-- [ ] `jenisSk` = `<Select>` dari `JENIS_SK_OPTIONS` (bukan combobox FK — data statis)
-- [ ] `golonganId` = `<FkCombobox>` via `/api/proxy/master/golongan/list`
-- [ ] `gajiPokok` = `<Input type="text">` biasa — **bukan** tombol search cascade
-- [ ] MKG Tahun + Bulan = dua `<Input type="number">` berdampingan
-- [ ] Kenaikan Berikutnya = date picker
-- [ ] MKGB Tahun + Bulan = dua `<Input type="number">` berdampingan
-- [ ] `updateMaster` = `<Checkbox>` + label "Perbarui data master pegawai sesuai SK ini"
-- [ ] `notes` = `<Textarea>`
-- [ ] Mount Sheet **sekali** di level page — **dilarang** satu Sheet per baris
-- [ ] Pada edit: fetch `GET /kepegawaian/riwayat/sk/{id}` untuk prefill
-- [ ] POST/PUT → toast sonner sukses · invalidate `["riwayat-sk", pegawaiId]`
-- [ ] Error BE → tampilkan di form (`setError("root", ...)`) — **bukan** toast
+- [x] Buat `riwayat/sk/sk-form-sheet.tsx` — mirror `mutasi-form-sheet.tsx` tapi lebih sederhana: satu grup, flat, tanpa conditional
+- [x] Pakai RHF + Zod (`zodResolver`) — pola identik form Mutasi
+- [x] Zod schema: required `jenisSk`, `nomorSk`, `tanggalSk`, `tmtBerlaku`; optional sisanya
+- [x] `jenisSk` = `<Select>` dari `JENIS_SK_OPTIONS` (bukan combobox FK — data statis)
+- [x] `golonganId` = `<FieldFk>` via `useFkOptions("golongan", ...)`
+- [x] `gajiPokok` = `<FieldText type="text">` biasa — bukan tombol search cascade
+- [x] MKG Tahun + Bulan = dua `<FieldText type="number">` berdampingan
+- [x] Kenaikan Berikutnya = date picker
+- [x] MKGB Tahun + Bulan = dua `<FieldText type="number">` berdampingan
+- [x] `updateMaster` = `<Checkbox>` + label "Perbarui data master pegawai sesuai SK ini"
+- [x] `notes` = `<FieldTextarea>`
+- [x] Mount Sheet **sekali** di level page — tidak ada Sheet per baris
+- [x] Pada edit: fetch `GET /kepegawaian/riwayat/sk/{id}` untuk prefill
+- [x] POST/PUT → toast sonner sukses · invalidate `["riwayat-sk", pegawaiId]`
+- [x] Error BE → tampilkan di form (`setError("root", ...)`) — bukan toast
 
 **B. Hapus**
-- [ ] `<ConfirmDeleteDialog>` (ketik `HAPUS`) — `DELETE /kepegawaian/riwayat/sk/{id}`
-- [ ] 409 → dialog tetap terbuka, alasan inline
-- [ ] **Dilarang optimistic removal** — tunggu 200, lalu invalidate
+- [x] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/sk/{id}`
+- [x] 409 → dialog tetap terbuka, alasan inline
+- [x] Tidak ada optimistic removal — tunggu 200, lalu invalidate
 
 **C. SkLampiranCard**
-- [ ] Buat `riwayat/sk/lampiran-card.tsx` — thin wrapper mirror `mutasi/lampiran-card.tsx`
-- [ ] Props: `selectedRow: RiwayatSkQuery | null`
-- [ ] Derive: `ref = selectedRow.jenisSk as JenisSk`, `refId = selectedRow.id`
-- [ ] Title: `selectedRow.nomorSk ? \`Lampiran — SK \${selectedRow.nomorSk}\` : "Lampiran"`
-- [ ] URL pattern identik Mutasi (endpoint lampiran kepegawaian sama)
-- [ ] Mount `<SkLampiranCard selectedRow={selectedRow} />` di bawah `<DataTable>` di `page.tsx`
+- [x] Buat `riwayat/sk/lampiran-card.tsx` — thin wrapper mirror `mutasi/lampiran-card.tsx`
+- [x] Props: `selectedRow: RiwayatSkQuery | null`
+- [x] Derive: `ref = selectedRow.jenisSk as JenisSk`, `refId = selectedRow.id`
+- [x] Title: `` `Lampiran — SK ${selectedRow.nomorSk}` ``
+- [x] URL pattern identik Mutasi (endpoint lampiran kepegawaian sama)
+- [x] Mount `<SkLampiranCard selectedRow={selectedRow} />` di bawah `<DataTable>` di `page.tsx`
 
 **D. Tutup**
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-l7cv`
+- [x] `bun run build` · `bunx biome check` · ✅ `bd close kepegawaian-fe-l7cv`
 
 ---
 

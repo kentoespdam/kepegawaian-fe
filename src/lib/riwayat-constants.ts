@@ -12,7 +12,7 @@ export const JENIS_MUTASI_OPTIONS: { value: string; label: string }[] = [
 /** Shared constant: opsi dropdown Jenis SK. Satu sumber, dipakai table + form. */
 export const JENIS_SK_OPTIONS: { value: string; label: string }[] = [
 	{ value: "SK_KENAIKAN_PANGKAT_GOLONGAN", label: "Kenaikan Pangkat" },
-	{ value: "SK_CAPEG", label: "CPNS" },
+	{ value: "SK_CAPEG", label: "Calon Pegawai" },
 	{ value: "SK_PEGAWAI_TETAP", label: "Pegawai Tetap" },
 	{ value: "SK_JABATAN", label: "Jabatan" },
 	{ value: "SK_MUTASI", label: "Mutasi" },

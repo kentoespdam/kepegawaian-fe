@@ -16,8 +16,8 @@ import { fromPage, toApiParams } from "@/lib/paging";
 import { JENIS_SK_OPTIONS, labelJenisSk } from "@/lib/riwayat-constants";
 import { formatDate, rupiah } from "@/lib/utils";
 import type { RiwayatSkQuery } from "@/types/kepegawaian/riwayat";
-import { SkFormSheet } from "./sk-form-sheet";
 import { SkLampiranCard } from "./lampiran-card";
+import { SkFormSheet } from "./sk-form-sheet";
 
 // ── Formatter helpers ──
 
@@ -282,7 +282,7 @@ export default function SkPage() {
 			<SkFormSheet
 				pegawaiId={pegawaiId}
 				editingId={editingId}
-				isOpen={isFormOpen}
+				isOpen={isFormOpen || editingId !== null}
 				onClose={() => {
 					setEditingId(null);
 					setIsFormOpen(false);
