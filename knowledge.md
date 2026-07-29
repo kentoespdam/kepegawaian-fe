@@ -86,7 +86,14 @@ Freebuff beroperasi dalam **2 mode**. Mode ditentukan oleh prompt pertama user:
    - Claim order checklist (step-by-step urutan ngerjain)
    - Referensi context/docs yang relevan
    - Dependency/urut-urutan
-5. Done — tidak perlu compile/test/push
+5. Jika grill **menghasilkan/mengubah file** (CONTEXT/ADR/Claim Order di `docs/` atau `.beads/issues.jsonl`):
+   - `git add docs/ .beads/issues.jsonl`
+   - `git commit -m "docs: {modul}: {deskripsi singkat}"`
+   - `git pull --rebase`
+   - `bd dolt push`
+   - `git push`
+   - `git status` — pastikan "up to date with origin"
+   Jika tidak ada file yang dibuat (hanya analisis/tanya-jawab) → Done, tidak perlu push.
 
 ### 💻 Coding Mode
 
@@ -94,12 +101,13 @@ Freebuff beroperasi dalam **2 mode**. Mode ditentukan oleh prompt pertama user:
 
 1. **Baca MD file** terkait issue — baca **teliti & mendalam**, pahami claim order
 2. **Baca CONTEXT files** — `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR, dll. **JANGAN halu/tebak-nebak**
-3. **Aktifkan `/ponytail`** — skill untuk memaksa solusi paling sederhana, minimal, YAGNI. **WAJIB** sebelum nulis kode.
-4. **Aktifkan skill graphify** — pahami arsitektur & relasi via knowledge graph
-5. **Kerjakan issue** — ikuti workflow coding di section 8
-6. **Update MD file** — tandai step yang sudah selesai
-7. **Close issue** — `bd close <id>`
-8. **Commit & push** ke GitHub sebagai finalisasi
+3. **WAJIB baca & ikuti `docs/design/coding-rules.md`** — aturan mengikat, bila konflik dengan kebiasaan default, aturan ini menang.
+4. **Aktifkan `/ponytail`** — skill untuk memaksa solusi paling sederhana, minimal, YAGNI. **WAJIB** sebelum nulis kode.
+5. **Aktifkan skill graphify** — pahami arsitektur & relasi via knowledge graph
+6. **Kerjakan issue** — ikuti workflow coding di section 8
+7. **Update MD file** — tandai step yang sudah selesai
+8. **Close issue** — `bd close <id>`
+9. **Commit & push** ke GitHub sebagai finalisasi
 
 ---
 
@@ -315,9 +323,10 @@ git push
 
 ### Skill Wajib
 
-1. **WAJIB aktifkan `/ponytail`** sebelum menulis kode — memaksa solusi paling sederhana, shortest path, YAGNI.
-2. **WAJIB gunakan `graphify` & `gitnexus`** untuk eksplorasi kode — **prioritas: `graphify` → `gitnexus` → `grep`**. Grep hanya sebagai last resort.
-3. **PAHAMI CONTEXT files** sebelum edit — `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR terkait. Jangan tebak-nebak.
+1. **WAJIB baca & ikuti `docs/design/coding-rules.md`** — aturan mengikat yang berlaku untuk seluruh Coding Mode. Bila konflik dengan kebiasaan default, **coding-rules.md menang**.
+2. **WAJIB aktifkan `/ponytail`** sebelum menulis kode — memaksa solusi paling sederhana, shortest path, YAGNI.
+3. **WAJIB gunakan `graphify` & `gitnexus`** untuk eksplorasi kode — **prioritas: `graphify` → `gitnexus` → `grep`**. Grep hanya sebagai last resort.
+4. **PAHAMI CONTEXT files** sebelum edit — `CONTEXT-MAP.md`, `docs/context/{domain}.md`, ADR terkait. Jangan tebak-nebak.
 
 ### Sequence
 
