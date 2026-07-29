@@ -1,7 +1,7 @@
-# Claim Order — BE API Update 2026-07-29 (Pegawai & Penggajian)
+# ✅ Claim Order — BE API Update 2026-07-29 (Pegawai & Penggajian)
 
-> Papan pantau untuk agen implementer. Sumber kebenaran status = **beads (`bd`)**, bukan file ini.
-> Alur per issue: `bd show <id>` → `bd update <id> --claim` → kerja → quality gate → `bd close <id>`.
+> ✅ **SELESAI.** Kedua issue sudah closed dan di-commit.
+> Lihat `bd show kepegawaian-fe-slzs` dan `bd show kepegawaian-fe-6fsr` untuk detail.
 
 **Konteks.** BE merilis update response shape untuk dua modul (2026-07-29).
 Types di-regenerate via `docs/api/extract-types.js` dan sudah di-sync ke `src/types/`.
@@ -35,28 +35,29 @@ File ini mencatat claim order dan implikasi per issue yang lahir dari update ter
 
 ## Urutan Claim
 
-### 1. `kepegawaian-fe-slzs` — penggajian: sync tipe BE update
+### 1. ✅ `kepegawaian-fe-slzs` — penggajian: sync tipe BE update
 
-**Depends on:** — (siap diklaim sekarang)
+**Status:** ✅ **CLOSED** (`closed_at: 2026-07-29T07:50:02Z`)
+**Depends on:** — (tidak ada)
 **Prioritas:** P1 · Preventif — modul penggajian belum dibangun, tapi tipe sudah berubah.
 
-- [ ] `bd update kepegawaian-fe-slzs --claim`
-- [ ] Audit consumer tipe lama:
+- [x] `bd update kepegawaian-fe-slzs --claim`
+- [x] Audit consumer tipe lama:
   ```bash
   grep -rn "DasarGajiResponse\|SingleResultDetailDasarGaji\b\|DasarGaji\b\|DetailDasarGaji\b" \
     src/ --include="*.ts" --include="*.tsx"
   ```
-  → **Hasil yang diharapkan: nol baris di luar `src/types/`**
-- [ ] Audit import dari `_shared` yang sebut `DasarGaji`:
+  → **Hasil: nol baris di luar `src/types/`** ✅
+- [x] Audit import dari `_shared` yang sebut `DasarGaji`:
   ```bash
   grep -rn "from.*_shared" src/ --include="*.ts" --include="*.tsx" | grep -i "dasar"
   ```
-  → **Hasil yang diharapkan: nol**
-- [ ] Catat temuan ke `bd update kepegawaian-fe-slzs --notes="..."`
-- [ ] Bila ada consumer stale → rename via `gitnexus_rename` (jangan find-replace)
-- [ ] `bun run build` — zero error tipe
-- [ ] `bunx biome check` — zero lint
-- [ ] `bd close kepegawaian-fe-slzs`
+  → **Hasil: nol** ✅
+- [x] Catat temuan ke `bd update kepegawaian-fe-slzs --notes="..."`
+- [x] Bila ada consumer stale → rename via `gitnexus_rename` (jangan find-replace) → **tidak ada**
+- [x] `bun run build` — zero error tipe ✅
+- [x] `bunx biome check` — zero lint ✅
+- [x] `bd close kepegawaian-fe-slzs` ✅
 
 > **Anchor tipe untuk implementer penggajian (catat sebelum mulai modul):**
 > - Tabel paged: `PageResultPageDasarGajiResponse` / `PageResultPageDetailDasarGajiResponse`
@@ -66,8 +67,9 @@ File ini mencatat claim order dan implikasi per issue yang lahir dari update ter
 
 ---
 
-### 2. `kepegawaian-fe-6fsr` — Conditional Mutasi form fields by jenisMutasi
+### 2. ✅ `kepegawaian-fe-6fsr` — Conditional Mutasi form fields by jenisMutasi
 
+**Status:** ✅ **CLOSED** (`closed_at: 2026-07-29T07:55:00Z`)
 **Depends on:** `slzs` selesai dahulu
 **Prioritas:** P1 · **Blocker BE sudah RESOLVED per update ini.**
 
@@ -83,21 +85,21 @@ File ini mencatat claim order dan implikasi per issue yang lahir dari update ter
 
 **A. Data Pegawai block (read-only)**
 
-- [ ] `gitnexus_impact({target: "mutasi-form-sheet", direction: "upstream"})`
-- [ ] Query `GET /pegawai/{id}/mutasi-context`:
+- [x] `gitnexus_impact({target: "mutasi-form-sheet", direction: "upstream"})`
+- [x] Query `GET /pegawai/{id}/mutasi-context`:
   - Type: `src/types/pegawai/pegawai.ts:344` — `PegawaiResponseMutasiContext`
   - Fields: `{ id, nipam, nama, golongan, organisasi, jabatan, profesi }` (semua `RefMiniResponse`)
   - `queryKey: ["pegawai-mutasi-context", pegawaiId]`, `staleTime: 5 * 60_000`
   - `isPending` → skeleton · `isError` → **inline retry (bukan toast)**
-- [ ] Render 6 field read-only: NIPAM, Nama, Golongan, Unit Kerja, Jabatan, Profesi
-- [ ] Block ini berfungsi ganda sebagai nilai "Lama" yang dikirim ke BE (`*LamaId`)
+- [x] Render 6 field read-only: NIPAM, Nama, Golongan, Unit Kerja, Jabatan, Profesi
+- [x] Block ini berfungsi ganda sebagai nilai "Lama" yang dikirim ke BE (`*LamaId`)
 
 **B. Base fields (selalu visible)**
 
-- [ ] Jenis Mutasi (select/enum), Nomor SK, Tanggal SK, TMT Berlaku
-- [ ] `updateMaster` checkbox — **tanpa validasi, tanpa dialog, tanpa warning kondisional**, default unchecked
-- [ ] Notes textarea
-- [ ] `jenisSk` derived otomatis dari `jenisMutasi` — **tidak ada `<select>` untuk field ini**:
+- [x] Jenis Mutasi (select/enum), Nomor SK, Tanggal SK, TMT Berlaku
+- [x] `updateMaster` checkbox — **tanpa validasi, tanpa dialog, tanpa warning kondisional**, default unchecked
+- [x] Notes textarea
+- [x] `jenisSk` derived otomatis dari `jenisMutasi` — **tidak ada `<select>` untuk field ini**:
 
   | `jenisMutasi` | `jenisSk` |
   |---|---|
@@ -111,42 +113,42 @@ File ini mencatat claim order dan implikasi per issue yang lahir dari update ter
 
 **C. Conditional sections (switch on `jenisMutasi`)**
 
-- [ ] `PENGANGKATAN_PERTAMA` / `TERMINASI` → base only, tidak ada section tambahan
-- [ ] `MUTASI_LOKER` / `MUTASI_JABATAN` → fieldset cascade:
+- [x] `PENGANGKATAN_PERTAMA` / `TERMINASI` → base only, tidak ada section tambahan
+- [x] `MUTASI_LOKER` / `MUTASI_JABATAN` → fieldset cascade:
   - Unit Kerja combobox → `GET /master/jabatan/organisasi/{id}` → Jabatan combobox → `GET /master/profesi/jabatan/{id}` → Profesi combobox
   - Ikut preseden `tambah-form.tsx` untuk pattern cascade + reset downstream
-- [ ] `MUTASI_GOLONGAN` → fieldset:
+- [x] `MUTASI_GOLONGAN` → fieldset:
   - Golongan select, MKG Tahun, MKG Bulan, Kenaikan Berikutnya (date)
   - MKGB Tahun, MKGB Bulan
   - **TANPA** Gaji Pokok (downstream salary process, bukan form ini)
-- [ ] `MUTASI_GAJI` / `MUTASI_GAJI_BERKALA` → semua field `MUTASI_GOLONGAN` + Gaji Pokok:
+- [x] `MUTASI_GAJI` / `MUTASI_GAJI_BERKALA` → semua field `MUTASI_GOLONGAN` + Gaji Pokok:
   - Tombol search → `GET /penggajian/detail-dasar-gaji/{golonganId}/{masaKerja}`
   - Response: `SingleResultDetailDasarGajiNominal` → ambil `response.data.nominal`
   - Bila 404/error → **field dikosongkan**, HR bisa isi manual (tidak blok submit)
 
 **D. Reset semantics (Keputusan 7b)**
 
-- [ ] `jenisMutasi` change → field section yang disembunyikan di-clear: `setValue(field, undefined)`
-- [ ] Mirror pola `onOrgChange` di `tambah-form.tsx`
+- [x] `jenisMutasi` change → field section yang disembunyikan di-clear: `setValue(field, undefined)`
+- [x] Mirror pola `onOrgChange` di `tambah-form.tsx`
 
 **E. Quality gate**
 
-- [ ] Split file bila > ~120 baris (pisah: form-fields, form-schema, form-sheet)
-- [ ] `gitnexus_detect_changes()` — pastikan scope hanya menyentuh file form mutasi
-- [ ] `bun run build` · `bunx biome check`
-- [ ] `bd close kepegawaian-fe-6fsr`
+- [x] Split file bila > ~120 baris (pisah: form-fields, form-schema, form-sheet)
+- [x] `gitnexus_detect_changes()` — pastikan scope hanya menyentuh file form mutasi
+- [x] `bun run build` · `bunx biome check` ✅
+- [x] `bd close kepegawaian-fe-6fsr` ✅
 
 ---
 
-## Definition of Done
+## ✅ Definition of Done
 
-- [ ] Form Sheet Mutasi merender blok Data Pegawai (6 field read-only) dari `mutasi-context`
-- [ ] `jenisMutasi` change muncul/hilangkan section yang benar — 5 varian diverifikasi
-- [ ] Cascade Unit Kerja → Jabatan → Profesi bekerja di `MUTASI_LOKER` / `MUTASI_JABATAN`
-- [ ] Lookup Gaji Pokok mengambil `data.nominal` dari `detail-dasar-gaji/{golonganId}/{masaKerja}`
-- [ ] `jenisSk` ter-derive otomatis dari `jenisMutasi` (7 mapping), tidak ada UI control untuk field ini
-- [ ] Field section tersembunyi ter-reset saat `jenisMutasi` berganti
-- [ ] `bun run build` + `bunx biome check` — hijau
+- [x] Form Sheet Mutasi merender blok Data Pegawai (6 field read-only) dari `mutasi-context`
+- [x] `jenisMutasi` change muncul/hilangkan section yang benar — 5 varian diverifikasi
+- [x] Cascade Unit Kerja → Jabatan → Profesi bekerja di `MUTASI_LOKER` / `MUTASI_JABATAN`
+- [x] Lookup Gaji Pokok mengambil `data.nominal` dari `detail-dasar-gaji/{golonganId}/{masaKerja}`
+- [x] `jenisSk` ter-derive otomatis dari `jenisMutasi` (7 mapping), tidak ada UI control untuk field ini
+- [x] Field section tersembunyi ter-reset saat `jenisMutasi` berganti
+- [x] `bun run build` + `bunx biome check` — hijau ✅
 
 ---
 
