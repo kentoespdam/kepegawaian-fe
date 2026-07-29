@@ -154,17 +154,33 @@ jadi filter tambahan = kolom mati untuk pengguna lansia. YAGNI, bisa ditambah ka
 ⚠️ Set filter yang berbeda per kategori **memperkuat Keputusan 2** (route per kategori): satu route
 bersama harus menyaring `searchParams` per kategori secara manual — persis kerumitan yang dihindari.
 
-**Keputusan 7 — Form Mutasi: satu Sheet, 2 bagian, apa adanya. Tanpa validasi rantai riwayat.**
+**Keputusan 7 — Form Mutasi: satu Sheet, conditional fields by `jenisMutasi`. Tanpa validasi rantai riwayat.**
 
 `RiwayatMutasiPostRequest` = **dua entitas dalam satu tulis**: seluruh isi `RiwayatSkPostRequest`
-(±12 field) + field mutasi (±10). Jadi satu Sheet (heavy form per CONTEXT-MAP) dengan 2 grup:
-**Surat Keputusan** (`nomorSk*`, `jenisSk*`, `tanggalSk*`, `tmtBerlaku*`, `gajiPokok`, `mkgTahun/Bulan`,
-`kenaikanBerikutnya`, `mkgbTahun/Bulan`, `notes`) dan **Perubahan** (`jenisMutasi*`, lalu pasangan
-`golonganLamaId`→`golonganId`, `organisasiLamaId`→`organisasiId`, `jabatanLamaId`→`jabatanId`,
-`profesiLamaId`→`profesiId`, `tanggalBerakhir`).
+(±12 field) + field mutasi (±10). Jadi satu Sheet (heavy form per CONTEXT-MAP).
 
-**Field Lama: prefill dari data pegawai saat ini, tetap bisa diubah.** Tidak dikunci read-only —
-HR perlu backfill riwayat lampau (mutasi 2019 punya golongan lama yang bukan golongan hari ini).
+**Struktur form (top → bottom):**
+1. **Data Pegawai** (read-only block): NIPAM, Nama, Golongan, Unit Kerja, Jabatan, Profesi — nilai
+   saat ini, dari `GET /pegawai/{id}/mutasi-context`. Berfungsi ganda sebagai **nilai "Lama"** yang
+   ikut dikirim (field `*LamaId`). → supersedes Keputusan 11 for form context (layout still uses session).
+2. **Data Mutasi** (always visible): Jenis Mutasi, Nomor SK, Tanggal SK, TMT Berlaku, checkbox
+   `updateMaster` (full row below TMT), Notes textarea.
+3. **Conditional sections** (keyed on `jenisMutasi`):
+   - `PENGANGKATAN_PERTAMA` / `TERMINASI`: base only (no additional section)
+   - `MUTASI_LOKER` / `MUTASI_JABATAN`: + fieldset "Mutasi Lokasi Kerja / Jabatan" with cascade
+     Unit Kerja → Jabatan → Profesi (via `GET /master/jabatan/organisasi/{id}` + `/master/profesi/jabatan/{id}`)
+   - `MUTASI_GOLONGAN`: + fieldset "Mutasi Golongan" with Golongan select, nested fieldset "Masa Kerja
+     Golongan" (MKG Tahun, MKG Bulan), Kenaikan Berikutnya date, nested fieldset "Masa Kerja Golongan
+     Berikutnya" (MKGB Tahun, MKGB Bulan). **NO Gaji Pokok** — downstream salary-adjustment process handles it.
+   - `MUTASI_GAJI` / `MUTASI_GAJI_BERKALA`: + all `MUTASI_GOLONGAN` fields + Gaji Pokok (text input with
+     search button calling `GET /penggajian/detail-dasar-gaji/{golonganId}/{masaKerja}`, fills from `data.nominal`).
+
+**`jenisSk` derived from `jenisMutasi`** (no UI control): `PENGANGKATAN_PERTAMA` → `SK_CAPEG`,
+`MUTASI_LOKER` → `SK_MUTASI`, `MUTASI_JABATAN` → `SK_JABATAN`, `MUTASI_GOLONGAN` → `SK_KENAIKAN_PANGKAT_GOLONGAN`,
+`MUTASI_GAJI` → `SK_PENYESUAIAN_GAJI`, `MUTASI_GAJI_BERKALA` → `SK_KENAIKAN_GAJI_BERKALA`, `TERMINASI` → `SK_PENSIUN`.
+
+**Keputusan 7b (reset semantics):** changing `jenisMutasi` → hidden section fields cleared immediately
+(`setValue(field, undefined)`), mirroring `onOrgChange` in tambah-form.tsx. State = visible.
 
 **`updateMaster` = checkbox biasa, keputusan HR.** Dirender apa adanya dengan label jelas
 ("Perbarui data pegawai sesuai mutasi ini"). **Tidak ada validasi, tidak ada dialog konfirmasi,
