@@ -260,10 +260,7 @@ export default function SkPage() {
 				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
 				selectedRowId={selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={(item) => {
-					setEditingId(String(item.id ?? ""));
-					setIsFormOpen(true);
-				}}
+				onEdit={(item) => setEditingId(String(item.id ?? ""))}
 				onDelete={(item) => setDeleteId(String(item.id ?? ""))}
 				emptyMessage="Belum ada data SK"
 				pagination={
