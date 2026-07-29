@@ -376,3 +376,80 @@ rail harus utuh 5 item sesuai screenshot sejak hari pertama; yang belum ada hany
 (Verifikasi multipart lewat `proxy.ts` = spike di Keputusan 9, bukan pertanyaan desain. RBAC tulis =
 ditunda secara sadar di Keputusan 10. Kunci identitas = tertutup di Keputusan 11. Scope cuti =
 tertutup di Keputusan 12.)
+
+---
+
+## Fase 2 — Riwayat Surat Keputusan (`riwayat/sk/`)
+
+> Keputusan desain dikunci sesi grilling 2026-07-29. Route, layout, dan shared primitives sudah
+> tersedia dari Fase 1 — SK hanya butuh `sk/page.tsx` baru.
+>
+> **Endpoint list:** `GET /kepegawaian/riwayat/sk/pegawai/{id}`
+> **Types:** `RiwayatSkQuery`, `RiwayatSkPostRequest`, `RiwayatSkPutRequest` sudah ada di
+> `src/types/kepegawaian/riwayat.ts` — zero generate needed.
+
+**Keputusan 13 — Kolom tabel persis screenshot. Aksi di kanan (konsisten DataTable).**
+
+Kolom (kiri→kanan): `No | Nomor SK | Jenis SK | Tgl. SK | Tgl. Berlaku | Golongan | Gaji Pokok | MKG | Kenaikan Berikutnya | MKGB | Notes` + **Aksi**.
+
+| Kolom | Isi | Sumber |
+|---|---|---|
+| No | nomor urut berjalan | `page * size + i + 1` |
+| Nomor SK | string | `row.nomorSk` |
+| Jenis SK | label enum | `row.jenisSk` → `labelJenisSk()` (tambah ke `riwayat-constants.ts`) |
+| Tgl. SK | tanggal | `formatDate(row.tanggalSk)` |
+| Tgl. Berlaku | tanggal | `formatDate(row.tmtBerlaku)` |
+| Golongan | string | `row.golongan?.golongan ?? "—"` |
+| Gaji Pokok | rupiah | `rp(row.gajiPokok)` |
+| MKG | `"X Thn – Y Bln"` | `row.mkgTahun` / `row.mkgBulan` — kosong → `"Thn – Bln"` |
+| Kenaikan Berikutnya | tanggal | `formatDate(row.kenaikanBerikutnya)` |
+| MKGB | `"X Thn – Y Bln"` | `row.mkgbTahun` / `row.mkgbBulan` — kosong → `"Thn – Bln"` |
+| Notes | teks | `row.notes` |
+
+Format MKG/MKGB: `"${mkgTahun ?? ""} Thn – ${mkgBulan ?? ""} Bln"` — render string persis seperti
+screenshot, bukan `"—"` walau kosong, karena HR membaca kolom ini di seluruh baris SK.
+
+Ditolak: Aksi di kolom ke-2 seperti screenshot legacy — `DataTable` meng-append Aksi otomatis di
+kanan (`hasActions`), memindahnya = sentuhan shared primitive 15+ entity demi satu tabel.
+
+**Keputusan 14 — Filter toolbar: Nomor SK + Jenis SK. Tanpa filter golonganId.**
+
+Filter yang dirender: `nomorSk` (text search "Cari Nomor SK") + `jenisSk` (select dropdown
+"Pilih Jenis Surat Kepu...") + tombol reset. Filter `golonganId` tersedia di BE tapi **tidak dirender**
+— satu pegawai jarang punya puluhan SK yang perlu difilter per-golongan (YAGNI). Source:
+`JENIS_SK_OPTIONS` dari `src/lib/riwayat-constants.ts` (sudah ada, hardcoded — zero fetch).
+
+**Keputusan 15 — Form SK: Sheet, flat, tanpa conditional per `jenisSk`.**
+
+`RiwayatSkPostRequest` punya 9 field opsional (`golonganId`, `gajiPokok`, MKG, MKGB, `updateMaster`,
+`notes`) tanpa mapping deterministik `jenisSk → field wajib` di spec. Form flat = zero conditional
+logic, HR memutuskan mana yang diisi. Berbeda dari form Mutasi yang punya cascade `jenisMutasi →
+fieldset`.
+
+Struktur form (top → bottom):
+1. **Jenis SK** — select dropdown `JENIS_SK_OPTIONS`; dipilih bebas oleh HR
+2. **Nomor SK** — text input (required)
+3. **Tanggal SK** — date picker (required)
+4. **TMT Berlaku** — date picker (required)
+5. **Golongan** — combobox FK via `/master/golongan/list` (opsional)
+6. **Gaji Pokok** — text input biasa (opsional; **bukan** tombol search cascade ke `/penggajian`)
+7. **MKG** — dua field: Tahun + Bulan (opsional)
+8. **Kenaikan Berikutnya** — date picker (opsional)
+9. **MKGB** — dua field: Tahun + Bulan (opsional)
+10. **Update Master** — checkbox "Perbarui data master pegawai sesuai SK ini" (opsional, default unchecked)
+11. **Notes** — textarea (opsional)
+
+Konsekuensi yang diterima: HR bisa mengisi field MKG untuk `SK_LAINNYA` sekalipun — tidak ada
+validasi kondisional. BE yang memvalidasi bila ada constraint bisnis. Frontend tidak menebak.
+
+**Keputusan 16 — Kunci lampiran SK: `ref = row.jenisSk`, `refId = row.id`.**
+
+Berbeda dari Mutasi di mana lampiran di-key ke SK embedded (`row.skMutasi.jenisSk`, `row.skMutasi.id`),
+di SK standalone baris itu **sendiri** yang merupakan SK — `ref` dan `refId` diambil langsung dari baris.
+
+Implementasi: thin wrapper `SkLampiranCard` identik polanya dengan `MutasiLampiranCard` (ADR-0013).
+Props: `selectedRow: RiwayatSkQuery | null`. Derive: `ref = row.jenisSk`, `refId = row.id`,
+`title = "Lampiran — SK {row.nomorSk}"`. Kartu Lampiran muncul di page SK (sama seperti Mutasi).
+
+**Belum terkunci:** — (kosong). Semua pertanyaan desain Fase 2 SK tertutup.
+
