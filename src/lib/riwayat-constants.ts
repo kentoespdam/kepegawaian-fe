@@ -26,3 +26,8 @@ export function labelJenisMutasi(s: unknown): string {
 	if (s == null || s === "") return "—";
 	return JENIS_MUTASI_OPTIONS.find((o) => o.value === s)?.label ?? String(s);
 }
+
+export function labelJenisSk(s: unknown): string {
+	if (s == null || s === "") return "—";
+	return JENIS_SK_OPTIONS.find((o) => o.value === s)?.label ?? String(s);
+}

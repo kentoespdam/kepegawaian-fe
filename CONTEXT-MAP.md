@@ -19,7 +19,11 @@ task touches**; this core is always in scope.
 | **Master** | [`docs/context/master.md`](docs/context/master.md) | Data referensi / master-data (17 entitas CRUD) | ✅ grilling round 1 |
 | **Kepegawaian** (tulang punggung) | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | Ringkas 4 page, identitas→record pegawai, Page 2/3, status | ✅ grilling round 1 |
 | ↳ Kepegawaian §Page 1 | [`docs/context/kepegawaian-dashboard.md`](docs/context/kepegawaian-dashboard.md) | **Hanya** bila menyentuh Dashboard Pegawai (self-edit biodata, 2 panel + accordion) | ✅ grilling round 2–4 |
-| ↳ Kepegawaian §Page 4 | [`docs/context/kepegawaian-riwayat.md`](docs/context/kepegawaian-riwayat.md) | **Hanya** bila menyentuh konsol Riwayat per-pegawai (Keputusan 1–12) | ✅ grilling round 5 |
+| ↳ Kepegawaian §Page 4 (shared infra) | [`docs/context/kepegawaian-riwayat.md`](docs/context/kepegawaian-riwayat.md) | Layout, rail, entry point, lampiran, RBAC, identitas (K1–K12) — **selalu muat ini** bila menyentuh konsol Riwayat | ✅ grilling round 5 |
+| ↳ §Page 4 — Data Mutasi | [`docs/context/kepegawaian-riwayat-mutasi.md`](docs/context/kepegawaian-riwayat-mutasi.md) | Form + tabel Mutasi (K7–K8) | ✅ grilling round 5 |
+| ↳ §Page 4 — Riwayat SK | [`docs/context/kepegawaian-riwayat-sk.md`](docs/context/kepegawaian-riwayat-sk.md) | Tabel + form SK standalone (K13–K16) | ✅ grilling 2026-07-29 |
+| ↳ §Page 4 — Riwayat Kontrak | [`docs/context/kepegawaian-riwayat-kontrak.md`](docs/context/kepegawaian-riwayat-kontrak.md) | Kontrak Kerja | ⏳ belum di-grill |
+| ↳ §Page 4 — Riwayat SP | [`docs/context/kepegawaian-riwayat-sp.md`](docs/context/kepegawaian-riwayat-sp.md) | Surat Peringatan | ⏳ belum di-grill |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |

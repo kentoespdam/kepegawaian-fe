@@ -1,8 +1,8 @@
-# Konteks: `kepegawaian` §Page 4 — Riwayat Pegawai (Keputusan 1–12)
+# Konteks: kepegawaian §Page 4 — Riwayat Pegawai (Shared Infra: K1–K12)
 
 > Delta modul. Baca [CONTEXT-MAP.md](../../CONTEXT-MAP.md) (inti bersama) dulu.
 > Bagian dari [kepegawaian.md](kepegawaian.md) — baca itu untuk Ringkas + identity bridge.
-> **Muat file ini hanya bila menyentuh konsol Riwayat** (`(app)/kepegawaian/data/[pegawaiId]/riwayat/**`).
+> **Muat file ini hanya bila menyentuh konsol Riwayat** (`(app)/kepegawaian/data/[pegawaiId]/riwayat/**`). Untuk detail per-kategori, lihat file di bawah.
 > Papan pantau implementasi: [CLAIM-ORDER-riwayat-pegawai.md](../CLAIM-ORDER-riwayat-pegawai.md) ·
 > ADR: [0013](../adr/0013-riwayat-route-per-kategori.md).
 
@@ -154,82 +154,6 @@ jadi filter tambahan = kolom mati untuk pengguna lansia. YAGNI, bisa ditambah ka
 ⚠️ Set filter yang berbeda per kategori **memperkuat Keputusan 2** (route per kategori): satu route
 bersama harus menyaring `searchParams` per kategori secara manual — persis kerumitan yang dihindari.
 
-**Keputusan 7 — Form Mutasi: satu Sheet, conditional fields by `jenisMutasi`. Tanpa validasi rantai riwayat.**
-
-`RiwayatMutasiPostRequest` = **dua entitas dalam satu tulis**: seluruh isi `RiwayatSkPostRequest`
-(±12 field) + field mutasi (±10). Jadi satu Sheet (heavy form per CONTEXT-MAP).
-
-**Struktur form (top → bottom):**
-1. **Data Pegawai** (read-only block): NIPAM, Nama, Golongan, Unit Kerja, Jabatan, Profesi — nilai
-   saat ini, dari `GET /pegawai/{id}/mutasi-context`. Berfungsi ganda sebagai **nilai "Lama"** yang
-   ikut dikirim (field `*LamaId`). → supersedes Keputusan 11 for form context (layout still uses session).
-2. **Data Mutasi** (always visible): Jenis Mutasi, Nomor SK, Tanggal SK, TMT Berlaku, checkbox
-   `updateMaster` (full row below TMT), Notes textarea.
-3. **Conditional sections** (keyed on `jenisMutasi`):
-   - `PENGANGKATAN_PERTAMA` / `TERMINASI`: base only (no additional section)
-   - `MUTASI_LOKER` / `MUTASI_JABATAN`: + fieldset "Mutasi Lokasi Kerja / Jabatan" with cascade
-     Unit Kerja → Jabatan → Profesi (via `GET /master/jabatan/organisasi/{id}` + `/master/profesi/jabatan/{id}`)
-   - `MUTASI_GOLONGAN`: + fieldset "Mutasi Golongan" with Golongan select, nested fieldset "Masa Kerja
-     Golongan" (MKG Tahun, MKG Bulan), Kenaikan Berikutnya date, nested fieldset "Masa Kerja Golongan
-     Berikutnya" (MKGB Tahun, MKGB Bulan). **NO Gaji Pokok** — downstream salary-adjustment process handles it.
-   - `MUTASI_GAJI` / `MUTASI_GAJI_BERKALA`: + all `MUTASI_GOLONGAN` fields + Gaji Pokok (text input with
-     search button calling `GET /penggajian/detail-dasar-gaji/{golonganId}/{masaKerja}`, fills from `data.nominal`).
-
-**`jenisSk` derived from `jenisMutasi`** (no UI control): `PENGANGKATAN_PERTAMA` → `SK_CAPEG`,
-`MUTASI_LOKER` → `SK_MUTASI`, `MUTASI_JABATAN` → `SK_JABATAN`, `MUTASI_GOLONGAN` → `SK_KENAIKAN_PANGKAT_GOLONGAN`,
-`MUTASI_GAJI` → `SK_PENYESUAIAN_GAJI`, `MUTASI_GAJI_BERKALA` → `SK_KENAIKAN_GAJI_BERKALA`, `TERMINASI` → `SK_PENSIUN`.
-
-**Keputusan 7b (reset semantics):** changing `jenisMutasi` → hidden section fields cleared immediately
-(`setValue(field, undefined)`), mirroring `onOrgChange` in tambah-form.tsx. State = visible.
-
-**`updateMaster` = checkbox biasa, keputusan HR.** Dirender apa adanya dengan label jelas
-("Perbarui data pegawai sesuai mutasi ini"). **Tidak ada validasi, tidak ada dialog konfirmasi,
-tidak ada peringatan kondisional** — HR yang memutuskan, sistem tidak menggurui. Default: tidak
-dicentang (mengikuti default field opsional BE; tak ada efek samping kecuali diminta).
-
-Konsekuensi yang diterima sadar: rantai riwayat bisa saja tidak nyambung (Baru baris N ≠ Lama baris N+1).
-**Itu bukan urusan frontend** — tidak ada validasi lintas-baris yang dibangun.
-
-**Keputusan 8 — Tabel Mutasi: persis screenshot. Sel komposit & pasangan Lama/Baru dirender penuh.**
-
-Kolom (kiri→kanan): `No | SK | Jenis Mutasi | Golongan | Unit Kerja | Jabatan | Notes` + **Aksi**.
-
-| Kolom | Isi | Sumber |
-|---|---|---|
-| No | nomor urut berjalan (lanjut lintas halaman) | `page * size + i + 1` |
-| SK | 3 baris: `Efektif : {tgl}` / `Nomor : {no}` / `Gaji Pokok : {rp}` | `row.skMutasi.tmtBerlaku`, `.nomorSk`, `.gajiPokok` |
-| Jenis Mutasi | label enum | `row.jenisMutasi` → formatter `jenisMutasi()` |
-| Golongan | 2 baris: `Lama : …` / `Baru : …` | `row.golonganLama` / `row.golongan` |
-| Unit Kerja | 2 baris `Lama:`/`Baru:` | `row.organisasiLama?.nama ?? row.namaOrganisasiLama` / idem non-lama |
-| Jabatan | 2 baris `Lama:`/`Baru:` | `row.jabatanLama` / `row.jabatan` |
-| Notes | teks | `row.notes` |
-
-**Pasangan tetap dirender penuh walau nilainya sama** (screenshot memang begitu: Golongan `Lama : II/a`
-/ `Baru : II/a` pada mutasi jabatan). Nilai kosong → `—`. Alasan: HR membaca tabel ini sebagai
-**salinan lembar SK**, bukan sebagai diff; menyembunyikan yang tak berubah membuat baris terlihat
-"hilang data". Profesi (`profesiLama`/`profesi`) ada di data tapi **tidak dirender** — tidak ada di
-screenshot dan tidak ada kolomnya; kalau nanti diminta, tinggal tambah kolom ke-4 berpola sama.
-
-Konsekuensi yang diterima: baris tinggi (≈3 baris teks), 7 kolom + Aksi. Untuk pengguna lansia ini
-justru menguntungkan (target sentuh besar, label eksplisit `Lama :`/`Baru :` bukan panah simbolik),
-tapi **lebar** jadi ketat — `<td>` di `DataTable` ber-`whitespace-nowrap`, jadi tiap baris di dalam sel
-harus `<div>` sendiri (bukan `<br/>` di satu string), dan label kecil di-mute (`text-xs
-text-muted-foreground`) sementara nilainya normal.
-
-Dua temuan kode yang mengikat implementasi:
-
-1. **`Column<T>.cell` sudah `(item) => ReactNode`** — sel multi-baris **tidak** butuh primitive baru.
-2. **Tapi kolom `No` butuh index, dan `cell` tidak menerimanya.** `DataTable` sudah punya `i` di
-   `data.map((item, i) => …)` tetapi memanggil `col.cell(item)` saja. Perubahan minimal:
-   `cell?: (item: T, index: number) => React.ReactNode` + teruskan `i` — **backward-compatible penuh**,
-   nol call-site existing yang berubah. Offset halaman dihitung di closure config (`page`/`size` sudah
-   ada di client). Ini satu-satunya sentuhan ke shared primitive; **wajib `gitnexus_impact` sebelum edit.**
-
-**Aksi tetap di kolom paling kanan, bukan kolom ke-2 seperti screenshot.** `DataTable` meng-append
-`<th>Aksi</th>` otomatis di akhir (`hasActions`) dan posisinya tidak dapat dikonfigurasi. Memindahnya
-= mengubah primitive yang dipakai 15+ entity master demi satu tabel → ditolak. Isinya tetap ikon
-langsung (✎ Edit, 🗑 Hapus) sesuai Keputusan 4, bukan menu `⋯`.
-
 **Keputusan 9 — Unggah lampiran: tanpa validasi klien. BE yang memvalidasi.**
 
 `<input type="file">` **tanpa `accept`, tanpa cek `file.size`**. Berkas dikirim apa adanya; bila BE
@@ -379,77 +303,14 @@ tertutup di Keputusan 12.)
 
 ---
 
-## Fase 2 — Riwayat Surat Keputusan (`riwayat/sk/`)
+## Peta context per kategori
 
-> Keputusan desain dikunci sesi grilling 2026-07-29. Route, layout, dan shared primitives sudah
-> tersedia dari Fase 1 — SK hanya butuh `sk/page.tsx` baru.
->
-> **Endpoint list:** `GET /kepegawaian/riwayat/sk/pegawai/{id}`
-> **Types:** `RiwayatSkQuery`, `RiwayatSkPostRequest`, `RiwayatSkPutRequest` sudah ada di
-> `src/types/kepegawaian/riwayat.ts` — zero generate needed.
+> Muat file kategori yang relevan saja — jangan muat semua sekaligus.
 
-**Keputusan 13 — Kolom tabel persis screenshot. Aksi di kanan (konsisten DataTable).**
-
-Kolom (kiri→kanan): `No | Nomor SK | Jenis SK | Tgl. SK | Tgl. Berlaku | Golongan | Gaji Pokok | MKG | Kenaikan Berikutnya | MKGB | Notes` + **Aksi**.
-
-| Kolom | Isi | Sumber |
+| Kategori | Context file | Status |
 |---|---|---|
-| No | nomor urut berjalan | `page * size + i + 1` |
-| Nomor SK | string | `row.nomorSk` |
-| Jenis SK | label enum | `row.jenisSk` → `labelJenisSk()` (tambah ke `riwayat-constants.ts`) |
-| Tgl. SK | tanggal | `formatDate(row.tanggalSk)` |
-| Tgl. Berlaku | tanggal | `formatDate(row.tmtBerlaku)` |
-| Golongan | string | `row.golongan?.golongan ?? "—"` |
-| Gaji Pokok | rupiah | `rp(row.gajiPokok)` |
-| MKG | `"X Thn – Y Bln"` | `row.mkgTahun` / `row.mkgBulan` — kosong → `"Thn – Bln"` |
-| Kenaikan Berikutnya | tanggal | `formatDate(row.kenaikanBerikutnya)` |
-| MKGB | `"X Thn – Y Bln"` | `row.mkgbTahun` / `row.mkgbBulan` — kosong → `"Thn – Bln"` |
-| Notes | teks | `row.notes` |
-
-Format MKG/MKGB: `"${mkgTahun ?? ""} Thn – ${mkgBulan ?? ""} Bln"` — render string persis seperti
-screenshot, bukan `"—"` walau kosong, karena HR membaca kolom ini di seluruh baris SK.
-
-Ditolak: Aksi di kolom ke-2 seperti screenshot legacy — `DataTable` meng-append Aksi otomatis di
-kanan (`hasActions`), memindahnya = sentuhan shared primitive 15+ entity demi satu tabel.
-
-**Keputusan 14 — Filter toolbar: Nomor SK + Jenis SK. Tanpa filter golonganId.**
-
-Filter yang dirender: `nomorSk` (text search "Cari Nomor SK") + `jenisSk` (select dropdown
-"Pilih Jenis Surat Kepu...") + tombol reset. Filter `golonganId` tersedia di BE tapi **tidak dirender**
-— satu pegawai jarang punya puluhan SK yang perlu difilter per-golongan (YAGNI). Source:
-`JENIS_SK_OPTIONS` dari `src/lib/riwayat-constants.ts` (sudah ada, hardcoded — zero fetch).
-
-**Keputusan 15 — Form SK: Sheet, flat, tanpa conditional per `jenisSk`.**
-
-`RiwayatSkPostRequest` punya 9 field opsional (`golonganId`, `gajiPokok`, MKG, MKGB, `updateMaster`,
-`notes`) tanpa mapping deterministik `jenisSk → field wajib` di spec. Form flat = zero conditional
-logic, HR memutuskan mana yang diisi. Berbeda dari form Mutasi yang punya cascade `jenisMutasi →
-fieldset`.
-
-Struktur form (top → bottom):
-1. **Jenis SK** — select dropdown `JENIS_SK_OPTIONS`; dipilih bebas oleh HR
-2. **Nomor SK** — text input (required)
-3. **Tanggal SK** — date picker (required)
-4. **TMT Berlaku** — date picker (required)
-5. **Golongan** — combobox FK via `/master/golongan/list` (opsional)
-6. **Gaji Pokok** — text input biasa (opsional; **bukan** tombol search cascade ke `/penggajian`)
-7. **MKG** — dua field: Tahun + Bulan (opsional)
-8. **Kenaikan Berikutnya** — date picker (opsional)
-9. **MKGB** — dua field: Tahun + Bulan (opsional)
-10. **Update Master** — checkbox "Perbarui data master pegawai sesuai SK ini" (opsional, default unchecked)
-11. **Notes** — textarea (opsional)
-
-Konsekuensi yang diterima: HR bisa mengisi field MKG untuk `SK_LAINNYA` sekalipun — tidak ada
-validasi kondisional. BE yang memvalidasi bila ada constraint bisnis. Frontend tidak menebak.
-
-**Keputusan 16 — Kunci lampiran SK: `ref = row.jenisSk`, `refId = row.id`.**
-
-Berbeda dari Mutasi di mana lampiran di-key ke SK embedded (`row.skMutasi.jenisSk`, `row.skMutasi.id`),
-di SK standalone baris itu **sendiri** yang merupakan SK — `ref` dan `refId` diambil langsung dari baris.
-
-Implementasi: thin wrapper `SkLampiranCard` identik polanya dengan `MutasiLampiranCard` (ADR-0013).
-Props: `selectedRow: RiwayatSkQuery | null`. Derive: `ref = row.jenisSk`, `refId = row.id`,
-`title = "Lampiran — SK {row.nomorSk}"`. Kartu Lampiran muncul di page SK (sama seperti Mutasi).
-
-**Belum terkunci:** — (kosong). Semua pertanyaan desain Fase 2 SK tertutup.
-
+| Data Mutasi | [`kepegawaian-riwayat-mutasi.md`](kepegawaian-riwayat-mutasi.md) | ✅ grilled |
+| Riwayat Surat Keputusan | [`kepegawaian-riwayat-sk.md`](kepegawaian-riwayat-sk.md) | ✅ grilled |
+| Riwayat Kontrak Kerja | [`kepegawaian-riwayat-kontrak.md`](kepegawaian-riwayat-kontrak.md) | ⏳ belum di-grill |
+| Riwayat Surat Peringatan | [`kepegawaian-riwayat-sp.md`](kepegawaian-riwayat-sp.md) | ⏳ belum di-grill |
+| Data Penggunaan Hak Cuti | (lihat K12 di file ini — read-only, Fase 2) | ⏳ belum di-grill |
