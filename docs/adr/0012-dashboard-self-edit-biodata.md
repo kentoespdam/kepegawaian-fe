@@ -2,7 +2,7 @@
 
 Date: 2026-07-27
 Status: Accepted
-Supersedes: sebagian [ADR-0011](0011-dashboard-two-panel-accordion.md) (baris "Read-only tetap; tak ada edit self-service") + §Page 1 [context/kepegawaian.md](../context/kepegawaian.md) label "(READ-ONLY)".
+Supersedes: sebagian [ADR-0011](0011-dashboard-two-panel-accordion.md) (baris "Read-only tetap; tak ada edit self-service") + §Page 1 [context/kepegawaian-dashboard.md](../context/kepegawaian-dashboard.md) label "(READ-ONLY)".
 
 ## Konteks
 
@@ -136,7 +136,7 @@ persetujuan admin.
 
 ## File terkait
 
-- `docs/context/kepegawaian.md` — §Page 1: label READ-ONLY → self-edit; catat 9 field + NIK
+- `docs/context/kepegawaian-dashboard.md` — §Page 1: label READ-ONLY → self-edit; catat 9 field + NIK
   read-only + Pendidikan dikecualikan + Ibu Kandung & Telp ditampilkan.
 - `src/hooks/useBiodataMutation.ts` — hook bespoke baru (dibuat agen eksekusi).
 - `src/components/crud-form.tsx` — tambah `"date"` ke union `FormField.type` (additive, CRITICAL —

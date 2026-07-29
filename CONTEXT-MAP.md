@@ -17,7 +17,9 @@ task touches**; this core is always in scope.
 |---|---|---|---|
 | **Core (shared)** | `CONTEXT-MAP.md` (ini) | Bahasa + konvensi lintas-modul | **selalu** |
 | **Master** | [`docs/context/master.md`](docs/context/master.md) | Data referensi / master-data (17 entitas CRUD) | ✅ grilling round 1 |
-| **Kepegawaian** | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | 3 page (Dashboard/Data/Terminasi), identitas→record pegawai | ✅ grilling round 1 |
+| **Kepegawaian** (tulang punggung) | [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md) | Ringkas 4 page, identitas→record pegawai, Page 2/3, status | ✅ grilling round 1 |
+| ↳ Kepegawaian §Page 1 | [`docs/context/kepegawaian-dashboard.md`](docs/context/kepegawaian-dashboard.md) | **Hanya** bila menyentuh Dashboard Pegawai (self-edit biodata, 2 panel + accordion) | ✅ grilling round 2–4 |
+| ↳ Kepegawaian §Page 4 | [`docs/context/kepegawaian-riwayat.md`](docs/context/kepegawaian-riwayat.md) | **Hanya** bila menyentuh konsol Riwayat per-pegawai (Keputusan 1–12) | ✅ grilling round 5 |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |

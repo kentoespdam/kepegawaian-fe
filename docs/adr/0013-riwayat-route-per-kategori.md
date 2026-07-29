@@ -90,7 +90,7 @@ kategori menyusut jadi ≤ 2 (tab jadi lebih murah).
 
 ## File terkait
 
-- `docs/context/kepegawaian.md` — §Page 4, Keputusan 1–12 (sumber kebenaran desain lengkap)
+- `docs/context/kepegawaian-riwayat.md` — §Page 4, Keputusan 1–12 (sumber kebenaran desain lengkap)
 - `docs/CLAIM-ORDER-riwayat-pegawai.md` — urutan claim + Definition of Done
 - `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/{layout,page}.tsx` — baru
 - `src/app/(app)/kepegawaian/data/ringkasan-panel.tsx` — tombol entry (ada di **2** salinan action row)

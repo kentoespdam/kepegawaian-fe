@@ -19,7 +19,7 @@ Dua masalah:
    identitas/detail diri, kanan daftar riwayat dalam accordion — plus beberapa section (Pendidikan,
    Pengalaman Kerja, Keahlian, Pelatihan, Foto Profil) yang belum ada di rilis W3.
 
-Karena §Page 1 di [context/kepegawaian.md](../context/kepegawaian.md) **mengunci** layout single-
+Karena §Page 1 di [context/kepegawaian-dashboard.md](../context/kepegawaian-dashboard.md) **mengunci** layout single-
 column secara eksplisit, mengubahnya adalah revisi keputusan yang sudah tercatat — bukan sekadar
 tweak CSS. Perlu direkam agar pembaca berikutnya paham kenapa spec berubah.
 
@@ -98,7 +98,7 @@ Issue: `3ls` (bug pagination 🔴) · `gr7` (rasio 38/62) · `2n2` (panel kiri m
 `098` (buang subtitle) · `atr` (Fibonacci spacing + grouping + alignment) · `ra3` (uji responsif).
 
 File terkait:
-- `docs/context/kepegawaian.md` — §Page 1 direvisi ke layout ini
+- `docs/context/kepegawaian-dashboard.md` — §Page 1 direvisi ke layout ini
 - `src/components/ui/accordion.tsx` — komponen Base UI Accordion baru (dibuat agen eksekusi)
 - `src/app/(app)/kepegawaian/dashboard/dashboard-client.tsx` — re-layout 2 panel
 - `src/app/(app)/kepegawaian/dashboard/section-*.tsx` — dipecah/ditambah per section, lazy-fetch

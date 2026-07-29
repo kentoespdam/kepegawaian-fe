@@ -9,7 +9,7 @@ S.Sos.)"*: header identitas, rail kiri **Kategori** berisi 5 item, tabel kategor
 **Lampiran** di bawahnya. **Fase 1 = kategori Mutasi saja, tapi tuntas** (tabel + filter + CRUD +
 lampiran). Kontrak/SK/SP/Cuti = Fase 2, railnya sudah dirender tapi non-aktif.
 
-**Epic:** `kepegawaian-fe-7eo5` · **Keputusan terkunci:** `docs/context/kepegawaian.md` §Page 4,
+**Epic:** `kepegawaian-fe-7eo5` · **Keputusan terkunci:** `docs/context/kepegawaian-riwayat.md` §Page 4,
 Keputusan 1–12.
 
 **File yang berubah:**
@@ -74,7 +74,7 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 ## Prasyarat (baca sebelum ngoding)
 
 1. `docs/design/coding-rules.md` — aturan wajib, file ≤ ~120 baris
-2. `docs/context/kepegawaian.md` §Page 4 — Keputusan 1–12, sumber kebenaran desain
+2. `docs/context/kepegawaian-riwayat.md` §Page 4 — Keputusan 1–12, sumber kebenaran desain
 3. `docs/adr/0013-riwayat-route-per-kategori.md` — kenapa route-per-kategori + rail page-local
 4. `CONTEXT-MAP.md` — glosarium + §170 (kenapa `⋯` ditolak)
 5. `docs/adr/0011-dashboard-two-panel-accordion.md` §round 4 — preseden prop additive `bare`

@@ -65,5 +65,6 @@ ternyata butuh nik/nipam (maka pertimbangkan pindah augmentasi ke `verifySession
 File terkait:
 - `src/lib/auth/pegawaiSession.ts` — fungsi baru (ditulis oleh agent eksekusi)
 - `src/lib/auth/verifySession.ts` — tetap tak berubah (tetap murni)
-- `docs/context/kepegawaian.md` — pemakaian di 3 page
+- `docs/context/kepegawaian.md` — pemakaian di 3 page (tulang punggung; §Page 1 di
+  `kepegawaian-dashboard.md`, §Page 4 di `kepegawaian-riwayat.md`)
 - `docs/context/pegawai.md` — resource yang dikonsumsi

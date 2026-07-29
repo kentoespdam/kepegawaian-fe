@@ -195,7 +195,9 @@ Start with `CONTEXT-MAP.md`, then pick relevant sub-context:
 | If touching... | Read |
 |----------------|------|
 | Master module (data referensi) | `docs/context/master.md` — entity taxonomy, FK graph, tree entities |
-| Kepegawaian module (dashboard/data/terminasi) | `docs/context/kepegawaian.md` — 3 pages, identity bridge |
+| Kepegawaian module (data/terminasi, identitas) | `docs/context/kepegawaian.md` — tulang punggung: ringkas 4 page, identity bridge |
+| Dashboard Pegawai (§Page 1) | `docs/context/kepegawaian-dashboard.md` — self-edit biodata, 2 panel + accordion |
+| Konsol Riwayat per-pegawai (§Page 4) | `docs/context/kepegawaian-riwayat.md` — Keputusan 1–12 |
 | Pegawai terminology | `docs/context/pegawai.md` — employee identity model |
 | Cross-module decisions | `CONTEXT-MAP.md` — core glossary + resolved decisions |
 | System-wide ADRs | `docs/adr/` — 12 ADRs (auth, form, shell, identity bridge, etc.) |

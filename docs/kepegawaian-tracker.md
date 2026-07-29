@@ -1,7 +1,7 @@
 # Tracker delegasi — Modul Kepegawaian
 
 > Panduan urutan klaim + checklist untuk agent eksekusi. Epic: **`kepegawaian-fe-a2e`**.
-> Spec: [`kepegawaian.md`](kepegawaian.md) · ADR: [`../adr/0006-...md`](../adr/0006-pegawai-session-identity-bridge.md).
+> Spec: [`context/kepegawaian.md`](context/kepegawaian.md) · ADR: [`adr/0006-...md`](adr/0006-pegawai-session-identity-bridge.md).
 > Sumber kebenaran status = **beads** (`bd show <id>`); MD ini peta baca-cepat.
 
 ## Aturan main
@@ -35,8 +35,8 @@ Wave 1  0is (types) ───────┬─► djv ─┬─► tvr ─┐
 
 ## W5 — Dashboard re-layout 2 panel + accordion (epic `kepegawaian-fe-o1o`)
 
-> Revisi Dashboard `tvr` → 2 panel + accordion. Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1 ·
-> ADR: [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md).
+> Revisi Dashboard `tvr` → 2 panel + accordion. Spec: [`context/kepegawaian-dashboard.md`](context/kepegawaian-dashboard.md) §Page 1 ·
+> ADR: [`adr/0011-...md`](adr/0011-dashboard-two-panel-accordion.md).
 
 ```
 zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
@@ -53,8 +53,8 @@ zb6 (accordion) ─┬─► lhg (panel kiri) ─┐
 ## W6 — Optimasi kerapian: golden ratio + planogram (epic `kepegawaian-fe-o1o`)
 
 > Round 3: rapikan render 2-panel via prinsip **golden ratio (φ)** + **planogram**.
-> Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1 "Proporsi & kerapian" ·
-> ADR: [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md) §Addendum.
+> Spec: [`context/kepegawaian-dashboard.md`](context/kepegawaian-dashboard.md) §Page 1 "Proporsi & kerapian" ·
+> ADR: [`adr/0011-...md`](adr/0011-dashboard-two-panel-accordion.md) §Addendum.
 > 8 temuan dipetakan; delegasi ke agen — Manager tak ngoding `src/`.
 
 ```
@@ -106,8 +106,8 @@ gr7 (ratio)┤
 ## W7 — Coloring semantik + spacing panel kanan + afordansi trigger (epic `kepegawaian-fe-o1o`)
 
 > Round 4: dashboard 100% grayscale → warna semantik; data panel kanan mepet + body accordion
-> "terpotong"; trigger accordion tak terlihat bisa diklik. Spec: [`kepegawaian.md`](kepegawaian.md)
-> §Page 1 round 4 · ADR: [`../adr/0011-...md`](../adr/0011-dashboard-two-panel-accordion.md) §Addendum round 4.
+> "terpotong"; trigger accordion tak terlihat bisa diklik. Spec: [`context/kepegawaian-dashboard.md`](context/kepegawaian-dashboard.md)
+> §Page 1 round 4 · ADR: [`adr/0011-...md`](adr/0011-dashboard-two-panel-accordion.md) §Addendum round 4.
 > Blast diukur: `DataTable` = 🔴 **CRITICAL** (23 konsumen — mitigasi: prop `bare` additive default-preserve);
 > `AccordionTrigger` = 🟢 LOW (dashboard-only). Manager tak ngoding `src/`.
 
@@ -191,8 +191,8 @@ aff (afordansi trig) ─┘                            ├─► ver (uji visual
 ## W9 — Edit biodata self-service (buka kunci READ-ONLY) (epic `kepegawaian-fe-o1o`)
 
 > User minta tombol "Edit Profil" di accordion "Data Pribadi" → `PATCH /profil/biodata/{nik}`
-> (self-edit, identity-gated ke sesi login). Spec: [`kepegawaian.md`](kepegawaian.md) §Page 1
-> "self-edit biodata" · ADR: [`../adr/0012-...md`](../adr/0012-dashboard-self-edit-biodata.md).
+> (self-edit, identity-gated ke sesi login). Spec: [`context/kepegawaian-dashboard.md`](context/kepegawaian-dashboard.md) §Page 1
+> "self-edit biodata" · ADR: [`adr/0012-...md`](adr/0012-dashboard-self-edit-biodata.md).
 > Blast diukur: `CrudForm` = 🔴 **CRITICAL** (19 konsumen: seluruh page master + profesi — mitigasi:
 > tambah `"date"` ke union `FormField.type` **additive-only**, cabang render lama tak diubah);
 > `SectionLeftPanel` = 🟢 LOW (hanya `DashboardClient`). Manager tak ngoding `src/`.
