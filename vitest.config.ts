@@ -9,7 +9,9 @@ export default defineConfig({
 	},
 	test: {
 		environment: "node",
-		include: ["src/**/*.test.ts", "docs/api/master/**/*.test.ts"],
+		include: ["src/**/*.test.ts", "src/**/*.test.tsx", "docs/api/master/**/*.test.ts"],
+		// jsdom digunakan via directive // @vitest-environment jsdom di tiap file *.test.tsx
+		setupFiles: ["src/lib/vitest.setup.ts"],
 		// Module captures these at import time — fix them so cookie names / base URL are deterministic.
 		env: {
 			APPWRITE_URL: "http://appwrite.test",
