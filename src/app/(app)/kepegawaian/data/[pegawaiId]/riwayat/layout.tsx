@@ -11,7 +11,7 @@ const RAIL_ITEMS = [
 	{ id: "mutasi", label: "Data Mutasi", href: "./mutasi", active: true },
 	{ id: "cuti", label: "Data Penggunaan Hak Cuti", href: "#", active: false },
 	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "#", active: false },
-	{ id: "sk", label: "Riwayat Surat Keputusan", href: "#", active: false },
+	{ id: "sk", label: "Riwayat Surat Keputusan", href: "./sk", active: true },
 	{ id: "sp", label: "Riwayat Surat Peringatan", href: "#", active: false },
 ] as const;
 

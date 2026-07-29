@@ -5,11 +5,13 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Field } from "@/components/ui/field";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_SK_OPTIONS } from "@/lib/riwayat-constants";
 import type { SingleResultRiwayatSkQuery } from "@/types/kepegawaian/riwayat";
 
@@ -32,6 +34,12 @@ const schema = z.object({
 });
 
 type FormValues = z.infer<typeof schema>;
+
+// ── FK options ──
+
+function useGolonganOptions() {
+	return useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
+}
 
 // ── Normalizer ──
 
@@ -82,6 +90,8 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	const defaults = normalizeFk(detailQuery.data);
 
 	const {
+		setValue,
+		watch,
 		handleSubmit: rhfSubmit,
 		formState: { errors, isSubmitting },
 		setError,
@@ -89,6 +99,8 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 		resolver: zodResolver(schema),
 		values: defaults as FormValues | undefined,
 	});
+
+	const golonganOpts = useGolonganOptions();
 
 	// ── Submit ──
 
@@ -108,7 +120,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			if (values.kenaikanBerikutnya) payload.kenaikanBerikutnya = values.kenaikanBerikutnya;
 			if (values.mkgbTahun) payload.mkgbTahun = Number(values.mkgbTahun);
 			if (values.mkgbBulan) payload.mkgbBulan = Number(values.mkgbBulan);
-			if (values.updateMaster) payload.updateMaster = values.updateMaster;
+			if (values.updateMaster) payload.updateMaster = true;
 			if (values.notes) payload.notes = values.notes;
 
 			const url = editingId
@@ -152,41 +164,114 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 					<FieldSelect
 						label="Jenis SK"
-						value=""
-						onChange={() => {}}
+						value={watch("jenisSk")}
+						onChange={(v) => setValue("jenisSk", v)}
 						options={JENIS_SK_OPTIONS}
-						// ponytail: hook form register for controlled select — reuse field-renderers pattern
-						{...{}}
+						required
+						error={errors.jenisSk?.message}
 					/>
-					{/* ponytail: use schema key as field name via Field* components. */}
-					<FieldText label="Nomor SK" {...{ name: "nomorSk" }} />
-					<FieldText label="Tanggal SK" type="date" {...{ name: "tanggalSk" }} />
-					<FieldText label="TMT Berlaku" type="date" {...{ name: "tmtBerlaku" }} />
-					<FieldFk label="Golongan" entity="golongan" {...{ name: "golonganId" }} />
-					<FieldText label="Gaji Pokok" {...{ name: "gajiPokok" }} />
+
+					<FieldText
+						label="Nomor SK"
+						value={watch("nomorSk")}
+						onChange={(v) => setValue("nomorSk", v)}
+						required
+						error={errors.nomorSk?.message}
+					/>
+
+					<FieldText
+						label="Tanggal SK"
+						type="date"
+						value={watch("tanggalSk")}
+						onChange={(v) => setValue("tanggalSk", v)}
+						required
+						error={errors.tanggalSk?.message}
+					/>
+
+					<FieldText
+						label="TMT Berlaku"
+						type="date"
+						value={watch("tmtBerlaku")}
+						onChange={(v) => setValue("tmtBerlaku", v)}
+						required
+						error={errors.tmtBerlaku?.message}
+					/>
+
+					<FieldFk
+						label="Golongan"
+						options={golonganOpts}
+						value={watch("golonganId")}
+						onChange={(v) => setValue("golonganId", v)}
+						error={errors.golonganId?.message}
+					/>
+
+					<FieldText
+						label="Gaji Pokok"
+						value={watch("gajiPokok")}
+						onChange={(v) => setValue("gajiPokok", v)}
+						error={errors.gajiPokok?.message}
+					/>
 
 					<div className="grid grid-cols-2 gap-3">
-						<FieldText label="MKG (Tahun)" type="number" {...{ name: "mkgTahun" }} />
-						<FieldText label="MKG (Bulan)" type="number" {...{ name: "mkgBulan" }} />
+						<FieldText
+							label="MKG (Tahun)"
+							type="number"
+							value={watch("mkgTahun")}
+							onChange={(v) => setValue("mkgTahun", v)}
+							error={errors.mkgTahun?.message}
+						/>
+						<FieldText
+							label="MKG (Bulan)"
+							type="number"
+							value={watch("mkgBulan")}
+							onChange={(v) => setValue("mkgBulan", v)}
+							error={errors.mkgBulan?.message}
+						/>
 					</div>
 
-					<FieldText label="Kenaikan Berikutnya" type="date" {...{ name: "kenaikanBerikutnya" }} />
+					<FieldText
+						label="Kenaikan Berikutnya"
+						type="date"
+						value={watch("kenaikanBerikutnya")}
+						onChange={(v) => setValue("kenaikanBerikutnya", v)}
+						error={errors.kenaikanBerikutnya?.message}
+					/>
 
 					<div className="grid grid-cols-2 gap-3">
-						<FieldText label="MKGB (Tahun)" type="number" {...{ name: "mkgbTahun" }} />
-						<FieldText label="MKGB (Bulan)" type="number" {...{ name: "mkgbBulan" }} />
+						<FieldText
+							label="MKGB (Tahun)"
+							type="number"
+							value={watch("mkgbTahun")}
+							onChange={(v) => setValue("mkgbTahun", v)}
+							error={errors.mkgbTahun?.message}
+						/>
+						<FieldText
+							label="MKGB (Bulan)"
+							type="number"
+							value={watch("mkgbBulan")}
+							onChange={(v) => setValue("mkgbBulan", v)}
+							error={errors.mkgbBulan?.message}
+						/>
 					</div>
 
 					<Field name="updateMaster">
 						<div className="flex items-center gap-2">
-							<Checkbox />
+							<Checkbox
+								checked={watch("updateMaster") ?? false}
+								onCheckedChange={(v) => setValue("updateMaster", v === true)}
+							/>
 							<label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
 								Perbarui data master pegawai sesuai SK ini
 							</label>
 						</div>
 					</Field>
 
-					<FieldTextarea label="Notes" {...{ name: "notes" }} />
+					<FieldTextarea
+						label="Notes"
+						value={watch("notes")}
+						onChange={(v) => setValue("notes", v)}
+						error={errors.notes?.message}
+					/>
 
 					<div className="flex justify-end gap-2 pt-2">
 						<Button type="button" variant="outline" onClick={onClose}>
