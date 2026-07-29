@@ -254,17 +254,16 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						/>
 					</div>
 
-					<Field name="updateMaster">
-						<div className="flex items-center gap-2">
-							<Checkbox
-								checked={watch("updateMaster") ?? false}
-								onCheckedChange={(v) => setValue("updateMaster", v === true)}
-							/>
-							<label className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-								Perbarui data master pegawai sesuai SK ini
-							</label>
-						</div>
-					</Field>
+					<div className="flex items-center gap-2">
+						<Checkbox
+							id="updateMaster"
+							checked={watch("updateMaster") ?? false}
+							onCheckedChange={(v) => setValue("updateMaster", v === true)}
+						/>
+						<Label htmlFor="updateMaster" className="text-sm font-medium leading-none">
+							Perbarui data master pegawai sesuai SK ini
+						</Label>
+					</div>
 
 					<FieldTextarea
 						label="Notes"
