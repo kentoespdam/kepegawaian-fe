@@ -45,7 +45,7 @@ function jenisSk(s: unknown): string {
 	if (!raw) return "-";
 	const map: Record<string, string> = {
 		SK_KENAIKAN_PANGKAT_GOLONGAN: "Kenaikan Pangkat",
-		SK_CAPEG: "CPNS",
+		SK_CAPEG: "Calon Pegawai",
 		SK_PEGAWAI_TETAP: "Pegawai Tetap",
 		SK_JABATAN: "Jabatan",
 		SK_MUTASI: "Mutasi",

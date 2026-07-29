@@ -29,7 +29,7 @@ export function labelKawin(s?: string): string {
 
 const STATUS_PEGAWAI: Record<string, string> = {
 	KONTRAK: "Kontrak",
-	CAPEG: "CPNS",
+	CAPEG: "Calon Pegawai",
 	PEGAWAI: "Pegawai Tetap",
 	HONORER: "Honorer",
 	CALON_HONORER: "Calon Honorer",
