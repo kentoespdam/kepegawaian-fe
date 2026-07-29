@@ -8,7 +8,7 @@
  * Endpoint : DELETE /penggajian/detail-dasar-gaji/{id}, GET /penggajian/detail-dasar-gaji, GET /penggajian/detail-dasar-gaji/list, GET /penggajian/detail-dasar-gaji/{golonganId}/{masaKerja}, GET /penggajian/detail-dasar-gaji/{id}, POST /penggajian/detail-dasar-gaji, POST /penggajian/detail-dasar-gaji/batch, PUT /penggajian/detail-dasar-gaji/{id}
  */
 
-import type { DasarGajiResponse, Envelope, Page, PageQuery } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface DetailDasarGajiSearchParams extends PageQuery {
 	dasarGajiId?: number; // int64
@@ -17,9 +17,14 @@ export interface DetailDasarGajiSearchParams extends PageQuery {
 	nominal?: number; // double
 }
 
+export interface DasarGajiMiniResponse {
+	id?: number; // int64
+	deskripsi?: string;
+}
+
 export interface DetailDasarGajiResponse {
 	id?: number; // int64
-	dasarGaji?: DasarGajiResponse;
+	dasarGaji?: DasarGajiMiniResponse;
 	mkg?: number; // int32
 	golonganKode?: number; // int32
 	nominal?: number; // double
@@ -36,7 +41,7 @@ export interface DetailDasarGajiPutRequest {
 
 export type PageDetailDasarGajiResponse = Page<DetailDasarGajiResponse>;
 
-export type SingleResultPageDetailDasarGajiResponse = Envelope<PageDetailDasarGajiResponse>;
+export type PageResultPageDetailDasarGajiResponse = PageEnvelope<DetailDasarGajiResponse>;
 
 export interface DetailDasarGajiPostRequest {
 	dasarGajiId?: number; // int64
@@ -45,43 +50,12 @@ export interface DetailDasarGajiPostRequest {
 	nominal?: number; // double
 }
 
-export interface DasarGaji {
-	id?: number; // int64
-	createdBy?: string;
-	createdAt?: string; // date-time
-	updatedBy?: string;
-	updatedAt?: string; // date-time
-	isDeleted?: boolean;
-	version?: number; // int32
-	deskripsi?: string;
-	tanggalAwal?: string; // date
-	tanggalAkhir?: string; // date
-	aktif?: boolean;
-}
-
-export interface DetailDasarGaji {
-	id?: number; // int64
-	createdBy?: string;
-	createdAt?: string; // date-time
-	updatedBy?: string;
-	updatedAt?: string; // date-time
-	isDeleted?: boolean;
-	version?: number; // int32
-	dasarGaji?: DasarGaji;
-	mkg?: number; // int32
-	golonganKode?: number; // int32
+export interface DetailDasarGajiNominal {
 	nominal?: number; // double
 }
 
-export type SingleResultDetailDasarGaji = Envelope<DetailDasarGaji>;
+export type SingleResultDetailDasarGajiNominal = Envelope<DetailDasarGajiNominal>;
 
 export type ListResultDetailDasarGajiResponse = Envelope<DetailDasarGajiResponse[]>;
 
-export type {
-	DasarGajiResponse,
-	DeletedResult,
-	PageableObject,
-	SavedResultLong,
-	SavedResultString,
-	SortObject,
-} from "../_shared";
+export type { DeletedResult, PageableObject, SavedResultListLong, SavedResultLong, SortObject } from "../_shared";

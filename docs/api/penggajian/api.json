@@ -371,7 +371,7 @@
 			},
 			"delete": {
 				"tags": ["detail-dasar-gaji-controller"],
-				"operationId": "deleteById_1",
+				"operationId": "delete_6",
 				"parameters": [
 					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],
@@ -416,7 +416,7 @@
 			},
 			"delete": {
 				"tags": ["dasar-gaji-controller"],
-				"operationId": "deleteById_2",
+				"operationId": "delete_7",
 				"parameters": [
 					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],
@@ -819,15 +819,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": {
-							"*/*": { "schema": { "$ref": "#/components/schemas/SingleResultPageDetailDasarGajiResponse" } }
-						}
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageDetailDasarGajiResponse" } } }
 					}
 				}
 			},
 			"post": {
 				"tags": ["detail-dasar-gaji-controller"],
-				"operationId": "save_3",
+				"operationId": "create_4",
 				"requestBody": {
 					"content": {
 						"application/json": { "schema": { "$ref": "#/components/schemas/DetailDasarGajiPostRequest" } }
@@ -845,7 +843,7 @@
 		"/penggajian/detail-dasar-gaji/batch": {
 			"post": {
 				"tags": ["detail-dasar-gaji-controller"],
-				"operationId": "batch",
+				"operationId": "createBatch",
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -857,7 +855,7 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultListLong" } } }
 					}
 				}
 			}
@@ -865,7 +863,7 @@
 		"/penggajian/dasar-gaji": {
 			"get": {
 				"tags": ["dasar-gaji-controller"],
-				"operationId": "get",
+				"operationId": "index_7",
 				"parameters": [
 					{ "name": "deskripsi", "in": "query", "required": false, "schema": { "type": "string" } },
 					{ "name": "tanggalAwal", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
@@ -899,13 +897,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultPageDasarGajiResponse" } } }
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageDasarGajiResponse" } } }
 					}
 				}
 			},
 			"post": {
 				"tags": ["dasar-gaji-controller"],
-				"operationId": "save_4",
+				"operationId": "create_5",
 				"requestBody": {
 					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/DasarGajiPostRequest" } } },
 					"required": true
@@ -921,7 +919,7 @@
 		"/penggajian/dasar-gaji/batch": {
 			"post": {
 				"tags": ["dasar-gaji-controller"],
-				"operationId": "batch_1",
+				"operationId": "createBatch_1",
 				"requestBody": {
 					"content": {
 						"application/json": {
@@ -933,7 +931,7 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultListLong" } } }
 					}
 				}
 			}
@@ -941,7 +939,7 @@
 		"/penggajian/batch": {
 			"get": {
 				"tags": ["gaji-batch-root-controller"],
-				"operationId": "index_7",
+				"operationId": "index_8",
 				"parameters": [
 					{ "name": "periode", "in": "query", "required": false, "schema": { "type": "string" } },
 					{
@@ -992,7 +990,7 @@
 			},
 			"post": {
 				"tags": ["gaji-batch-root-controller"],
-				"operationId": "create_4",
+				"operationId": "create_6",
 				"requestBody": {
 					"content": {
 						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/GajiBatchRootPostRequest" } }
@@ -1009,7 +1007,7 @@
 		"/penggajian/batch/master/proses": {
 			"get": {
 				"tags": ["gaji-batch-master-proses-controller"],
-				"operationId": "index_8",
+				"operationId": "index_9",
 				"parameters": [
 					{
 						"name": "batchMasterId",
@@ -1055,7 +1053,7 @@
 			},
 			"post": {
 				"tags": ["gaji-batch-master-proses-controller"],
-				"operationId": "save_5",
+				"operationId": "save_3",
 				"requestBody": {
 					"content": {
 						"application/json": { "schema": { "$ref": "#/components/schemas/GajiBatchMasterProsesPostRequest" } }
@@ -1167,7 +1165,7 @@
 		"/penggajian/tunjangan": {
 			"get": {
 				"tags": ["gaji-tunjangan-controller"],
-				"operationId": "index_9",
+				"operationId": "index_10",
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -1297,7 +1295,7 @@
 		"/penggajian/komponen/{profilId}/profil": {
 			"get": {
 				"tags": ["gaji-komponen-controller"],
-				"operationId": "index_10",
+				"operationId": "index_11",
 				"parameters": [
 					{ "name": "profilId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
 					{ "name": "kode", "in": "query", "required": false, "schema": { "type": "string" } },
@@ -1385,7 +1383,7 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultDetailDasarGaji" } } }
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultDetailDasarGajiNominal" } } }
 					}
 				}
 			}
@@ -1394,41 +1392,6 @@
 			"get": {
 				"tags": ["detail-dasar-gaji-controller"],
 				"operationId": "list_4",
-				"parameters": [
-					{
-						"name": "dasarGajiId",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
-					},
-					{ "name": "mkg", "in": "query", "required": false, "schema": { "type": "integer", "format": "int32" } },
-					{
-						"name": "golonganKode",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32" }
-					},
-					{ "name": "nominal", "in": "query", "required": false, "schema": { "type": "number", "format": "double" } },
-					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
-					}
-				],
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -1441,36 +1404,6 @@
 			"get": {
 				"tags": ["dasar-gaji-controller"],
 				"operationId": "list_5",
-				"parameters": [
-					{ "name": "deskripsi", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "tanggalAwal", "in": "query", "required": false, "schema": { "type": "string", "format": "date" } },
-					{
-						"name": "tanggalAkhir",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "format": "date" }
-					},
-					{ "name": "aktif", "in": "query", "required": false, "schema": { "type": "boolean" } },
-					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
-					}
-				],
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -1655,7 +1588,7 @@
 		"/penggajian/batch/{id}": {
 			"delete": {
 				"tags": ["gaji-batch-root-controller"],
-				"operationId": "delete_6",
+				"operationId": "delete_8",
 				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"responses": {
 					"200": {
@@ -1681,7 +1614,7 @@
 		"/penggajian/batch/master/proses/{id}": {
 			"delete": {
 				"tags": ["gaji-batch-master-proses-controller"],
-				"operationId": "delete_7",
+				"operationId": "delete_9",
 				"parameters": [
 					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],
@@ -1937,6 +1870,105 @@
 					"nominal": { "type": "number", "format": "double" }
 				}
 			},
+			"SavedResultListLong": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": { "type": "array", "items": { "type": "string" } },
+					"message": { "type": "string" },
+					"data": { "type": "array", "items": { "type": "integer", "format": "int64" } },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"DasarGajiPostRequest": {
+				"type": "object",
+				"properties": {
+					"deskripsi": { "type": "string", "minLength": 1 },
+					"tanggalAwal": { "type": "string", "format": "date" },
+					"tanggalAkhir": { "type": "string", "format": "date" },
+					"aktif": { "type": "boolean" }
+				},
+				"required": ["aktif", "deskripsi", "tanggalAwal"]
+			},
+			"GajiBatchRootPostRequest": {
+				"type": "object",
+				"properties": {
+					"tahun": { "type": "string" },
+					"bulan": { "type": "string" },
+					"diProsesOleh": { "type": "string" },
+					"jabatanPemroses": { "type": "string" },
+					"fileName": { "type": "string", "format": "binary" }
+				}
+			},
 			"SavedResultString": {
 				"type": "object",
 				"properties": {
@@ -2014,26 +2046,6 @@
 					"message": { "type": "string" },
 					"data": { "type": "string" },
 					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"DasarGajiPostRequest": {
-				"type": "object",
-				"properties": {
-					"deskripsi": { "type": "string", "minLength": 1 },
-					"tanggalAwal": { "type": "string", "format": "date" },
-					"tanggalAkhir": { "type": "string", "format": "date" },
-					"aktif": { "type": "boolean" }
-				},
-				"required": ["aktif", "deskripsi", "tanggalAwal"]
-			},
-			"GajiBatchRootPostRequest": {
-				"type": "object",
-				"properties": {
-					"tahun": { "type": "string" },
-					"bulan": { "type": "string" },
-					"diProsesOleh": { "type": "string" },
-					"jabatanPemroses": { "type": "string" },
-					"fileName": { "type": "string", "format": "binary" }
 				}
 			},
 			"GajiBatchMasterProsesPostRequest": {
@@ -2179,11 +2191,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiTunjanganResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -2374,11 +2386,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiProfilResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -2638,11 +2650,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPotonganTkkResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -2819,11 +2831,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPhdpResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3079,11 +3091,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPendapatanNonPajakResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3338,11 +3350,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiParameterSettingResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3603,11 +3615,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiKomponenResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3929,21 +3941,15 @@
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
-			"DasarGajiResponse": {
+			"DasarGajiMiniResponse": {
 				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"deskripsi": { "type": "string" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalAkhir": { "type": "string", "format": "date" },
-					"aktif": { "type": "boolean" }
-				}
+				"properties": { "id": { "type": "integer", "format": "int64" }, "deskripsi": { "type": "string" } }
 			},
 			"DetailDasarGajiResponse": {
 				"type": "object",
 				"properties": {
 					"id": { "type": "integer", "format": "int64" },
-					"dasarGaji": { "$ref": "#/components/schemas/DasarGajiResponse" },
+					"dasarGaji": { "$ref": "#/components/schemas/DasarGajiMiniResponse" },
 					"mkg": { "type": "integer", "format": "int32" },
 					"golonganKode": { "type": "integer", "format": "int32" },
 					"nominal": { "type": "number", "format": "double" }
@@ -3957,15 +3963,15 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/DetailDasarGajiResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
-			"SingleResultPageDetailDasarGajiResponse": {
+			"PageResultPageDetailDasarGajiResponse": {
 				"type": "object",
 				"properties": {
 					"status": { "type": "integer", "format": "int32" },
@@ -4038,8 +4044,6 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
 					"data": { "$ref": "#/components/schemas/PageDetailDasarGajiResponse" },
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
@@ -4123,39 +4127,11 @@
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
-			"DasarGaji": {
+			"DetailDasarGajiNominal": {
 				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"createdBy": { "type": "string" },
-					"createdAt": { "type": "string", "format": "date-time" },
-					"updatedBy": { "type": "string" },
-					"updatedAt": { "type": "string", "format": "date-time" },
-					"isDeleted": { "type": "boolean" },
-					"version": { "type": "integer", "format": "int32" },
-					"deskripsi": { "type": "string" },
-					"tanggalAwal": { "type": "string", "format": "date" },
-					"tanggalAkhir": { "type": "string", "format": "date" },
-					"aktif": { "type": "boolean" }
-				}
+				"properties": { "nominal": { "type": "number", "format": "double" } }
 			},
-			"DetailDasarGaji": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"createdBy": { "type": "string" },
-					"createdAt": { "type": "string", "format": "date-time" },
-					"updatedBy": { "type": "string" },
-					"updatedAt": { "type": "string", "format": "date-time" },
-					"isDeleted": { "type": "boolean" },
-					"version": { "type": "integer", "format": "int32" },
-					"dasarGaji": { "$ref": "#/components/schemas/DasarGaji" },
-					"mkg": { "type": "integer", "format": "int32" },
-					"golonganKode": { "type": "integer", "format": "int32" },
-					"nominal": { "type": "number", "format": "double" }
-				}
-			},
-			"SingleResultDetailDasarGaji": {
+			"SingleResultDetailDasarGajiNominal": {
 				"type": "object",
 				"properties": {
 					"status": { "type": "integer", "format": "int32" },
@@ -4230,7 +4206,7 @@
 					},
 					"errors": { "type": "array", "items": { "type": "string" } },
 					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/DetailDasarGaji" },
+					"data": { "$ref": "#/components/schemas/DetailDasarGajiNominal" },
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
@@ -4313,6 +4289,16 @@
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
+			"DasarGajiResponse": {
+				"type": "object",
+				"properties": {
+					"id": { "type": "integer", "format": "int64" },
+					"deskripsi": { "type": "string" },
+					"tanggalMulai": { "type": "string", "format": "date" },
+					"tanggalAkhir": { "type": "string", "format": "date" },
+					"aktif": { "type": "boolean" }
+				}
+			},
 			"PageDasarGajiResponse": {
 				"type": "object",
 				"properties": {
@@ -4321,15 +4307,15 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/DasarGajiResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
-			"SingleResultPageDasarGajiResponse": {
+			"PageResultPageDasarGajiResponse": {
 				"type": "object",
 				"properties": {
 					"status": { "type": "integer", "format": "int32" },
@@ -4402,8 +4388,6 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
 					"data": { "$ref": "#/components/schemas/PageDasarGajiResponse" },
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
@@ -4923,11 +4907,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterProsesResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -5174,11 +5158,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},

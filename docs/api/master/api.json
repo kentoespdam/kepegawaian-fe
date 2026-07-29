@@ -1680,6 +1680,21 @@
 				}
 			}
 		},
+		"/master/profesi/jabatan/{id}": {
+			"get": {
+				"tags": ["profesi-controller"],
+				"operationId": "findByJabatanId",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultProfesiListResponse" } } }
+					}
+				}
+			}
+		},
 		"/master/organisasi/{id}/parent": {
 			"get": {
 				"tags": ["organisasi-controller"],
@@ -2539,11 +2554,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/SanksiQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -2941,11 +2956,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RumahDinasQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3165,11 +3180,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/ProfesiDetail" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3447,11 +3462,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/OrganisasiQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -3781,11 +3796,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/LevelResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -4042,11 +4057,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JenjangPendidikanResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -4302,11 +4317,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JenisSpQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -4573,11 +4588,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JenisPelatihanQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -4832,11 +4847,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JenisKitasQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -5091,11 +5106,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JenisKeahlianQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -5357,11 +5372,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/JabatanQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -5704,11 +5719,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/HariLiburQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -5972,11 +5987,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GradeQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -6318,11 +6333,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GolonganQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -6585,11 +6600,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/AlasanBerhentiQuery" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},

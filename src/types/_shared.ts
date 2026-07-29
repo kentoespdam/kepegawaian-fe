@@ -363,14 +363,6 @@ export interface GajiProfilResponse {
 	nama?: string;
 }
 
-export interface DasarGajiResponse {
-	id?: number; // int64
-	deskripsi?: string;
-	tanggalMulai?: string; // date
-	tanggalAkhir?: string; // date
-	aktif?: boolean;
-}
-
 export interface LampiranRow {
 	id?: number; // int64
 	fileName?: string;

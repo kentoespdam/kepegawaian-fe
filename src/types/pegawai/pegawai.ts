@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/{modul}/api.json
- * Endpoint : DELETE /pegawai/{id}, GET /pegawai, GET /pegawai/list, GET /pegawai/{id}, GET /pegawai/{id}/ringkasan, GET /pegawai/{id}/session, GET /pegawai/{nipam}/nipam, PATCH /pegawai/{id}/gaji, PATCH /pegawai/{id}/profil, POST /pegawai, POST /pegawai/batch, POST /pegawai/batch-by-ids, PUT /pegawai/{id}
+ * Endpoint : DELETE /pegawai/{id}, GET /pegawai, GET /pegawai/list, GET /pegawai/{id}, GET /pegawai/{id}/mutasi-context, GET /pegawai/{id}/ringkasan, GET /pegawai/{id}/session, GET /pegawai/{nipam}/nipam, PATCH /pegawai/{id}/gaji, PATCH /pegawai/{id}/profil, POST /pegawai, POST /pegawai/batch, POST /pegawai/batch-by-ids, PUT /pegawai/{id}
  */
 
 import type {
@@ -340,6 +340,18 @@ export interface PegawaiResponseRingkasan {
 }
 
 export type SingleResultPegawaiResponseRingkasan = Envelope<PegawaiResponseRingkasan>;
+
+export interface PegawaiResponseMutasiContext {
+	id?: number; // int64
+	nipam?: string;
+	nama?: string;
+	golongan?: RefMiniResponse;
+	organisasi?: RefMiniResponse;
+	jabatan?: RefMiniResponse;
+	profesi?: RefMiniResponse;
+}
+
+export type SingleResultPegawaiResponseMutasiContext = Envelope<PegawaiResponseMutasiContext>;
 
 export type {
 	Biodata,
