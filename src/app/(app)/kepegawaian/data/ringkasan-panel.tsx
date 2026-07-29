@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, FileX2, Pencil, RefreshCw, Wallet } from "lucide-react";
+import { AlertTriangle, FileX2, History, Pencil, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { labelAgama, labelJk, labelKawin, labelStatus } from "@/lib/enum-labels";
@@ -16,6 +16,7 @@ interface Props {
 	onRetry: () => void;
 	onEditProfil: () => void;
 	onEditGaji: () => void;
+	onRiwayat: () => void;
 }
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
@@ -47,6 +48,7 @@ export function RingkasanPanel({
 	onRetry,
 	onEditProfil,
 	onEditGaji,
+	onRiwayat,
 }: Props) {
 	const showActions = !!selectedId && !isError;
 
@@ -71,6 +73,10 @@ export function RingkasanPanel({
 						<Button variant="outline" size="sm" onClick={onEditGaji}>
 							<Wallet className="mr-1.5 size-3.5" />
 							Edit Gaji
+						</Button>
+						<Button variant="outline" size="sm" onClick={onRiwayat}>
+							<History className="mr-1.5 size-3.5" />
+							Riwayat
 						</Button>
 					</div>
 				)}
@@ -109,6 +115,10 @@ export function RingkasanPanel({
 				<Button variant="outline" size="sm" onClick={onEditGaji}>
 					<Wallet className="mr-1.5 size-3.5" />
 					Edit Gaji
+				</Button>
+				<Button variant="outline" size="sm" onClick={onRiwayat}>
+					<History className="mr-1.5 size-3.5" />
+					Riwayat
 				</Button>
 			</div>
 			{/* Informasi Umum */}

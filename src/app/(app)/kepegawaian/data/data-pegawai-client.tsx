@@ -218,6 +218,7 @@ export function DataPegawaiClient() {
 								onRetry={() => ringkasanQuery.refetch()}
 								onEditProfil={() => setEditProfilId(String(selectedId))}
 								onEditGaji={() => setEditGajiId(String(selectedId))}
+								onRiwayat={() => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`)}
 							/>
 						</div>
 					</div>

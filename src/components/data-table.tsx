@@ -25,7 +25,7 @@ export interface Column<T> {
 	sortable?: boolean;
 	/** Kolom identitas baris (mis. NAMA): weight 600 + text-foreground. Kolom lain di-mute. */
 	primary?: boolean;
-	cell?: (item: T) => React.ReactNode;
+	cell?: (item: T, index: number) => React.ReactNode;
 	align?: "center" | "left" | "right" | "justify" | "char";
 }
 
@@ -273,7 +273,7 @@ export function DataTable<T>({
 											align={col.align}
 										>
 											{" "}
-											{col.cell ? col.cell(item) : cellContent(item[col.id as keyof T])}
+											{col.cell ? col.cell(item, i) : cellContent(item[col.id as keyof T])}
 										</td>
 									))}
 									{hasActions && (

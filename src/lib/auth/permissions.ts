@@ -7,4 +7,5 @@ const VIEW: Action[] = ["view"];
 export const PERMISSIONS: Record<string, Record<string, Action[]>> = {
 	admin: { "*": ALL },
 	viewer: { "*": VIEW },
+	hr: { "*": ALL },
 };

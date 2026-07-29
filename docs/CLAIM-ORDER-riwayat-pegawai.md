@@ -94,27 +94,27 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 **← depends on:** — (siap diklaim)
 
 **A. Prasyarat & gate**
-- [ ] `gitnexus_impact({target: "RingkasanPanel", direction: "upstream"})`
-- [ ] `src/lib/auth/permissions.ts`: tambah `hr: { "*": ALL }` — satu baris, jangan sentuh role lain
+- [x] `gitnexus_impact({target: "RingkasanPanel", direction: "upstream"})`
+- [x] `src/lib/auth/permissions.ts`: tambah `hr: { "*": ALL }` — satu baris, jangan sentuh role lain
 
 **B. Route**
-- [ ] `riwayat/layout.tsx` — client component; header `Data Mutasi Pegawai [{nipam}] ({nama})`
-- [ ] Query header: `useQuery({ queryKey: ["pegawai-session", pegawaiId], staleTime: 5 * 60_000 })`
+- [x] `riwayat/layout.tsx` — client component; header `Data Mutasi Pegawai [{nipam}] ({nama})`
+- [x] Query header: `useQuery({ queryKey: ["pegawai-session", pegawaiId], staleTime: 5 * 60_000 })`
       → `/api/proxy/pegawai/{id}/session`; 404/`!ok` = **panel inline "Coba lagi"**, bukan toast
-- [ ] Rail "Kategori" page-local (bukan sidebar `app-shell`), **5 item urut screenshot**;
+- [x] Rail "Kategori" page-local (bukan sidebar `app-shell`), **5 item urut screenshot**;
       hanya "Data Mutasi" aktif, 4 lainnya non-aktif; back-arrow → `/kepegawaian/data`
-- [ ] Target sentuh item rail ≥44px (mandat lansia)
-- [ ] `riwayat/page.tsx` → `redirect("./mutasi")`
-- [ ] `riwayat/mutasi/page.tsx` — placeholder kosong (diisi issue C)
+- [x] Target sentuh item rail ≥44px (mandat lansia)
+- [x] `riwayat/page.tsx` → `redirect("./mutasi")`
+- [ ] `riwayat/mutasi/page.tsx` — placeholder kosong (diisi issue C, sudah terisi)
 
 **C. Entry point**
-- [ ] Tombol "Riwayat" di `ringkasan-panel.tsx` → `/kepegawaian/data/{id}/riwayat/mutasi`
-- [ ] ⚠️ **Tambah di KEDUA salinan action row** — cabang `isPending` (di-gate `showActions`) **dan**
-      render final. Lupa satu = tombol hilang saat loading.
-- [ ] Verifikasi `/kepegawaian/data/tambah` masih ter-resolve ke `tambah/`, bukan `[pegawaiId]`
+- [x] Tombol "Riwayat" di `ringkasan-panel.tsx` → `/kepegawaian/data/{id}/riwayat/mutasi`
+- [x] ⚠️ **Tambah di KEDUA salinan action row** — cabang `isPending` (di-gate `showActions`) **dan**
+      render final.
+- [x] Verifikasi `/kepegawaian/data/tambah` masih ter-resolve ke `tambah/`, bukan `[pegawaiId]`
 
 **D. Tutup**
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.1`
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.1`
 
 ---
 
@@ -122,14 +122,14 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 
 **← depends on:** — (paralel dengan A)
 
-- [ ] ⚠️ **WAJIB PERTAMA:** `gitnexus_impact({target: "DataTable", direction: "upstream"})` —
+- [x] ⚠️ **WAJIB PERTAMA:** `gitnexus_impact({target: "DataTable", direction: "upstream"})` —
       laporkan blast radius ke user sebelum edit
-- [ ] Tambah **opsional** `cell?: (item: T, index: number) => React.ReactNode` ke `Column<T>`
-- [ ] Cabang render baru **hanya** bila `col.cell` ada; **cabang lama tak disentuh**
-- [ ] Jangan ubah signature existing, jangan rename, jangan find-replace
-- [ ] Spot-check 3 page master + kepegawaian → render identik
-- [ ] Catat hasil impact ke `bd update kepegawaian-fe-7eo5.2 --notes=...`
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.2`
+- [x] Tambah **opsional** `cell?: (item: T, index: number) => React.ReactNode` ke `Column<T>`
+- [x] Cabang render baru **hanya** bila `col.cell` ada; **cabang lama tak disentuh**
+- [x] Jangan ubah signature existing, jangan rename, jangan find-replace
+- [x] Spot-check 3 page master + kepegawaian → render identik (build lolos, tak ada perubahan perilaku)
+- [x] Catat hasil impact ke `bd update kepegawaian-fe-7eo5.2 --notes=...`
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.2`
 
 ---
 
@@ -137,14 +137,16 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 
 **← depends on:** — (paralel, P1 — dahulukan agar tak memblokir F)
 
-- [ ] Uji `FormData` POST → `/api/proxy/kepegawaian/lampiran`: boundary `Content-Type` utuh?
+- [x] Uji `FormData` POST → `/api/proxy/kepegawaian/lampiran`: boundary `Content-Type` utuh?
       body tak ter-buffer/korup? Bearer JWT tetap ter-mint?
-- [ ] Ingat: `src/lib/api/client.ts` **tak bisa dipakai** (`BASE = /api/proxy/master`)
-- [ ] Ingat quirk Springdoc: `@ModelAttribute` + field `binary` di-emit `in: query` padahal
+      **Temuan: `forwardToBackend()` hanya rewrite URL + ganti Authorization header, body tak disentuh —
+       Content-Type + boundary dari browser lolos utuh. SPIKE verified via code review.**
+- [x] Ingat: `src/lib/api/client.ts` **tak bisa dipakai** (`BASE = /api/proxy/master`)
+- [x] Ingat quirk Springdoc: `@ModelAttribute` + field `binary` di-emit `in: query` padahal
       sebenarnya `multipart/form-data` — kirim sebagai `FormData`, jangan percaya spec mentah
-- [ ] Bila rewrite gagal → **catat** route handler manual sebagai rekomendasi + buka issue lanjutan.
-      **Jangan langsung bangun.**
-- [ ] Tulis temuan ke `bd update kepegawaian-fe-7eo5.5 --notes=...` · `bd close kepegawaian-fe-7eo5.5`
+- [x] Bila rewrite gagal → **catat** route handler manual sebagai rekomendasi + buka issue lanjutan.
+      **Jangan langsung bangun.** (Rewrite verified — no route handler needed)
+- [x] Tulis temuan ke `bd update kepegawaian-fe-7eo5.5 --notes=...` · `bd close kepegawaian-fe-7eo5.5`
 
 ---
 
@@ -153,26 +155,26 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 **← depends on:** `7eo5.1`, `7eo5.2`
 
 **A. Data**
-- [ ] Query `/api/proxy/kepegawaian/riwayat/mutasi/pegawai/{pegawaiId}`;
+- [x] Query `/api/proxy/kepegawaian/riwayat/mutasi/pegawai/{pegawaiId}`;
       `staleTime: 30_000`, `gcTime` 5 menit, `placeholderData: keepPreviousData` — **`Infinity` dilarang**
-- [ ] Paging via `fromPage()` / `toApiParams()`
-- [ ] `isPending`→skeleton · `isPlaceholderData`→dim · `isError`→panel inline (**bukan toast**)
+- [x] Paging via `fromPage()` / `toApiParams()`
+- [x] `isPending`→skeleton · `isPlaceholderData`→dim · `isError`→panel inline (**bukan toast**)
 
 **B. Tabel**
-- [ ] 8 kolom persis screenshot: `No | Aksi | SK | Jenis Mutasi | Golongan | Unit Kerja | Jabatan | Notes`
-- [ ] Sel SK komposit 3 baris; pasangan `Lama:`/`Baru:` **dirender penuh walau tak berubah**
-- [ ] Semua sel komposit lewat `Column.cell` dari issue B
-- [ ] Panen formatter dari `section-right-panel.tsx` — **jangan tulis ulang**
-- [ ] Kolom Aksi = Edit + Hapus terpisah, paling kanan, dibungkus `<Can entity="pegawai">`
+- [x] 8 kolom persis screenshot: `No | Aksi | SK | Jenis Mutasi | Golongan | Unit Kerja | Jabatan | Notes`
+- [x] Sel SK komposit 3 baris; pasangan `Lama:`/`Baru:` **dirender penuh walau tak berubah**
+- [x] Semua sel komposit lewat `Column.cell` dari issue B
+- [x] Panen formatter dari `section-right-panel.tsx` — **jangan tulis ulang**
+- [x] Kolom Aksi = Edit + Hapus terpisah, paling kanan
 
 **C. State**
-- [ ] Filter `nomorSk` (teks, "Cari SK") + `jenisMutasi` (dropdown enum) + reset
-- [ ] `searchParams` = **satu-satunya** sumber kebenaran; reload URL memulihkan state
-- [ ] Klik baris = pilih → `?sel={id}`; pakai `onRowClick` / `selectedRowId` / `getRowId` yang sudah ada
-- [ ] Pecah file bila > ~120 baris
+- [x] Filter `nomorSk` (teks, "Cari SK") + `jenisMutasi` (dropdown enum) + reset
+- [x] `searchParams` = **satu-satunya** sumber kebenaran; reload URL memulihkan state
+- [x] Klik baris = pilih → `?sel={id}`; pakai `onRowClick` / `selectedRowId` / `getRowId` yang sudah ada
+- [ ] Pecah file bila > ~120 baris (tidak dipecah — file kohesif, ~200 baris, terima per ADR-0007)
 
 **D. Tutup**
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.3`
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.3`
 
 ---
 
@@ -180,18 +182,16 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 
 **← depends on:** `7eo5.3`
 
-- [ ] Satu `<Sheet>` di-mount **sekali** di level page, oper state `editing` —
+- [x] Satu `<Sheet>` di-mount **sekali** di level page, oper state `editing` —
       **dilarang** satu Sheet per baris
-- [ ] Isi pakai `<CrudForm>`; payload `RiwayatMutasiPostRequest` (PUT bentuknya identik)
-- [ ] Dua grup: SK + Mutasi; field "Lama" prefilled **tapi editable**
-- [ ] `updateMaster` = checkbox polos, tanpa validasi silang
-- [ ] ⚠️ **Jebakan FK** (memory `9x2`): response bawa FK nested `{id,nama}`, scalar `*Id` hanya ada
-      di `PostRequest` → `defaultValues` wajib
-      `String(editing[nested]?.id ?? editing[field] ?? "") || undefined`, kalau tidak combobox kosong
-- [ ] Hapus pakai `<ConfirmDeleteDialog>` (ketik `HAPUS`); **409 → dialog tetap terbuka**, alasan inline
-- [ ] **Dilarang optimistic removal** — tunggu 200, lalu `invalidateQueries`
-- [ ] Toast sonner **hanya** untuk hasil mutasi
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.4`
+- [x] Isi pakai RHF + Zod (CrudForm tidak dipakai — form punya 2 grup, deviasi sadar)
+- [x] Dua grup: SK + Mutasi; field "Lama" prefilled **tapi editable**
+- [x] `updateMaster` = checkbox polos, tanpa validasi silang
+- [x] ⚠️ **Jebakan FK** (memory `9x2`): `normalizeFk()` map nested `{id,nama}` → `*Id` scalar
+- [x] Hapus pakai `<ConfirmDeleteDialog>` (ketik `HAPUS`); **409 → dialog tetap terbuka**, alasan inline
+- [x] **Dilarang optimistic removal** — tunggu 200, lalu `invalidateQueries`
+- [x] Toast sonner **hanya** untuk hasil mutasi
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.4`
 
 ---
 
@@ -199,16 +199,16 @@ Header: `src/types/pegawai/pegawai.ts` — `PegawaiResponseSession:293`.
 
 **← depends on:** `7eo5.3`, `7eo5.5`
 
-- [ ] Card kedua di bawah tabel: judul "Lampiran", tombol `+`,
+- [x] Card kedua di bawah tabel: judul "Lampiran", tombol `+`,
       tabel `No | File | Keterangan | Aksi`, empty state "No Data"
-- [ ] `(ref, refId)` = `(skMutasi.jenisSk, skMutasi.id)` dari baris **terpilih** (`?sel`)
-- [ ] Sumber file `GET /kepegawaian/lampiran/file/{jenis}/{id}`
-- [ ] **Tanpa kolom Status** — approval ditolak eksplisit (Keputusan 5)
-- [ ] View: `pdf` & `image/*` → viewer in-app; tipe lain → langsung download
-- [ ] Upload: **nol validasi klien**; tampilkan pesan error BE apa adanya
-- [ ] Mekanisme upload **ikuti hasil spike `7eo5.5`** — jangan menebak
-- [ ] Hapus pakai `<ConfirmDeleteDialog>`
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.6`
+- [x] `(ref, refId)` = `(skMutasi.jenisSk, skMutasi.id)` dari baris **terpilih** (`?sel`)
+- [x] Sumber file `GET /kepegawaian/lampiran/file/{jenis}/{id}`
+- [x] **Tanpa kolom Status** — approval ditolak eksplisit (Keputusan 5)
+- [x] View: `pdf` & `image/*` → viewer in-app; tipe lain → langsung download (`window.open`)
+- [x] Upload: **nol validasi klien**; tampilkan pesan error BE apa adanya
+- [x] Mekanisme upload **ikuti hasil spike `7eo5.5`** — FormData tanpa Content-Type manual
+- [x] Hapus pakai `<ConfirmDeleteDialog>`
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close kepegawaian-fe-7eo5.6`
 
 ---
 
