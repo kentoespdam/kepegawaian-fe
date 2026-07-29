@@ -59,8 +59,8 @@ sanksi→jenis-sp. **Tree:** organisasi, jabatan (`parentId`).
 Tiap entitas punya file konkret sendiri (page, columns, form) → beda tampilan per-entitas mudah &
 terbaca — BUKAN satu engine config-driven. DRY dipaksa lewat **shared primitives** yang tiap
 entitas compose: `<DataTable>` (+ toolbar + pagination), `<CrudForm>`, `<ConfirmDeleteDialog>`,
-`<Can>`, hook `useResource`/proxy, helper API client bertipe. Duplikasi hanya di glue tipis
-per-entitas — tak pernah di logika table/fetch/CRUD.
+`<Can>`, `<LampiranCard>`, `<LampiranUploadModal>`, hook `useResource`/proxy, helper API client
+bertipe. Duplikasi hanya di glue tipis per-entitas — tak pernah di logika table/fetch/CRUD.
 
 ---
 

@@ -15,7 +15,7 @@ import { fromPage, toApiParams } from "@/lib/paging";
 import { JENIS_MUTASI_OPTIONS, labelJenisMutasi } from "@/lib/riwayat-constants";
 import { formatDate, rupiah } from "@/lib/utils";
 import type { RiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
-import { LampiranCard } from "./lampiran-card";
+import { MutasiLampiranCard } from "./lampiran-card";
 import { MutasiFormSheet } from "./mutasi-form-sheet";
 
 // ── Formatter helpers (panen dari section-right-panel.tsx) ──
@@ -314,7 +314,7 @@ export default function MutasiPage() {
 					setIsFormOpen(false);
 				}}
 			/>
-			<LampiranCard selectedRow={selectedRow} />
+			<MutasiLampiranCard selectedRow={selectedRow} />
 			<ConfirmDeleteDialog
 				open={deleteId !== null}
 				onOpenChange={(v) => {

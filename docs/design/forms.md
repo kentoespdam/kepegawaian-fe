@@ -70,6 +70,75 @@ spesifik form).
   footer) — JANGAN toast untuk validasi.
 - Rejected: two-column & horizontal-label (zigzag eye-path / pola mobile ganda).
 
+### 10.6 Lampiran components — reusable attachment management
+
+**Tambahan 2026-07-29.** Dua komponen shared primitive untuk lampiran/attachment:
+
+| Komponen | File | Fungsi |
+|----------|------|--------|
+| `LampiranCard` | `src/components/lampiran-card.tsx` | Card dengan tabel lampiran + upload modal + viewer + delete |
+| `LampiranUploadModal` | `src/components/lampiran-upload-modal.tsx` | Modal upload form (file + keterangan) |
+
+#### LampiranCard — full attachment card
+
+Komponen yang mencakup: header (judul + tombol Unggah), tabel daftar lampiran (No, File, Keterangan, Aksi), upload modal, viewer modal (pdf/image), dan confirm delete dialog.
+
+```tsx
+interface LampiranCardProps {
+  title?: string;              // Judul header, default "Lampiran"
+  ref: string;                  // Entity ref type (e.g. "SK_MUTASI", "PROFIL_PENDIDIKAN")
+  refId: string | number;       // Entity ref ID
+  queryKey: readonly string[];  // Query key prefix
+  listUrl: string;              // GET daftar lampiran
+  uploadUrl: string;            // POST upload (FormData)
+  deleteUrl: (id) => string;    // Builder URL DELETE
+  viewUrl: (id) => string;      // Builder URL view file
+  itemLabel?: string;           // Label delete confirm, default "lampiran"
+  hideUpload?: boolean;         // Sembunyikan tombol upload
+}
+```
+
+Contoh pemakaian (modul kepegawaian):
+```tsx
+<LampiranCard
+  title="Lampiran — SK Mutasi"
+  ref="SK_MUTASI"
+  refId={mutasiId}
+  queryKey={["lampiran"]}
+  listUrl={`/api/proxy/kepegawaian/lampiran/list/SK_MUTASI/${mutasiId}`}
+  uploadUrl="/api/proxy/kepegawaian/lampiran"
+  deleteUrl={(id) => `/api/proxy/kepegawaian/lampiran/SK_MUTASI/${mutasiId}/${id}`}
+  viewUrl={(id) => `/api/proxy/kepegawaian/lampiran/file/SK_MUTASI/${id}`}
+/>
+```
+
+**Aturan:**
+- `queryKey` dipakai sebagai prefix — queryKey final = `[...queryKey, ref, refId]`. Pastikan `LampiranUploadModal` menerima `queryKey` yang sama agar invalidasi setelah upload bekerja.
+- `listUrl` harus mengembalikan envelope `{ data: Array<{id, fileName, mimeType, notes}> }`.
+- `viewUrl` hanya dipakai untuk pdf/image (render via iframe/img). Non-pdf/image langsung di-download via `window.open`.
+- `uploadUrl` menerima POST FormData dengan fields: `ref`, `refId`, `fileName` (file binary), `notes` (opsional).
+- **Jangan set Content-Type header** pada upload — biarkan browser set multipart boundary.
+
+#### LampiranUploadModal — upload form modal
+
+Komponen mandiri yang bisa dipakai tanpa `LampiranCard` bila hanya perlu upload:
+
+```tsx
+interface LampiranUploadModalProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+  ref: string;
+  refId: string | number;
+  queryKey: readonly string[];
+  uploadUrl: string;
+  title?: string;  // default "Unggah Lampiran"
+}
+```
+
+Setelah upload sukses: invalidate query → reset form → tutup modal.
+
+**Query key consistency:** `LampiranCard` dan `LampiranUploadModal` sama-sama menggunakan `[...queryKey, ref, refId]` untuk fetch dan invalidasi. Pastikan `queryKey` yang diberikan ke kedua komponen identik.
+
 ### 10.3b-1 Enum field — label display via SelectValue render-prop
 
 **Tambahan 2026-07-28.** Base UI `<SelectValue>` di shadcn (varian Base UI) tidak otomatis
