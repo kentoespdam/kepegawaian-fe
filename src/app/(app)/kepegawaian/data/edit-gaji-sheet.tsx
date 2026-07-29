@@ -7,12 +7,12 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { FieldFk, FieldSelect, FieldText } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
+import { usePajakOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import { FieldFk, FieldSelect, FieldText } from "./tambah/field-renderers";
-import { usePajakOptions, useStatusPegawaiOptions } from "./tambah/hooks";
 
 const schema = z.object({
 	statusPegawai: z.string().min(1, "Pilih status"),

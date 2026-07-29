@@ -4,77 +4,37 @@ import { useQuery } from "@tanstack/react-query";
 import { Clock, Pencil } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { z } from "zod";
-import { CrudForm, type FormField } from "@/components/crud-form";
+import { CrudForm } from "@/components/crud-form";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { biodataFormSchema, editFormFields } from "@/config/profil/biodata.config";
 import { useBiodataMutation } from "@/hooks/useBiodataMutation";
-import { cn, formatDate } from "@/lib/utils";
+import {
+	formatPendidikan,
+	labelAgama,
+	labelJk,
+	labelKawin,
+	labelStatus,
+	labelStatusKerja,
+	statusKerjaColor,
+	valueFromLabel,
+} from "@/lib/enum-labels";
+import { ENUMS } from "@/lib/enums";
+import { cn, formatDate, rupiah } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import type { BiodataDashboardResponse, BiodataPatchRequest, PendidikanDashboard } from "@/types/profil/biodata";
-import { ENUMS } from "../data/tambah/constants";
+import type { BiodataDashboardResponse, BiodataPatchRequest } from "@/types/profil/biodata";
 
 // ponytail: shared afordansi trigger className
 const ACCORDION_TRIGGER_AFF =
 	"px-5 py-3 hover:bg-muted/50 data-[state=open]:bg-muted/20 **:data-[slot=accordion-trigger-icon]:text-primary";
-
-/** Reverse lookup: cari enum value dari label (karena API dashboard return label, bukan value) */
-function enumValueFromLabel(
-	label: string | undefined | null,
-	options: readonly { value: string; label: string }[],
-): string {
-	if (!label) return "";
-	return options.find((o) => o.label === label)?.value ?? label;
-}
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
 	const biodataMutation = useBiodataMutation(nik ?? "");
-
-	const biodataFormSchema = z.object({
-		nik: z.string().optional(),
-		nama: z.string().min(1, "Nama wajib diisi"),
-		jenisKelamin: z.string().optional(),
-		tempatLahir: z.string().optional(),
-		tanggalLahir: z.string().optional(),
-		agama: z.string().optional(),
-		statusKawin: z.string().optional(),
-		ibuKandung: z.string().optional(),
-		telp: z
-			.string()
-			.optional()
-			.refine((v) => !v || /^[0-9+\-\s()]{7,20}$/.test(v), "Format nomor telepon tidak valid"),
-		alamat: z.string().optional(),
-	});
-
-	const editFormFields: FormField[] = [
-		{ name: "nik", label: "NIK", type: "text", required: false },
-		{ name: "nama", label: "Nama", type: "text", required: true },
-		{
-			name: "jenisKelamin",
-			label: "Jenis Kelamin",
-			type: "select",
-			required: false,
-			options: [...ENUMS.jenisKelamin],
-		},
-		{ name: "tempatLahir", label: "Tempat Lahir", type: "text", required: false },
-		{ name: "tanggalLahir", label: "Tanggal Lahir", type: "date", required: false },
-		{ name: "agama", label: "Agama", type: "select", required: false, options: [...ENUMS.agama] },
-		{
-			name: "statusKawin",
-			label: "Status Kawin",
-			type: "select",
-			required: false,
-			options: [...ENUMS.statusKawin],
-		},
-		{ name: "ibuKandung", label: "Ibu Kandung", type: "text", required: false },
-		{ name: "telp", label: "Telp", type: "text", required: false },
-		{ name: "alamat", label: "Alamat", type: "textarea", required: false },
-	];
 
 	const handleEditSubmit = async (data: Record<string, unknown>) => {
 		setFormError(null);
@@ -226,7 +186,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 								label="Masa Kerja"
 								value={pegawai.mkgTahun != null ? `${pegawai.mkgTahun} th ${pegawai.mkgBulan ?? 0} bln` : undefined}
 							/>
-							<Field label="Gaji Pokok" value={pegawai.gajiPokok != null ? formatRp(pegawai.gajiPokok) : undefined} />
+							<Field label="Gaji Pokok" value={pegawai.gajiPokok != null ? rupiah(pegawai.gajiPokok) : undefined} />
 						</div>
 					</AccordionContent>
 				</AccordionItem>
@@ -255,11 +215,11 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 									? ({
 											nik: d.nik ?? "",
 											nama: d.nama ?? "",
-											jenisKelamin: enumValueFromLabel(d.jenisKelamin, ENUMS.jenisKelamin),
+											jenisKelamin: valueFromLabel(d.jenisKelamin, ENUMS.jenisKelamin),
 											tempatLahir: d.tempatLahir ?? "",
 											tanggalLahir: d.tanggalLahir ?? "",
-											agama: enumValueFromLabel(d.agama, ENUMS.agama),
-											statusKawin: enumValueFromLabel(d.statusKawin, ENUMS.statusKawin),
+											agama: valueFromLabel(d.agama, ENUMS.agama),
+											statusKawin: valueFromLabel(d.statusKawin, ENUMS.statusKawin),
 											ibuKandung: d.ibuKandung ?? "",
 											telp: d.noTelp ?? "",
 											alamat: d.alamat ?? "",
@@ -298,78 +258,4 @@ function Field({
 			<p className={cn("text-sm", badgeClass)}>{value ?? "-"}</p>
 		</div>
 	);
-}
-
-function statusKerjaColor(s?: string): string | undefined {
-	if (s === "KARYAWAN_AKTIF") return "text-success";
-	if (s === "BERHENTI_OR_KELUAR") return "text-destructive";
-	if (s === "DIRUMAHKAN") return "text-warning";
-	return undefined;
-}
-
-function labelJk(s?: string): string {
-	if (s === "LAKI_LAKI") return "Laki-laki";
-	if (s === "PEREMPUAN") return "Perempuan";
-	return s ?? "-";
-}
-
-function labelAgama(s: string): string {
-	const map: Record<string, string> = {
-		ISLAM: "Islam",
-		KRISTEN: "Kristen",
-		KATOLIK: "Katolik",
-		HINDU: "Hindu",
-		BUDHA: "Buddha",
-		KONGHUCHU: "Konghuchu",
-		ALIRAN_KEPERCAYAAN: "Aliran Kepercayaan",
-		LAINNYA: "Lainnya",
-	};
-	return map[s] ?? s;
-}
-
-function labelKawin(s: string): string {
-	const map: Record<string, string> = {
-		BELUM_KAWIN: "Belum Kawin",
-		KAWIN: "Kawin",
-		JANDA_DUDA: "Janda/Duda",
-		MENIKAH_SEKANTOR: "Menikah Satu Kantor",
-		TIDAK_TAHU: "Tidak Tahu",
-	};
-	return map[s] ?? s;
-}
-
-function labelStatus(s: string): string {
-	const map: Record<string, string> = {
-		KONTRAK: "Kontrak",
-		CAPEG: "CPNS",
-		PEGAWAI: "Pegawai Tetap",
-		HONORER: "Honorer",
-		CALON_HONORER: "Calon Honorer",
-		NON_PEGAWAI: "Non-Pegawai",
-	};
-	return map[s] ?? s;
-}
-
-function labelStatusKerja(s: string): string {
-	const map: Record<string, string> = {
-		KARYAWAN_AKTIF: "Aktif",
-		BERHENTI_OR_KELUAR: "Berhenti / Keluar",
-		DIRUMAHKAN: "Dirumahkan",
-	};
-	return map[s] ?? s;
-}
-
-function formatPendidikan(p?: PendidikanDashboard): string | undefined {
-	if (!p) return undefined;
-	const parts = [p.tingkat, p.jurusan, p.institusi, p.tahunLulus ? String(p.tahunLulus) : undefined].filter(Boolean);
-	return parts.length > 0 ? parts.join(" — ") : undefined;
-}
-
-function formatRp(n: number): string {
-	return new Intl.NumberFormat("id-ID", {
-		style: "currency",
-		currency: "IDR",
-		minimumFractionDigits: 0,
-		maximumFractionDigits: 0,
-	}).format(n);
 }

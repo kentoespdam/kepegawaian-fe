@@ -7,13 +7,13 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
+import { ENUMS } from "@/lib/enums";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import { ENUMS } from "./tambah/constants";
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./tambah/field-renderers";
 
 const schema = z.object({
 	nipam: z.string().min(1, "NIPAM wajib"),

@@ -1,20 +1,9 @@
 {
   "env": {
-    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "35",
+    "CLAUDE_AUTOCOMPACT_PCT_OVERRIDE": "45",
     "CLAUDE_CODE_AUTO_COMPACT_WINDOW": "1000000"
   },
   "hooks": {
-    "PreCompact": [
-      {
-        "matcher": "",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "bd prime"
-          }
-        ]
-      }
-    ],
     "SessionStart": [
       {
         "matcher": "",

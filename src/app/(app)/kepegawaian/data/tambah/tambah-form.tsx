@@ -7,12 +7,12 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
+import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { useFkOptions } from "@/hooks/useFkOptions";
+import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
 import { api } from "@/lib/api/client";
-import { ENUMS } from "./constants";
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "./field-renderers";
-import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "./hooks";
+import { ENUMS } from "@/lib/enums";
 import { type FormValues, schema } from "./schema";
 
 export function TambahPegawaiForm() {

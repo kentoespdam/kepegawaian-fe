@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useFkOptions } from "@/hooks/useFkOptions";
-import { useStatusKerjaOptions, useStatusPegawaiOptions } from "./tambah/hooks";
+import { useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
 
 // ── Filter definitions ──
 

@@ -3,6 +3,7 @@
 import { AlertTriangle, FileX2, Pencil, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { labelAgama, labelJk, labelKawin, labelStatus } from "@/lib/enum-labels";
 import { formatDate } from "@/lib/utils";
 import type { PegawaiResponseRingkasan } from "@/types/pegawai/pegawai";
 
@@ -116,12 +117,12 @@ export function RingkasanPanel({
 				<div className="divide-y divide-border">
 					<Field label="NIPAM" value={data.nipam} />
 					<Field label="Nama" value={data.nama} />
-					<Field label="Jenis Kelamin" value={data.jenisKelamin} />
+					<Field label="Jenis Kelamin" value={labelJk(data.jenisKelamin)} />
 					<Field label="Tempat Lahir" value={data.tempatLahir} />
 					<Field label="Tanggal Lahir" value={formatDate(data.tanggalLahir)} />
-					<Field label="Status Kawin" value={data.statusKawin} />
+					<Field label="Status Kawin" value={labelKawin(data.statusKawin)} />
 					<Field label="NIK" value={data.nik} />
-					<Field label="Agama" value={data.agama} />
+					<Field label="Agama" value={labelAgama(data.agama)} />
 					<Field label="Alamat" value={data.alamat} />
 					<Field label="Telp" value={data.telp} />
 					<Field label="Email" value={data.email} />
@@ -148,7 +149,7 @@ export function RingkasanPanel({
 					Informasi Kepegawaian
 				</h3>
 				<div className="divide-y divide-border">
-					<Field label="Status Pegawai" value={data.statusPegawai} />
+					<Field label="Status Pegawai" value={labelStatus(data.statusPegawai)} />
 					<Field label="Pangkat/Golongan" value={data.pangkatGolongan} />
 					<Field label="TMT Golongan" value={formatDate(data.tmtGolongan)} />
 					<Field label="MKG" value={data.mkg} />
