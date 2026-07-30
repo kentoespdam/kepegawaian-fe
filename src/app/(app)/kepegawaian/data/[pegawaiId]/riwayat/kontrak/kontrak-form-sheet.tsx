@@ -11,6 +11,7 @@ import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/fie
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_AKSI_KONTRAK_OPTIONS } from "@/lib/riwayat-constants";
@@ -58,6 +59,14 @@ function normalizeFk(d: SingleResultRiwayatKontrakQuery["data"] | undefined): Re
 		isLatest: false,
 		notes: d.notes ?? "",
 	};
+}
+
+// ── Section label ──
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+	return (
+		<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>
+	);
 }
 
 // ── Component ──
@@ -154,86 +163,45 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 	};
 
 	return (
-		<Sheet
-			open={isOpen}
-			onOpenChange={(v) => {
-				if (!v) onClose();
-			}}
-		>
+		<Sheet open={isOpen} onOpenChange={(v) => { if (!v) onClose(); }}>
 			<SheetContent className="sm:max-w-xl overflow-y-auto">
 				<SheetHeader>
 					<SheetTitle>{editingId ? "Edit Riwayat Kontrak" : "Tambah Riwayat Kontrak"}</SheetTitle>
 				</SheetHeader>
 
-				<form onSubmit={rhfSubmit(onSubmit)} className="mt-6 space-y-5">
+				<form onSubmit={rhfSubmit(onSubmit)} className="mt-4 space-y-3.5">
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
 
-					{/* ── Baris 1: NIPAM + Nama ── */}
+					{/* ── Data Pegawai ── */}
+					<SectionLabel>Data Pegawai</SectionLabel>
+
 					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="NIPAM"
-							value={watch("nipam")}
-							onChange={(v) => setValue("nipam", v)}
-							required
-							error={errors.nipam?.message}
-						/>
-						<FieldText
-							label="Nama"
-							value={watch("nama")}
-							onChange={(v) => setValue("nama", v)}
-							required
-							error={errors.nama?.message}
-						/>
+						<FieldText label="NIPAM" value={watch("nipam")} onChange={(v) => setValue("nipam", v)} required error={errors.nipam?.message} />
+						<FieldText label="Nama" value={watch("nama")} onChange={(v) => setValue("nama", v)} required error={errors.nama?.message} />
 					</div>
 
-					<FieldSelect
-						label="Jenis Aksi"
-						value={watch("jenisKontrak")}
-						onChange={(v) => setValue("jenisKontrak", v)}
-						options={JENIS_AKSI_KONTRAK_OPTIONS}
-						required
-						error={errors.jenisKontrak?.message}
-					/>
+					<Separator />
 
-					<FieldText
-						label="Nomor Kontrak"
-						value={watch("nomorKontrak")}
-						onChange={(v) => setValue("nomorKontrak", v)}
-						required
-						error={errors.nomorKontrak?.message}
-					/>
+					{/* ── Data Kontrak ── */}
+					<SectionLabel>Data Kontrak</SectionLabel>
 
-					{/* ── Tanggal: Tgl. SK + Mulai sebaris, Selesai full-width ── */}
+					<FieldSelect label="Jenis Aksi" value={watch("jenisKontrak")} onChange={(v) => setValue("jenisKontrak", v)} options={JENIS_AKSI_KONTRAK_OPTIONS} required error={errors.jenisKontrak?.message} />
+
+					<FieldText label="Nomor Kontrak" value={watch("nomorKontrak")} onChange={(v) => setValue("nomorKontrak", v)} required error={errors.nomorKontrak?.message} />
+
 					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="Tgl. SK"
-							type="date"
-							value={watch("tanggalSk")}
-							onChange={(v) => setValue("tanggalSk", v)}
-							required
-							error={errors.tanggalSk?.message}
-						/>
-						<FieldText
-							label="Mulai"
-							type="date"
-							value={watch("tanggalMulai")}
-							onChange={(v) => setValue("tanggalMulai", v)}
-							required
-							error={errors.tanggalMulai?.message}
-						/>
+						<FieldText label="Tgl. SK" type="date" value={watch("tanggalSk")} onChange={(v) => setValue("tanggalSk", v)} required error={errors.tanggalSk?.message} />
+						<FieldText label="Mulai" type="date" value={watch("tanggalMulai")} onChange={(v) => setValue("tanggalMulai", v)} required error={errors.tanggalMulai?.message} />
 					</div>
 
-					<FieldText
-						label="Selesai"
-						type="date"
-						value={watch("tanggalSelesai")}
-						onChange={(v) => setValue("tanggalSelesai", v)}
-						error={errors.tanggalSelesai?.message}
-					/>
+					<FieldText label="Selesai" type="date" value={watch("tanggalSelesai")} onChange={(v) => setValue("tanggalSelesai", v)} error={errors.tanggalSelesai?.message} />
 
-					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN; full-width tanpa grid placeholder */}
+					<Separator />
+
+					{/* ── Detail Tambahan ── */}
+					<SectionLabel>Detail Tambahan</SectionLabel>					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN; full-width tanpa grid placeholder */}
 					{showGolongan && (
 						<FieldFk
 							label="Golongan"
@@ -252,30 +220,15 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 					/>
 
 					<div className="flex items-center gap-2">
-						<Checkbox
-							id="isLatest"
-							checked={watch("isLatest") ?? false}
-							onCheckedChange={(v) => setValue("isLatest", v === true)}
-						/>
-						<Label htmlFor="isLatest" className="text-sm font-medium leading-none">
-							Kontrak Terbaru
-						</Label>
+						<Checkbox id="isLatest" checked={watch("isLatest") ?? false} onCheckedChange={(v) => setValue("isLatest", v === true)} />
+						<Label htmlFor="isLatest" className="text-sm font-medium leading-none">Kontrak Terbaru</Label>
 					</div>
 
-					<FieldTextarea
-						label="Notes"
-						value={watch("notes")}
-						onChange={(v) => setValue("notes", v)}
-						error={errors.notes?.message}
-					/>
+					<FieldTextarea label="Notes" value={watch("notes")} onChange={(v) => setValue("notes", v)} error={errors.notes?.message} />
 
-					<div className="flex justify-end gap-2 pt-2">
-						<Button type="button" variant="outline" onClick={onClose}>
-							Batal
-						</Button>
-						<Button type="submit" disabled={isSubmitting}>
-							{isSubmitting ? "Menyimpan..." : "Simpan"}
-						</Button>
+					<div className="flex justify-end gap-2 pt-1">
+						<Button type="button" variant="outline" onClick={onClose}>Batal</Button>
+						<Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Menyimpan..." : "Simpan"}</Button>
 					</div>
 				</form>
 			</SheetContent>
