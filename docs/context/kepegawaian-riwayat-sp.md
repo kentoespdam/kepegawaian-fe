@@ -2,15 +2,184 @@
 
 > Delta kategori. Baca [kepegawaian-riwayat.md](kepegawaian-riwayat.md) (shared infra, K1–K12) dulu.
 > **Muat file ini hanya bila menyentuh `riwayat/sp/`.**
+> Claim order: [CLAIM-ORDER-riwayat-sp.md](../CLAIM-ORDER-riwayat-sp.md)
+> Keputusan dikunci: grilling 2026-07-30
 
-⏳ **Belum di-grill.** Context ini belum ada — domain surat peringatan belum didiskusikan.
+**Keputusan SP-1 — Kolom tabel.**
 
-Ketika siap, jalankan `/grill-with-docs` untuk kategori Riwayat Surat Peringatan.
+`No | Nomor SP | Jenis SP | Tgl SP | Sanksi | Tgl Mulai | Tgl Selesai | Notes | File | Aksi`
 
-## Yang sudah diketahui dari shared file
+| Kolom | Isi | Sumber |
+|---|---|---|
+| No | nomor urut berjalan | `(page-1) * size + i + 1` |
+| Nomor SP | string | `row.nomorSp` |
+| Jenis SP | label | `row.jenisSp?.keterangan ?? "—"` |
+| Tgl SP | tanggal | `formatDate(row.tanggalSp)` |
+| Sanksi | label | `row.sanksi?.keterangan ?? "—"` |
+| Tgl Mulai | tanggal | `formatDate(row.tanggalMulai)` |
+| Tgl Selesai | tanggal | `formatDate(row.tanggalSelesai)` |
+| Notes | teks | `row.notes ?? "—"` |
+| File | ikon viewer bersyarat | lihat K-SP2 |
+| Aksi | ✎ Edit + 🗑 Hapus | kolom terakhir (DataTable default) |
 
-- **Endpoint list:** `GET /kepegawaian/riwayat/sp/pegawai/{pegawaiId}`
-- **Filter:** `nomorSp`, `jenisSpId` (lihat K6 di `kepegawaian-riwayat.md`)
-- **Types:** `RiwayatSpQuery`, `RiwayatSpPostRequest` (di `riwayat.ts`)
-- **Lampiran:** SP punya `fileName`/`mimeType` **inline** + `GET /riwayat/sp/{id}/file` — **berbeda** dari subsistem Lampiran (lihat K5 di shared file)
-- **RBAC:** ikut `can(roles, "view", "pegawai")` (lihat K10)
+Ditolak: kolom `sanksiNotes`, `tanggalEksekusiSanksi`, `penandaTangan`, `jabatanPenandaTangan` —
+terlalu sempit untuk scan cepat HR; tetap tersedia di form Edit.
+
+**Keputusan SP-2 — File SP: inline, bukan LampiranCard.**
+
+SP punya **satu file per baris**, tersimpan inline di response (`fileName`, `mimeType`).
+Tidak ada subsistem `POST /kepegawaian/lampiran` untuk SP — endpoint terpisah `GET /kepegawaian/riwayat/sp/{id}/file`.
+
+Karena itu: **tidak ada kartu Lampiran** di bawah tabel (berbeda dari SK dan Mutasi).
+
+Kolom **File** di tabel = satu tombol/ikon bersyarat (aturan sama seperti K5 shared infra):
+
+| `mimeType` | Perilaku |
+|---|---|
+| `application/pdf` atau `image/*` | buka viewer in-app |
+| lain-lain | langsung unduh berkas |
+| `fileName` null/kosong | tampil `"—"`, tidak ada tombol |
+
+Sumber berkas: `GET /kepegawaian/riwayat/sp/{id}/file`.
+
+**Keputusan SP-3 — Filter toolbar.**
+
+```
+[Cari Nomor SP]  [Pilih Jenis SP ▾]  [Reset]  [+ Tambah SP]
+```
+
+- `nomorSp` → text search
+- `jenisSp` → combobox **fetch** `/api/proxy/master/jenis-sp/list` (dynamic — **bukan** hardcoded enum seperti `JENIS_SK_OPTIONS`)
+- Filter `jenisSpId` (integer id) dikirim ke BE query param
+- Reset + Tambah SP di kanan — konsisten dengan pola SK/Mutasi
+
+Ditolak: `<Select>` static — Jenis SP adalah master entity dinamis, bukan enum terkunci di BE.
+
+**Keputusan SP-4 — Cascade Jenis SP → Sanksi di form.**
+
+Di form Tambah/Edit: memilih **Jenis SP** mengubah opsi Sanksi yang tersedia (hanya sanksi yang
+terhubung ke jenis SP tersebut).
+
+Endpoint cascade: `GET /master/sanksi/jenis-sp/{jenisSpId}` → `ListResultSanksiJenisSpList`
+
+`SanksiJenisSpList`: `{ id, kode, keterangan, jenisSp, potTkk, ... }` — `id` sebagai value combobox,
+`keterangan` sebagai label.
+
+Perilaku:
+- Sebelum `jenisSpId` dipilih → sanksi combobox **disabled**
+- Reset `jenisSpId` → reset `sanksiId` juga (tidak boleh sanksi orphan)
+- Pola sama seperti cascade Organisasi → Jabatan di form Tambah Pegawai
+
+Tidak ada BE change — endpoint `/master/sanksi/jenis-sp/{id}` sudah ada dan berisi shape yang cukup.
+
+**Keputusan SP-5 — Edit: file lama dipertahankan jika tidak diganti.**
+
+Konfirmasi BE: `PUT /kepegawaian/riwayat/sp/{id}`:
+- `fileName` **tidak dikirim** (field absen dari FormData) → BE **mempertahankan file lama**
+- `fileName` **hadir** → replace file lama
+
+Implementasi form Edit:
+- Tampilkan nama file lama (`row.fileName`) jika ada — label informatif, bukan preview
+- `<input type="file">` opsional di bawahnya
+- Jika user tidak pilih file baru → **jangan** append `fileName` ke FormData
+- Jika user pilih file baru → append `fd.append("fileName", file)`
+
+**Keputusan SP-6 — Klik baris = no-op.**
+
+SP tidak punya LampiranCard (K-SP2), sehingga tidak ada panel yang bergantung pada baris terpilih.
+Override K4 (shared infra) **tidak berlaku** — K4 hanya untuk tabel dengan kartu/panel bergantung baris.
+
+Konsekuensi:
+- Tidak ada `onRowClick` di `<DataTable>`
+- Tidak ada `?sel=` di URL
+- Tidak ada `selectedRowId` / `selectedRow` state
+
+Aksi baris:
+- Kolom **Aksi**: ✎ Edit → Sheet, 🗑 Hapus → `<ConfirmDeleteDialog>`
+- Kolom **File**: tombol bersyarat langsung di cell — `row.id` + `row.mimeType` sudah tersedia di baris
+
+**Keputusan SP-7 — Content-type: `multipart/form-data` untuk semua mutasi SP.**
+
+`POST /kepegawaian/riwayat/sp` dan `PUT /kepegawaian/riwayat/sp/{id}` keduanya menggunakan pola
+Springdoc `@ModelAttribute` (spec: `"in": "query"` dengan schema object berisi field binary).
+Realitanya: **seluruh request harus dikirim sebagai `multipart/form-data`**, bukan JSON.
+
+Berbeda dari SK / Mutasi / Kontrak yang murni JSON.
+
+Konsekuensi implementasi wajib dipahami:
+
+- Gunakan `FormData` — `fd.append("nomorSp", value)` per field
+- File: `fd.append("fileName", file)` — hanya jika user memilih file
+- `fetch` langsung (bukan `src/lib/api/client.ts` yang selalu `JSON.stringify`)
+- Tidak set `Content-Type` header manual — browser auto-set boundary multipart
+- `proxy.ts` meneruskan body via `rewrite` apa adanya — sudah terbukti untuk lampiran (spike K9 Fase 1)
+
+> ⚠️ Ini satu-satunya **form entity** non-JSON di codebase. Jangan copy pola fetch JSON dari form SK/Mutasi.
+
+---
+
+## Pemetaan `RiwayatSpQuery` → sel tabel
+
+| Sel | Sumber |
+|---|---|
+| No | `(page-1) * size + i + 1` |
+| Nomor SP | `row.nomorSp` |
+| Jenis SP | `row.jenisSp?.keterangan ?? "—"` |
+| Tgl SP | `formatDate(row.tanggalSp)` |
+| Sanksi | `row.sanksi?.keterangan ?? "—"` |
+| Tgl Mulai | `formatDate(row.tanggalMulai)` |
+| Tgl Selesai | `formatDate(row.tanggalSelesai)` |
+| Notes | `row.notes ?? "—"` |
+| File | ikon bersyarat — `row.fileName`, `row.mimeType`, `row.id` |
+
+## Urutan field di form Sheet (atas → bawah)
+
+| # | Field | Type | Zod | Sumber data |
+|---|---|---|---|---|
+| 1 | Nomor SP | text | required | input bebas |
+| 2 | Jenis SP | combobox FK | required | `GET /master/jenis-sp/list` |
+| 3 | Sanksi | combobox FK (cascade) | required | `GET /master/sanksi/jenis-sp/{jenisSpId}` |
+| 4 | Tanggal SP | date picker | required | — |
+| 5 | Tanggal Mulai | date picker | required | — |
+| 6 | Tanggal Selesai | date picker | required | — |
+| 7 | Organisasi | combobox FK | required | `GET /master/organisasi/list` |
+| 8 | Jabatan | combobox FK | required | `GET /master/jabatan/list` |
+| 9 | Penanda Tangan | text | required | — |
+| 10 | Jabatan Penanda Tangan | text | required | — |
+| 11 | Catatan Sanksi | textarea | optional | — |
+| 12 | Tgl. Eksekusi Sanksi | date picker | optional | — |
+| 13 | File SP | file input | optional | upload ke POST/PUT |
+| 14 | Notes | textarea | optional | — |
+
+`pegawaiId` = hidden, dari URL param — tidak dirender di form.
+
+## Types
+
+`src/types/kepegawaian/riwayat.ts`:
+- `RiwayatSpQuery` L151
+- `RiwayatSpPostRequest` L325 — required: `nomorSp`, `pegawaiId`, `organisasiId`, `jabatanId`, `tanggalSp`, `jenisSpId`, `sanksiId`, `tanggalMulai`, `tanggalSelesai`, `penandaTangan`, `jabatanPenandaTangan`
+- `RiwayatSpPutRequest` L177 — required: sama
+- `PageResultPageRiwayatSpQuery` L413
+
+## Endpoint CRUD
+
+| Aksi | Endpoint | Content-type |
+|---|---|---|
+| List | `GET /kepegawaian/riwayat/sp/pegawai/{pegawaiId}` — filter: `nomorSp`, `jenisSpId` | — |
+| Detail | `GET /kepegawaian/riwayat/sp/{id}` | — |
+| Create | `POST /kepegawaian/riwayat/sp` | **multipart/form-data** |
+| Update | `PUT /kepegawaian/riwayat/sp/{id}` | **multipart/form-data** |
+| Delete | `DELETE /kepegawaian/riwayat/sp/{id}` | — |
+| File | `GET /kepegawaian/riwayat/sp/{id}/file` | — |
+
+## Endpoint master (cascade & combobox)
+
+| Kebutuhan | Endpoint |
+|---|---|
+| Jenis SP list (filter + form) | `GET /master/jenis-sp/list` |
+| Sanksi by jenisSp (cascade form) | `GET /master/sanksi/jenis-sp/{jenisSpId}` |
+| Sanksi all (fallback Edit — jenisSp sudah terpilih) | `GET /master/sanksi/list` |
+| Organisasi | `GET /master/organisasi/list` |
+| Jabatan | `GET /master/jabatan/list` |
+
+**Belum terkunci:** — (kosong). Semua pertanyaan desain SP tertutup.

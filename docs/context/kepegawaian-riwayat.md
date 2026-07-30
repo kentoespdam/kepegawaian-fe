@@ -312,5 +312,5 @@ tertutup di Keputusan 12.)
 | Data Mutasi | [`kepegawaian-riwayat-mutasi.md`](kepegawaian-riwayat-mutasi.md) | ✅ grilled |
 | Riwayat Surat Keputusan | [`kepegawaian-riwayat-sk.md`](kepegawaian-riwayat-sk.md) | ✅ grilled |
 | Riwayat Kontrak Kerja | [`kepegawaian-riwayat-kontrak.md`](kepegawaian-riwayat-kontrak.md) | ⏳ belum di-grill |
-| Riwayat Surat Peringatan | [`kepegawaian-riwayat-sp.md`](kepegawaian-riwayat-sp.md) | ⏳ belum di-grill |
+| Riwayat Surat Peringatan | [`kepegawaian-riwayat-sp.md`](kepegawaian-riwayat-sp.md) | ✅ grilled |
 | Data Penggunaan Hak Cuti | (lihat K12 di file ini — read-only, Fase 2) | ⏳ belum di-grill |
