@@ -165,11 +165,13 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 	return (
 		<Sheet open={isOpen} onOpenChange={(v) => { if (!v) onClose(); }}>
 			<SheetContent className="sm:max-w-xl overflow-y-auto">
-				<SheetHeader>
-					<SheetTitle>{editingId ? "Edit Riwayat Kontrak" : "Tambah Riwayat Kontrak"}</SheetTitle>
-				</SheetHeader>
+			<SheetHeader>
+				<SheetTitle>{editingId ? "Edit Riwayat Kontrak" : "Tambah Riwayat Kontrak"}</SheetTitle>
+			</SheetHeader>
 
-				<form onSubmit={rhfSubmit(onSubmit)} className="mt-4 space-y-3.5">
+			<Separator />
+
+			<form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5">
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
