@@ -24,7 +24,7 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
 
 ## Keputusan desain (hasil grill — DIKUNCI, jangan re-litigasi)
 
-1. **Label aksi kontrak:** `PERPANJANGAN` → "Perpanjangan Kontrak", `PENGANGKATAN` → "Pengangkatan Kontrak", `TERMINASI` → "Terminasi Kontrak".
+1. **Label aksi kontrak:** `PERPANJANGAN` → "Perpanjangan Kontrak", `PENGANGKATAN` → "Pengangkatan Calon Pegawai", `TERMINASI` → "Terminasi Kontrak".
 2. **Kolom tabel:** `No | Nomor Kontrak | Jenis Aksi | Tgl. SK | Mulai | Selesai | Notes`.
 3. **Filter:** `nomorKontrak` (text) saja — sesuai `RiwayatSearchParams` (tidak ada filter jenis kontrak di API).
 4. **Read-only saat status ≠ KONTRAK:** Sembunyikan tombol "+ Tambah Kontrak" di toolbar + ikon Edit/Hapus di baris.
@@ -97,7 +97,7 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
   ```ts
   export const JENIS_AKSI_KONTRAK_OPTIONS: { value: string; label: string }[] = [
     { value: "PERPANJANGAN", label: "Perpanjangan Kontrak" },
-    { value: "PENGANGKATAN", label: "Pengangkatan Kontrak" },
+    { value: "PENGANGKATAN", label: "Pengangkatan Calon Pegawai" },
     { value: "TERMINASI", label: "Terminasi Kontrak" },
   ];
   ```
@@ -134,22 +134,20 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
 - [x] Query: `GET /kepegawaian/riwayat/kontrak/pegawai/{pegawaiId}`
   - `staleTime: 30_000`, `placeholderData: keepPreviousData`
 - [x] Paging via `fromPage()` / `toApiParams()`
-- [ ] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline
+- [x] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline
 
 **B. Tabel**
-- [ ] 7 kolom: `No | Nomor Kontrak | Jenis Aksi | Tgl. SK | Mulai | Selesai | Notes`
-- [ ] Kolom `No` pakai `cell(item, i)` pattern — offset paging
-- [ ] `labelAksiKontrak()` untuk kolom Jenis Aksi
-- [ ] `val()` dan `rp()` helper panen dari `sk/page.tsx` — tidak ditulis ulang
+- [x] 7 kolom: `No | Nomor Kontrak | Jenis Aksi | Tgl. SK | Mulai | Selesai | Notes`
+- [x] Kolom `No` pakai `cell(item, i)` pattern — offset paging
+- [x] `labelAksiKontrak()` untuk kolom Jenis Aksi
+- [x] `val()` helper panen dari `sk/page.tsx` — tidak ditulis ulang
 
 **C. Read-only gate (statusPegawai ≠ KONTRAK)**
-- [ ] ⏳ **Ditunda — BE belum deploy `statusPegawai` di session endpoint.** Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`
-- [ ] Jika `statusPegawai` tersedia di `layout.tsx` (dari `sessionQuery.data?.statusPegawai`):
-  - **Opsi:** pass sebagai props ke `children` via cloneElement/context, **atau** query ulang di page
-  - **Rekomendasi:** query ulang saja `useQuery([...])` di page untuk `statusPegawai` — lebih sederhana
-- [ ] ⏳ Gate toolbar: jika `statusPegawai !== "KONTRAK"`, jangan render tombol "+ Tambah Kontrak"
-- [ ] ⏳ Gate aksi baris: jika `statusPegawai !== "KONTRAK"`, jangan render ikon Edit/Hapus di `<DataTable>`
-- [ ] ⏳ **Hanya sembunyikan tombol — tanpa banner/notice**
+- [x] ✅ **Sudah deploy.** Session query dengan queryKey sama seperti layout → cache hit, zero extra network.
+- [x] `isKontrak = sessionQuery.data?.statusPegawai === "KONTRAK"`
+- [x] Gate toolbar: `{canEdit && <Button>}` — unmount, bukan disabled
+- [x] Gate aksi baris: `onEdit={isKontrak ? handler : undefined}` — DataTable render kolom Aksi hanya jika ada handler
+- [x] **Hanya sembunyikan tombol — tanpa banner/notice**
 
 **D. State**
 - [x] Filter `nomorKontrak` (text)
@@ -173,17 +171,14 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
   - Optional: `tanggalSelesai`, `golonganId`, `gajiPokok`, `isLatest`, `notes`
   - **Catatan:** `golonganId` di PostRequest/PutRequest required (`number, min 1`) tapi opsional di Zod — detail query tidak return golongan, jadi edit butuh opsional
 - [x] **Form fields:**
-  - `NIPAM` — `<FieldText>` editable (prefilled dari session)
-  - `Nama` — `<FieldText>` editable (prefilled dari session)
-  - `Nomor Kontrak` — `<FieldText>` required
-  - `Jenis Aksi` — `<Select>` dari `JENIS_AKSI_KONTRAK_OPTIONS`
-  - `Tgl. SK` — date picker required
-  - `Tanggal Mulai` — date picker required
-  - `Tanggal Selesai` — date picker optional
+  - `NIPAM` + `Nama` — grid 2 kolom, editable
+  - `Jenis Aksi` — `<Select>` dari `JENIS_AKSI_KONTRAK_OPTIONS`, full width
+  - `Nomor Kontrak` — `<FieldText>` required, full width
+  - `Tgl. SK` + `Mulai` + `Selesai` — grid 3 kolom date picker
   - `Golongan` — `<FieldFk>` via `useFkOptions("golongan", ...)`
     - **Hanya render jika:** `jenisKontrak === "PENGANGKATAN"` **SAAT CREATE** (`editingId === null`)
     - **Saat EDIT:** field Golongan tidak ditampilkan
-  - `Gaji Pokok` — `<FieldText type="text">` optional
+  - `Gaji Pokok` — grid 2 kolom bersama Golongan
   - `isLatest` — `<Checkbox>` "Kontrak Terbaru"
   - `Notes` — `<FieldTextarea>` optional
 - [x] Mount Sheet **sekali** di level page — tidak ada Sheet per baris
@@ -191,9 +186,9 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
 - [x] POST/PUT → toast sonner sukses · invalidate `["riwayat-kontrak", pegawaiId]`
 - [x] Error BE → tampilkan di form (`setError("root", ...)`) — bukan toast
 - [x] **OnSubmit logic untuk golongan:**
-  - Golongan selalu ditampilkan (types BE bilang required)
-  - `// ponytail` comment: conditional per jenisKontrak + mode CREATE ditunda sampai BE konfirmasi
-  - Skip `golonganId` di payload hanya jika falsy
+  - `showGolongan = !editingId && watch("jenisKontrak") === "PENGANGKATAN"`
+  - `useEffect` bersihkan `golonganId` saat field disembunyikan
+  - Skip `golonganId` di payload jika `!showGolongan || !values.golonganId`
 
 **B. Hapus**
 - [x] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/kontrak/{id}`
@@ -207,14 +202,15 @@ Lihat `docs/BE-REQUIREMENT-riwayat-kontrak-status-pegawai.md`.
 
 ## Definition of Done
 
-- [ ] Rail item "Riwayat Kontrak Kerja" aktif dan ter-navigate ke `/riwayat/kontrak`
-- [ ] Tabel Kontrak: 7 kolom, format tanggal, label aksi kontrak
-- [ ] Filter `nomorKontrak` + paging + row-select seluruhnya lewat URL `searchParams`
-- [ ] Read-only gate bekerja: pegawai non-KONTRAK tidak melihat tombol tambah/edit/hapus
-- [ ] CRUD Kontrak jalan end-to-end
-- [ ] Golongan hanya muncul di form saat CREATE + PENGANGKATAN
-- [ ] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
-- [ ] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
+- [x] Rail item "Riwayat Kontrak Kerja" aktif dan ter-navigate ke `/riwayat/kontrak`
+- [x] Tabel Kontrak: 7 kolom, format tanggal, label aksi kontrak
+- [x] Filter `nomorKontrak` + paging + row-select seluruhnya lewat URL `searchParams`
+- [x] Read-only gate bekerja: pegawai non-KONTRAK tidak melihat tombol tambah/edit/hapus
+- [x] CRUD Kontrak jalan end-to-end
+- [x] Golongan hanya muncul di form saat CREATE + PENGANGKATAN
+- [x] Layout form: grid 2/3 kolom, label diringkas, compact
+- [x] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
+- [x] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
 
 ---
 
