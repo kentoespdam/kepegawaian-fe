@@ -10,6 +10,7 @@ import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/fie
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_SK_OPTIONS } from "@/lib/riwayat-constants";
@@ -69,6 +70,14 @@ interface Props {
 	editingId: string | null;
 	isOpen: boolean;
 	onClose: () => void;
+}
+
+// ── Section label ──
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+	return (
+		<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>
+	);
 }
 
 export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
@@ -154,14 +163,19 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			}}
 		>
 			<SheetContent className="sm:max-w-xl overflow-y-auto">
-				<SheetHeader>
-					<SheetTitle>{editingId ? "Edit Surat Keputusan" : "Tambah Surat Keputusan"}</SheetTitle>
-				</SheetHeader>
+			<SheetHeader>
+				<SheetTitle>{editingId ? "Edit Surat Keputusan" : "Tambah Surat Keputusan"}</SheetTitle>
+			</SheetHeader>
 
-				<form onSubmit={rhfSubmit(onSubmit)} className="mt-6 space-y-5">
+			<Separator />
+
+			<form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5">
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
+
+					{/* ── Data SK ── */}
+					<SectionLabel>Data SK</SectionLabel>
 
 					<FieldSelect
 						label="Jenis SK"
@@ -180,23 +194,29 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.nomorSk?.message}
 					/>
 
-					<FieldText
-						label="Tanggal SK"
-						type="date"
-						value={watch("tanggalSk")}
-						onChange={(v) => setValue("tanggalSk", v)}
-						required
-						error={errors.tanggalSk?.message}
-					/>
+					<div className="grid grid-cols-2 gap-3">
+						<FieldText
+							label="Tanggal SK"
+							type="date"
+							value={watch("tanggalSk")}
+							onChange={(v) => setValue("tanggalSk", v)}
+							required
+							error={errors.tanggalSk?.message}
+						/>
+						<FieldText
+							label="TMT Berlaku"
+							type="date"
+							value={watch("tmtBerlaku")}
+							onChange={(v) => setValue("tmtBerlaku", v)}
+							required
+							error={errors.tmtBerlaku?.message}
+						/>
+					</div>
 
-					<FieldText
-						label="TMT Berlaku"
-						type="date"
-						value={watch("tmtBerlaku")}
-						onChange={(v) => setValue("tmtBerlaku", v)}
-						required
-						error={errors.tmtBerlaku?.message}
-					/>
+					<Separator />
+
+					{/* ── Detail Kenaikan ── */}
+					<SectionLabel>Detail Kenaikan</SectionLabel>
 
 					<FieldFk
 						label="Golongan"
@@ -255,6 +275,11 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						/>
 					</div>
 
+					<Separator />
+
+					{/* ── Detail Tambahan ── */}
+					<SectionLabel>Detail Tambahan</SectionLabel>
+
 					<div className="flex items-center gap-2">
 						<Checkbox
 							id="updateMaster"
@@ -273,7 +298,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.notes?.message}
 					/>
 
-					<div className="flex justify-end gap-2 pt-2">
+					<div className="flex justify-end gap-2 pt-1">
 						<Button type="button" variant="outline" onClick={onClose}>
 							Batal
 						</Button>
