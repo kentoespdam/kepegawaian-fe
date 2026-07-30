@@ -23,7 +23,7 @@ task touches**; this core is always in scope.
 | ↳ §Page 4 — Data Mutasi | [`docs/context/kepegawaian-riwayat-mutasi.md`](docs/context/kepegawaian-riwayat-mutasi.md) | Form + tabel Mutasi (K7–K8) | ✅ grilling round 5 |
 | ↳ §Page 4 — Riwayat SK | [`docs/context/kepegawaian-riwayat-sk.md`](docs/context/kepegawaian-riwayat-sk.md) | Tabel + form SK standalone (K13–K16) | ✅ grilling 2026-07-29 |
 | ↳ §Page 4 — Riwayat Kontrak | [`docs/context/kepegawaian-riwayat-kontrak.md`](docs/context/kepegawaian-riwayat-kontrak.md) | Kontrak Kerja | ⏳ belum di-grill |
-| ↳ §Page 4 — Riwayat SP | [`docs/context/kepegawaian-riwayat-sp.md`](docs/context/kepegawaian-riwayat-sp.md) | Surat Peringatan | ⏳ belum di-grill |
+| ↳ §Page 4 — Riwayat SP | [`docs/context/kepegawaian-riwayat-sp.md`](docs/context/kepegawaian-riwayat-sp.md) | Surat Peringatan | ✅ grilling 2026-07-30 ✅ implemented |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |
