@@ -142,14 +142,18 @@ Konsekuensi implementasi wajib dipahami:
 | 4 | Tanggal SP | date picker | required | — |
 | 5 | Tanggal Mulai | date picker | required | — |
 | 6 | Tanggal Selesai | date picker | required | — |
-| 7 | Organisasi | combobox FK | required | `GET /master/organisasi/list` |
-| 8 | Jabatan | combobox FK | required | `GET /master/jabatan/list` |
-| 9 | Penanda Tangan | text | required | — |
-| 10 | Jabatan Penanda Tangan | text | required | — |
-| 11 | Catatan Sanksi | textarea | optional | — |
-| 12 | Tgl. Eksekusi Sanksi | date picker | optional | — |
-| 13 | File SP | file input | optional | upload ke POST/PUT |
-| 14 | Notes | textarea | optional | — |
+| 7 | **[Cari Penanda Tangan]** | tombol → modal picker | — | — |
+| 7a | ↳ Penanda Tangan | read-only text display | required\* | autofill dari picker |
+| 7b | ↳ Jabatan Penanda Tangan | read-only text display | required\* | autofill dari picker |
+| 7c | ↳ `organisasiId` | hidden (RHF `setValue`) | required | autofill dari picker |
+| 7d | ↳ `jabatanId` | hidden (RHF `setValue`) | required | autofill dari picker |
+| 8 | Catatan Sanksi | textarea | optional | — |
+| 9 | Tgl. Eksekusi Sanksi | date picker | optional | — |
+| 10 | File SP | file input | optional | upload ke POST/PUT |
+| 11 | Notes | textarea | optional | — |
+
+\* required via Zod refine: validasi bahwa `organisasiId` dan `jabatanId` terisi (set oleh picker),
+bukan via user input langsung. Error jika tombol picker belum digunakan: `"Pilih penanda tangan terlebih dahulu"`.
 
 `pegawaiId` = hidden, dari URL param — tidak dirender di form.
 
@@ -181,5 +185,37 @@ Konsekuensi implementasi wajib dipahami:
 | Sanksi all (fallback Edit — jenisSp sudah terpilih) | `GET /master/sanksi/list` |
 | Organisasi | `GET /master/organisasi/list` |
 | Jabatan | `GET /master/jabatan/list` |
+
+**Keputusan SP-8 — Penanda Tangan: wajib via picker pegawai, tidak ada input manual.**
+
+Form tidak menyediakan combobox Organisasi/Jabatan maupun text input bebas untuk Penanda Tangan.
+Sebagai gantinya: satu tombol **"Cari Penanda Tangan"** membuka modal search pegawai.
+
+Endpoint picker: `GET /pegawai/list?nama={q}&nipam={q}&statusKerja=KARYAWAN_AKTIF&size=20`
+Response: `PegawaiListResponse { id, nipam, nama, organisasi: {id, nama}, jabatan: {id, nama} }`
+— endpoint sudah ada, **tidak perlu BE requirement**.
+
+Autofill saat pegawai dipilih:
+
+| Form field | Diisi dari |
+|---|---|
+| `organisasiId` | `pegawai.organisasi.id` (hidden, dikirim via FormData) |
+| `jabatanId` | `pegawai.jabatan.id` (hidden, dikirim via FormData) |
+| `penandaTangan` | `pegawai.nama` (read-only display) |
+| `jabatanPenandaTangan` | `pegawai.jabatan.nama` (read-only display) |
+
+Desain modal:
+- Search input tunggal → dikirim ke `?nama={q}&nipam={q}` sekaligus
+- Search-as-you-type, debounce 300ms, trigger ≥2 karakter
+- Kolom hasil: NIPAM · Nama · Jabatan · Organisasi
+- Klik baris → pilih & tutup modal
+- State picker disimpan di form sebagai `selectedPegawai` (bukan bagian Zod schema — hanya untuk display)
+- `organisasiId`, `jabatanId` di-set via `setValue` RHF saat picker memilih
+
+Edit mode prefill: tampilkan `row.penandaTangan` + `row.jabatanPenandaTangan` sebagai read-only display;
+tombol "Ganti Penanda Tangan" membuka picker kembali.
+
+Komponen: **lokal** di dalam `sp-form-sheet.tsx` (bukan shared component) — extract hanya jika
+form lain butuh picker yang sama.
 
 **Belum terkunci:** — (kosong). Semua pertanyaan desain SP tertutup.

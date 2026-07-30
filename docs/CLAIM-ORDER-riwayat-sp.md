@@ -117,48 +117,84 @@ Jangan re-litigasi.
 **← depends on:** `kepegawaian-fe-rmwi` selesai ✅
 
 **A. Form Sheet**
-- [x] Buat `riwayat/sp/sp-form-sheet.tsx` — `"use client"`
-- [x] Pakai RHF + Zod (`zodResolver`) — pola identik form SK, **tapi fetch via FormData**
-- [x] Zod schema required: `nomorSp`, `jenisSpId`, `sanksiId`, `tanggalSp`, `tanggalMulai`, `tanggalSelesai`, `organisasiId`, `jabatanId`, `penandaTangan`, `jabatanPenandaTangan`
-- [x] Field 1: `nomorSp` = `<FieldText>`
-- [x] Field 2: `jenisSpId` = combobox fetch `/master/jenis-sp/list` (value: id, label: nama)
+- [ ] Buat `riwayat/sp/sp-form-sheet.tsx` — `"use client"`
+- [ ] Pakai RHF + Zod (`zodResolver`) — pola identik form SK, **tapi fetch via FormData**
+- [ ] Zod schema required: `nomorSp`, `jenisSpId`, `sanksiId`, `tanggalSp`, `tanggalMulai`, `tanggalSelesai`, `organisasiId`, `jabatanId`, `penandaTangan`, `jabatanPenandaTangan`
+- [ ] `organisasiId` + `jabatanId` + `penandaTangan` + `jabatanPenandaTangan` tidak dirender sebagai input — di-set via `setValue` oleh picker (K-SP8)
+- [ ] Field 1: `nomorSp` = `<FieldText>`
+- [ ] Field 2: `jenisSpId` = combobox fetch `/master/jenis-sp/list` (value: id, label: keterangan)
   - `onChange`: reset `sanksiId` ke undefined
-- [x] Field 3: `sanksiId` = combobox fetch `/master/sanksi/jenis-sp/{jenisSpId}` (cascade)
-  - **disabled** jika `jenisSpId` belum dipilih
-  - Re-fetch ketika `jenisSpId` berubah
+- [ ] Field 3: `sanksiId` = combobox FK cascade dari `jenisSpId`
+  - fetch `/master/sanksi/jenis-sp/{jenisSpId}`, **disabled** jika `jenisSpId` belum dipilih
   - Value: `item.id`, Label: `item.keterangan`
-- [x] Field 4–6: `tanggalSp`, `tanggalMulai`, `tanggalSelesai` = date picker (3-col grid)
-- [x] Field 7: `organisasiId` = `<FieldFk>` via `/master/organisasi/list`
-- [x] Field 8: `jabatanId` = `<FieldFk>` via `/master/jabatan/list`
-- [x] Field 9–10: `penandaTangan`, `jabatanPenandaTangan` = `<FieldText>` (2-col grid)
-- [x] Field 11: `sanksiNotes` = `<FieldText>` (opsional)
-- [x] Field 12: `tanggalEksekusiSanksi` = date picker (opsional)
-- [x] Field 13: **File SP** — `<input type="file">` opsional
-  - Pada Edit: tampilkan nama file lama (`detailQuery.data.fileName`) sebagai label di atas input
-  - `ref` via `useRef<HTMLInputElement>`
-- [x] Field 14: `notes` = `<FieldTextarea>` (opsional)
-- [x] Mount Sheet **sekali** di level page — tidak ada Sheet per baris
+- [ ] Field 4–6: `tanggalSp`, `tanggalMulai`, `tanggalSelesai` = date picker (required)
+- [ ] Field 7: `sanksiNotes` = `<FieldTextarea>` (opsional)
+- [ ] Field 8: `tanggalEksekusiSanksi` = date picker (opsional)
+- [ ] Field 9: **File SP** — `<input type="file">` opsional
+  - Pada Edit: tampilkan nama file lama (`initialData.fileName`) sebagai label
+- [ ] Field 10: `notes` = `<FieldTextarea>` (opsional)
+- [ ] Mount Sheet **sekali** di level page
 
-**B. Submit logic — WAJIB: multipart/form-data**
-- [x] Gunakan `FormData` — **bukan** `JSON.stringify`
-- [x] POST: `fetch("/api/proxy/kepegawaian/riwayat/sp", { method: "POST", body: fd })`
-- [x] PUT: `fetch("/api/proxy/kepegawaian/riwayat/sp/${editingId}", { method: "PUT", body: fd })`
-- [x] Sukses → `toast.success(...)` + `qc.invalidateQueries(["riwayat-sp", pegawaiId])` + close Sheet
-- [x] Error BE → `setError("root", { message: ... })` — **bukan** toast
-- [x] Dialog tetap terbuka saat error (konsisten K9 shared infra)
+**B. Modal Picker Penanda Tangan (komponen lokal di file yang sama)**
+- [ ] State lokal: `isPickerOpen`, `pickerQuery`, `pickerResults`, `selectedPenandaTangan`
+- [ ] Tombol **"Cari Penanda Tangan"** (Add: ikon `Search` dari lucide) → set `isPickerOpen = true`
+  - Edit mode: label tombol menjadi **"Ganti Penanda Tangan"** jika sudah ada signer terpilih
+- [ ] Modal (`<Dialog>` dari shadcn/Base UI):
+  - Satu `<input>` search — debounce 300ms, trigger fetch jika ≥2 karakter
+  - Fetch: `GET /api/proxy/pegawai/list?nama={q}&nipam={q}&statusKerja=KARYAWAN_AKTIF&size=20`
+  - Hasil: tabel mini (NIPAM · Nama · Jabatan · Organisasi)
+  - `isPending` → skeleton rows · `isError` → pesan inline · hasil kosong → "Tidak ditemukan"
+  - Klik baris → autofill + tutup modal:
+    ```ts
+    setValue("organisasiId", item.organisasi.id);
+    setValue("jabatanId", item.jabatan.id);
+    setValue("penandaTangan", item.nama);
+    setValue("jabatanPenandaTangan", item.jabatan.nama ?? "");
+    setSelectedPenandaTangan(item); // untuk display
+    setIsPickerOpen(false);
+    ```
+- [ ] Di bawah tombol picker: tampilkan read-only display jika `selectedPenandaTangan` ada:
+  ```
+  ✓ YULIAWATY, S.Sos.  |  Kabag Umum  |  Divisi Adm
+  ```
+- [ ] Validasi Zod: `organisasiId` dan `jabatanId` wajib terisi (set oleh picker)
+  - Error message jika belum dipilih: `"Pilih penanda tangan terlebih dahulu"`
+- [ ] **Tidak ada input manual** untuk nama/jabatan penanda tangan — wajib via picker
 
-**C. Prefill Edit**
-- [x] Pada edit: fetch `GET /kepegawaian/riwayat/sp/{editingId}` → `SingleResultRiwayatSpQuery`
-- [x] Prefill semua field termasuk `jenisSpId` + trigger fetch sanksi cascade
-- [x] Tampilkan `detailQuery.data.fileName` sebagai label informatif di atas input file
+**C. Submit logic — WAJIB: multipart/form-data**
+- [ ] Gunakan `FormData` — **bukan** `JSON.stringify`
+  ```ts
+  const fd = new FormData();
+  fd.append("nomorSp", data.nomorSp);
+  fd.append("pegawaiId", String(pegawaiId));
+  fd.append("organisasiId", String(data.organisasiId)); // dari picker
+  fd.append("jabatanId", String(data.jabatanId));       // dari picker
+  fd.append("penandaTangan", data.penandaTangan);       // dari picker
+  fd.append("jabatanPenandaTangan", data.jabatanPenandaTangan); // dari picker
+  // ... field lain
+  if (fileInput.current?.files?.[0]) fd.append("fileName", fileInput.current.files[0]);
+  // JANGAN set Content-Type header
+  ```
+- [ ] POST: `fetch("/api/proxy/kepegawaian/riwayat/sp", { method: "POST", body: fd })`
+- [ ] PUT: `fetch("/api/proxy/kepegawaian/riwayat/sp/${editingId}", { method: "PUT", body: fd })`
+- [ ] Sukses → `toast.success(...)` + `qc.invalidateQueries(["riwayat-sp", pegawaiId])` + close Sheet
+- [ ] Error BE → `setError("root", { message: ... })` — **bukan** toast
+- [ ] Sheet tetap terbuka saat error
 
-**D. Hapus**
-- [x] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/sp/{id}`
-- [x] 409 → dialog tetap terbuka, alasan inline
-- [x] Tidak ada optimistic removal — tunggu 200, lalu `invalidateQueries`
+**D. Prefill Edit**
+- [ ] Fetch `GET /kepegawaian/riwayat/sp/{editingId}` → `SingleResultRiwayatSpQuery`
+- [ ] Prefill field: `nomorSp`, `jenisSpId`, `sanksiId`, tanggal-tanggal, `sanksiNotes`, `tanggalEksekusiSanksi`, `notes`
+- [ ] Prefill picker display: `selectedPenandaTangan` ← `{ nama: row.penandaTangan, jabatan: { nama: row.jabatanPenandaTangan, id: row.jabatan?.id }, organisasi: { id: row.organisasi?.id } }`
+- [ ] Set `organisasiId`/`jabatanId` via `setValue` dari data detail
+- [ ] Tampilkan `initialData.fileName` sebagai label di atas input file
 
-**E. Tutup**
-- [x] `bun run build` · `bunx biome check` · ✅ ~~`bd close kepegawaian-fe-i4v9`~~ **✅ Closed**
+**E. Hapus**
+- [ ] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/sp/{id}`
+- [ ] 409 → dialog tetap terbuka, alasan inline
+- [ ] Tidak ada optimistic removal — tunggu 200, lalu `invalidateQueries`
+
+**F. Tutup**
+- [ ] `bun run build` · `bunx biome check` · ✅ `bd close kepegawaian-fe-i4v9`
 
 ---
 
@@ -171,6 +207,9 @@ Jangan re-litigasi.
 - [ ] Filter + paging seluruhnya lewat URL `searchParams`; tidak ada `?sel=`
 - [ ] CRUD SP jalan end-to-end via `multipart/form-data`
 - [ ] Cascade Jenis SP → Sanksi: sanksi disabled sebelum jenis SP dipilih, re-fetch saat ganti
+- [ ] Picker penanda tangan: modal search, debounce, autofill 4 field, read-only display
+- [ ] Validasi picker: error "Pilih penanda tangan terlebih dahulu" jika belum dipilih
+- [ ] Edit mode: penanda tangan lama tampil sebagai read-only, tombol "Ganti" tersedia
 - [ ] Form Edit: nama file lama tampil, file baru opsional
 - [ ] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
 - [ ] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
