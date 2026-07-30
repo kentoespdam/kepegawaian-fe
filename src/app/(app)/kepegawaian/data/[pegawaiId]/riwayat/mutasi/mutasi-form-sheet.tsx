@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { z } from "zod";
 import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
+import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
@@ -92,6 +93,14 @@ interface Props {
 	editingId: string | null;
 	isOpen: boolean;
 	onClose: () => void;
+}
+
+// ── Section label ──
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+	return (
+		<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>
+	);
 }
 
 export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
@@ -312,18 +321,20 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 			}}
 		>
 			<SheetContent className="sm:max-w-160 flex flex-col gap-0 p-0">
-				<SheetHeader className="shrink-0">
-					<SheetTitle>{editingId ? "Edit Mutasi" : "Tambah Mutasi"}</SheetTitle>
-				</SheetHeader>
-				<div className="flex-1 overflow-y-auto px-4 pb-4">
+			<SheetHeader className="shrink-0">
+				<SheetTitle>{editingId ? "Edit Mutasi" : "Tambah Mutasi"}</SheetTitle>
+			</SheetHeader>
+
+			<Separator />
+
+			<div className="flex-1 overflow-y-auto px-4 pb-4">
 					{editingId && detailQuery.isPending ? (
 						<div className="flex items-center justify-center py-12">
 							<Loader2 className="size-6 animate-spin text-muted-foreground" />
 						</div>
-					) : (
-						<form id="mutasi-form" onSubmit={rhfSubmit(onSubmit)} className="space-y-4 pt-4">
+					) : (											<form id="mutasi-form" onSubmit={rhfSubmit(onSubmit)} className="space-y-3.5 pt-4">
 							{/* Data Pegawai (read-only) */}
-							<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Data Pegawai</h3>
+							<SectionLabel>Data Pegawai</SectionLabel>
 							{mutasiCtxQuery.isPending ? (
 								<div className="flex items-center justify-center py-4">
 									<Loader2 className="size-5 animate-spin text-muted-foreground" />
@@ -361,13 +372,15 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									<div>
 										<span className="text-muted-foreground text-xs">Profesi</span>
 										<p className="font-medium">{val(mutasiCtxQuery.data?.profesi?.nama)}</p>
-									</div>
-								</div>
-							)}
+									</div>										</div>
+									)
+								}
 
-							{/* Grup Surat Keputusan */}
-							<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Surat Keputusan</h3>
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+								<Separator />
+
+								{/* Grup Surat Keputusan */}
+								<SectionLabel>Surat Keputusan</SectionLabel>
+								<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								<FieldText
 									label="Nomor SK"
 									value={watch("nomorSk")}
@@ -390,11 +403,12 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									onChange={(v) => setValue("tmtBerlaku", v)}
 									error={e("tmtBerlaku")}
 									required
-								/>
-							</div>
+								/>										</div>
 
-							{/* Grup Data Mutasi */}
-							<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Data Mutasi</h3>
+									<Separator />
+
+									{/* Grup Data Mutasi */}
+									<SectionLabel>Data Mutasi</SectionLabel>
 							<FieldSelect
 								label="Jenis Mutasi"
 								value={jenisMutasi}
@@ -407,10 +421,9 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 							{/* Conditional: cascade organisasi → jabatan → profesi */}
 							{isCascadeType && (
 								<div className="space-y-4 pl-2 border-l-2 border-primary/20">
-									<p className="text-xs font-medium text-muted-foreground">Penempatan Baru</p>
-									<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-										<FieldFk
-											label="Unit Kerja"
+									<p className="text-xs font-medium text-muted-foreground">Penempatan Baru</p>											<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+												<FieldFk
+													label="Unit Kerja"
 											options={orgOpts}
 											value={watch("organisasiId")}
 											onChange={(v) => {
@@ -452,10 +465,9 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 							{/* Conditional: golongan + MKG fields */}
 							{isGolonganType && (
 								<div className="space-y-4 pl-2 border-l-2 border-primary/20">
-									<p className="text-xs font-medium text-muted-foreground">Data Golongan</p>
-									<div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-										<FieldFk
-											label="Golongan (Baru)"
+									<p className="text-xs font-medium text-muted-foreground">Data Golongan</p>											<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+												<FieldFk
+													label="Golongan (Baru)"
 											options={golonganOpts}
 											value={watch("golonganId")}
 											onChange={(v) => setValue("golonganId", v)}
