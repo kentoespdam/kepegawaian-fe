@@ -19,7 +19,8 @@
 			"!.agents",
 			"!scripts",
 			"!graphify-out",
-			"!src/components/ui"
+			"!src/components/ui",
+			"!public/"
 		]
 	},
 	"formatter": {

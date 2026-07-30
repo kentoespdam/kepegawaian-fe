@@ -49,11 +49,7 @@ vi.mock("react-pdf", () => ({
 			</div>
 		);
 	},
-	Page: ({
-		pageNumber,
-		scale,
-		width,
-	}: { pageNumber: number; scale?: number; width?: number }) => (
+	Page: ({ pageNumber, scale, width }: { pageNumber: number; scale?: number; width?: number }) => (
 		<div
 			data-testid="pdf-page"
 			data-page-number={pageNumber}
@@ -304,9 +300,8 @@ describe("PdfViewer", () => {
 		const createElementSpy = vi.spyOn(document, "createElement");
 		await user.click(screen.getByTitle("Download PDF"));
 
-		const anchor = createElementSpy.mock.results.find(
-			(r) => r.value instanceof HTMLAnchorElement,
-		)?.value as HTMLAnchorElement;
+		const anchor = createElementSpy.mock.results.find((r) => r.value instanceof HTMLAnchorElement)
+			?.value as HTMLAnchorElement;
 		expect(anchor).toBeDefined();
 		expect(anchor.download).toBe("surat-sk.pdf");
 		expect(anchor.href).toBe("blob:mock-url");

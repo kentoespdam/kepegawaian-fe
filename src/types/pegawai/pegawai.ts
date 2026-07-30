@@ -295,6 +295,8 @@ export interface PegawaiResponseSession {
 	nipam?: string;
 	nik?: string;
 	nama?: string;
+	// ponytail: ditambah manual — regenerate via docs/api/extract-types.js setelah BE update OpenAPI
+	statusPegawai?: string;
 	jabatan?: RefMiniResponse;
 	organisasi?: RefMiniResponse;
 }

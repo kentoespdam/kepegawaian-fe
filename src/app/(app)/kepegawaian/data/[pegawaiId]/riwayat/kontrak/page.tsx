@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { labelAksiKontrak } from "@/lib/riwayat-constants";
 import { formatDate } from "@/lib/utils";
+import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { RiwayatKontrakQuery } from "@/types/kepegawaian/riwayat";
 import { KontrakFormSheet } from "./kontrak-form-sheet";
 
@@ -65,12 +66,14 @@ const KONTRAK_COLUMNS: Column<RiwayatKontrakQuery>[] = [
 
 function KontrakToolbar({
 	nomorKontrak,
+	canEdit,
 	hasActive,
 	onFilterChange,
 	onReset,
 	onTambah,
 }: {
 	nomorKontrak: string;
+	canEdit: boolean;
 	hasActive: boolean;
 	onFilterChange: (key: string, val: string | undefined) => void;
 	onReset: () => void;
@@ -84,11 +87,13 @@ function KontrakToolbar({
 			hasActive={hasActive}
 			onReset={onReset}
 		>
-			{/* ponytail: read-only gate (statusPegawai !== KONTRAK) deferred — tunggu BE deploy statusPegawai di session */}
-			<Button onClick={onTambah}>
-				<Plus />
-				Tambah Kontrak
-			</Button>
+			{/* ponytail: gate statusPegawai — hanya KONTRAK bisa tambah/edit/hapus */}
+			{canEdit && (
+				<Button onClick={onTambah}>
+					<Plus />
+					Tambah Kontrak
+				</Button>
+			)}
 		</DataTableToolbar>
 	);
 }
@@ -111,6 +116,19 @@ export default function KontrakPage() {
 	const [isFormOpen, setIsFormOpen] = useState(false);
 	const [deleteId, setDeleteId] = useState<string | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	// ponytail: dedupe dengan layout — queryKey sama, cache hit, zero extra network
+	const sessionQuery = useQuery({
+		queryKey: ["pegawai-session", pegawaiId],
+		queryFn: async () => {
+			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
+			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			const body = (await res.json()) as SingleResultPegawaiResponseSession;
+			return body.data;
+		},
+		staleTime: 5 * 60_000,
+	});
+	const isKontrak = sessionQuery.data?.statusPegawai === "KONTRAK";
 
 	const hasActive = !!nomorKontrak;
 
@@ -183,6 +201,7 @@ export default function KontrakPage() {
 				toolbar={
 					<KontrakToolbar
 						nomorKontrak={nomorKontrak}
+						canEdit={isKontrak}
 						hasActive={hasActive}
 						onFilterChange={onFilterChange}
 						onReset={onReset}
@@ -202,8 +221,9 @@ export default function KontrakPage() {
 				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
 				selectedRowId={selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={(item) => setEditingId(String(item.id ?? ""))}
-				onDelete={(item) => setDeleteId(String(item.id ?? ""))}
+				// ponytail: gate — null callback = no action buttons rendered
+				onEdit={isKontrak ? (item) => setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={isKontrak ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data kontrak"
 				pagination={
 					<DataTablePagination

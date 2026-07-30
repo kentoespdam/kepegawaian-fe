@@ -3,39 +3,38 @@
 ## Claim Order Checklist
 
 ### Step 1: ✅ Header dinamis
-- [ ] `usePathname()` untuk deteksi halaman aktif
-- [ ] Judul berubah: "Riwayat Mutasi — [NIPAM] ([Nama])" atau "Riwayat Surat Keputusan — ..."
-- [ ] Fallback: "Riwayat Pegawai — ..." jika path tak dikenal
+- [x] `usePathname()` untuk deteksi halaman aktif
+- [x] Judul berubah: "Riwayat Mutasi — [NIPAM] ([Nama])" atau "Riwayat Surat Keputusan — ..."
+- [x] Fallback: "Riwayat Pegawai — ..." jika path tak dikenal
 
 ### Step 2: ✅ Ikon + active left border accent
-- [ ] Tambah `lucide-react` icons tiap item rail
-- [ ] Active state: left border accent (3px `bg-primary` dengan `rounded-r`)
-- [ ] Scale animation on active: `scale-y-0` → `scale-y-100` (150ms)
-- [ ] `bg-accent` saat aktif + `hover:bg-accent/50` untuk item aktif
+- [x] Tambah `lucide-react` icons tiap item rail
+- [x] Active state: left border accent (2px `bg-primary` dengan `rounded-r`)
+- [x] Scale animation on active: `scale-y-0` → `scale-y-100` (150ms)
+- [x] `bg-accent` saat aktif + `hover:bg-accent/50` untuk item aktif
 
 ### Step 3: ✅ Disabled items graceful
-- [ ] Ganti `cursor-not-allowed` jadi `pointer-events-none` + `opacity-40`
-- [ ] Badge "Segera" (outline, amber)
-- [ ] Tooltip "Fitur akan hadir" via `title` attribute
+- [x] Ganti `cursor-not-allowed` jadi `pointer-events-none` + `opacity-40`
+- [x] Badge "Segera" (outline, amber)
+- [x] Tooltip "Fitur akan hadir" via `title` attribute
 
 ### Step 4: ✅ Card polish
-- [ ] Padding: `p-3` → `p-4`
-- [ ] Section label dengan separator (`border-b border-border`)
-- [ ] Gap antar item: `gap-0.5`
+- [x] Padding: `p-3` → `p-4`
+- [x] Section label dengan separator (`border-b border-border`)
+- [x] Gap antar item: `gap-0.5`
 
 ### Step 5: ✅ Micro-interactions
-- [ ] Hover: `transition-colors duration-150`
-- [ ] Active border animation: `transition-transform duration-150`
-- [ ] Disabled items tetap konsisten
+- [x] Hover: `transition-colors duration-150`
+- [x] Active border animation: `transition-transform duration-150`
+- [x] Disabled items tetap konsisten
 
 ### Step 6: ✅ Typecheck & build
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint error
+- [x] `bun run build` — zero error ✅
+- [x] `bunx biome check` — zero lint error ✅
 
 ### Step 7: ✅ Commit & push
-- [ ] `git add docs/ src/`
-- [ ] `git commit -m "feat: optimasi navigation rail riwayat"`
-- [ ] `git pull --rebase && bd dolt push && git push`
+- [x] `git commit -m "feat: optimasi navigation rail riwayat"`
+- [x] `git push` ✅
 
 ---
 
