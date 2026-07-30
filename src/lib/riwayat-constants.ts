@@ -30,7 +30,7 @@ export function labelJenisMutasi(s: unknown): string {
 /** Shared constant: opsi dropdown Jenis Aksi Kontrak. */
 export const JENIS_AKSI_KONTRAK_OPTIONS: { value: string; label: string }[] = [
 	{ value: "PERPANJANGAN", label: "Perpanjangan Kontrak" },
-	{ value: "PENGANGKATAN", label: "Pengangkatan Kontrak" },
+	{ value: "PENGANGKATAN", label: "Pengangkatan Calon Pegawai" },
 	{ value: "TERMINASI", label: "Terminasi Kontrak" },
 ];
 
