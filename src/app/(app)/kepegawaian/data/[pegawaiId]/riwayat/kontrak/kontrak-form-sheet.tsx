@@ -205,8 +205,8 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						error={errors.nomorKontrak?.message}
 					/>
 
-					{/* ── Baris 2: Tanggal SK + Tanggal Mulai + Tanggal Selesai ── */}
-					<div className="grid grid-cols-3 gap-3">
+					{/* ── Tanggal: Tgl. SK + Mulai sebaris, Selesai full-width ── */}
+					<div className="grid grid-cols-2 gap-3">
 						<FieldText
 							label="Tgl. SK"
 							type="date"
@@ -223,36 +223,33 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 							required
 							error={errors.tanggalMulai?.message}
 						/>
-						<FieldText
-							label="Selesai"
-							type="date"
-							value={watch("tanggalSelesai")}
-							onChange={(v) => setValue("tanggalSelesai", v)}
-							error={errors.tanggalSelesai?.message}
-						/>
 					</div>
 
-					{/* ── Baris 3: Golongan (conditional) + Gaji Pokok ── */}
-					<div className="grid grid-cols-2 gap-3">
-						{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN */}
-						{showGolongan ? (
-							<FieldFk
-								label="Golongan"
-								options={golonganOpts}
-								value={watch("golonganId")}
-								onChange={(v) => setValue("golonganId", v)}
-								error={errors.golonganId?.message}
-							/>
-						) : (
-							<div />
-						)}
-						<FieldText
-							label="Gaji Pokok"
-							value={watch("gajiPokok")}
-							onChange={(v) => setValue("gajiPokok", v)}
-							error={errors.gajiPokok?.message}
+					<FieldText
+						label="Selesai"
+						type="date"
+						value={watch("tanggalSelesai")}
+						onChange={(v) => setValue("tanggalSelesai", v)}
+						error={errors.tanggalSelesai?.message}
+					/>
+
+					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN; full-width tanpa grid placeholder */}
+					{showGolongan && (
+						<FieldFk
+							label="Golongan"
+							options={golonganOpts}
+							value={watch("golonganId")}
+							onChange={(v) => setValue("golonganId", v)}
+							error={errors.golonganId?.message}
 						/>
-					</div>
+					)}
+
+					<FieldText
+						label="Gaji Pokok"
+						value={watch("gajiPokok")}
+						onChange={(v) => setValue("gajiPokok", v)}
+						error={errors.gajiPokok?.message}
+					/>
 
 					<div className="flex items-center gap-2">
 						<Checkbox
