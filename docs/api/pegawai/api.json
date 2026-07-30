@@ -882,11 +882,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PegawaiTableResponse" } },
 					"number": { "type": "integer", "format": "int32" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -1448,6 +1448,7 @@
 					"nipam": { "type": "string" },
 					"nik": { "type": "string" },
 					"nama": { "type": "string" },
+					"statusPegawai": { "type": "string" },
 					"jabatan": { "$ref": "#/components/schemas/RefMiniResponse" },
 					"organisasi": { "$ref": "#/components/schemas/RefMiniResponse" }
 				}

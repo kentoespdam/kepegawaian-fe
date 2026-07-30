@@ -295,6 +295,7 @@ export interface PegawaiResponseSession {
 	nipam?: string;
 	nik?: string;
 	nama?: string;
+	statusPegawai?: string;
 	jabatan?: RefMiniResponse;
 	organisasi?: RefMiniResponse;
 }
