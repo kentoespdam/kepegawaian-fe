@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Loader2, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -15,8 +15,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
 import type { SingleResultRiwayatSpQuery } from "@/types/kepegawaian/riwayat";
+import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
 
 // ── Schema ──
 
@@ -161,7 +161,9 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 		queryKey: ["pegawai-search", debouncedSearch],
 		queryFn: async () => {
 			if (!searchQuery_enabled) return [];
-			const res = await fetch(`/api/proxy/pegawai/list?nama=${encodeURIComponent(debouncedSearch)}&nipam=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF&size=20`);
+			const res = await fetch(
+				`/api/proxy/pegawai/list?nama=${encodeURIComponent(debouncedSearch)}&nipam=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF&size=20`,
+			);
 			if (!res.ok) throw new Error("Gagal mencari pegawai");
 			const body = (await res.json()) as ListResultPegawaiListResponse;
 			return (body.data ?? []) as PegawaiListResponse[];
@@ -265,15 +267,16 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 				<SheetHeader>
 					<SheetTitle>{editingId ? "Edit Surat Peringatan" : "Tambah Surat Peringatan"}</SheetTitle>
 				</SheetHeader>
-
-				<Separator />					<form onSubmit={rhfSubmit(onSubmit)} className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto overflow-x-hidden flex-1 min-h-0">
+				<Separator />{" "}
+				<form
+					onSubmit={rhfSubmit(onSubmit)}
+					className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto overflow-x-hidden flex-1 min-h-0"
+				>
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
-
 					{/* ── Data SP ── */}
 					<SectionLabel>Data SP</SectionLabel>
-
 					<FieldText
 						label="Nomor SP"
 						value={watch("nomorSp")}
@@ -281,7 +284,6 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						required
 						error={errors.nomorSp?.message}
 					/>
-
 					<FieldFk
 						label="Jenis SP"
 						options={jenisSpOptions}
@@ -290,7 +292,6 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						required
 						error={errors.jenisSpId?.message}
 					/>
-
 					<FieldFk
 						label="Sanksi"
 						options={sanksiOptions}
@@ -301,77 +302,58 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						loading={jenisSpId ? sanksiQuery.isPending : false}
 						error={errors.sanksiId?.message}
 					/>
-
-					<div className="grid grid-cols-2 gap-3">							<FieldDate
-								label="Tgl SP"
-								value={watch("tanggalSp")}
-								onChange={(v) => setValue("tanggalSp", v)}
-								required
-								error={errors.tanggalSp?.message}
-							/>							<FieldDate
-								label="Tgl Mulai"
-								value={watch("tanggalMulai")}
-								onChange={(v) => setValue("tanggalMulai", v)}
-								required
-								error={errors.tanggalMulai?.message}
-							/>
-					</div>						<FieldDate
-							label="Tgl Selesai"
-							value={watch("tanggalSelesai")}
-							onChange={(v) => setValue("tanggalSelesai", v)}
+					<div className="grid grid-cols-2 gap-3">
+						{" "}
+						<FieldDate
+							label="Tgl SP"
+							value={watch("tanggalSp")}
+							onChange={(v) => setValue("tanggalSp", v)}
 							required
-							error={errors.tanggalSelesai?.message}
+							error={errors.tanggalSp?.message}
+						/>{" "}
+						<FieldDate
+							label="Tgl Mulai"
+							value={watch("tanggalMulai")}
+							onChange={(v) => setValue("tanggalMulai", v)}
+							required
+							error={errors.tanggalMulai?.message}
 						/>
-
+					</div>{" "}
+					<FieldDate
+						label="Tgl Selesai"
+						value={watch("tanggalSelesai")}
+						onChange={(v) => setValue("tanggalSelesai", v)}
+						required
+						error={errors.tanggalSelesai?.message}
+					/>
 					<Separator />
-
 					{/* ── Penandatangan ── */}
 					<SectionLabel>Penandatangan</SectionLabel>
-
 					{/* Hidden fields — di-set oleh picker */}
 					<input type="hidden" value={watch("organisasiId") ?? ""} />
 					<input type="hidden" value={watch("jabatanId") ?? ""} />
-
 					{selectedSigner ? (
 						<div className="flex items-start justify-between gap-2 rounded-lg border bg-muted/30 px-3 py-2.5">
 							<div className="min-w-0 flex-1">
-								<p className="text-sm font-medium truncate">
-									{selectedSigner.nama}
-								</p>
+								<p className="text-sm font-medium truncate">{selectedSigner.nama}</p>
 								<p className="text-xs text-muted-foreground truncate">
 									{selectedSigner.jabatan?.nama ?? "—"}
 									{selectedSigner.organisasi?.nama && `  |  ${selectedSigner.organisasi.nama}`}
 								</p>
 							</div>
 							<div className="flex gap-1 shrink-0">
-								<Button
-									type="button"
-									variant="outline"
-									size="sm"
-									onClick={() => setIsPickerOpen(true)}
-								>
+								<Button type="button" variant="outline" size="sm" onClick={() => setIsPickerOpen(true)}>
 									<Search className="size-3.5 mr-1" />
 									{editingId ? "Ganti" : "Ubah"}
 								</Button>
-								<Button
-									type="button"
-									variant="ghost"
-									size="icon-sm"
-									onClick={clearSigner}
-									title="Hapus penanda tangan"
-								>
+								<Button type="button" variant="ghost" size="icon-sm" onClick={clearSigner} title="Hapus penanda tangan">
 									<X className="size-3.5" />
 								</Button>
 							</div>
 						</div>
 					) : (
 						<div className="space-y-1.5">
-							<Button
-								type="button"
-								variant="outline"
-								className="h-11 w-full"
-								onClick={() => setIsPickerOpen(true)}
-							>
+							<Button type="button" variant="outline" className="h-11 w-full" onClick={() => setIsPickerOpen(true)}>
 								<Search className="size-4 mr-2" />
 								Cari Penanda Tangan
 							</Button>
@@ -380,9 +362,16 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							)}
 						</div>
 					)}
-
 					{/* ── Picker Modal ── */}
-					<Dialog open={isPickerOpen} onOpenChange={(v) => { if (!v) { setIsPickerOpen(false); setSearchQuery(""); } }}>
+					<Dialog
+						open={isPickerOpen}
+						onOpenChange={(v) => {
+							if (!v) {
+								setIsPickerOpen(false);
+								setSearchQuery("");
+							}
+						}}
+					>
 						<DialogContent className="sm:max-w-lg">
 							<DialogHeader>
 								<DialogTitle>Cari Penanda Tangan</DialogTitle>
@@ -409,13 +398,9 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 										<div className="h-10 animate-pulse rounded-md bg-muted" />
 									</div>
 								) : pegawaiSearch.isError ? (
-									<p className="px-4 py-6 text-center text-sm text-destructive">
-										Gagal memuat data. Coba lagi.
-									</p>
+									<p className="px-4 py-6 text-center text-sm text-destructive">Gagal memuat data. Coba lagi.</p>
 								) : pegawaiSearch.data?.length === 0 ? (
-									<p className="px-4 py-6 text-center text-sm text-muted-foreground">
-										Tidak ditemukan
-									</p>
+									<p className="px-4 py-6 text-center text-sm text-muted-foreground">Tidak ditemukan</p>
 								) : (
 									<div className="divide-y divide-border">
 										{pegawaiSearch.data?.map((item) => (
@@ -440,38 +425,33 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							</div>
 						</DialogContent>
 					</Dialog>
-
 					<Separator />
-
 					{/* ── Detail Tambahan ── */}
 					<SectionLabel>Detail Tambahan</SectionLabel>
-
 					<FieldText
 						label="Catatan Sanksi"
 						value={watch("sanksiNotes")}
 						onChange={(v) => setValue("sanksiNotes", v)}
 						error={errors.sanksiNotes?.message}
-					/>						<FieldDate
-							label="Tgl. Eksekusi Sanksi"
-							value={watch("tanggalEksekusiSanksi")}
-							onChange={(v) => setValue("tanggalEksekusiSanksi", v)}
-							error={errors.tanggalEksekusiSanksi?.message}
-						/>
-
+					/>{" "}
+					<FieldDate
+						label="Tgl. Eksekusi Sanksi"
+						value={watch("tanggalEksekusiSanksi")}
+						onChange={(v) => setValue("tanggalEksekusiSanksi", v)}
+						error={errors.tanggalEksekusiSanksi?.message}
+					/>
 					{/* ── File ── */}
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">File SP</Label>
 						{fileNameLabel && <p className="text-xs text-muted-foreground mb-1">File saat ini: {fileNameLabel}</p>}
 						<Input ref={fileRef} type="file" className="h-11 cursor-pointer" />
 					</div>
-
 					<FieldTextarea
 						label="Notes"
 						value={watch("notes")}
 						onChange={(v) => setValue("notes", v)}
 						error={errors.notes?.message}
 					/>
-
 					<div className="flex justify-end gap-2 pt-1">
 						<Button type="button" variant="outline" onClick={onClose}>
 							Batal

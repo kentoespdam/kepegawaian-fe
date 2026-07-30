@@ -171,10 +171,8 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
-
 					{/* ── Data SK ── */}
 					<SectionLabel>Data SK</SectionLabel>
-
 					<FieldSelect
 						label="Jenis SK"
 						value={watch("jenisSk")}
@@ -183,7 +181,6 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						required
 						error={errors.jenisSk?.message}
 					/>
-
 					<FieldText
 						label="Nomor SK"
 						value={watch("nomorSk")}
@@ -191,27 +188,26 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						required
 						error={errors.nomorSk?.message}
 					/>
-
-					<div className="grid grid-cols-2 gap-3">							<FieldDate
-								label="Tanggal SK"
-								value={watch("tanggalSk")}
-								onChange={(v) => setValue("tanggalSk", v)}
-								required
-								error={errors.tanggalSk?.message}
-							/>							<FieldDate
-								label="TMT Berlaku"
-								value={watch("tmtBerlaku")}
-								onChange={(v) => setValue("tmtBerlaku", v)}
-								required
-								error={errors.tmtBerlaku?.message}
-							/>
+					<div className="grid grid-cols-2 gap-3">
+						{" "}
+						<FieldDate
+							label="Tanggal SK"
+							value={watch("tanggalSk")}
+							onChange={(v) => setValue("tanggalSk", v)}
+							required
+							error={errors.tanggalSk?.message}
+						/>{" "}
+						<FieldDate
+							label="TMT Berlaku"
+							value={watch("tmtBerlaku")}
+							onChange={(v) => setValue("tmtBerlaku", v)}
+							required
+							error={errors.tmtBerlaku?.message}
+						/>
 					</div>
-
 					<Separator />
-
 					{/* ── Detail Kenaikan ── */}
 					<SectionLabel>Detail Kenaikan</SectionLabel>
-
 					<FieldFk
 						label="Golongan"
 						options={golonganOpts}
@@ -219,14 +215,12 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						onChange={(v) => setValue("golonganId", v)}
 						error={errors.golonganId?.message}
 					/>
-
 					<FieldText
 						label="Gaji Pokok"
 						value={watch("gajiPokok")}
 						onChange={(v) => setValue("gajiPokok", v)}
 						error={errors.gajiPokok?.message}
 					/>
-
 					<div className="grid grid-cols-2 gap-3">
 						<FieldText
 							label="MKG (Tahun)"
@@ -242,13 +236,13 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							onChange={(v) => setValue("mkgBulan", v)}
 							error={errors.mkgBulan?.message}
 						/>
-					</div>						<FieldDate
-							label="Kenaikan Berikutnya"
-							value={watch("kenaikanBerikutnya")}
-							onChange={(v) => setValue("kenaikanBerikutnya", v)}
-							error={errors.kenaikanBerikutnya?.message}
-						/>
-
+					</div>{" "}
+					<FieldDate
+						label="Kenaikan Berikutnya"
+						value={watch("kenaikanBerikutnya")}
+						onChange={(v) => setValue("kenaikanBerikutnya", v)}
+						error={errors.kenaikanBerikutnya?.message}
+					/>
 					<div className="grid grid-cols-2 gap-3">
 						<FieldText
 							label="MKGB (Tahun)"
@@ -265,12 +259,9 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							error={errors.mkgbBulan?.message}
 						/>
 					</div>
-
 					<Separator />
-
 					{/* ── Detail Tambahan ── */}
 					<SectionLabel>Detail Tambahan</SectionLabel>
-
 					<div className="flex items-center gap-2">
 						<Checkbox
 							id="updateMaster"
@@ -281,14 +272,12 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							Perbarui data master pegawai sesuai SK ini
 						</Label>
 					</div>
-
 					<FieldTextarea
 						label="Notes"
 						value={watch("notes")}
 						onChange={(v) => setValue("notes", v)}
 						error={errors.notes?.message}
 					/>
-
 					<div className="flex justify-end gap-2 pt-1">
 						<Button type="button" variant="outline" onClick={onClose}>
 							Batal

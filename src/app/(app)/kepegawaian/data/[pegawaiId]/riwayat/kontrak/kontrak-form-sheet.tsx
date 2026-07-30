@@ -214,25 +214,29 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						required
 						error={errors.nomorKontrak?.message}
 					/>
-					<div className="grid grid-cols-2 gap-3">							<FieldDate
-								label="Tgl. SK"
-								value={watch("tanggalSk")}
-								onChange={(v) => setValue("tanggalSk", v)}
-								required
-								error={errors.tanggalSk?.message}
-							/>							<FieldDate
-								label="Mulai"
-								value={watch("tanggalMulai")}
-								onChange={(v) => setValue("tanggalMulai", v)}
-								required
-								error={errors.tanggalMulai?.message}
-							/>
-					</div>						<FieldDate
-							label="Selesai"
-							value={watch("tanggalSelesai")}
-							onChange={(v) => setValue("tanggalSelesai", v)}
-							error={errors.tanggalSelesai?.message}
+					<div className="grid grid-cols-2 gap-3">
+						{" "}
+						<FieldDate
+							label="Tgl. SK"
+							value={watch("tanggalSk")}
+							onChange={(v) => setValue("tanggalSk", v)}
+							required
+							error={errors.tanggalSk?.message}
+						/>{" "}
+						<FieldDate
+							label="Mulai"
+							value={watch("tanggalMulai")}
+							onChange={(v) => setValue("tanggalMulai", v)}
+							required
+							error={errors.tanggalMulai?.message}
 						/>
+					</div>{" "}
+					<FieldDate
+						label="Selesai"
+						value={watch("tanggalSelesai")}
+						onChange={(v) => setValue("tanggalSelesai", v)}
+						error={errors.tanggalSelesai?.message}
+					/>
 					<Separator />
 					{/* ── Detail Tambahan ── */}
 					<SectionLabel>Detail Tambahan</SectionLabel>{" "}

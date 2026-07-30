@@ -1,5 +1,5 @@
+import { CalendarIcon } from "lucide-react";
 import * as React from "react";
-
 import { FKCombobox } from "@/components/fk-combobox";
 import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { CalendarIcon } from "lucide-react";
 
 export function FieldSelect({
 	label,
@@ -166,11 +165,15 @@ export function FieldDate({
 					}
 				>
 					<span className={date ? "text-foreground" : "text-muted-foreground"}>
-						{date ? date.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" }) : "Pilih tanggal"}
+						{date
+							? date.toLocaleDateString("id-ID", { day: "2-digit", month: "long", year: "numeric" })
+							: "Pilih tanggal"}
 					</span>
 					<CalendarIcon className="size-4 shrink-0 text-muted-foreground" />
-			</PopoverTrigger>
-			<PopoverContent className="w-auto p-0" align="start" sideOffset={4}>					<Calendar
+				</PopoverTrigger>
+				<PopoverContent className="w-auto p-0" align="start" sideOffset={4}>
+					{" "}
+					<Calendar
 						mode="single"
 						selected={date}
 						onSelect={(d) => {
@@ -178,8 +181,8 @@ export function FieldDate({
 							setOpen(false);
 						}}
 					/>
-			</PopoverContent>
-		</Popover>
+				</PopoverContent>
+			</Popover>
 			{error && <p className="text-xs text-destructive">{error}</p>}
 		</div>
 	);

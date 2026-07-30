@@ -214,12 +214,12 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 									onChange={(v) => setValue("tempatLahir", v)}
 									error={e("tempatLahir")}
 								/>
-							<FieldDate
-								label="Tanggal Lahir"
-								value={watch("tanggalLahir")}
-								onChange={(v) => setValue("tanggalLahir", v)}
-								error={e("tanggalLahir")}
-							/>
+								<FieldDate
+									label="Tanggal Lahir"
+									value={watch("tanggalLahir")}
+									onChange={(v) => setValue("tanggalLahir", v)}
+									error={e("tanggalLahir")}
+								/>
 							</div>
 							<FieldText
 								label="Ibu Kandung"
