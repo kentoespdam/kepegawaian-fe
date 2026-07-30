@@ -230,7 +230,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.sanksiId?.message}
 					/>
 
-					<div className="grid grid-cols-3 gap-3">
+					<div className="grid grid-cols-2 gap-3">
 						<FieldText
 							label="Tgl SP"
 							type="date"
@@ -247,15 +247,16 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							required
 							error={errors.tanggalMulai?.message}
 						/>
-						<FieldText
-							label="Tgl Selesai"
-							type="date"
-							value={watch("tanggalSelesai")}
-							onChange={(v) => setValue("tanggalSelesai", v)}
-							required
-							error={errors.tanggalSelesai?.message}
-						/>
 					</div>
+
+					<FieldText
+						label="Tgl Selesai"
+						type="date"
+						value={watch("tanggalSelesai")}
+						onChange={(v) => setValue("tanggalSelesai", v)}
+						required
+						error={errors.tanggalSelesai?.message}
+					/>
 
 					<Separator />
 
@@ -280,22 +281,21 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.jabatanId?.message}
 					/>
 
-					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="Penanda Tangan"
-							value={watch("penandaTangan")}
-							onChange={(v) => setValue("penandaTangan", v)}
-							required
-							error={errors.penandaTangan?.message}
-						/>
-						<FieldText
-							label="Jabatan Penanda Tangan"
-							value={watch("jabatanPenandaTangan")}
-							onChange={(v) => setValue("jabatanPenandaTangan", v)}
-							required
-							error={errors.jabatanPenandaTangan?.message}
-						/>
-					</div>
+					<FieldText
+						label="Penanda Tangan"
+						value={watch("penandaTangan")}
+						onChange={(v) => setValue("penandaTangan", v)}
+						required
+						error={errors.penandaTangan?.message}
+					/>
+
+					<FieldText
+						label="Jabatan Penanda Tangan"
+						value={watch("jabatanPenandaTangan")}
+						onChange={(v) => setValue("jabatanPenandaTangan", v)}
+						required
+						error={errors.jabatanPenandaTangan?.message}
+					/>
 
 					<Separator />
 
