@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
@@ -148,9 +148,8 @@ export function TambahPegawaiForm() {
 						error={e("tempatLahir")}
 						required
 					/>
-					<FieldText
+					<FieldDate
 						label="Tanggal Lahir"
-						type="date"
 						value={watch("tanggalLahir")}
 						onChange={(v) => setValue("tanggalLahir", v)}
 						error={e("tanggalLahir")}
@@ -290,23 +289,20 @@ export function TambahPegawaiForm() {
 								onChange={(v) => setValue("nomorSk", v)}
 								error={e("nomorSk")}
 							/>
-							<FieldText
+							<FieldDate
 								label="Tanggal SK"
-								type="date"
 								value={watch("tanggalSk")}
 								onChange={(v) => setValue("tanggalSk", v)}
 								error={e("tanggalSk")}
 							/>
-							<FieldText
+							<FieldDate
 								label="TMT Berlaku SK"
-								type="date"
 								value={watch("tmtBerlakuSk")}
 								onChange={(v) => setValue("tmtBerlakuSk", v)}
 								error={e("tmtBerlakuSk")}
 							/>
-							<FieldText
+							<FieldDate
 								label="TMT Kontrak Selesai"
-								type="date"
 								value={watch("tmtKontrakSelesai")}
 								onChange={(v) => setValue("tmtKontrakSelesai", v)}
 								error={e("tmtKontrakSelesai")}

@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
@@ -214,13 +214,12 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 									onChange={(v) => setValue("tempatLahir", v)}
 									error={e("tempatLahir")}
 								/>
-								<FieldText
-									label="Tanggal Lahir"
-									type="date"
-									value={watch("tanggalLahir")}
-									onChange={(v) => setValue("tanggalLahir", v)}
-									error={e("tanggalLahir")}
-								/>
+							<FieldDate
+								label="Tanggal Lahir"
+								value={watch("tanggalLahir")}
+								onChange={(v) => setValue("tanggalLahir", v)}
+								error={e("tanggalLahir")}
+							/>
 							</div>
 							<FieldText
 								label="Ibu Kandung"

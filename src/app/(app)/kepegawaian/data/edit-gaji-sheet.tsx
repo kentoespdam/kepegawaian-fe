@@ -7,7 +7,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { FieldFk, FieldSelect, FieldText } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
@@ -167,16 +167,14 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 									error={e("statusPegawai")}
 									required
 								/>
-								<FieldText
+								<FieldDate
 									label="TMT Kerja"
-									type="date"
 									value={watch("tmtKerja")}
 									onChange={(v) => setValue("tmtKerja", v)}
 									error={e("tmtKerja")}
 								/>
-								<FieldText
+								<FieldDate
 									label="TMT Pensiun"
-									type="date"
 									value={watch("tmtPensiun")}
 									onChange={(v) => setValue("tmtPensiun", v)}
 									error={e("tmtPensiun")}
