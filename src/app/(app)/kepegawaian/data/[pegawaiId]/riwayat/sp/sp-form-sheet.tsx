@@ -2,18 +2,20 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useRef } from "react";
+import { Loader2, Search, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
 import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useFkOptions } from "@/hooks/useFkOptions";
+import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
 import type { SingleResultRiwayatSpQuery } from "@/types/kepegawaian/riwayat";
 
 // ── Schema ──
@@ -106,9 +108,20 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 	// ── FK options ──
 
-	const jenisSpOptions = useFkOptions("jenis-sp", (i) => String(i.nama ?? ""));
-	const organisasiOptions = useFkOptions("organisasi", (i) => String(i.nama ?? ""));
-	const jabatanOptions = useFkOptions("jabatan", (i) => String(i.nama ?? ""));
+	const jenisSpQuery = useQuery({
+		queryKey: ["jenis-sp-list"],
+		queryFn: async () => {
+			const res = await fetch("/api/proxy/master/jenis-sp/list");
+			if (!res.ok) return [];
+			const body = await res.json();
+			return ((body.data ?? []) as Array<{ id: number; nama: string }>).map((i) => ({
+				value: String(i.id),
+				label: i.nama ?? "",
+			}));
+		},
+		staleTime: 300_000,
+	});
+	const jenisSpOptions = jenisSpQuery.data ?? [];
 
 	// ponytail: cascade sanksi — fetch only when jenisSpId is set
 	const sanksiQuery = useQuery({
@@ -129,6 +142,51 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	});
 
 	const sanksiOptions = sanksiQuery.data ?? [];
+
+	// ── Picker Penanda Tangan ──
+
+	const [isPickerOpen, setIsPickerOpen] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [selectedSigner, setSelectedSigner] = useState<PegawaiListResponse | null>(null);
+
+	// ponytail: debounce search query — trigger fetch after 300ms idle
+	const [debouncedSearch, setDebouncedSearch] = useState("");
+	useEffect(() => {
+		const t = setTimeout(() => setDebouncedSearch(searchQuery), 300);
+		return () => clearTimeout(t);
+	}, [searchQuery]);
+
+	const searchQuery_enabled = debouncedSearch.length >= 2;
+	const pegawaiSearch = useQuery({
+		queryKey: ["pegawai-search", debouncedSearch],
+		queryFn: async () => {
+			if (!searchQuery_enabled) return [];
+			const res = await fetch(`/api/proxy/pegawai/list?nama=${encodeURIComponent(debouncedSearch)}&nipam=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF&size=20`);
+			if (!res.ok) throw new Error("Gagal mencari pegawai");
+			const body = (await res.json()) as ListResultPegawaiListResponse;
+			return (body.data ?? []) as PegawaiListResponse[];
+		},
+		enabled: searchQuery_enabled,
+		staleTime: 60_000,
+	});
+
+	const selectSigner = (item: PegawaiListResponse) => {
+		setValue("organisasiId", String(item.organisasi?.id ?? ""));
+		setValue("jabatanId", String(item.jabatan?.id ?? ""));
+		setValue("penandaTangan", item.nama ?? "");
+		setValue("jabatanPenandaTangan", item.jabatan?.nama ?? "");
+		setSelectedSigner(item);
+		setIsPickerOpen(false);
+		setSearchQuery("");
+	};
+
+	const clearSigner = () => {
+		setValue("organisasiId", "");
+		setValue("jabatanId", "");
+		setValue("penandaTangan", "");
+		setValue("jabatanPenandaTangan", "");
+		setSelectedSigner(null);
+	};
 
 	// ponytail: reset sanksiId when jenisSp changes
 	const handleJenisSpChange = (v: string | undefined) => {
@@ -177,6 +235,22 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			setError("root", { message: e instanceof Error ? e.message : "Terjadi kesalahan" });
 		}
 	};
+
+	// ponytail: prefill selectedSigner on edit mode — construct from detail data
+	useEffect(() => {
+		const d = detailQuery.data;
+		if (d) {
+			setSelectedSigner({
+				id: d.organisasi?.id,
+				nipam: "",
+				nama: d.penandaTangan ?? "",
+				statusPegawai: undefined,
+				organisasi: d.organisasi ?? { id: undefined, nama: undefined },
+				jabatan: { id: d.jabatan?.id, nama: d.jabatanPenandaTangan },
+				golongan: undefined,
+			});
+		}
+	}, [detailQuery.data]);
 
 	const fileNameLabel = detailQuery.data?.fileName;
 
@@ -254,39 +328,118 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 					{/* ── Penandatangan ── */}
 					<SectionLabel>Penandatangan</SectionLabel>
 
-					<FieldFk
-						label="Organisasi"
-						options={organisasiOptions}
-						value={watch("organisasiId")}
-						onChange={(v) => setValue("organisasiId", v ?? "")}
-						required
-						error={errors.organisasiId?.message}
-					/>
+					{/* Hidden fields — di-set oleh picker */}
+					<input type="hidden" value={watch("organisasiId") ?? ""} />
+					<input type="hidden" value={watch("jabatanId") ?? ""} />
 
-					<FieldFk
-						label="Jabatan"
-						options={jabatanOptions}
-						value={watch("jabatanId")}
-						onChange={(v) => setValue("jabatanId", v ?? "")}
-						required
-						error={errors.jabatanId?.message}
-					/>
+					{selectedSigner ? (
+						<div className="flex items-start justify-between gap-2 rounded-lg border bg-muted/30 px-3 py-2.5">
+							<div className="min-w-0 flex-1">
+								<p className="text-sm font-medium truncate">
+									{selectedSigner.nama}
+								</p>
+								<p className="text-xs text-muted-foreground truncate">
+									{selectedSigner.jabatan?.nama ?? "—"}
+									{selectedSigner.organisasi?.nama && `  |  ${selectedSigner.organisasi.nama}`}
+								</p>
+							</div>
+							<div className="flex gap-1 shrink-0">
+								<Button
+									type="button"
+									variant="outline"
+									size="sm"
+									onClick={() => setIsPickerOpen(true)}
+								>
+									<Search className="size-3.5 mr-1" />
+									{editingId ? "Ganti" : "Ubah"}
+								</Button>
+								<Button
+									type="button"
+									variant="ghost"
+									size="icon-sm"
+									onClick={clearSigner}
+									title="Hapus penanda tangan"
+								>
+									<X className="size-3.5" />
+								</Button>
+							</div>
+						</div>
+					) : (
+						<div className="space-y-1.5">
+							<Button
+								type="button"
+								variant="outline"
+								className="h-11 w-full"
+								onClick={() => setIsPickerOpen(true)}
+							>
+								<Search className="size-4 mr-2" />
+								Cari Penanda Tangan
+							</Button>
+							{errors.organisasiId?.message && (
+								<p className="text-xs text-destructive">Pilih penanda tangan terlebih dahulu</p>
+							)}
+						</div>
+					)}
 
-					<FieldText
-						label="Penanda Tangan"
-						value={watch("penandaTangan")}
-						onChange={(v) => setValue("penandaTangan", v)}
-						required
-						error={errors.penandaTangan?.message}
-					/>
+					{/* ── Picker Modal ── */}
+					<Dialog open={isPickerOpen} onOpenChange={(v) => { if (!v) { setIsPickerOpen(false); setSearchQuery(""); } }}>
+						<DialogContent className="sm:max-w-lg">
+							<DialogHeader>
+								<DialogTitle>Cari Penanda Tangan</DialogTitle>
+							</DialogHeader>
 
-					<FieldText
-						label="Jabatan Penanda Tangan"
-						value={watch("jabatanPenandaTangan")}
-						onChange={(v) => setValue("jabatanPenandaTangan", v)}
-						required
-						error={errors.jabatanPenandaTangan?.message}
-					/>
+							<Input
+								type="search"
+								placeholder="Cari berdasarkan nama atau NIPAM..."
+								value={searchQuery}
+								onChange={(e) => setSearchQuery(e.target.value)}
+								className="h-11"
+								autoFocus
+							/>
+
+							<div className="max-h-64 overflow-y-auto -mx-4">
+								{!searchQuery_enabled ? (
+									<p className="px-4 py-6 text-center text-sm text-muted-foreground">
+										Ketik minimal 2 karakter untuk mencari
+									</p>
+								) : pegawaiSearch.isPending ? (
+									<div className="space-y-2 px-4 py-4">
+										<div className="h-10 animate-pulse rounded-md bg-muted" />
+										<div className="h-10 animate-pulse rounded-md bg-muted" />
+										<div className="h-10 animate-pulse rounded-md bg-muted" />
+									</div>
+								) : pegawaiSearch.isError ? (
+									<p className="px-4 py-6 text-center text-sm text-destructive">
+										Gagal memuat data. Coba lagi.
+									</p>
+								) : pegawaiSearch.data?.length === 0 ? (
+									<p className="px-4 py-6 text-center text-sm text-muted-foreground">
+										Tidak ditemukan
+									</p>
+								) : (
+									<div className="divide-y divide-border">
+										{pegawaiSearch.data?.map((item) => (
+											<button
+												key={item.id}
+												type="button"
+												onClick={() => selectSigner(item)}
+												className="w-full px-4 py-2.5 text-left hover:bg-accent transition-colors duration-100"
+											>
+												<p className="text-sm font-medium">
+													{item.nipam && <span className="text-muted-foreground font-normal mr-1.5">{item.nipam}</span>}
+													{item.nama}
+												</p>
+												<p className="text-xs text-muted-foreground truncate">
+													{item.jabatan?.nama ?? "—"}
+													{item.organisasi?.nama && `  |  ${item.organisasi.nama}`}
+												</p>
+											</button>
+										))}
+									</div>
+								)}
+							</div>
+						</DialogContent>
+					</Dialog>
 
 					<Separator />
 
