@@ -21,12 +21,13 @@ const ITEM_ICONS: Record<string, typeof FileText> = {
 const PAGE_TITLES: Record<string, string> = {
 	mutasi: "Riwayat Mutasi",
 	sk: "Riwayat Surat Keputusan",
+	kontrak: "Riwayat Kontrak Kerja",
 } as const;
 
 const RAIL_ITEMS = [
 	{ id: "mutasi", label: "Data Mutasi", href: "./mutasi", active: true },
 	{ id: "cuti", label: "Data Penggunaan Hak Cuti", href: "#", active: false, soon: true },
-	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "#", active: false, soon: true },
+	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "./kontrak", active: true },
 	{ id: "sk", label: "Riwayat Surat Keputusan", href: "./sk", active: true },
 	{ id: "sp", label: "Riwayat Surat Peringatan", href: "#", active: false, soon: true },
 ] as const;
@@ -91,7 +92,7 @@ function Rail({ currentPage }: { currentPage: string }) {
 						<Icon className="size-5 shrink-0 mr-3" />
 						<span className="flex-1 truncate">{item.label}</span>
 						{item.soon && (
-							<span className="inline-flex items-center rounded-full border border-amber-500/30 bg-amber-500/5 px-2 py-0.5 text-[10px] font-medium text-amber-600 dark:text-amber-400">
+							<span className="inline-flex items-center rounded-full border border-warning/30 bg-warning/5 px-2 py-0.5 text-[10px] font-medium text-warning">
 								Segera
 							</span>
 						)}

@@ -27,7 +27,19 @@ export function labelJenisMutasi(s: unknown): string {
 	return JENIS_MUTASI_OPTIONS.find((o) => o.value === s)?.label ?? String(s);
 }
 
+/** Shared constant: opsi dropdown Jenis Aksi Kontrak. */
+export const JENIS_AKSI_KONTRAK_OPTIONS: { value: string; label: string }[] = [
+	{ value: "PERPANJANGAN", label: "Perpanjangan Kontrak" },
+	{ value: "PENGANGKATAN", label: "Pengangkatan Kontrak" },
+	{ value: "TERMINASI", label: "Terminasi Kontrak" },
+];
+
 export function labelJenisSk(s: unknown): string {
 	if (s == null || s === "") return "—";
 	return JENIS_SK_OPTIONS.find((o) => o.value === s)?.label ?? String(s);
+}
+
+export function labelAksiKontrak(s: unknown): string {
+	if (s == null || s === "") return "—";
+	return JENIS_AKSI_KONTRAK_OPTIONS.find((o) => o.value === s)?.label ?? String(s);
 }
