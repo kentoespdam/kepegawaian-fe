@@ -136,30 +136,19 @@ Jangan re-litigasi.
 - [ ] Mount Sheet **sekali** di level page
 
 **B. Modal Picker Penanda Tangan (komponen lokal di file yang sama)**
-- [ ] State lokal: `isPickerOpen`, `pickerQuery`, `pickerResults`, `selectedPenandaTangan`
-- [ ] Tombol **"Cari Penanda Tangan"** (Add: ikon `Search` dari lucide) → set `isPickerOpen = true`
-  - Edit mode: label tombol menjadi **"Ganti Penanda Tangan"** jika sudah ada signer terpilih
-- [ ] Modal (`<Dialog>` dari shadcn/Base UI):
+- [x] State lokal: `isPickerOpen`, `pickerQuery`, `pickerResults`, `selectedPenandaTangan`
+- [x] Tombol **"Cari Penanda Tangan"** (Add: ikon `Search` dari lucide) → set `isPickerOpen = true`
+  - Edit mode: label tombol menjadi **"Ganti" / "Ubah"** jika sudah ada signer terpilih
+- [x] Modal (`<Dialog>` dari shadcn/Base UI):
   - Satu `<input>` search — debounce 300ms, trigger fetch jika ≥2 karakter
   - Fetch: `GET /api/proxy/pegawai/list?nama={q}&nipam={q}&statusKerja=KARYAWAN_AKTIF&size=20`
   - Hasil: tabel mini (NIPAM · Nama · Jabatan · Organisasi)
   - `isPending` → skeleton rows · `isError` → pesan inline · hasil kosong → "Tidak ditemukan"
-  - Klik baris → autofill + tutup modal:
-    ```ts
-    setValue("organisasiId", item.organisasi.id);
-    setValue("jabatanId", item.jabatan.id);
-    setValue("penandaTangan", item.nama);
-    setValue("jabatanPenandaTangan", item.jabatan.nama ?? "");
-    setSelectedPenandaTangan(item); // untuk display
-    setIsPickerOpen(false);
-    ```
-- [ ] Di bawah tombol picker: tampilkan read-only display jika `selectedPenandaTangan` ada:
-  ```
-  ✓ YULIAWATY, S.Sos.  |  Kabag Umum  |  Divisi Adm
-  ```
-- [ ] Validasi Zod: `organisasiId` dan `jabatanId` wajib terisi (set oleh picker)
+  - Klik baris → autofill + tutup modal
+- [x] Di bawah tombol picker: tampilkan read-only display jika `selectedPenandaTangan` ada
+- [x] Validasi Zod: `organisasiId` dan `jabatanId` wajib terisi (set oleh picker)
   - Error message jika belum dipilih: `"Pilih penanda tangan terlebih dahulu"`
-- [ ] **Tidak ada input manual** untuk nama/jabatan penanda tangan — wajib via picker
+- [x] **Tidak ada input manual** untuk nama/jabatan penanda tangan — wajib via picker
 
 **C. Submit logic — WAJIB: multipart/form-data**
 - [ ] Gunakan `FormData` — **bukan** `JSON.stringify`
