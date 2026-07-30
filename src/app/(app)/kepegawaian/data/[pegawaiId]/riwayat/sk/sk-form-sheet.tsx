@@ -75,9 +75,7 @@ interface Props {
 // ── Section label ──
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-	return (
-		<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>
-	);
+	return <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>;
 }
 
 export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
@@ -162,14 +160,14 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 				if (!v) onClose();
 			}}
 		>
-			<SheetContent className="sm:max-w-xl overflow-y-auto">
-			<SheetHeader>
-				<SheetTitle>{editingId ? "Edit Surat Keputusan" : "Tambah Surat Keputusan"}</SheetTitle>
-			</SheetHeader>
+			<SheetContent className="sm:max-w-xl">
+				<SheetHeader>
+					<SheetTitle>{editingId ? "Edit Surat Keputusan" : "Tambah Surat Keputusan"}</SheetTitle>
+				</SheetHeader>
 
-			<Separator />
+				<Separator />
 
-			<form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5">
+				<form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0">
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
