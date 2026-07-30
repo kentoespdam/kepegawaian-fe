@@ -31,7 +31,7 @@
 
 **Key points:**
 - `<Separator />` antara `SheetHeader` dan `form` — visual break wajib
-- Form wrapper: `className="px-4 pb-4 space-y-3.5"` — padding kiri-kanan + bawah
+- Form wrapper: `className="px-4 sm:px-6 pb-4 space-y-3.5"` — responsive: 16px mobile, 24px desktop (Material Design)
 - Section groupings dipisah `<Separator />` + `SectionLabel`
 - `SheetContent` harus pakai `sm:max-w-xl overflow-y-auto` — lebar konsisten + scroll untuk form panjang
 
@@ -80,7 +80,7 @@ Gunakan `<Separator />` tanpa props — cukup satu baris.
 | Grid gap | `gap-3` | Antara kolom di grid (12px) |
 | Section → field | `space-y-3.5` | Inherit dari form wrapper |
 | Footer buttons | `pt-1` | Spacing tipis sebelum tombol aksi |
-| Sheet padding | `px-4 pb-4` | 16px horizontal + bottom — form tidak "dipaksakan" ke edge |
+| Sheet padding | `px-4 sm:px-6 pb-4` | 16px mobile, 24px desktop — responsive, sesuai Material Design |
 
 **JANGAN pakai `space-y-5`** (20px) — terlalu longgar untuk form密集. `space-y-3.5` sweet spot.
 
@@ -241,7 +241,7 @@ export function ExampleFormSheet({ editingId, isOpen, onClose }: Props) {
 
         <Separator />
 
-        <form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5">
+        <form onSubmit={rhfSubmit(onSubmit)} className="px-4 sm:px-6 pb-4 space-y-3.5">
           {errors.root && (
             <div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
               {errors.root.message}
@@ -284,7 +284,7 @@ export function ExampleFormSheet({ editingId, isOpen, onClose }: Props) {
 
 - [ ] `SheetContent` punya `sm:max-w-xl overflow-y-auto`
 - [ ] `<Separator />` antara `SheetHeader` dan `form`
-- [ ] Form wrapper punya `px-4 pb-4 space-y-3.5`
+- [ ] Form wrapper punya `px-4 sm:px-6 pb-4 space-y-3.5` (responsive: 16px mobile, 24px desktop)
 - [ ] Section grouping pakai `SectionLabel` + `<Separator />`
 - [ ] Grid max 2 kolom (3-col hanya untuk 3+ field sejenis yang legible)
 - [ ] Conditional field full-width, tanpa `<div />` placeholder di grid
@@ -305,6 +305,6 @@ export function ExampleFormSheet({ editingId, isOpen, onClose }: Props) {
 | 3-col grid untuk date pickers | 2-col + full-width (Sheet tidak cukup lebar) |
 | `<div />` placeholder saat conditional field hidden | Full-width standalone fields |
 | `setValue` inline di render body | `useEffect` dengan dependency |
-| Field tanpa padding → nempel ke sheet edge | `px-4 pb-4` pada form wrapper |
+| Field tanpa padding → nempel ke sheet edge | `px-4 sm:px-6 pb-4` pada form wrapper (responsive) |
 | Header langsung ke form tanpa pemisah | `<Separator />` antara header dan form |
 | Form fields semua flat tanpa grouping | `SectionLabel` + `<Separator />` untuk hierarki |
