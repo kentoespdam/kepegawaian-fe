@@ -179,11 +179,61 @@ Tidak bergantung pada tipe spesifik (`LampiranSkQuery` / `LampiranProfilQuery`) 
 **Tinjau ulang jika:** muncul pattern endpoint lampiran ketiga yang berbeda secara fundamental;
 atau kebutuhan validasi otomatis `ref`/`refId` di komponen.
 
+### PDF Viewer — dari iframe ke react-pdf (update 2026-07-30)
+
+**Masalah:** Saat membuka PDF lampiran, browser memblokir `<iframe>` karena backend Spring Boot
+mengirim header `X-Frame-Options: DENY`. Error:
+```
+Refused to display '...' in a frame because it set 'X-Frame-Options' to 'deny'.
+```
+
+**Keputusan:** Ganti viewer PDF dari `<iframe>` ke **react-pdf** (`wojtekmaj/react-pdf`, MIT).
+
+**Bagaimana react-pdf menyelesaikan masalah:** Library ini fetch PDF sebagai `ArrayBuffer` via
+JavaScript `fetch()` — bukan via `<iframe>`. Browser tidak pernah mencoba me-render respons
+backend di dalam frame, sehingga header `X-Frame-Options` tidak relevan.
+
+**File baru:**
+- `src/components/pdf-viewer.tsx` — komponen viewer dedicated:
+  - Fetch ArrayBuffer via `fetch(url, { credentials: "include" })` (mengirim cookie session)
+  - Render via `<Document>` + `<Page>` dari react-pdf (render ke `<canvas>`, bukan iframe)
+  - Pagination: navigasi prev/next, counter "Page X of Y"
+  - ResizeObserver untuk fit-width rendering
+  - 3 layer error handling: fetch error → Document error → Page error
+  - Loading state di setiap layer
+
+**Worker pdf.js:**
+- File `node_modules/pdfjs-dist/build/pdf.worker.min.mjs` di-copy ke `public/pdf.worker.min.mjs`
+- Dikonfigurasi via `pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs"`
+- Include dalam VCS agar tersedia di production build
+
+**SSR handling:**
+- `PdfViewer` di-import via `next/dynamic` dengan `ssr: false`
+- Karena react-pdf bergantung pada browser API (canvas, DOMMatrix, Web Worker)
+
+**Konsekuensi positif:**
+- **Zero X-Frame-Options issue** — masalah selesai di akar
+- **UX lebih baik** — navigasi halaman, fit-width rendering, toolbar
+- **Tidak perlu ubah backend** — solusi frontend-only
+
+**Konsekuensi negatif:**
+- +1 dependency: `react-pdf@10.4.1` (~100KB gzipped)
+- Worker file perlu di-copy ke `public/` dan di-commit
+- File gambar tetap pakai `<img>` (tidak pakai react-pdf) — pemisahan logis
+
+**Alternatif yang ditolak:**
+- **Strip header di proxy.ts** — `NextResponse.rewrite()` tidak menjamin header modification
+  bertahan setelah rewrite. Terlalu fragile.
+- **Fix backend Spring Boot** — butuh perubahan di repo terpisah, tidak frontend-only.
+- **Open PDF di tab baru** — UX buruk, keluar dari konteks aplikasi.
+
 ## File terkait
 
-- `src/components/lampiran-card.tsx` — komponen reusable baru
-- `src/components/lampiran-upload-modal.tsx` — komponen reusable baru
-- `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/mutasi/lampiran-card.tsx` — diubah jadi `MutasiLampiranCard` (thin wrapper)
-- `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/mutasi/page.tsx` — import `MutasiLampiranCard`
+- `src/components/lampiran-card.tsx` — komponen reusable (diupdate: iframe → PdfViewer)
+- `src/components/lampiran-upload-modal.tsx` — komponen reusable
+- `src/components/pdf-viewer.tsx` — komponen viewer PDF baru (react-pdf)
+- `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/mutasi/lampiran-card.tsx` — thin wrapper
+- `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/mutasi/page.tsx` — import wrapper
+- `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/sk/lampiran-card.tsx` — thin wrapper SK
 - `docs/design/forms.md` §10.6 — dokumentasi teknis
 - `docs/design/architecture.md` §18 — shared primitives list

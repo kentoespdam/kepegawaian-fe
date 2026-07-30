@@ -2,6 +2,7 @@
 
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Eye, Loader2, Plus, Trash2 } from "lucide-react";
+import dynamic from "next/dynamic";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -9,6 +10,16 @@ import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { LampiranUploadModal } from "@/components/lampiran-upload-modal";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+
+// Dynamic import — react-pdf butuh browser API, jangan di-SSR
+const PdfViewer = dynamic(() => import("@/components/pdf-viewer").then((m) => m.PdfViewer), {
+	ssr: false,
+	loading: () => (
+		<div className="flex items-center justify-center py-20">
+			<Loader2 className="size-8 animate-spin text-muted-foreground" />
+		</div>
+	),
+});
 
 /** Minimal item shape dari endpoint list. */
 interface LampiranItem {
@@ -194,16 +205,16 @@ export function LampiranCard({
 
 			{/* Viewer modal (pdf/image only) */}
 			<Dialog open={isViewerOpen} onOpenChange={setIsViewerOpen}>
-				<DialogContent className="sm:max-w-4xl p-0 gap-0 overflow-hidden">
-					<div className="relative w-full max-h-[85vh] overflow-auto">
-						{" "}
-						{viewerFile?.mimeType?.startsWith("image/") ? (
-							// biome-ignore lint/performance/noImgElement: dynamic upload, use img not next/Image
+				<DialogContent className="sm:max-w-4xl p-0 gap-0 max-h-[85dvh] overflow-hidden flex flex-col">
+					{viewerFile?.mimeType?.startsWith("image/") ? (
+						<div className="relative w-full max-h-[85vh] overflow-auto">
+							{" "}
+							{/* biome-ignore lint/performance/noImgElement: dynamic upload, use img not next/Image */}
 							<img src={viewerFile.url} alt={viewerFile.name} className="w-full h-auto" />
-						) : (
-							<iframe src={viewerFile?.url ?? ""} className="w-full h-[85vh]" title={viewerFile?.name ?? ""} />
-						)}
-					</div>
+						</div>
+					) : viewerFile ? (
+						<PdfViewer url={viewerFile.url} fileName={viewerFile.name} />
+					) : null}
 				</DialogContent>
 			</Dialog>
 
