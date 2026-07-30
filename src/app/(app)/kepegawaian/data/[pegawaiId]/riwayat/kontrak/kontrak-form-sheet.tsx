@@ -170,6 +170,24 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
 
+					{/* ── Baris 1: NIPAM + Nama ── */}
+					<div className="grid grid-cols-2 gap-3">
+						<FieldText
+							label="NIPAM"
+							value={watch("nipam")}
+							onChange={(v) => setValue("nipam", v)}
+							required
+							error={errors.nipam?.message}
+						/>
+						<FieldText
+							label="Nama"
+							value={watch("nama")}
+							onChange={(v) => setValue("nama", v)}
+							required
+							error={errors.nama?.message}
+						/>
+					</div>
+
 					<FieldSelect
 						label="Jenis Aksi"
 						value={watch("jenisKontrak")}
@@ -180,22 +198,6 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 					/>
 
 					<FieldText
-						label="NIPAM"
-						value={watch("nipam")}
-						onChange={(v) => setValue("nipam", v)}
-						required
-						error={errors.nipam?.message}
-					/>
-
-					<FieldText
-						label="Nama"
-						value={watch("nama")}
-						onChange={(v) => setValue("nama", v)}
-						required
-						error={errors.nama?.message}
-					/>
-
-					<FieldText
 						label="Nomor Kontrak"
 						value={watch("nomorKontrak")}
 						onChange={(v) => setValue("nomorKontrak", v)}
@@ -203,49 +205,54 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						error={errors.nomorKontrak?.message}
 					/>
 
-					<FieldText
-						label="Tanggal SK"
-						type="date"
-						value={watch("tanggalSk")}
-						onChange={(v) => setValue("tanggalSk", v)}
-						required
-						error={errors.tanggalSk?.message}
-					/>
-
-					<FieldText
-						label="Tanggal Mulai"
-						type="date"
-						value={watch("tanggalMulai")}
-						onChange={(v) => setValue("tanggalMulai", v)}
-						required
-						error={errors.tanggalMulai?.message}
-					/>
-
-					<FieldText
-						label="Tanggal Selesai"
-						type="date"
-						value={watch("tanggalSelesai")}
-						onChange={(v) => setValue("tanggalSelesai", v)}
-						error={errors.tanggalSelesai?.message}
-					/>
-
-					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN */}
-					{showGolongan && (
-						<FieldFk
-							label="Golongan"
-							options={golonganOpts}
-							value={watch("golonganId")}
-							onChange={(v) => setValue("golonganId", v)}
-							error={errors.golonganId?.message}
+					{/* ── Baris 2: Tanggal SK + Tanggal Mulai + Tanggal Selesai ── */}
+					<div className="grid grid-cols-3 gap-3">
+						<FieldText
+							label="Tgl. SK"
+							type="date"
+							value={watch("tanggalSk")}
+							onChange={(v) => setValue("tanggalSk", v)}
+							required
+							error={errors.tanggalSk?.message}
 						/>
-					)}
+						<FieldText
+							label="Mulai"
+							type="date"
+							value={watch("tanggalMulai")}
+							onChange={(v) => setValue("tanggalMulai", v)}
+							required
+							error={errors.tanggalMulai?.message}
+						/>
+						<FieldText
+							label="Selesai"
+							type="date"
+							value={watch("tanggalSelesai")}
+							onChange={(v) => setValue("tanggalSelesai", v)}
+							error={errors.tanggalSelesai?.message}
+						/>
+					</div>
 
-					<FieldText
-						label="Gaji Pokok"
-						value={watch("gajiPokok")}
-						onChange={(v) => setValue("gajiPokok", v)}
-						error={errors.gajiPokok?.message}
-					/>
+					{/* ── Baris 3: Golongan (conditional) + Gaji Pokok ── */}
+					<div className="grid grid-cols-2 gap-3">
+						{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN */}
+						{showGolongan ? (
+							<FieldFk
+								label="Golongan"
+								options={golonganOpts}
+								value={watch("golonganId")}
+								onChange={(v) => setValue("golonganId", v)}
+								error={errors.golonganId?.message}
+							/>
+						) : (
+							<div />
+						)}
+						<FieldText
+							label="Gaji Pokok"
+							value={watch("gajiPokok")}
+							onChange={(v) => setValue("gajiPokok", v)}
+							error={errors.gajiPokok?.message}
+						/>
+					</div>
 
 					<div className="flex items-center gap-2">
 						<Checkbox
