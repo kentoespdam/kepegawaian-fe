@@ -167,7 +167,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 				<Separator />
 
-				<form onSubmit={rhfSubmit(onSubmit)} className="px-4 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0">
+				<form onSubmit={rhfSubmit(onSubmit)} className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0">
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}

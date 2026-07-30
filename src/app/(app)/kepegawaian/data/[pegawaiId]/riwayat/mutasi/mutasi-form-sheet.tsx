@@ -327,7 +327,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 
 			<Separator />
 
-			<div className="flex-1 overflow-y-auto px-4 pb-4">
+			<div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4">
 					{editingId && detailQuery.isPending ? (
 						<div className="flex items-center justify-center py-12">
 							<Loader2 className="size-6 animate-spin text-muted-foreground" />
