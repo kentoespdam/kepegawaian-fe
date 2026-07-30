@@ -33,6 +33,15 @@
 - `<Separator />` antara `SheetHeader` dan `form` — visual break wajib
 - Form wrapper: `className="px-4 pb-4 space-y-3.5"` — padding kiri-kanan + bawah
 - Section groupings dipisah `<Separator />` + `SectionLabel`
+- `SheetContent` harus pakai `sm:max-w-xl overflow-y-auto` — lebar konsisten + scroll untuk form panjang
+
+> **Catatan lebar:** `sm:max-w-xl` = 576px di viewport ≥640px. Ukuran ini membatasi form
+> agar tidak terlalu lebar di desktop, sekaligus cukup legible untuk 2-kolom grid.
+
+> **Rekonsiliasi dengan forms.md §10.3:** `forms.md` menetapkan "single column, label-on-top"
+> dan "rejected: two-column". Pattern ini menggunakan **2-kolom grid HANYA untuk field bersaudara**
+> yang maknanya berdekatan (NIPAM+Nama, tanggal mulai+selesai). Full multi-column layout
+> tetap ditolak. 2-kolom grid = deviasi terkontrol, bukan pelanggaran.
 
 ---
 
@@ -273,6 +282,7 @@ export function ExampleFormSheet({ editingId, isOpen, onClose }: Props) {
 
 ## 8. Checklist — Sebelum Ship Form Sheet
 
+- [ ] `SheetContent` punya `sm:max-w-xl overflow-y-auto`
 - [ ] `<Separator />` antara `SheetHeader` dan `form`
 - [ ] Form wrapper punya `px-4 pb-4 space-y-3.5`
 - [ ] Section grouping pakai `SectionLabel` + `<Separator />`
@@ -283,6 +293,7 @@ export function ExampleFormSheet({ editingId, isOpen, onClose }: Props) {
 - [ ] Footer: Batal (outline) kiri, Simpan (primary) kanan
 - [ ] Submit button: `disabled={isSubmitting}` + label "Menyimpan..."
 - [ ] Error inline di form (bukan toast)
+- [ ] Aksesibilitas (visual-foundation §2): input ≥44px, font ≥16px, focus ring jelas
 
 ---
 
