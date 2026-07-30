@@ -78,96 +78,87 @@ Jangan re-litigasi.
 **← depends on:** — (siap diklaim, Fase 1 + SK sudah selesai)
 
 **A. Layout**
-- [ ] Update `riwayat/layout.tsx`:
+- [x] Update `riwayat/layout.tsx`:
   - Rail item `sp`: ubah `href: "#"` → `href: "./sp"`, `active: false` → `active: true`, hapus `soon: true`
   - Tambah `sp: "Riwayat Surat Peringatan"` ke `PAGE_TITLES`
 
 **B. Route**
-- [ ] Buat `riwayat/sp/page.tsx` — `"use client"`
-- [ ] Query: `GET /kepegawaian/riwayat/sp/pegawai/{pegawaiId}` — `staleTime: 30_000`, `placeholderData: keepPreviousData`
-- [ ] Paging via `fromPage()` / `toApiParams()`
-- [ ] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline
+- [x] Buat `riwayat/sp/page.tsx` — `"use client"`
+- [x] Query: `GET /kepegawaian/riwayat/sp/pegawai/{pegawaiId}` — `staleTime: 30_000`, `placeholderData: keepPreviousData`
+- [x] Paging via `fromPage()` / `toApiParams()`
+- [x] `isPending` → skeleton · `isPlaceholderData` → dim · `isError` → panel inline
 
 **C. Tabel**
-- [ ] 9 kolom data + Aksi (K-SP1) — copy struktur `SK_COLUMNS`, sesuaikan field
-- [ ] Kolom `No` pakai `cell(item, i)` pattern — offset paging
-- [ ] Kolom `File`:
+- [x] 9 kolom data + Aksi (K-SP1) — copy struktur `SK_COLUMNS`, sesuaikan field
+- [x] Kolom `No` pakai `cell(item, i)` pattern — offset paging
+- [x] Kolom `File`:
   - `row.fileName` ada → render tombol ikon (mis. `<FileText />` dari lucide)
   - `onClick`: baca `row.mimeType` → `application/pdf` / `image/*` → buka `window.open(url, "_blank")` · lain-lain → trigger unduh via `<a href download>`
   - URL: `/api/proxy/kepegawaian/riwayat/sp/${row.id}/file`
   - `row.fileName` null → render `"—"`
-- [ ] **Tidak ada** `onRowClick`, tidak ada `selectedRowId`, tidak ada `?sel=`
+- [x] **Tidak ada** `onRowClick`, tidak ada `selectedRowId`, tidak ada `?sel=`
 
 **D. Toolbar**
-- [ ] `nomorSp` → `<DataTableToolbar searchFields=[{name:"nomorSp", label:"Nomor SP"}]>`
-- [ ] `jenisSpId` → combobox fetch `/api/proxy/master/jenis-sp/list`
+- [x] `nomorSp` → `<DataTableToolbar searchFields=[{name:"nomorSp", label:"Nomor SP"}]>`
+- [x] `jenisSpId` → combobox fetch `/api/proxy/master/jenis-sp/list`
   - Gunakan pola `useFkOptions` atau fetch manual — **bukan** hardcoded
   - Value: `item.id` (integer, kirim ke BE sebagai string query param)
-  - Label: `item.keterangan`
-- [ ] Reset + Tambah SP di kanan
-- [ ] `hasActive = !!(nomorSp || jenisSpId)`
+  - Label: `item.nama` (sesuai tipe `JenisSpMiniResponse`)
+- [x] Reset + Tambah SP di kanan
+- [x] `hasActive = !!(nomorSp || jenisSpId)`
 
 **E. Tutup**
-- [ ] `bun run build` · `bunx biome check` · ✅ `bd close kepegawaian-fe-rmwi`
+- [x] `bun run build` · `bunx biome check` · ✅ ~~`bd close kepegawaian-fe-rmwi`~~ **✅ Closed**
 
 ---
 
 ### 2. `kepegawaian-fe-i4v9` — SP B: `form Sheet (multipart) + hapus`
 
-**← depends on:** `kepegawaian-fe-rmwi` selesai
+**← depends on:** `kepegawaian-fe-rmwi` selesai ✅
 
 **A. Form Sheet**
-- [ ] Buat `riwayat/sp/sp-form-sheet.tsx` — `"use client"`
-- [ ] Pakai RHF + Zod (`zodResolver`) — pola identik form SK, **tapi fetch via FormData**
-- [ ] Zod schema required: `nomorSp`, `jenisSpId`, `sanksiId`, `tanggalSp`, `tanggalMulai`, `tanggalSelesai`, `organisasiId`, `jabatanId`, `penandaTangan`, `jabatanPenandaTangan`
-- [ ] Field 1: `nomorSp` = `<FieldText>`
-- [ ] Field 2: `jenisSpId` = combobox fetch `/master/jenis-sp/list` (value: id, label: keterangan)
+- [x] Buat `riwayat/sp/sp-form-sheet.tsx` — `"use client"`
+- [x] Pakai RHF + Zod (`zodResolver`) — pola identik form SK, **tapi fetch via FormData**
+- [x] Zod schema required: `nomorSp`, `jenisSpId`, `sanksiId`, `tanggalSp`, `tanggalMulai`, `tanggalSelesai`, `organisasiId`, `jabatanId`, `penandaTangan`, `jabatanPenandaTangan`
+- [x] Field 1: `nomorSp` = `<FieldText>`
+- [x] Field 2: `jenisSpId` = combobox fetch `/master/jenis-sp/list` (value: id, label: nama)
   - `onChange`: reset `sanksiId` ke undefined
-- [ ] Field 3: `sanksiId` = combobox fetch `/master/sanksi/jenis-sp/{jenisSpId}` (cascade)
+- [x] Field 3: `sanksiId` = combobox fetch `/master/sanksi/jenis-sp/{jenisSpId}` (cascade)
   - **disabled** jika `jenisSpId` belum dipilih
   - Re-fetch ketika `jenisSpId` berubah
   - Value: `item.id`, Label: `item.keterangan`
-- [ ] Field 4–6: `tanggalSp`, `tanggalMulai`, `tanggalSelesai` = date picker
-- [ ] Field 7: `organisasiId` = `<FieldFk>` via `/master/organisasi/list`
-- [ ] Field 8: `jabatanId` = `<FieldFk>` via `/master/jabatan/list`
-- [ ] Field 9–10: `penandaTangan`, `jabatanPenandaTangan` = `<FieldText>`
-- [ ] Field 11: `sanksiNotes` = `<FieldTextarea>` (opsional)
-- [ ] Field 12: `tanggalEksekusiSanksi` = date picker (opsional)
-- [ ] Field 13: **File SP** — `<input type="file">` opsional
-  - Pada Edit: tampilkan nama file lama (`initialData.fileName`) sebagai label di atas input
-  - `ref` via RHF `register("fileInput")` atau uncontrolled via `useRef`
-- [ ] Field 14: `notes` = `<FieldTextarea>` (opsional)
-- [ ] Mount Sheet **sekali** di level page — tidak ada Sheet per baris
+- [x] Field 4–6: `tanggalSp`, `tanggalMulai`, `tanggalSelesai` = date picker (3-col grid)
+- [x] Field 7: `organisasiId` = `<FieldFk>` via `/master/organisasi/list`
+- [x] Field 8: `jabatanId` = `<FieldFk>` via `/master/jabatan/list`
+- [x] Field 9–10: `penandaTangan`, `jabatanPenandaTangan` = `<FieldText>` (2-col grid)
+- [x] Field 11: `sanksiNotes` = `<FieldText>` (opsional)
+- [x] Field 12: `tanggalEksekusiSanksi` = date picker (opsional)
+- [x] Field 13: **File SP** — `<input type="file">` opsional
+  - Pada Edit: tampilkan nama file lama (`detailQuery.data.fileName`) sebagai label di atas input
+  - `ref` via `useRef<HTMLInputElement>`
+- [x] Field 14: `notes` = `<FieldTextarea>` (opsional)
+- [x] Mount Sheet **sekali** di level page — tidak ada Sheet per baris
 
 **B. Submit logic — WAJIB: multipart/form-data**
-- [ ] Gunakan `FormData` — **bukan** `JSON.stringify`
-  ```ts
-  const fd = new FormData();
-  fd.append("nomorSp", data.nomorSp);
-  fd.append("pegawaiId", String(pegawaiId));
-  // ... semua field required
-  if (data.sanksiNotes) fd.append("sanksiNotes", data.sanksiNotes);
-  if (fileInput.current?.files?.[0]) fd.append("fileName", fileInput.current.files[0]);
-  // JANGAN set Content-Type — browser auto-set boundary
-  ```
-- [ ] POST: `fetch("/api/proxy/kepegawaian/riwayat/sp", { method: "POST", body: fd })`
-- [ ] PUT: `fetch("/api/proxy/kepegawaian/riwayat/sp/${editingId}", { method: "PUT", body: fd })`
-- [ ] Sukses → `toast.success(...)` + `qc.invalidateQueries(["riwayat-sp", pegawaiId])` + close Sheet
-- [ ] Error BE → `setError("root", { message: ... })` — **bukan** toast
-- [ ] Dialog tetap terbuka saat error (konsisten K9 shared infra)
+- [x] Gunakan `FormData` — **bukan** `JSON.stringify`
+- [x] POST: `fetch("/api/proxy/kepegawaian/riwayat/sp", { method: "POST", body: fd })`
+- [x] PUT: `fetch("/api/proxy/kepegawaian/riwayat/sp/${editingId}", { method: "PUT", body: fd })`
+- [x] Sukses → `toast.success(...)` + `qc.invalidateQueries(["riwayat-sp", pegawaiId])` + close Sheet
+- [x] Error BE → `setError("root", { message: ... })` — **bukan** toast
+- [x] Dialog tetap terbuka saat error (konsisten K9 shared infra)
 
 **C. Prefill Edit**
-- [ ] Pada edit: fetch `GET /kepegawaian/riwayat/sp/{editingId}` → `SingleResultRiwayatSpQuery`
-- [ ] Prefill semua field termasuk `jenisSpId` + trigger fetch sanksi cascade
-- [ ] Tampilkan `initialData.fileName` sebagai label informatif di atas input file
+- [x] Pada edit: fetch `GET /kepegawaian/riwayat/sp/{editingId}` → `SingleResultRiwayatSpQuery`
+- [x] Prefill semua field termasuk `jenisSpId` + trigger fetch sanksi cascade
+- [x] Tampilkan `detailQuery.data.fileName` sebagai label informatif di atas input file
 
 **D. Hapus**
-- [ ] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/sp/{id}`
-- [ ] 409 → dialog tetap terbuka, alasan inline
-- [ ] Tidak ada optimistic removal — tunggu 200, lalu `invalidateQueries`
+- [x] `<ConfirmDeleteDialog>` — `DELETE /kepegawaian/riwayat/sp/{id}`
+- [x] 409 → dialog tetap terbuka, alasan inline
+- [x] Tidak ada optimistic removal — tunggu 200, lalu `invalidateQueries`
 
 **E. Tutup**
-- [ ] `bun run build` · `bunx biome check` · ✅ `bd close kepegawaian-fe-i4v9`
+- [x] `bun run build` · `bunx biome check` · ✅ ~~`bd close kepegawaian-fe-i4v9`~~ **✅ Closed**
 
 ---
 

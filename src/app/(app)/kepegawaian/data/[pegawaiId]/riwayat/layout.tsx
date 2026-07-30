@@ -22,6 +22,7 @@ const PAGE_TITLES: Record<string, string> = {
 	mutasi: "Riwayat Mutasi",
 	sk: "Riwayat Surat Keputusan",
 	kontrak: "Riwayat Kontrak Kerja",
+	sp: "Riwayat Surat Peringatan",
 } as const;
 
 const RAIL_ITEMS = [
@@ -29,7 +30,7 @@ const RAIL_ITEMS = [
 	{ id: "cuti", label: "Data Penggunaan Hak Cuti", href: "#", active: false, soon: true },
 	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "./kontrak", active: true },
 	{ id: "sk", label: "Riwayat Surat Keputusan", href: "./sk", active: true },
-	{ id: "sp", label: "Riwayat Surat Peringatan", href: "#", active: false, soon: true },
+	{ id: "sp", label: "Riwayat Surat Peringatan", href: "./sp", active: true },
 ] as const;
 
 function RailSkeleton() {
