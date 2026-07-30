@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -25,8 +26,7 @@ const schema = z.object({
 	tanggalSk: z.string().min(1, "Tanggal SK wajib"),
 	tanggalMulai: z.string().min(1, "Tanggal mulai wajib"),
 	tanggalSelesai: z.string().optional(),
-	// ponytail: golonganId optional in Zod — detail query (RiwayatKontrakQuery) doesn't return golongan field
-	// Always shown in form; conditional gate per jenisKontrak when BE confirms golonganId can be omitted
+	// ponytail: golonganId hanya dikirim saat CREATE + PENGANGKATAN. Detail query tak return golongan field.
 	golonganId: z.string().optional(),
 	gajiPokok: z.string().optional(),
 	isLatest: z.boolean().optional(),
@@ -100,6 +100,14 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 
 	const golonganOpts = useGolonganOptions();
 
+	// ponytail: showGolongan hanya saat create + PENGANGKATAN
+	const showGolongan = !editingId && watch("jenisKontrak") === "PENGANGKATAN";
+
+	// ponytail: bersihkan golonganId saat field disembunyikan
+	useEffect(() => {
+		if (!showGolongan) setValue("golonganId", "");
+	}, [showGolongan, setValue]);
+
 	// ── Submit ──
 
 	const onSubmit = async (values: FormValues) => {
@@ -114,7 +122,8 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 				tanggalMulai: values.tanggalMulai,
 			};
 			if (values.tanggalSelesai) payload.tanggalSelesai = values.tanggalSelesai;
-			if (values.golonganId) payload.golonganId = Number(values.golonganId);
+			// ponytail: hanya kirim golonganId saat CREATE + PENGANGKATAN
+			if (showGolongan && values.golonganId) payload.golonganId = Number(values.golonganId);
 			if (values.gajiPokok) payload.gajiPokok = Number(values.gajiPokok);
 			if (values.isLatest) payload.isLatest = true;
 			if (values.notes) payload.notes = values.notes;
@@ -220,14 +229,16 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						error={errors.tanggalSelesai?.message}
 					/>
 
-					{/* ponytail: golonganId always shown. Conditional per jenisKontrak when BE confirms optional */}
-					<FieldFk
-						label="Golongan"
-						options={golonganOpts}
-						value={watch("golonganId")}
-						onChange={(v) => setValue("golonganId", v)}
-						error={errors.golonganId?.message}
-					/>
+					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN */}
+					{showGolongan && (
+						<FieldFk
+							label="Golongan"
+							options={golonganOpts}
+							value={watch("golonganId")}
+							onChange={(v) => setValue("golonganId", v)}
+							error={errors.golonganId?.message}
+						/>
+					)}
 
 					<FieldText
 						label="Gaji Pokok"
