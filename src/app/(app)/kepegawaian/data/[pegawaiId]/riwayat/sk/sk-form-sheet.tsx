@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -192,23 +192,19 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.nomorSk?.message}
 					/>
 
-					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="Tanggal SK"
-							type="date"
-							value={watch("tanggalSk")}
-							onChange={(v) => setValue("tanggalSk", v)}
-							required
-							error={errors.tanggalSk?.message}
-						/>
-						<FieldText
-							label="TMT Berlaku"
-							type="date"
-							value={watch("tmtBerlaku")}
-							onChange={(v) => setValue("tmtBerlaku", v)}
-							required
-							error={errors.tmtBerlaku?.message}
-						/>
+					<div className="grid grid-cols-2 gap-3">							<FieldDate
+								label="Tanggal SK"
+								value={watch("tanggalSk")}
+								onChange={(v) => setValue("tanggalSk", v)}
+								required
+								error={errors.tanggalSk?.message}
+							/>							<FieldDate
+								label="TMT Berlaku"
+								value={watch("tmtBerlaku")}
+								onChange={(v) => setValue("tmtBerlaku", v)}
+								required
+								error={errors.tmtBerlaku?.message}
+							/>
 					</div>
 
 					<Separator />
@@ -246,15 +242,12 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 							onChange={(v) => setValue("mkgBulan", v)}
 							error={errors.mkgBulan?.message}
 						/>
-					</div>
-
-					<FieldText
-						label="Kenaikan Berikutnya"
-						type="date"
-						value={watch("kenaikanBerikutnya")}
-						onChange={(v) => setValue("kenaikanBerikutnya", v)}
-						error={errors.kenaikanBerikutnya?.message}
-					/>
+					</div>						<FieldDate
+							label="Kenaikan Berikutnya"
+							value={watch("kenaikanBerikutnya")}
+							onChange={(v) => setValue("kenaikanBerikutnya", v)}
+							error={errors.kenaikanBerikutnya?.message}
+						/>
 
 					<div className="grid grid-cols-2 gap-3">
 						<FieldText

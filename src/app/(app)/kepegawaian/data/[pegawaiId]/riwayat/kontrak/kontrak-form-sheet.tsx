@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -214,31 +214,25 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 						required
 						error={errors.nomorKontrak?.message}
 					/>
-					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="Tgl. SK"
-							type="date"
-							value={watch("tanggalSk")}
-							onChange={(v) => setValue("tanggalSk", v)}
-							required
-							error={errors.tanggalSk?.message}
+					<div className="grid grid-cols-2 gap-3">							<FieldDate
+								label="Tgl. SK"
+								value={watch("tanggalSk")}
+								onChange={(v) => setValue("tanggalSk", v)}
+								required
+								error={errors.tanggalSk?.message}
+							/>							<FieldDate
+								label="Mulai"
+								value={watch("tanggalMulai")}
+								onChange={(v) => setValue("tanggalMulai", v)}
+								required
+								error={errors.tanggalMulai?.message}
+							/>
+					</div>						<FieldDate
+							label="Selesai"
+							value={watch("tanggalSelesai")}
+							onChange={(v) => setValue("tanggalSelesai", v)}
+							error={errors.tanggalSelesai?.message}
 						/>
-						<FieldText
-							label="Mulai"
-							type="date"
-							value={watch("tanggalMulai")}
-							onChange={(v) => setValue("tanggalMulai", v)}
-							required
-							error={errors.tanggalMulai?.message}
-						/>
-					</div>
-					<FieldText
-						label="Selesai"
-						type="date"
-						value={watch("tanggalSelesai")}
-						onChange={(v) => setValue("tanggalSelesai", v)}
-						error={errors.tanggalSelesai?.message}
-					/>
 					<Separator />
 					{/* ── Detail Tambahan ── */}
 					<SectionLabel>Detail Tambahan</SectionLabel>{" "}

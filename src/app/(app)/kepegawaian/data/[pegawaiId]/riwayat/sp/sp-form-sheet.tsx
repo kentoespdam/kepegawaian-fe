@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
 
-import { FieldFk, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -228,33 +228,26 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						error={errors.sanksiId?.message}
 					/>
 
-					<div className="grid grid-cols-2 gap-3">
-						<FieldText
-							label="Tgl SP"
-							type="date"
-							value={watch("tanggalSp")}
-							onChange={(v) => setValue("tanggalSp", v)}
+					<div className="grid grid-cols-2 gap-3">							<FieldDate
+								label="Tgl SP"
+								value={watch("tanggalSp")}
+								onChange={(v) => setValue("tanggalSp", v)}
+								required
+								error={errors.tanggalSp?.message}
+							/>							<FieldDate
+								label="Tgl Mulai"
+								value={watch("tanggalMulai")}
+								onChange={(v) => setValue("tanggalMulai", v)}
+								required
+								error={errors.tanggalMulai?.message}
+							/>
+					</div>						<FieldDate
+							label="Tgl Selesai"
+							value={watch("tanggalSelesai")}
+							onChange={(v) => setValue("tanggalSelesai", v)}
 							required
-							error={errors.tanggalSp?.message}
+							error={errors.tanggalSelesai?.message}
 						/>
-						<FieldText
-							label="Tgl Mulai"
-							type="date"
-							value={watch("tanggalMulai")}
-							onChange={(v) => setValue("tanggalMulai", v)}
-							required
-							error={errors.tanggalMulai?.message}
-						/>
-					</div>
-
-					<FieldText
-						label="Tgl Selesai"
-						type="date"
-						value={watch("tanggalSelesai")}
-						onChange={(v) => setValue("tanggalSelesai", v)}
-						required
-						error={errors.tanggalSelesai?.message}
-					/>
 
 					<Separator />
 
@@ -305,15 +298,12 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 						value={watch("sanksiNotes")}
 						onChange={(v) => setValue("sanksiNotes", v)}
 						error={errors.sanksiNotes?.message}
-					/>
-
-					<FieldText
-						label="Tgl. Eksekusi Sanksi"
-						type="date"
-						value={watch("tanggalEksekusiSanksi")}
-						onChange={(v) => setValue("tanggalEksekusiSanksi", v)}
-						error={errors.tanggalEksekusiSanksi?.message}
-					/>
+					/>						<FieldDate
+							label="Tgl. Eksekusi Sanksi"
+							value={watch("tanggalEksekusiSanksi")}
+							onChange={(v) => setValue("tanggalEksekusiSanksi", v)}
+							error={errors.tanggalEksekusiSanksi?.message}
+						/>
 
 					{/* ── File ── */}
 					<div className="space-y-1.5">

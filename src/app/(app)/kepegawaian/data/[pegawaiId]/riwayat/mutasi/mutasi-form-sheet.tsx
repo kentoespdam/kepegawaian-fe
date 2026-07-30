@@ -7,7 +7,7 @@ import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
-import { FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
+import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
@@ -388,17 +388,15 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									error={e("nomorSk")}
 									required
 								/>
-								<FieldText
+								<							FieldDate
 									label="Tanggal SK"
-									type="date"
 									value={watch("tanggalSk")}
 									onChange={(v) => setValue("tanggalSk", v)}
 									error={e("tanggalSk")}
 									required
 								/>
-								<FieldText
+								<							FieldDate
 									label="TMT Berlaku"
-									type="date"
 									value={watch("tmtBerlaku")}
 									onChange={(v) => setValue("tmtBerlaku", v)}
 									error={e("tmtBerlaku")}
@@ -487,12 +485,11 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 											onChange={(v) => setValue("mkgBulan", v)}
 											error={e("mkgBulan")}
 										/>
-										<FieldText
-											label="Kenaikan Berikutnya"
-											type="date"
-											value={watch("kenaikanBerikutnya")}
-											onChange={(v) => setValue("kenaikanBerikutnya", v)}
-											error={e("kenaikanBerikutnya")}
+										<								FieldDate
+										label="Kenaikan Berikutnya"
+										value={watch("kenaikanBerikutnya")}
+										onChange={(v) => setValue("kenaikanBerikutnya", v)}
+										error={e("kenaikanBerikutnya")}
 										/>
 										<FieldText
 											label="MKGB (Tahun)"
