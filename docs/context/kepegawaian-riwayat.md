@@ -313,4 +313,4 @@ tertutup di Keputusan 12.)
 | Riwayat Surat Keputusan | [`kepegawaian-riwayat-sk.md`](kepegawaian-riwayat-sk.md) | ✅ grilled |
 | Riwayat Kontrak Kerja | [`kepegawaian-riwayat-kontrak.md`](kepegawaian-riwayat-kontrak.md) | ⏳ belum di-grill |
 | Riwayat Surat Peringatan | [`kepegawaian-riwayat-sp.md`](kepegawaian-riwayat-sp.md) | ✅ grilled |
-| Data Penggunaan Hak Cuti | (lihat K12 di file ini — read-only, Fase 2) | ⏳ belum di-grill |
+| Data Penggunaan Hak Cuti | [`kepegawaian-riwayat-cuti.md`](kepegawaian-riwayat-cuti.md) — K-C1–K-C7 (grill 2026-07-31, memperdalam K12) | ✅ grilled |
