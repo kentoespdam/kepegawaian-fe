@@ -111,6 +111,7 @@ export function TambahPegawaiForm() {
 			router.push("/kepegawaian/data");
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+			toast.error(msg);
 			setError("root", { message: msg });
 		}
 	};

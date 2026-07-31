@@ -309,7 +309,9 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 			qc.invalidateQueries({ queryKey: ["riwayat-mutasi", pegawaiId] });
 			onClose();
 		} catch (e: unknown) {
-			setError("root", { message: e instanceof Error ? e.message : "Terjadi kesalahan" });
+			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+			toast.error(msg);
+			setError("root", { message: msg });
 		}
 	};
 

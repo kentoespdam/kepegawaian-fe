@@ -134,7 +134,9 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 			qc.invalidateQueries({ queryKey: ["ringkasan", pegawaiId] });
 			onClose();
 		} catch (e: unknown) {
-			setError("root", { message: e instanceof Error ? e.message : "Terjadi kesalahan" });
+			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+			toast.error(msg);
+			setError("root", { message: msg });
 		}
 	};
 

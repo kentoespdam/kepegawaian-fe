@@ -149,7 +149,9 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			qc.invalidateQueries({ queryKey: ["riwayat-sk", pegawaiId] });
 			onClose();
 		} catch (e: unknown) {
-			setError("root", { message: e instanceof Error ? e.message : "Terjadi kesalahan" });
+			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
+			toast.error(msg);
+			setError("root", { message: msg });
 		}
 	};
 

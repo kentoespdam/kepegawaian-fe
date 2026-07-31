@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -84,7 +85,10 @@ export function ChangePasswordForm() {
 			{ oldPassword: data.oldPassword, newPassword: data.newPassword },
 			{
 				onSuccess: () => reset(),
-				onError: (e) => setError("root", { message: e.message }),
+				onError: (e) => {
+					toast.error(e.message);
+					setError("root", { message: e.message });
+				},
 			},
 		);
 	};
