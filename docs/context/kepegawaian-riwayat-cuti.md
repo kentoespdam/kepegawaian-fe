@@ -73,10 +73,20 @@ Kartu (keputusan user — **3 angka**):
 | Diambil | `kuotaTerpakai` |
 | Sisa | `sisaKuota` |
 
+> ⚠️ **K-C5 MEREVISI sumber strip di K12** (bukan sekadar memperdalam): K12 menulis strip dari
+> `GET /cuti/kuota/{pegawaiId}/{tahun}/sisa` (hanya sisa tahun ini/lalu), padahal permintaan user
+> butuh 3 angka (kuota · diambil · sisa). Setelah grill (2026-07-31), sumber diubah ke index
+> `GET /cuti/kuota?pegawaiId&tahun` yang menyediakan ketiganya. Implementer yang membaca K12 harus
+> mengikuti **K-C5**, bukan tabel "Sumber data" di K12.
+>
 > ⚠️ **Verifikasi wajib (spike kecil, bukan asumsi):** bentuk respons `CutiKuotaPegawaiResponse`
 > punya `page` (paged) + `additional` (array). Buka 1 request nyata untuk memastikan baris kuota
 > tahun terpilih ada di `page.content[0]` atau `additional[0]` (atau keduanya). Ambil baris
 > `tahun === tahun terpilih` dari container mana pun yang terisi.
+>
+> ⚠️ **Null-safety:** `kuota`, `kuotaTerpakai`, `sisaKuota`, `kuotaTambahan` semua opsional di tipe.
+> Kartu Kuota = `(kuota ?? 0) + (kuotaTambahan ?? 0)` — jangan `kuota + kuotaTambahan` mentah
+> (undefined + undefined = NaN).
 
 - Tak ada record kuota untuk tahun itu → kartu tampil `—`/0 + keterangan "Belum ada kuota tahun ini".
 - Skeleton saat `isPending`; strip ikut `tahun` terpilih (refetch saat ganti tahun).
@@ -104,6 +114,8 @@ Gate halaman: `can(roles, "view", "pegawai")` → `forbidden()`. Tanpa tombol tu
 | `GET /cuti/kuota?pegawaiId&tahun` | `src/types/cuti/kuota.ts` — `CutiKuotaPegawaiResponse`, `CutiKuotaResponse` |
 | Header pegawai | `GET /pegawai/{id}/session` (sudah di-fetch di `riwayat/layout.tsx`, gratis) |
 
-**Template kode:** `riwayat/sk/page.tsx` (tabel read-only terdekat, tanpa LampiranCard) dan
-`riwayat/layout.tsx` (aktivasi rail). **Tidak** memakai `src/lib/api/client.ts` (BASE master) —
-pakai `fetch("/api/proxy/cuti/…")` langsung, pola yang sudah ada di page-page riwayat.
+**Template kode:** `riwayat/sk/page.tsx` (tabel riwayat terdekat — **berhati-hati: SK itu CRUD**
+penuh, jadi ambil pola tabel/filter/paging-nya saja lalu **hilangkan** kolom Aksi, form Sheet, dan
+LampiranCard) dan `riwayat/layout.tsx` (aktivasi rail). Belum ada page riwayat read-only — halaman
+ini yang pertama. **Tidak** memakai `src/lib/api/client.ts` (BASE master) — pakai
+`fetch("/api/proxy/cuti/…")` langsung, pola yang sudah ada di page-page riwayat.

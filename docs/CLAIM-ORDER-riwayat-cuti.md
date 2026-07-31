@@ -48,13 +48,16 @@ Jangan re-litigasi.
 - `src/types/cuti/pengajuan.ts` — `PageResultPageCutiPengajuanResponse`, `CutiPengajuanResponse`
 - `src/types/cuti/kuota.ts` — `CutiKuotaPegawaiResponse { page, additional }`, `CutiKuotaResponse`
 
+> ⚠️ **K-C5 merevisi sumber strip K12** (`/cuti/kuota/{id}/{tahun}/sisa` → `/cuti/kuota` index).
+> Kalau ada kontradiksi dengan tabel "Sumber data" K12, yang berlaku **K-C5**.
+
 ---
 
 ## Prasyarat (baca sebelum ngoding)
 
 1. `docs/context/kepegawaian-riwayat-cuti.md` — **keputusan K-C1–K-C7** (baca semua)
 2. `docs/context/kepegawaian-riwayat.md` §K1–K12 — shared infra: RBAC, pola filter URL, header, state
-3. `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/sk/page.tsx` — template tabel read-only terdekat
+3. `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/sk/page.tsx` — template tabel riwayat terdekat (SK = CRUD; ambil pola tabel/filter/paging saja, hilangkan Aksi/form/Lampiran)
 4. `src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/layout.tsx` — rail cuti diaktifkan di sini
 5. `src/lib/enum-labels.ts` — cek apakah `StatusApproval` (6 state) sudah punya label; belum → tambahkan di file itu (bukan hardcode di page)
 6. `src/lib/paging.ts` — `fromPage()` / `toApiParams()` untuk paging
@@ -94,7 +97,7 @@ Jangan re-litigasi.
 **E. Strip 3 kartu**
 - [ ] Query strip: `GET /api/proxy/cuti/kuota?pegawaiId={id}&tahun={tahun}` — `queryKey: ["cuti-kuota", pegawaiId, tahun]`
 - [ ] ⚠️ **Verifikasi container respons**: cek `CutiKuotaPegawaiResponse.page.content` vs `additional` dengan 1 request nyata — ambil baris `tahun === tahun terpilih` dari container yang terisi
-- [ ] Render 3 kartu: Kuota (`kuota + kuotaTambahan`) · Diambil (`kuotaTerpakai`) · Sisa (`sisaKuota`)
+- [ ] Render 3 kartu: Kuota (`(kuota ?? 0) + (kuotaTambahan ?? 0)`) · Diambil (`kuotaTerpakai ?? 0`) · Sisa (`sisaKuota ?? 0`) — **null-safe** (semua field opsional)
 - [ ] Tak ada record → kartu `—`/0 + "Belum ada kuota tahun ini"; `isPending` → skeleton; `isError` → inline `—` (bukan toast, jangan blokir tabel)
 
 **F. Tutup**
