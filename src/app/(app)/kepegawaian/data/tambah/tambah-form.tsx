@@ -13,6 +13,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
 import { api } from "@/lib/api/client";
 import { ENUMS } from "@/lib/enums";
+import { apiErrorMessage } from "@/lib/utils";
 import { type FormValues, schema } from "./schema";
 
 export function TambahPegawaiForm() {
@@ -104,7 +105,7 @@ export function TambahPegawaiForm() {
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Gagal menyimpan data");
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan data"));
 			}
 			toast.success("Data pegawai berhasil disimpan");
 			qc.invalidateQueries({ queryKey: ["/api/proxy/pegawai"] });

@@ -15,6 +15,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_AKSI_KONTRAK_OPTIONS } from "@/lib/riwayat-constants";
+import { apiErrorMessage } from "@/lib/utils";
 import type { SingleResultRiwayatKontrakQuery } from "@/types/kepegawaian/riwayat";
 
 // ── Schema ──
@@ -148,8 +149,7 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				const msg = (body as { message?: string }).message ?? "Gagal menyimpan kontrak";
-				throw new Error(msg);
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan kontrak"));
 			}
 
 			toast.success(editingId ? "Kontrak berhasil diperbarui" : "Kontrak berhasil ditambahkan");

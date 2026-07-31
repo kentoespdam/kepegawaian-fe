@@ -14,6 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_SK_OPTIONS } from "@/lib/riwayat-constants";
+import { apiErrorMessage } from "@/lib/utils";
 import type { SingleResultRiwayatSkQuery } from "@/types/kepegawaian/riwayat";
 
 // ── Schema ──
@@ -141,8 +142,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				const msg = (body as { message?: string }).message ?? "Gagal menyimpan SK";
-				throw new Error(msg);
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan SK"));
 			}
 
 			toast.success(editingId ? "SK berhasil diperbarui" : "SK berhasil ditambahkan");

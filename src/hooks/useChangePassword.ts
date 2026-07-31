@@ -2,6 +2,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { apiErrorMessage } from "@/lib/utils";
 
 function changePassword({ oldPassword, newPassword }: { oldPassword: string; newPassword: string }) {
 	return fetch("/api/proxy/v1/account/password", {
@@ -11,7 +12,7 @@ function changePassword({ oldPassword, newPassword }: { oldPassword: string; new
 	}).then(async (res) => {
 		if (!res.ok) {
 			const body = await res.json().catch(() => ({}));
-			throw new Error(body.message ?? "Gagal mengubah password");
+			throw new Error(apiErrorMessage(body, "Gagal mengubah password"));
 		}
 	});
 }

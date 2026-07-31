@@ -14,7 +14,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { JENIS_MUTASI_OPTIONS } from "@/lib/riwayat-constants";
-import { cn } from "@/lib/utils";
+import { apiErrorMessage, cn } from "@/lib/utils";
 import type { RiwayatMutasiQuery, SingleResultRiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
 import type { SingleResultPegawaiResponseMutasiContext } from "@/types/pegawai/pegawai";
 import type { SingleResultDetailDasarGajiNominal } from "@/types/penggajian/detail-dasar-gaji";
@@ -303,7 +303,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Gagal menyimpan");
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Mutasi berhasil diperbarui" : "Mutasi berhasil ditambahkan");
 			qc.invalidateQueries({ queryKey: ["riwayat-mutasi", pegawaiId] });

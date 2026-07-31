@@ -13,6 +13,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { ENUMS } from "@/lib/enums";
+import { apiErrorMessage } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 
 const schema = z.object({
@@ -128,7 +129,7 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Gagal menyimpan");
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success("Profil berhasil diperbarui");
 			qc.invalidateQueries({ queryKey: ["/api/proxy/pegawai"] });
