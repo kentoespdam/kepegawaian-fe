@@ -1,4 +1,10 @@
+.agents/
+.beads/
+.claude/
+.github/
+.openclaude/
+.vscode/
 .next/
 nodes_modules/
-graphify-out/cache/
-docs/api/*/api.json
+graphify-out/
+docs/api/
