@@ -64,6 +64,32 @@ export function rupiah(value: number | null | undefined, cents?: boolean): strin
  *
  * @param date  Nilai tanggal (string, null, undefined, atau unknown).
  */
+/**
+ * Ambil pesan error dari body respons API.
+ *
+ * BE Spring Boot mengembalikan **RFC-7807 ProblemDetails** (`detail`, `title`)
+ * untuk error terstruktur (mis. 413 "Maximum upload size exceeded"), sementara
+ * envelope lama memakai `message`. Helper ini membaca ketiganya dengan urutan
+ * prioritas: `detail` → `title` → `message` → `fallback`.
+ *
+ * @example
+ *   apiErrorMessage({ detail: "Maximum upload size exceeded" }, "Gagal") → "Maximum upload size exceeded"
+ *   apiErrorMessage({ title: "Content Too Large" }, "Gagal")          → "Content Too Large"
+ *   apiErrorMessage({ message: "NIPAM sudah dipakai" }, "Gagal")       → "NIPAM sudah dipakai"
+ *   apiErrorMessage(null, "Gagal")                                     → "Gagal"
+ *
+ * @param body      Body respons yang sudah di-`JSON.parse` (atau null/undefined).
+ * @param fallback  Pesan default bila tidak ada field yang terbaca.
+ */
+export function apiErrorMessage(body: unknown, fallback: string): string {
+	if (typeof body !== "object" || body === null) return fallback;
+	const b = body as Record<string, unknown>;
+	const detail = typeof b.detail === "string" ? b.detail : undefined;
+	const title = typeof b.title === "string" ? b.title : undefined;
+	const message = typeof b.message === "string" ? b.message : undefined;
+	return detail ?? title ?? message ?? fallback;
+}
+
 export function formatDate(date: unknown): string {
 	if (typeof date !== "string") return "-";
 	if (!date) return "-";

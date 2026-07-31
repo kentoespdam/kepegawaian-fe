@@ -15,8 +15,12 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { apiErrorMessage } from "@/lib/utils";
 import type { SingleResultRiwayatSpQuery } from "@/types/kepegawaian/riwayat";
 import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
+
+// ponytail: guard klien — cegah round-trip boros ke BE. Pesan asli BE (RFC-7807) tetap tampil via apiErrorMessage.
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 // ── Schema ──
 
@@ -56,6 +60,7 @@ interface Props {
 export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
 	const fileRef = useRef<HTMLInputElement>(null);
+	const [fileError, setFileError] = useState<string | null>(null);
 
 	// ── Detail fetch ──
 
@@ -200,6 +205,12 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 	const onSubmit = async (values: FormValues) => {
 		try {
+			const file = fileRef.current?.files?.[0];
+			if (file && file.size > MAX_FILE_SIZE_BYTES) {
+				setFileError("File terlalu besar — maksimal 5 MB");
+				return;
+			}
+			setFileError(null);
 			const fd = new FormData();
 			fd.append("nomorSp", values.nomorSp);
 			fd.append("pegawaiId", String(Number(pegawaiId)));
@@ -226,8 +237,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				const msg = (body as { message?: string }).message ?? "Gagal menyimpan SP";
-				throw new Error(msg);
+				throw new Error(apiErrorMessage(body, "Gagal menyimpan SP"));
 			}
 
 			toast.success(editingId ? "SP berhasil diperbarui" : "SP berhasil ditambahkan");
@@ -446,7 +456,9 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">File SP</Label>
 						{fileNameLabel && <p className="text-xs text-muted-foreground mb-1">File saat ini: {fileNameLabel}</p>}
-						<Input ref={fileRef} type="file" className="h-11 cursor-pointer" />
+						<p className="text-xs text-muted-foreground mb-1">Maksimal 5 MB</p>
+						<Input ref={fileRef} type="file" className="h-11 cursor-pointer" onChange={() => setFileError(null)} />
+						{fileError && <p className="text-xs text-destructive">{fileError}</p>}
 					</div>
 					<FieldTextarea
 						label="Notes"

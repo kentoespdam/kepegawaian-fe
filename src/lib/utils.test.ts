@@ -1,5 +1,31 @@
 import { describe, expect, it } from "vitest";
-import { formatDate } from "./utils";
+import { apiErrorMessage, formatDate } from "./utils";
+
+describe("apiErrorMessage — RFC-7807 ProblemDetails → pesan terbaik", () => {
+	it("RFC-7807: detail lebih diutamakan dari title", () => {
+		const body = { detail: "Maximum upload size exceeded", title: "Content Too Large", status: 413 };
+		expect(apiErrorMessage(body, "Gagal menyimpan SP")).toBe("Maximum upload size exceeded");
+	});
+
+	it("RFC-7807 tanpa detail — pakai title", () => {
+		expect(apiErrorMessage({ title: "Content Too Large", status: 413 }, "Gagal")).toBe("Content Too Large");
+	});
+
+	it("envelope lama — pakai message", () => {
+		expect(apiErrorMessage({ message: "NIPAM sudah dipakai" }, "Gagal")).toBe("NIPAM sudah dipakai");
+	});
+
+	it("body kosong / bukan object → fallback", () => {
+		expect(apiErrorMessage({}, "Gagal")).toBe("Gagal");
+		expect(apiErrorMessage(null, "Gagal")).toBe("Gagal");
+		expect(apiErrorMessage(undefined, "Gagal")).toBe("Gagal");
+		expect(apiErrorMessage("teks", "Gagal")).toBe("Gagal");
+	});
+
+	it("field bertipe non-string diabaikan", () => {
+		expect(apiErrorMessage({ detail: 413, title: 404 }, "Gagal")).toBe("Gagal");
+	});
+});
 
 describe("formatDate — yyyy-mm-dd → Indonesia (DD Bulan YYYY)", () => {
 	it("format standar", () => {
