@@ -14,6 +14,7 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { JENIS_MUTASI_OPTIONS } from "@/lib/riwayat-constants";
+import { cn } from "@/lib/utils";
 import type { RiwayatMutasiQuery, SingleResultRiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
 import type { SingleResultPegawaiResponseMutasiContext } from "@/types/pegawai/pegawai";
 import type { SingleResultDetailDasarGajiNominal } from "@/types/penggajian/detail-dasar-gaji";
@@ -201,24 +202,31 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	// ── Gaji lookup ──
 
 	const [isSearchingGaji, setIsSearchingGaji] = useState(false);
+	// ponytail: lookup feedback inline, bukan toast — aturan "toast = hasil mutasi only"
+	const [gajiLookup, setGajiLookup] = useState<{
+		tone: "success" | "warning" | "destructive";
+		text: string;
+	} | null>(null);
 
 	const handleCariGaji = async () => {
 		if (!golonganId || !mkgTahun) return;
 		setIsSearchingGaji(true);
+		setGajiLookup(null);
 		try {
 			// ponytail: assume masaKerja = mkgTahun (tahun saja). BE confirmed this interpretation.
 			const res = await fetch(`/api/proxy/penggajian/detail-dasar-gaji/${golonganId}/${mkgTahun}`);
-			if (!res.ok) return;
+			// ponytail: throw agar catch menangani keduanya — satu literal pesan, bukan duplikat
+			if (!res.ok) throw new Error("Gagal mencari gaji pokok, isi manual");
 			const body = (await res.json()) as SingleResultDetailDasarGajiNominal;
 			if (body.data?.nominal != null) {
 				setValue("gajiPokok", String(body.data.nominal));
-				toast.success("Gaji pokok ditemukan");
+				setGajiLookup({ tone: "success", text: "Gaji pokok ditemukan dan diisi otomatis" });
 			} else {
-				toast.info("Gaji pokok tidak ditemukan, isi manual");
+				setGajiLookup({ tone: "warning", text: "Gaji pokok tidak ditemukan, isi manual" });
 			}
 		} catch {
 			// 404/error → field dikosongkan, HR isi manual
-			toast.info("Gagal mencari gaji pokok, isi manual");
+			setGajiLookup({ tone: "destructive", text: "Gagal mencari gaji pokok, isi manual" });
 		} finally {
 			setIsSearchingGaji(false);
 		}
@@ -229,6 +237,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 
 	const onJenisMutasiChange = (v: string) => {
 		setValue("jenisMutasi", v);
+		setGajiLookup(null);
 		// ponytail: always clear all conditional fields — setValue(undefined) is cheap
 		// and avoids tracking which section was visible before the change
 		setValue("golonganId", undefined);
@@ -466,18 +475,25 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 								<div className="space-y-4 pl-2 border-l-2 border-primary/20">
 									<p className="text-xs font-medium text-muted-foreground">Data Golongan</p>{" "}
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+										{" "}
 										<FieldFk
 											label="Golongan (Baru)"
 											options={golonganOpts}
 											value={watch("golonganId")}
-											onChange={(v) => setValue("golonganId", v)}
+											onChange={(v) => {
+												setValue("golonganId", v);
+												setGajiLookup(null);
+											}}
 											error={e("golonganId")}
-										/>
+										/>{" "}
 										<FieldText
 											label="MKG (Tahun)"
 											type="number"
 											value={watch("mkgTahun")}
-											onChange={(v) => setValue("mkgTahun", v)}
+											onChange={(v) => {
+												setValue("mkgTahun", v);
+												setGajiLookup(null);
+											}}
 											error={e("mkgTahun")}
 										/>
 										<FieldText
@@ -544,6 +560,18 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 													? "Pilih golongan & isi MKG untuk mencari gaji pokok"
 													: "Klik cari untuk mengisi otomatis dari data penggajian"}
 											</p>
+											{gajiLookup && (
+												<output
+													className={cn(
+														"block text-xs font-medium",
+														gajiLookup.tone === "success" && "text-success",
+														gajiLookup.tone === "warning" && "text-warning",
+														gajiLookup.tone === "destructive" && "text-destructive",
+													)}
+												>
+													{gajiLookup.text}
+												</output>
+											)}
 										</div>
 									)}
 								</div>
