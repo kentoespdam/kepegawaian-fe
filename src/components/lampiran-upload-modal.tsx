@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { apiErrorMessage } from "@/lib/utils";
 
 export interface LampiranUploadModalProps {
 	open: boolean;
@@ -58,7 +59,7 @@ export function LampiranUploadModal({
 			const res = await fetch(uploadUrl, { method: "POST", body: fd });
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Gagal mengunggah");
+				throw new Error(apiErrorMessage(body, "Gagal mengunggah"));
 			}
 			toast.success("Lampiran berhasil diunggah");
 			qc.invalidateQueries({ queryKey: [...queryKey, ref, refId] });
