@@ -162,7 +162,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 		queryFn: async () => {
 			if (!searchQuery_enabled) return [];
 			const res = await fetch(
-				`/api/proxy/pegawai/list?nama=${encodeURIComponent(debouncedSearch)}&nipam=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF&size=20`,
+				`/api/proxy/pegawai/list?search=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF`,
 			);
 			if (!res.ok) throw new Error("Gagal mencari pegawai");
 			const body = (await res.json()) as ListResultPegawaiListResponse;
