@@ -141,7 +141,8 @@ Jangan re-litigasi.
   - Edit mode: label tombol menjadi **"Ganti" / "Ubah"** jika sudah ada signer terpilih
 - [x] Modal (`<Dialog>` dari shadcn/Base UI):
   - Satu `<input>` search — debounce 300ms, trigger fetch jika ≥2 karakter
-  - Fetch: `GET /api/proxy/pegawai/list?nama={q}&nipam={q}&statusKerja=KARYAWAN_AKTIF&size=20`
+  - Fetch: `GET /api/proxy/pegawai/list?search={q}&statusKerja=KARYAWAN_AKTIF`
+    (kontrak baru 2026-07-31 — `nama`/`nipam` digabung jadi `search`; `page`/`size`/`sortBy`/`sortDirection` dihapus dari endpoint ini)
   - Hasil: tabel mini (NIPAM · Nama · Jabatan · Organisasi)
   - `isPending` → skeleton rows · `isError` → pesan inline · hasil kosong → "Tidak ditemukan"
   - Klik baris → autofill + tutup modal

@@ -51,6 +51,7 @@ export interface PegawaiSearchParams extends PageQuery {
 		| "DIREKOMENDASIKAN"
 		| "DITOLAK";
 	jenisKelamin?: "LAKI_LAKI" | "PEREMPUAN";
+	search?: string;
 }
 
 export interface JenisKitasResponse {

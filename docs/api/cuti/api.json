@@ -574,26 +574,7 @@
 				"operationId": "list",
 				"parameters": [
 					{ "name": "parentId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
-					}
+					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } }
 				],
 				"responses": {
 					"200": {
@@ -1110,11 +1091,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
+					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"unpaged": { "type": "boolean" }
+					"sort": { "$ref": "#/components/schemas/SortObject" }
 				}
 			},
 			"SortObject": {

@@ -62,14 +62,11 @@
 				"tags": ["riwayat-sp-controller"],
 				"operationId": "update_1",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{
-						"name": "request",
-						"in": "query",
-						"required": true,
-						"schema": { "$ref": "#/components/schemas/RiwayatSpPutRequest" }
-					}
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatSpPutRequest" } } }
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -316,14 +313,9 @@
 			"post": {
 				"tags": ["riwayat-sp-controller"],
 				"operationId": "create_1",
-				"parameters": [
-					{
-						"name": "request",
-						"in": "query",
-						"required": true,
-						"schema": { "$ref": "#/components/schemas/RiwayatSpPostRequest" }
-					}
-				],
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatSpPostRequest" } } }
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -442,14 +434,9 @@
 			"post": {
 				"tags": ["lampiran-sk-controller"],
 				"operationId": "create_2",
-				"parameters": [
-					{
-						"name": "request",
-						"in": "query",
-						"required": true,
-						"schema": { "$ref": "#/components/schemas/LampiranSkPostRequest" }
-					}
-				],
+				"requestBody": {
+					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/LampiranSkPostRequest" } } }
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -676,31 +663,7 @@
 							]
 						}
 					},
-					{
-						"name": "golonganId",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
-					},
-					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
-					}
+					{ "name": "golonganId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } }
 				],
 				"responses": {
 					"200": {
@@ -1633,11 +1596,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
+					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"unpaged": { "type": "boolean" }
+					"sort": { "$ref": "#/components/schemas/SortObject" }
 				}
 			},
 			"PegawaiResponse": {

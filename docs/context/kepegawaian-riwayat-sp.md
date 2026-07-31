@@ -191,9 +191,25 @@ bukan via user input langsung. Error jika tombol picker belum digunakan: `"Pilih
 Form tidak menyediakan combobox Organisasi/Jabatan maupun text input bebas untuk Penanda Tangan.
 Sebagai gantinya: satu tombol **"Cari Penanda Tangan"** membuka modal search pegawai.
 
-Endpoint picker: `GET /pegawai/list?nama={q}&nipam={q}&statusKerja=KARYAWAN_AKTIF&size=20`
+Endpoint picker: `GET /pegawai/list?search={q}&statusKerja=KARYAWAN_AKTIF`
 Response: `PegawaiListResponse { id, nipam, nama, organisasi: {id, nama}, jabatan: {id, nama} }`
-— endpoint sudah ada, **tidak perlu BE requirement**.
+
+BE sudah menyesuaikan endpoint ini khusus untuk picker (kontrak baru, 2026-07-31):
+
+| Param | Status | Catatan |
+|---|---|---|
+| `search` | optional | menggantikan `nama` + `nipam` — satu keyword dicocokkan ke keduanya di BE |
+| `statusKerja` | optional | server default `KARYAWAN_AKTIF` (**tidak** tertulis di spec) |
+
+`page` / `size` / `sortBy` / `sortDirection` **dihapus** dari `/pegawai/list` — jangan kirim `&size=20`.
+
+`statusKerja` tetap dikirim eksplisit meski optional: default-nya invisible di OpenAPI
+(tidak ada field `default`), jadi param eksplisit = dokumentasi di call-site + kebal drift
+bila BE mengubah default. Biaya nol.
+
+> ⚠️ `PegawaiSearchParams` (generated) tetap memuat `nama`/`nipam` karena generator me-*merge*
+> query param seluruh path domain `pegawai` — `GET /pegawai` (tabel berhalaman) masih memakainya.
+> Keduanya **tidak** berlaku untuk `/pegawai/list`.
 
 Autofill saat pegawai dipilih:
 
@@ -205,7 +221,7 @@ Autofill saat pegawai dipilih:
 | `jabatanPenandaTangan` | `pegawai.jabatan.nama` (read-only display) |
 
 Desain modal:
-- Search input tunggal → dikirim ke `?nama={q}&nipam={q}` sekaligus
+- Search input tunggal → dikirim sebagai `?search={q}` (satu param)
 - Search-as-you-type, debounce 300ms, trigger ≥2 karakter
 - Kolom hasil: NIPAM · Nama · Jabatan · Organisasi
 - Klik baris → pilih & tutup modal

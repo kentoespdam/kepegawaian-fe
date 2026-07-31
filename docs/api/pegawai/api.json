@@ -292,33 +292,7 @@
 				"tags": ["pegawai-controller"],
 				"operationId": "list",
 				"parameters": [
-					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "nik", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "statusPegawai",
-						"in": "query",
-						"required": false,
-						"schema": {
-							"type": "string",
-							"enum": ["KONTRAK", "CAPEG", "PEGAWAI", "CALON_HONORER", "HONORER", "NON_PEGAWAI"]
-						}
-					},
-					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{
-						"name": "organisasiId",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
-					},
-					{ "name": "profesiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{
-						"name": "golonganId",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
-					},
-					{ "name": "gradeId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } },
 					{
 						"name": "statusKerja",
 						"in": "query",
@@ -336,31 +310,6 @@
 								"DITOLAK"
 							]
 						}
-					},
-					{
-						"name": "jenisKelamin",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "enum": ["LAKI_LAKI", "PEREMPUAN"] }
-					},
-					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
 					}
 				],
 				"responses": {
@@ -882,11 +831,11 @@
 					"size": { "type": "integer", "format": "int32" },
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PegawaiTableResponse" } },
 					"number": { "type": "integer", "format": "int32" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
 					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
 				}
 			},
@@ -971,11 +920,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
+					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"unpaged": { "type": "boolean" }
+					"sort": { "$ref": "#/components/schemas/SortObject" }
 				}
 			},
 			"PegawaiTableResponse": {
