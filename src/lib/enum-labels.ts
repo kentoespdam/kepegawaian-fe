@@ -60,6 +60,39 @@ export function statusKerjaColor(s?: string): string | undefined {
 	return undefined;
 }
 
+// ─── Status Approval Cuti ───────────────────────────────────────────────────
+
+const STATUS_APPROVAL: Record<string, string> = {
+	PENDING: "Menunggu",
+	APPROVED: "Disetujui",
+	CONFIRMED: "Dikonfirmasi",
+	REJECTED: "Ditolak",
+	CANCELED: "Dibatalkan",
+	RETURNED: "Dikembalikan",
+};
+
+export function labelApprovalStatus(s?: string): string {
+	return s ? (STATUS_APPROVAL[s] ?? s) : "-";
+}
+
+/** Tone semantik badge status approval — ikon + teks + warna (a11y: bukan warna saja). */
+export function approvalStatusTone(s?: string): string {
+	switch (s) {
+		case "APPROVED":
+		case "CONFIRMED":
+			return "text-success border-success/30 bg-success/10";
+		case "REJECTED":
+			return "text-destructive border-destructive/30 bg-destructive/10";
+		case "PENDING":
+		case "RETURNED":
+			return "text-warning border-warning/30 bg-warning/10";
+		case "CANCELED":
+			return "text-muted-foreground border-border bg-muted/30";
+		default:
+			return "text-muted-foreground border-border bg-muted/30";
+	}
+}
+
 // ─── Pendidikan ─────────────────────────────────────────────────────────────
 
 export function formatPendidikan(p?: PendidikanDashboard): string | undefined {

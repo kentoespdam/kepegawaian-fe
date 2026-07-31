@@ -20,17 +20,18 @@ const ITEM_ICONS: Record<string, typeof FileText> = {
 // ponytail: title map untuk header dinamis
 const PAGE_TITLES: Record<string, string> = {
 	mutasi: "Riwayat Mutasi",
+	cuti: "Riwayat Cuti",
 	sk: "Riwayat Surat Keputusan",
 	kontrak: "Riwayat Kontrak Kerja",
 	sp: "Riwayat Surat Peringatan",
 } as const;
 
 const RAIL_ITEMS = [
-	{ id: "mutasi", label: "Data Mutasi", href: "./mutasi", active: true },
-	{ id: "cuti", label: "Data Penggunaan Hak Cuti", href: "#", active: false, soon: true },
-	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "./kontrak", active: true },
-	{ id: "sk", label: "Riwayat Surat Keputusan", href: "./sk", active: true },
-	{ id: "sp", label: "Riwayat Surat Peringatan", href: "./sp", active: true },
+	{ id: "mutasi", label: "Data Mutasi", href: "./mutasi" },
+	{ id: "cuti", label: "Data Penggunaan Hak Cuti", href: "./cuti" },
+	{ id: "kontrak", label: "Riwayat Kontrak Kerja", href: "./kontrak" },
+	{ id: "sk", label: "Riwayat Surat Keputusan", href: "./sk" },
+	{ id: "sp", label: "Riwayat Surat Peringatan", href: "./sp" },
 ] as const;
 
 function RailSkeleton() {
@@ -46,6 +47,7 @@ function RailSkeleton() {
 	);
 }
 
+// ponytail: semua 5 kategori aktif sejak cuti dibuka — cabang disabled + badge "Segera" dihapus (dead code)
 function Rail({ currentPage }: { currentPage: string }) {
 	return (
 		<nav className="space-y-0.5 w-full" aria-label="Kategori Riwayat">
@@ -53,51 +55,30 @@ function Rail({ currentPage }: { currentPage: string }) {
 				const isActive = currentPage === item.id;
 				const Icon = ITEM_ICONS[item.id];
 
-				if (item.active) {
-					return (
-						<Link
-							key={item.id}
-							href={item.href}
-							className={cn(
-								"group relative flex items-center h-11 px-3 rounded-md text-sm font-medium transition-all duration-150",
-								isActive
-									? "bg-accent text-foreground"
-									: "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
-							)}
-						>
-							{/* Left border accent — active only */}
-							<span
-								className={cn(
-									"absolute inset-y-0 left-0 w-0.5 bg-primary rounded-r transition-transform duration-150",
-									isActive ? "scale-y-100" : "scale-y-0",
-								)}
-							/>
-							<Icon
-								className={cn(
-									"size-5 shrink-0 mr-3 transition-colors duration-150",
-									isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
-								)}
-							/>
-							<span>{item.label}</span>
-						</Link>
-					);
-				}
-
-				// ponytail: disabled items — badge "Segera" + opacity, bukan cursor-not-allowed
 				return (
-					<div
+					<Link
 						key={item.id}
-						className="flex items-center h-11 px-3 rounded-md text-sm text-muted-foreground opacity-40 pointer-events-none select-none"
-						title="Fitur akan hadir"
-					>
-						<Icon className="size-5 shrink-0 mr-3" />
-						<span className="flex-1 truncate">{item.label}</span>
-						{item.soon && (
-							<span className="inline-flex items-center rounded-full border border-warning/30 bg-warning/5 px-2 py-0.5 text-[10px] font-medium text-warning">
-								Segera
-							</span>
+						href={item.href}
+						className={cn(
+							"group relative flex items-center h-11 px-3 rounded-md text-sm font-medium transition-all duration-150",
+							isActive ? "bg-accent text-foreground" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
 						)}
-					</div>
+					>
+						{/* Left border accent — active only */}
+						<span
+							className={cn(
+								"absolute inset-y-0 left-0 w-0.5 bg-primary rounded-r transition-transform duration-150",
+								isActive ? "scale-y-100" : "scale-y-0",
+							)}
+						/>
+						<Icon
+							className={cn(
+								"size-5 shrink-0 mr-3 transition-colors duration-150",
+								isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground",
+							)}
+						/>
+						<span>{item.label}</span>
+					</Link>
 				);
 			})}
 		</nav>

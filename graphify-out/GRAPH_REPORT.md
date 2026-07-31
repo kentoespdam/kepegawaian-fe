@@ -1,308 +1,413 @@
-# Graph Report - .  (2026-07-27)
+# Graph Report - .  (2026-08-01)
 
 ## Corpus Check
-- 180 files · ~44,097 words
+- 0 files · ~0 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1033 nodes · 2832 edges · 49 communities
-- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 3 edges (avg confidence: 0.5)
+- 1249 nodes · 3383 edges · 73 communities
+- Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 9 edges (avg confidence: 0.53)
 - Token cost: 0 input · 0 output
 
 ## Community Hubs (Navigation)
-- Core Pages Layout
-- Master Config Types
-- Dashboard Biodata
-- Toolbar Filter Edit
-- Lampiran Riwayat Types
-- Sidebar Shell
-- Master Entity Types
-- Avatar Breadcrumb UI
-- Badge Dialog
-- Filter Login
-- Gaji Batch
-- Profesi CRUD Form
-- Pegawai Data Types
-- Auth Session
-- Modal Dialog
-- Combobox Command
-- Biodata Management
-- Dropdown Menu
-- Cuti Leave
-- Search Params Gaji
-- Jenjang Level
-- Tunjangan
-- Dasar Gaji
-- Approval Workflow
-- Paging Gaji Profil
-- Sanksi Sanction
-- Shared Enums
-- Profesi APD
-- Detail Dasar Gaji
-- Switch Form
-- Cuti Kuota
-- Jenis SP
-- Organisasi
-- Data Table UI
-- Jabatan
-- Parameter Setting
-- Keahlian
-- Alasan Berhenti
-- Golongan
-- Hari Libur
-- Rumah Dinas
-- Pelatihan
-- Pengalaman Kerja
-- Change Password
-- Kartu Identitas
-- Keluarga
-- Pendidikan
-- Lampiran Request
-- Profil Detail
+- Community 0
+- Community 1
+- Community 2
+- Community 3
+- Community 4
+- Community 5
+- Community 6
+- Community 7
+- Community 8
+- Community 9
+- Community 10
+- Community 11
+- Community 12
+- Community 13
+- Community 14
+- Community 15
+- Community 16
+- Community 17
+- Community 18
+- Community 19
+- Community 20
+- Community 21
+- Community 22
+- Community 23
+- Community 24
+- Community 25
+- Community 26
+- Community 27
+- Community 28
+- Community 29
+- Community 30
+- Community 31
+- Community 32
+- Community 33
+- Community 34
+- Community 35
+- Community 36
+- Community 37
+- Community 38
+- Community 39
+- Community 40
+- Community 41
+- Community 42
+- Community 43
+- Community 44
+- Community 45
+- Community 46
+- Community 47
+- Community 48
+- Community 49
+- Community 50
+- Community 51
+- Community 52
+- Community 53
+- Community 54
+- Community 55
+- Community 56
+- Community 57
+- Community 58
+- Community 59
+- Community 60
+- Community 61
+- Community 62
+- Community 63
+- Community 64
+- Community 65
+- Community 66
+- Community 67
+- Community 68
+- Community 69
 
 ## God Nodes (most connected - your core abstractions)
-1. `cn()` - 152 edges
+1. `cn()` - 172 edges
 2. `PageQuery` - 81 edges
 3. `can()` - 48 edges
-4. `Page` - 46 edges
+4. `Page` - 47 edges
 5. `MasterEntityTypes` - 45 edges
 6. `verifySession` - 45 edges
 7. `getRoles()` - 44 edges
 8. `Envelope` - 43 edges
-9. `SortObject` - 40 edges
-10. `PageableObject` - 40 edges
+9. `PageEnvelope` - 40 edges
+10. `SortObject` - 40 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `AlertDialogOverlay()` --calls--> `cn()`  [EXTRACTED]
   src/components/ui/alert-dialog.tsx → src/lib/utils.ts
 - `AlertDialogMedia()` --calls--> `cn()`  [EXTRACTED]
   src/components/ui/alert-dialog.tsx → src/lib/utils.ts
-- `CommandSeparator()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/command.tsx → src/lib/utils.ts
-- `CommandShortcut()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/command.tsx → src/lib/utils.ts
-- `DialogOverlay()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/dialog.tsx → src/lib/utils.ts
+- `AvatarImage()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/avatar.tsx → src/lib/utils.ts
+- `AvatarBadge()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/avatar.tsx → src/lib/utils.ts
+- `AvatarGroup()` --calls--> `cn()`  [EXTRACTED]
+  src/components/ui/avatar.tsx → src/lib/utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (49 total, 0 thin omitted)
+## Communities (73 total, 0 thin omitted)
 
-### Community 0 - "Core Pages Layout"
-Cohesion: 0.13
-Nodes (38): DataPegawaiPage(), TambahPegawaiPage(), TerminasiPage(), AppLayout(), AlasanBerhentiPage(), EntityFormModal(), GolonganPage(), GradePage() (+30 more)
-
-### Community 1 - "Master Config Types"
-Cohesion: 0.10
-Nodes (35): ADR-0008, EntityFormModalProps, FormField, Column, alasanBerhentiConfig, EntityConfig, FKSource, makeConfig() (+27 more)
-
-### Community 2 - "Dashboard Biodata"
+### Community 0 - "Community 0"
 Cohesion: 0.07
-Nodes (38): DashboardClient(), DashboardPage(), labelAgama(), labelJk(), labelKawin(), SectionBiodata(), SectionCard(), formatRp() (+30 more)
+Nodes (69): ADR-0001, ADR-0008, DataPegawaiPage(), TambahPegawaiPage(), TerminasiPage(), AppLayout(), AlasanBerhentiPage(), EntityFormModalProps (+61 more)
 
-### Community 3 - "Toolbar Filter Edit"
-Cohesion: 0.08
-Nodes (37): DataPegawaiToolbar(), fkLabelMap(), labelMap(), PopoverFilterContent(), statusKerjaLabel(), statusPegawaiLabel(), FormValues, Props (+29 more)
+### Community 1 - "Community 1"
+Cohesion: 0.06
+Nodes (55): MasterEntityName, MasterEntityTypes, GradeQuery, HariLiburListResponse, HariLiburPostRequest, HariLiburQuery, HariLiburSearchParams, ListResultHariLiburListResponse (+47 more)
 
-### Community 4 - "Lampiran Riwayat Types"
+### Community 2 - "Community 2"
 Cohesion: 0.06
 Nodes (42): LampiranSkAcceptRequest, LampiranSkPostRequest, ListResultLampiranSkQuery, AlasanBerhentiResponse, JenisAksiKontrak, JenisRiwayatKepegawaian, ListResultRiwayatSkQuery, PagePegawaiResponse (+34 more)
 
-### Community 5 - "Sidebar Shell"
+### Community 3 - "Community 3"
 Cohesion: 0.08
-Nodes (36): AppShell(), MODULE_ENTITY_MAP, MODULES, Sidebar(), SidebarContent(), SidebarContext, SidebarContextProps, SidebarFooter() (+28 more)
+Nodes (30): EntityFormModal(), BadgeItem, BadgeManager(), BadgeManagerProps, badgeSchema, CrudForm(), LampiranCardProps, LampiranItem (+22 more)
 
-### Community 6 - "Master Entity Types"
+### Community 4 - "Community 4"
+Cohesion: 0.06
+Nodes (38): CutiJenisPostRequest, CutiJenisPutRequest, CutiJenisResponse, JenisSearchParams, ListResultCutiJenisResponse, PageCutiJenisResponse, PageResultPageCutiJenisResponse, SingleResultCutiJenisResponse (+30 more)
+
+### Community 5 - "Community 5"
 Cohesion: 0.08
-Nodes (38): MasterEntityName, MasterEntityTypes, GradeListResponse, GradePostRequest, GradeQuery, GradeSearchParams, ListResultGradeListResponse, ListResultGradeQuery (+30 more)
+Nodes (34): Separator(), Sidebar(), SidebarContent(), SidebarContext, SidebarContextProps, SidebarFooter(), SidebarGroup(), SidebarGroupAction() (+26 more)
 
-### Community 7 - "Avatar Breadcrumb UI"
+### Community 6 - "Community 6"
+Cohesion: 0.12
+Nodes (27): Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage(), BreadcrumbSeparator(), Calendar() (+19 more)
+
+### Community 7 - "Community 7"
 Cohesion: 0.11
-Nodes (31): Avatar(), AvatarBadge(), AvatarFallback(), AvatarGroup(), AvatarGroupCount(), AvatarImage(), Breadcrumb(), BreadcrumbEllipsis() (+23 more)
+Nodes (23): DashboardClient(), DashboardPage(), labelAgama(), labelJk(), labelKawin(), SectionBiodata(), SectionCard(), formatRp() (+15 more)
 
-### Community 8 - "Badge Dialog"
-Cohesion: 0.09
-Nodes (27): BadgeItem, BadgeManager(), BadgeManagerProps, badgeSchema, ConfirmDeleteDialog(), ConfirmDeleteDialogProps, SanksiManager(), SanksiManagerProps (+19 more)
-
-### Community 9 - "Filter Login"
-Cohesion: 0.09
-Nodes (23): DataPegawaiToolbarProps, FilterDef, POPOVER_FILTERS, STATUS_OPTIONS, Data, LoginForm(), schema, DataTableToolbar() (+15 more)
-
-### Community 10 - "Gaji Batch"
+### Community 8 - "Community 8"
 Cohesion: 0.07
 Nodes (30): BatchSearchParams, GajiBatchMasterPostRequest, GajiBatchMasterProsesPostRequest, GajiBatchMasterProsesResponse, GajiBatchRootErrorLogsResponse, GajiBatchRootLampiranMiniResponse, GajiBatchRootPostRequest, GajiBatchRootProcessRequest (+22 more)
 
-### Community 11 - "Profesi CRUD Form"
-Cohesion: 0.15
-Nodes (19): ProfesiForm(), ProfesiFormProps, profesiDefaults(), ProfesiFormValues, profesiSchema, CrudForm(), CrudFormProps, FKCombobox() (+11 more)
+### Community 9 - "Community 9"
+Cohesion: 0.09
+Nodes (30): RiwayatMutasiQuery, RiwayatSkQuery, JenisKitasResponse, KartuIdentitasMiniResponse, PagePegawaiTableResponse, PageResultPagePegawaiTableResponse, PegawaiBatchIdsRequest, PegawaiListResponse (+22 more)
 
-### Community 12 - "Pegawai Data Types"
+### Community 10 - "Community 10"
 Cohesion: 0.10
-Nodes (24): GradeResponse, JenisKitasResponse, KartuIdentitasMiniResponse, ListResultPegawaiListResponse, PagePegawaiTableResponse, PageResultPagePegawaiTableResponse, PegawaiBatchIdsRequest, PegawaiPatchGaji (+16 more)
+Nodes (21): Avatar(), AvatarBadge(), AvatarFallback(), AvatarGroup(), AvatarGroupCount(), AvatarImage(), DropdownMenu(), DropdownMenuCheckboxItem() (+13 more)
 
-### Community 13 - "Auth Session"
-Cohesion: 0.20
-Nodes (17): ADR-0001, ADR-0010, appwriteRequest(), fetchAccount(), mintCache, mintJWT(), readSession(), resolveToken() (+9 more)
-
-### Community 14 - "Modal Dialog"
-Cohesion: 0.12
-Nodes (14): Dialog(), DialogContent(), DialogDescription(), DialogFooter(), DialogHeader(), DialogOverlay(), DialogTitle(), Sheet() (+6 more)
-
-### Community 15 - "Combobox Command"
-Cohesion: 0.16
-Nodes (19): FKComboboxFilterProps, FKComboboxProps, Command(), CommandDialog(), CommandEmpty(), CommandGroup(), CommandInput(), CommandItem() (+11 more)
-
-### Community 16 - "Biodata Management"
-Cohesion: 0.23
-Nodes (22): BiodataResponse, PegawaiPatchProfil, PegawaiPostRequest, PegawaiPutRequest, BiodataDetail, BiodataPatchRequest, BiodataPostRequest, BiodataPutRequest (+14 more)
-
-### Community 17 - "Dropdown Menu"
+### Community 11 - "Community 11"
 Cohesion: 0.13
-Nodes (15): DropdownMenu(), DropdownMenuCheckboxItem(), DropdownMenuContent(), DropdownMenuItem(), DropdownMenuLabel(), DropdownMenuRadioItem(), DropdownMenuSeparator(), DropdownMenuShortcut() (+7 more)
+Nodes (19): FormValues, KontrakFormSheet(), normalizeFk(), Props, schema, useGolonganOptions(), FormValues, Props (+11 more)
 
-### Community 18 - "Cuti Leave"
-Cohesion: 0.10
-Nodes (20): CutiJenisPostRequest, CutiJenisPutRequest, CutiJenisResponse, JenisSearchParams, ListResultCutiJenisResponse, PageCutiJenisResponse, PageResultPageCutiJenisResponse, SingleResultCutiJenisResponse (+12 more)
+### Community 12 - "Community 12"
+Cohesion: 0.08
+Nodes (24): DasarGajiPostRequest, DasarGajiPutRequest, DasarGajiResponse, DasarGajiSearchParams, ListResultDasarGajiResponse, PageDasarGajiResponse, PageResultPageDasarGajiResponse, SingleResultDasarGajiResponse (+16 more)
 
-### Community 19 - "Search Params Gaji"
-Cohesion: 0.10
-Nodes (19): RiwayatSearchParams, KepegawaianSearchParams, SingleResultObject, JenisKitasSearchParams, PegawaiSearchParams, GajiPhdpPostRequest, GajiPhdpPutRequest, GajiPhdpResponse (+11 more)
+### Community 13 - "Community 13"
+Cohesion: 0.14
+Nodes (18): Field(), fetchSection(), hubunganKeluarga(), jenisMutasi(), rp(), SectionConf, SectionRightPanel(), SECTIONS (+10 more)
 
-### Community 20 - "Jenjang Level"
+### Community 14 - "Community 14"
+Cohesion: 0.16
+Nodes (19): SectionLeftPanel(), Props, RingkasanPanel(), Skeleton(), formatPendidikan(), labelAgama(), labelJk(), labelKawin() (+11 more)
+
+### Community 15 - "Community 15"
+Cohesion: 0.20
+Nodes (20): PopoverFilterContent(), FormValues, Props, schema, SheetEditGaji(), toDefaults(), useGajiProfilOptions(), FieldSelect() (+12 more)
+
+### Community 16 - "Community 16"
+Cohesion: 0.21
+Nodes (23): BiodataResponse, PegawaiPatchProfil, PegawaiPostRequest, PegawaiPutRequest, BiodataDetail, BiodataPatchRequest, BiodataPostRequest, BiodataPutRequest (+15 more)
+
+### Community 17 - "Community 17"
 Cohesion: 0.11
 Nodes (17): JenjangPendidikanPostRequest, JenjangPendidikanPutRequest, JenjangPendidikanSearchParams, ListResultJenjangPendidikanResponse, PageJenjangPendidikanResponse, PageResultPageJenjangPendidikanResponse, SingleResultJenjangPendidikanResponse, LevelPostRequest (+9 more)
 
-### Community 21 - "Tunjangan"
-Cohesion: 0.10
-Nodes (18): GajiTunjanganPostRequest, GajiTunjanganPutRequest, GajiTunjanganResponse, JenisTunjangan, ListResultMapStringObject, PageGajiTunjanganResponse, PageResultPageGajiTunjanganResponse, SingleResultGajiTunjanganResponse (+10 more)
-
-### Community 22 - "Dasar Gaji"
+### Community 18 - "Community 18"
 Cohesion: 0.12
-Nodes (16): DasarGajiPostRequest, DasarGajiPutRequest, DasarGajiSearchParams, ListResultDasarGajiResponse, PageDasarGajiResponse, SingleResultDasarGajiResponse, SingleResultPageDasarGajiResponse, GajiPendapatanNonPajakPostRequest (+8 more)
+Nodes (17): CutiKuotaImportRequest, CutiKuotaPegawaiResponse, CutiKuotaPostRequest, CutiKuotaPutRequest, CutiKuotaResponse, CutiKuotaSisa, KuotaSearchParams, PageCutiKuotaResponse (+9 more)
 
-### Community 23 - "Approval Workflow"
-Cohesion: 0.20
-Nodes (15): ApprovalSearchParams, CutiApprovalMiniResponse, CutiApprovalPostRequest, PageCutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse, CutiPengajuanMiniResponse, CutiPengajuanResponse, RiwayatMutasiQuery (+7 more)
+### Community 19 - "Community 19"
+Cohesion: 0.16
+Nodes (11): CURRENT_YEAR, CUTI_COLUMNS, KuotaStrip(), STATUS_ICONS, StatusBadge(), YEAR_OPTIONS, cellContent(), DataTable() (+3 more)
 
-### Community 24 - "Paging Gaji Profil"
-Cohesion: 0.17
-Nodes (11): PageParams, PageView, GajiProfilPostRequest, GajiProfilPutRequest, ListResultGajiProfilResponse, PageGajiProfilResponse, PageResultPageGajiProfilResponse, ProfilSearchParams (+3 more)
-
-### Community 25 - "Sanksi Sanction"
-Cohesion: 0.15
-Nodes (14): RiwayatSpQuery, JenisSpSimple, ListResultSanksiJenisSpList, ListResultSanksiQuery, PageResultPageSanksiQuery, PageSanksiQuery, PatchSanksiJenisSpRequest, SanksiJenisSpList (+6 more)
-
-### Community 26 - "Shared Enums"
+### Community 20 - "Community 20"
 Cohesion: 0.23
-Nodes (9): Biodata, EnumOption, Grade, HttpStatusText, Jabatan, KodePajak, ListResultEnumOption, Organisasi (+1 more)
+Nodes (12): CrudFormProps, FKCombobox(), SelectContent(), SelectGroup(), SelectItem(), SelectLabel(), SelectScrollDownButton(), SelectScrollUpButton() (+4 more)
 
-### Community 27 - "Profesi APD"
-Cohesion: 0.14
-Nodes (13): AlatKerjaPostRequest, AlatKerjaRow, ApdPostRequest, ApdRow, GradeMiniResponse, ListResultProfesiListResponse, PageProfesiDetail, PageResultPageProfesiDetail (+5 more)
+### Community 21 - "Community 21"
+Cohesion: 0.19
+Nodes (12): ConfirmDeleteDialog(), ConfirmDeleteDialogProps, AlertDialog(), AlertDialogAction(), AlertDialogCancel(), AlertDialogContent(), AlertDialogDescription(), AlertDialogFooter() (+4 more)
 
-### Community 28 - "Detail Dasar Gaji"
-Cohesion: 0.17
-Nodes (12): DasarGaji, DetailDasarGaji, DetailDasarGajiPostRequest, DetailDasarGajiPutRequest, DetailDasarGajiResponse, DetailDasarGajiSearchParams, ListResultDetailDasarGajiResponse, PageDetailDasarGajiResponse (+4 more)
+### Community 22 - "Community 22"
+Cohesion: 0.28
+Nodes (12): appwriteRequest(), fetchAccount(), mintCache, mintJWT(), readSession(), sessionCookieNames(), tokenCookieOptions(), config (+4 more)
 
-### Community 29 - "Switch Form"
+### Community 23 - "Community 23"
+Cohesion: 0.19
+Nodes (12): biodataColumns, DataPegawaiClient(), FILTER_PARAMS, pegawaiColumns, TABS, columns, TABS, TerminasiClient() (+4 more)
+
+### Community 24 - "Community 24"
+Cohesion: 0.19
+Nodes (6): inter, metadata, handleSessionExpired(), Providers(), api, ApiError
+
+### Community 25 - "Community 25"
+Cohesion: 0.16
+Nodes (11): PageParams, PageView, GajiParameterSettingPostRequest, GajiParameterSettingPutRequest, GajiParameterSettingResponse, ListResultGajiParameterSettingResponse, PageGajiParameterSettingResponse, PageResultPageGajiParameterSettingResponse (+3 more)
+
+### Community 26 - "Community 26"
+Cohesion: 0.24
+Nodes (10): KONTRAK_COLUMNS, KontrakPage(), val(), JENIS_AKSI_KONTRAK_OPTIONS, JENIS_MUTASI_OPTIONS, JENIS_SK_OPTIONS, labelAksiKontrak(), labelJenisMutasi() (+2 more)
+
+### Community 27 - "Community 27"
+Cohesion: 0.23
+Nodes (11): MutasiLampiranCard(), Props, MUTASI_COLUMNS, MutasiPage(), PairCell(), rp(), SkCell(), val() (+3 more)
+
+### Community 28 - "Community 28"
+Cohesion: 0.22
+Nodes (9): FormValues, normalizeFk(), Props, schema, SkFormSheet(), useGolonganOptions(), Checkbox(), apiErrorMessage() (+1 more)
+
+### Community 29 - "Community 29"
+Cohesion: 0.30
+Nodes (11): FKComboboxFilterProps, FKComboboxProps, Command(), CommandDialog(), CommandEmpty(), CommandGroup(), CommandInput(), CommandItem() (+3 more)
+
+### Community 30 - "Community 30"
+Cohesion: 0.15
+Nodes (6): PdfViewer(), PdfViewerProps, MOCK_PDF_BUFFER, mockCreateObjectURL, mockResizeObserver, mockRevokeObjectURL
+
+### Community 31 - "Community 31"
+Cohesion: 0.24
+Nodes (12): ApprovalSearchParams, CutiApprovalMiniResponse, CutiApprovalPostRequest, PageCutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse, CutiPengajuanMiniResponse, CutiPengajuanResponse, CutiJenisMiniResponse (+4 more)
+
+### Community 32 - "Community 32"
+Cohesion: 0.26
+Nodes (8): Biodata, EnumOption, Golongan, HttpStatusText, Jabatan, KodePajak, ListResultEnumOption, Organisasi
+
+### Community 33 - "Community 33"
+Cohesion: 0.15
+Nodes (12): JenisSpSimple, ListResultSanksiJenisSpList, ListResultSanksiQuery, PageResultPageSanksiQuery, PageSanksiQuery, PatchSanksiJenisSpRequest, SanksiJenisSpList, SanksiPostRequest (+4 more)
+
+### Community 34 - "Community 34"
+Cohesion: 0.20
+Nodes (10): FormValues, Props, schema, SheetEditProfil(), toDefaults(), EnumOption, ENUMS, FieldFk() (+2 more)
+
+### Community 35 - "Community 35"
 Cohesion: 0.26
 Nodes (9): SanksiForm(), SanksiFormProps, sanksiDefaults(), SanksiFormValues, sanksiSchema, SWITCH_LABELS, SwitchField, MasterSwitch() (+1 more)
 
-### Community 30 - "Cuti Kuota"
+### Community 36 - "Community 36"
 Cohesion: 0.17
-Nodes (11): CutiKuotaImportRequest, CutiKuotaPegawaiResponse, CutiKuotaPostRequest, CutiKuotaPutRequest, CutiKuotaResponse, CutiKuotaSisa, KuotaSearchParams, PageCutiKuotaResponse (+3 more)
+Nodes (11): CutiApprovalChainResponse, CutiPengajuanKlaimPostRequest, CutiPengajuanPostRequest, CutiPengajuanPutRequest, KlaimCuti, PageCutiApprovalChainResponse, PageCutiPengajuanResponse, PageResultPageCutiApprovalChainResponse (+3 more)
 
-### Community 31 - "Jenis SP"
+### Community 37 - "Community 37"
+Cohesion: 0.25
+Nodes (9): DataPegawaiToolbar(), DataPegawaiToolbarProps, FilterDef, fkLabelMap(), labelMap(), POPOVER_FILTERS, STATUS_OPTIONS, statusKerjaLabel() (+1 more)
+
+### Community 38 - "Community 38"
+Cohesion: 0.27
+Nodes (7): ChangePasswordForm(), Data, schema, Button(), buttonVariants, changePassword(), useChangePassword()
+
+### Community 39 - "Community 39"
+Cohesion: 0.27
+Nodes (6): Data, LoginForm(), schema, Label(), loginRequest(), useLogin()
+
+### Community 40 - "Community 40"
+Cohesion: 0.18
+Nodes (7): Sheet(), SheetContent(), SheetDescription(), SheetFooter(), SheetHeader(), SheetOverlay(), SheetTitle()
+
+### Community 41 - "Community 41"
+Cohesion: 0.20
+Nodes (9): golonganConfig, GolonganListResponse, GolonganPostRequest, GolonganQuery, GolonganSearchParams, ListResultGolonganListResponse, PageGolonganQuery, PageResultPageGolonganQuery (+1 more)
+
+### Community 42 - "Community 42"
 Cohesion: 0.18
 Nodes (10): JenisSpListResponse, JenisSpPostRequest, JenisSpPutRequest, JenisSpQuery, JenisSpSearchParams, ListResultJenisSpListResponse, PageJenisSpQuery, PageResultPageJenisSpQuery (+2 more)
 
-### Community 32 - "Organisasi"
-Cohesion: 0.18
-Nodes (10): ListResultOrganisasiListResponse, ListResultOrganisasiQuery, OrganisasiListResponse, OrganisasiPostRequest, OrganisasiPutRequest, OrganisasiQuery, OrganisasiSearchParams, PageOrganisasiQuery (+2 more)
-
-### Community 33 - "Data Table UI"
+### Community 43 - "Community 43"
 Cohesion: 0.27
-Nodes (5): cellContent(), DataTable(), DataTableProps, Separator(), Skeleton()
+Nodes (8): t(), FileCell(), isImage(), isPdf(), SP_COLUMNS, SpPage(), val(), SpFormSheet()
 
-### Community 34 - "Jabatan"
+### Community 44 - "Community 44"
+Cohesion: 0.22
+Nodes (8): KUOTA_ROW, MOCK_KUOTA_ADDITIONAL, MOCK_KUOTA_PAGE_CONTENT, MOCK_PAGE, MOCK_ROWS, mockDefaultFetch(), okJson(), YEAR
+
+### Community 45 - "Community 45"
 Cohesion: 0.20
-Nodes (9): JabatanListResponse, JabatanPostRequest, JabatanPutRequest, JabatanSearchParams, ListResultJabatanListResponse, ListResultJabatanQuery, PageJabatanQuery, PageResultPageJabatanQuery (+1 more)
+Nodes (4): ITEM_ICONS, PAGE_TITLES, Rail(), RAIL_ITEMS
 
-### Community 35 - "Parameter Setting"
+### Community 46 - "Community 46"
+Cohesion: 0.22
+Nodes (8): FormValues, JENIS_SK_BY_MUTASI, MutasiFormSheet(), normalizeFk(), Props, schema, SingleResultPegawaiResponseMutasiContext, SingleResultDetailDasarGajiNominal
+
+### Community 47 - "Community 47"
+Cohesion: 0.27
+Nodes (6): Props, SkLampiranCard(), rp(), SK_COLUMNS, SkPage(), val()
+
+### Community 48 - "Community 48"
 Cohesion: 0.20
-Nodes (9): GajiParameterSettingPostRequest, GajiParameterSettingPutRequest, GajiParameterSettingResponse, ListResultGajiParameterSettingResponse, PageGajiParameterSettingResponse, PageResultPageGajiParameterSettingResponse, ParameterSettingSearchParams, SingleResultGajiParameterSettingResponse (+1 more)
+Nodes (9): ListResultOrganisasiListResponse, ListResultOrganisasiQuery, OrganisasiListResponse, OrganisasiPostRequest, OrganisasiPutRequest, OrganisasiSearchParams, PageOrganisasiQuery, PageResultPageOrganisasiQuery (+1 more)
 
-### Community 36 - "Keahlian"
+### Community 49 - "Community 49"
 Cohesion: 0.20
 Nodes (9): JenisKeahlianResponse, KeahlianPostRequest, KeahlianPutRequest, KeahlianQuery, KeahlianSearchParams, PageKeahlianQuery, PageResultPageKeahlianQuery, SingleResultKeahlianDetail (+1 more)
 
-### Community 37 - "Alasan Berhenti"
+### Community 50 - "Community 50"
+Cohesion: 0.20
+Nodes (9): PageProfileUpdateQuery, PageResultPageProfileUpdateQuery, ProfileUpdateQuery, ProfilUpdateAcceptRequest, ProfilUpdateDetailObject, ProfilUpdateSearchParams, SingleResultProfilUpdateDetailObject, StatusUpdateProfil (+1 more)
+
+### Community 51 - "Community 51"
+Cohesion: 0.25
+Nodes (6): DataTableToolbar(), DataTableToolbarProps, FilterField, FKSource, FKComboboxFilter(), Input()
+
+### Community 52 - "Community 52"
+Cohesion: 0.28
+Nodes (8): InputGroup(), InputGroupAddon(), inputGroupAddonVariants, InputGroupButton(), inputGroupButtonVariants, InputGroupInput(), InputGroupText(), InputGroupTextarea()
+
+### Community 53 - "Community 53"
 Cohesion: 0.22
 Nodes (8): AlasanBerhentiListResponse, AlasanBerhentiPostRequest, AlasanBerhentiQuery, AlasanBerhentiSearchParams, ListResultAlasanBerhentiListResponse, PageAlasanBerhentiQuery, PageResultPageAlasanBerhentiQuery, SingleResultAlasanBerhentiQuery
 
-### Community 38 - "Golongan"
+### Community 54 - "Community 54"
 Cohesion: 0.22
-Nodes (8): GolonganListResponse, GolonganPostRequest, GolonganQuery, GolonganSearchParams, ListResultGolonganListResponse, PageGolonganQuery, PageResultPageGolonganQuery, SingleResultGolonganQuery
+Nodes (8): GradeListResponse, GradePostRequest, GradeSearchParams, ListResultGradeListResponse, ListResultGradeQuery, PageGradeQuery, PageResultPageGradeQuery, SingleResultGradeQuery
 
-### Community 39 - "Hari Libur"
+### Community 55 - "Community 55"
 Cohesion: 0.22
-Nodes (8): HariLiburListResponse, HariLiburPostRequest, HariLiburQuery, HariLiburSearchParams, ListResultHariLiburListResponse, PageHariLiburQuery, PageResultPageHariLiburQuery, SingleResultHariLiburQuery
+Nodes (8): JenisKeahlianListResponse, JenisKeahlianPostRequest, JenisKeahlianQuery, JenisKeahlianSearchParams, ListResultJenisKeahlianListResponse, PageJenisKeahlianQuery, PageResultPageJenisKeahlianQuery, SingleResultJenisKeahlianQuery
 
-### Community 40 - "Rumah Dinas"
+### Community 56 - "Community 56"
 Cohesion: 0.22
-Nodes (8): ListResultRumahDinasListResponse, PageResultPageRumahDinasQuery, PageRumahDinasQuery, RumahDinasListResponse, RumahDinasPostRequest, RumahDinasQuery, RumahDinasSearchParams, SingleResultRumahDinasQuery
+Nodes (8): JenisPelatihanListResponse, JenisPelatihanPostRequest, JenisPelatihanQuery, JenisPelatihanSearchParams, ListResultJenisPelatihanListResponse, PageJenisPelatihanQuery, PageResultPageJenisPelatihanQuery, SingleResultJenisPelatihanQuery
 
-### Community 41 - "Pelatihan"
+### Community 57 - "Community 57"
+Cohesion: 0.22
+Nodes (8): GajiTunjanganPostRequest, GajiTunjanganPutRequest, JenisTunjangan, ListResultMapStringObject, PageGajiTunjanganResponse, PageResultPageGajiTunjanganResponse, SingleResultGajiTunjanganResponse, TunjanganSearchParams
+
+### Community 58 - "Community 58"
 Cohesion: 0.22
 Nodes (8): PagePelatihanQuery, PageResultPagePelatihanQuery, PelatihanLampiranPostRequest, PelatihanPostRequest, PelatihanPutRequest, PelatihanQuery, PelatihanSearchParams, SingleResultPelatihanDetail
 
-### Community 42 - "Pengalaman Kerja"
+### Community 59 - "Community 59"
 Cohesion: 0.22
 Nodes (8): PagePengalamanKerjaQuery, PageResultPagePengalamanKerjaQuery, PengalamanKerjaPostRequest, PengalamanKerjaPutRequest, PengalamanKerjaQuery, PengalamanKerjaSearchParams, PengalamanLampiranPostRequest, SingleResultPengalamanKerjaDetail
 
-### Community 43 - "Change Password"
-Cohesion: 0.36
-Nodes (5): ChangePasswordForm(), Data, schema, changePassword(), useChangePassword()
-
-### Community 44 - "Kartu Identitas"
+### Community 60 - "Community 60"
 Cohesion: 0.25
 Nodes (7): KartuIdentitasPostRequest, KartuIdentitasPutRequest, KartuIdentitasSearchParams, PageKartuIdentitasQuery, PageResultPageKartuIdentitasQuery, SingleResultKartuIdentitasDetail, ListResultLampiranProfilQuery
 
-### Community 45 - "Keluarga"
+### Community 61 - "Community 61"
 Cohesion: 0.25
 Nodes (7): HubunganKeluarga, KeluargaSearchParams, PageProfilKeluargaQuery, PageResultPageProfilKeluargaQuery, SingleResultProfilKeluargaDetail, StatusPendidikanKeluarga, SingleResultLampiranProfilQuery
 
-### Community 46 - "Pendidikan"
+### Community 62 - "Community 62"
 Cohesion: 0.25
 Nodes (7): PagePendidikanQuery, PageResultPagePendidikanQuery, PendidikanPostRequest, PendidikanPutRequest, PendidikanSearchParams, SingleResultPendidikanQuery, LampiranProfilQuery
 
-### Community 47 - "Lampiran Request"
+### Community 63 - "Community 63"
+Cohesion: 0.48
+Nodes (5): ProfesiForm(), ProfesiFormProps, profesiDefaults(), ProfesiFormValues, profesiSchema
+
+### Community 64 - "Community 64"
+Cohesion: 0.43
+Nodes (5): AppShell(), MODULE_ENTITY_MAP, MODULES, entityGate(), entityHref()
+
+### Community 65 - "Community 65"
+Cohesion: 0.29
+Nodes (6): Popover(), PopoverContent(), PopoverDescription(), PopoverHeader(), PopoverTitle(), PopoverTrigger()
+
+### Community 66 - "Community 66"
+Cohesion: 0.40
+Nodes (4): MOCK_PAGE, MOCK_ROWS, mockDefaultFetch(), okJson()
+
+### Community 67 - "Community 67"
 Cohesion: 0.33
 Nodes (6): LampiranProfilAcceptRequest, KartuIdentitasLampiranPostRequest, KeahlianLampiranPostRequest, ProfilKeluargaLampiranPostRequest, PendidikanLampiranPostRequest, JenisProfilUpdate
 
-### Community 48 - "Profil Detail"
+### Community 68 - "Community 68"
 Cohesion: 0.33
 Nodes (6): KartuIdentitasDetail, KeahlianDetail, ProfilKeluargaDetail, PelatihanDetail, PengalamanKerjaDetail, LampiranRow
 
+### Community 69 - "Community 69"
+Cohesion: 0.60
+Nodes (4): extractErrorMessage(), patchBiodata(), RFC-7807, useBiodataMutation()
+
 ## Knowledge Gaps
-- **327 isolated node(s):** `PREVIEW`, `Row`, `TABS`, `FILTER_PARAMS`, `pegawaiColumns` (+322 more)
+- **382 isolated node(s):** `PREVIEW`, `Row`, `TABS`, `FILTER_PARAMS`, `pegawaiColumns` (+377 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `Avatar Breadcrumb UI` to `Data Table UI`, `Dashboard Biodata`, `Sidebar Shell`, `Badge Dialog`, `Filter Login`, `Profesi CRUD Form`, `Modal Dialog`, `Combobox Command`, `Dropdown Menu`, `Switch Form`?**
-  _High betweenness centrality (0.242) - this node is a cross-community bridge._
-- **Why does `PageQuery` connect `Search Params Gaji` to `Lampiran Riwayat Types`, `Master Entity Types`, `Gaji Batch`, `Pegawai Data Types`, `Biodata Management`, `Cuti Leave`, `Jenjang Level`, `Tunjangan`, `Dasar Gaji`, `Approval Workflow`, `Paging Gaji Profil`, `Sanksi Sanction`, `Shared Enums`, `Profesi APD`, `Detail Dasar Gaji`, `Cuti Kuota`, `Jenis SP`, `Organisasi`, `Jabatan`, `Parameter Setting`, `Keahlian`, `Alasan Berhenti`, `Golongan`, `Hari Libur`, `Rumah Dinas`, `Pelatihan`, `Pengalaman Kerja`, `Kartu Identitas`, `Keluarga`, `Pendidikan`?**
-  _High betweenness centrality (0.105) - this node is a cross-community bridge._
-- **Why does `Page` connect `Paging Gaji Profil` to `Master Config Types`, `Lampiran Riwayat Types`, `Master Entity Types`, `Gaji Batch`, `Pegawai Data Types`, `Biodata Management`, `Cuti Leave`, `Search Params Gaji`, `Jenjang Level`, `Tunjangan`, `Dasar Gaji`, `Approval Workflow`, `Sanksi Sanction`, `Shared Enums`, `Profesi APD`, `Detail Dasar Gaji`, `Cuti Kuota`, `Jenis SP`, `Organisasi`, `Jabatan`, `Parameter Setting`, `Keahlian`, `Alasan Berhenti`, `Golongan`, `Hari Libur`, `Rumah Dinas`, `Pelatihan`, `Pengalaman Kerja`, `Kartu Identitas`, `Keluarga`, `Pendidikan`?**
-  _High betweenness centrality (0.101) - this node is a cross-community bridge._
+- **Why does `cn()` connect `Community 6` to `Community 3`, `Community 5`, `Community 7`, `Community 10`, `Community 13`, `Community 14`, `Community 19`, `Community 20`, `Community 21`, `Community 28`, `Community 29`, `Community 35`, `Community 38`, `Community 39`, `Community 40`, `Community 45`, `Community 46`, `Community 51`, `Community 52`, `Community 64`, `Community 65`?**
+  _High betweenness centrality (0.194) - this node is a cross-community bridge._
+- **Why does `Page` connect `Community 25` to `Community 0`, `Community 1`, `Community 2`, `Community 4`, `Community 8`, `Community 9`, `Community 12`, `Community 13`, `Community 16`, `Community 17`, `Community 18`, `Community 31`, `Community 32`, `Community 33`, `Community 36`, `Community 41`, `Community 42`, `Community 48`, `Community 49`, `Community 50`, `Community 53`, `Community 54`, `Community 55`, `Community 56`, `Community 57`, `Community 58`, `Community 59`, `Community 60`, `Community 61`, `Community 62`?**
+  _High betweenness centrality (0.098) - this node is a cross-community bridge._
+- **Why does `PageQuery` connect `Community 18` to `Community 1`, `Community 2`, `Community 4`, `Community 8`, `Community 9`, `Community 12`, `Community 16`, `Community 17`, `Community 25`, `Community 31`, `Community 32`, `Community 33`, `Community 36`, `Community 41`, `Community 42`, `Community 48`, `Community 49`, `Community 50`, `Community 53`, `Community 54`, `Community 55`, `Community 56`, `Community 57`, `Community 58`, `Community 59`, `Community 60`, `Community 61`, `Community 62`?**
+  _High betweenness centrality (0.081) - this node is a cross-community bridge._
 - **What connects `PREVIEW`, `Row`, `TABS` to the rest of the system?**
-  _327 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Core Pages Layout` be split into smaller, more focused modules?**
-  _Cohesion score 0.131002331002331 - nodes in this community are weakly interconnected._
-- **Should `Master Config Types` be split into smaller, more focused modules?**
-  _Cohesion score 0.10437710437710437 - nodes in this community are weakly interconnected._
-- **Should `Dashboard Biodata` be split into smaller, more focused modules?**
-  _Cohesion score 0.06531204644412192 - nodes in this community are weakly interconnected._
+  _382 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.06731634182908545 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
+  _Cohesion score 0.05573770491803279 - nodes in this community are weakly interconnected._
+- **Should `Community 2` be split into smaller, more focused modules?**
+  _Cohesion score 0.05919661733615222 - nodes in this community are weakly interconnected._
