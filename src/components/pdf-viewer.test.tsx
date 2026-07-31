@@ -30,7 +30,6 @@ const mockResizeObserver = vi.fn().mockImplementation(() => ({
 vi.mock("react-pdf", () => ({
 	Document: ({
 		children,
-		onLoadSuccess,
 		loading,
 		error,
 	}: {
@@ -39,8 +38,6 @@ vi.mock("react-pdf", () => ({
 		loading: React.ReactNode;
 		error: React.ReactNode;
 	}) => {
-		// Panggil callback onLoadSuccess untuk mensimulasikan load PDF
-		// (hanya sekali, gunakan efek samping di mock)
 		return (
 			<div data-testid="pdf-document">
 				{loading}

@@ -179,7 +179,7 @@ describe("Riwayat SK page", () => {
 		renderPage();
 
 		const row = await screen.findByText("820/2821/2020");
-		await userEvent.click(row.closest("tr")!);
+		await userEvent.click(row.closest("tr") as HTMLElement);
 
 		expect(replace).toHaveBeenCalledWith(expect.stringContaining("sel=1"));
 	});
