@@ -8,3 +8,4 @@
 nodes_modules/
 graphify-out/
 docs/api/
+public/*.js

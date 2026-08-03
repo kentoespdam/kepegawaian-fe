@@ -135,7 +135,7 @@ export default function RiwayatLayout({ children }: { children: React.ReactNode 
 	return (
 		<div className="flex flex-col gap-4">
 			{/* Back arrow + header */}
-			<div className="flex items-start gap-3">
+			<div className="flex items-center gap-3">
 				<Link
 					href="/kepegawaian/data"
 					className="flex items-center justify-center size-10 shrink-0 rounded-md hover:bg-accent transition-colors mt-0.5"
@@ -156,7 +156,7 @@ export default function RiwayatLayout({ children }: { children: React.ReactNode 
 
 			{/* Rail + content */}
 			<div className="flex gap-5 items-start">
-				<div className="w-56 shrink-0 rounded-lg border bg-card shadow-sm p-4 sticky top-4">
+				<div className="w-64 shrink-0 rounded-lg border bg-card shadow-sm p-4 sticky top-4">
 					<div className="flex items-center justify-between mb-3 pb-3 border-b border-border">
 						<h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Kategori Riwayat</h2>
 					</div>

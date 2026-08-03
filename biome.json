@@ -20,7 +20,9 @@
 			"!scripts",
 			"!graphify-out",
 			"!src/components/ui",
-			"!public/"
+			"!public",
+			"!*.test.js",
+			"!.openclaude-profile.json"
 		]
 	},
 	"formatter": {

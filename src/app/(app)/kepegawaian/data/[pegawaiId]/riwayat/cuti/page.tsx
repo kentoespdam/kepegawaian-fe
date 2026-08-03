@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Ban, CalendarCheck, CalendarDays, CircleCheck, CircleX, Clock, PiggyBank, Undo2 } from "lucide-react";
+import { Ban, CalendarCheck, CalendarDays, CircleCheck, CircleX, Clock, StickyNoteMinus, Undo2 } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
@@ -88,7 +88,7 @@ function KuotaStrip({
 	const cards = [
 		{ label: "Kuota Cuti", icon: CalendarDays, value: kuota, tone: "text-primary bg-primary/10" },
 		{ label: "Diambil", icon: CalendarCheck, value: diambil, tone: "text-success bg-success/10" },
-		{ label: "Sisa", icon: PiggyBank, value: sisa, tone: "text-warning bg-warning/10" },
+		{ label: "Sisa", icon: StickyNoteMinus, value: sisa, tone: "text-warning bg-warning/10" },
 	] as const;
 
 	return (
