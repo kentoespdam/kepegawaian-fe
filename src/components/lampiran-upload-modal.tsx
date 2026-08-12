@@ -42,6 +42,7 @@ export function LampiranUploadModal({
 }: LampiranUploadModalProps) {
 	const qc = useQueryClient();
 	const fileRef = useRef<HTMLInputElement>(null);
+	const [hasFile, setHasFile] = useState(false);
 	const [notes, setNotes] = useState("");
 	const [isUploading, setIsUploading] = useState(false);
 
@@ -64,6 +65,7 @@ export function LampiranUploadModal({
 			toast.success("Lampiran berhasil diunggah");
 			qc.invalidateQueries({ queryKey: [...queryKey, ref, refId] });
 			if (fileRef.current) fileRef.current.value = "";
+			setHasFile(false);
 			setNotes("");
 			onOpenChange(false);
 		} catch (e: unknown) {
@@ -86,6 +88,9 @@ export function LampiranUploadModal({
 						<input
 							ref={fileRef}
 							type="file"
+							// Re-render saat file dipilih — kalau tak ada onChange, tombol
+							// Unggah tak pernah tahu file sudah ada (ref dibaca saat render).
+							onChange={(e) => setHasFile(Boolean(e.target.files?.[0]))}
 							className="block w-full text-sm text-foreground file:mr-2 file:rounded-md file:border-0 file:bg-primary file:px-3 file:py-1.5 file:text-xs file:font-medium file:text-primary-foreground hover:file:bg-primary/90"
 						/>
 					</div>
@@ -100,7 +105,7 @@ export function LampiranUploadModal({
 						<Button variant="outline" onClick={() => onOpenChange(false)} disabled={isUploading}>
 							Batal
 						</Button>
-						<Button onClick={handleUpload} disabled={isUploading || !fileRef.current?.files?.[0]}>
+						<Button onClick={handleUpload} disabled={isUploading || !hasFile}>
 							{isUploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
 							{isUploading ? "Mengunggah…" : "Unggah"}
 						</Button>

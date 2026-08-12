@@ -22,23 +22,68 @@ interface Props {
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
 	return (
-		<div className="flex justify-between gap-2 py-1.5 text-sm">
-			<span className="text-muted-foreground shrink-0">{label}</span>
-			<span className="text-foreground text-right font-medium">{value ?? "-"}</span>
+		<div className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 py-1.5 px-2 text-sm odd:bg-muted/40 rounded-sm">
+			<span className="text-muted-foreground truncate">{label}</span>
+			<span className="text-foreground font-medium text-right break-words">{value ?? "-"}</span>
+		</div>
+	);
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+	return (
+		<div className="flex items-center gap-2 mb-2">
+			<span className="inline-flex items-center rounded-full bg-primary/10 px-2.5 py-0.5 text-[0.65rem] font-semibold uppercase tracking-wider text-primary">
+				{children}
+			</span>
+			<div className="flex-1 h-px bg-border" />
 		</div>
 	);
 }
 
 function SectionSkeleton() {
 	return (
-		<div className="space-y-3">
-			<Skeleton className="h-5 w-1/2" />
-			{Array.from({ length: 4 }, (_, i) => i).map((i) => (
-				<Skeleton key={i} className="h-4 w-full" />
+		<div className="space-y-2">
+			<Skeleton className="h-4 w-28 rounded-full" />
+			{[3, 4, 5, 3, 4].map((w, i) => (
+				// biome-ignore lint/suspicious/noArrayIndexKey: skeleton baris
+				<div key={i} className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 py-1.5 px-2 odd:bg-muted/40 rounded-sm">
+					<Skeleton className={`h-3.5 w-${w}/6`} />
+					<Skeleton className="h-3.5 w-4/5 ml-auto" />
+				</div>
 			))}
 		</div>
 	);
 }
+
+/** Tombol aksi — 2×2 grid agar tidak terpotong di panel sempit */
+function ActionButtons({
+	onEditProfil,
+	onEditGaji,
+	onRiwayat,
+	onPendukung,
+}: Pick<Props, "onEditProfil" | "onEditGaji" | "onRiwayat" | "onPendukung">) {
+	return (
+		<div className="grid grid-cols-2 gap-2">
+			<Button variant="outline" size="sm" onClick={onEditProfil} className="justify-start gap-1.5">
+				<Pencil className="size-3.5 shrink-0" />
+				Edit Profil
+			</Button>
+			<Button variant="outline" size="sm" onClick={onEditGaji} className="justify-start gap-1.5">
+				<Wallet className="size-3.5 shrink-0" />
+				Edit Gaji
+			</Button>
+			<Button variant="outline" size="sm" onClick={onRiwayat} className="justify-start gap-1.5">
+				<History className="size-3.5 shrink-0" />
+				Riwayat
+			</Button>
+			<Button variant="outline" size="sm" onClick={onPendukung} className="justify-start gap-1.5">
+				<FolderOpen className="size-3.5 shrink-0" />
+				Data Pendukung
+			</Button>
+		</div>
+	);
+}
+
 export function RingkasanPanel({
 	selectedId,
 	isPending,
@@ -64,25 +109,13 @@ export function RingkasanPanel({
 
 	if (isPending) {
 		return (
-			<div className="space-y-6 p-4">
+			<div className="space-y-5">
 				{showActions && (
-					<div className="flex gap-2">
-						<Button variant="outline" size="sm" onClick={onEditProfil}>
-							<Pencil className="mr-1.5 size-3.5" />
-							Edit Profil
-						</Button>
-						<Button variant="outline" size="sm" onClick={onEditGaji}>
-							<Wallet className="mr-1.5 size-3.5" />
-							Edit Gaji
-						</Button>{" "}
-						<Button variant="outline" size="sm" onClick={onRiwayat}>
-							<History className="mr-1.5 size-3.5" />
-							Riwayat
-						</Button>
-						<Button variant="outline" size="sm" onClick={onPendukung}>
-							<FolderOpen className="mr-1.5 size-3.5" />
-							Data Pendukung
-						</Button>
+					<div className="grid grid-cols-2 gap-2">
+						{[...Array(4)].map((_, i) => (
+							// biome-ignore lint/suspicious/noArrayIndexKey: skeleton tombol
+							<Skeleton key={i} className="h-7 w-full rounded-lg" />
+						))}
 					</div>
 				)}
 				<SectionSkeleton />
@@ -111,29 +144,18 @@ export function RingkasanPanel({
 	if (!data) return null;
 
 	return (
-		<div className="space-y-6">
-			<div className="flex gap-2">
-				<Button variant="outline" size="sm" onClick={onEditProfil}>
-					<Pencil className="mr-1.5 size-3.5" />
-					Edit Profil
-				</Button>
-				<Button variant="outline" size="sm" onClick={onEditGaji}>
-					<Wallet className="mr-1.5 size-3.5" />
-					Edit Gaji
-				</Button>
-				<Button variant="outline" size="sm" onClick={onRiwayat}>
-					<History className="mr-1.5 size-3.5" />
-					Riwayat
-				</Button>
-				<Button variant="outline" size="sm" onClick={onPendukung}>
-					<FolderOpen className="mr-1.5 size-3.5" />
-					Data Pendukung
-				</Button>
-			</div>
+		<div className="space-y-5">
+			<ActionButtons
+				onEditProfil={onEditProfil}
+				onEditGaji={onEditGaji}
+				onRiwayat={onRiwayat}
+				onPendukung={onPendukung}
+			/>
+
 			{/* Informasi Umum */}
 			<section>
-				<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">Informasi Umum</h3>
-				<div className="divide-y divide-border">
+				<SectionLabel>Informasi Umum</SectionLabel>
+				<div className="space-y-0.5">
 					<Field label="NIPAM" value={data.nipam} />
 					<Field label="Nama" value={data.nama} />
 					<Field label="Jenis Kelamin" value={labelJk(data.jenisKelamin)} />
@@ -152,10 +174,8 @@ export function RingkasanPanel({
 
 			{/* Informasi Akademik */}
 			<section>
-				<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-					Informasi Akademik
-				</h3>
-				<div className="divide-y divide-border">
+				<SectionLabel>Informasi Akademik</SectionLabel>
+				<div className="space-y-0.5">
 					<Field label="Pendidikan Terakhir" value={data.pendidikanTerakhir} />
 					<Field label="Lembaga Pendidikan" value={data.lembagaPendidikan} />
 					<Field label="Tahun Lulus" value={data.tahunLulus} />
@@ -164,10 +184,8 @@ export function RingkasanPanel({
 
 			{/* Informasi Kepegawaian */}
 			<section>
-				<h3 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-					Informasi Kepegawaian
-				</h3>
-				<div className="divide-y divide-border">
+				<SectionLabel>Informasi Kepegawaian</SectionLabel>
+				<div className="space-y-0.5">
 					<Field label="Status Pegawai" value={labelStatus(data.statusPegawai)} />
 					<Field label="Pangkat/Golongan" value={data.pangkatGolongan} />
 					<Field label="TMT Golongan" value={formatDate(data.tmtGolongan)} />
