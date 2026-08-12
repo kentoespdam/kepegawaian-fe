@@ -29,6 +29,21 @@ berupa enum string — **mapping angka↔enum TIDAK terdokumentasi**. Keputusan 
 - ⚠️ **Spike WAJIB sebelum feature dianggap jadi** (claim khusus, pola spike lampiran): filter
   dengan kandidat angka pada request nyata (`?hubunganKeluarga=0..5`), bandingkan hasil dengan
   isi response; temukan mapping yang benar; **catat mapping terverifikasi di file ini**.
+- ✅ **Spike SELESAI (`fnfh.5`, 2026-08-12) — mapping TERVERIFIKASI via request nyata**
+  (`GET /profil/keluarga?biodataId=<nik>&hubunganKeluarga=<n>`, backend `192.168.1.211:8080`):
+
+  | int32 | enum | konfirmasi |
+  |---|---|---|
+  | `0` | `SUAMI` | pegawai 268 (nik `3302111906880001`): filter 0 → 1 baris SUAMI ✓ |
+  | `1` | `ISTRI` | pegawai 268: filter 1 → 1 baris ISTRI ✓ |
+  | `2` | `AYAH` | pegawai 199 (nik `3302031808750003`): filter 2 → AYAH ✓ |
+  | `3` | `IBU` | pegawai 199: filter 3 → IBU ✓ |
+  | `4` | `ANAK` | pegawai 268: filter 4 → 2 baris ANAK ✓ |
+  | `5` | `SAUDARA` | pegawai 199: filter 5 → SAUDARA ✓ |
+
+  = **urutan 0-indexed enum di OpenAPI** (`SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA`).
+  Filter FE kirim `hubunganKeluarga` sebagai angka hasil mapping ini (kandidat 0..5 selain di atas
+  mengembalikan 0 baris — diuji `6`, `7` → kosong, aman).
 - **Fallback terkunci:** bila spike gagal menentukan mapping → **filter dihapus** (toolbar hanya
   "+ Tambah"), anomali dicatat, dan kalau HR butuh filter → BE-requirement kecil (minta BE terima
   string enum atau dokumentasikan angka).
