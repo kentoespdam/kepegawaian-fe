@@ -30,7 +30,9 @@ export function UserMenu({ user }: { user: AppwriteUser }) {
 		<DropdownMenu>
 			<DropdownMenuTrigger className="flex items-center gap-2 rounded-lg p-1 transition-colors hover:bg-muted outline-none focus-visible:ring-3 focus-visible:ring-ring/50">
 				<Avatar size="sm">
-					<AvatarFallback>{initial}</AvatarFallback>
+					<AvatarFallback className="bg-gradient-to-br from-primary to-primary-dark text-primary-foreground font-semibold">
+						{initial}
+					</AvatarFallback>
 				</Avatar>
 				<span className="hidden text-sm font-medium sm:inline text-foreground">{user.name}</span>
 			</DropdownMenuTrigger>

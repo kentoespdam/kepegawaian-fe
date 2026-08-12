@@ -1,6 +1,7 @@
 "use client";
 
 import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, Settings, Users } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -93,11 +94,20 @@ export function AppShell({
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<Sidebar collapsible="icon">
 					<SidebarHeader>
-						<SidebarMenuButton size="lg">
-							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-								K
+						<SidebarMenuButton size="lg" className="gap-3 py-3">
+							<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-border/40">
+								<Image
+									src="/logo_pdam.svg"
+									alt="Logo Perumdam Tirta Satria"
+									width={28}
+									height={28}
+									className="size-6 object-contain"
+								/>
 							</div>
-							<span className="font-semibold">Kepegawaian</span>
+							<div className="flex flex-col leading-tight">
+								<span className="text-xs font-bold tracking-wide text-sidebar-foreground">TIRTA SATRIA</span>
+								<span className="text-[0.65rem] text-muted-foreground">Sistem Kepegawaian</span>
+							</div>
 						</SidebarMenuButton>
 					</SidebarHeader>
 					<SidebarContent>
@@ -129,7 +139,10 @@ export function AppShell({
 														key={entity.id}
 														render={<Link href={href} />}
 														isActive={isActive}
-														className="min-h-11"
+														className={cn(
+															"min-h-11 border-l-2 border-transparent pl-[calc(0.75rem-2px)] transition-colors",
+															isActive && "border-l-primary font-medium",
+														)}
 													>
 														{entity.label}
 													</SidebarMenuSubButton>
@@ -141,10 +154,14 @@ export function AppShell({
 							</SidebarMenu>
 						))}
 					</SidebarContent>
-					<SidebarFooter />
+					<SidebarFooter>
+						<p className="px-2 py-1 text-[0.65rem] text-sidebar-foreground/40">© 2026 Perumdam Tirta Satria</p>
+					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset className="min-w-0">
-					<header className="flex h-14 items-center justify-between border-b border-border bg-card px-4 shrink-0">
+					<header className="relative flex h-16 items-center justify-between border-b border-border bg-card px-4 shadow-sm shrink-0">
+						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
+						<div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40" />
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
 							{activeEntity && activeModule ? (
@@ -163,9 +180,6 @@ export function AppShell({
 						<UserMenu user={user} />
 					</header>
 					<div className="flex-1 overflow-y-auto p-6 min-w-0">{children}</div>
-					<footer className="bg-card border-t border-border py-3 text-center text-xs text-muted-foreground shrink-0">
-						© Perumdam Tirta Satria 2026
-					</footer>
 				</SidebarInset>
 			</SidebarProvider>
 		</RolesProvider>
