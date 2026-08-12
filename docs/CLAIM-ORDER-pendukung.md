@@ -190,6 +190,12 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > "Kadaluarsa" komputasi klien (tanggal lokal, bukan UTC), filter `jenisKartuId` (master
 > `jenis-kitas`) + `nomorKartu`, form 6 field (**request pakai `nik`, bukan `biodataId`** — P6,
 > FieldDate, cross-field `tanggalExpired > tanggalTerima`), lampiran list pola `/{refId}/lampiran`.
+>
+> ✅ **Pelatihan SELESAI (2026-08-12, fnfh.6)** — `pendukung/pelatihan/{page,
+> pelatihan-form-sheet}.tsx` + rail di-aktifkan. PL1–PL3 jalan: tabel **flat 11 kolom** (notes
+> truncate + tooltip; scroll horizontal di region), filter 3 (`nama` + `jenisPelatihanId` +
+> `lembaga`), form 10 field dengan **2 cross-field** (`tanggalSelesai ≥ tanggalMulai`;
+> `ikatanDinas` → `tanggalAkhirIkatan` wajib + dikosongkan), lampiran list pola `/{refId}/lampiran`.
 
 > **Semua 6 kategori sudah di-grill (2026-08-12)** — detail di `docs/context/kepegawaian-pendukung-*.md`
 > (D1–D5 pendidikan + BE-requirement, W1–W4 pengalaman-kerja, K1–K3 keahlian, PL1–PL3 pelatihan,
