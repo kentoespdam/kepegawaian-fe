@@ -44,6 +44,17 @@ berupa enum string — **mapping angka↔enum TIDAK terdokumentasi**. Keputusan 
   = **urutan 0-indexed enum di OpenAPI** (`SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA`).
   Filter FE kirim `hubunganKeluarga` sebagai angka hasil mapping ini (kandidat 0..5 selain di atas
   mengembalikan 0 baris — diuji `6`, `7` → kosong, aman).
+- ✅ **Mapping `jenisKelamin` juga TERVERIFIKASI (lanjutan spike fnfh.5, 2026-08-12)** via request
+  nyata yang sama (`?jenisKelamin=0..1`, biodataId `3302031808750003` + `3302111906880001`):
+
+  | int32 | enum | konfirmasi |
+  |---|---|---|
+  | `0` | `LAKI_LAKI` | 199: filter 0 → 2 baris LAKI_LAKI ✓ · 268: 2 baris ✓ |
+  | `1` | `PEREMPUAN` | 199: filter 1 → 1 baris PEREMPUAN ✓ · 268: 2 baris ✓ |
+
+  = urutan 0-indexed enum `LAKI_LAKI | PEREMPUAN` (diuji `2`, `3`, `5`, `7` → kosong, aman).
+  **Tetap YAGNI: filter `jenisKelamin` tidak dirender** (keputusan K2) — mapping dicatat untuk
+  referensi bila HR minta filter kelak.
 - **Fallback terkunci:** bila spike gagal menentukan mapping → **filter dihapus** (toolbar hanya
   "+ Tambah"), anomali dicatat, dan kalau HR butuh filter → BE-requirement kecil (minta BE terima
   string enum atau dokumentasikan angka).

@@ -212,6 +212,8 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > request nyata** ke backend (`?hubunganKeluarga=0..5`, 2 biodataId): `0=SUAMI · 1=ISTRI · 2=AYAH ·
 > 3=IBU · 4=ANAK · 5=SAUDARA` = urutan 0-indexed enum OpenAPI. Detail di
 > `docs/context/kepegawaian-pendukung-keluarga.md` K2. Keluarga (fnfh.7) tidak terblokir lagi.
+> ✅ **Lanjutan spike (2026-08-12)** — `jenisKelamin` juga terverifikasi: `0=LAKI_LAKI ·
+> 1=PEREMPUAN` (0-indexed; diuji 2/3/5/7 → kosong). Tetap YAGNI: filter jenisKelamin tidak dirender.
 > ⚠️ **Claim spike lampiran `/profil/*`** (bentuk URL list per entity) mendahului semua kartu Lampiran.
 
 ---
