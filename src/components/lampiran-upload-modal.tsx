@@ -91,8 +91,9 @@ export function LampiranUploadModal({
 					</div>
 
 					<div className="space-y-1.5">
-						<Label className="text-xs text-muted-foreground">Keterangan (opsional)</Label>
+						<Label className="text-xs text-muted-foreground">Keterangan</Label>
 						<Input placeholder="Catatan untuk lampiran ini" value={notes} onChange={(e) => setNotes(e.target.value)} />
+						<p className="text-xs text-muted-foreground">Opsional — boleh dikosongkan.</p>
 					</div>
 
 					<div className="flex justify-end gap-2 pt-2">
