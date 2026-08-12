@@ -25,6 +25,7 @@ task touches**; this core is always in scope.
 | ↳ §Page 4 — Riwayat Kontrak | [`docs/context/kepegawaian-riwayat-kontrak.md`](docs/context/kepegawaian-riwayat-kontrak.md) | Kontrak Kerja | ⏳ belum di-grill |
 | ↳ §Page 4 — Riwayat SP | [`docs/context/kepegawaian-riwayat-sp.md`](docs/context/kepegawaian-riwayat-sp.md) | Surat Peringatan | ✅ grilling 2026-07-30 ✅ implemented |
 | ↳ §Page 4 — Data Penggunaan Hak Cuti | [`docs/context/kepegawaian-riwayat-cuti.md`](docs/context/kepegawaian-riwayat-cuti.md) | Read-only: tabel penggunaan + strip kuota/sisa/diambil (K-C1–K-C7) | ✅ grilling 2026-07-31 |
+| ↳ §Page 5 — Data Pendukung | [`docs/context/kepegawaian-pendukung.md`](docs/context/kepegawaian-pendukung.md) | Konsol CRUD profil per-pegawai: Pendidikan, Pengalaman Kerja, Keahlian, Pelatihan, Kartu Identitas, Keluarga (P1–P8) | ✅ grilling 2026-08-12 |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
 | Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |
@@ -34,6 +35,11 @@ task touches**; this core is always in scope.
 > (SK/mutasi/kontrak/SP/terminasi) adalah **sub-area di dalam kepegawaian**, dikonsumsi oleh page
 > Dashboard & Terminasi — **bukan** modul ke-7. Rail app-shell tetap **6 modul** (master,
 > kepegawaian, cuti, laporan, penggajian, sistem). Lihat [`docs/context/kepegawaian.md`](docs/context/kepegawaian.md).
+
+> **✅ Resolved (grilling 2026-08-12) — `pendukung` = sub-area ke-2 kepegawaian.** Data Pendukung
+> adalah konsol CRUD atas resource `profil/*` untuk **satu** pegawai (Pendidikan, Pengalaman Kerja,
+> Keahlian, Pelatihan, Kartu Identitas, Keluarga) — **bukan** modul ke-7 dan bukan item sidebar.
+> Lihat [`docs/context/kepegawaian-pendukung.md`](docs/context/kepegawaian-pendukung.md).
 
 > **Scope catatan:** DESIGN (spec turunan, `DESIGN.md` + `docs/design/*.md`) masih memakai index
 > tunggal berbasis-concern §1–§19; **belum** dipecah per-modul. Referensi silang "CONTEXT §X" di
@@ -49,6 +55,8 @@ task touches**; this core is always in scope.
 - **Identity bridge** — how a user's Appwrite identity becomes a Backend-accepted JWT. Resolved: the Backend trusts Appwrite-issued JWTs; `proxy.ts` mints the Appwrite JWT and forwards it as `Bearer`.
 - **Appwrite Session module** (`lib/auth/appwriteSession`) — the single module that *owns* what an Appwrite session **is**: the session cookie names (the `Secure` primary `a_session_<projectId>` **and** its non-`Secure` `_legacy` fallback), the Appwrite base URL + `X-Appwrite-Project` header, the authenticated-request primitive (attach `Cookie: <name>=<value>`), plus `readSession` / `fetchAccount` / `mintJWT` and the token-cookie policy. Both `proxy.ts` and the DAL `verifySession` are thin callers of it — session knowledge lives in **one** place, not duplicated across the two files. `readSession(get)` takes an injected cookie-lookup so the module imports neither `next/server` nor `next/headers` (unit-testable).
 - **Modul** — one functional area of the app (master, kepegawaian, cuti, penggajian, laporan, sistem). Each owns a Tier-1 rail icon (`### App shell`) and — once grilled — a `docs/context/<modul>.md` delta. The **Master module** (reference/master-data) is defined in [`docs/context/master.md`](docs/context/master.md).
+- **Data Pendukung** — konsol kepegawaian §Page 5 (`/kepegawaian/data/[pegawaiId]/pendukung/*`): data **keadaan sekarang** seorang pegawai (Pendidikan, Pengalaman Kerja, Keahlian, Pelatihan, Kartu Identitas, Keluarga). Beda sifat dari **Riwayat** (kejadian/perjalanan karier). Sumber data = resource **`/profil/*`**. Lihat [`docs/context/kepegawaian-pendukung.md`](docs/context/kepegawaian-pendukung.md).
+- **Biodata** — record profil seorang pegawai di Backend. Seluruh entitas `/profil/*` (pendidikan, keluarga, dsb.) di-key **`biodataId`** yang bernilai **sama dengan NIK pegawai** (`GET /pegawai/{id}/session` → `nik`), sehingga query-nya `?biodataId=<nik>`. Kekhasan BE: `KartuIdentitasPostRequest` menyebut field kuncinya `nik` (bukan `biodataId`) — nilainya sama.
 
 ## Naming — "proxy" means one thing here (mail-fe pattern)
 
