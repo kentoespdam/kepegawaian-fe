@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertTriangle, FileX2, History, Pencil, RefreshCw, Wallet } from "lucide-react";
+import { AlertTriangle, FileX2, FolderOpen, History, Pencil, RefreshCw, Wallet } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { labelAgama, labelJk, labelKawin, labelStatus } from "@/lib/enum-labels";
@@ -17,6 +17,7 @@ interface Props {
 	onEditProfil: () => void;
 	onEditGaji: () => void;
 	onRiwayat: () => void;
+	onPendukung: () => void;
 }
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
@@ -38,7 +39,6 @@ function SectionSkeleton() {
 		</div>
 	);
 }
-
 export function RingkasanPanel({
 	selectedId,
 	isPending,
@@ -49,6 +49,7 @@ export function RingkasanPanel({
 	onEditProfil,
 	onEditGaji,
 	onRiwayat,
+	onPendukung,
 }: Props) {
 	const showActions = !!selectedId && !isError;
 
@@ -73,10 +74,14 @@ export function RingkasanPanel({
 						<Button variant="outline" size="sm" onClick={onEditGaji}>
 							<Wallet className="mr-1.5 size-3.5" />
 							Edit Gaji
-						</Button>
+						</Button>{" "}
 						<Button variant="outline" size="sm" onClick={onRiwayat}>
 							<History className="mr-1.5 size-3.5" />
 							Riwayat
+						</Button>
+						<Button variant="outline" size="sm" onClick={onPendukung}>
+							<FolderOpen className="mr-1.5 size-3.5" />
+							Data Pendukung
 						</Button>
 					</div>
 				)}
@@ -119,6 +124,10 @@ export function RingkasanPanel({
 				<Button variant="outline" size="sm" onClick={onRiwayat}>
 					<History className="mr-1.5 size-3.5" />
 					Riwayat
+				</Button>
+				<Button variant="outline" size="sm" onClick={onPendukung}>
+					<FolderOpen className="mr-1.5 size-3.5" />
+					Data Pendukung
 				</Button>
 			</div>
 			{/* Informasi Umum */}

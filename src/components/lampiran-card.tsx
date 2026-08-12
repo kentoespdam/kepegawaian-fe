@@ -59,6 +59,9 @@ export interface LampiranCardProps {
 
 	/** Sembunyikan tombol upload. */
 	hideUpload?: boolean;
+
+	/** Sembunyikan tombol hapus (RBAC view-only). */
+	hideDelete?: boolean;
 }
 
 export function LampiranCard({
@@ -72,6 +75,7 @@ export function LampiranCard({
 	viewUrl,
 	itemLabel = "lampiran",
 	hideUpload = false,
+	hideDelete = false,
 }: LampiranCardProps) {
 	const qc = useQueryClient();
 	const [uploadOpen, setUploadOpen] = useState(false);
@@ -175,14 +179,16 @@ export function LampiranCard({
 												<Button variant="ghost" size="icon" title="Lihat" onClick={() => handleView(item)}>
 													<Eye className="size-4" />
 												</Button>
-												<Button
-													variant="ghost"
-													size="icon"
-													title="Hapus"
-													onClick={() => setDeleteId(String(item.id ?? ""))}
-												>
-													<Trash2 className="size-4 text-destructive" />
-												</Button>
+												{!hideDelete && (
+													<Button
+														variant="ghost"
+														size="icon"
+														title="Hapus"
+														onClick={() => setDeleteId(String(item.id ?? ""))}
+													>
+														<Trash2 className="size-4 text-destructive" />
+													</Button>
+												)}
 											</div>
 										</td>
 									</tr>

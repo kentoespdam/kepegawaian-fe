@@ -219,6 +219,7 @@ export function DataPegawaiClient() {
 								onEditProfil={() => setEditProfilId(String(selectedId))}
 								onEditGaji={() => setEditGajiId(String(selectedId))}
 								onRiwayat={() => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`)}
+								onPendukung={() => router.push(`/kepegawaian/data/${selectedId}/pendukung/pendidikan`)}
 							/>
 						</div>
 					</div>

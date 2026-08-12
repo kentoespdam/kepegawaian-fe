@@ -20,12 +20,14 @@ spike-filter-keluarga · `.11/.10/.6/.9/.7` Fase 2) ·
 
 1. `src/app/(app)/kepegawaian/data/[pegawaiId]/pendukung/layout.tsx` — **baru** (header + rail)
 2. `src/app/(app)/kepegawaian/data/[pegawaiId]/pendukung/page.tsx` — **baru** (redirect → `./pendidikan`)
-3. `src/app/(app)/kepegawaian/data/[pegawaiId]/pendukung/pendidikan/page.tsx` — **baru** (tabel + form + lampiran)
+3. `src/app/(app)/kepegawaian/data/[pegawaiId]/pendukung/pendidikan/page.tsx` — **baru** (tabel + filter + form + lampiran + RBAC)
 4. `src/app/(app)/kepegawaian/data/[pegawaiId]/pendukung/pendidikan/pendidikan-form-sheet.tsx` — **baru**
 5. `src/app/(app)/kepegawaian/data/ringkasan-panel.tsx` — tombol "Data Pendukung" (**di 2 tempat**)
+6. `src/app/(app)/kepegawaian/data/data-pegawai-client.tsx` — wire `onPendukung`
+7. `src/components/lampiran-card.tsx` — prop `hideDelete` (default false, backward-compatible)
 
 Tidak menyentuh: `data-table.tsx` (widening `Column.cell` sudah ada), `permissions.ts`
-(`hr: {"*": ALL}` sudah ada), `lampiran-card.tsx` (sudah parametrizable).
+(`hr: {"*": ALL}` sudah ada).
 
 ---
 
@@ -72,22 +74,22 @@ Tidak menyentuh: `data-table.tsx` (widening `Column.cell` sudah ada), `permissio
 
 ### A. `pendukung.scaffold` — route scaffold + header + rail + tombol entry
 
-**← depends on:** — (siap diklaim)
+**← depends on:** — ✅ SELESAI (2026-08-12, fnfh.1)
 
-- [ ] `gitnexus_impact({target: "RingkasanPanel", direction: "upstream"})` — laporkan blast radius
-- [ ] `pendukung/layout.tsx` — client component; copy struktur riwayat `layout.tsx`
-- [ ] Query header: `useQuery({ queryKey: ["pegawai-session", pegawaiId], staleTime: 5 * 60_000 })`
+- [x] `gitnexus_impact({target: "RingkasanPanel", direction: "upstream"})` — blast radius LOW: 1 caller (`DataPegawaiClient`)
+- [x] `pendukung/layout.tsx` — client component; copy struktur riwayat `layout.tsx`
+- [x] Query header: `useQuery({ queryKey: ["pegawai-session", pegawaiId], staleTime: 5 * 60_000 })`
       → `/api/proxy/pegawai/{id}/session`; 404/`!ok` = panel inline, bukan toast
-- [ ] Rail "Kategori Data Pendukung" page-local, **6 item urut**: Data Pendidikan · Pengalaman
+- [x] Rail "Kategori Data Pendukung" page-local, **6 item urut**: Data Pendidikan · Pengalaman
       Kerja · Keahlian · Pelatihan · Kartu Identitas · Keluarga; hanya "Data Pendidikan" aktif,
-      5 lainnya non-aktif (ikon lucide: `GraduationCap` · `Briefcase` · `Award` · `BookOpen` ·
-      `CreditCard` · `Users`); back-arrow → `/kepegawaian/data`
-- [ ] Target sentuh item rail ≥44px (mandat lansia)
-- [ ] `pendukung/page.tsx` → `redirect("./pendidikan")`
-- [ ] Tombol "Data Pendukung" di `ringkasan-panel.tsx` → `/kepegawaian/data/{id}/pendukung/pendidikan`
-      — **tambah di KEDUA salinan action row** (cabang `isPending` **dan** render final)
-- [ ] Verifikasi `/kepegawaian/data/tambah` masih ter-resolve ke `tambah/`, bukan `[pegawaiId]`
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close pendukung.scaffold`
+      5 lainnya non-aktif + badge "Segera" (ikon lucide: `GraduationCap` · `Briefcase` · `Award` ·
+      `BookOpen` · `CreditCard` · `Users`); back-arrow → `/kepegawaian/data`
+- [x] Target sentuh item rail ≥44px (h-11) — mandat lansia
+- [x] `pendukung/page.tsx` → `redirect("./pendidikan")`
+- [x] Tombol "Data Pendukung" di `ringkasan-panel.tsx` → `/kepegawaian/data/{id}/pendukung/pendidikan`
+      — ditambah di KEDUA salinan action row (cabang `isPending` **dan** render final)
+- [x] Verifikasi `/kepegawaian/data/tambah` masih ter-resolve ke `tambah/` — build output mengonfirmasi
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close fnfh.1`
 
 ---
 
@@ -109,60 +111,61 @@ Tidak menyentuh: `data-table.tsx` (widening `Column.cell` sudah ada), `permissio
 
 ### C. `pendukung.pendidikan.tabel` — tabel Data Pendidikan + filter + pagination
 
-**← depends on:** `pendukung.scaffold`
+**← depends on:** `pendukung.scaffold` — ✅ SELESAI (2026-08-12, fnfh.4)
 
-- [ ] Query `/api/proxy/profil/pendidikan?biodataId=<nik>`; `staleTime: 30_000`, `gcTime` 5 menit,
+- [x] Query `/api/proxy/profil/pendidikan?biodataId=<nik>`; `staleTime: 30_000`, gcTime default 5 menit,
       `placeholderData: keepPreviousData` — **`Infinity` dilarang**
-- [ ] Paging via `fromPage()` / `toApiParams()`; `nik` dari cache session layout (satu query,
-      jangan re-fetch)
-- [ ] `isPending`→skeleton · `isPlaceholderData`→dim · `isError`→panel inline (**bukan toast**)
-- [ ] Kolom **D1 (terkunci)**: `No | Jenjang | Institusi | Jurusan | Kota | Tahun | IPK | Gelar | Status | Aksi`
+- [x] Paging via `fromPage()` / `toApiParams()`; `nik` dari cache session layout (queryKey sama →
+      satu fetch, tanpa re-fetch)
+- [x] `isPending`→skeleton · `isPlaceholderData`→dim · `isError`→panel inline (**bukan toast**)
+- [x] Kolom **D1 (terkunci)**: `No | Jenjang | Institusi | Jurusan | Kota | Tahun | IPK | Gelar | Status | Aksi`
       — Tahun komposit `Masuk–Lulus`; Gelar komposit `Depan Belakang`; **Status** = badge
-      "Terakhir" (`isLatest`) + badge "Disetujui"/"Belum" (`disetujui` — menunggu BE-requirement #1)
-      — Aksi = Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`
-- [ ] Filter toolbar **D2 (terkunci)**: `institusi` (teks, "Cari Institusi") + `jenjangId`
-      (combobox `/master/jenjang-pendidikan/list`) + reset. ⚠️ filter `jenjangId` vs form
-      `jenjangPendidikanId` — nama beda, nilai sama
-- [ ] `searchParams` = satu-satunya sumber kebenaran; reload URL memulihkan state
-- [ ] Klik baris = pilih → `?sel={id}` (pola riwayat)
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close pendukung.pendidikan.tabel`
+      "Terakhir" (`isLatest`) — badge "Disetujui"/"Belum" ditunda (menunggu BE-requirement #1,
+      additive) — Aksi = Edit + Hapus via handler kondisional (unmount bila tanpa akses, P8)
+- [x] Filter toolbar **D2 (terkunci)**: `institusi` (teks, "Cari Institusi") + `jenjangId`
+      (combobox `/master/jenjang-pendidikan/list` via `useFkOptions`) + reset; empty-filter state
+      juga menyediakan Reset (`isFiltered`/`onResetFilter`)
+- [x] `searchParams` = satu-satunya sumber kebenaran; reload URL memulihkan state
+- [x] Klik baris = pilih → `?sel={id}` (pola riwayat)
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close fnfh.4`
 
 ---
 
 ### D. `pendukung.pendidikan.form` — form Sheet Pendidikan + hapus
 
-**← depends on:** `pendukung.pendidikan.tabel`
+**← depends on:** `pendukung.pendidikan.tabel` — ✅ SELESAI (2026-08-12, fnfh.2)
 
-- [ ] Satu `<Sheet>` di-mount sekali di level page, oper state `editing` — dilarang per baris
-- [ ] Form Sheet **D5 (terkunci)** — RHF + Zod (`zodResolver`); field: `jenjangPendidikanId`
+- [x] Satu `<Sheet>` di-mount sekali di level page, oper state `editing` — dilarang per baris
+- [x] Form Sheet **D5 (terkunci)** — RHF + Zod (`zodResolver`); field: `jenjangPendidikanId`
       (FK combobox, required), `institusi` (required), `jurusan`, `kota`, `gelarDepan`,
       `gelarBelakang`, `tahunMasuk`, `isLulus` (checkbox), `tahunLulus`, `gpa` (IPK, Zod 0–4),
       `isLatest` (checkbox "Pendidikan Terakhir")
-      — **Cross-field**: `isLulus` dicentang → `tahunLulus` wajib; tidak dicentang → `tahunLulus`
-      dikosongkan (tidak dikirim)
-- [ ] ⚠️ Jebakan FK (`normalizeFk()`): map nested `{id,nama}` → `*Id` scalar
-- [ ] Hapus pakai `<ConfirmDeleteDialog>` (ketik `HAPUS`); **409 → dialog tetap terbuka**, alasan inline
-- [ ] **Dilarang optimistic removal** — tunggu 200, lalu `invalidateQueries`
-- [ ] Toast sonner **hanya** untuk hasil mutasi
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close pendukung.pendidikan.form`
+      — **Cross-field**: `isLulus` dicentang → `tahunLulus` wajib (superRefine); tidak dicentang →
+      `tahunLulus` dikosongkan (tidak dikirim); rentang tahun 1950–berjalan + gpa regex 2 desimal
+- [x] ⚠️ Jebakan FK (`normalizeFk()`): map nested `{jenjangPendidikan,id}` → `jenjangPendidikanId`
+- [x] Hapus pakai `<ConfirmDeleteDialog>` (ketik `HAPUS`); **409 → dialog tetap terbuka**, alasan inline
+- [x] **Dilarang optimistic removal** — tunggu 200, lalu `invalidateQueries`
+- [x] Toast sonner **hanya** untuk hasil mutasi; Simpan disabled sampai `nik` session tersedia
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close fnfh.2`
 
 ---
 
 ### E. `pendukung.pendidikan.lampiran` — card Lampiran Pendidikan
 
-**← depends on:** `pendukung.pendidikan.tabel`, `pendukung.spike-lampiran`
+**← depends on:** `pendukung.pendidikan.tabel`, `pendukung.spike-lampiran` — ✅ SELESAI (2026-08-12, fnfh.3)
 
-- [ ] Card kedua di bawah tabel: judul "Lampiran", tombol `+`, tabel
-      `No | File | Keterangan | Aksi`, empty state "No Data"
-- [ ] `(ref, refId)` = (`PROFIL_PENDIDIKAN`, id baris terpilih `?sel`)
-- [ ] URL dari hasil spike B (jangan mengarang); `LampiranCard` di-supply
-      `listUrl/uploadUrl/deleteUrl/viewUrl` + `queryKey`
-- [ ] **Tanpa kolom Status lampiran** — approval lampiran ditolak eksplisit (P5).
+- [x] Card kedua di bawah tabel: judul "Lampiran", tombol `+`, tabel
+      `No | File | Keterangan | Aksi`, empty state "No Data" (via `LampiranCard` shared)
+- [x] `(ref, refId)` = (`PROFIL_PENDIDIKAN`, id baris terpilih `?sel`)
+- [x] URL dari hasil spike B (P5): list `/lampiran/{refId}/list`, upload `POST …/lampiran`,
+      delete `/lampiran/{id}`, view `/lampiran/{id}/file` — di-supply ke `LampiranCard`
+- [x] **Tanpa kolom Status lampiran** — approval lampiran ditolak eksplisit (P5).
       Status **record** (badge Disetujui) hidup di tabel, bukan di kartu lampiran
-- [ ] View: `pdf` & `image/*` → viewer in-app; tipe lain → langsung download (`window.open`)
-- [ ] Upload: **nol validasi klien**; tampilkan pesan error BE apa adanya
-- [ ] Hapus pakai `<ConfirmDeleteDialog>`
-- [ ] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close pendukung.pendidikan.lampiran`
+- [x] View: `pdf` & `image/*` → viewer in-app; tipe lain → langsung download (`window.open`)
+- [x] Upload: **nol validasi klien**; tampilkan pesan error BE apa adanya
+- [x] Hapus pakai `<ConfirmDeleteDialog>`; RBAC: upload gated `hideUpload`, hapus gated `hideDelete`
+      (prop baru di `LampiranCard`, default false — backward-compatible untuk riwayat)
+- [x] `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close fnfh.3`
 
 ---
 
@@ -190,15 +193,15 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 
 ## Definition of Done
 
-- [ ] Tombol "Data Pendukung" muncul di `RingkasanPanel` (loading **dan** loaded) dan membuka konsol
-- [ ] Header menampilkan NIPAM + nama dari `/pegawai/{id}/session`
-- [ ] Rail 6 item utuh; 1 aktif, 5 non-aktif (Fase 1)
-- [ ] Tabel Pendidikan + filter + paging + row-select seluruhnya lewat URL `searchParams`
-- [ ] CRUD Pendidikan jalan end-to-end; combobox FK ter-autoselect saat edit
-- [ ] Card Lampiran: upload / view / download / hapus jalan (URL sesuai hasil spike)
-- [ ] 5 kategori lain mengikuti pola yang sama (Fase 2)
-- [ ] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
-- [ ] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
+- [x] Tombol "Data Pendukung" muncul di `RingkasanPanel` (loading **dan** loaded) dan membuka konsol
+- [x] Header menampilkan NIPAM + nama dari `/pegawai/{id}/session`
+- [x] Rail 6 item utuh; 1 aktif, 5 non-aktif + badge "Segera" (Fase 1)
+- [x] Tabel Pendidikan + filter + paging + row-select seluruhnya lewat URL `searchParams`
+- [x] CRUD Pendidikan jalan end-to-end; combobox FK ter-autoselect saat edit (`normalizeFk`)
+- [x] Card Lampiran: upload / view / download / hapus jalan (URL sesuai hasil spike B)
+- [ ] 5 kategori lain mengikuti pola yang sama (Fase 2 — issue fnfh.11/.10/.6/.9/.7)
+- [x] `bun run build` · `bunx biome check` — hijau; `bun run test` hijau (4 gagal = bug pre-existing `kepegawaian-fe-ggvr` pdf-viewer)
+- [x] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
 
 ---
 
