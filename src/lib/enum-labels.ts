@@ -25,6 +25,22 @@ export function labelHubunganKeluarga(s?: string): string {
 	return labelFromValue(s, ENUMS.hubunganKeluarga);
 }
 
+// ponytail: mapping enum → int32 untuk filter BE — index 0-based, TERVERIFIKASI spike fnfh.5
+// (2026-08-12, request nyata): 0=SUAMI, 1=ISTRI, 2=AYAH, 3=IBU, 4=ANAK, 5=SAUDARA.
+const HUBUNGAN_KELUARGA_INT: Record<string, number> = Object.fromEntries(
+	ENUMS.hubunganKeluarga.map((o, i) => [o.value, i]),
+);
+
+/** Enum → int32 filter BE (?hubunganKeluarga=N). Tanpa nilai → undefined (tak difilter). */
+export function hubunganKeluargaInt(s?: string): number | undefined {
+	return s ? HUBUNGAN_KELUARGA_INT[s] : undefined;
+}
+
+/** Opsi filter (value = angka int32) — dipakai combobox filter. */
+export function hubunganKeluargaFilterOptions(): { value: string; label: string }[] {
+	return ENUMS.hubunganKeluarga.map((o, i) => ({ value: String(i), label: o.label }));
+}
+
 export function labelStatusPendidikanKeluarga(s?: string): string {
 	return labelFromValue(s, ENUMS.statusPendidikanKeluarga);
 }

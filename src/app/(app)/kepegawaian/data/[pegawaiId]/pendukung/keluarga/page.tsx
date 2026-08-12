@@ -15,8 +15,13 @@ import { Button } from "@/components/ui/button";
 import { useRoles } from "@/hooks/useRoles";
 // ponytail: import modul langsung — verifySession server-only
 import { can, forbidden } from "@/lib/auth/can";
-import { labelAgama, labelHubunganKeluarga, labelJk, labelStatusPendidikanKeluarga } from "@/lib/enum-labels";
-import { ENUMS } from "@/lib/enums";
+import {
+	hubunganKeluargaFilterOptions,
+	labelAgama,
+	labelHubunganKeluarga,
+	labelJk,
+	labelStatusPendidikanKeluarga,
+} from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { formatDate } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
@@ -27,9 +32,6 @@ function val(s: unknown): string {
 	if (s == null || s === "") return "—";
 	return String(s);
 }
-
-// Mapping enum → angka (TERVERIFIKASI spike fnfh.5, 2026-08-12): urutan 0-indexed ENUMS.hubunganKeluarga
-const HUBUNGAN_INT = ENUMS.hubunganKeluarga.map((o, i) => ({ value: String(i), label: o.label }));
 
 // ── Kolom tabel (K1 flat: No | Nama | Hubungan | Jenis Kelamin | Agama | Tgl Lahir |
 //    Tempat Lahir | NIK | Tanggungan | Pendidikan | Status Pendidikan | Status Kawin | Notes | Aksi) ──
@@ -93,7 +95,7 @@ function KeluargaToolbar({
 	return (
 		<DataTableToolbar
 			fkSources={[{ field: "hubunganKeluarga", entity: "", label: "Hubungan Keluarga" }]}
-			fkOptions={{ hubunganKeluarga: HUBUNGAN_INT }}
+			fkOptions={{ hubunganKeluarga: hubunganKeluargaFilterOptions() }}
 			values={{ hubunganKeluarga }}
 			onFilterChange={onFilterChange}
 			hasActive={hasActive}
