@@ -23,6 +23,7 @@ const PAGE_TITLES: Record<string, string> = {
 	pendidikan: "Data Pendidikan",
 	"pengalaman-kerja": "Pengalaman Kerja",
 	keahlian: "Keahlian",
+	"kartu-identitas": "Kartu Identitas",
 } as const;
 
 const RAIL_ITEMS = [
@@ -35,7 +36,7 @@ const RAIL_ITEMS = [
 ] as const;
 
 // ponytail: kategori yang sudah jadi — sisanya non-aktif + badge "Segera" (tambah saat Fase 2 jalan)
-const ENABLED_CATEGORIES: readonly string[] = ["pendidikan", "pengalaman-kerja", "keahlian"];
+const ENABLED_CATEGORIES: readonly string[] = ["pendidikan", "pengalaman-kerja", "keahlian", "kartu-identitas"];
 
 function RailSkeleton() {
 	return (

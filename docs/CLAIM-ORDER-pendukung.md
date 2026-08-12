@@ -184,6 +184,12 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > Disetujui/Belum = override user 2026-08-12**, `KeahlianQuery` sudah memuat `disetujui`), filter 1
 > combobox `jenisKeahlianId`, form 6 field (FK combobox, select kualifikasi, form tak sentuh
 > status), lampiran list pola `/{refId}/lampiran` (spike B).
+>
+> ✅ **Kartu Identitas SELESAI (2026-08-12, fnfh.9)** — `pendukung/kartu-identitas/{page,
+> kartu-identitas-form-sheet}.tsx` + rail di-aktifkan. KI1–KI3 jalan: tabel 6 kolom + badge
+> "Kadaluarsa" komputasi klien (tanggal lokal, bukan UTC), filter `jenisKartuId` (master
+> `jenis-kitas`) + `nomorKartu`, form 6 field (**request pakai `nik`, bukan `biodataId`** — P6,
+> FieldDate, cross-field `tanggalExpired > tanggalTerima`), lampiran list pola `/{refId}/lampiran`.
 
 > **Semua 6 kategori sudah di-grill (2026-08-12)** — detail di `docs/context/kepegawaian-pendukung-*.md`
 > (D1–D5 pendidikan + BE-requirement, W1–W4 pengalaman-kerja, K1–K3 keahlian, PL1–PL3 pelatihan,
@@ -195,7 +201,7 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 - [x] Rail item kategori di-aktifkan di `pendukung/layout.tsx` (badge "Segera" dihapus) — pengalaman-kerja ✅
 - [x] `pendukung/{kategori}/page.tsx` + form-sheet + lampiran — clone Fase 1, ganti entity — pengalaman-kerja ✅
 - [x] ⚠️ Pengalaman Kerja: lampiran bentuk `/lampiran/{id}/list` (sama pendidikan) — pakai hasil spike B ✅
-- [ ] ⚠️ Kartu Identitas: request pakai field **`nik`** (bukan `biodataId`) — P6
+- [x] ⚠️ Kartu Identitas: request pakai field **`nik`** (bukan `biodataId`) — P6 ✅
 - [x] ⚠️ Keahlian: tabel menampilkan `disetujui` (override user — kolom Status); form **tidak** menyentuhnya (P4) ✅
 - [ ] Per kategori berikutnya: `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close`
 
