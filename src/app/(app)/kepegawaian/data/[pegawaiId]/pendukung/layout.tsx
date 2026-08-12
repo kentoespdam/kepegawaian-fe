@@ -21,6 +21,7 @@ const ITEM_ICONS: Record<string, typeof GraduationCap> = {
 
 const PAGE_TITLES: Record<string, string> = {
 	pendidikan: "Data Pendidikan",
+	"pengalaman-kerja": "Pengalaman Kerja",
 } as const;
 
 const RAIL_ITEMS = [
@@ -32,8 +33,8 @@ const RAIL_ITEMS = [
 	{ id: "keluarga", label: "Keluarga", href: "./keluarga" },
 ] as const;
 
-// ponytail: Fase 1 hanya Data Pendidikan aktif — 5 lain non-aktif + badge "Segera" (hapus saat Fase 2)
-const ENABLED_CATEGORIES: readonly string[] = ["pendidikan"];
+// ponytail: kategori yang sudah jadi — sisanya non-aktif + badge "Segera" (tambah saat Fase 2 jalan)
+const ENABLED_CATEGORIES: readonly string[] = ["pendidikan", "pengalaman-kerja"];
 
 function RailSkeleton() {
 	return (

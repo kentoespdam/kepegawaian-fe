@@ -174,20 +174,24 @@ Tidak menyentuh: `data-table.tsx` (widening `Column.cell` sudah ada), `permissio
 Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalaman Kerja** ·
 **Kartu Identitas** · **Keahlian** · **Pelatihan** · **Keluarga**.
 
+> ✅ **Pengalaman Kerja SELESAI (2026-08-12, fnfh.11)** — `pendukung/pengalaman-kerja/{page,
+> pengalaman-kerja-form-sheet}.tsx` + rail di-aktifkan di `layout.tsx`. W1–W4 semua jalan: tabel 6
+> kolom (Periode komposit `–sekarang`), filter 2 teks, form 7 field (cross-field `tahunKeluar ≥
+> tahunMasuk`), lampiran `/lampiran/{refId}/list` (spike B).
+
 > **Semua 6 kategori sudah di-grill (2026-08-12)** — detail di `docs/context/kepegawaian-pendukung-*.md`
 > (D1–D5 pendidikan + BE-requirement, W1–W4 pengalaman-kerja, K1–K3 keahlian, PL1–PL3 pelatihan,
 > KI1–KI3 kartu-identitas, K1–K3 keluarga).
 > ⚠️ **Claim spike filter keluarga** (mapping enum→angka) **wajib** sebelum filter Hubungan dianggap jadi.
 > ⚠️ **Claim spike lampiran `/profil/*`** (bentuk URL list per entity) mendahului semua kartu Lampiran.
 
-- [ ] **Grill per kategori dulu** → tulis `docs/context/kepegawaian-pendukung-{kategori}.md`
-      (kolom tabel, filter, field form, FK master) — preseden riwayat (sk/sp/cuti punya delta sendiri)
-- [ ] Rail item kategori di-aktifkan di `pendukung/layout.tsx` (badge "Segera" dihapus)
-- [ ] `pendukung/{kategori}/page.tsx` + form-sheet + lampiran — clone Fase 1, ganti entity
-- [ ] ⚠️ Pengalaman Kerja: lampiran bentuk `/lampiran/{id}/list` (sama pendidikan) — pakai hasil spike B
+- [x] **Grill per kategori dulu** (Pengalaman Kerja sudah — W1–W4 terkunci di context file)
+- [x] Rail item kategori di-aktifkan di `pendukung/layout.tsx` (badge "Segera" dihapus) — pengalaman-kerja ✅
+- [x] `pendukung/{kategori}/page.tsx` + form-sheet + lampiran — clone Fase 1, ganti entity — pengalaman-kerja ✅
+- [x] ⚠️ Pengalaman Kerja: lampiran bentuk `/lampiran/{id}/list` (sama pendidikan) — pakai hasil spike B ✅
 - [ ] ⚠️ Kartu Identitas: request pakai field **`nik`** (bukan `biodataId`) — P6
 - [ ] ⚠️ Keahlian: tabel bisa tampilkan `disetujui` sebagai info; form **tidak** menyentuhnya (P4)
-- [ ] Per kategori: `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close`
+- [ ] Per kategori berikutnya: `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close`
 
 ---
 
