@@ -19,6 +19,16 @@ export function labelAgama(s?: string): string {
 	return labelFromValue(s, ENUMS.agama);
 }
 
+// ─── Hubungan Keluarga & Status Pendidikan Keluarga (data pendukung) ──────────
+
+export function labelHubunganKeluarga(s?: string): string {
+	return labelFromValue(s, ENUMS.hubunganKeluarga);
+}
+
+export function labelStatusPendidikanKeluarga(s?: string): string {
+	return labelFromValue(s, ENUMS.statusPendidikanKeluarga);
+}
+
 // ─── Status Kawin ───────────────────────────────────────────────────────────
 
 export function labelKawin(s?: string): string {

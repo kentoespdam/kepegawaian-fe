@@ -25,6 +25,7 @@ const PAGE_TITLES: Record<string, string> = {
 	keahlian: "Keahlian",
 	"kartu-identitas": "Kartu Identitas",
 	pelatihan: "Pelatihan",
+	keluarga: "Keluarga",
 } as const;
 
 const RAIL_ITEMS = [
@@ -43,6 +44,7 @@ const ENABLED_CATEGORIES: readonly string[] = [
 	"keahlian",
 	"kartu-identitas",
 	"pelatihan",
+	"keluarga",
 ];
 
 function RailSkeleton() {

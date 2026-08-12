@@ -196,6 +196,14 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > truncate + tooltip; scroll horizontal di region), filter 3 (`nama` + `jenisPelatihanId` +
 > `lembaga`), form 10 field dengan **2 cross-field** (`tanggalSelesai ≥ tanggalMulai`;
 > `ikatanDinas` → `tanggalAkhirIkatan` wajib + dikosongkan), lampiran list pola `/{refId}/lampiran`.
+>
+> ✅ **Keluarga SELESAI (2026-08-12, fnfh.7)** — `pendukung/keluarga/{page,
+> keluarga-form-sheet}.tsx` + rail di-aktifkan (**semua 6 kategori kini aktif**). K1–K3 jalan:
+> tabel **flat 13 kolom data** (label via `labelHubunganKeluarga`/`labelStatusPendidikanKeluarga`
+> yang dipanen ke `enum-labels.ts`), filter K2 = select Hubungan Keluarga mengirim **angka**
+> (mapping terverifikasi spike fnfh.5, `HUBUNGAN_INT` = urutan 0-indexed `ENUMS.hubunganKeluarga`),
+> form 12 field **tanpa cross-field** (keputusan HR), `biodataId=nik` (P6), lampiran list pola
+> `/{refId}/lampiran` ref `PROFIL_KELUARGA`.
 
 > **Semua 6 kategori sudah di-grill (2026-08-12)** — detail di `docs/context/kepegawaian-pendukung-*.md`
 > (D1–D5 pendidikan + BE-requirement, W1–W4 pengalaman-kerja, K1–K3 keahlian, PL1–PL3 pelatihan,
@@ -205,14 +213,6 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > 3=IBU · 4=ANAK · 5=SAUDARA` = urutan 0-indexed enum OpenAPI. Detail di
 > `docs/context/kepegawaian-pendukung-keluarga.md` K2. Keluarga (fnfh.7) tidak terblokir lagi.
 > ⚠️ **Claim spike lampiran `/profil/*`** (bentuk URL list per entity) mendahului semua kartu Lampiran.
-
-- [x] **Grill per kategori dulu** (Pengalaman Kerja sudah — W1–W4 terkunci di context file)
-- [x] Rail item kategori di-aktifkan di `pendukung/layout.tsx` (badge "Segera" dihapus) — pengalaman-kerja ✅
-- [x] `pendukung/{kategori}/page.tsx` + form-sheet + lampiran — clone Fase 1, ganti entity — pengalaman-kerja ✅
-- [x] ⚠️ Pengalaman Kerja: lampiran bentuk `/lampiran/{id}/list` (sama pendidikan) — pakai hasil spike B ✅
-- [x] ⚠️ Kartu Identitas: request pakai field **`nik`** (bukan `biodataId`) — P6 ✅
-- [x] ⚠️ Keahlian: tabel menampilkan `disetujui` (override user — kolom Status); form **tidak** menyentuhnya (P4) ✅
-- [x] ⚠️ Spike filter keluarga: mapping enum→angka terverifikasi (fnfh.5) — Keluarga tak terblokir ✅
 
 ---
 
@@ -224,7 +224,7 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 - [x] Tabel Pendidikan + filter + paging + row-select seluruhnya lewat URL `searchParams`
 - [x] CRUD Pendidikan jalan end-to-end; combobox FK ter-autoselect saat edit (`normalizeFk`)
 - [x] Card Lampiran: upload / view / download / hapus jalan (URL sesuai hasil spike B)
-- [ ] 5 kategori lain mengikuti pola yang sama (Fase 2 — issue fnfh.11/.10/.6/.9/.7)
+- [x] 5 kategori lain mengikuti pola yang sama (Fase 2 — issue fnfh.11/.10/.6/.9/.7) — **semua SELESAI**
 - [x] `bun run build` · `bunx biome check` — hijau; `bun run test` hijau (4 gagal = bug pre-existing `kepegawaian-fe-ggvr` pdf-viewer)
 - [x] `npx gitnexus analyze` + `/graphify . --update` + `bd dolt push` + `git push`
 

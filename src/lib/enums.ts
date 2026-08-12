@@ -18,6 +18,19 @@ export const ENUMS = {
 		{ value: "TIDAK_TAHU", label: "Tidak Tahu" },
 		{ value: "LAINNYA", label: "Lainnya" },
 	] as const,
+	hubunganKeluarga: [
+		{ value: "SUAMI", label: "Suami" },
+		{ value: "ISTRI", label: "Istri" },
+		{ value: "AYAH", label: "Ayah" },
+		{ value: "IBU", label: "Ibu" },
+		{ value: "ANAK", label: "Anak" },
+		{ value: "SAUDARA", label: "Saudara" },
+	] as const,
+	statusPendidikanKeluarga: [
+		{ value: "BELUM_SEKOLAH", label: "Belum Sekolah" },
+		{ value: "SEKOLAH", label: "Sekolah" },
+		{ value: "SELESAI_SEKOLAH", label: "Selesai Sekolah" },
+	] as const,
 	statusKawin: [
 		{ value: "BELUM_KAWIN", label: "Belum Kawin" },
 		{ value: "KAWIN", label: "Kawin" },
