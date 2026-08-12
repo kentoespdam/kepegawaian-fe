@@ -46,7 +46,10 @@ function SectionSkeleton() {
 			<Skeleton className="h-4 w-28 rounded-full" />
 			{[3, 4, 5, 3, 4].map((w, i) => (
 				// biome-ignore lint/suspicious/noArrayIndexKey: skeleton baris
-				<div key={i} className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 py-1.5 px-2 odd:bg-muted/40 rounded-sm">
+				<div
+					key={i}
+					className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 py-1.5 px-2 odd:bg-muted/40 rounded-sm"
+				>
 					<Skeleton className={`h-3.5 w-${w}/6`} />
 					<Skeleton className="h-3.5 w-4/5 ml-auto" />
 				</div>

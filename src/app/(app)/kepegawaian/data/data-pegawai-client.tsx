@@ -207,20 +207,26 @@ export function DataPegawaiClient() {
 				</div>
 				{isPegawaiTab && (
 					<div className="lg:w-95 shrink-0">
-						<div className="rounded-lg border bg-card shadow-md p-4 sticky top-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
-							<h2 className="text-sm font-semibold text-foreground mb-4">Ringkasan Data Karyawan</h2>
-							<RingkasanPanel
-								selectedId={selectedId}
-								isPending={ringkasanQuery.isPending}
-								isError={ringkasanQuery.isError}
-								error={ringkasanQuery.error}
-								data={ringkasanQuery.data}
-								onRetry={() => ringkasanQuery.refetch()}
-								onEditProfil={() => setEditProfilId(String(selectedId))}
-								onEditGaji={() => setEditGajiId(String(selectedId))}
-								onRiwayat={() => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`)}
-								onPendukung={() => router.push(`/kepegawaian/data/${selectedId}/pendukung/pendidikan`)}
-							/>
+						<div className="rounded-lg border bg-card shadow-md sticky top-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
+							{/* Accent line — konsisten dengan topbar */}
+							<div className="h-0.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40 rounded-t-lg" />
+							<div className="p-4">
+								<h2 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">
+									Ringkasan Data Karyawan
+								</h2>
+								<RingkasanPanel
+									selectedId={selectedId}
+									isPending={ringkasanQuery.isPending}
+									isError={ringkasanQuery.isError}
+									error={ringkasanQuery.error}
+									data={ringkasanQuery.data}
+									onRetry={() => ringkasanQuery.refetch()}
+									onEditProfil={() => setEditProfilId(String(selectedId))}
+									onEditGaji={() => setEditGajiId(String(selectedId))}
+									onRiwayat={() => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`)}
+									onPendukung={() => router.push(`/kepegawaian/data/${selectedId}/pendukung/pendidikan`)}
+								/>
+							</div>
 						</div>
 					</div>
 				)}
