@@ -1,10 +1,11 @@
 "use client";
 
-import { AlertCircle, ChevronLeft, ChevronRight, Download, Loader2, ZoomIn, ZoomOut } from "lucide-react";
+import { AlertCircle, ChevronLeft, ChevronRight, Download, Loader2, Scaling, ZoomIn, ZoomOut } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { Document, Page, pdfjs } from "react-pdf";
 
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 // Worker pdf.js — file sudah di-copy ke public/ saat build/install
 pdfjs.GlobalWorkerOptions.workerSrc = "/pdf.worker.min.mjs";
@@ -93,6 +94,10 @@ export function PdfViewer({ url, fileName }: PdfViewerProps) {
 		setScale((s) => Math.max(s - ZOOM_STEP, ZOOM_MIN));
 	};
 
+	const handleFitToWidth = () => {
+		setFitToWidth(true);
+	};
+
 	const handleDownload = () => {
 		if (!pdfData) return;
 		const blob = new Blob([pdfData], { type: "application/pdf" });
@@ -136,6 +141,16 @@ export function PdfViewer({ url, fileName }: PdfViewerProps) {
 
 				{/* Zoom controls — sembunyi di layar kecil */}
 				<div className="hidden sm:flex items-center gap-0.5">
+					<Button
+						variant="ghost"
+						size="icon"
+						onClick={handleFitToWidth}
+						className={cn(fitToWidth && "bg-accent")}
+						title="Sesuaikan lebar"
+						aria-pressed={fitToWidth}
+					>
+						<Scaling className="size-4" />
+					</Button>
 					<Button
 						variant="ghost"
 						size="icon"

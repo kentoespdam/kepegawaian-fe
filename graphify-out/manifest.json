@@ -990,9 +990,9 @@
     "semantic_hash": "1d751d31edf094f74fad738b1e15b164"
   },
   "src/components/pdf-viewer.tsx": {
-    "mtime": 1785385461.123358,
-    "ast_hash": "63c2f5d80aecdb80b9d83c0a25062c2e",
-    "semantic_hash": "63c2f5d80aecdb80b9d83c0a25062c2e"
+    "mtime": 1786504465.2417052,
+    "ast_hash": "78eb3b87332469c0a28c4883e7289a9b",
+    "semantic_hash": "78eb3b87332469c0a28c4883e7289a9b"
   },
   "src/components/ui/accordion.tsx": {
     "mtime": 1785124792.3290305,
