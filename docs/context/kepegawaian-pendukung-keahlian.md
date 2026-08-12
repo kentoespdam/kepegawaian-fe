@@ -4,17 +4,19 @@
 > **Muat file ini hanya bila menyentuh `pendukung/keahlian/`.**
 > Claim order: [CLAIM-ORDER-pendukung.md](../CLAIM-ORDER-pendukung.md) (Fase 2)
 
-**Keputusan K1 — Tabel kompak (7 kolom), TANPA kolom Status.**
+**Keputusan K1 — Tabel kompak (8 kolom, kolom Status ditambahkan via override user 2026-08-12).**
 
-`No | Keahlian | Tingkat | Sertifikasi | Institusi | Tahun | Aksi`
+`No | Keahlian | Tingkat | Sertifikasi | Institusi | Tahun | Status | Aksi`
 
 - **Keahlian** = kolom identitas (`jenisKeahlian.nama`, weight 600).
 - **Tingkat** = `kualifikasi` → label **Kurang · Baik · Cukup** (nilai enum `KURANG|BAIK|CUKUP`).
 - **Sertifikasi** = badge kecil "Ya"/"—" (`sertifikasi` boolean).
 - **Institusi** = `institusi`; **Tahun** = `tahun` (tabular-nums).
-- **Tidak ada kolom Status/disetujui** — keputusan user: konsol admin = semua auto-disetujui, badge
-  jadi noise. `disetujui`/`tanggalPengajuan`/`tanggalDisetujui`/`disetujuiOleh` **tidak dirender
-  sama sekali** di kategori ini (berbeda dari pendidikan D3 yang menampilkannya).
+- **Status** = badge `Disetujui`/`Belum` dari `disetujui` — **override user 2026-08-12** (instruksi
+  "tabel tampilkan disetujui"; claim order: "bisa tampilkan sebagai info"). Keputusan grill awal
+  (tanpa kolom Status, badge dinilai noise di konsol admin) dibatalkan. `KeahlianQuery` sudah
+  memuat `disetujui` → tanpa gap BE. Field `tanggalPengajuan`/`tanggalDisetujui`/`disetujuiOleh`
+  tetap tidak dirender.
 - `masaBerlaku` tidak jadi kolom (nilai teks bebas ambigu; tetap di form).
 - **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
 
@@ -52,6 +54,7 @@
 | Sertifikasi | `sertifikasi` → badge "Ya"/"—" |
 | Institusi | `institusi` |
 | Tahun | `tahun` |
+| Status | `disetujui` → badge "Disetujui"/"Belum" (override user 2026-08-12) |
 | Aksi | Edit + Hapus |
 
 **Endpoint list:**

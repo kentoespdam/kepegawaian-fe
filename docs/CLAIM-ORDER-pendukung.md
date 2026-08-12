@@ -178,6 +178,12 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 > pengalaman-kerja-form-sheet}.tsx` + rail di-aktifkan di `layout.tsx`. W1–W4 semua jalan: tabel 6
 > kolom (Periode komposit `–sekarang`), filter 2 teks, form 7 field (cross-field `tahunKeluar ≥
 > tahunMasuk`), lampiran `/lampiran/{refId}/list` (spike B).
+>
+> ✅ **Keahlian SELESAI (2026-08-12, fnfh.10)** — `pendukung/keahlian/{page,
+> keahlian-form-sheet}.tsx` + rail di-aktifkan. K1–K3 jalan: tabel 8 kolom (**Status badge
+> Disetujui/Belum = override user 2026-08-12**, `KeahlianQuery` sudah memuat `disetujui`), filter 1
+> combobox `jenisKeahlianId`, form 6 field (FK combobox, select kualifikasi, form tak sentuh
+> status), lampiran list pola `/{refId}/lampiran` (spike B).
 
 > **Semua 6 kategori sudah di-grill (2026-08-12)** — detail di `docs/context/kepegawaian-pendukung-*.md`
 > (D1–D5 pendidikan + BE-requirement, W1–W4 pengalaman-kerja, K1–K3 keahlian, PL1–PL3 pelatihan,
@@ -190,7 +196,7 @@ Urutan saran (FK ke master paling sedikit dulu, supaya cepat menang): **Pengalam
 - [x] `pendukung/{kategori}/page.tsx` + form-sheet + lampiran — clone Fase 1, ganti entity — pengalaman-kerja ✅
 - [x] ⚠️ Pengalaman Kerja: lampiran bentuk `/lampiran/{id}/list` (sama pendidikan) — pakai hasil spike B ✅
 - [ ] ⚠️ Kartu Identitas: request pakai field **`nik`** (bukan `biodataId`) — P6
-- [ ] ⚠️ Keahlian: tabel bisa tampilkan `disetujui` sebagai info; form **tidak** menyentuhnya (P4)
+- [x] ⚠️ Keahlian: tabel menampilkan `disetujui` (override user — kolom Status); form **tidak** menyentuhnya (P4) ✅
 - [ ] Per kategori berikutnya: `gitnexus_detect_changes()` · `bun run build` · `bunx biome check` · `bd close`
 
 ---
