@@ -402,6 +402,10 @@ export interface PendidikanQuery {
 	tahunLulus?: number; // int32
 	gpa?: number; // double
 	isLatest?: boolean;
+	disetujui?: boolean;
+	tanggalPengajuan?: string; // date-time
+	tanggalDisetujui?: string; // date-time
+	disetujuiOleh?: string;
 	changedStatus?: string; // byte
 }
 

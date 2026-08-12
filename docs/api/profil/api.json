@@ -2744,6 +2744,10 @@
 					"tahunLulus": { "type": "integer", "format": "int32" },
 					"gpa": { "type": "number", "format": "double" },
 					"isLatest": { "type": "boolean" },
+					"disetujui": { "type": "boolean" },
+					"tanggalPengajuan": { "type": "string", "format": "date-time" },
+					"tanggalDisetujui": { "type": "string", "format": "date-time" },
+					"disetujuiOleh": { "type": "string" },
 					"changedStatus": { "type": "string", "format": "byte" }
 				}
 			},

@@ -3,8 +3,11 @@
 **Untuk:** Tim Backend (Spring Boot)
 **Dari:** Tim Frontend (`kepegawaian-fe`)
 **Tanggal:** 2026-08-12
-**Status:** FE **partially blocked** — tabel/form/lampiran bisa dibangun sekarang; **badge "Disetujui"**
-menunggu perubahan BE #1. Normalisasi `isLatest` (perubahan #2) menunggu konfirmasi + implementasi BE.
+**Status:** ✅ **SELESAI (2026-08-12)** — perubahan #1 dan #2 sudah diterapkan di BE (field
+`disetujui`/`tanggalPengajuan`/`tanggalDisetujui`/`disetujuiOleh` ada di response nyata; `isLatest`
+ternormalisasi satu-true per biodataId — diverifikasi via cURL ke `192.168.1.211:8080`). Sisi FE
+(fnfh.8): spec di-update, types di-regenerate (`PendidikanQuery` di `_shared.ts`), badge
+Disetujui/Belum + Terakhir di tabel pendidikan live.
 
 ---
 

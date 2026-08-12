@@ -65,8 +65,18 @@ const PENDIDIKAN_COLUMNS: Column<PendidikanQuery>[] = [
 	{
 		id: "status",
 		header: "Status",
-		// ponytail: badge "Disetujui" menunggu field disetujui (BE-requirement #1) — additive nanti
-		cell: (row) => (row.isLatest ? <Badge>Terakhir</Badge> : <span className="text-muted-foreground">—</span>),
+		cell: (row) => (
+			<span className="inline-flex items-center gap-1.5">
+				{row.disetujui ? (
+					<Badge variant="outline" className="text-success border-success/30 bg-success/10">
+						Disetujui
+					</Badge>
+				) : (
+					<Badge variant="outline">Belum</Badge>
+				)}
+				{row.isLatest ? <Badge>Terakhir</Badge> : null}
+			</span>
+		),
 	},
 ];
 

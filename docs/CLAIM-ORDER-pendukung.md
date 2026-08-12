@@ -120,8 +120,8 @@ Tidak menyentuh: `data-table.tsx` (widening `Column.cell` sudah ada), `permissio
 - [x] `isPending`→skeleton · `isPlaceholderData`→dim · `isError`→panel inline (**bukan toast**)
 - [x] Kolom **D1 (terkunci)**: `No | Jenjang | Institusi | Jurusan | Kota | Tahun | IPK | Gelar | Status | Aksi`
       — Tahun komposit `Masuk–Lulus`; Gelar komposit `Depan Belakang`; **Status** = badge
-      "Terakhir" (`isLatest`) — badge "Disetujui"/"Belum" ditunda (menunggu BE-requirement #1,
-      additive) — Aksi = Edit + Hapus via handler kondisional (unmount bila tanpa akses, P8)
+      "Disetujui"/"Belum" (`disetujui`, BE-requirement #1 ✅) + badge "Terakhir" (`isLatest`)
+      — Aksi = Edit + Hapus via handler kondisional (unmount bila tanpa akses, P8)
 - [x] Filter toolbar **D2 (terkunci)**: `institusi` (teks, "Cari Institusi") + `jenjangId`
       (combobox `/master/jenjang-pendidikan/list` via `useFkOptions`) + reset; empty-filter state
       juga menyediakan Reset (`isFiltered`/`onResetFilter`)
