@@ -1,9 +1,10 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Pencil, Plus, X } from "lucide-react";
+import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -109,6 +110,25 @@ export function RolesClient() {
 
 	const [selectedRole, setSelectedRole] = useState<PrefRole | null>(null);
 	const [roleForm, setRoleForm] = useState<{ open: boolean; role: PrefRole | null }>({ open: false, role: null });
+	const [deleteRole, setDeleteRole] = useState<PrefRole | null>(null);
+	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	const deleteRoleMutation = useMutation({
+		mutationFn: async (roleId: string) => {
+			const res = await fetch(`/api/proxy/system/roles/${roleId}`, { method: "DELETE" });
+			if (!res.ok) {
+				const body: { message?: string } = await res.json().catch(() => ({}));
+				throw new Error(body.message ?? "Gagal menghapus role");
+			}
+		},
+		onSuccess: () => {
+			toast.success("Role dihapus");
+			setDeleteRole(null);
+			setDeleteError(null);
+			qc.invalidateQueries({ queryKey: ["system-roles"] });
+		},
+		onError: (e: Error) => setDeleteError(e.message),
+	});
 
 	const saveRoleMutation = useMutation({
 		mutationFn: async (data: { id: string; description?: string }) => {
@@ -203,14 +223,27 @@ export function RolesClient() {
 											</Button>
 										</td>
 										<td className="px-4 py-2.5 text-right">
-											<Button
-												variant="ghost"
-												size="sm"
-												onClick={() => setRoleForm({ open: true, role })}
-												aria-label={`Edit role ${role.id}`}
-											>
-												<Pencil className="size-4" />
-											</Button>
+											<div className="flex justify-end gap-1">
+												<Button
+													variant="ghost"
+													size="sm"
+													onClick={() => setRoleForm({ open: true, role })}
+													aria-label={`Edit role ${role.id}`}
+												>
+													<Pencil className="size-4" />
+												</Button>
+												<Button
+													variant="ghost"
+													size="sm"
+													onClick={() => {
+														setDeleteError(null);
+														setDeleteRole(role);
+													}}
+													aria-label={`Hapus role ${role.id}`}
+												>
+													<Trash2 className="size-4" />
+												</Button>
+											</div>
 										</td>
 									</tr>
 								))}
@@ -255,6 +288,14 @@ export function RolesClient() {
 				role={roleForm.role}
 				onSubmit={(data) => saveRoleMutation.mutate(data)}
 				isPending={saveRoleMutation.isPending}
+			/>
+
+			<ConfirmDeleteDialog
+				open={deleteRole != null}
+				onOpenChange={(v) => !v && setDeleteRole(null)}
+				itemLabel={`role ${deleteRole?.id ?? ""}`}
+				onConfirm={() => deleteRoleMutation.mutateAsync(deleteRole?.id ?? "")}
+				error={deleteError}
 			/>
 		</>
 	);
