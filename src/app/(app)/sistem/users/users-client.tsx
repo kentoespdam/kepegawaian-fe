@@ -1,6 +1,7 @@
 "use client";
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -20,9 +21,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
-import type { PageUserResponse, SingleResultPageUserResponse, UserResponse } from "@/types/system/users";
+import type {
+	AuthPostRequest,
+	PageUserResponse,
+	SingleResultPageUserResponse,
+	UserPatchStatusRequest,
+	UserResponse,
+} from "@/types/system/users";
 
 function useAllRoles() {
 	return useQuery({
@@ -101,6 +110,12 @@ export function UsersClient() {
 	const [editingUser, setEditingUser] = useState<UserResponse | null>(null);
 	const [toggleUser, setToggleUser] = useState<UserResponse | null>(null);
 	const [toggleError, setToggleError] = useState<string | null>(null);
+	const [createOpen, setCreateOpen] = useState(false);
+	const [createError, setCreateError] = useState<string | null>(null);
+	const [createNipam, setCreateNipam] = useState("");
+	const [createNama, setCreateNama] = useState("");
+	const [createPassword, setCreatePassword] = useState("");
+	const [createRoles, setCreateRoles] = useState<Set<string>>(new Set());
 
 	const rolesQuery = useAllRoles();
 	const allRoles = rolesQuery.data ?? [];
@@ -163,10 +178,11 @@ export function UsersClient() {
 
 	const toggleStatusMutation = useMutation({
 		mutationFn: async ({ userId, status }: { userId: string; status: boolean }) => {
+			const payload: UserPatchStatusRequest = { status };
 			const res = await fetch(`/api/proxy/system/users/${userId}/status`, {
 				method: "PATCH",
 				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ status }),
+				body: JSON.stringify(payload),
 			});
 			if (!res.ok) {
 				const body: { message?: string } = await res.json().catch(() => ({}));
@@ -179,6 +195,27 @@ export function UsersClient() {
 			qc.invalidateQueries({ queryKey: ["system-users"] });
 		},
 		onError: (e: Error) => setToggleError(e.message),
+	});
+
+	const createUserMutation = useMutation({
+		mutationFn: async (data: AuthPostRequest) => {
+			const res = await fetch("/api/proxy/system/users", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
+			});
+			if (!res.ok) {
+				const body: { message?: string } = await res.json().catch(() => ({}));
+				throw new Error(body.message ?? "Gagal membuat user");
+			}
+		},
+		onSuccess: () => {
+			toast.success("User dibuat");
+			setCreateOpen(false);
+			setCreateError(null);
+			qc.invalidateQueries({ queryKey: ["system-users"] });
+		},
+		onError: (e: Error) => setCreateError(e.message),
 	});
 
 	const handleSaveRoles = () => {
@@ -204,6 +241,22 @@ export function UsersClient() {
 
 	const hasActive = !!(nipam || nama);
 
+	const createPayload = (): AuthPostRequest | null => {
+		const nipamV = createNipam.trim();
+		const namaV = createNama.trim();
+		const passwordV = createPassword.trim();
+		if (!nipamV || !namaV) {
+			setCreateError("NIPAM dan nama wajib diisi");
+			return null;
+		}
+		return {
+			nipam: nipamV,
+			nama: namaV,
+			password: passwordV || undefined,
+			roles: [...createRoles].map((id) => ({ id })),
+		};
+	};
+
 	return (
 		<>
 			<DataTable<UserResponse>
@@ -217,7 +270,22 @@ export function UsersClient() {
 						onFilterChange={(key, val) => nav({ [key]: val, page: "1" })}
 						hasActive={hasActive}
 						onReset={() => router.replace("/sistem/users")}
-					/>
+					>
+						<Button
+							size="sm"
+							onClick={() => {
+								setCreateNipam("");
+								setCreateNama("");
+								setCreatePassword("");
+								setCreateRoles(new Set());
+								setCreateError(null);
+								setCreateOpen(true);
+							}}
+						>
+							<Plus className="mr-1.5 size-4" />
+							Tambah user
+						</Button>
+					</DataTableToolbar>
 				}
 				columns={columns}
 				data={pageView.rows ?? []}
@@ -283,6 +351,88 @@ export function UsersClient() {
 						<Button onClick={handleSaveRoles} disabled={assignRolesMutation.isPending}>
 							Simpan
 						</Button>
+					</div>
+				</DialogContent>
+			</Dialog>
+
+			{/* Create user dialog */}
+			<Dialog open={createOpen} onOpenChange={(v) => !v && setCreateOpen(false)}>
+				<DialogContent className="sm:max-w-md">
+					<DialogHeader>
+						<DialogTitle>Tambah user</DialogTitle>
+					</DialogHeader>
+					<div className="space-y-3">
+						<div className="space-y-1.5">
+							<Label htmlFor="user-nipam">NIPAM</Label>
+							<Input
+								id="user-nipam"
+								value={createNipam}
+								onChange={(e) => setCreateNipam(e.target.value)}
+								placeholder="Nomor pegawai"
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label htmlFor="user-nama">Nama</Label>
+							<Input
+								id="user-nama"
+								value={createNama}
+								onChange={(e) => setCreateNama(e.target.value)}
+								placeholder="Nama lengkap"
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label htmlFor="user-password">Password</Label>
+							<Input
+								id="user-password"
+								type="password"
+								value={createPassword}
+								onChange={(e) => setCreatePassword(e.target.value)}
+								placeholder="Opsional"
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label>Role</Label>
+							<div className="flex max-h-40 flex-col gap-1 overflow-y-auto rounded-lg border p-2">
+								{allRoles.length === 0 && <p className="text-sm text-muted-foreground">Tidak ada role</p>}
+								{allRoles.map((role) => {
+									const checked = createRoles.has(role.id);
+									return (
+										<label
+											key={role.id}
+											className="flex cursor-pointer items-center justify-between rounded-lg border px-3 py-2"
+										>
+											<span className="text-sm font-medium">{role.id}</span>
+											<input
+												type="checkbox"
+												checked={checked}
+												onChange={() => {
+													const next = new Set(createRoles);
+													if (checked) next.delete(role.id);
+													else next.add(role.id);
+													setCreateRoles(next);
+												}}
+												className="size-4 accent-primary"
+											/>
+										</label>
+									);
+								})}
+							</div>
+						</div>
+						{createError && <p className="text-sm text-destructive">{createError}</p>}
+						<div className="flex justify-end gap-2">
+							<Button variant="outline" onClick={() => setCreateOpen(false)}>
+								Batal
+							</Button>
+							<Button
+								onClick={() => {
+									const payload = createPayload();
+									if (payload) createUserMutation.mutate(payload);
+								}}
+								disabled={createUserMutation.isPending}
+							>
+								Simpan
+							</Button>
+						</div>
 					</div>
 				</DialogContent>
 			</Dialog>
