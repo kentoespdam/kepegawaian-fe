@@ -627,5 +627,6 @@ export interface PrefPermission {
 
 export interface PrefRole {
 	id: string; // minLength 1
+	description?: string;
 	permissions?: PrefPermission[];
 }

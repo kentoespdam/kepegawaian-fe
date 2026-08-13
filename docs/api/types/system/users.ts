@@ -50,7 +50,7 @@ export interface AuthPostRequest {
 }
 
 export interface UserPatchStatusRequest {
-	status?: boolean;
+	status: boolean;
 }
 
 export interface SimpleGrantedAuthority {
