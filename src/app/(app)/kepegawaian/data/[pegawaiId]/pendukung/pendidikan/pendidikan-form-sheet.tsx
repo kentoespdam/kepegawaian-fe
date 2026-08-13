@@ -135,7 +135,7 @@ export function PendidikanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose
 			if (values.gpa) payload.gpa = Number(values.gpa);
 			if (values.isLatest) payload.isLatest = true;
 
-			const url = editingId ? `/api/proxy/profil/pendidikan/${editingId}` : "/api/proxy/profil/pendidikan";
+			const url = editingId ? `/api/proxy/admin/profil/pendidikan/${editingId}` : "/api/proxy/admin/profil/pendidikan";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

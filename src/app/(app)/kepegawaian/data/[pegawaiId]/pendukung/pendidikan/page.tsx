@@ -216,7 +216,7 @@ export default function PendidikanPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/pendidikan/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/pendidikan/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -295,8 +295,8 @@ export default function PendidikanPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/pendidikan/lampiran/${selectedRow.id}/list`}
-						uploadUrl="/api/proxy/profil/pendidikan/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/pendidikan/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/pendidikan/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/pendidikan/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/pendidikan/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}

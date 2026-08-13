@@ -211,7 +211,7 @@ export default function PelatihanPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/pelatihan/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/pelatihan/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -291,8 +291,8 @@ export default function PelatihanPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/pelatihan/${selectedRow.id}/lampiran`}
-						uploadUrl="/api/proxy/profil/pelatihan/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/pelatihan/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/pelatihan/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/pelatihan/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/pelatihan/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}

@@ -112,7 +112,9 @@ export function PengalamanKerjaFormSheet({ pegawaiId, nik, editingId, isOpen, on
 			if (values.tahunKeluar) payload.tahunKeluar = Number(values.tahunKeluar);
 			if (values.notes) payload.notes = values.notes;
 
-			const url = editingId ? `/api/proxy/profil/pengalaman-kerja/${editingId}` : "/api/proxy/profil/pengalaman-kerja";
+			const url = editingId
+				? `/api/proxy/admin/profil/pengalaman-kerja/${editingId}`
+				: "/api/proxy/admin/profil/pengalaman-kerja";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

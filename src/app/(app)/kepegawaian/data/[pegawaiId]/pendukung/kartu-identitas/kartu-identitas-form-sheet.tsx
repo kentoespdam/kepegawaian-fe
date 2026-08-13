@@ -98,7 +98,9 @@ export function KartuIdentitasFormSheet({ pegawaiId, nik, editingId, isOpen, onC
 			if (values.tanggalExpired) payload.tanggalExpired = values.tanggalExpired;
 			if (values.notes) payload.notes = values.notes;
 
-			const url = editingId ? `/api/proxy/profil/kartu-identitas/${editingId}` : "/api/proxy/profil/kartu-identitas";
+			const url = editingId
+				? `/api/proxy/admin/profil/kartu-identitas/${editingId}`
+				: "/api/proxy/admin/profil/kartu-identitas";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

@@ -181,7 +181,7 @@ export default function PengalamanKerjaPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/pengalaman-kerja/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/pengalaman-kerja/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -259,8 +259,8 @@ export default function PengalamanKerjaPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/pengalaman-kerja/lampiran/${selectedRow.id}/list`}
-						uploadUrl="/api/proxy/profil/pengalaman-kerja/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/pengalaman-kerja/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/pengalaman-kerja/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/pengalaman-kerja/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/pengalaman-kerja/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}

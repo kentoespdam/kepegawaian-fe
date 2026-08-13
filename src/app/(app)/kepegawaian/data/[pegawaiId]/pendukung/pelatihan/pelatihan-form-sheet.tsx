@@ -125,7 +125,7 @@ export function PelatihanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose 
 			if (values.ikatanDinas && values.tanggalAkhirIkatan) payload.tanggalAkhirIkatan = values.tanggalAkhirIkatan;
 			if (values.notes) payload.notes = values.notes;
 
-			const url = editingId ? `/api/proxy/profil/pelatihan/${editingId}` : "/api/proxy/profil/pelatihan";
+			const url = editingId ? `/api/proxy/admin/profil/pelatihan/${editingId}` : "/api/proxy/admin/profil/pelatihan";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

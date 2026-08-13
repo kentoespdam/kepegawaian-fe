@@ -193,7 +193,7 @@ export default function KeahlianPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/keahlian/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/keahlian/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -271,8 +271,8 @@ export default function KeahlianPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/keahlian/${selectedRow.id}/lampiran`}
-						uploadUrl="/api/proxy/profil/keahlian/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/keahlian/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/keahlian/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/keahlian/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/keahlian/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}

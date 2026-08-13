@@ -200,7 +200,7 @@ export default function KartuIdentitasPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/kartu-identitas/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/kartu-identitas/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -279,8 +279,8 @@ export default function KartuIdentitasPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/kartu-identitas/${selectedRow.id}/lampiran`}
-						uploadUrl="/api/proxy/profil/kartu-identitas/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/kartu-identitas/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/kartu-identitas/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/kartu-identitas/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/kartu-identitas/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}

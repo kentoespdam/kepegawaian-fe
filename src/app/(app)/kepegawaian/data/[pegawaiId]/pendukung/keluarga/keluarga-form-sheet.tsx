@@ -114,7 +114,7 @@ export function KeluargaFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 			if (values.statusPendidikan) payload.statusPendidikan = values.statusPendidikan;
 			if (values.notes) payload.notes = values.notes;
 
-			const url = editingId ? `/api/proxy/profil/keluarga/${editingId}` : "/api/proxy/profil/keluarga";
+			const url = editingId ? `/api/proxy/admin/profil/keluarga/${editingId}` : "/api/proxy/admin/profil/keluarga";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

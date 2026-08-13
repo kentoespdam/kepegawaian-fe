@@ -114,7 +114,7 @@ export function KeahlianFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 			if (values.tahun) payload.tahun = Number(values.tahun);
 			if (values.masaBerlaku) payload.masaBerlaku = values.masaBerlaku;
 
-			const url = editingId ? `/api/proxy/profil/keahlian/${editingId}` : "/api/proxy/profil/keahlian";
+			const url = editingId ? `/api/proxy/admin/profil/keahlian/${editingId}` : "/api/proxy/admin/profil/keahlian";
 			const method = editingId ? "PUT" : "POST";
 
 			const res = await fetch(url, {

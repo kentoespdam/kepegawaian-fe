@@ -202,7 +202,7 @@ export default function KeluargaPage() {
 		if (!deleteId) return;
 		setDeleteError(null);
 		try {
-			const res = await fetch(`/api/proxy/profil/keluarga/${deleteId}`, { method: "DELETE" });
+			const res = await fetch(`/api/proxy/admin/profil/keluarga/${deleteId}`, { method: "DELETE" });
 			if (res.status === 409) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
@@ -279,8 +279,8 @@ export default function KeluargaPage() {
 						refId={selectedRow.id ?? ""}
 						queryKey={["lampiran"]}
 						listUrl={`/api/proxy/profil/keluarga/${selectedRow.id}/lampiran`}
-						uploadUrl="/api/proxy/profil/keluarga/lampiran"
-						deleteUrl={(id) => `/api/proxy/profil/keluarga/lampiran/${id}`}
+						uploadUrl="/api/proxy/admin/profil/keluarga/lampiran"
+						deleteUrl={(id) => `/api/proxy/admin/profil/keluarga/lampiran/${id}`}
 						viewUrl={(id) => `/api/proxy/profil/keluarga/lampiran/${id}/file`}
 						hideUpload={!canUpdate}
 						hideDelete={!canDelete}
