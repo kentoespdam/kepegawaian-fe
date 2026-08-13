@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
-import type { MeResponse } from "@/types/account/me";
+import type { SingleResultMeResponse } from "@/types/account/me";
 import { readSession, resolveToken } from "./appwriteSession";
 
 const BACKEND_URL = process.env.BACKEND_URL ?? "";
@@ -17,8 +17,8 @@ export const getAccountSession = cache(async (): Promise<{ permissions: string[]
 			headers: { Authorization: `Bearer ${jwt}` },
 		});
 		if (!res.ok) return { permissions: [] };
-		const body = (await res.json()) as MeResponse;
-		return { permissions: body.permissions ?? [] };
+		const body = (await res.json()) as SingleResultMeResponse;
+		return { permissions: body.data?.permissions ?? [] };
 	} catch {
 		return { permissions: [] };
 	}
