@@ -8,10 +8,7 @@
  * Endpoint : DELETE /profil/keahlian/lampiran/{id}, DELETE /profil/keahlian/{id}, GET /profil/keahlian, GET /profil/keahlian/lampiran/{id}, GET /profil/keahlian/lampiran/{id}/file, GET /profil/keahlian/{id}, GET /profil/keahlian/{id}/lampiran, POST /profil/keahlian, POST /profil/keahlian/lampiran, PUT /profil/keahlian/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
-
-/** Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP). */
-export type TingkatKemampuan = "KURANG" | "BAIK" | "CUKUP";
+import type { Envelope, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface KeahlianSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -49,39 +46,15 @@ export interface KeahlianDetail {
 
 export type SingleResultKeahlianDetail = Envelope<KeahlianDetail>;
 
-export interface KeahlianPutRequest {
-	biodataId: string; // minLength 1
-	keahlianId?: number; // int64, min 1
-	kualifikasi: TingkatKemampuan;
-	sertifikasi?: boolean;
-	institusi: string; // minLength 1
-	tahun?: number; // int32, min 1970
-	masaBerlaku?: string;
-}
-
 export type PageKeahlianQuery = Page<KeahlianQuery>;
 
 export type PageResultPageKeahlianQuery = PageEnvelope<KeahlianQuery>;
 
-export interface KeahlianPostRequest {
-	biodataId: string; // minLength 1
-	keahlianId?: number; // int64, min 1
-	kualifikasi: TingkatKemampuan;
-	sertifikasi?: boolean;
-	institusi: string; // minLength 1
-	tahun?: number; // int32, min 1970
-	masaBerlaku?: string;
-}
-
-export interface KeahlianLampiranPostRequest {
-	ref?: JenisProfilUpdate;
-	refId?: number; // int64, min 1
-	fileName: string; // binary
-	notes?: string;
-}
-
 export type {
 	DeletedResult,
+	KeahlianLampiranPostRequest,
+	KeahlianPostRequest,
+	KeahlianPutRequest,
 	LampiranProfilQuery,
 	LampiranRow,
 	ListResultLampiranProfilQuery,

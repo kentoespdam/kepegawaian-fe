@@ -23,9 +23,9 @@ import {
 } from "@/lib/enum-labels";
 import { ENUMS } from "@/lib/enums";
 import { cn, formatDate, rupiah } from "@/lib/utils";
+import type { BiodataPatchRequest } from "@/types/admin/profil";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
 import type { BiodataDashboardResponse } from "@/types/profil/biodata";
-import type { BiodataPatchRequest } from "@/types/profil/biodata-patch";
 
 // ponytail: shared afordansi trigger className
 const ACCORDION_TRIGGER_AFF =

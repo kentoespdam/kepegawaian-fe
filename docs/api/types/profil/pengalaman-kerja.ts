@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pengalaman-kerja/lampiran/{id}, DELETE /profil/pengalaman-kerja/{id}, GET /profil/pengalaman-kerja, GET /profil/pengalaman-kerja/lampiran/{id}/detail, GET /profil/pengalaman-kerja/lampiran/{id}/file, GET /profil/pengalaman-kerja/lampiran/{id}/list, GET /profil/pengalaman-kerja/{id}, POST /profil/pengalaman-kerja, POST /profil/pengalaman-kerja/lampiran, PUT /profil/pengalaman-kerja/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PengalamanKerjaSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -34,17 +34,6 @@ export interface PengalamanKerjaDetail {
 
 export type SingleResultPengalamanKerjaDetail = Envelope<PengalamanKerjaDetail>;
 
-export interface PengalamanKerjaPutRequest {
-	biodataId: string; // minLength 1
-	namaPerusahaan: string; // minLength 1
-	typePerusahaan?: string;
-	jabatan?: string;
-	lokasi?: string;
-	tahunMasuk?: number; // int32
-	tahunKeluar?: number; // int32
-	notes?: string;
-}
-
 export interface PengalamanKerjaQuery {
 	id?: number; // int64
 	biodataId?: string;
@@ -64,30 +53,15 @@ export type PagePengalamanKerjaQuery = Page<PengalamanKerjaQuery>;
 
 export type PageResultPagePengalamanKerjaQuery = PageEnvelope<PengalamanKerjaQuery>;
 
-export interface PengalamanKerjaPostRequest {
-	biodataId: string; // minLength 1
-	namaPerusahaan: string; // minLength 1
-	typePerusahaan?: string;
-	jabatan?: string;
-	lokasi?: string;
-	tahunMasuk?: number; // int32
-	tahunKeluar?: number; // int32
-	notes?: string;
-}
-
-export interface PengalamanLampiranPostRequest {
-	ref?: JenisProfilUpdate;
-	refId?: number; // int64, min 1
-	fileName: string; // binary
-	notes?: string;
-}
-
 export type {
 	DeletedResult,
 	LampiranProfilQuery,
 	LampiranRow,
 	ListResultLampiranProfilQuery,
 	PageableObject,
+	PengalamanKerjaPostRequest,
+	PengalamanKerjaPutRequest,
+	PengalamanLampiranPostRequest,
 	SavedResultLong,
 	SingleResultLampiranProfilQuery,
 	SortObject,

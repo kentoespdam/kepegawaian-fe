@@ -381,6 +381,198 @@
 				}
 			}
 		},
+		"/admin/profil/pengalaman-kerja/{id}": {
+			"put": {
+				"tags": ["admin-pengalaman-kerja-controller"],
+				"operationId": "update_7",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PengalamanKerjaPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-pengalaman-kerja-controller"],
+				"operationId": "delete_6",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pendidikan/{id}": {
+			"put": {
+				"tags": ["admin-pendidikan-controller"],
+				"operationId": "update_8",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PendidikanPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-pendidikan-controller"],
+				"operationId": "delete_7",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pelatihan/{id}": {
+			"put": {
+				"tags": ["admin-pelatihan-controller"],
+				"operationId": "update_9",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PelatihanPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-pelatihan-controller"],
+				"operationId": "delete_8",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keluarga/{id}": {
+			"put": {
+				"tags": ["admin-keluarga-controller"],
+				"operationId": "update_10",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-keluarga-controller"],
+				"operationId": "delete_9",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keahlian/{id}": {
+			"put": {
+				"tags": ["admin-keahlian-controller"],
+				"operationId": "update_11",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeahlianPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-keahlian-controller"],
+				"operationId": "delete_10",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/kartu-identitas/{id}": {
+			"put": {
+				"tags": ["admin-kartu-identitas-controller"],
+				"operationId": "update_12",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KartuIdentitasPutRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			},
+			"delete": {
+				"tags": ["admin-kartu-identitas-controller"],
+				"operationId": "delete_11",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
 		"/profil/pengalaman-kerja": {
 			"get": {
 				"tags": ["pengalaman-kerja-controller"],
@@ -887,10 +1079,227 @@
 				}
 			}
 		},
+		"/admin/profil/pengalaman-kerja": {
+			"post": {
+				"tags": ["admin-pengalaman-kerja-controller"],
+				"operationId": "create",
+				"requestBody": {
+					"content": {
+						"application/json": { "schema": { "$ref": "#/components/schemas/PengalamanKerjaPostRequest" } }
+					},
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pengalaman-kerja/lampiran": {
+			"post": {
+				"tags": ["admin-pengalaman-kerja-controller"],
+				"operationId": "addLampiran",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PengalamanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pendidikan": {
+			"post": {
+				"tags": ["admin-pendidikan-controller"],
+				"operationId": "create_1",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PendidikanPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pendidikan/lampiran": {
+			"post": {
+				"tags": ["admin-pendidikan-controller"],
+				"operationId": "addLampiran_1",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PendidikanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pelatihan": {
+			"post": {
+				"tags": ["admin-pelatihan-controller"],
+				"operationId": "create_2",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/PelatihanPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pelatihan/lampiran": {
+			"post": {
+				"tags": ["admin-pelatihan-controller"],
+				"operationId": "addLampiran_2",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PelatihanLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keluarga": {
+			"post": {
+				"tags": ["admin-keluarga-controller"],
+				"operationId": "create_3",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keluarga/lampiran": {
+			"post": {
+				"tags": ["admin-keluarga-controller"],
+				"operationId": "addLampiran_3",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/ProfilKeluargaLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keahlian": {
+			"post": {
+				"tags": ["admin-keahlian-controller"],
+				"operationId": "create_4",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KeahlianPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keahlian/lampiran": {
+			"post": {
+				"tags": ["admin-keahlian-controller"],
+				"operationId": "addLampiran_4",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/KeahlianLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/kartu-identitas": {
+			"post": {
+				"tags": ["admin-kartu-identitas-controller"],
+				"operationId": "create_5",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/KartuIdentitasPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/kartu-identitas/lampiran": {
+			"post": {
+				"tags": ["admin-kartu-identitas-controller"],
+				"operationId": "addLampiran_5",
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/KartuIdentitasLampiranPostRequest" } }
+					}
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+					}
+				}
+			}
+		},
 		"/profil": {
 			"patch": {
 				"tags": ["self-profil-controller"],
 				"operationId": "patchBiodataSelf",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPatchRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/{id}": {
+			"patch": {
+				"tags": ["admin-profil-controller"],
+				"operationId": "patchBiodataAdmin",
+				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"requestBody": {
 					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPatchRequest" } } },
 					"required": true
@@ -1327,7 +1736,97 @@
 		"/profil/lampiran/delete/{id}": {
 			"delete": {
 				"tags": ["lampiran-profil-controller"],
-				"operationId": "delete_6",
+				"operationId": "delete_12",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pengalaman-kerja/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-pengalaman-kerja-controller"],
+				"operationId": "deleteLampiran_6",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pendidikan/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-pendidikan-controller"],
+				"operationId": "deleteLampiran_7",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/pelatihan/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-pelatihan-controller"],
+				"operationId": "deleteLampiran_8",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keluarga/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-keluarga-controller"],
+				"operationId": "deleteLampiran_9",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/keahlian/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-keahlian-controller"],
+				"operationId": "deleteLampiran_10",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+					}
+				}
+			}
+		},
+		"/admin/profil/kartu-identitas/lampiran/{id}": {
+			"delete": {
+				"tags": ["admin-kartu-identitas-controller"],
+				"operationId": "deleteLampiran_11",
 				"parameters": [
 					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],

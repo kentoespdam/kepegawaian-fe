@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { cache } from "react";
-import type { AccountMeResponse } from "@/types/auth";
+import type { MeResponse } from "@/types/account/me";
 import { readSession, resolveToken } from "./appwriteSession";
 
 const BACKEND_URL = process.env.BACKEND_URL ?? "";
@@ -17,7 +17,7 @@ export const getAccountSession = cache(async (): Promise<{ permissions: string[]
 			headers: { Authorization: `Bearer ${jwt}` },
 		});
 		if (!res.ok) return { permissions: [] };
-		const body = (await res.json()) as AccountMeResponse;
+		const body = (await res.json()) as MeResponse;
 		return { permissions: body.permissions ?? [] };
 	} catch {
 		return { permissions: [] };

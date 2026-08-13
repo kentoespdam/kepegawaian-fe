@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { BiodataPatchRequest } from "@/types/profil/biodata-patch";
+import type { BiodataPatchRequest } from "@/types/admin/profil";
 
 /** PATCH /admin/profil/{nik} — edit biodata oleh HRD/ADMIN, langsung stable (tanpa approval queue). */
 export function useAdminBiodataMutation(nik: string) {

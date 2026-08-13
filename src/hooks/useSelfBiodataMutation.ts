@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import type { BiodataPatchRequest } from "@/types/profil/biodata-patch";
+import type { BiodataPatchRequest } from "@/types/admin/profil";
 
 /** PATCH /profil — edit biodata sendiri oleh pegawai, selalu masuk approval queue (changedStatus=true). */
 export function useSelfBiodataMutation() {

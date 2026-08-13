@@ -8,7 +8,7 @@
  * Endpoint : DELETE /profil/pelatihan/lampiran/{id}, DELETE /profil/pelatihan/{id}, GET /profil/pelatihan, GET /profil/pelatihan/lampiran/{id}, GET /profil/pelatihan/lampiran/{id}/file, GET /profil/pelatihan/{id}, GET /profil/pelatihan/{id}/lampiran, POST /profil/pelatihan, POST /profil/pelatihan/lampiran, PUT /profil/pelatihan/{id}
  */
 
-import type { Envelope, JenisProfilUpdate, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
+import type { Envelope, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface PelatihanSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -39,20 +39,6 @@ export interface PelatihanDetail {
 
 export type SingleResultPelatihanDetail = Envelope<PelatihanDetail>;
 
-export interface PelatihanPutRequest {
-	biodataId: string; // minLength 1
-	jenisPelatihanId?: number; // int64, min 1
-	nama: string; // minLength 1
-	lembaga: string; // minLength 1
-	tanggalMulai: string; // date
-	tanggalSelesai: string; // date
-	lulus?: boolean;
-	nilai: string; // minLength 1
-	ikatanDinas?: boolean;
-	tanggalAkhirIkatan?: string; // date
-	notes?: string;
-}
-
 export interface PelatihanQuery {
 	id?: number; // int64
 	biodataId?: string;
@@ -76,33 +62,15 @@ export type PagePelatihanQuery = Page<PelatihanQuery>;
 
 export type PageResultPagePelatihanQuery = PageEnvelope<PelatihanQuery>;
 
-export interface PelatihanPostRequest {
-	biodataId: string; // minLength 1
-	jenisPelatihanId?: number; // int64, min 1
-	nama: string; // minLength 1
-	lembaga: string; // minLength 1
-	tanggalMulai: string; // date
-	tanggalSelesai: string; // date
-	lulus?: boolean;
-	nilai: string; // minLength 1
-	ikatanDinas?: boolean;
-	tanggalAkhirIkatan?: string; // date
-	notes?: string;
-}
-
-export interface PelatihanLampiranPostRequest {
-	ref?: JenisProfilUpdate;
-	refId?: number; // int64, min 1
-	fileName: string; // binary
-	notes?: string;
-}
-
 export type {
 	DeletedResult,
 	LampiranProfilQuery,
 	LampiranRow,
 	ListResultLampiranProfilQuery,
 	PageableObject,
+	PelatihanLampiranPostRequest,
+	PelatihanPostRequest,
+	PelatihanPutRequest,
 	SavedResultLong,
 	SingleResultLampiranProfilQuery,
 	SortObject,

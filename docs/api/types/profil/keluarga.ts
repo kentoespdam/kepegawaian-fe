@@ -8,22 +8,7 @@
  * Endpoint : DELETE /profil/keluarga/lampiran/{id}, DELETE /profil/keluarga/{id}, GET /profil/keluarga, GET /profil/keluarga/lampiran/{id}, GET /profil/keluarga/lampiran/{id}/file, GET /profil/keluarga/{id}, GET /profil/keluarga/{id}/lampiran, POST /profil/keluarga, POST /profil/keluarga/lampiran, PUT /profil/keluarga/{id}
  */
 
-import type {
-	Agama,
-	Envelope,
-	JenisKelamin,
-	JenisProfilUpdate,
-	JenjangPendidikanResponse,
-	LampiranRow,
-	Page,
-	PageEnvelope,
-	PageQuery,
-} from "../_shared";
-
-/** Hubungan keluarga (SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA). */
-export type HubunganKeluarga = "SUAMI" | "ISTRI" | "AYAH" | "IBU" | "ANAK" | "SAUDARA";
-/** Status pendidikan anggota keluarga (BELUM_SEKOLAH, SEKOLAH, SELESAI_SEKOLAH). */
-export type StatusPendidikanKeluarga = "BELUM_SEKOLAH" | "SEKOLAH" | "SELESAI_SEKOLAH";
+import type { Envelope, JenjangPendidikanResponse, LampiranRow, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface KeluargaSearchParams extends PageQuery {
 	biodataId: string; // minLength 1
@@ -62,48 +47,9 @@ export interface ProfilKeluargaDetail {
 
 export type SingleResultProfilKeluargaDetail = Envelope<ProfilKeluargaDetail>;
 
-export interface ProfilKeluargaPutRequest {
-	biodataId: string; // minLength 1
-	nik?: string;
-	nama: string; // minLength 1
-	jenisKelamin: JenisKelamin;
-	agama: Agama;
-	hubunganKeluarga: HubunganKeluarga;
-	tempatLahir: string; // minLength 1
-	tanggalLahir: string; // date
-	tanggungan: boolean;
-	pendidikanId?: number; // int64
-	statusPendidikan?: StatusPendidikanKeluarga;
-	statusKawin: boolean;
-	notes?: string;
-}
-
 export type PageProfilKeluargaQuery = Page<ProfilKeluargaQuery>;
 
 export type PageResultPageProfilKeluargaQuery = PageEnvelope<ProfilKeluargaQuery>;
-
-export interface ProfilKeluargaPostRequest {
-	biodataId: string; // minLength 1
-	nik?: string;
-	nama: string; // minLength 1
-	jenisKelamin: JenisKelamin;
-	agama: Agama;
-	hubunganKeluarga: HubunganKeluarga;
-	tempatLahir: string; // minLength 1
-	tanggalLahir: string; // date
-	tanggungan: boolean;
-	pendidikanId?: number; // int64
-	statusPendidikan?: StatusPendidikanKeluarga;
-	statusKawin: boolean;
-	notes?: string;
-}
-
-export interface ProfilKeluargaLampiranPostRequest {
-	ref?: JenisProfilUpdate;
-	refId?: number; // int64, min 1
-	fileName: string; // binary
-	notes?: string;
-}
 
 export type {
 	DeletedResult,
@@ -112,6 +58,9 @@ export type {
 	LampiranRow,
 	ListResultLampiranProfilQuery,
 	PageableObject,
+	ProfilKeluargaLampiranPostRequest,
+	ProfilKeluargaPostRequest,
+	ProfilKeluargaPutRequest,
 	SavedResultLong,
 	SingleResultLampiranProfilQuery,
 	SortObject,
