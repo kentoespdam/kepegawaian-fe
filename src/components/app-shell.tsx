@@ -34,7 +34,11 @@ const MODULES = [
 		id: "master",
 		label: "Master",
 		icon: LayoutGrid,
-		entities: MASTER_ENTITIES.map((e) => ({ ...e, gate: PERMISSION.MASTER_READ })),
+		entities: MASTER_ENTITIES.map((e) => ({
+			...e,
+			// READ saja tidak cukup — seed V31 memberi ADMIN MASTER:WRITE/DELETE tanpa READ
+			gate: [PERMISSION.MASTER_READ, PERMISSION.MASTER_WRITE, PERMISSION.MASTER_DELETE],
+		})),
 	},
 	{
 		id: "kepegawaian",
@@ -97,8 +101,10 @@ export function AppShell({
 		...mod,
 		visibleEntities: mod.entities.filter((e) => {
 			const gate = entityGate(e);
-			// null = no gate (always visible), otherwise check permission
-			return gate === null || hasPermission(permissions, gate as Permission);
+			// null = no gate (always visible); string[] = any-of; string = single permission
+			if (gate === null) return true;
+			const gates = Array.isArray(gate) ? gate : [gate];
+			return gates.some((g) => hasPermission(permissions, g as Permission));
 		}),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 

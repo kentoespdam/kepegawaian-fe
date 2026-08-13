@@ -3,7 +3,7 @@ export function entityHref(e: { id: string; href?: string }): string {
 	return e.href ?? `/master/${e.id}`;
 }
 
-/** Get RBAC gate entity name — default `id`, `null` = always visible. */
-export function entityGate(e: { id: string; gate?: string | null }): string | null {
+/** Get RBAC gate entity — default `id`, `null` = always visible, string[] = any-of. */
+export function entityGate(e: { id: string; gate?: string | string[] | null }): string | string[] | null {
 	return e.gate !== undefined ? e.gate : e.id;
 }
