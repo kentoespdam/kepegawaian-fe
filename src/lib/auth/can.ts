@@ -1,6 +1,11 @@
 import { notFound } from "next/navigation";
 import type { Action, AppwriteUser } from "@/types/auth";
-import { PERMISSIONS } from "./permissions";
+import { PERMISSIONS, type Permission } from "./permissions";
+
+/** Cek permission granular (dari GET /account/me) pada list permissions user. */
+export function hasPermission(perms: string[], p: Permission): boolean {
+	return perms.includes(p);
+}
 
 export function getRoles(user: AppwriteUser): string[] {
 	return user.prefs?.roles ?? [];

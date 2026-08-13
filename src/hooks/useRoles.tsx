@@ -1,13 +1,5 @@
 "use client";
 
-import { createContext, useContext } from "react";
-
-const RolesContext = createContext<string[]>([]);
-
-export function RolesProvider({ roles, children }: { roles: string[]; children: React.ReactNode }) {
-	return <RolesContext.Provider value={roles}>{children}</RolesContext.Provider>;
-}
-
-export function useRoles(): string[] {
-	return useContext(RolesContext);
-}
+// ponytail: re-export kompat — useRoles/RolesProvider kini tinggal di useAuth.tsx.
+// File ini tetap agar call site lama (badge-manager, pendukung/*, riwayat/cuti) tak perlu diubah.
+export { AuthProvider as RolesProvider, useRoles } from "./useAuth";

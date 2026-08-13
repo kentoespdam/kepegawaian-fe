@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, Settings, Users } from "lucide-react";
+import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, Settings, UserRound, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -21,8 +21,10 @@ import {
 } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
-import { RolesProvider } from "@/hooks/useRoles";
-import { can, getRoles } from "@/lib/auth/can";
+import { AuthProvider } from "@/hooks/useAuth";
+import { getRoles, hasPermission } from "@/lib/auth/can";
+import type { Permission } from "@/lib/auth/permissions";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { entityGate, entityHref } from "@/lib/sidebar-utils";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
@@ -32,7 +34,7 @@ const MODULES = [
 		id: "master",
 		label: "Master",
 		icon: LayoutGrid,
-		entities: MASTER_ENTITIES,
+		entities: MASTER_ENTITIES.map((e) => ({ ...e, gate: PERMISSION.MASTER_READ })),
 	},
 	{
 		id: "kepegawaian",
@@ -41,23 +43,46 @@ const MODULES = [
 		entities: [
 			// ponytail: Dashboard = no gate (terbuka semua login)
 			{ id: "dashboard", label: "Dashboard", href: "/kepegawaian/dashboard", gate: null },
-			{ id: "pegawai", label: "Data Pegawai", href: "/kepegawaian/data", gate: "pegawai" },
-			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: "pegawai" },
+			{ id: "pegawai", label: "Data Pegawai", href: "/kepegawaian/data", gate: PERMISSION.PEGAWAI_READ },
+			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: PERMISSION.PEGAWAI_READ },
+		],
+	},
+	{
+		id: "profil",
+		label: "Profil",
+		icon: UserRound,
+		entities: [
+			{
+				id: "approval-profil",
+				label: "Approval Profil",
+				href: "/profil/approval",
+				gate: PERMISSION.PROFIL_APPROVE,
+			},
 		],
 	},
 	{ id: "cuti", label: "Cuti", icon: CalendarRange, entities: [] },
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
 	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
-	{ id: "sistem", label: "Sistem", icon: Settings, entities: [] },
+	{
+		id: "sistem",
+		label: "Sistem",
+		icon: Settings,
+		entities: [
+			{ id: "roles", label: "Manajemen Role", href: "/sistem/roles", gate: PERMISSION.SYSTEM_MANAGE_ROLE },
+			{ id: "users", label: "Manajemen User", href: "/sistem/users", gate: PERMISSION.SYSTEM_MANAGE_USER },
+		],
+	},
 ];
 export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
 
 export function AppShell({
 	user,
+	permissions,
 	children,
 	defaultOpen = true,
 }: {
 	user: AppwriteUser;
+	permissions: string[];
 	children: React.ReactNode;
 	defaultOpen?: boolean;
 }) {
@@ -73,7 +98,7 @@ export function AppShell({
 		visibleEntities: mod.entities.filter((e) => {
 			const gate = entityGate(e);
 			// null = no gate (always visible), otherwise check permission
-			return gate === null || can(roles, "view", gate);
+			return gate === null || hasPermission(permissions, gate as Permission);
 		}),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 
@@ -90,7 +115,7 @@ export function AppShell({
 	};
 
 	return (
-		<RolesProvider roles={roles}>
+		<AuthProvider roles={roles} permissions={permissions}>
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<Sidebar collapsible="icon">
 					<SidebarHeader>
@@ -182,6 +207,6 @@ export function AppShell({
 					<div className="flex-1 overflow-y-auto p-6 min-w-0">{children}</div>
 				</SidebarInset>
 			</SidebarProvider>
-		</RolesProvider>
+		</AuthProvider>
 	);
 }

@@ -7,7 +7,7 @@ import { SanksiForm } from "@/app/(app)/master/sanksi/form";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useRoles } from "@/hooks/useRoles";
+import { useRoles } from "@/hooks/useAuth";
 import { type FullSanksiPayload, useSanksiMutations } from "@/hooks/useSanksiMutations";
 import { can } from "@/lib/auth/can";
 

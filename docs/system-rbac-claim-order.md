@@ -20,87 +20,89 @@ kepegawaian-fe-sd9y  ← KERJAKAN DULU (fondasi, semua issue lain bergantung ini
 
 ## Issue 1 — WAJIB PERTAMA
 
-### `kepegawaian-fe-sd9y` — auth: additive permission layer
+### `kepegawaian-fe-sd9y` — auth: additive permission layer ✅
 
 **Files yang dibuat/diubah:**
 
-- [ ] `src/types/auth.ts` — tambah `AccountMeResponse`
-- [ ] `src/lib/auth/permissions.ts` — ganti `PERMISSIONS` → `const PERMISSION + type Permission`
-- [ ] `src/lib/auth/can.ts` — tambah `hasPermission(perms, p)`
-- [ ] `src/lib/auth/accountSession.ts` — **FILE BARU** — fetch `GET /account/me`
-- [ ] `src/lib/auth/index.ts` — export baru: `hasPermission`, `getAccountSession`, `AccountMeResponse`, `PERMISSION`
-- [ ] `src/hooks/useAuth.tsx` — **FILE BARU** — extend dari useRoles, shim `useRoles()`
-- [ ] `src/hooks/useRoles.tsx` — hapus setelah `useAuth.tsx` verified (atau jadikan re-export)
-- [ ] `src/app/(app)/layout.tsx` — `Promise.all([verifySession(), getAccountSession()])`
-- [ ] `src/components/app-shell.tsx` — prop `permissions`, gate → `hasPermission`, nilai gate → BE string, `<AuthProvider>`
+- [x] `src/types/auth.ts` — tambah `AccountMeResponse`
+- [x] `src/lib/auth/permissions.ts` — ganti `PERMISSIONS` → `const PERMISSION + type Permission` (PERMISSIONS lama dipertahankan untuk `can()` legacy: Can/sanksi-manager)
+- [x] `src/lib/auth/can.ts` — tambah `hasPermission(perms, p)`
+- [x] `src/lib/auth/accountSession.ts` — **FILE BARU** — fetch `GET /account/me`
+- [x] `src/lib/auth/index.ts` — export baru: `hasPermission`, `getAccountSession`, `AccountMeResponse`, `PERMISSION`
+- [x] `src/hooks/useAuth.tsx` — **FILE BARU** — extend dari useRoles, shim `useRoles()`
+- [x] `src/hooks/useRoles.tsx` — dijadikan re-export dari useAuth (7 call site lama tetap jalan)
+- [x] `src/app/(app)/layout.tsx` — `Promise.all([verifySession(), getAccountSession()])`
+- [x] `src/components/app-shell.tsx` — prop `permissions`, gate → `hasPermission`, nilai gate → BE string, `<AuthProvider>`
 
 **Verifikasi:**
-- [ ] `bun run test` — existing tests tetap hijau
-- [ ] `bun run build` — zero error
-- [ ] Sidebar tampil sama seperti sebelumnya untuk ADMIN (semua menu visible)
+- [x] `bun run test` — existing tests tetap hijau (118/118)
+- [x] `bun run build` — zero error
+- [x] Sidebar tampil sama seperti sebelumnya untuk ADMIN (semua menu visible)
 
 ---
 
 ## Issue 2 — Paralel setelah sd9y
 
-### `kepegawaian-fe-s5bd` — profil: split useBiodataMutation
+### `kepegawaian-fe-s5bd` — profil: split useBiodataMutation ✅
 
 **Files yang dibuat/diubah:**
 
-- [ ] `src/hooks/useSelfBiodataMutation.ts` — **FILE BARU** — `PATCH /profil`
-- [ ] `src/hooks/useAdminBiodataMutation.ts` — **FILE BARU** — `PATCH /admin/profil/{nik}`
-- [ ] `src/hooks/useBiodataMutation.ts` — hapus
-- [ ] `src/app/(app)/profil/page.tsx` (atau komponen di dalamnya) — pakai `useSelfBiodataMutation`
-- [ ] `src/app/(app)/kepegawaian/dashboard/section-left-panel.tsx` — pakai `useAdminBiodataMutation(nik)`
+- [x] `src/hooks/useSelfBiodataMutation.ts` — **FILE BARU** — `PATCH /profil` (masuk approval queue)
+- [x] `src/hooks/useAdminBiodataMutation.ts` — **FILE BARU** — `PATCH /admin/profil/{nik}` (langsung stable)
+- [x] `src/hooks/useBiodataMutation.ts` — hapus
+- [x] `src/types/profil/biodata-patch.ts` — **FILE BARU** — `BiodataPatchRequest` hand-written (generator tak bisa: path satu-segmen `/profil` di-skip `domainOf`)
+- [x] `src/app/(app)/kepegawaian/dashboard/section-left-panel.tsx` — pakai `useSelfBiodataMutation` (dashboard = self-service, keputusan user 2026-08-13)
+
+> ⚠️ Deviasi dari plan: plan menugaskan `useAdminBiodataMutation` ke dashboard, tapi dashboard fetch dari `getPegawaiSession()` (self-service). Per contract §5, self → `PATCH /profil`. Konfirmasi user: **self hook untuk dashboard, admin hook untuk halaman admin (`kepegawaian/data/{pegawaiId}/pendukung/*`)**.
 
 **Verifikasi:**
-- [ ] Edit biodata di halaman /profil → masuk approval queue (status PENDING)
-- [ ] Edit biodata di dashboard kepegawaian → langsung update (sebagai admin)
+- [x] Edit biodata di dashboard → `PATCH /profil` → masuk approval queue (PENDING)
+- [x] `useAdminBiodataMutation` siap dipakai halaman admin pendukung
 
 ---
 
 ## Issue 3 — Paralel setelah sd9y
 
-### `kepegawaian-fe-mice` — profil: halaman approval antrian
+### `kepegawaian-fe-mice` — profil: halaman approval antrian ✅
 
 **Files yang dibuat:**
 
-- [ ] `src/app/(app)/profil/approval/page.tsx` — server component, gate `PROFIL:APPROVE`
-- [ ] `src/app/(app)/profil/approval/approval-client.tsx` — tabel + dialog detail + diff
+- [x] `src/app/(app)/profil/approval/page.tsx` — server component, gate `PROFIL:APPROVE`
+- [x] `src/app/(app)/profil/approval/approval-client.tsx` — tabel + dialog detail + diff
 
 **Komponen di dalam approval-client.tsx:**
-- [ ] Tabel list `ProfileUpdateQuery[]` dengan filter PENDING default
-- [ ] `flattenForDiff(obj, prefix)` — recursive flatten untuk diff renderer
-- [ ] Dialog detail: header (nama/nipam/jabatan/reqDate/tableName), tabel diff 3 kolom
-- [ ] Tombol Approve + Reject — gated `hasPermission(permissions, PERMISSION.PROFIL_APPROVE)`
-- [ ] Sidebar entry: tambah ke MODULES (grup profil atau sistem)
+- [x] Tabel list `ProfileUpdateQuery[]` dengan filter PENDING default
+- [x] `flattenForDiff(obj, prefix)` — recursive flatten untuk diff renderer
+- [x] Dialog detail: header (nama/nipam/jabatan/reqDate/tableName), tabel diff 3 kolom
+- [x] Tombol Approve + Reject — gated `hasPermission(permissions, PERMISSION.PROFIL_APPROVE)`
+- [x] Sidebar entry: tambah ke MODULES (grup profil baru)
 
 **Verifikasi:**
-- [ ] ADMIN/HRD dapat akses `/profil/approval`
-- [ ] User tanpa PROFIL:APPROVE → `forbidden()` (404)
-- [ ] Diff menampilkan field yang berubah dengan highlight
-- [ ] Approve → status APPROVED, row hilang dari filter PENDING
+- [x] ADMIN/HRD dapat akses `/profil/approval`
+- [x] User tanpa PROFIL:APPROVE → `forbidden()` (404)
+- [x] Diff menampilkan field yang berubah dengan highlight
+- [x] Approve → status APPROVED, row hilang dari filter PENDING
 
 ---
 
 ## Issue 4 — Paralel setelah sd9y
 
-### `kepegawaian-fe-6ljl` — sistem: manajemen role & user
+### `kepegawaian-fe-6ljl` — sistem: manajemen role & user ✅
 
 **Files yang dibuat:**
 
-- [ ] `src/app/(app)/sistem/roles/page.tsx` — gate `SYSTEM:MANAGE_ROLE`
-- [ ] `src/app/(app)/sistem/roles/roles-client.tsx` — tabel role + assign/revoke permission
-- [ ] `src/app/(app)/sistem/users/page.tsx` — gate `SYSTEM:MANAGE_USER`
-- [ ] `src/app/(app)/sistem/users/users-client.tsx` — tabel user + assign role
+- [x] `src/app/(app)/sistem/roles/page.tsx` — gate `SYSTEM:MANAGE_ROLE`
+- [x] `src/app/(app)/sistem/roles/roles-client.tsx` — tabel role + assign/revoke permission
+- [x] `src/app/(app)/sistem/users/page.tsx` — gate `SYSTEM:MANAGE_USER`
+- [x] `src/app/(app)/sistem/users/users-client.tsx` — tabel user + assign role + toggle status
 
 **Sidebar:**
-- [ ] Isi `entities: []` di modul sistem dengan dua entry baru (roles + users)
+- [x] Isi `entities: []` di modul sistem dengan dua entry baru (roles + users)
 
 **Verifikasi:**
-- [ ] Toggle permission di role → POST/DELETE `/system/roles/{roleId}/permissions/{permName}`
-- [ ] Assign role ke user → PATCH `/system/users/pref/{id}`
-- [ ] User tanpa SYSTEM:MANAGE_ROLE/USER → 404
+- [x] Toggle permission di role → POST/DELETE `/system/roles/{roleId}/permissions/{permName}`
+- [x] Assign role ke user → PATCH `/system/users/pref/{id}` (body: `PrefRole[]`, sesuai api.json)
+- [x] User tanpa SYSTEM:MANAGE_ROLE/USER → 404
 
 ---
 

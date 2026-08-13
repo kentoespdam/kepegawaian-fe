@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { biodataFormSchema, editFormFields } from "@/config/profil/biodata.config";
-import { useBiodataMutation } from "@/hooks/useBiodataMutation";
+import { useSelfBiodataMutation } from "@/hooks/useSelfBiodataMutation";
 import {
 	formatPendidikan,
 	labelAgama,
@@ -24,7 +24,8 @@ import {
 import { ENUMS } from "@/lib/enums";
 import { cn, formatDate, rupiah } from "@/lib/utils";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import type { BiodataDashboardResponse, BiodataPatchRequest } from "@/types/profil/biodata";
+import type { BiodataDashboardResponse } from "@/types/profil/biodata";
+import type { BiodataPatchRequest } from "@/types/profil/biodata-patch";
 
 // ponytail: shared afordansi trigger className
 const ACCORDION_TRIGGER_AFF =
@@ -34,7 +35,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [formError, setFormError] = useState<string | null>(null);
-	const biodataMutation = useBiodataMutation(nik ?? "");
+	const biodataMutation = useSelfBiodataMutation();
 
 	const handleEditSubmit = async (data: Record<string, unknown>) => {
 		setFormError(null);
@@ -45,7 +46,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 				if (v === "" || v === undefined) continue;
 				payload[key] = v;
 			}
-			await biodataMutation.mutateAsync({ nik: nik ?? "", data: payload as BiodataPatchRequest });
+			await biodataMutation.mutateAsync(payload as BiodataPatchRequest);
 			setDialogOpen(false);
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
