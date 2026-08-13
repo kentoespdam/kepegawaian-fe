@@ -26,7 +26,15 @@ export interface ProfileUpdateQuery {
 	nama?: string;
 	jabatan?: string;
 	reqDate?: string; // date-time
-	tableName?: "BIODATA" | "KELUARGA" | "PENDIDIKAN" | "PENGALAMAN_KERJA" | "PELATIHAN" | "KEAHLIAN";
+	tableName?:
+		| "BIODATA"
+		| "KELUARGA"
+		| "PENDIDIKAN"
+		| "PENGALAMAN_KERJA"
+		| "PELATIHAN"
+		| "KEAHLIAN"
+		| "KARTU_IDENTITAS"
+		| "LAMPIRAN";
 	actionType?: "UNKNOWN" | "INSERT" | "UPDATE" | "DELETE";
 	dataDescription?: string;
 	revId?: string;

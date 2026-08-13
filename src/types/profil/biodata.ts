@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/{modul}/api.json
- * Endpoint : DELETE /profil/biodata/{id}, GET /profil/biodata, GET /profil/biodata/list, GET /profil/biodata/{id}, GET /profil/biodata/{id}/dashboard, GET /profil/biodata/{id}/foto-profil, PATCH /profil/biodata/{id}, POST /profil/biodata, PUT /profil/biodata/{id}, PUT /profil/biodata/{id}/foto-profil
+ * Endpoint : DELETE /profil/biodata/{id}, GET /profil/biodata, GET /profil/biodata/list, GET /profil/biodata/{id}, GET /profil/biodata/{id}/dashboard, GET /profil/biodata/{id}/foto-profil, POST /profil/biodata, PUT /profil/biodata/{id}, PUT /profil/biodata/{id}/foto-profil
  */
 
 import type {
@@ -67,18 +67,6 @@ export interface BiodataPutRequest {
 	statusKawin?: StatusKawin;
 	notes?: string;
 	isPegawai?: boolean;
-}
-
-export interface BiodataPatchRequest {
-	nama?: string;
-	alamat?: string;
-	jenisKelamin?: JenisKelamin;
-	statusKawin?: StatusKawin;
-	agama?: Agama;
-	tempatLahir?: string;
-	tanggalLahir?: string; // date
-	ibuKandung?: string;
-	telp?: string;
 }
 
 export interface BiodataQuery {

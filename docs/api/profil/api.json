@@ -349,21 +349,6 @@
 						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
 					}
 				}
-			},
-			"patch": {
-				"tags": ["biodata-controller"],
-				"operationId": "patchBiodata",
-				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPatchRequest" } } },
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
-					}
-				}
 			}
 		},
 		"/profil/biodata/{id}/foto-profil": {
@@ -614,24 +599,6 @@
 					"content": {
 						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/PelatihanLampiranPostRequest" } }
 					}
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
-					}
-				}
-			}
-		},
-		"/profil/lampiran/accept": {
-			"post": {
-				"tags": ["lampiran-profil-controller"],
-				"operationId": "acceptLampiran",
-				"requestBody": {
-					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/LampiranProfilAcceptRequest" } }
-					},
-					"required": true
 				},
 				"responses": {
 					"200": {
@@ -910,6 +877,22 @@
 				"operationId": "save_6",
 				"requestBody": {
 					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPostRequest" } } },
+					"required": true
+				},
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
+					}
+				}
+			}
+		},
+		"/profil": {
+			"patch": {
+				"tags": ["self-profil-controller"],
+				"operationId": "patchBiodataSelf",
+				"requestBody": {
+					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/BiodataPatchRequest" } } },
 					"required": true
 				},
 				"responses": {
@@ -1789,26 +1772,6 @@
 				},
 				"required": ["fileName"]
 			},
-			"LampiranProfilAcceptRequest": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64", "minimum": 1 },
-					"ref": {
-						"type": "string",
-						"enum": [
-							"PROFIL_KELUARGA",
-							"PROFIL_PENDIDIKAN",
-							"PROFIL_PELATIHAN",
-							"PROFIL_KEAHLIAN",
-							"FOTO_PROFIL",
-							"KARTU_IDENTITAS",
-							"PROFIL_PENGALAMAN_KERJA"
-						]
-					},
-					"refId": { "type": "integer", "format": "int64", "minimum": 1 }
-				},
-				"required": ["id", "ref", "refId"]
-			},
 			"ProfilKeluargaPostRequest": {
 				"type": "object",
 				"properties": {
@@ -2102,11 +2065,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
-					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" }
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
 				}
 			},
 			"ProfileUpdateQuery": {
@@ -2119,7 +2082,16 @@
 					"reqDate": { "type": "string", "format": "date-time" },
 					"tableName": {
 						"type": "string",
-						"enum": ["BIODATA", "KELUARGA", "PENDIDIKAN", "PENGALAMAN_KERJA", "PELATIHAN", "KEAHLIAN"]
+						"enum": [
+							"BIODATA",
+							"KELUARGA",
+							"PENDIDIKAN",
+							"PENGALAMAN_KERJA",
+							"PELATIHAN",
+							"KEAHLIAN",
+							"KARTU_IDENTITAS",
+							"LAMPIRAN"
+						]
 					},
 					"actionType": { "type": "string", "enum": ["UNKNOWN", "INSERT", "UPDATE", "DELETE"] },
 					"dataDescription": { "type": "string" },

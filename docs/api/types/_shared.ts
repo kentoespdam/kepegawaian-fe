@@ -101,6 +101,8 @@ export type Agama =
 export type StatusKepegawaian = "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
 /** Status perkawinan (BELUM_KAWIN, KAWIN, JANDA_DUDA, MENIKAH_SEKANTOR, TIDAK_TAHU). */
 export type StatusKawin = "BELUM_KAWIN" | "KAWIN" | "JANDA_DUDA" | "MENIKAH_SEKANTOR" | "TIDAK_TAHU";
+/** Golongan darah (A, B, AB, O). */
+export type GolonganDarah = "A" | "B" | "AB" | "O";
 /** Jenis profil yang diupdate (PROFIL_KELUARGA, PROFIL_PENDIDIKAN). */
 export type JenisProfilUpdate =
 	| "PROFIL_KELUARGA"
@@ -110,8 +112,6 @@ export type JenisProfilUpdate =
 	| "FOTO_PROFIL"
 	| "KARTU_IDENTITAS"
 	| "PROFIL_PENGALAMAN_KERJA";
-/** Golongan darah (A, B, AB, O). */
-export type GolonganDarah = "A" | "B" | "AB" | "O";
 /** Tipe komponen penggajian (NONE, PEMASUKAN, POTONGAN). */
 export type TipeKomponen = "NONE" | "PEMASUKAN" | "POTONGAN";
 /** Status approval umum (PENDING, APPROVED, CONFIRMED, REJECTED, CANCELED, RETURNED). */
@@ -421,4 +421,13 @@ export interface KartuIdentitasQuery {
 	tanggalTerima?: string; // date
 	notes?: string;
 	changedStatus?: string; // byte
+}
+
+export interface PrefPermission {
+	name?: string;
+}
+
+export interface PrefRole {
+	id: string; // minLength 1
+	permissions?: PrefPermission[];
 }
