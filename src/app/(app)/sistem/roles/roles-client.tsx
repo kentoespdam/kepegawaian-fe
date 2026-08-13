@@ -1,14 +1,75 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, X } from "lucide-react";
+import { Check, Pencil, Plus, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import type { ListResultPrefPermission } from "@/types/system/permissions";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
+
+/** Dialog buat/edit role — POST saat create, PUT saat edit. */
+function RoleFormDialog({
+	open,
+	onOpenChange,
+	role,
+	onSubmit,
+	isPending,
+}: {
+	open: boolean;
+	onOpenChange: (v: boolean) => void;
+	role: PrefRole | null;
+	onSubmit: (data: { id: string; description?: string }) => void;
+	isPending: boolean;
+}) {
+	const [id, setId] = useState("");
+	const [description, setDescription] = useState("");
+
+	// Reset form tiap dialog dibuka (create: kosong; edit: isi dari role).
+	if (open && role !== null && id === "" && description === "") {
+		setId(role.id);
+		setDescription(role.description ?? "");
+	}
+
+	const submit = () => {
+		if (role === null && !id.trim()) return;
+		onSubmit({ id: role?.id ?? id.trim(), description: description.trim() || undefined });
+	};
+
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent className="sm:max-w-sm">
+				<DialogHeader>
+					<DialogTitle>{role === null ? "Tambah role" : `Edit role — ${role.id}`}</DialogTitle>
+				</DialogHeader>
+				<div className="space-y-3">
+					{role === null && (
+						<div className="space-y-1.5">
+							<Label htmlFor="role-id">ID role</Label>
+							<Input id="role-id" value={id} onChange={(e) => setId(e.target.value)} placeholder="mis. HRD" />
+						</div>
+					)}
+					<div className="space-y-1.5">
+						<Label htmlFor="role-desc">Deskripsi</Label>
+						<Input
+							id="role-desc"
+							value={description}
+							onChange={(e) => setDescription(e.target.value)}
+							placeholder="Opsional — keterangan singkat role"
+						/>
+					</div>
+					<Button className="w-full" disabled={isPending} onClick={submit}>
+						{role === null ? "Simpan role" : "Simpan perubahan"}
+					</Button>
+				</div>
+			</DialogContent>
+		</Dialog>
+	);
+}
 
 /** Ambil SEMUA permission yang tersedia di sistem (read-only, katalog). */
 function useAllPermissions() {
@@ -47,6 +108,27 @@ export function RolesClient() {
 	const allPerms = permsQuery.data ?? [];
 
 	const [selectedRole, setSelectedRole] = useState<PrefRole | null>(null);
+	const [roleForm, setRoleForm] = useState<{ open: boolean; role: PrefRole | null }>({ open: false, role: null });
+
+	const saveRoleMutation = useMutation({
+		mutationFn: async (data: { id: string; description?: string }) => {
+			const res = await fetch(`/api/proxy/system/roles${roleForm.role ? `/${roleForm.role.id}` : ""}`, {
+				method: roleForm.role ? "PUT" : "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(roleForm.role ? { description: data.description } : data),
+			});
+			if (!res.ok) {
+				const body: { message?: string } = await res.json().catch(() => ({}));
+				throw new Error(body.message ?? "Gagal menyimpan role");
+			}
+		},
+		onSuccess: () => {
+			toast.success(roleForm.role ? "Role diperbarui" : "Role dibuat");
+			setRoleForm({ open: false, role: null });
+			qc.invalidateQueries({ queryKey: ["system-roles"] });
+		},
+		onError: (e: Error) => toast.error(e.message),
+	});
 
 	const toggleMutation = useMutation({
 		mutationFn: async ({ roleId, permName, assign }: { roleId: string; permName: string; assign: boolean }) => {
@@ -75,6 +157,13 @@ export function RolesClient() {
 	return (
 		<>
 			<div className="space-y-4">
+				<div className="flex items-center justify-between">
+					<p className="text-sm text-muted-foreground">Daftar role sistem beserta permission-nya.</p>
+					<Button size="sm" onClick={() => setRoleForm({ open: true, role: null })}>
+						<Plus className="mr-1.5 size-4" />
+						Tambah role
+					</Button>
+				</div>
 				{rolesQuery.isPending && <p className="text-sm text-muted-foreground">Memuat role...</p>}
 				{rolesQuery.isError && (
 					<p className="text-sm text-destructive">
@@ -90,13 +179,16 @@ export function RolesClient() {
 							<thead className="bg-muted/50 text-left text-xs uppercase text-muted-foreground">
 								<tr>
 									<th className="px-4 py-2.5">Role</th>
+									<th className="px-4 py-2.5">Deskripsi</th>
 									<th className="px-4 py-2.5">Permission</th>
+									<th className="px-4 py-2.5 text-right">Aksi</th>
 								</tr>
 							</thead>
 							<tbody>
 								{roles.map((role) => (
 									<tr key={role.id} className="border-t hover:bg-muted/30">
 										<td className="px-4 py-2.5 font-medium">{role.id}</td>
+										<td className="max-w-48 truncate px-4 py-2.5 text-muted-foreground">{role.description ?? "—"}</td>
 										<td className="px-4 py-2.5">
 											<Button
 												variant="outline"
@@ -108,6 +200,16 @@ export function RolesClient() {
 													{(role.permissions ?? []).length}
 												</Badge>
 												Kelola
+											</Button>
+										</td>
+										<td className="px-4 py-2.5 text-right">
+											<Button
+												variant="ghost"
+												size="sm"
+												onClick={() => setRoleForm({ open: true, role })}
+												aria-label={`Edit role ${role.id}`}
+											>
+												<Pencil className="size-4" />
 											</Button>
 										</td>
 									</tr>
@@ -146,6 +248,14 @@ export function RolesClient() {
 					</div>
 				</DialogContent>
 			</Dialog>
+
+			<RoleFormDialog
+				open={roleForm.open}
+				onOpenChange={(v) => !v && setRoleForm({ open: false, role: null })}
+				role={roleForm.role}
+				onSubmit={(data) => saveRoleMutation.mutate(data)}
+				isPending={saveRoleMutation.isPending}
+			/>
 		</>
 	);
 }
