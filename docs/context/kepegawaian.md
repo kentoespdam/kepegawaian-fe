@@ -99,6 +99,7 @@ kunci identitas, cuti Fase 2). Papan pantau implementasi:
 ## Status
 
 - ✅ Grilling round 1 selesai (identitas, 3 page, gating, istilah). Keputusan terkunci di doc ini + ADR-0006.
+- ✅ **Grilling round 2** (2026-08-14) — Terminasi: fitur tambah terminasi pegawai. Keputusan terkunci di [`CLAIM-ORDER-terminasi-tambah.md`](../CLAIM-ORDER-terminasi-tambah.md). Issue: `kepegawaian-fe-9uqt`.
 - ✅ **W1** — Generate tipe (`kepegawaian-fe-0is`) & verifikasi backend batch (`kepegawaian-fe-oqp`).
 - ✅ **W2** — `getPegawaiSession()` (`kepegawaian-fe-djv`), Data Pegawai 3 tab (`kepegawaian-fe-hnc`), Terminasi 2 tab (`kepegawaian-fe-vfe`).
 - ✅ **W3** — Dashboard Pegawai read-only 5 section (`kepegawaian-fe-tvr`).
