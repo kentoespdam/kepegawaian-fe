@@ -156,15 +156,9 @@ export function TerminasiClient() {
 						</p>
 					</div>
 				</div>
-				<div className="flex items-center gap-3">
-					<Button type="button" onClick={() => handleOpenForm()}>
-						<Plus className="size-4 mr-1.5" />
-						Tambah Terminasi
-					</Button>
-					<div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1 text-xs font-medium text-foreground shadow-xs">
-						<span className="size-2 rounded-full bg-primary" />
-						<span>Total: {pageView.total} Data</span>
-					</div>
+				<div className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3.5 py-1 text-xs font-medium text-foreground shadow-xs">
+					<span className="size-2 rounded-full bg-primary" />
+					<span>Total: {pageView.total} Data</span>
 				</div>
 			</div>
 
@@ -243,13 +237,19 @@ export function TerminasiClient() {
 					)}
 				</div>
 
-				<div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-					<AlertCircle className="size-3.5 text-primary" />
-					<span>
-						{tab === "calon-pensiun"
-							? "Proyeksi berdasarkan tanggal lahir & batas usia pensiun"
-							: "Data arsip pegawai resmi dinonaktifkan"}
-					</span>
+				<div className="flex items-center gap-3">
+					<Button type="button" onClick={() => handleOpenForm()}>
+						<Plus className="size-4 mr-1.5" />
+						Tambah Terminasi
+					</Button>
+					<div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
+						<AlertCircle className="size-3.5 text-primary" />
+						<span>
+							{tab === "calon-pensiun"
+								? "Proyeksi berdasarkan tanggal lahir & batas usia pensiun"
+								: "Data arsip pegawai resmi dinonaktifkan"}
+						</span>
+					</div>
 				</div>
 			</div>
 
