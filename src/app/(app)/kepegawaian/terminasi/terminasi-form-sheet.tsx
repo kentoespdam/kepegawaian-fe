@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -12,17 +12,15 @@ import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { apiErrorMessage } from "@/lib/utils";
-import type { PegawaiResponse, RiwayatTerminasiPostRequest } from "@/types/kepegawaian/riwayat";
+import type { PegawaiResponse } from "@/types/kepegawaian/riwayat";
 import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
 
-const JENIS_SK_OPTIONS = [
-	{ value: "SK_PENSIUN", label: "SK Pensiun" },
-	{ value: "SK_LAINNYA", label: "SK Lainnya" },
-	{ value: "SK_MUTASI", label: "SK Mutasi" },
-];
+// ponytail: guard klien — cegah round-trip boros ke BE. Pesan asli BE (RFC-7807) tetap tampil via apiErrorMessage.
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
 
 const schema = z.object({
 	pegawaiId: z.number().min(1, "Pegawai wajib dipilih"),
@@ -33,7 +31,6 @@ const schema = z.object({
 	golonganId: z.number().optional(),
 	alasanTerminasiId: z.string().min(1, "Alasan terminasi wajib"),
 	nomorSk: z.string().min(1, "Nomor SK wajib"),
-	jenisSk: z.string().min(1, "Jenis SK wajib"),
 	tanggalSk: z.string().min(1, "Tanggal SK wajib"),
 	tmtBerlaku: z.string().min(1, "TMT Berlaku wajib"),
 	notes: z.string().optional(),
@@ -49,6 +46,8 @@ interface Props {
 
 export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 	const qc = useQueryClient();
+	const fileRef = useRef<HTMLInputElement>(null);
+	const [fileError, setFileError] = useState<string | null>(null);
 
 	const {
 		setValue,
@@ -59,9 +58,6 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 		setError,
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema),
-		defaultValues: {
-			jenisSk: "SK_PENSIUN",
-		},
 	});
 
 	// ── Alasan Terminasi Options ──
@@ -163,7 +159,6 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 					organisasiId: orgId,
 					jabatanId: jabId,
 					golonganId: golId,
-					jenisSk: "SK_PENSIUN",
 					nomorSk: "",
 					tanggalSk: "",
 					tmtBerlaku: initialPegawai.tmtPensiun ?? "",
@@ -185,7 +180,6 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 					nama: "",
 					organisasiId: 0,
 					jabatanId: 0,
-					jenisSk: "SK_PENSIUN",
 					nomorSk: "",
 					tanggalSk: "",
 					tmtBerlaku: "",
@@ -200,25 +194,33 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 	// ── Submit ──
 	const onSubmit = async (values: FormValues) => {
 		try {
-			const payload: RiwayatTerminasiPostRequest = {
-				pegawaiId: values.pegawaiId,
-				nipam: values.nipam,
-				nama: values.nama,
-				organisasiId: values.organisasiId,
-				jabatanId: values.jabatanId,
-				golonganId: values.golonganId,
-				alasanTerminasiId: Number(values.alasanTerminasiId),
-				nomorSk: values.nomorSk,
-				jenisSk: values.jenisSk as RiwayatTerminasiPostRequest["jenisSk"],
-				tanggalSk: values.tanggalSk,
-				tmtBerlaku: values.tmtBerlaku,
-				notes: values.notes,
-			};
+			const file = fileRef.current?.files?.[0];
+			if (file && file.size > MAX_FILE_SIZE_BYTES) {
+				setFileError("File terlalu besar — maksimal 5 MB");
+				return;
+			}
+			setFileError(null);
+
+			// ponytail: multipart/form-data (@ModelAttribute) — JSON → HTTP 415. JANGAN set Content-Type manual.
+			const fd = new FormData();
+			fd.append("pegawaiId", String(values.pegawaiId));
+			fd.append("nipam", values.nipam);
+			fd.append("nama", values.nama);
+			fd.append("organisasiId", String(values.organisasiId));
+			fd.append("jabatanId", String(values.jabatanId));
+			fd.append("alasanTerminasiId", values.alasanTerminasiId);
+			fd.append("nomorSk", values.nomorSk);
+			// ponytail: jenisSk terminasi selalu SK_PENSIUN — hardcode, tidak ditampilkan di form
+			fd.append("jenisSk", "SK_PENSIUN");
+			fd.append("tanggalSk", values.tanggalSk);
+			fd.append("tmtBerlaku", values.tmtBerlaku);
+			if (values.golonganId) fd.append("golonganId", String(values.golonganId));
+			if (values.notes) fd.append("notes", values.notes);
+			if (file) fd.append("fileName", file);
 
 			const res = await fetch("/api/proxy/kepegawaian/riwayat/terminasi", {
 				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
+				body: fd,
 			});
 
 			if (!res.ok) {
@@ -308,14 +310,6 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 						required
 						error={errors.nomorSk?.message}
 					/>
-					<FieldFk
-						label="Jenis SK"
-						options={JENIS_SK_OPTIONS}
-						value={watch("jenisSk")}
-						onChange={(v) => setValue("jenisSk", v ?? "SK_PENSIUN")}
-						required
-						error={errors.jenisSk?.message}
-					/>
 					<div className="grid grid-cols-2 gap-3">
 						<FieldDate
 							label="Tgl. SK"
@@ -331,6 +325,13 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 							required
 							error={errors.tmtBerlaku?.message}
 						/>
+					</div>
+					{/* ── File ── */}
+					<div className="space-y-1.5">
+						<Label className="text-sm font-medium">File SK</Label>
+						<p className="text-xs text-muted-foreground mb-1">Maksimal 5 MB</p>
+						<Input ref={fileRef} type="file" className="h-11 cursor-pointer" onChange={() => setFileError(null)} />
+						{fileError && <p className="text-xs text-destructive">{fileError}</p>}
 					</div>
 					<FieldTextarea
 						label="Notes"

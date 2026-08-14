@@ -5,6 +5,10 @@
 
 **Issue:** `kepegawaian-fe-9uqt`
 
+> **Status (2026-08-14 — sesi coding):** ✅ SELESAI. Revisi grill sesi 2 (multipart
+> FormData, `jenisSk` hardcode, file input) sudah diterapkan di `terminasi-form-sheet.tsx`.
+> Test baru `terminasi-form-sheet.test.tsx` mengunci submit multipart (JSON → 415).
+
 **Tujuan.** Tambah tombol **"Tambah Terminasi"** di header page `/kepegawaian/terminasi` yang
 membuka Sheet form untuk mengubah status pegawai aktif menjadi terminasi — mencakup semua jenis:
 pensiun normal, pengunduran diri, pemberhentian dengan/tanpa hormat, meninggal dunia, dsb.
@@ -93,84 +97,84 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 **← depends on:** — (siap diklaim langsung)
 
 **A. Update filter alasan di `terminasi-client.tsx` + `useTerminasiTable.ts`**
-- [ ] Fetch `GET /api/proxy/master/alasan-berhenti/list` → array `AlasanBerhentiResponse[]`
+- [x] Fetch `GET /api/proxy/master/alasan-berhenti/list` → array `AlasanBerhentiResponse[]`
   - `useQuery`, `staleTime: 5 * 60_000` (master data jarang berubah)
   - Pattern: `{ id, nama }` — ikuti pola `useFkOptions` yang sudah ada di project
-- [ ] Ganti `<select>` filter alasan hardcode di `terminasi-client.tsx` → options dari fetch
+- [x] Ganti `<select>` filter alasan hardcode di `terminasi-client.tsx` → options dari fetch
   - Loading: disable + placeholder "Memuat..."
   - Error: fallback opsi kosong (tidak crash)
 
 **B. Buat `terminasi-form-sheet.tsx` — `"use client"`**
-- [ ] Buat file baru: `src/app/(app)/kepegawaian/terminasi/terminasi-form-sheet.tsx`
-- [ ] Props: `open: boolean`, `onOpenChange: (open: boolean) => void`, `initialPegawai?: PegawaiResponse | null`
+- [x] Buat file baru: `src/app/(app)/kepegawaian/terminasi/terminasi-form-sheet.tsx`
+- [x] Props: `open: boolean`, `onOpenChange: (open: boolean) => void`, `initialPegawai?: PegawaiResponse | null`
   - `initialPegawai` diisi saat user klik baris Calon Pensiun (pre-fill)
   - `null` / `undefined` = form kosong (via tombol header)
 
 **C. Picker Pegawai (komponen di dalam Sheet)**
-- [ ] State: `pickerQuery`, combobox input atau mini modal search
-- [ ] Fetch: `GET /api/proxy/pegawai?statusKerja=KARYAWAN_AKTIF&nama={q}&size=10`
+- [x] State: `pickerQuery`, combobox input atau mini modal search
+- [x] Fetch: `GET /api/proxy/pegawai?statusKerja=KARYAWAN_AKTIF&nama={q}&size=10`
   - Debounce 300ms, trigger jika ≥2 karakter
-- [ ] Hasil: tabel mini (NIPAM · Nama · Jabatan · Organisasi)
-- [ ] Klik baris → `setValue` ke `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `golonganId`
-- [ ] Display read-only pegawai terpilih di bawah picker
+- [x] Hasil: tabel mini (NIPAM · Nama · Jabatan · Organisasi)
+- [x] Klik baris → `setValue` ke `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `golonganId`
+- [x] Display read-only pegawai terpilih di bawah picker
 
 **D. Zod schema + form fields**
-- [ ] Schema wajib: `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `alasanTerminasiId`, `nomorSk`, `tanggalSk`, `tmtBerlaku`
-- [ ] Schema opsional: `golonganId`, `notes`
-- [ ] `jenisSk` **TIDAK masuk schema** — hardcode `"SK_PENSIUN"` di `defaultValues` RHF, tidak ditampilkan
-- [ ] Field `alasanTerminasiId` = combobox reuse data fetch dari step A
-- [ ] Field `nomorSk` = text input
-- [ ] Field `tanggalSk` + `tmtBerlaku` = date picker
-- [ ] Field `notes` = textarea opsional
-- [ ] **File input:** `useRef<HTMLInputElement>` + `<Input ref={fileRef} type="file" />` + guard 5 MB (ikuti pola SP L23, L62, L208–212)
+- [x] Schema wajib: `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `alasanTerminasiId`, `nomorSk`, `tanggalSk`, `tmtBerlaku`
+- [x] Schema opsional: `golonganId`, `notes`
+- [x] `jenisSk` **TIDAK masuk schema** — hardcode `"SK_PENSIUN"` di `defaultValues` RHF, tidak ditampilkan (implementasi: langsung `fd.append("jenisSk", "SK_PENSIUN")` di submit)
+- [x] Field `alasanTerminasiId` = combobox reuse data fetch dari step A
+- [x] Field `nomorSk` = text input
+- [x] Field `tanggalSk` + `tmtBerlaku` = date picker
+- [x] Field `notes` = textarea opsional
+- [x] **File input:** `useRef<HTMLInputElement>` + `<Input ref={fileRef} type="file" />` + guard 5 MB (ikuti pola SP L23, L62, L208–212)
 
 **E. Pre-fill dari `initialPegawai`**
-- [ ] `useEffect` saat `initialPegawai` berubah → `reset({ pegawaiId, nipam, nama, organisasiId, jabatanId, golonganId })`
-- [ ] Display read-only nama pegawai terpilih (dari `initialPegawai.biodata?.nama`)
-- [ ] `organisasiId` dari `initialPegawai.organisasi?.id`; `jabatanId` dari `initialPegawai.jabatan?.id`
+- [x] `useEffect` saat `initialPegawai` berubah → `reset({ pegawaiId, nipam, nama, organisasiId, jabatanId, golonganId })`
+- [x] Display read-only nama pegawai terpilih (dari `initialPegawai.biodata?.nama`)
+- [x] `organisasiId` dari `initialPegawai.organisasi?.id`; `jabatanId` dari `initialPegawai.jabatan?.id`
 
 **F. Submit — `POST /api/proxy/kepegawaian/riwayat/terminasi`**
-- [ ] **Gunakan `FormData`** (bukan `JSON.stringify`) — ikuti pola SP `sp-form-sheet.tsx` L214–236
-- [ ] `fd.append("pegawaiId", String(values.pegawaiId))` — semua field append ke FormData
-- [ ] `fd.append("jenisSk", "SK_PENSIUN")` — hardcode
-- [ ] File: `if (fileRef.current?.files?.[0]) fd.append("fileName", fileRef.current.files[0])`
-- [ ] Validasi file size ≤ 5 MB sebelum submit (guard client-side, SP L209–212)
-- [ ] **JANGAN set `Content-Type`** — browser auto-set boundary multipart
-- [ ] Sukses → `toast.success("Terminasi berhasil disimpan")` + `qc.invalidateQueries` (kedua tab: calon-pensiun + terminasi) + `onClose()`
-- [ ] Error BE → `setError("root", { message: ... })` + `toast.error(...)` (ikuti SP L246–250); Sheet tetap terbuka
-- [ ] 409 duplikat → pesan BE: `"Terminasi is already exist"`
+- [x] **Gunakan `FormData`** (bukan `JSON.stringify`) — ikuti pola SP `sp-form-sheet.tsx` L214–236
+- [x] `fd.append("pegawaiId", String(values.pegawaiId))` — semua field append ke FormData
+- [x] `fd.append("jenisSk", "SK_PENSIUN")` — hardcode
+- [x] File: `if (fileRef.current?.files?.[0]) fd.append("fileName", fileRef.current.files[0])`
+- [x] Validasi file size ≤ 5 MB sebelum submit (guard client-side, SP L209–212)
+- [x] **JANGAN set `Content-Type`** — browser auto-set boundary multipart
+- [x] Sukses → `toast.success("Terminasi berhasil disimpan")` + `qc.invalidateQueries` (kedua tab: calon-pensiun + terminasi) + `onClose()`
+- [x] Error BE → `setError("root", { message: ... })` + `toast.error(...)` (ikuti SP L246–250); Sheet tetap terbuka
+- [x] 409 duplikat → pesan BE: `"Terminasi is already exist"`
 
 **G. Wire ke `terminasi-client.tsx`**
-- [ ] State: `sheetOpen`, `prefillPegawai` di `TerminasiClient`
-- [ ] Tombol "Tambah Terminasi" di header → `setSheetOpen(true)`, `setPrefillPegawai(null)`
-- [ ] Kolom Aksi di tab "Calon Pensiun": tombol ikon per baris → `setSheetOpen(true)`, `setPrefillPegawai(row)`
-- [ ] Mount `<TerminasiFormSheet>` **sekali** di level page (bukan per baris)
+- [x] State: `sheetOpen`, `prefillPegawai` di `TerminasiClient`
+- [x] Tombol "Tambah Terminasi" di header → `setSheetOpen(true)`, `setPrefillPegawai(null)`
+- [x] Kolom Aksi di tab "Calon Pensiun": tombol ikon per baris → `setSheetOpen(true)`, `setPrefillPegawai(row)`
+- [x] Mount `<TerminasiFormSheet>` **sekali** di level page (bukan per baris)
 
 **H. Quality gate**
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint error
-- [ ] `bun run test` — tidak ada test yang pecah
-- [ ] `bd close kepegawaian-fe-9uqt`
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint error
+- [x] `bun run test` — tidak ada test yang pecah
+- [x] `bd close kepegawaian-fe-9uqt`
 
 ---
 
 ## Definition of Done
 
-- [ ] Tombol "Tambah Terminasi" di header page selalu terlihat (tidak bergantung tab aktif)
-- [ ] Klik tombol → Sheet terbuka dengan picker pegawai kosong
-- [ ] Klik baris di tab "Calon Pensiun" → Sheet terbuka dengan data pegawai pre-fill
-- [ ] Picker pegawai: search live, debounce 300ms, hanya `KARYAWAN_AKTIF`
-- [ ] Setelah pilih pegawai: nama, NIPAM, organisasi, jabatan tampil sebagai read-only
-- [ ] Field wajib tervalidasi via Zod + RHF sebelum submit
-- [ ] AlasanTerminasi: fetch dari backend, bukan hardcode
-- [ ] Filter "Alasan Terminasi" di tab "Sudah Terminasi": fetch dari backend, bukan hardcode
-- [ ] `jenisSk` tidak ditampilkan di form — hardcode `SK_PENSIUN` di payload
-- [ ] File input opsional: `<input type="file">`, guard 5 MB, dikirim via FormData
-- [ ] Submit pakai `multipart/form-data` (FormData, tanpa set Content-Type manual)
-- [ ] POST sukses → toast + kedua tab invalidate + Sheet tutup
-- [ ] POST gagal → error inline di form + toast.error, Sheet tetap terbuka
-- [ ] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
-- [ ] `npx gitnexus analyze` + `bd dolt push` + `git push`
+- [x] Tombol "Tambah Terminasi" di header page selalu terlihat (tidak bergantung tab aktif)
+- [x] Klik tombol → Sheet terbuka dengan picker pegawai kosong
+- [x] Klik baris di tab "Calon Pensiun" → Sheet terbuka dengan data pegawai pre-fill
+- [x] Picker pegawai: search live, debounce 300ms, hanya `KARYAWAN_AKTIF`
+- [x] Setelah pilih pegawai: nama, NIPAM, organisasi, jabatan tampil sebagai read-only
+- [x] Field wajib tervalidasi via Zod + RHF sebelum submit
+- [x] AlasanTerminasi: fetch dari backend, bukan hardcode
+- [x] Filter "Alasan Terminasi" di tab "Sudah Terminasi": fetch dari backend, bukan hardcode
+- [x] `jenisSk` tidak ditampilkan di form — hardcode `SK_PENSIUN` di payload
+- [x] File input opsional: `<input type="file">`, guard 5 MB, dikirim via FormData
+- [x] Submit pakai `multipart/form-data` (FormData, tanpa set Content-Type manual)
+- [x] POST sukses → toast + kedua tab invalidate + Sheet tutup
+- [x] POST gagal → error inline di form + toast.error, Sheet tetap terbuka
+- [x] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
+- [x] `npx gitnexus analyze` + `bd dolt push` + `git push`
 
 ---
 
