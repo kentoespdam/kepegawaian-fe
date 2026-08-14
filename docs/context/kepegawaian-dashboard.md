@@ -96,10 +96,16 @@ Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa
 **Panel KANAN — "Riwayat"** (accordion, **multi-open + lazy fetch**, section pertama terbuka).
 Data tiap section di-fetch **hanya saat dibuka**. Urutan mengikuti gambar referensi:
 
-> **CRUD self-service (ADR-0039):** Section 1–5 punya tombol Tambah/Edit/Hapus via self-endpoint
-> (`POST/PUT/DELETE /profil/{entity}/...`). Semua perubahan → approval queue (`changedStatus=true`).
-> Guard per-row: bila `changedStatus` truthy → unmount Edit/Hapus, tampilkan icon pending.
-> Badge "Menunggu" di header section bila ≥1 row pending. Section 6–10 tetap **read-only** (dikontrol HR/sistem).
+> **CRUD self-service (ADR-0039) — ✅ LIVE:** Section 1–5 punya tombol Tambah/Edit/Hapus via
+> self-endpoint (`POST/PUT/DELETE /profil/{entity}/...`). Semua perubahan → approval queue
+> (`changedStatus=true`), termasuk untuk ADMIN/HRD. Implementasi config-driven:
+> `src/config/profil/{entity}.config.ts` (Zod schema + `FormField[]` + mutation URL +
+> defaultValues) + `src/hooks/useSelf{Entity}Mutation.ts` (core `useSelfProfilMutation`, biodataId
+> di-inject dari sesi) + `SectionCrudSlot` (tombol Tambah, kolom Aksi, Dialog form, ConfirmDeleteDialog).
+> Guard per-row: `changedStatus` truthy → unmount Edit/Hapus, tampil badge "Menunggu" (ikon Clock).
+> Badge "Menunggu" di header section bila ≥1 row pending (page yang sedang tampil — known limitation).
+> FK combobox: jenjang-pendidikan / jenis-keahlian / jenis-pelatihan via `/master/{entity}/list`.
+> Section 6–10 tetap **read-only** (dikontrol HR/sistem). Detail implementasi: CLAIM-ORDER-dashboard-crud-panel-kanan.md.
 
 1. **Data Keluarga** — `/profil/keluarga?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/keluarga]**
 2. **Data Pendidikan** — `/profil/pendidikan?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/pendidikan]**

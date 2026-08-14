@@ -1,13 +1,29 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Clock } from "lucide-react";
 import { useState } from "react";
-import { type Column, DataTable } from "@/components/data-table";
-import { DataTablePagination } from "@/components/data-table-pagination";
+import type { z } from "zod";
+import type { FormField } from "@/components/crud-form";
+import type { Column } from "@/components/data-table";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { keahlianCrudConfig } from "@/config/profil/keahlian.config";
+import { keluargaCrudConfig } from "@/config/profil/keluarga.config";
+import { pelatihanCrudConfig } from "@/config/profil/pelatihan.config";
+import { pendidikanCrudConfig } from "@/config/profil/pendidikan.config";
+import { pengalamanKerjaCrudConfig } from "@/config/profil/pengalaman-kerja.config";
+import { useFkOptions } from "@/hooks/useFkOptions";
+import { useSelfKeahlianMutation } from "@/hooks/useSelfKeahlianMutation";
+import { useSelfKeluargaMutation } from "@/hooks/useSelfKeluargaMutation";
+import { useSelfPelatihanMutation } from "@/hooks/useSelfPelatihanMutation";
+import { useSelfPendidikanMutation } from "@/hooks/useSelfPendidikanMutation";
+import { useSelfPengalamanKerjaMutation } from "@/hooks/useSelfPengalamanKerjaMutation";
+import type { SelfProfilCrud } from "@/hooks/useSelfProfilMutation";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { cn, formatDate } from "@/lib/utils";
 import type { Page } from "@/types/_shared";
+import { SectionCrudSlot } from "./section-crud-slot";
 
 // ponytail: shared afordansi trigger className — hover bg + padding + chevron tint
 const ACCORDION_TRIGGER_AFF =
@@ -90,12 +106,22 @@ function spSeverity(s: unknown): string {
 }
 
 // ponytail: section column defs — one per section, used both in useQuery and rendering
-interface SectionConf {
+interface CrudConfig {
+	label: string;
+	formSchema: z.ZodType;
+	formFields: FormField[];
+	/** FK combobox: field name → master entity slug (options di-fetch via /master/{entity}/list). */
+	fkSources?: { field: string; entity: string }[];
+	defaultValues: (row: Record<string, unknown>) => Record<string, unknown>;
+}
+
+export interface SectionConf {
 	id: string;
 	label: string;
 	buildUrl: (pegawaiId: number, nik: string | null, params: Record<string, string>) => string;
 	columns: Column<Record<string, unknown>>[];
 	isSingleItem?: boolean; // non-paginated endpoint (penggajian)
+	crudConfig?: CrudConfig; // ada = section editable self-service; tanpa = read-only
 }
 
 const SECTIONS: SectionConf[] = [
@@ -109,6 +135,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "tanggalLahir", header: "Tgl Lahir", cell: (r) => formatDate(r.tanggalLahir) },
 			{ id: "tanggungan", header: "Tanggungan", cell: (r) => boolStr(r.tanggungan) },
 		],
+		crudConfig: keluargaCrudConfig,
 	},
 	{
 		id: "pendidikan",
@@ -120,6 +147,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "jurusan", header: "Jurusan" },
 			{ id: "tahunLulus", header: "Tahun Lulus", cell: (r) => val(r.tahunLulus) },
 		],
+		crudConfig: pendidikanCrudConfig,
 	},
 	{
 		id: "pengalaman-kerja",
@@ -131,6 +159,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "tahunMasuk", header: "Tahun Masuk", cell: (r) => val(r.tahunMasuk) },
 			{ id: "tahunKeluar", header: "Tahun Keluar", cell: (r) => val(r.tahunKeluar) },
 		],
+		crudConfig: pengalamanKerjaCrudConfig,
 	},
 	{
 		id: "keahlian",
@@ -142,6 +171,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "sertifikasi", header: "Sertifikasi", cell: (r) => boolStr(r.sertifikasi) },
 			{ id: "tahun", header: "Tahun", cell: (r) => val(r.tahun) },
 		],
+		crudConfig: keahlianCrudConfig,
 	},
 	{
 		id: "pelatihan",
@@ -153,6 +183,7 @@ const SECTIONS: SectionConf[] = [
 			{ id: "tanggalMulai", header: "Tgl Mulai", cell: (r) => formatDate(r.tanggalMulai) },
 			{ id: "tanggalSelesai", header: "Tgl Selesai", cell: (r) => formatDate(r.tanggalSelesai) },
 		],
+		crudConfig: pelatihanCrudConfig,
 	},
 	{
 		id: "mutasi",
@@ -268,6 +299,22 @@ export function SectionRightPanel({ pegawaiId, nik }: { pegawaiId: number; nik: 
 	const [pageMap, setPageMap] = useState<Record<string, number>>({});
 	const [sizeMap, setSizeMap] = useState<Record<string, number>>({});
 
+	// ponytail: mutation self-service per entitas editable (5 hook, dipilih via conf.id)
+	const crudMap: Record<string, SelfProfilCrud | undefined> = {
+		keluarga: useSelfKeluargaMutation(nik),
+		pendidikan: useSelfPendidikanMutation(nik),
+		"pengalaman-kerja": useSelfPengalamanKerjaMutation(nik),
+		keahlian: useSelfKeahlianMutation(nik),
+		pelatihan: useSelfPelatihanMutation(nik),
+	};
+
+	// ponytail: options FK combobox (list master kecil, staleTime 5m — sekali fetch, dipakai lintas section)
+	const fkOptions: Record<string, { value: string; label: string }[]> = {
+		"jenjang-pendidikan": useFkOptions("jenjang-pendidikan"),
+		"jenis-keahlian": useFkOptions("jenis-keahlian"),
+		"jenis-pelatihan": useFkOptions("jenis-pelatihan"),
+	};
+
 	// ponytail: all 10 hooks at top level, each enabled by open state (rules of hooks ✓)
 	const keluarga = useQuery({
 		queryKey: ["keluarga", pegawaiId, nik, pageMap.keluarga ?? 1, sizeMap.keluarga ?? 5],
@@ -367,37 +414,31 @@ export function SectionRightPanel({ pegawaiId, nik }: { pegawaiId: number; nik: 
 			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
 				{SECTIONS.map((conf) => {
 					const q = queries[conf.id];
-					const s = sizeMap[conf.id] ?? 5;
-					const view = q.data;
+					const hasPending = (q.data?.rows ?? []).some((r) => Boolean(r.changedStatus));
 					return (
 						<AccordionItem key={conf.id} value={conf.id}>
-							<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>{conf.label}</AccordionTrigger>
+							<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>
+								<span className="inline-flex items-center gap-2">
+									{conf.label}
+									{conf.crudConfig && hasPending && (
+										<Badge variant="outline" className="gap-1 text-warning border-warning/30 bg-warning/5">
+											<Clock className="size-3" />
+											Menunggu
+										</Badge>
+									)}
+								</span>
+							</AccordionTrigger>
 							<AccordionContent>
 								{openValues.includes(conf.id) && (
-									<DataTable<Record<string, unknown>>
-										bare
-										columns={conf.columns}
-										data={view?.rows ?? []}
-										isLoading={q.isPending}
-										isPlaceholder={q.isPlaceholderData}
-										isError={q.isError}
-										error={q.error}
-										onRetry={() => q.refetch()}
-										emptyMessage="Tidak ada data"
-										pagination={
-											view ? (
-												<DataTablePagination
-													page={view.page}
-													size={s}
-													total={view.total}
-													totalPages={view.totalPages}
-													first={view.first}
-													last={view.last}
-													onPageChange={(np) => onPageChange(conf.id, np)}
-													onSizeChange={(ns) => onSizeChange(conf.id, ns)}
-												/>
-											) : undefined
-										}
+									<SectionCrudSlot
+										conf={conf}
+										q={q}
+										crud={crudMap[conf.id]}
+										fkOptions={fkOptions}
+										nik={nik}
+										size={sizeMap[conf.id] ?? 5}
+										onPageChange={(np) => onPageChange(conf.id, np)}
+										onSizeChange={(ns) => onSizeChange(conf.id, ns)}
 									/>
 								)}
 							</AccordionContent>
