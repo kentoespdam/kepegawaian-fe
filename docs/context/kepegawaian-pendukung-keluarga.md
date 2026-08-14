@@ -18,7 +18,8 @@
   Belum Sekolah/Sekolah/Selesai.
 - **Notes** = truncate + tooltip `title`.
 - ⚠️ Konsekuensi diterima: tabel lebar + scroll horizontal dalam region tabel.
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 
 **Keputusan K2 — Filter: Hubungan Keluarga (select enum → angka) — DENGAN SPIKE WAJIB.**
 

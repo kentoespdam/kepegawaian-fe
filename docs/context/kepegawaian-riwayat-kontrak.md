@@ -13,4 +13,4 @@ Ketika siap, jalankan `/grill-with-docs` untuk kategori Riwayat Kontrak Kerja.
 - **Filter:** `nomorKontrak` saja (lihat K6 di `kepegawaian-riwayat.md`)
 - **Types:** `RiwayatKontrakQuery`, `RiwayatKontrakPostRequest`, `RiwayatKontrakPutRequest` (di `riwayat.ts`)
 - **Lampiran:** kontrak **tidak punya** berkas lampiran (lihat K5 di shared file)
-- **RBAC:** ikut `can(roles, "view", "pegawai")` (lihat K10)
+- **RBAC:** ikut `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` → `forbidden()` (lihat K10)

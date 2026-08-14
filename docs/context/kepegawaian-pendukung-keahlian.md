@@ -18,7 +18,8 @@
   memuat `disetujui` → tanpa gap BE. Field `tanggalPengajuan`/`tanggalDisetujui`/`disetujuiOleh`
   tetap tidak dirender.
 - `masaBerlaku` tidak jadi kolom (nilai teks bebas ambigu; tetap di form).
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 
 **Keputusan K2 — Filter toolbar (1 combobox).**
 

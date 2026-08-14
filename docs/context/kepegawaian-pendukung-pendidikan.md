@@ -17,7 +17,8 @@
 - **Status** = badge berteks (a11y: bukan warna saja):
   - **"Terakhir"** bila `isLatest === true` (badge accent/primary)
   - **"Disetujui"** bila `disetujui === true` (badge success) / **"Belum"** bila `false`
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 - Kolom flat 12 **ditolak user** (lebar + scroll horizontal terus-menerus untuk pengguna lansia).
   Tahun & Gelar digabung — semua data tetap terlihat.
 

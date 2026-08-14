@@ -56,7 +56,7 @@ Tiap entitas Master punya **halaman sendiri** (file page konkret per-entitas, bu
 route) + form sendiri (sanksi/profesi bespoke, sisanya generic lewat `<EntityFormModal>`).
 DRY dipaksa lewat **shared primitives** yang tiap entitas compose (semua didefinisikan di core):
 `<DataTable>` + `<DataTableToolbar>` + `<DataTablePagination>`, `<CrudForm>`,
-`<ConfirmDeleteDialog>`, `<Can>`, hook proxy/`useResource`, helper API client bertipe. Duplikasi
+`<ConfirmDeleteDialog>`, hook proxy/`useResource`, helper API client bertipe. Duplikasi
 hanya di **glue tipis per-entitas** (columns + skema Zod + config toolbar) — tak pernah di logika
 table/fetch/CRUD. Ke-15 entitas CRUD memakai anatomi layar daftar & presentasi form yang sama.
 
@@ -74,7 +74,8 @@ Map entitas di-widen tanpa switch, di-factory oleh `makeConfig`. Lapisan di atas
   literal entity name sebagai prop, infer `TItem`/`TPage`/`TReq` dari `MasterEntityTypes`, dan
   me-wire `useResource<TPage, TReq>` + `EntityConfig<TItem, TReq>` + `<DataTable>` secara typed.
 - **15 halaman per-entitas** (`src/app/(app)/master/{entity}/page.tsx`) — server component
-  tipis yang panggil `verifySession()` + `can()`, lalu render `<MasterPageClient entity="…" />`
+  tipis yang panggil `verifySession()` + `getAccountSession()` + `hasPermission(permissions,
+  PERMISSION.MASTER_WRITE, roles)` → `forbidden()`, lalu render `<MasterPageClient entity="…" />`
   dengan literal entity name. Dynamic route `[entity]/page.tsx` dihapus — Next.js 404 untuk
   rute tak dikenal.
 
@@ -164,9 +165,11 @@ bersama page entity, bukan shared component.
   - remove: `api.remove(\`profesi/${profesiId}/apd\`, id)`
   - `proxy.ts` & `api/client.ts` **tidak perlu diubah** — rewrite bekerja di kedalaman path apa pun
     dan `entity` diinterpolasi mentah ke URL, jadi string komposit langsung jalan.
-- **RBAC = ikut `profesi`.** `+`/edit digating `can(roles,"update","profesi")`, ✕ oleh
-  `can(roles,"delete","profesi")`. Karena sel = client component tanpa `roles` di scope, konsumsi
-  `RolesContext` + `useRoles()` (sudah ada di `AppShell`) di `<BadgeManager>`.
+- **RBAC = permission master (dual-mode).** `+`/edit di-gate
+  `hasPermission(permissions, PERMISSION.MASTER_WRITE, roles)`, ✕ oleh
+  `PERMISSION.MASTER_DELETE`. Karena sel = client component, konsumsi `useAuth()`
+  (`{ roles, permissions }` — disuntik `AuthProvider` di AppShell dari `getAccountSession()`) di
+  `<BadgeManager>`; unmount tombol bila tak berhak (bukan disable).
 
 ## Dashboard shortcut grid — 15 kartu Master
 

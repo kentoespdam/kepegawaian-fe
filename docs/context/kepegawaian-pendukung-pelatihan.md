@@ -17,7 +17,8 @@
 - ⚠️ **Konsekuensi yang diterima user:** 10 kolom data = tabel lebar dengan **scroll horizontal
   dalam region tabel** (diizinkan per CONTEXT-MAP "DataTables degrade gracefully on mobile");
   toolbar + pagination tetap fixed.
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 
 > Deviasi sadar dari pola kompak kategori lain (pendidikan/pengalaman-kerja/keahlian) — keputusan
 > user: semua data terlihat tanpa membuka form.

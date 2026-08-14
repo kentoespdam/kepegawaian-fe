@@ -176,23 +176,19 @@ gagal agar berkas tidak perlu dipilih ulang.
 > `JSON.stringify` — **tidak bisa dipakai** untuk unggah; pakai `fetch` langsung seperti yang sudah
 > dilakukan `section-right-panel.tsx` untuk endpoint kepegawaian.
 
-**Keputusan 10 — RBAC ditunda (lagi). Page 4 ikut role ADMIN/HR lewat entity `pegawai` yang sudah ada.**
+**Keputusan 10 — RBAC: gate permission `pegawai` (dual-mode). Page 4 = konsol HR.**
 
-Matriks RBAC per-entity belum dirancang, dan Page 4 **tidak** dijadikan pemicu untuk merancangnya.
-Gate-nya ikut preseden yang sudah ship: `data/tambah/page.tsx` melakukan tulis lintas-pegawai dengan
-`can(roles, "create", "pegawai")`. Page 4 memakai kunci entity yang sama.
+Sumber kebenaran akses = `GET /account/me` (`getAccountSession()` → `{ roles, permissions }`),
+bukan matriks hardcode. Halaman server di-gate `PEGAWAI:READ`; aksi tulis per-komponen client
+di-gate `useAuth()` + `hasPermission(..., roles)` (ADMIN/HR lolos lewat permission seed BE —
+dual-mode, lihat FE-GUIDE-dual-mode-rbac.md §7).
 
 | Titik | Gate |
 |---|---|
-| `[pegawaiId]/riwayat/**/page.tsx` | `can(roles, "view", "pegawai")` → `forbidden()` |
-| Tombol **+ Tambah Mutasi** | `<Can action="create" entity="pegawai">` |
-| Ikon ✎ / 🗑 di kolom Aksi | `<Can action="update" \| "delete" entity="pegawai">` |
-| Unggah / hapus lampiran | ikut `update` / `delete` `"pegawai"` |
-
-**Satu baris yang tetap harus ditambah:** `can()` melakukan `PERMISSIONS[role.toLowerCase()]`, jadi
-label Appwrite `HR` **tidak akan cocok apa pun** selama `PERMISSIONS` cuma punya `admin` dan `viewer`
-— HR bakal kena `forbidden()`. Supaya "ikut ADMIN/HR" benar-benar berlaku:
-`hr: { "*": ALL }` di `src/lib/auth/permissions.ts`, sejajar `admin`. Bukan matriks, satu baris.
+| `[pegawaiId]/riwayat/**/page.tsx` | `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` → `forbidden()` |
+| Tombol **+ Tambah Mutasi** | `hasPermission(permissions, PERMISSION.PEGAWAI_WRITE, roles)` (unmount) |
+| Ikon ✎ / 🗑 di kolom Aksi | ✎ `PERMISSION.PEGAWAI_WRITE` · 🗑 `PERMISSION.PEGAWAI_DELETE` |
+| Unggah / hapus lampiran | ikut `PEGAWAI:WRITE` / `PEGAWAI:DELETE` |
 
 **Kenapa ADR-0012 tidak jadi blocker.** ADR-0012 menulis *"Tinjau ulang jika: muncul kebutuhan edit
 lintas-pegawai (HR) → butuh RBAC nyata"*. Kenyataannya kebutuhan itu **sudah lewat tanpa ditinjau**:
@@ -202,9 +198,9 @@ utang Page 4 — memblokir fitur ini demi model yang belum punya peminta = mengh
 kebetulan datang terakhir. Karena itu **tidak ada ADR** untuk keputusan ini: tidak ada trade-off baru
 yang dipilih, hanya preseden yang diikuti.
 
-Biaya membalik nanti ≈ nol: `can()` sudah `perms[entity] ?? perms["*"]`, jadi saat matriks asli
-dirancang, mengganti `"pegawai"` → `"riwayat"` di page + `<Can>` adalah find-replace di satu direktori,
-tanpa menyentuh page lain.
+> **Pasca-migrasi RBAC (2026-08-14):** gate lama `can()` + matriks `PERMISSIONS` (wildcard
+> `hr: { "*": ALL }`) sudah diganti `hasPermission()` — tidak ada matriks yang perlu ditambah;
+> permission HR/ADMIN datang dari seed BE via `/account/me`.
 
 **Rail "Kategori" (page-local, bukan sidebar)** — konsisten dengan resolusi "rail tetap 6 modul":
 
@@ -216,8 +212,9 @@ tanpa menyentuh page lain.
 | Riwayat Surat Peringatan | `/kepegawaian/riwayat/sp/pegawai/{pegawaiId}` | 2 |
 | Data Penggunaan Hak Cuti | `/cuti/pengajuan/{pegawaiId}/pegawai` (+ `/cuti/kuota/{pegawaiId}/{tahun}/sisa`) — **read-only** | 2 |
 
-**Gate:** `can(roles, "view", "pegawai")` (page) + `<Can … entity="pegawai">` per aksi — lihat
-Keputusan 10. Prasyarat implementasi: tambah `hr: { "*": ALL }` ke `PERMISSIONS`.
+**Gate:** `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` (page, server component)
++ `useAuth()` per aksi — lihat Keputusan 10. Tanpa prasyarat matriks: permission HR/ADMIN dari
+seed BE `/account/me`.
 
 **Keputusan 11 — Kunci identitas = `pegawaiId` numerik, tanpa konversi. Header dari
 `GET /pegawai/{id}/session`.**

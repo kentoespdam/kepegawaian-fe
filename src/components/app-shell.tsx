@@ -163,7 +163,7 @@ export function AppShell({
 														render={<Link href={href} />}
 														isActive={isActive}
 														className={cn(
-															"min-h-11 border-l-2 border-transparent pl-[calc(0.75rem-2px)] transition-colors",
+															"min-h-11 border-l-2 border-transparent pl-2.5 transition-colors",
 															isActive && "border-l-primary font-medium",
 														)}
 													>
@@ -184,7 +184,7 @@ export function AppShell({
 				<SidebarInset className="min-w-0">
 					<header className="relative flex h-16 items-center justify-between border-b border-border bg-card px-4 shadow-sm shrink-0">
 						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
-						<div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40" />
+						<div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
 							{activeEntity && activeModule ? (

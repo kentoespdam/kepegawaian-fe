@@ -93,9 +93,10 @@ Kartu (keputusan user — **3 angka**):
 
 ## K-C6 — RBAC (mengikuti K10, tidak diubah)
 
-Gate halaman: `can(roles, "view", "pegawai")` → `forbidden()`. Tanpa tombol tulis → tidak ada
-`<Can action="create|update|delete">` sama sekali. Prasyarat yang sama dengan kategori lain:
-`hr: { "*": ALL }` di `src/lib/auth/permissions.ts` (bila belum ada).
+Gate halaman: `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` → `forbidden()`
+(server component: `verifySession()` + `getAccountSession()`). Tanpa tombol tulis → tidak ada
+gating aksi tulis sama sekali. Tanpa prasyarat matriks — permission HR/ADMIN dari seed BE
+`/account/me` (K10, dual-mode).
 
 ## K-C7 — State & empty
 

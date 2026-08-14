@@ -20,7 +20,8 @@ ditolak (risiko bentrok nilai legacy + nilai lama tak terwakili saat edit); mast
   kosong → `2015–sekarang` (asumsi: masih bekerja — BE tidak punya flag "current job").
 - `typePerusahaan` dan `notes` **tidak** jadi kolom: type teks bebas tidak standar, notes paragraf
   panjang; keduanya tetap tersimpan dan tampil di form saat edit (YAGNI).
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 
 **Keputusan W3 — Filter toolbar (2, keduanya teks).**
 

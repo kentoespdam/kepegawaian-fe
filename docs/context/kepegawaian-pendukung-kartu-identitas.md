@@ -15,7 +15,8 @@
   Komputasi murni klien — tidak ada field status dari BE.
 - `tanggalTerima` = `tanggalTerima`; `notes` → hanya di form (jarang terisi).
 - ⚠️ Kategori ini **tidak tampil di Dashboard** (Page 1) — murni baru di konsol Data Pendukung.
-- **Aksi** = ikon Edit + Hapus, paling kanan, dibungkus `<Can entity="pegawai">`.
+- **Aksi** = ikon Edit + Hapus, paling kanan, di-gate `hasPermission(permissions,
+  PERMISSION.PEGAWAI_WRITE, roles)` (✎) / `PERMISSION.PEGAWAI_DELETE` (🗑) — unmount bila tak berhak.
 
 **Keputusan KI2 — Filter toolbar (2).**
 

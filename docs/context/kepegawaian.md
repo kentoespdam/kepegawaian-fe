@@ -24,9 +24,9 @@ ia sub-route drill-down dari Data Pegawai.
 | Page | Route | Audiens | Gate |
 |---|---|---|---|
 | **Dashboard Pegawai** | `(app)/kepegawaian/dashboard` | setiap pegawai (data diri) | terbuka semua login |
-| **Data Pegawai** | `(app)/kepegawaian/data` | HR/admin | `can(roles,"view","pegawai")` |
+| **Data Pegawai** | `(app)/kepegawaian/data` | HR/admin | `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` |
 | **Riwayat Pegawai** | `(app)/kepegawaian/data/[pegawaiId]/riwayat/[kategori]` | HR/admin | (lihat [kepegawaian-riwayat.md](kepegawaian-riwayat.md)) |
-| **Terminasi Pegawai** | `(app)/kepegawaian/terminasi` | HR/admin | `can(roles,"view","pegawai")` |
+| **Terminasi Pegawai** | `(app)/kepegawaian/terminasi` | HR/admin | `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` |
 
 > **Resolusi open-question `riwayat`** (CONTEXT-MAP): **riwayat = sub-area di dalam kepegawaian**,
 > BUKAN modul ke-7. Dashboard memakai riwayat karier + disiplin; Terminasi memakai riwayat/terminasi.

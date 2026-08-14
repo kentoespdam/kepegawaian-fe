@@ -136,17 +136,18 @@ di-mount **sekali** di level page, `editing` state di-lift — dilarang satu She
 FK combobox (jenjang pendidikan, jenis keahlian, jenis pelatihan, jenis kartu, hubungan keluarga)
 pakai `/list` cache bersama (staleTime panjang) — pola combobox CONTEXT-MAP.
 
-**Keputusan P8 — RBAC: gate pada entity `pegawai` (preseden Keputusan 10 riwayat).**
+**Keputusan P8 — RBAC: gate permission `pegawai` (dual-mode, preseden Keputusan 10 riwayat).**
 
 | Titik | Gate |
 |---|---|
-| `[pegawaiId]/pendukung/**/page.tsx` | `can(roles, "view", "pegawai")` → `forbidden()` |
-| Tombol **+ Tambah** | `<Can action="create" entity="pegawai">` |
-| Ikon ✎ / 🗑 di kolom Aksi | `<Can action="update" \| "delete" entity="pegawai">` |
-| Unggah / hapus lampiran | ikut `update` / `delete` `"pegawai"` |
+| `[pegawaiId]/pendukung/**/page.tsx` | `hasPermission(permissions, PERMISSION.PEGAWAI_READ, roles)` → `forbidden()` |
+| Tombol **+ Tambah** | `hasPermission(permissions, PERMISSION.PEGAWAI_WRITE, roles)` (unmount) |
+| Ikon ✎ / 🗑 di kolom Aksi | ✎ `PERMISSION.PEGAWAI_WRITE` · 🗑 `PERMISSION.PEGAWAI_DELETE` |
+| Unggah / hapus lampiran | ikut `PEGAWAI:WRITE` / `PEGAWAI:DELETE` |
 
-`hr: { "*": ALL }` **sudah ada** di `src/lib/auth/permissions.ts` — bukan prasyarat baru. Tidak
-ada ADR untuk keputusan ini (preseden diikuti, biaya balik ≈ nol: find-replace di satu direktori).
+Sumber kebenaran = `getAccountSession()` (`/account/me`) — permission HR/ADMIN dari seed BE,
+tanpa matriks hardcode. Tidak ada ADR untuk keputusan ini (preseden diikuti; dulu gate pakai
+`can()` + `<Can>` di entity `pegawai` — kini `hasPermission()`).
 
 ---
 
