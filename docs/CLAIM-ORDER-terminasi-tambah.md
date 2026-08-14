@@ -20,30 +20,44 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 2. **Dual-entry pegawai:** combobox search di form (filter `statusKerja=KARYAWAN_AKTIF`) **atau** klik
    baris di tab "Calon Pensiun" → Sheet terbuka dengan data pegawai sudah pre-fill.
 3. **Pre-fill dari Calon Pensiun:** `nama`, `nipam`, `organisasi`, `jabatan`, `golongan` terisi
-   otomatis. User hanya melengkapi field SK (`nomorSk`, `jenisSk`, `tanggalSk`, `tmtBerlaku`) dan
+   otomatis. User hanya melengkapi field SK (`nomorSk`, `tanggalSk`, `tmtBerlaku`) dan
    memilih `alasanTerminasiId`.
 4. **AlasanTerminasi:** fetch dari `GET /master/alasan-berhenti/list` — tidak hardcode. Filter
    dropdown di tab "Sudah Terminasi" juga diupdate dari hardcode → backend.
-5. **Upload file SK:** opsional (field `fileName`).
+5. **Upload file SK:** opsional — field `fileName` binary dikirim bareng `FormData` (ikuti pola SP).
 6. **Form container:** Sheet dari kanan — konsisten dengan form riwayat lainnya (SP, SK, Mutasi).
-7. **Content-type:** `application/json` untuk POST terminasi (bukan multipart — `fileName` di
-   request type adalah nama file string, bukan binary upload — konfirmasi dari tipe generated).
+7. ~~Content-type: `application/json`~~ **DIREVISI (grill sesi 2, 2026-08-14):** Content-type =
+   **`multipart/form-data`** (`@ModelAttribute`, ikuti pola SP persis). Mengirim JSON → **HTTP 415**.
+   Referensi: `FE-CONTRACT-file-endpoints.md` §2.1, `FE-CONTRACT-kepegawaian-riwayat-write.md` §5.
+8. **`jenisSk` hardcode `SK_PENSIUN`** — tidak ditampilkan ke user, set di `defaultValues` RHF.
+   Hapus `JENIS_SK_OPTIONS` dan `<FieldFk>` jenisSk dari form. Contract: `jenisSk` terminasi **selalu**
+   `SK_PENSIUN` (FE-CONTRACT-kepegawaian-riwayat-write.md §5).
+9. **Field noise TIDAK ada di DTO:** `gajiPokok`, `mkgTahun`, `mkgBulan`, `kenaikanBerikutnya`,
+   `mkgbTahun`, `mkgbBulan`, `updateMaster` **sudah dihapus BE dari spec** — jangan dikirim.
+   Types telah di-regenerate dan mencerminkan ini (`riwayat.ts` diupdate 2026-08-14).
+10. **Scope tetap POST saja** — Edit (`PUT`) & Hapus = issue terpisah meski BE sudah siap.
+11. **Profil lampiran URL fix** = issue terpisah (inkonsistensi `listUrl` pendidikan/pengalaman-kerja).
+12. **Fix endpoint lampiran SK/Mutasi** = issue terpisah urgent (`/kepegawaian/lampiran` →
+    `/kepegawaian/lampiran-sk` per FE-CONTRACT-file-endpoints.md §2.1).
 
 ---
 
-## Pemetaan field form → `RiwayatTerminasiPostRequest`
+## Pemetaan field form → `RiwayatTerminasiPostRequest` (multipart/form-data)
 
-| Field UI | Field Request | Sumber | Wajib? |
+> **Content-Type: `multipart/form-data`** — jangan set manual, biarkan browser. Ikuti pola SP.
+
+| Field UI | Field FormData | Sumber | Wajib? |
 |---|---|---|---|
 | Pegawai (combobox search) | `pegawaiId`, `nipam`, `nama` | Pick dari `/pegawai?statusKerja=KARYAWAN_AKTIF` | ✅ |
 | Organisasi | `organisasiId` | Auto dari data pegawai terpilih | ✅ |
 | Jabatan | `jabatanId` | Auto dari data pegawai terpilih | ✅ |
 | Alasan Terminasi | `alasanTerminasiId` | Combobox fetch `/master/alasan-berhenti/list` | ✅ |
 | Nomor SK | `nomorSk` | Text input | ✅ |
-| Jenis SK | `jenisSk` | Select enum `JenisSk` | ✅ |
+| ~~Jenis SK~~ | `jenisSk` | **Hardcode `SK_PENSIUN` di `defaultValues`** — tidak ditampilkan | ✅ (hidden) |
 | Tanggal SK | `tanggalSk` | Date picker | ✅ |
 | TMT Berlaku | `tmtBerlaku` | Date picker | ✅ |
 | Golongan | `golonganId` | Auto dari data pegawai (opsional) | ❌ |
+| File SK | `fileName` (binary file part) | `<input type="file">` via `useRef` | ❌ |
 | Notes | `notes` | Textarea | ❌ |
 
 > Tipe: `src/types/kepegawaian/riwayat.ts` → `RiwayatTerminasiPostRequest` (L302), `AlasanBerhentiResponse` (L80).
@@ -52,11 +66,11 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 
 ## Endpoint
 
-| Aksi | Method | URL |
-|---|---|---|
-| List alasan terminasi | `GET` | `/master/alasan-berhenti/list` |
-| Cari pegawai aktif | `GET` | `/pegawai?statusKerja=KARYAWAN_AKTIF&nama={q}&size=10` |
-| Tambah terminasi | `POST` | `/kepegawaian/riwayat/terminasi` |
+| Aksi | Method | URL | Binding |
+|---|---|---|---|
+| List alasan terminasi | `GET` | `/master/alasan-berhenti/list` | — |
+| Cari pegawai aktif | `GET` | `/pegawai/list?search={q}&statusKerja=KARYAWAN_AKTIF` | — |
+| Tambah terminasi | `POST` | `/kepegawaian/riwayat/terminasi` | `multipart/form-data` |
 
 ---
 
@@ -101,13 +115,14 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 - [ ] Display read-only pegawai terpilih di bawah picker
 
 **D. Zod schema + form fields**
-- [ ] Schema wajib: `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `alasanTerminasiId`, `nomorSk`, `jenisSk`, `tanggalSk`, `tmtBerlaku`
+- [ ] Schema wajib: `pegawaiId`, `nipam`, `nama`, `organisasiId`, `jabatanId`, `alasanTerminasiId`, `nomorSk`, `tanggalSk`, `tmtBerlaku`
 - [ ] Schema opsional: `golonganId`, `notes`
+- [ ] `jenisSk` **TIDAK masuk schema** — hardcode `"SK_PENSIUN"` di `defaultValues` RHF, tidak ditampilkan
 - [ ] Field `alasanTerminasiId` = combobox reuse data fetch dari step A
-- [ ] Field `jenisSk` = Select dengan opsi dari enum `JenisSk` (dari `_shared.ts`)
 - [ ] Field `nomorSk` = text input
 - [ ] Field `tanggalSk` + `tmtBerlaku` = date picker
 - [ ] Field `notes` = textarea opsional
+- [ ] **File input:** `useRef<HTMLInputElement>` + `<Input ref={fileRef} type="file" />` + guard 5 MB (ikuti pola SP L23, L62, L208–212)
 
 **E. Pre-fill dari `initialPegawai`**
 - [ ] `useEffect` saat `initialPegawai` berubah → `reset({ pegawaiId, nipam, nama, organisasiId, jabatanId, golonganId })`
@@ -115,9 +130,15 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 - [ ] `organisasiId` dari `initialPegawai.organisasi?.id`; `jabatanId` dari `initialPegawai.jabatan?.id`
 
 **F. Submit — `POST /api/proxy/kepegawaian/riwayat/terminasi`**
-- [ ] Content-Type: `application/json` (`JSON.stringify(data)`)
-- [ ] Sukses → `toast.success("Terminasi berhasil disimpan")` + `qc.invalidateQueries` (kedua tab: calon-pensiun + terminasi) + `onOpenChange(false)`
-- [ ] Error BE → `setError("root", { message: ... })` — bukan toast; Sheet tetap terbuka
+- [ ] **Gunakan `FormData`** (bukan `JSON.stringify`) — ikuti pola SP `sp-form-sheet.tsx` L214–236
+- [ ] `fd.append("pegawaiId", String(values.pegawaiId))` — semua field append ke FormData
+- [ ] `fd.append("jenisSk", "SK_PENSIUN")` — hardcode
+- [ ] File: `if (fileRef.current?.files?.[0]) fd.append("fileName", fileRef.current.files[0])`
+- [ ] Validasi file size ≤ 5 MB sebelum submit (guard client-side, SP L209–212)
+- [ ] **JANGAN set `Content-Type`** — browser auto-set boundary multipart
+- [ ] Sukses → `toast.success("Terminasi berhasil disimpan")` + `qc.invalidateQueries` (kedua tab: calon-pensiun + terminasi) + `onClose()`
+- [ ] Error BE → `setError("root", { message: ... })` + `toast.error(...)` (ikuti SP L246–250); Sheet tetap terbuka
+- [ ] 409 duplikat → pesan BE: `"Terminasi is already exist"`
 
 **G. Wire ke `terminasi-client.tsx`**
 - [ ] State: `sheetOpen`, `prefillPegawai` di `TerminasiClient`
@@ -143,8 +164,11 @@ Jenis terminasi ditentukan oleh `alasanTerminasi` (entity master dari backend �
 - [ ] Field wajib tervalidasi via Zod + RHF sebelum submit
 - [ ] AlasanTerminasi: fetch dari backend, bukan hardcode
 - [ ] Filter "Alasan Terminasi" di tab "Sudah Terminasi": fetch dari backend, bukan hardcode
+- [ ] `jenisSk` tidak ditampilkan di form — hardcode `SK_PENSIUN` di payload
+- [ ] File input opsional: `<input type="file">`, guard 5 MB, dikirim via FormData
+- [ ] Submit pakai `multipart/form-data` (FormData, tanpa set Content-Type manual)
 - [ ] POST sukses → toast + kedua tab invalidate + Sheet tutup
-- [ ] POST gagal → error inline di form, Sheet tetap terbuka
+- [ ] POST gagal → error inline di form + toast.error, Sheet tetap terbuka
 - [ ] `bun run test` · `bun run build` · `bunx biome check` — semua hijau
 - [ ] `npx gitnexus analyze` + `bd dolt push` + `git push`
 

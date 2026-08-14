@@ -131,14 +131,7 @@ export interface RiwayatTerminasiPutRequest {
 	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
-	golonganId?: number; // int64
-	gajiPokok?: number; // double
-	mkgTahun?: number; // int32
-	mkgBulan?: number; // int32
-	kenaikanBerikutnya?: string; // date
-	mkgbTahun?: number; // int32
-	mkgbBulan?: number; // int32
-	updateMaster?: boolean;
+	golonganId?: number; // int64, min 1
 	notes?: string;
 	alasanTerminasiId: number; // int64, min 1
 	nipam: string; // minLength 1
@@ -251,12 +244,9 @@ export interface RiwayatMutasiPutRequest {
 	kenaikanBerikutnya?: string; // date
 	mkgbTahun?: number; // int32
 	mkgbBulan?: number; // int32
-	updateMaster?: boolean;
 	notes?: string;
-	nipam?: string;
-	nama?: string;
-	tanggalBerakhir?: string; // date
 	jenisMutasi: JenisRiwayatKepegawaian;
+	tanggalBerakhir?: string; // date
 	organisasiId?: number; // int64
 	jabatanId?: number; // int64
 	profesiId?: number; // int64
@@ -305,14 +295,7 @@ export interface RiwayatTerminasiPostRequest {
 	jenisSk: JenisSk;
 	tanggalSk: string; // date
 	tmtBerlaku: string; // date
-	golonganId?: number; // int64
-	gajiPokok?: number; // double
-	mkgTahun?: number; // int32
-	mkgBulan?: number; // int32
-	kenaikanBerikutnya?: string; // date
-	mkgbTahun?: number; // int32
-	mkgbBulan?: number; // int32
-	updateMaster?: boolean;
+	golonganId?: number; // int64, min 1
 	notes?: string;
 	alasanTerminasiId: number; // int64, min 1
 	nipam: string; // minLength 1
@@ -374,12 +357,9 @@ export interface RiwayatMutasiPostRequest {
 	kenaikanBerikutnya?: string; // date
 	mkgbTahun?: number; // int32
 	mkgbBulan?: number; // int32
-	updateMaster?: boolean;
 	notes?: string;
-	nipam?: string;
-	nama?: string;
-	tanggalBerakhir?: string; // date
 	jenisMutasi: JenisRiwayatKepegawaian;
+	tanggalBerakhir?: string; // date
 	organisasiId?: number; // int64
 	jabatanId?: number; // int64
 	profesiId?: number; // int64
