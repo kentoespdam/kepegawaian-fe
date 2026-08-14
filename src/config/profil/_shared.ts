@@ -36,8 +36,5 @@ export const optBool = z
 export const optNum = z
 	.union([z.string(), z.number()])
 	.optional()
-	.refine(
-		(v) => v === "" || v === undefined || !Number.isNaN(Number(v)),
-		"Angka tidak valid",
-	)
+	.refine((v) => v === "" || v === undefined || !Number.isNaN(Number(v)), "Angka tidak valid")
 	.transform((v) => (v === "" || v === undefined ? undefined : Number(v)));

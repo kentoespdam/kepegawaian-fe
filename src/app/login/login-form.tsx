@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -30,18 +30,22 @@ export function LoginForm() {
 	});
 
 	return (
-		<>
-			<h2 className="mb-6 text-xl font-semibold text-foreground">Masuk</h2>
+		<div>
+			<div className="mb-6 space-y-1">
+				<h2 className="text-xl font-bold text-foreground">Masuk ke Akun</h2>
+				<p className="text-xs text-muted-foreground">Masukkan email kedinasan dan password Anda untuk melanjutkan</p>
+			</div>
+
 			<form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-5">
 				<div className="space-y-1.5">
-					<Label htmlFor="email" className="text-sm font-medium">
+					<Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 						Email
 					</Label>
 					<Input
 						id="email"
 						type="email"
-						placeholder="nama@perumdam.com"
-						className="h-11"
+						placeholder="nama@perumdamts.com"
+						className="h-11 text-sm bg-background/50 focus-visible:bg-background"
 						aria-invalid={!!errors.email}
 						{...register("email")}
 					/>
@@ -49,22 +53,24 @@ export function LoginForm() {
 				</div>
 
 				<div className="space-y-1.5">
-					<Label htmlFor="password" className="text-sm font-medium">
-						Password
-					</Label>
+					<div className="flex items-center justify-between">
+						<Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+							Password
+						</Label>
+					</div>
 					<div className="relative">
 						<Input
 							id="password"
 							type={showPassword ? "text" : "password"}
-							placeholder="Password"
-							className="h-11 pr-10"
+							placeholder="Masukkan password"
+							className="h-11 pr-10 text-sm bg-background/50 focus-visible:bg-background"
 							aria-invalid={!!errors.password}
 							{...register("password")}
 						/>
 						<button
 							type="button"
 							onClick={() => setShowPassword((prev) => !prev)}
-							className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+							className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
 							aria-label={showPassword ? "Sembunyikan password" : "Tampilkan password"}
 						>
 							{showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
@@ -74,18 +80,32 @@ export function LoginForm() {
 				</div>
 
 				{login.error && (
-					<p className="text-sm text-destructive" role="alert">
+					<div
+						className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive"
+						role="alert"
+					>
 						{login.error.message}
-					</p>
+					</div>
 				)}
 
-				<Button type="submit" className="w-full h-11" disabled={login.isPending}>
-					{login.isPending && <Loader2 className="mr-2 size-4 animate-spin" />}
-					{login.isPending ? "Memproses…" : "Masuk"}
+				<Button type="submit" className="w-full h-11 text-sm font-semibold shadow-sm" disabled={login.isPending}>
+					{login.isPending ? (
+						<>
+							<Loader2 className="mr-2 size-4 animate-spin" />
+							Memproses...
+						</>
+					) : (
+						<>
+							<LogIn className="mr-2 size-4" />
+							Masuk
+						</>
+					)}
 				</Button>
 
-				<p className="text-center text-xs text-muted-foreground">Butuh bantuan? Hubungi admin</p>
+				<p className="text-center text-xs text-muted-foreground">
+					Mengalami kendala login? Hubungi Administrator SIMPEG
+				</p>
 			</form>
-		</>
+		</div>
 	);
 }
