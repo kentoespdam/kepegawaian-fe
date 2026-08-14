@@ -28,6 +28,92 @@ const STATUS_LABEL: Record<StatusUpdateProfil, string> = {
 	REJECT: "Ditolak",
 };
 
+type FieldDef = { key: string; label: string };
+const FIELD_MAP: Record<string, FieldDef[]> = {
+	BIODATA: [
+		{ key: "nik", label: "NIK" },
+		{ key: "nama", label: "Nama" },
+		{ key: "jenisKelamin", label: "Jenis Kelamin" },
+		{ key: "tempatLahir", label: "Tempat Lahir" },
+		{ key: "tanggalLahir", label: "Tanggal Lahir" },
+		{ key: "alamat", label: "Alamat" },
+		{ key: "telp", label: "Telp" },
+		{ key: "agama", label: "Agama" },
+		{ key: "ibuKandung", label: "Ibu Kandung" },
+		{ key: "pendidikanTerakhirId", label: "Pend. Terakhir" },
+		{ key: "golonganDarah", label: "Gol. Darah" },
+		{ key: "statusKawin", label: "Status Kawin" },
+		{ key: "notes", label: "Catatan" },
+	],
+	PENDIDIKAN: [
+		{ key: "jenjangPendidikan", label: "Jenjang" },
+		{ key: "institusi", label: "Institusi" },
+		{ key: "jurusan", label: "Jurusan" },
+		{ key: "kota", label: "Kota" },
+		{ key: "gelarDepan", label: "Gelar Depan" },
+		{ key: "gelarBelakang", label: "Gelar Belakang" },
+		{ key: "tahunMasuk", label: "Tahun Masuk" },
+		{ key: "gpa", label: "IPK" },
+		{ key: "isLulus", label: "Lulus" },
+		{ key: "tahunLulus", label: "Tahun Lulus" },
+		{ key: "isLatest", label: "Pendidikan Terakhir" },
+	],
+	PELATIHAN: [
+		{ key: "jenisPelatihanId", label: "Jenis Pelatihan" },
+		{ key: "nama", label: "Nama" },
+		{ key: "lembaga", label: "Lembaga" },
+		{ key: "tanggalMulai", label: "Tgl Mulai" },
+		{ key: "tanggalSelesai", label: "Tgl Selesai" },
+		{ key: "lulus", label: "Lulus" },
+		{ key: "nilai", label: "Nilai" },
+		{ key: "ikatanDinas", label: "Ikatan Dinas" },
+		{ key: "tanggalAkhirIkatan", label: "Tgl Akhir Ikatan" },
+		{ key: "notes", label: "Catatan" },
+	],
+	KELUARGA: [
+		{ key: "nama", label: "Nama" },
+		{ key: "nik", label: "NIK" },
+		{ key: "jenisKelamin", label: "Jenis Kelamin" },
+		{ key: "agama", label: "Agama" },
+		{ key: "hubunganKeluarga", label: "Hubungan" },
+		{ key: "tempatLahir", label: "Tempat Lahir" },
+		{ key: "tanggalLahir", label: "Tgl Lahir" },
+		{ key: "tanggungan", label: "Tanggungan" },
+		{ key: "statusKawin", label: "Status Kawin" },
+		{ key: "pendidikanId", label: "Pendidikan" },
+		{ key: "statusPendidikan", label: "Status Pendidikan" },
+		{ key: "notes", label: "Catatan" },
+	],
+	KEAHLIAN: [
+		{ key: "jenisKeahlian", label: "Jenis Keahlian" },
+		{ key: "kualifikasi", label: "Tingkat Kemampuan" },
+		{ key: "sertifikasi", label: "Sertifikasi" },
+		{ key: "institusi", label: "Institusi" },
+		{ key: "tahun", label: "Tahun" },
+		{ key: "masaBerlaku", label: "Masa Berlaku" },
+	],
+	KARTU_IDENTITAS: [
+		{ key: "jenisKartuId", label: "Jenis Kartu" },
+		{ key: "nomorKartu", label: "Nomor Kartu" },
+		{ key: "tanggalTerima", label: "Tgl Terima" },
+		{ key: "tanggalExpired", label: "Masa Berlaku" },
+		{ key: "notes", label: "Catatan" },
+	],
+	PENGALAMAN_KERJA: [
+		{ key: "namaPerusahaan", label: "Nama Perusahaan" },
+		{ key: "typePerusahaan", label: "Jenis" },
+		{ key: "jabatan", label: "Jabatan" },
+		{ key: "lokasi", label: "Lokasi" },
+		{ key: "tahunMasuk", label: "Tahun Masuk" },
+		{ key: "tahunKeluar", label: "Tahun Keluar" },
+		{ key: "notes", label: "Catatan" },
+	],
+	LAMPIRAN: [
+		{ key: "fileName", label: "File" },
+		{ key: "notes", label: "Catatan" },
+	],
+};
+
 function StatusBadge({ status }: { status?: StatusUpdateProfil }) {
 	if (!status) return null;
 	return (
@@ -46,20 +132,20 @@ function StatusBadge({ status }: { status?: StatusUpdateProfil }) {
 	);
 }
 
-/** Flatten objek nested (latest/previous revision) jadi flat field → nilai. */
-function flattenForDiff(obj: unknown, prefix = ""): Record<string, unknown> {
-	if (obj === null || typeof obj !== "object") return prefix ? { [prefix]: obj } : {};
-	const out: Record<string, unknown> = {};
-	if (Array.isArray(obj)) {
-		for (let i = 0; i < obj.length; i++) {
-			Object.assign(out, flattenForDiff(obj[i], prefix ? `${prefix}[${i}]` : `[${i}]`));
-		}
-	} else {
-		for (const [k, v] of Object.entries(obj as Record<string, unknown>)) {
-			Object.assign(out, flattenForDiff(v, prefix ? `${prefix}.${k}` : k));
-		}
+function resolveValue(obj: Record<string, unknown>, key: string): unknown {
+	// FK convention: key berakhiran 'Id' → coba key.replace(/Id$/, 'Nama')
+	if (key.endsWith("Id")) {
+		const nameKey = key.replace(/Id$/, "Nama");
+		const nameVal = obj[nameKey];
+		if (nameVal !== null && nameVal !== undefined) return nameVal;
 	}
-	return out;
+	// Nilai berupa object (mis. jenjangPendidikan = { id, nama }) → ambil .nama
+	const val = obj[key];
+	if (val !== null && typeof val === "object" && !Array.isArray(val)) {
+		const nested = (val as Record<string, unknown>).nama ?? (val as Record<string, unknown>).name;
+		if (nested !== undefined) return nested;
+	}
+	return val;
 }
 
 const COLUMNS: Column<ProfileUpdateQuery>[] = [
@@ -148,13 +234,15 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 	});
 
 	const detail = detailQuery.data;
-	const diffRows = detail
-		? Object.keys(flattenForDiff(detail.latestRevision)).map((key) => ({
-				key,
-				before: (flattenForDiff(detail.previousRevision)[key] as unknown) ?? "—",
-				after: (flattenForDiff(detail.latestRevision)[key] as unknown) ?? "—",
-			}))
-		: [];
+	const fields = FIELD_MAP[detail?.profileUpdate?.tableName ?? ""] ?? [];
+	const prev = (detail?.previousRevision ?? {}) as Record<string, unknown>;
+	const latest = (detail?.latestRevision ?? {}) as Record<string, unknown>;
+
+	const diffRows = fields.map(({ key, label }) => ({
+		label,
+		before: resolveValue(prev, key),
+		after: resolveValue(latest, key),
+	}));
 
 	const handleApprove = (approval: "APPROVED" | "REJECT") => {
 		if (selectedId == null) return;
@@ -294,10 +382,14 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 												{diffRows.map((row) => {
 													const changed = row.before !== row.after;
 													return (
-														<tr key={row.key} className={cn("border-t", changed && "bg-warning/10")}>
-															<td className="px-3 py-1.5 font-mono text-xs">{row.key}</td>
-															<td className="px-3 py-1.5">{String(row.before)}</td>
-															<td className="px-3 py-1.5 font-medium">{String(row.after)}</td>
+														<tr key={row.label} className={cn("border-t", changed && "bg-warning/10")}>
+															<td className="px-3 py-1.5 font-mono text-xs">{row.label}</td>
+															<td className="px-3 py-1.5">
+																{row.before == null || row.before === "" ? "—" : String(row.before)}
+															</td>
+															<td className="px-3 py-1.5 font-medium">
+																{row.after == null || row.after === "" ? "—" : String(row.after)}
+															</td>
 														</tr>
 													);
 												})}

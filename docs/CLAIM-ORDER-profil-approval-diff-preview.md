@@ -51,10 +51,10 @@ yang relevan (whitelist), dengan label yang sudah di-humanize dalam Bahasa Indon
 
 ### Wave 1 — Implementasi (satu file)
 
-- [ ] **Baca file target** — pahami struktur `approval-client.tsx` saat ini
-- [ ] **Jalankan impact analysis** — `npx gitnexus impact flattenForDiff -d upstream -r kepegawaian-fe`
-      (ekspektasi: blast-radius rendah, lokal)
-- [ ] **Tambah `FIELD_MAP`** — const inline di `approval-client.tsx`, setelah imports
+- [x] **Baca file target** — pahami struktur `approval-client.tsx` saat ini
+- [x] **Jalankan impact analysis** — `npx gitnexus impact flattenForDiff -d upstream -r kepegawaian-fe`
+      (ekspektasi: blast-radius rendah, lokal) → **LOW risk**, 1 direct caller, 1 process
+- [x] **Tambah `FIELD_MAP`** — const inline di `approval-client.tsx`, setelah imports
 
   ```ts
   type FieldDef = { key: string; label: string }
@@ -144,7 +144,7 @@ yang relevan (whitelist), dengan label yang sudah di-humanize dalam Bahasa Indon
   }
   ```
 
-- [ ] **Tambah `resolveValue` helper** — gantikan `flattenForDiff`:
+- [x] **Tambah `resolveValue` helper** — gantikan `flattenForDiff`:
 
   ```ts
   function resolveValue(obj: Record<string, unknown>, key: string): unknown {
@@ -166,7 +166,7 @@ yang relevan (whitelist), dengan label yang sudah di-humanize dalam Bahasa Indon
   }
   ```
 
-- [ ] **Ganti logika `diffRows`** — hapus `flattenForDiff` call, ganti dengan:
+- [x] **Ganti logika `diffRows`** — hapus `flattenForDiff` call, ganti dengan:
 
   ```ts
   const fields = FIELD_MAP[detail.profileUpdate?.tableName ?? ''] ?? []
@@ -180,7 +180,7 @@ yang relevan (whitelist), dengan label yang sudah di-humanize dalam Bahasa Indon
   }))
   ```
 
-- [ ] **Update diff table render** — ganti `row.key` → `row.label`, dan perbaiki null display:
+- [x] **Update diff table render** — ganti `row.key` → `row.label`, dan perbaiki null display:
 
   ```tsx
   <td className="px-3 py-1.5 font-mono text-xs">{row.label}</td>
@@ -194,11 +194,11 @@ yang relevan (whitelist), dengan label yang sudah di-humanize dalam Bahasa Indon
 
   > `== null` (double-equal) menangkap baik `null` maupun `undefined`.
 
-- [ ] **Hapus `flattenForDiff`** — fungsi tidak dipakai lagi, hapus seluruh definisinya
+- [x] **Hapus `flattenForDiff`** — fungsi tidak dipakai lagi, hapus seluruh definisinya
 
-- [ ] **Quality gates:**
-  - `bunx biome check` — zero lint errors
-  - `bun run build` — clean build
+- [x] **Quality gates:**
+  - `bunx biome check` — zero lint errors ✅
+  - `bun run build` — clean build ✅
 
 - [ ] **Session close:**
   - `npx gitnexus analyze`
