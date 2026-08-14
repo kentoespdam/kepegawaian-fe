@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { AlertCircle, Calendar, CalendarOff, Clock, FileCheck2, Filter, Plus, UserMinus } from "lucide-react";
+import { Calendar, CalendarOff, Clock, FileCheck2, Filter, Plus, UserMinus } from "lucide-react";
 import { useState } from "react";
 
 import { DataTable } from "@/components/data-table";
@@ -237,19 +237,11 @@ export function TerminasiClient() {
 					)}
 				</div>
 
-				<div className="flex items-center gap-3">
+				<div>
 					<Button type="button" onClick={() => handleOpenForm()}>
 						<Plus className="size-4 mr-1.5" />
 						Tambah Terminasi
 					</Button>
-					<div className="hidden sm:flex items-center gap-1.5 text-xs text-muted-foreground">
-						<AlertCircle className="size-3.5 text-primary" />
-						<span>
-							{tab === "calon-pensiun"
-								? "Proyeksi berdasarkan tanggal lahir & batas usia pensiun"
-								: "Data arsip pegawai resmi dinonaktifkan"}
-						</span>
-					</div>
 				</div>
 			</div>
 
