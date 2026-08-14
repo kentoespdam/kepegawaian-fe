@@ -28,14 +28,13 @@
 				"tags": ["riwayat-terminasi-controller"],
 				"operationId": "update",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{
-						"name": "request",
-						"in": "query",
-						"required": true,
-						"schema": { "$ref": "#/components/schemas/RiwayatTerminasiPutRequest" }
-					}
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
 				],
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatTerminasiPutRequest" } }
+					}
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -293,14 +292,11 @@
 			"post": {
 				"tags": ["riwayat-terminasi-controller"],
 				"operationId": "create",
-				"parameters": [
-					{
-						"name": "request",
-						"in": "query",
-						"required": true,
-						"schema": { "$ref": "#/components/schemas/RiwayatTerminasiPostRequest" }
+				"requestBody": {
+					"content": {
+						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatTerminasiPostRequest" } }
 					}
-				],
+				},
 				"responses": {
 					"200": {
 						"description": "OK",
@@ -913,14 +909,7 @@
 					},
 					"tanggalSk": { "type": "string", "format": "date" },
 					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
+					"golonganId": { "type": "integer", "format": "int64", "minimum": 1 },
 					"notes": { "type": "string" },
 					"alasanTerminasiId": { "type": "integer", "format": "int64", "minimum": 1 },
 					"nipam": { "type": "string", "minLength": 1 },
@@ -1115,11 +1104,7 @@
 					"kenaikanBerikutnya": { "type": "string", "format": "date" },
 					"mkgbTahun": { "type": "integer", "format": "int32" },
 					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
 					"notes": { "type": "string" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"tanggalBerakhir": { "type": "string", "format": "date" },
 					"jenisMutasi": {
 						"type": "string",
 						"enum": [
@@ -1132,6 +1117,7 @@
 							"TERMINASI"
 						]
 					},
+					"tanggalBerakhir": { "type": "string", "format": "date" },
 					"organisasiId": { "type": "integer", "format": "int64" },
 					"jabatanId": { "type": "integer", "format": "int64" },
 					"profesiId": { "type": "integer", "format": "int64" },
@@ -1181,14 +1167,7 @@
 					},
 					"tanggalSk": { "type": "string", "format": "date" },
 					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
+					"golonganId": { "type": "integer", "format": "int64", "minimum": 1 },
 					"notes": { "type": "string" },
 					"alasanTerminasiId": { "type": "integer", "format": "int64", "minimum": 1 },
 					"nipam": { "type": "string", "minLength": 1 },
@@ -1304,11 +1283,7 @@
 					"kenaikanBerikutnya": { "type": "string", "format": "date" },
 					"mkgbTahun": { "type": "integer", "format": "int32" },
 					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
 					"notes": { "type": "string" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"tanggalBerakhir": { "type": "string", "format": "date" },
 					"jenisMutasi": {
 						"type": "string",
 						"enum": [
@@ -1321,6 +1296,7 @@
 							"TERMINASI"
 						]
 					},
+					"tanggalBerakhir": { "type": "string", "format": "date" },
 					"organisasiId": { "type": "integer", "format": "int64" },
 					"jabatanId": { "type": "integer", "format": "int64" },
 					"profesiId": { "type": "integer", "format": "int64" },
@@ -1596,11 +1572,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
-					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" }
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
 				}
 			},
 			"PegawaiResponse": {

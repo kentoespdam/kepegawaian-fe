@@ -364,7 +364,7 @@
 				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"requestBody": {
 					"content": {
-						"application/json": {
+						"multipart/form-data": {
 							"schema": {
 								"type": "object",
 								"properties": { "fotoProfil": { "type": "string", "format": "binary" } },
