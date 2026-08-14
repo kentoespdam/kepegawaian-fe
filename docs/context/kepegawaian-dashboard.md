@@ -96,12 +96,17 @@ Mengikuti pola dashboard legacy (gambar referensi) tapi mengecualikan data tanpa
 **Panel KANAN — "Riwayat"** (accordion, **multi-open + lazy fetch**, section pertama terbuka).
 Data tiap section di-fetch **hanya saat dibuka**. Urutan mengikuti gambar referensi:
 
-1. **Data Keluarga** — `/profil/keluarga?biodataId={nik}`.
-2. **Data Pendidikan** — `/profil/pendidikan?biodataId={nik}`.
-3. **Data Pengalaman Kerja** — `/profil/pengalaman-kerja?biodataId={nik}`.
-4. **Data Keahlian** — `/profil/keahlian?biodataId={nik}`.
-5. **Data Pelatihan** — `/profil/pelatihan?biodataId={nik}`.
-6. **Riwayat Mutasi** — `/kepegawaian/riwayat/mutasi/pegawai/{$id}`.
+> **CRUD self-service (ADR-0039):** Section 1–5 punya tombol Tambah/Edit/Hapus via self-endpoint
+> (`POST/PUT/DELETE /profil/{entity}/...`). Semua perubahan → approval queue (`changedStatus=true`).
+> Guard per-row: bila `changedStatus` truthy → unmount Edit/Hapus, tampilkan icon pending.
+> Badge "Menunggu" di header section bila ≥1 row pending. Section 6–10 tetap **read-only** (dikontrol HR/sistem).
+
+1. **Data Keluarga** — `/profil/keluarga?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/keluarga]**
+2. **Data Pendidikan** — `/profil/pendidikan?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/pendidikan]**
+3. **Data Pengalaman Kerja** — `/profil/pengalaman-kerja?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/pengalaman-kerja]**
+4. **Data Keahlian** — `/profil/keahlian?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/keahlian]**
+5. **Data Pelatihan** — `/profil/pelatihan?biodataId={nik}`. **[CRUD: POST/PUT/DELETE /profil/pelatihan]**
+6. **Riwayat Mutasi** — `/kepegawaian/riwayat/mutasi/pegawai/{$id}`. (READ-ONLY)
 7. **Riwayat SK** — `/kepegawaian/riwayat/sk/pegawai/{$id}`.
 8. **Riwayat Kontrak** — `/kepegawaian/riwayat/kontrak/pegawai/{$id}`.
 9. **Riwayat Penggajian** — slip bulanan dari `/penggajian/batch/master/pegawai/{$id}`.
