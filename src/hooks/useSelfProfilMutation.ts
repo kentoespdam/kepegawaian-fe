@@ -68,7 +68,11 @@ export function useSelfProfilMutation({ url, queryKey, label, nik }: Options): S
 }
 
 async function selfProfilRequest(url: string, init: RequestInit, fallback: string): Promise<void> {
-	const res = await fetch(url, init);
+	// ponytail: body selalu JSON — tanpa header ini fetch default ke text/plain → 415 (regresi PUT keluarga)
+	const res = await fetch(url, {
+		...init,
+		headers: { "Content-Type": "application/json", ...(init.headers as Record<string, string>) },
+	});
 	if (!res.ok) {
 		const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
 		throw new Error(extractErrorMessage(body, fallback));
