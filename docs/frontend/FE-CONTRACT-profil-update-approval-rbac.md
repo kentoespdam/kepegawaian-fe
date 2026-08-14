@@ -35,22 +35,16 @@
 - Satu user dengan banyak role mendapat **union** semua permission dari semua role-nya.
 - Di sisi server, authority yang di-inject ke setiap request: `ROLE_<nama role>` **dan** string permission `ENTITY:ACTION` (tanpa prefix).
 
-### Katalog Permission (21) — diverifikasi ulang live 2026-08-14
-
-> ✅ Snapshot `GET /system/permissions` (BE). FE mengunci keselarasan ini di
-> `src/lib/auth/permissions.test.ts` (anti-drift). Perubahan sejak dokumen awal:
-> **`MASTER:READ` dihapus** (read master terbuka utk semua user login — bukan permission),
-> **`CUTI:CREATE` → `CUTI:WRITE`**, tambah **`LAPORAN:READ`** & **`PENGGAJIAN:DELETE`**.
+### Katalog Permission (20)
 
 | Permission | Arti |
 |------------|------|
-| `MASTER:WRITE` / `MASTER:DELETE` | Master data (jabatan, organisasi, golongan, dst.) — read TIDAK butuh permission (terbuka semua login) |
+| `MASTER:READ` / `MASTER:WRITE` / `MASTER:DELETE` | Master data (jabatan, organisasi, golongan, dst.) |
 | `PEGAWAI:READ` / `PEGAWAI:WRITE` / `PEGAWAI:DELETE` | Data pegawai |
 | `KEPEGAWAIAN:READ` / `KEPEGAWAIAN:WRITE` / `KEPEGAWAIAN:DELETE` | SK, mutasi, kontrak, SP |
 | `PROFIL:READ` / `PROFIL:UPDATE` / `PROFIL:APPROVE` | Profil: baca / update sendiri / approve antrian |
-| `CUTI:READ` / `CUTI:WRITE` / `CUTI:APPROVE` | Cuti |
-| `LAPORAN:READ` | Laporan |
-| `PENGGAJIAN:READ` / `PENGGAJIAN:WRITE` / `PENGGAJIAN:PROCESS` / `PENGGAJIAN:DELETE` | Penggajian |
+| `CUTI:READ` / `CUTI:CREATE` / `CUTI:APPROVE` | Cuti |
+| `PENGGAJIAN:READ` / `PENGGAJIAN:WRITE` / `PENGGAJIAN:PROCESS` | Penggajian |
 | `SYSTEM:MANAGE_USER` / `SYSTEM:MANAGE_ROLE` | Manajemen user & role |
 
 > **Sudah tersedia — `GET /account/me`** (envelope `SingleResult`):
@@ -73,7 +67,16 @@
 
 ## 2. RBAC — Endpoint Baru (✅ LIVE)
 
-Semua endpoint di bawah diproteksi `@PreAuthorize("hasRole('SYSTEM')")` — **hanya role `SYSTEM`** yang bisa akses (403 untuk lainnya).
+Semua endpoint di bawah diproteksi **dual-mode** (ADR-0037): `@PreAuthorize("hasRole('SYSTEM') or hasAuthority('SYSTEM:MANAGE_USER'|'SYSTEM:MANAGE_ROLE')")` — akses untuk role `SYSTEM`, atau siapapun yang memegang permission `SYSTEM:MANAGE_*` (seed: `ADMIN` punya keduanya).
+
+**Guard per area:**
+
+| Area | Permission |
+|------|------------|
+| `/system/users/*` | `SYSTEM:MANAGE_USER` |
+| `/system/roles/*` dan `/system/permissions` | `SYSTEM:MANAGE_ROLE` |
+
+> ⚠️ **Perubahan**: `GET /system/roles*` dan `GET /system/users` yang tadinya terbaca semua user authenticated kini **di-guard** (SYSTEM + pemegang permission) — ini perbaikan keamanan (sebelumnya permission matrix semua role bocor ke user biasa).
 
 ### 2.1 `GET /system/permissions` — list semua permission
 
@@ -90,8 +93,8 @@ Respons (envelope `ListResult`):
   "errors": [],
   "message": "Data found!",
   "data": [
-    { "name": "MASTER:WRITE" },
-    { "name": "MASTER:DELETE" }
+    { "name": "MASTER:READ" },
+    { "name": "MASTER:WRITE" }
   ],
   "timestamp": "2026-08-12 14:30:00"
 }
@@ -124,17 +127,15 @@ DELETE /api/system/roles/HRD/permissions/PROFIL:APPROVE
 | 404 | Role/permission tidak ada, atau permission tidak ter-assign ke role tsb |
 | 403 | Bukan role `SYSTEM` |
 
-### 2.4 Perubahan respons `GET /system/roles` — field `permissions` baru
+### 2.4 Perubahan respons `GET /system/roles` — field `permissions` & `description` baru
 
-Endpoint role yang **sudah ada** (`GET /system/roles`, `GET /system/roles/list`, `GET /system/roles/{id}`, `POST /system/roles`) kini mengembalikan **field tambahan `permissions`** per role (dari relasi DB):
+Endpoint role (`GET /system/roles`, `GET /system/roles/list`, `GET /system/roles/{id}`) kini mengembalikan **field tambahan `permissions`** (relasi DB) dan **`description`** (label role, nullable):
 
 ```json
-// Sebelum
-{ "id": "HRD" }
-
 // Sesudah
 {
   "id": "HRD",
+  "description": "Petugas kepegawaian (operasional minus SYSTEM:*)",
   "permissions": [
     { "name": "PROFIL:APPROVE" },
     { "name": "CUTI:APPROVE" }
@@ -142,12 +143,52 @@ Endpoint role yang **sudah ada** (`GET /system/roles`, `GET /system/roles/list`,
 }
 ```
 
-- Field `permissions` bisa kosong (`[]`) jika role belum punya permission.
-- Ini perubahan **additive** — FE lama tetap jalan, tapi halaman manajemen role sebaiknya menampilkan list permission ini.
+- Field `permissions` bisa kosong (`[]`) jika role belum punya permission; `description` bisa `null`.
+- Ini perubahan **additive** — FE lama tetap jalan.
 
-> **Seed matrix (live, diverifikasi 2026-08-14):** role `ADMIN` = **21 permission** (semua), role `HRD` = **16** (minus `SYSTEM:*`, `PENGGAJIAN:WRITE/PROCESS/DELETE`), role `USER` = **7** read-only (`CUTI:READ`, `KEPEGAWAIAN:READ`, `LAPORAN:READ`, `PEGAWAI:READ`, `PENGGAJIAN:READ`, `PROFIL:READ`, `PROFIL:UPDATE`). Implikasi:
-> - HRD bisa akses **write/delete master** (dual-mode `MASTER:WRITE`/`MASTER:DELETE` di controller master), **write/delete pegawai** (dual-mode `PEGAWAI:WRITE`/`PEGAWAI:DELETE`) dan **`PATCH /admin/profil/{id}`** (punya `PROFIL:APPROVE`).
-> - `CUTI:WRITE` (bukan `CUTI:CREATE`) milik ADMIN & HRD — `USER` hanya `CUTI:READ`.
+### 2.5 Endpoint baru manajemen role
+
+**`PUT /system/roles/{id}`** — update `description` role:
+
+```http
+PUT /api/system/roles/HRD
+Content-Type: application/json
+{ "description": "Petugas kepegawaian" }
+```
+
+| Kode | Kasus |
+|------|-------|
+| 200 | Berhasil — `SavedResult` |
+| 404 | Role tidak ditemukan |
+| 403 | Bukan SYSTEM / tanpa `SYSTEM:MANAGE_ROLE` |
+
+**`DELETE /system/roles/{id}`** — hapus role (hard delete + hapus baris join permission):
+
+```http
+DELETE /api/system/roles/HRD
+```
+
+| Kode | Kasus |
+|------|-------|
+| 200 | Berhasil — `DeletedResult` |
+| 404 | Role tidak ditemukan |
+| **409** | Role **`SYSTEM`** atau **`ADMIN`** — tidak boleh dihapus (bootstrap/proteksi) |
+| 403 | Bukan SYSTEM / tanpa `SYSTEM:MANAGE_ROLE` |
+
+> ⚠️ Konsekuensi hapus role: user yang masih memegang role di prefs Appwrite **tetap punya** `ROLE_xxx` (login & dual-mode `hasRole` tetap jalan) tapi **kehilangan permission** dari role itu. Tidak ada rename role — rename = buat baru + reassign + hapus lama.
+
+**`POST /system/roles`** — body berubah menjadi `{ "id": "ROLE_X", "description": "..." }` (tidak lagi menerima entity mentah / field `permissions`). Assign permission hanya lewat endpoint 2.2–2.3.
+
+**`GET /system/roles/{id}`** — diperbaiki: exact match, respons `SingleResult` (bukan list), `404` jika tidak ada.
+
+> **Seed matrix (V31 + V33 + V34 + V35, sudah live):** katalog **21 permission**. `ADMIN`=21 (semua), `HRD`=14 (operasional minus `SYSTEM:*`, `CUTI:CREATE`, `PENGGAJIAN:WRITE/PROCESS/DELETE`), `USER`=7 (`PEGAWAI:READ`, `PROFIL:READ/UPDATE`, `KEPEGAWAIAN:READ`, `CUTI:READ`, `PENGGAJIAN:READ`, `LAPORAN:READ`). Implikasi:
+> - HRD bisa akses **write/delete master** (`MASTER:WRITE/DELETE`), **write/delete pegawai** (`PEGAWAI:WRITE/DELETE`), **`PATCH /admin/profil/{id}`** (`PROFIL:APPROVE`), kelola **jenis/kuota cuti** (`CUTI:WRITE`), **laporan** (`LAPORAN:READ`).
+> - `USER` (pegawai biasa) bisa **baca modul bisnis** (READ yang dimiliki) dan **update profil sendiri** (`PROFIL:UPDATE`).
+> - ✅ **Pengajuan cuti (create/update/klaim/batal) = login-only + ownership check** — TANPA permission: semua pegawai bersesi aktif berhak mengusulkan cuti sendiri. Server me-resolve identitas dari principal (`CutiOwnershipService`, ADR-0038): non-ADMIN/HRD yang mencoba `pegawaiId` milik orang lain → **403**. `CUTI:CREATE` dihapus dari katalog (V35). Baca daftar/detail cuti milik sendiri (`GET /cuti/pengajuan/{pegawaiId}/pegawai`, `GET /cuti/pengajuan/{id}`) juga login-only + di-scope ke principal.
+> - ✅ **Read master (jabatan, organisasi, golongan, jenis-*, dll) = login-only** — TANPA guard permission, cukup sesi aktif (pola `/account/me`). FE bisa pakai dropdown master dari sesi user mana pun. `MASTER:READ` dihapus dari katalog (V34).
+> - ✅ **Referensi lintas modul = login-only juga**: `GET /cuti/jenis*` (katalog jenis cuti), `GET /penggajian/tunjangan` (daftar enum jenis tunjangan, tanpa nominal), `GET /cuti/pengajuan/{tgl}/{tgl}/total-hari-kerja` (kalkulator hari kerja) — cukup sesi aktif, tanpa permission.
+> - ⚠️ **Read-path modul bisnis** (`PEGAWAI:READ`, `PROFIL:READ`, `KEPEGAWAIAN:READ`, `CUTI:READ`, `PENGGAJIAN:READ`, `LAPORAN:READ`) di-guard dual-mode (`hasRole('ADMIN') or hasAuthority('X:READ')`).
+> - ⚠️ **Antrian approval profil** (`GET /profil/profil-update*`) di-guard `PROFIL:APPROVE` — **menyempit** (sebelumnya terbuka semua user login; perbaikan keamanan kepegawaian-t3s3).
 > - Matrix bisa diubah runtime via API assign/revoke (section 2.2–2.3).
 
 ---
@@ -161,6 +202,12 @@ Endpoint role yang **sudah ada** (`GET /system/roles`, `GET /system/roles/list`,
 - Role `ADMIN` (dan role lain) harus di-assign **eksplisit** oleh admin `SYSTEM` via endpoint yang sudah ada:
   `PATCH /api/system/users/pref/{userId}` dengan body `{ "roles": ["ADMIN"] }` (cek kontrak existing endpoint ini).
 - Halaman manajemen user: pastikan ada UI untuk assign role per user (bukan hanya "user baru otomatis admin").
+
+**User lifecycle (ADR-0039) — tidak ada `DELETE /system/users`:**
+- User Appwrite **tidak pernah dihapus**; status `blocked` (`PATCH /system/users/{id}/status` dengan `{"status": true}`) adalah mekanisme mencabut akses login.
+- Otomatis: pegawai **terminasi** atau **di-hard-delete** → user Appwrite ikut di-disable (best-effort).
+- `PATCH /system/users/{id}/status` sekarang **wajib** body eksplisit `{"status": true/false}` — body kosong → `400` (sebelumnya body kosong = unblock, footgun).
+- User yang di-disable tetap muncul di `GET /system/users` dengan `status: true` — tampilkan status, jangan sembunyikan.
 
 ### Dev User (hanya profile `development`)
 
@@ -384,3 +431,4 @@ Semua endpoint memakai envelope berikut (kecuali error handler khusus):
 - [x] **Seed matrix (V31)**: `ADMIN`=20 / `HRD`=15 sudah live — HRD punya write/delete master + pegawai + admin-profil (section 2.4).
 - [x] **Ownership self-endpoint**: endpoint self verifikasi kepemilikan `biodataId`/`nik` — **sudah LIVE** (kepegawaian-3blf); target bukan milik principal → 404 (section 5.1).
 - [x] **Ownership read self**: jalur read profil dibatasi ke data sendiri (force NIK di list, 404 di detail/file) — **sudah LIVE** (kepegawaian-jiv4); HRD/ADMIN bebas via `PROFIL:READ` (section 5.1).
+- [x] **Terdaftar di OpenAPI**: `GET /account/me` masuk group swagger `auth` (`/v3/api-docs/auth` — paths `/auth/**`, `/account/**`); semua `/admin/profil/**` masuk group `profil` (`/v3/api-docs/profil` — paths `/profil/**`, `/admin/profil/**`) — FE bisa regenerate tipe dari kedua group tersebut.
