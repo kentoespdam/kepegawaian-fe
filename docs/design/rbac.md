@@ -1,41 +1,38 @@
-# RBAC — Appwrite Labels + peta terpusat
+# RBAC — Permission-driven (`/account/me` + `hasPermission`)
 
-> **Muat modul ini untuk:** kerja otorisasi/permission, `can()`, `<Can>`, `lib/auth/permissions.ts`,
-> penyembunyian aksi berbasis peran, `forbidden()`. Berisi §9.
-> **Sumber:** CONTEXT §RBAC. Lihat juga proteksi rute di [auth-proxy.md](./auth-proxy.md) §4.2.
+> **Muat modul ini untuk:** kerja otorisasi/permission, `hasPermission()`, `PERMISSION` catalog,
+> `lib/auth/permissions.ts`, penyembunyian aksi berbasis akses, `forbidden()`. Berisi §9.
+> **Sumber:** CONTEXT §RBAC + [FE-GUIDE-dual-mode-rbac.md](../FE-GUIDE-dual-mode-rbac.md).
+> Lihat juga proteksi rute di [auth-proxy.md](./auth-proxy.md) §4.2.
 
 ---
 
-## 9. RBAC — Appwrite Labels + peta terpusat (CONTEXT §RBAC)
+## 9. RBAC — Permission-driven (dual-mode, single source of truth `/account/me`)
 
-Otorisasi **role-based**; peran didefinisikan user nanti. Rilis 1 bangun **mekanisme**, bukan
-daftar peran hardcoded. FE tak pernah hardcode `"admin"`.
+Backend dual-mode: `hasRole('ADMIN') OR hasAuthority('ENTITY:ACTION')`. FE **tidak** memutuskan
+keamanan — hanya show/hide UI. Keamanan di server.
 
-- **Sumber peran = Appwrite Labels.** `labels` array datang **gratis di `account.get()`** (sudah
-  dipanggil DAL) — nol network ekstra. Dibaca lewat satu helper `getRoles(session)` (agar bisa
-  swap ke Teams tanpa sentuh caller).
-- **Peta permission** — satu file `lib/auth/permissions.ts`: `role → entity → action[]`,
-  action ∈ `view | create | update | delete`. Key entity `*` = default per-role.
-  ```
-  PERMISSIONS = {
-    hr:     { golongan: ['view','create','update','delete'], organisasi: ['view'], /* … */ },
-    viewer: { '*': ['view'] },
-  }
-  ```
-- **Satu API cek:** `can(roles, action, entity)` — TAK PERNAH `role === 'admin'`. Signature
-  dikunci sejak hari 1.
+- **Sumber kebenaran = `GET /account/me`** via `getAccountSession()` (server, cached) →
+  `{ roles: string[], permissions: string[] }`. `permissions` = union semua role user saat itu
+  (berubah runtime, JANGAN hardcode matriks).
+- **Katalog permission** — satu file `lib/auth/permissions.ts`: `const PERMISSION` (21, sinkron
+  dengan katalog BE `GET /system/permissions`; anti-drift di-test di `permissions.test.ts`).
+- **Satu API cek:** `hasPermission(permissions, PERMISSION.X, roles?)` — TAK PERNAH
+  `role === 'admin'` hardcode. Role `ADMIN` otomatis lolos (shortcut di dalam `hasPermission`,
+  mencerminkan dual-mode BE) walau list `permissions` kosong.
 - **Enforcement (defense in depth):**
-  - **UI: unmount** (return `null`) — BUKAN CSS-hide/disable — via helper `<Can action entity>`.
-    Tombol absen = kenyamanan, bukan batas keamanan.
-  - **Page/render:** DAL `forbidden()` → `forbidden.tsx` saat peran tak punya `view`.
+  - **UI client: unmount** (return `null`) — BUKAN CSS-hide/disable. Ambil akses via `useAuth()`
+    (`{ roles, permissions }`, disuntik `AuthProvider` di AppShell dari `getAccountSession`).
+  - **Page server:** `verifySession()` + `getAccountSession()` → `hasPermission(..., roles)`
+    gagal → `forbidden()` (`notFound()`).
+  - **Sidebar:** `filterVisibleEntities(entities, permissions, roles)` — gate `PERMISSION.*`
+    (string/string[] any-of/`null` = semua login).
   - **Data:** `proxy.ts` = gate keras (request tak berwenang ditolak server-side).
 - **Aturan unmount (TERKUNCI — jangan disable):**
-  - **Tambah** tak dirender saat `!can(create)`.
-  - **Kolom Aksi** tak dirender sama sekali bila peran tak punya `update` maupun `delete`;
-    bila hanya satu, hanya ikon itu dirender.
-  - **Klik-baris-ke-Edit** nonaktif saat `!can(update)` (baris tetap terbaca, non-interaktif).
-  - Entitas yang tak bisa `view` **tak muncul di sidebar** (tak dirender sebagai sub-item); grup
-    modul tanpa entitas ter-view sama sekali → tak dirender. DAL `forbidden()` = jaring pengaman
-    untuk URL yang diketik langsung.
-- **Rilis 1 tak seed peran nyata** — peta ship default masuk-akal (write role + `viewer` via `*`);
-  user isi matriks per-label. Kelola peran lewat UI = ditunda ke modul `sistem`.
+  - **Tambah/Edit** tak dirender saat `!hasPermission(permissions, PERMISSION.X, roles)`.
+  - **Kolom Aksi** tak dirender sama sekali bila user tak punya akses tulis.
+  - Entitas yang tak bisa `read` **tak muncul di sidebar**; `forbidden()` = jaring pengaman untuk
+    URL yang diketik langsung.
+- **Tier akses (FE-GUIDE §4):** read master & referensi = login-only (JANGAN gate permission);
+  approval/manajemen (`PROFIL:APPROVE`, `SYSTEM:MANAGE_*`) = permission-only.
+- Kelola peran/permission lewat modul `sistem` (UI) — matriks tidak dikunci di FE.

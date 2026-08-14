@@ -19,8 +19,8 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   gitnexus untuk pelacakan simbol, impact analysis, & query flow kode. **`grep` HANYA sebagai
   fallback** — graphify/gitnexus dulu, baru grep. Larangan "grep buta" tetap berlaku.
 - `gitnexus impact` **WAJIB** bila target edit: (a) **fan-in ≥2** (di-import ≥2 modul), **atau**
-  (b) di **permukaan kritis**: `proxy.ts`, DAL/`verifySession`, `can()`/RBAC, shared primitive
-  (`<DataTable>`/`<CrudForm>`/`<Can>`/dst), `src/hooks/*`. Di situ, bangun pemahaman caller/callee &
+  (b) di **permukaan kritis**: `proxy.ts`, DAL/`verifySession`, RBAC/`hasPermission`, shared
+  primitive (`<DataTable>`/`<CrudForm>`/dst), `src/hooks/*`. Di situ, bangun pemahaman caller/callee &
   blast radius dari **peta kode**, bukan tebakan. **Di bawah ambang** (edit 1-file lokal, config glue,
   typo, rename lokal): baca file langsung + graphify/gitnexus tetap dianjurkan untuk orientasi
   singkat, tapi boleh langsung ke kode bila perubahan sepele — ADR-0007 melindungi efisiensi agen.
@@ -61,8 +61,8 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   `Read`, import graph lebih dalam) tanpa gain keterbacaan. Fragmentasi = anti-pola, sama buruknya
   dengan file raksasa yang campur tanggung jawab.
 - **DRY** — jangan duplikasi logika. Ekstrak pola berulang jadi shared primitive / helper / hook
-  (lihat architecture §18: `<DataTable>`, `<CrudForm>`, `<ConfirmDeleteDialog>`, `<Can>`,
-  `useResource`). Duplikasi hanya boleh di glue tipis per-entitas, TAK PERNAH di logika
+  (lihat architecture §18: `<DataTable>`, `<CrudForm>`, `<ConfirmDeleteDialog>`, `useResource`).
+  Duplikasi hanya boleh di glue tipis per-entitas, TAK PERNAH di logika
   table/fetch/CRUD/auth.
 - **KISS** — pilih solusi paling sederhana yang memenuhi spec. Hindari abstraksi prematur; abstraksi
   muncul dari duplikasi nyata (rule of three), bukan diantisipasi.
@@ -184,7 +184,8 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   `try/catch` fail-safe (redirect `/login`, **jangan** throw 500); pin **Node runtime**; **hapus
   cookie `token` saat logout** (cegah replay); refresh buffer ~30s + mint `duration: 3600`.
 - **Defense in depth 3 lapis:** `proxy.ts` (gate data) → DAL `verifySession()` (gate render) → RBAC
-  `can()` server-side. **UI unmount = kenyamanan, BUKAN batas keamanan** — jangan andalkan.
+  `hasPermission()` server-side. **UI unmount = kenyamanan, BUKAN batas keamanan** — jangan
+  andalkan.
 - Kontrak status: **401** = sesi hilang → toast + `/login?next=`; **403** = forbidden page (JANGAN
   bounce login); **409** = inline di dialog. Detail: auth-proxy §4.
 - JWT hidup di cookie httpOnly + secure + sameSite, short-lived.
@@ -193,8 +194,13 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
 
 ## 7. RBAC
 
-- **TIDAK PERNAH** hardcode `role === 'admin'`. Selalu lewat `can(roles, action, entity)` +
-  `<Can action entity>`. Sumber peran = Appwrite Labels via `getRoles()`.
+- **TIDAK PERNAH** hardcode `role === 'admin'`. Selalu lewat
+  `hasPermission(permissions, PERMISSION.X, roles?)`.
+- **Sumber kebenaran = `getAccountSession()`** (`GET /account/me`) → `{ roles, permissions }`.
+  Server component: `verifySession()` + `getAccountSession()`; client: `useAuth()` (disuntik
+  `AuthProvider` di AppShell). Detail: rbac §9 + FE-GUIDE-dual-mode-rbac.md §7.
+- Role `ADMIN` lolos otomatis (shortcut di `hasPermission` — dual-mode BE); `permissions` bisa
+  kosong untuk ADMIN — jangan hardcode ekspektasi sebaliknya.
 - Akses ditolak di UI = **unmount (`return null`)**, **BUKAN** disable/CSS-hide. Aturan unmount
   terkunci di rbac §9.
 

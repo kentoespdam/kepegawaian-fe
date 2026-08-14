@@ -16,7 +16,7 @@ implementasi memuat **hanya** file yang relevan dengan task → hemat token, hin
 | [app-shell.md](./app-shell.md) | §6, §12, §13 | Sidebar-09, top bar, landing |
 | [list-and-tables.md](./list-and-tables.md) | §7, §8, §11 | DataTable, delete UX, tree entities |
 | [forms.md](./forms.md) | §10 | `<CrudForm>` RHF+Zod, heavy-form |
-| [rbac.md](./rbac.md) | §9 | `can()`, `<Can>`, permissions map |
+| [rbac.md](./rbac.md) | §9 | `hasPermission()`, `PERMISSION` catalog, `/account/me` |
 | [login-and-profile.md](./login-and-profile.md) | §14, §15 | Login & profil |
 | [notifications.md](./notifications.md) | §16 | Konvensi sonner |
 
