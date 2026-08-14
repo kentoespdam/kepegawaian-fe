@@ -130,9 +130,10 @@ Step 1 (getAccountSession)
 - [x] `bun run build` — clean
 - [x] `bunx biome check` — zero
 - [x] `npx gitnexus analyze` + `detect-changes` — index refresh; scope sesuai
-- [ ] `/graphify --update` via skill graphify
-- [ ] `bd close kepegawaian-fe-da30`
-- [ ] `git pull --rebase` → `bd dolt push` → `git push`
+- [x] `/graphify --update` (incremental, code-only — AST + rebuild, 1480 nodes)
+- [x] `bd close kepegawaian-fe-da30` — closed, state ter-commit
+- [x] `git pull --rebase` (clean) → `git push` — `f891146` di `origin/blackboxai/branch-clean`
+- [ ] `bd dolt push` — **tidak bisa**: environment ini belum punya dolt remote (`bd dolt show` → Remotes: none). Perlu konfigurasi remote dulu sebelum push issue state.
 
 ---
 
