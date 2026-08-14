@@ -8,9 +8,10 @@ import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { CrudForm } from "@/components/crud-form";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { useAuth } from "@/hooks/useAuth";
 import { useBadgeMutations } from "@/hooks/useBadgeMutations";
-import { useRoles } from "@/hooks/useRoles";
-import { can } from "@/lib/auth/can";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 
 const badgeSchema = z.object({ nama: z.string().min(1, "Nama harus diisi") });
 interface BadgeItem {
@@ -22,9 +23,8 @@ interface BadgeManagerProps {
 	profesiId: number;
 	items: BadgeItem[];
 }
-
 export function BadgeManager({ entity, profesiId, items }: BadgeManagerProps) {
-	const roles = useRoles();
+	const { roles, permissions } = useAuth();
 	const { create, update, remove } = useBadgeMutations(entity, profesiId);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<BadgeItem | null>(null);
@@ -32,8 +32,8 @@ export function BadgeManager({ entity, profesiId, items }: BadgeManagerProps) {
 	const [error, setError] = useState<string | null>(null);
 	const [delErr, setDelErr] = useState<string | null>(null);
 	const label = entity === "apd" ? "APD" : "Alat Kerja";
-	const canUpdate = can(roles, "update", "profesi");
-	const canDelete = can(roles, "delete", "profesi");
+	const canUpdate = hasPermission(permissions, PERMISSION.MASTER_WRITE, roles);
+	const canDelete = hasPermission(permissions, PERMISSION.MASTER_DELETE, roles);
 
 	const handleSubmit = async (data: { nama: string }) => {
 		setError(null);

@@ -6,9 +6,11 @@ import type { RiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
 
 interface Props {
 	selectedRow: RiwayatMutasiQuery | null;
+	hideUpload?: boolean;
+	hideDelete?: boolean;
 }
 
-export function MutasiLampiranCard({ selectedRow }: Props) {
+export function MutasiLampiranCard({ selectedRow, hideUpload, hideDelete }: Props) {
 	const ref = selectedRow?.skMutasi?.jenisSk as JenisSk | undefined;
 	const refId = selectedRow?.skMutasi?.id;
 	const skLabel = selectedRow?.skMutasi?.nomorSk ?? "";
@@ -26,6 +28,8 @@ export function MutasiLampiranCard({ selectedRow }: Props) {
 				uploadUrl="/api/proxy/kepegawaian/lampiran"
 				deleteUrl={(id) => `/api/proxy/kepegawaian/lampiran/${ref}/${refId}/${id}`}
 				viewUrl={(id) => `/api/proxy/kepegawaian/lampiran/file/${ref}/${id}`}
+				hideUpload={hideUpload}
+				hideDelete={hideDelete}
 			/>
 		</div>
 	);

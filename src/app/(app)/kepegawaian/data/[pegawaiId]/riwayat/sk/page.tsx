@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { forbidden, useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,6 +12,9 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { JENIS_SK_OPTIONS, labelJenisSk } from "@/lib/riwayat-constants";
 import { formatDate, rupiah } from "@/lib/utils";
@@ -110,7 +113,7 @@ function SkToolbar({
 	hasActive: boolean;
 	onFilterChange: (key: string, val: string | undefined) => void;
 	onReset: () => void;
-	onTambah: () => void;
+	onTambah?: () => void;
 }) {
 	return (
 		<DataTableToolbar
@@ -136,10 +139,12 @@ function SkToolbar({
 					))}
 				</SelectContent>
 			</Select>
-			<Button onClick={onTambah}>
-				<Plus />
-				Tambah SK
-			</Button>
+			{onTambah && (
+				<Button onClick={onTambah}>
+					<Plus />
+					Tambah SK
+				</Button>
+			)}
 		</DataTableToolbar>
 	);
 }
@@ -147,6 +152,11 @@ function SkToolbar({
 // ── Page ──
 
 export default function SkPage() {
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
+	const canWrite = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.PEGAWAI_DELETE);
+
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
 	const router = useRouter();
@@ -244,10 +254,14 @@ export default function SkPage() {
 						hasActive={hasActive}
 						onFilterChange={onFilterChange}
 						onReset={onReset}
-						onTambah={() => {
-							setEditingId(null);
-							setIsFormOpen(true);
-						}}
+						onTambah={
+							canWrite
+								? () => {
+										setEditingId(null);
+										setIsFormOpen(true);
+									}
+								: undefined
+						}
 					/>
 				}
 				columns={columns}
@@ -260,8 +274,8 @@ export default function SkPage() {
 				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
 				selectedRowId={selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={(item) => setEditingId(String(item.id ?? ""))}
-				onDelete={(item) => setDeleteId(String(item.id ?? ""))}
+				onEdit={canWrite ? (item) => setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data SK"
 				pagination={
 					<DataTablePagination
@@ -285,7 +299,7 @@ export default function SkPage() {
 					setIsFormOpen(false);
 				}}
 			/>
-			<SkLampiranCard selectedRow={selectedRow} />
+			<SkLampiranCard selectedRow={selectedRow} hideUpload={!canWrite} hideDelete={!canDelete} />
 			<ConfirmDeleteDialog
 				open={deleteId !== null}
 				onOpenChange={(v) => {

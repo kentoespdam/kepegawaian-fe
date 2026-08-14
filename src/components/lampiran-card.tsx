@@ -91,9 +91,9 @@ export function LampiranCard({
 	const lampiranQuery = useQuery({
 		queryKey: [...queryKey, ref, refId],
 		queryFn: async () => {
-			const res = await fetch(listUrl);				// BE balikin 404 "Data not found!" saat list kosong — jangan throw, biar
-				// refetch pasca-hapus item terakhir tak menyisakan baris stale (keepPreviousData).
-				if (res.status === 404) return [];
+			const res = await fetch(listUrl); // BE balikin 404 "Data not found!" saat list kosong — jangan throw, biar
+			// refetch pasca-hapus item terakhir tak menyisakan baris stale (keepPreviousData).
+			if (res.status === 404) return [];
 			if (!res.ok) throw new Error("Gagal memuat lampiran");
 			const body = (await res.json()) as {
 				data?: LampiranItem[];

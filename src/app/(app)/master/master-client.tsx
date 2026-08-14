@@ -10,9 +10,12 @@ import { Button } from "@/components/ui/button";
 import type { EntityConfig } from "@/config/master-config";
 import { MASTER_ENTITY_CONFIGS } from "@/config/master-config";
 import type { MasterEntityName, MasterEntityTypes } from "@/config/master-entity-types";
+import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
 import { useResource } from "@/hooks/useResource";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { EntityFormModal } from "./entity-form-modal";
 
@@ -24,6 +27,12 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 	// ponytail: map di-widen ke EntityConfig — cast via unknown karena tipe tidak overlapping
 	const cfg = MASTER_ENTITY_CONFIGS[entity] as unknown as EntityConfig<TItem, TReq>;
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(entity);
+
+	// Read master terbuka utk semua user login (kontrak BE: katalog tak punya MASTER:READ).
+	// Write/delete digate permission — UI aksi disembunyikan utk pembaca murni (mis. role USER).
+	const { permissions } = useAuth();
+	const canWrite = hasPermission(permissions, PERMISSION.MASTER_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.MASTER_DELETE);
 
 	const [editing, setEditing] = useState<TItem | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
@@ -109,9 +118,11 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 				hasActive={Object.keys(filters).length > 0 || !!sortBy}
 				onReset={resetAll}
 			>
-				<Button size="default" onClick={openCreate}>
-					+ Tambah
-				</Button>
+				{canWrite && (
+					<Button size="default" onClick={openCreate}>
+						+ Tambah
+					</Button>
+				)}
 			</DataTableToolbar>
 
 			<DataTable
@@ -128,8 +139,8 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 					if (sortBy === key) setP("sortDirection", sortDir === "asc" ? "desc" : "asc");
 					else setP({ sortBy: key, sortDirection: "asc" });
 				}}
-				onEdit={openEdit}
-				onDelete={openDelete}
+				onEdit={canWrite ? openEdit : undefined}
+				onDelete={canDelete ? openDelete : undefined}
 				getRowId={(i) => String((i as Record<string, unknown>).id ?? "")}
 				pagination={
 					<DataTablePagination

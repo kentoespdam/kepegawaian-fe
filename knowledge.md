@@ -410,13 +410,24 @@ Full catalog: `.agents/skills/`. Key ones:
 
 ## 12. Exploration Priority — WAJIB 🚨
 
-**Urutan menjelajahi kode: `graphify` → `gitnexus` → `grep` (fallback).**
+**Urutan menjelajahi kode: `graphify` → `gitnexus` → raw tools (`grep`/`cat`/`find`/`ls`) sebagai last resort.**
 
-| Urutan | Alat | Kapan pakai |
-|--------|------|-------------|
-| **1** | **graphify** | onboarding modul baru, memahami arsitektur & relasi domain level-tinggi. Buka `graphify-out/graph.html` untuk navigasi visual, atau `/graphify query "<q>"` untuk tanya graph. |
-| **2** | **gitnexus** | impact analysis (`gitnexus_impact`), cari flow (`gitnexus_query`), context 360° simbol (`gitnexus_context`), ganti nama simbol (`gitnexus_rename`). |
-| **3** | **grep** 🚫 | **HANYA fallback** bila graphify & gitnexus tidak menjawab — misal cari literal string, file config tanpa simbol, atau pola regex ad-hoc. Jangan mulai dengan grep untuk paham kode tak dikenal. |
+### Hierarki tool (dari prioritas tertinggi ke terendah)
+
+| Urutan | Alat | Command | Kapan pakai |
+|--------|------|---------|-------------|
+| **1** | **graphify** | `graphify query "<pertanyaan>"` · `graphify path "<A>" "<B>"` · `graphify explain "<konsep>"` | **Selalu coba ini dulu** untuk pertanyaan arsitektur, relasi antar modul, atau saat tidak tahu harus mulai dari mana. Jauh lebih murah token daripada cat/grep file besar. |
+| **2** | **gitnexus** | `gitnexus_query` · `gitnexus_impact` · `gitnexus_context` | Setelah tahu simbol yang relevan dari graphify: impact analysis, caller/callee graph, context 360° simbol, ganti nama aman. |
+| **3** | **baca file langsung** | `view_file` / `cat` | **Boleh langsung** bila (a) nama file sudah diketahui pasti, (b) file kecil & spesifik, (c) graphify/gitnexus sudah memberi arah jelas. Bukan untuk eksplorasi acak. |
+| **4** | **grep / find / ls** 🚫 | `grep` · `find` · `ls` | **HANYA last resort** bila graphify & gitnexus tidak menjawab — misal cari literal string, file config tanpa simbol, pola regex ad-hoc. **JANGAN mulai eksplorasi dengan grep** untuk paham kode tak dikenal. |
+
+### Aturan praktis
+
+- **"Saya tidak tahu arsitekturnya"** → `graphify query "<pertanyaan>"` atau `graphify explain "<konsep>"` DULU
+- **"Saya tahu simbolnya, tapi tidak tahu dampaknya"** → `gitnexus_impact` + `gitnexus_context`
+- **"Saya tahu nama filenya"** → `view_file` langsung (OK)
+- **"Saya mau cari string literal/regex di seluruh codebase"** → `grep` (boleh, ini use-case valid)
+- **❌ JANGAN:** `grep useQuery src/ -r` untuk "pahami bagaimana data fetching bekerja" — itu tugas graphify/gitnexus
 
 ---
 

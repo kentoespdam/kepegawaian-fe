@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { MASTER_ENTITIES } from "@/config/entities";
-import { can, getRoles, verifySession } from "@/lib/auth";
+import { verifySession } from "@/lib/auth";
 
 const ENTITY_ICONS: Record<string, LucideIcon> = {
 	level: Layers,
@@ -36,11 +36,11 @@ const ENTITY_ICONS: Record<string, LucideIcon> = {
 	"rumah-dinas": HomeIcon,
 	"hari-libur": CalendarOff,
 };
-
 export default async function Home() {
 	const user = await verifySession();
-	const roles = getRoles(user);
-	const visible = MASTER_ENTITIES.filter((e) => can(roles, "view", e.id));
+	// Read master terbuka utk semua user login (kontrak BE: tak ada MASTER:READ) —
+	// tampilkan semua entity referensi, tanpa filter role legacy.
+	const visible = MASTER_ENTITIES;
 
 	return (
 		<div className="mx-auto max-w-4xl">

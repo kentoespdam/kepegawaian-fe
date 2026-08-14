@@ -5,6 +5,8 @@ import { cleanup, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { AuthProvider as RolesProvider } from "@/hooks/useAuth";
+import { PERMISSION } from "@/lib/auth/permissions";
 import SkPage from "./page";
 
 // ── Mock next/navigation ──
@@ -97,9 +99,14 @@ function mockDefaultFetch() {
 function renderPage() {
 	const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 	return render(
-		<QueryClientProvider client={qc}>
-			<SkPage />
-		</QueryClientProvider>,
+		<RolesProvider
+			roles={["admin"]}
+			permissions={[PERMISSION.PEGAWAI_READ, PERMISSION.PEGAWAI_WRITE, PERMISSION.PEGAWAI_DELETE]}
+		>
+			<QueryClientProvider client={qc}>
+				<SkPage />
+			</QueryClientProvider>
+		</RolesProvider>,
 	);
 }
 

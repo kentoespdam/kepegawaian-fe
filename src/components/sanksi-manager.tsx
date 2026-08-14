@@ -7,9 +7,10 @@ import { SanksiForm } from "@/app/(app)/master/sanksi/form";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { useRoles } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { type FullSanksiPayload, useSanksiMutations } from "@/hooks/useSanksiMutations";
-import { can } from "@/lib/auth/can";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 
 interface SanksiRow {
 	id?: number;
@@ -21,9 +22,8 @@ interface SanksiManagerProps {
 	jenisSpId: number;
 	items: SanksiRow[];
 }
-
 export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
-	const roles = useRoles();
+	const { roles, permissions } = useAuth();
 	const { create, update, remove } = useSanksiMutations(jenisSpId);
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<SanksiRow | null>(null);
@@ -31,8 +31,8 @@ export function SanksiManager({ jenisSpId, items }: SanksiManagerProps) {
 	const [error, setError] = useState<string | null>(null);
 	const [delErr, setDelErr] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
-	const canUpdate = can(roles, "update", "jenis-sp");
-	const canDelete = can(roles, "delete", "jenis-sp");
+	const canUpdate = hasPermission(permissions, PERMISSION.MASTER_WRITE, roles);
+	const canDelete = hasPermission(permissions, PERMISSION.MASTER_DELETE, roles);
 
 	const dClose = () => {
 		setDialogOpen(false);

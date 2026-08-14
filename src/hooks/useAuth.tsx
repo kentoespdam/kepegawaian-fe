@@ -16,8 +16,3 @@ export function AuthProvider({ roles, permissions, children }: AuthState & { chi
 export function useAuth(): AuthState {
 	return useContext(AuthContext);
 }
-
-// ponytail: shim — call site lama (sanksi-manager) tetap jalan tanpa perubahan
-export function useRoles(): string[] {
-	return useContext(AuthContext).roles;
-}

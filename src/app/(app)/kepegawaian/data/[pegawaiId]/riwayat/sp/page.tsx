@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileText, Plus } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { forbidden, useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -12,7 +12,10 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { formatDate } from "@/lib/utils";
 import type { RiwayatSpQuery } from "@/types/kepegawaian/riwayat";
@@ -125,7 +128,7 @@ function SpToolbar({
 	hasActive: boolean;
 	onFilterChange: (key: string, val: string | undefined) => void;
 	onReset: () => void;
-	onTambah: () => void;
+	onTambah?: () => void;
 }) {
 	return (
 		<DataTableToolbar
@@ -141,10 +144,12 @@ function SpToolbar({
 				value={jenisSpId}
 				onChange={(v) => onFilterChange("jenisSpId", v)}
 			/>
-			<Button onClick={onTambah}>
-				<Plus />
-				Tambah SP
-			</Button>
+			{onTambah && (
+				<Button onClick={onTambah}>
+					<Plus />
+					Tambah SP
+				</Button>
+			)}
 		</DataTableToolbar>
 	);
 }
@@ -152,6 +157,11 @@ function SpToolbar({
 // ── Page ──
 
 export default function SpPage() {
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
+	const canWrite = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.PEGAWAI_DELETE);
+
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
 	const router = useRouter();
@@ -255,10 +265,14 @@ export default function SpPage() {
 						hasActive={hasActive}
 						onFilterChange={onFilterChange}
 						onReset={onReset}
-						onTambah={() => {
-							setEditingId(null);
-							setIsFormOpen(true);
-						}}
+						onTambah={
+							canWrite
+								? () => {
+										setEditingId(null);
+										setIsFormOpen(true);
+									}
+								: undefined
+						}
 					/>
 				}
 				columns={columns}
@@ -270,8 +284,8 @@ export default function SpPage() {
 				onRetry={() => query.refetch()}
 				// ponytail: K-SP6 — no onRowClick, no selectedRowId
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={(item) => setEditingId(String(item.id ?? ""))}
-				onDelete={(item) => setDeleteId(String(item.id ?? ""))}
+				onEdit={canWrite ? (item) => setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data SP"
 				pagination={
 					<DataTablePagination

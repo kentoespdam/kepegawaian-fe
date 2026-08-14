@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -28,8 +27,9 @@ const schema = z.object({
 	tanggalSk: z.string().min(1, "Tanggal SK wajib"),
 	tanggalMulai: z.string().min(1, "Tanggal mulai wajib"),
 	tanggalSelesai: z.string().optional(),
-	// ponytail: golonganId hanya dikirim saat CREATE + PENGANGKATAN. Detail query tak return golongan field.
-	golonganId: z.string().optional(),
+	// golonganId WAJIB (diverifikasi live: server 400 "Golongan ID is required" kalau dihilangkan,
+	// dan 0 → 404 "Unknown Golongan") — field selalu ditampilkan & divalidasi, bukan hanya create+PENGANGKATAN.
+	golonganId: z.string().min(1, "Golongan wajib"),
 	gajiPokok: z.string().optional(),
 	isLatest: z.boolean().optional(),
 	notes: z.string().optional(),
@@ -55,6 +55,8 @@ function normalizeFk(d: SingleResultRiwayatKontrakQuery["data"] | undefined): Re
 		tanggalSk: d.tanggalSk ?? "",
 		tanggalMulai: d.tanggalMulai ?? "",
 		tanggalSelesai: d.tanggalSelesai ?? "",
+		// detail query tidak mengembalikan golongan (tipe RiwayatKontrakQuery tanpa field golongan) —
+		// edit mengharuskan user memilih ulang golongan (server mensyaratkan golonganId wajib)
 		golonganId: "",
 		gajiPokok: "",
 		isLatest: false,
@@ -108,14 +110,6 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 
 	const golonganOpts = useGolonganOptions();
 
-	// ponytail: showGolongan hanya saat create + PENGANGKATAN
-	const showGolongan = !editingId && watch("jenisKontrak") === "PENGANGKATAN";
-
-	// ponytail: bersihkan golonganId saat field disembunyikan
-	useEffect(() => {
-		if (!showGolongan) setValue("golonganId", "");
-	}, [showGolongan, setValue]);
-
 	// ── Submit ──
 
 	const onSubmit = async (values: FormValues) => {
@@ -130,10 +124,11 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 				tanggalMulai: values.tanggalMulai,
 			};
 			if (values.tanggalSelesai) payload.tanggalSelesai = values.tanggalSelesai;
-			// ponytail: hanya kirim golonganId saat CREATE + PENGANGKATAN
-			if (showGolongan && values.golonganId) payload.golonganId = Number(values.golonganId);
+			// golonganId WAJIB ada (server 400 kalau dihilangkan, 0 → 404) — selalu dikirim + divalidasi zod
+			payload.golonganId = Number(values.golonganId);
 			if (values.gajiPokok) payload.gajiPokok = Number(values.gajiPokok);
-			if (values.isLatest) payload.isLatest = true;
+			// isLatest Boolean wajib hadir (pola yang sama: omitting Boolean → NPE di server)
+			payload.isLatest = values.isLatest ?? false;
 			if (values.notes) payload.notes = values.notes;
 
 			const url = editingId
@@ -242,16 +237,15 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 					<Separator />
 					{/* ── Detail Tambahan ── */}
 					<SectionLabel>Detail Tambahan</SectionLabel>{" "}
-					{/* ponytail: golongan hanya untuk CREATE + PENGANGKATAN; full-width tanpa grid placeholder */}
-					{showGolongan && (
-						<FieldFk
-							label="Golongan"
-							options={golonganOpts}
-							value={watch("golonganId")}
-							onChange={(v) => setValue("golonganId", v)}
-							error={errors.golonganId?.message}
-						/>
-					)}
+					{/* golongan selalu tampil & wajib — server mensyaratkan golonganId untuk semua jenis kontrak */}
+					<FieldFk
+						label="Golongan"
+						options={golonganOpts}
+						value={watch("golonganId")}
+						onChange={(v) => setValue("golonganId", v ?? "")}
+						error={errors.golonganId?.message}
+						required
+					/>
 					<FieldText
 						label="Gaji Pokok"
 						value={watch("gajiPokok")}

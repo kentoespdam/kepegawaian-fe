@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState } from "react";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { PegawaiResponseRingkasan, PegawaiTableResponse } from "@/types/pegawai/pegawai";
 import type { BiodataQuery } from "@/types/profil/biodata";
@@ -58,6 +61,10 @@ const biodataColumns = [
 
 export function DataPegawaiClient() {
 	const sp = useSearchParams();
+	// Write pegawai (POST /pegawai, PATCH /pegawai/{id}/profil & /gaji) = dual-mode PEGAWAI:WRITE
+	// (kontrak BE). Pembaca murni (role USER) tetap lihat data tapi tanpa tombol tulis.
+	const { permissions } = useAuth();
+	const canWrite = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
 	const router = useRouter();
 	const tab = (sp.get("tab") as (typeof TABS)[number]["id"]) ?? "aktif";
 	const activeTab = TABS.find((t) => t.id === tab) ?? TABS[0];
@@ -168,7 +175,7 @@ export function DataPegawaiClient() {
 								onFilterChange={onFilterChange}
 								onReset={onReset}
 								hasActive={hasActiveFilter}
-								onAddClick={() => router.push("/kepegawaian/data/tambah")}
+								onAddClick={canWrite ? () => router.push("/kepegawaian/data/tambah") : undefined}
 							/>
 						}
 						columns={(isPegawaiTab ? pegawaiColumns : biodataColumns) as never}
@@ -221,8 +228,8 @@ export function DataPegawaiClient() {
 									error={ringkasanQuery.error}
 									data={ringkasanQuery.data}
 									onRetry={() => ringkasanQuery.refetch()}
-									onEditProfil={() => setEditProfilId(String(selectedId))}
-									onEditGaji={() => setEditGajiId(String(selectedId))}
+									onEditProfil={canWrite ? () => setEditProfilId(String(selectedId)) : undefined}
+									onEditGaji={canWrite ? () => setEditGajiId(String(selectedId)) : undefined}
 									onRiwayat={() => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`)}
 									onPendukung={() => router.push(`/kepegawaian/data/${selectedId}/pendukung/pendidikan`)}
 								/>

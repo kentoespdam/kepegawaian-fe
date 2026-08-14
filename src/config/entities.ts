@@ -6,8 +6,8 @@ export interface Entity {
 	/** Custom URL path. Default: `/master/${id}` */
 	href?: string;
 	/**
-	 * Custom RBAC gate entity name for `can(roles, "view", gate)`.
-	 * `null` = always visible (no gate). Default: `id`
+	 * Custom RBAC gate utk sidebar — `PERMISSION.*` string, array of permissions (any-of),
+	 * atau `null` = always visible. Default: `id` (entity master di-gate via MASTER_GATE).
 	 */
 	gate?: string | null;
 }

@@ -85,7 +85,7 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 		handleSubmit: rhfSubmit,
 		setValue,
 		watch,
-		formState: { errors, dirtyFields, isSubmitting },
+		formState: { errors, isSubmitting },
 		setError,
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema as never),
@@ -114,12 +114,24 @@ export function SheetEditProfil({ pegawaiId, onClose }: Props) {
 
 	const onSubmit = async (values: FormValues) => {
 		try {
-			const dirty = dirtyFields as Partial<Record<keyof FormValues, boolean>>;
-			const payload: Record<string, unknown> = { id: Number(pegawaiId), nipam: values.nipam, nama: values.nama };
-			for (const key of Object.keys(dirty) as (keyof FormValues)[]) {
-				if (key === "nipam" || key === "nama") continue;
-				const v = values[key];
-				payload[key] = v === "" || v === undefined ? undefined : key.endsWith("Id") ? Number(v) : v;
+			// ponytail: jangan andalkan dirtyFields — setValue-controlled (tanpa shouldDirty) tidak pernah
+			// mem-populate dirtyFields di RHF v7 → payload dulu cuma {id, nipam, nama}, field lain raib.
+			// Server WAJIB terima FK kepegawaian sebagai angka (min 0) — kirim 0 bila kosong,
+			// JANGAN dihilangkan dari request (hilang = 500 "The given id must not be null").
+			// 0 = "tidak diisi" untuk profesi/golongan (divalidasi server); organisasi/jabatan selalu ada.
+			const payload: Record<string, unknown> = {
+				id: Number(pegawaiId),
+				nipam: values.nipam,
+				nama: values.nama,
+				organisasiId: Number(values.organisasiId ?? 0),
+				jabatanId: Number(values.jabatanId ?? 0),
+				profesiId: Number(values.profesiId ?? 0),
+				golonganId: Number(values.golonganId ?? 0),
+			};
+			for (const [key, v] of Object.entries(values)) {
+				if (key === "nipam" || key === "nama" || key.endsWith("Id")) continue;
+				if (v === "" || v === undefined) continue;
+				payload[key] = v;
 			}
 
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/profil`, {

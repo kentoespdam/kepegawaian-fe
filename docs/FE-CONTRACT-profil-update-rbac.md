@@ -35,16 +35,22 @@
 - Satu user dengan banyak role mendapat **union** semua permission dari semua role-nya.
 - Di sisi server, authority yang di-inject ke setiap request: `ROLE_<nama role>` **dan** string permission `ENTITY:ACTION` (tanpa prefix).
 
-### Katalog Permission (20)
+### Katalog Permission (21) — diverifikasi ulang live 2026-08-14
+
+> ✅ Snapshot `GET /system/permissions` (BE). FE mengunci keselarasan ini di
+> `src/lib/auth/permissions.test.ts` (anti-drift). Perubahan sejak dokumen awal:
+> **`MASTER:READ` dihapus** (read master terbuka utk semua user login — bukan permission),
+> **`CUTI:CREATE` → `CUTI:WRITE`**, tambah **`LAPORAN:READ`** & **`PENGGAJIAN:DELETE`**.
 
 | Permission | Arti |
 |------------|------|
-| `MASTER:READ` / `MASTER:WRITE` / `MASTER:DELETE` | Master data (jabatan, organisasi, golongan, dst.) |
+| `MASTER:WRITE` / `MASTER:DELETE` | Master data (jabatan, organisasi, golongan, dst.) — read TIDAK butuh permission (terbuka semua login) |
 | `PEGAWAI:READ` / `PEGAWAI:WRITE` / `PEGAWAI:DELETE` | Data pegawai |
 | `KEPEGAWAIAN:READ` / `KEPEGAWAIAN:WRITE` / `KEPEGAWAIAN:DELETE` | SK, mutasi, kontrak, SP |
 | `PROFIL:READ` / `PROFIL:UPDATE` / `PROFIL:APPROVE` | Profil: baca / update sendiri / approve antrian |
-| `CUTI:READ` / `CUTI:CREATE` / `CUTI:APPROVE` | Cuti |
-| `PENGGAJIAN:READ` / `PENGGAJIAN:WRITE` / `PENGGAJIAN:PROCESS` | Penggajian |
+| `CUTI:READ` / `CUTI:WRITE` / `CUTI:APPROVE` | Cuti |
+| `LAPORAN:READ` | Laporan |
+| `PENGGAJIAN:READ` / `PENGGAJIAN:WRITE` / `PENGGAJIAN:PROCESS` / `PENGGAJIAN:DELETE` | Penggajian |
 | `SYSTEM:MANAGE_USER` / `SYSTEM:MANAGE_ROLE` | Manajemen user & role |
 
 > **Sudah tersedia — `GET /account/me`** (envelope `SingleResult`):
@@ -84,8 +90,8 @@ Respons (envelope `ListResult`):
   "errors": [],
   "message": "Data found!",
   "data": [
-    { "name": "MASTER:READ" },
-    { "name": "MASTER:WRITE" }
+    { "name": "MASTER:WRITE" },
+    { "name": "MASTER:DELETE" }
   ],
   "timestamp": "2026-08-12 14:30:00"
 }
@@ -139,9 +145,9 @@ Endpoint role yang **sudah ada** (`GET /system/roles`, `GET /system/roles/list`,
 - Field `permissions` bisa kosong (`[]`) jika role belum punya permission.
 - Ini perubahan **additive** — FE lama tetap jalan, tapi halaman manajemen role sebaiknya menampilkan list permission ini.
 
-> **Seed matrix (V31, sudah live):** role `ADMIN` ter-seed **20 permission** (semua), role `HRD` ter-seed **15** (operasional minus `SYSTEM:*`, `CUTI:CREATE`, `PENGGAJIAN:WRITE/PROCESS`). Implikasi:
-> - HRD kini bisa akses **write/delete master** (dual-mode `MASTER:WRITE`/`MASTER:DELETE` di controller master), **write/delete pegawai** (dual-mode `PEGAWAI:WRITE`/`PEGAWAI:DELETE`) dan **`PATCH /admin/profil/{id}`** (punya `PROFIL:APPROVE`).
-> - `CUTI:CREATE` tetap milik pegawai (`USER`) — HRD hanya approve.
+> **Seed matrix (live, diverifikasi 2026-08-14):** role `ADMIN` = **21 permission** (semua), role `HRD` = **16** (minus `SYSTEM:*`, `PENGGAJIAN:WRITE/PROCESS/DELETE`), role `USER` = **7** read-only (`CUTI:READ`, `KEPEGAWAIAN:READ`, `LAPORAN:READ`, `PEGAWAI:READ`, `PENGGAJIAN:READ`, `PROFIL:READ`, `PROFIL:UPDATE`). Implikasi:
+> - HRD bisa akses **write/delete master** (dual-mode `MASTER:WRITE`/`MASTER:DELETE` di controller master), **write/delete pegawai** (dual-mode `PEGAWAI:WRITE`/`PEGAWAI:DELETE`) dan **`PATCH /admin/profil/{id}`** (punya `PROFIL:APPROVE`).
+> - `CUTI:WRITE` (bukan `CUTI:CREATE`) milik ADMIN & HRD — `USER` hanya `CUTI:READ`.
 > - Matrix bisa diubah runtime via API assign/revoke (section 2.2–2.3).
 
 ---

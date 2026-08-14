@@ -9,9 +9,10 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRoles } from "@/hooks/useRoles";
+import { useAuth } from "@/hooks/useAuth";
 // ponytail: import modul langsung (bukan barrel @/lib/auth) — verifySession server-only
-import { can, forbidden } from "@/lib/auth/can";
+import { forbidden, hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { cn, formatDate } from "@/lib/utils";
@@ -188,8 +189,8 @@ const CUTI_COLUMNS: Column<CutiPengajuanResponse>[] = [
 // ── Page (read-only total — K-C2) ──
 
 export default function CutiPage() {
-	const roles = useRoles();
-	if (!can(roles, "view", "pegawai")) forbidden();
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();

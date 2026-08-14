@@ -138,7 +138,7 @@ interface DataPegawaiToolbarProps {
 	onFilterChange: (key: string, val: string | undefined) => void;
 	onReset: () => void;
 	hasActive: boolean;
-	onAddClick: () => void;
+	onAddClick?: () => void;
 }
 
 export function DataPegawaiToolbar({
@@ -280,10 +280,12 @@ export function DataPegawaiToolbar({
 								Reset
 							</Button>
 						)}
-						<Button onClick={onAddClick}>
-							<Plus />
-							Tambah
-						</Button>
+						{onAddClick && (
+							<Button onClick={onAddClick}>
+								<Plus />
+								Tambah
+							</Button>
+						)}
 					</div>
 				</div>
 			</div>

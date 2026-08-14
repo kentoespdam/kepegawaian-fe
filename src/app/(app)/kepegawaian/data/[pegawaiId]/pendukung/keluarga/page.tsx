@@ -12,9 +12,10 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { useRoles } from "@/hooks/useRoles";
+import { useAuth } from "@/hooks/useAuth";
 // ponytail: import modul langsung — verifySession server-only
-import { can, forbidden } from "@/lib/auth/can";
+import { forbidden, hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import {
 	hubunganKeluargaFilterOptions,
 	labelAgama,
@@ -112,8 +113,8 @@ function KeluargaToolbar({
 }
 
 export default function KeluargaPage() {
-	const roles = useRoles();
-	if (!can(roles, "view", "pegawai")) forbidden();
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
@@ -121,9 +122,9 @@ export default function KeluargaPage() {
 	const qc = useQueryClient();
 	const pegawaiId = params.pegawaiId;
 
-	const canCreate = can(roles, "create", "pegawai");
-	const canUpdate = can(roles, "update", "pegawai");
-	const canDelete = can(roles, "delete", "pegawai");
+	const canCreate = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canUpdate = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.PEGAWAI_DELETE);
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
 	const sessionQuery = useQuery({

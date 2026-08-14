@@ -12,10 +12,11 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
-import { useRoles } from "@/hooks/useRoles";
 // ponytail: import modul langsung — verifySession server-only
-import { can, forbidden } from "@/lib/auth/can";
+import { forbidden, hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { PageResultPagePendidikanQuery, PendidikanQuery } from "@/types/profil/pendidikan";
@@ -122,8 +123,8 @@ function PendidikanToolbar({
 }
 
 export default function PendidikanPage() {
-	const roles = useRoles();
-	if (!can(roles, "view", "pegawai")) forbidden();
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
@@ -131,9 +132,9 @@ export default function PendidikanPage() {
 	const qc = useQueryClient();
 	const pegawaiId = params.pegawaiId;
 
-	const canCreate = can(roles, "create", "pegawai");
-	const canUpdate = can(roles, "update", "pegawai");
-	const canDelete = can(roles, "delete", "pegawai");
+	const canCreate = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canUpdate = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.PEGAWAI_DELETE);
 
 	const jenjangOpts = useFkOptions("jenjang-pendidikan");
 

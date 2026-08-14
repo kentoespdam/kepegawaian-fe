@@ -5,7 +5,8 @@ import { cleanup, render, screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { RolesProvider } from "@/hooks/useRoles";
+import { AuthProvider as RolesProvider } from "@/hooks/useAuth";
+import { PERMISSION } from "@/lib/auth/permissions";
 import CutiPage from "./page";
 
 // ── Mock next/navigation ──
@@ -115,7 +116,7 @@ function mockDefaultFetch(kuota = MOCK_KUOTA_PAGE_CONTENT) {
 function renderPage() {
 	const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 	return render(
-		<RolesProvider roles={["admin"]}>
+		<RolesProvider roles={["admin"]} permissions={[PERMISSION.PEGAWAI_READ]}>
 			<QueryClientProvider client={qc}>
 				<CutiPage />
 			</QueryClientProvider>
@@ -246,11 +247,11 @@ describe("Riwayat Cuti page", () => {
 		expect(replace).toHaveBeenCalledWith(expect.stringContaining(`tahun=${YEAR - 1}`));
 	});
 
-	it("RBAC: roles tanpa view pegawai → forbidden (notFound)", () => {
+	it("RBAC: tanpa PEGAWAI:READ → forbidden (notFound)", () => {
 		const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 		expect(() =>
 			render(
-				<RolesProvider roles={["unknown-role"]}>
+				<RolesProvider roles={["admin"]} permissions={[PERMISSION.PEGAWAI_WRITE]}>
 					<QueryClientProvider client={qc}>
 						<CutiPage />
 					</QueryClientProvider>

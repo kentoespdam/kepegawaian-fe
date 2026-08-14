@@ -45,10 +45,17 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   *"berhenti & lihat"*, bukan perintah pecah. Bila file lewat ambang **tapi kohesif satu tanggung jawab**
   (mis. form 27 field, shared primitive `<DataTable>`) → **biarkan**. Pecah HANYA bila ada **>1 alasan
   untuk berubah** (SRP: fetch vs render vs tipe), lalu angkat sub-komponen / hook `src/hooks/` / tipe
-  `src/types/`. Ambang per-kategori:
+  `src/types/`. **Ambang per-kategori (berbasis data token-efficiency AI agent):**
   - `components/ui/*` (generated) → **exempt total** (§3 larang edit manual)
-  - `src/types/*` (DTO) → **exempt** (soft ~400) · `src/config/*` → **exempt** (soft ~200) — deklaratif
-  - shared primitive → **~250** (konsolidasi DRY sengaja besar, §18) · komponen → **~180** · hook/lib → **~120** (di sini baris = logika)
+  - `src/types/*` (DTO generated) → **exempt** · `src/config/*` → **exempt** (soft ~200) — deklaratif
+  - **shared primitive** → **~250** (konsolidasi DRY sengaja besar, §18)
+  - **komponen** (`.tsx`) → optimal **150–250**, hard ceiling **300** — di atas 300 agent lakukan
+    *atomic rewrite* (2–3× lebih mahal dari surgical diff)
+  - **hook** (`use*.ts`) → optimal **75–150**, hard ceiling **150** — hook >150 baris = tanda ada
+    ≥2 perilaku yang harus dikomposisi; split jadi hook lebih kecil
+  - **lib/util** (`.ts`) → optimal **100–200**, hard ceiling **250** — domain-grouped, bukan monolith
+  - **types** hand-written (`.ts`) → optimal **50–150**, hard ceiling **200** — pisah per-domain
+    bila >150 (mis. `user.types.ts`, `api.types.ts`)
 - **Anti-fragmentasi (mengikat).** DILARANG pecah file hanya demi mengejar angka. Memotong satu unit
   kohesif jadi 2+ file yang selalu diedit bareng **menaikkan biaya konteks AI agent** (lebih banyak
   `Read`, import graph lebih dalam) tanpa gain keterbacaan. Fragmentasi = anti-pola, sama buruknya
@@ -59,10 +66,47 @@ Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda,
   table/fetch/CRUD/auth.
 - **KISS** — pilih solusi paling sederhana yang memenuhi spec. Hindari abstraksi prematur; abstraksi
   muncul dari duplikasi nyata (rule of three), bukan diantisipasi.
-- **Pisahkan logic dari komponen → `src/hooks/`.** Komponen fokus ke presentasi/markup; semua logika
-  (fetching, mutation, state turunan, event handler non-trivial, kalkulasi) diangkat ke custom hook
-  di `src/hooks/` (mis. `useGolonganTable`, `useCrudForm`, `useAuthSession`). Komponen memanggil hook
-  → mudah dites, dipakai ulang, dan dibaca. Hindari blok logika gemuk inline di dalam JSX component.
+- **Pisahkan logic dari komponen → `src/hooks/` (WAJIB, tanpa pengecualian).** Komponen fokus ke
+  presentasi/markup; semua logika (fetching, mutation, state turunan, event handler non-trivial,
+  kalkulasi) diangkat ke custom hook di `src/hooks/` sebagai **file terpisah**. Hook kecil yang
+  hanya dipakai satu komponen pun tetap harus di `src/hooks/` — bukan inline di file komponen.
+  **WAJIB periksa setiap file komponen sebelum commit:** bila ada `useQuery`/`useMutation`/`useState`
+  yang berisi business logic atau handler non-trivial → angkat ke hook dulu, baru lanjut.
+
+  ```tsx
+  // ❌ SALAH — logic fetch/mutation inline di komponen
+  export function GolonganPage() {
+    const { data } = useQuery({
+      queryKey: ["golongan"],
+      queryFn: () => fetch("/api/proxy/master/golongan").then(r => r.json()),
+    });
+    const mutation = useMutation({
+      mutationFn: (id: number) => fetch(`/api/proxy/master/golongan/${id}`, { method: "DELETE" }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["golongan"] }),
+    });
+    return <DataTable data={data} onDelete={mutation.mutate} />;
+  }
+
+  // ✅ BENAR — logic di hook terpisah `src/hooks/useGolonganTable.ts`
+  // src/hooks/useGolonganTable.ts
+  export function useGolonganTable() {
+    const { data } = useQuery({
+      queryKey: ["golongan"],
+      queryFn: () => fetch("/api/proxy/master/golongan").then(r => r.json()),
+    });
+    const mutation = useMutation({
+      mutationFn: (id: number) => fetch(`/api/proxy/master/golongan/${id}`, { method: "DELETE" }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["golongan"] }),
+    });
+    return { data, onDelete: mutation.mutate };
+  }
+  // src/app/(app)/master/golongan/page.tsx
+  export function GolonganPage() {
+    const { data, onDelete } = useGolonganTable(); // komponen tipis, hanya render
+    return <DataTable data={data} onDelete={onDelete} />;
+  }
+  ```
+
 - **Pisahkan `type`/`interface` → `src/types/`.** Definisi tipe bersama (model entitas, DTO, response
   API, props lintas-komponen) diletakkan di `src/types/` (mis. `src/types/golongan.ts`), lalu di-import
   di tempat pakai. Komponen/hook fokus ke logika, bukan deklarasi tipe gemuk inline. Pengecualian:

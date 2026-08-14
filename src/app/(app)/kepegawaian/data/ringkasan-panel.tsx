@@ -14,8 +14,8 @@ interface Props {
 	error: Error | null;
 	data: PegawaiResponseRingkasan | undefined;
 	onRetry: () => void;
-	onEditProfil: () => void;
-	onEditGaji: () => void;
+	onEditProfil?: () => void;
+	onEditGaji?: () => void;
 	onRiwayat: () => void;
 	onPendukung: () => void;
 }
@@ -45,8 +45,8 @@ function SectionSkeleton() {
 		<div className="space-y-2">
 			<Skeleton className="h-4 w-28 rounded-full" />
 			{[3, 4, 5, 3, 4].map((w, i) => (
-				// biome-ignore lint/suspicious/noArrayIndexKey: skeleton baris
 				<div
+					// biome-ignore lint/suspicious/noArrayIndexKey: skeleton baris
 					key={i}
 					className="grid grid-cols-[minmax(0,2fr)_minmax(0,3fr)] gap-x-3 py-1.5 px-2 odd:bg-muted/40 rounded-sm"
 				>
@@ -67,14 +67,18 @@ function ActionButtons({
 }: Pick<Props, "onEditProfil" | "onEditGaji" | "onRiwayat" | "onPendukung">) {
 	return (
 		<div className="grid grid-cols-2 gap-2">
-			<Button variant="outline" size="sm" onClick={onEditProfil} className="justify-start gap-1.5">
-				<Pencil className="size-3.5 shrink-0" />
-				Edit Profil
-			</Button>
-			<Button variant="outline" size="sm" onClick={onEditGaji} className="justify-start gap-1.5">
-				<Wallet className="size-3.5 shrink-0" />
-				Edit Gaji
-			</Button>
+			{onEditProfil && (
+				<Button variant="outline" size="sm" onClick={onEditProfil} className="justify-start gap-1.5">
+					<Pencil className="size-3.5 shrink-0" />
+					Edit Profil
+				</Button>
+			)}
+			{onEditGaji && (
+				<Button variant="outline" size="sm" onClick={onEditGaji} className="justify-start gap-1.5">
+					<Wallet className="size-3.5 shrink-0" />
+					Edit Gaji
+				</Button>
+			)}
 			<Button variant="outline" size="sm" onClick={onRiwayat} className="justify-start gap-1.5">
 				<History className="size-3.5 shrink-0" />
 				Riwayat

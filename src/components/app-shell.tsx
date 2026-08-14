@@ -22,10 +22,8 @@ import {
 import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
 import { AuthProvider } from "@/hooks/useAuth";
-import { getRoles, hasPermission } from "@/lib/auth/can";
-import type { Permission } from "@/lib/auth/permissions";
 import { PERMISSION } from "@/lib/auth/permissions";
-import { entityGate, entityHref } from "@/lib/sidebar-utils";
+import { entityHref, filterVisibleEntities, MASTER_GATE } from "@/lib/sidebar-utils";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
 
@@ -36,8 +34,8 @@ const MODULES = [
 		icon: LayoutGrid,
 		entities: MASTER_ENTITIES.map((e) => ({
 			...e,
-			// READ saja tidak cukup — seed V31 memberi ADMIN MASTER:WRITE/DELETE tanpa READ
-			gate: [PERMISSION.MASTER_READ, PERMISSION.MASTER_WRITE, PERMISSION.MASTER_DELETE],
+			// Hanya yang bisa WRITE/DELETE yang melihat menu; READ (role `user`, referensi) disembunyikan
+			gate: MASTER_GATE,
 		})),
 	},
 	{
@@ -78,20 +76,20 @@ const MODULES = [
 	},
 ];
 export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
-
 export function AppShell({
 	user,
+	roles,
 	permissions,
 	children,
 	defaultOpen = true,
 }: {
 	user: AppwriteUser;
+	roles: string[];
 	permissions: string[];
 	children: React.ReactNode;
 	defaultOpen?: boolean;
 }) {
 	const pathname = usePathname();
-	const roles = getRoles(user);
 
 	const activeEntity = MODULE_ENTITY_MAP.find((e) => pathname === entityHref(e));
 	const activeModule = MODULES.find((m) => m.entities.some((e) => pathname.startsWith(entityHref(e))));
@@ -99,13 +97,7 @@ export function AppShell({
 	// Filter modules by RBAC — only show groups with at least one viewable entity
 	const visibleModules = MODULES.map((mod) => ({
 		...mod,
-		visibleEntities: mod.entities.filter((e) => {
-			const gate = entityGate(e);
-			// null = no gate (always visible); string[] = any-of; string = single permission
-			if (gate === null) return true;
-			const gates = Array.isArray(gate) ? gate : [gate];
-			return gates.some((g) => hasPermission(permissions, g as Permission));
-		}),
+		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 
 	// All visible groups default to open (tidak di-persist)

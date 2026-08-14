@@ -487,6 +487,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 												setGajiLookup(null);
 											}}
 											error={e("golonganId")}
+											required
 										/>{" "}
 										<FieldText
 											label="MKG (Tahun)"

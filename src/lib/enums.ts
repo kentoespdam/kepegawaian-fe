@@ -59,9 +59,15 @@ export function labelFromValue(value: string | undefined | null, options: EnumAr
 
 /**
  * Cari value dari label dalam array opsi enum (reverse lookup).
- * Mengembalikan value jika ditemukan, label asli jika tidak, "" jika null/undefined.
+ * Cocok case-insensitive terhadap label MAUPUN value — endpoint dashboard
+ * mengembalikan campuran (mis. jenisKelamin sebagai label "Laki-Laki",
+ * agama/statusKawin sebagai value "ISLAM"/"KAWIN"). Tanpa ini, form mengirim
+ * label mentah → backend 400 (regresi dashboard edit profil).
+ * Mengembalikan value jika ditemukan, input asli jika tidak, "" jika null/undefined.
  */
 export function valueFromLabel(label: string | undefined | null, options: EnumArray): string {
 	if (!label) return "";
-	return options.find((o) => o.label === label)?.value ?? label;
+	const needle = label.trim().toLowerCase();
+	const hit = options.find((o) => o.value.toLowerCase() === needle || o.label.toLowerCase() === needle);
+	return hit?.value ?? label;
 }

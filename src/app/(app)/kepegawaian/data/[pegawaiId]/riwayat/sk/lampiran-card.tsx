@@ -6,9 +6,11 @@ import type { RiwayatSkQuery } from "@/types/kepegawaian/riwayat";
 
 interface Props {
 	selectedRow: RiwayatSkQuery | null;
+	hideUpload?: boolean;
+	hideDelete?: boolean;
 }
 
-export function SkLampiranCard({ selectedRow }: Props) {
+export function SkLampiranCard({ selectedRow, hideUpload, hideDelete }: Props) {
 	const ref = selectedRow?.jenisSk as JenisSk | undefined;
 	const refId = selectedRow?.id;
 	const skLabel = selectedRow?.nomorSk ?? "";
@@ -26,6 +28,8 @@ export function SkLampiranCard({ selectedRow }: Props) {
 				uploadUrl="/api/proxy/kepegawaian/lampiran"
 				deleteUrl={(id) => `/api/proxy/kepegawaian/lampiran/${ref}/${refId}/${id}`}
 				viewUrl={(id) => `/api/proxy/kepegawaian/lampiran/file/${ref}/${id}`}
+				hideUpload={hideUpload}
+				hideDelete={hideDelete}
 			/>
 		</div>
 	);

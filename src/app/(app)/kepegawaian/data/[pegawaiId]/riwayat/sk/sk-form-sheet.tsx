@@ -114,21 +114,23 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 
 	const onSubmit = async (values: FormValues) => {
 		try {
+			// Server WAJIB terima golonganId (min 0) & updateMaster (Boolean) — kalau dihilangkan:
+			// golonganId → 500 "The given id must not be null", updateMaster → 500 NPE (diverifikasi live).
 			const payload: Record<string, unknown> = {
 				pegawaiId: Number(pegawaiId),
 				jenisSk: values.jenisSk,
 				nomorSk: values.nomorSk,
 				tanggalSk: values.tanggalSk,
 				tmtBerlaku: values.tmtBerlaku,
+				golonganId: Number(values.golonganId ?? 0),
+				updateMaster: values.updateMaster ?? false,
 			};
-			if (values.golonganId) payload.golonganId = Number(values.golonganId);
 			if (values.gajiPokok) payload.gajiPokok = Number(values.gajiPokok);
 			if (values.mkgTahun) payload.mkgTahun = Number(values.mkgTahun);
 			if (values.mkgBulan) payload.mkgBulan = Number(values.mkgBulan);
 			if (values.kenaikanBerikutnya) payload.kenaikanBerikutnya = values.kenaikanBerikutnya;
 			if (values.mkgbTahun) payload.mkgbTahun = Number(values.mkgbTahun);
 			if (values.mkgbBulan) payload.mkgbBulan = Number(values.mkgbBulan);
-			if (values.updateMaster) payload.updateMaster = true;
 			if (values.notes) payload.notes = values.notes;
 
 			const url = editingId ? `/api/proxy/kepegawaian/riwayat/sk/${editingId}` : "/api/proxy/kepegawaian/riwayat/sk";

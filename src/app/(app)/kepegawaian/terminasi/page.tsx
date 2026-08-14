@@ -1,11 +1,10 @@
 import { Suspense } from "react";
-import { can, forbidden, getRoles, verifySession } from "@/lib/auth";
+import { forbidden, getAccountSession, hasPermission, PERMISSION, verifySession } from "@/lib/auth";
 import { TerminasiClient } from "./terminasi-client";
 
 export default async function TerminasiPage() {
-	const user = await verifySession();
-	const roles = getRoles(user);
-	if (!can(roles, "view", "pegawai")) forbidden();
+	const [, { permissions }] = await Promise.all([verifySession(), getAccountSession()]);
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
 	return (
 		<Suspense fallback={<div className="p-6 text-muted-foreground">Memuat...</div>}>
 			<TerminasiClient />

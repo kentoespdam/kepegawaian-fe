@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
+import { forbidden, useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
@@ -11,6 +11,9 @@ import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { hasPermission } from "@/lib/auth/can";
+import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { labelAksiKontrak } from "@/lib/riwayat-constants";
 import { formatDate } from "@/lib/utils";
@@ -77,7 +80,7 @@ function KontrakToolbar({
 	hasActive: boolean;
 	onFilterChange: (key: string, val: string | undefined) => void;
 	onReset: () => void;
-	onTambah: () => void;
+	onTambah?: () => void;
 }) {
 	return (
 		<DataTableToolbar
@@ -88,7 +91,7 @@ function KontrakToolbar({
 			onReset={onReset}
 		>
 			{/* ponytail: gate statusPegawai — hanya KONTRAK bisa tambah/edit/hapus */}
-			{canEdit && (
+			{canEdit && onTambah && (
 				<Button onClick={onTambah}>
 					<Plus />
 					Tambah Kontrak
@@ -101,6 +104,11 @@ function KontrakToolbar({
 // ── Page ──
 
 export default function KontrakPage() {
+	const { permissions } = useAuth();
+	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
+	const canWrite = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
+	const canDelete = hasPermission(permissions, PERMISSION.PEGAWAI_DELETE);
+
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
 	const router = useRouter();
@@ -205,10 +213,14 @@ export default function KontrakPage() {
 						hasActive={hasActive}
 						onFilterChange={onFilterChange}
 						onReset={onReset}
-						onTambah={() => {
-							setEditingId(null);
-							setIsFormOpen(true);
-						}}
+						onTambah={
+							canWrite
+								? () => {
+										setEditingId(null);
+										setIsFormOpen(true);
+									}
+								: undefined
+						}
 					/>
 				}
 				columns={columns}
@@ -222,8 +234,8 @@ export default function KontrakPage() {
 				selectedRowId={selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
 				// ponytail: gate — null callback = no action buttons rendered
-				onEdit={isKontrak ? (item) => setEditingId(String(item.id ?? "")) : undefined}
-				onDelete={isKontrak ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
+				onEdit={isKontrak && canWrite ? (item) => setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={isKontrak && canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data kontrak"
 				pagination={
 					<DataTablePagination

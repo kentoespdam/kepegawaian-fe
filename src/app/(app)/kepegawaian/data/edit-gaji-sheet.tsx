@@ -91,7 +91,7 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 		handleSubmit: rhfSubmit,
 		setValue,
 		watch,
-		formState: { errors, dirtyFields, isSubmitting },
+		formState: { errors, isSubmitting },
 		setError,
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema as never),
@@ -105,19 +105,22 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 
 	const onSubmit = async (values: FormValues) => {
 		try {
-			const dirty = dirtyFields as Partial<Record<keyof FormValues, boolean>>;
+			// ponytail: jangan andalkan dirtyFields — setValue-controlled (tanpa shouldDirty) tidak pernah
+			// mem-populate dirtyFields di RHF v7 → field opsional (tmtKerja, gajiPokok, ...) raib.
+			// Server WAJIB terima rumahDinasId sebagai angka (min 0) — kirim 0 bila kosong,
+			// JANGAN dihilangkan dari request (hilang = 500 "The given id must not be null").
 			const payload: Record<string, unknown> = {
 				statusPegawai: values.statusPegawai,
 				kodePajakId: Number(values.kodePajakId),
 				gajiProfilId: Number(values.gajiProfilId),
+				rumahDinasId: Number(values.rumahDinasId ?? 0),
 			};
-			for (const key of Object.keys(dirty) as (keyof FormValues)[]) {
-				if (key === "statusPegawai" || key === "kodePajakId" || key === "gajiProfilId") continue;
-				const v = values[key];
+			for (const [key, v] of Object.entries(values)) {
+				if (key === "statusPegawai" || key === "kodePajakId" || key === "gajiProfilId" || key === "rumahDinasId")
+					continue;
 				if (v === "" || v === undefined) continue;
 				if (key === "gajiPokok" || key === "phdp") payload[key] = Number(v);
 				else if (key === "isAskes") payload[key] = v === "true";
-				else if (key === "rumahDinasId") payload[key] = Number(v);
 				else payload[key] = v;
 			}
 
