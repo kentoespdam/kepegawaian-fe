@@ -30,9 +30,14 @@ export const optBool = z
 	.optional()
 	.transform((v) => (v === "" || v === undefined ? undefined : v === "true"));
 
-/** Number opsional (int32/double) — "" di-drop ke undefined. */
+/** Number opsional (int32/double) — "" / undefined di-drop ke undefined.
+ *  Menerima string (dari input form kosong/baru) MAUPUN number (dari defaultValues
+ *  edit-mode — RHF mengembalikan nilai numerik asli, bukan string). */
 export const optNum = z
-	.string()
+	.union([z.string(), z.number()])
 	.optional()
-	.refine((v) => v === "" || v === undefined || !Number.isNaN(Number(v)), "Angka tidak valid")
+	.refine(
+		(v) => v === "" || v === undefined || !Number.isNaN(Number(v)),
+		"Angka tidak valid",
+	)
 	.transform((v) => (v === "" || v === undefined ? undefined : Number(v)));
