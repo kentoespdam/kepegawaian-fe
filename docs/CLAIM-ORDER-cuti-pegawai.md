@@ -186,74 +186,71 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue F — Persetujuan Cuti: Halaman + Dua Tab + Approval Dialog
+### Issue F — Persetujuan Cuti: Halaman + Dua Tab + Approval Dialog ✅ selesai 2026-08-18
 
 **Depends on:** Issue A selesai `[paralel dengan Issue D/E]`
 
 **Scope:**
-- [ ] `src/app/(app)/cuti/persetujuan/page.tsx`:
-  - Server component — `verifySession()` → ambil `pegawaiId` dari session
-  - Semua pegawai bisa akses, tidak ada gate khusus
-  - Render `<PersetujuanPageClient pegawaiId={pegawaiId} />`
-- [ ] `src/app/(app)/cuti/persetujuan/persetujuan-page-client.tsx`:
+- [x] `src/app/(app)/cuti/persetujuan/page.tsx`: server — `getPegawaiSession()` → `pegawai.id`; semua pegawai bisa akses, tanpa gate khusus; pegawai null → empty state
+- [x] `src/app/(app)/cuti/persetujuan/persetujuan-page-client.tsx`:
   - **Tab "Menunggu"**: `GET /cuti/pengajuan/approval?tahun&picSaatIniId={pegawaiId}&approvalCutiStatus=PENDING`
-  - **Tab "Riwayat Persetujuan"**: query sama dengan `approvalCutiStatus=APPROVED`
-    (atau query tanpa filter status untuk semua non-PENDING — spike kecil untuk tentukan param terbaik)
-  - Tab state di URL (`?tab=menunggu` default, `?tab=riwayat`)
-  - Toolbar: Select Tahun (5 tahun, default tahun berjalan)
-  - Kolom tabel (keduanya): No · Nama Pegawai · Jenis Cuti · Periode · Jumlah Hari Kerja · Status · Aksi
-  - Aksi (tab Menunggu): "Setujui" + "Tolak" — hanya render jika `readWriteStatus === "WRITE"`
-  - Tab Riwayat: tidak ada kolom Aksi
-  - Empty state: jika list kosong (pegawai bukan approver) → empty state standar, bukan error
-- [ ] `<ApprovalConfirmDialog>` — satu komponen, prop `action: "APPROVE" | "REJECT"`:
-  - Judul: "Setujui Pengajuan Cuti" / "Tolak Pengajuan Cuti"
-  - Textarea `notes` (catatan) — **required untuk kedua aksi**
-  - Submit → `POST /cuti/approval` → toast sukses/gagal → invalidate
-  - Request body: `{ csrfToken, cutiId, approverId: pegawaiId, approvalLevel, approvalStatus: "APPROVED"/"REJECTED", notes }`
-  - ⚠️ Spike: verifikasi sumber `approvalLevel` dari response `CutiApprovalChainResponse`
-- [ ] `bun run build` · `bunx biome check` · `bun run test`
+  - **Tab "Riwayat Persetujuan"**: spike ter-resolve — backend filter status = **1 nilai**, jadi query tanpa `approvalCutiStatus` + filter client non-PENDING (backend 1-nilai; alternatif per-query per-status terlalu mahal untuk nilai yang sama)
+  - Tab state di URL (`?tab=menunggu` default, `?tab=riwayat`) — pill di atas tabel
+  - Toolbar: Select Tahun (5 tahun); queryKey `["cuti-persetujuan", pegawaiId, tab, tahun, page, size]` (CU-14)
+  - Kolom: No · Nama Pegawai · Jenis Cuti (+ sub-jenis) · Periode · Jumlah Hari Kerja · Status (badge) · Aksi
+  - Aksi (tab Menunggu): "Setujui" + "Tolak" — hanya render jika `readWriteStatus === "WRITE"` (CU-11)
+  - Tab Riwayat: tanpa kolom Aksi
+  - Empty state standar ("Tidak ada pengajuan yang menunggu persetujuan Anda") — bukan error, sesuai CU-10
+- [x] `src/app/(app)/cuti/persetujuan/approval-confirm-dialog.tsx` — satu komponen, prop `action: "APPROVE" | "REJECT"`:
+  - Judul "Setujui Pengajuan Cuti" / "Tolak Pengajuan Cuti", ikon sesuai aksi
+  - Textarea `notes` **required untuk kedua aksi** (tombol disabled sampai terisi)
+  - Submit → `POST /cuti/approval` → toast sukses/gagal → invalidate `["cuti-persetujuan"]` + pengajuan + kuota
+  - Body: `{ csrfToken (GET /auth/csrf-token), cutiId: refCuti.id, approverId: pegawaiId, approvalLevel, approvalStatus: "APPROVED"/"REJECTED", notes }`
+  - ⚠️ Spike ter-resolve: `approvalLevel` = `CutiApprovalChainResponse.approvalLevel` (ada di tipe generated — bukan di refCuti)
+- [x] Test baru `persetujuan-page-client.test.tsx` (tombol hanya WRITE + notes required + body approval benar)
+- [x] `bun run build` zero error · `bunx biome check` zero lint · `bun run test` — 180 hijau
 
 **DoD:**
-- Tab "Menunggu" tampil list pengajuan yang menunggu persetujuan user login
-- Tab "Riwayat" tampil list yang sudah diproses
-- Tombol Setujui/Tolak muncul hanya jika `readWriteStatus === "WRITE"`
-- Dialog konfirmasi + textarea notes berfungsi untuk kedua aksi
-- Pegawai biasa yang bukan approver: halaman menampilkan empty state
+- [x] Tab "Menunggu" tampil list pengajuan yang menunggu persetujuan user login
+- [x] Tab "Riwayat" tampil list yang sudah diproses
+- [x] Tombol Setujui/Tolak muncul hanya jika `readWriteStatus === "WRITE"`
+- [x] Dialog konfirmasi + textarea notes berfungsi untuk kedua aksi
+- [x] Pegawai biasa yang bukan approver: halaman menampilkan empty state
 
 ---
 
 ## Quality Gates (semua issue)
 
 Per issue sebelum `bd close`:
-- [ ] `bun run test` — all green
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint
+- [x] `bun run test` — all green (180)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint
 
 Per session akhir (setelah semua issue selesai):
-- [ ] `npx gitnexus analyze` — refresh index
-- [ ] `npx gitnexus detect-changes` — verifikasi scope
-- [ ] `/graphify . --update` via skill — update graph
-- [ ] `bd dolt push` + `git pull --rebase` + `git push` → "up to date with origin"
+- [x] `npx gitnexus analyze` — refresh index
+- [x] `npx gitnexus detect-changes` — verifikasi scope (risk low)
+- [x] `/graphify . --update` via skill — update graph
+- [x] `bd dolt push` + `git pull --rebase` + `git push` → "up to date with origin"
 
 ---
 
-## Definition of Done (Keseluruhan Modul)
+## Definition of Done (Keseluruhan Modul) ✅ 2026-08-18
 
-- [ ] Sidebar utama: entri "Cuti" muncul dengan sub-menu 3 item
-- [ ] `/cuti` redirect ke `/cuti/pengajuan`
-- [ ] **Kuota Cuti**: SDM bisa CRUD, filter tahun + nama/NIPAM, download template, import batch
-- [ ] **Kuota Cuti**: Non-SDM mendapat `forbidden()` (bukan redirect, bukan 404)
-- [ ] **Pengajuan Cuti**: Semua pegawai dapat lihat riwayat pengajuan + strip kartu (Kuota/Diambil/Sisa)
-- [ ] **Pengajuan Cuti**: Pegawai dapat tambah/edit (form berantai jenis→sub-jenis + auto-fill hari kerja)
-- [ ] **Pengajuan Cuti**: Pegawai dapat batalkan pengajuan PENDING saja
-- [ ] **Persetujuan Cuti**: Dua tab berfungsi (Menunggu + Riwayat)
-- [ ] **Persetujuan Cuti**: Approver dapat Setujui/Tolak dengan mandatory notes
-- [ ] **Persetujuan Cuti**: Pegawai non-approver melihat empty state (bukan error)
-- [ ] Semua badge status menggunakan `enum-labels.ts` (tidak hardcode)
-- [ ] Tidak ada `gcTime: Infinity` / `staleTime: Infinity`
-- [ ] Tidak ada toast untuk gagal-fetch (pakai inline panel)
-- [ ] `bun run test`, `bun run build`, `bunx biome check` — semua hijau
-- [ ] GraphQL/gitnexus + graphify terupdate
+- [x] Sidebar utama: entri "Cuti" muncul dengan sub-menu 3 item
+- [x] `/cuti` redirect ke `/cuti/pengajuan`
+- [x] **Kuota Cuti**: SDM bisa CRUD, filter tahun + nama/NIPAM, download template, import batch
+- [x] **Kuota Cuti**: Non-SDM mendapat `forbidden()` (bukan redirect, bukan 404)
+- [x] **Pengajuan Cuti**: Semua pegawai dapat lihat riwayat pengajuan + strip kartu (Kuota/Diambil/Sisa)
+- [x] **Pengajuan Cuti**: Pegawai dapat tambah/edit (form berantai jenis→sub-jenis + auto-fill hari kerja)
+- [x] **Pengajuan Cuti**: Pegawai dapat batalkan pengajuan PENDING saja
+- [x] **Persetujuan Cuti**: Dua tab berfungsi (Menunggu + Riwayat)
+- [x] **Persetujuan Cuti**: Approver dapat Setujui/Tolak dengan mandatory notes
+- [x] **Persetujuan Cuti**: Pegawai non-approver melihat empty state (bukan error)
+- [x] Semua badge status menggunakan `enum-labels.ts` (tidak hardcode)
+- [x] Tidak ada `gcTime: Infinity` / `staleTime: Infinity`
+- [x] Tidak ada toast untuk gagal-fetch (pakai inline panel)
+- [x] `bun run test` (180), `bun run build`, `bunx biome check` — semua hijau
+- [x] GitNexus + graphify terupdate
 
 ---
 
