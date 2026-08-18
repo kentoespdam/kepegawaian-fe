@@ -22,7 +22,7 @@ Grilling 2026-08-18. Keputusan **CU-1 – CU-14** di bawah **terkunci** — jang
 | **Sisa Kuota** | Hari cuti yang masih bisa diambil = Kuota Total − Kuota Terpakai (`sisaKuota`). Dihitung oleh backend. |
 | **Jenis Cuti** | Kategori cuti (Cuti Tahunan, Cuti Sakit, Cuti Ibadah, dll.). Ada yang punya sub-jenis (berantai). |
 | **Sub-Jenis Cuti** | Turunan dari Jenis Cuti (contoh: Ibadah Haji, Ibadah Umroh di bawah Cuti Ibadah). |
-| **ParentId (Jenis Cuti)** | `parentId` pada `CutiJenisMiniResponse` — id parent jenis cuti dalam pohon `CutiJenis` ber-induk. `null` = **root** (tidak berinduk) ATAU parent tidak ikut di-select query (mini yang mewakili root/parent di jalur JOOQ). **Jangan** pakai `parentId === null` sebagai penanda "data rusak" — pakai `parent == null` (di `/cuti/jenis/*`) atau `subJenisCuti == null` (di pengajuan). Relasi yang valid untuk satu baris pengajuan: `subJenisCuti.parentId === jenisCuti.id`. |
+| **ParentId (Jenis Cuti)** | `parentId` pada `CutiJenisMiniResponse` — id parent jenis cuti dalam pohon `CutiJenis` ber-induk. **Riil di `GET /cuti/jenis/list`** (di-select langsung dari kolom `parent_id`; `null` = **root**) dan di `subJenisCuti` pengajuan (= id `jenisCuti` baris yang sama, hasil join). Mini lain **tidak** membawa `parentId` riil: `parent` di `/cuti/jenis/*` → `null` (parent dari parent tidak di-select query), `jenisCuti` di pengajuan → `null` (jenis root). **Jangan** pakai `parentId === null` sebagai penanda "data rusak" — untuk itu pakai `parent == null` (di `/cuti/jenis/*`) atau `subJenisCuti == null` (di pengajuan). Relasi valid per baris pengajuan: `subJenisCuti.parentId === jenisCuti.id`. |
 | **Pengajuan Cuti** | Permintaan formal pegawai untuk mengambil cuti dalam rentang tanggal tertentu. Dibuat oleh pegawai untuk diri sendiri. |
 | **Klaim Cuti** | Jenis pengajuan khusus — pegawai mengklaim hari-hari spesifik dari sebuah pengajuan yang sudah ada (`KLAIM_CUTI`). Beda dari `PENGAJUAN_CUTI`. |
 | **Approval Chain** | Rantai persetujuan multi-level: Atasan → SDM → Direksi. Dikelola backend (`picSaatIni` = jabatan approver saat ini). |
@@ -180,10 +180,11 @@ ada di `kepegawaian-riwayat-cuti.md` K-C5.
 Form ditampilkan sebagai **Sheet (drawer kanan)** — konsisten dengan pola CrudForm proyek.
 
 **Field form:**
-1. **Jenis Cuti** (combobox dari `GET /cuti/jenis/list` tanpa `parentId`) — required
-2. **Sub-Jenis Cuti** (combobox dari `GET /cuti/jenis/list?parentId={jenisCutiId}`)
-   — conditional: hanya tampil jika Jenis Cuti yang dipilih punya sub-jenis.
-   Load saat `jenisCutiId` berubah.
+1. **Jenis Cuti** (combobox, required) — **hanya root**: item `parentId == null` dari
+   `GET /cuti/jenis/list` (response `ListResultCutiJenisMiniResponse`). Sub-jenis tidak ikut.
+2. **Sub-Jenis Cuti** (combobox, conditional — hanya tampil jika jenis terpilih punya anak):
+   item `parentId === jenisCutiId`, **di-filter client-side** dari flat list yang sama (CU-16).
+   Query berantai `?parentId=` tidak dipakai lagi.
 3. **Tanggal Mulai** (date picker) — required
 4. **Tanggal Selesai** (date picker) — required; harus ≥ Tanggal Mulai
 5. **Jumlah Hari** (read-only, calculated: `tanggalSelesai - tanggalMulai + 1`)
@@ -369,7 +370,7 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 | Edit pengajuan | `PUT /cuti/pengajuan/{id}` | `CutiPengajuanPutRequest` |
 | Batalkan pengajuan | `DELETE /cuti/pengajuan/{id}` | — |
 | Total hari kerja | `GET /cuti/pengajuan/{tglMulai}/{tglSelesai}/total-hari-kerja` | — |
-| List jenis cuti | `GET /cuti/jenis/list` | `?parentId` |
+| List jenis cuti | `GET /cuti/jenis/list` | `?parentId&nama` → `ListResultCutiJenisMiniResponse` (`{id, nama, parentId}` riil; `null` = root) |
 | Kuota strip (self) | `GET /cuti/kuota?pegawaiId&tahun` | — |
 | List approval | `GET /cuti/pengajuan/approval` | `?tahun&picSaatIniId&approvalCutiStatus&page&size` |
 | Aksi approval | `POST /cuti/approval` | `CutiApprovalPostRequest` |
