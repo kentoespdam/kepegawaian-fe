@@ -58,8 +58,11 @@ const MOCK_PAGE = {
 	content: MOCK_ROWS,
 };
 
-// K-C5: verifikasi container — kuota tahun terpilih bisa di page.content ATAU additional.
+// K-C5 (ADR-0040): baris kuota tahun terpilih ada di page.content; kuotaTahunSebelumnya
+// berisi baris Y−1 dan diabaikan oleh strip.
 const KUOTA_ROW = { id: 1, tahun: YEAR, kuota: 12, kuotaTambahan: 2, kuotaTerpakai: 5, sisaKuota: 9 };
+// baris tahun sebelumnya — nilainya sengaja beda, harus TIDAK dipakai strip
+const KUOTA_PREV_ROW = { id: 99, tahun: YEAR - 1, kuota: 1, kuotaTerpakai: 0, sisaKuota: 1 };
 
 const MOCK_KUOTA_PAGE_CONTENT = {
 	page: {
@@ -73,22 +76,12 @@ const MOCK_KUOTA_PAGE_CONTENT = {
 		empty: false,
 		content: [KUOTA_ROW],
 	},
-	additional: [],
+	kuotaTahunSebelumnya: [],
 };
 
-const MOCK_KUOTA_ADDITIONAL = {
-	page: {
-		totalElements: 0,
-		totalPages: 0,
-		size: 10,
-		number: 0,
-		numberOfElements: 0,
-		first: true,
-		last: true,
-		empty: true,
-		content: [],
-	},
-	additional: [KUOTA_ROW],
+const MOCK_KUOTA_PREV_IGNORED = {
+	page: MOCK_KUOTA_PAGE_CONTENT.page,
+	kuotaTahunSebelumnya: [KUOTA_PREV_ROW],
 };
 
 /** Helper: buat Response sukses dengan envelope { data: ... }. */
@@ -197,10 +190,11 @@ describe("Riwayat Cuti page", () => {
 		expect(screen.getByText("9", { selector: "p" })).toBeInTheDocument();
 	});
 
-	it("strip membaca baris kuota dari additional saat page kosong (K-C5)", async () => {
-		mockDefaultFetch(MOCK_KUOTA_ADDITIONAL);
+	it("strip memakai page.content, kuotaTahunSebelumnya diabaikan (K-C5, ADR-0040)", async () => {
+		mockDefaultFetch(MOCK_KUOTA_PREV_IGNORED);
 		renderPage();
 
+		// kartu tetap dari KUOTA_ROW (12+2 / 5 / 9) — bukan dari baris Y−1
 		expect(await screen.findByText("14")).toBeInTheDocument();
 		expect(screen.getByText("5", { selector: "p" })).toBeInTheDocument();
 		expect(screen.getByText("9", { selector: "p" })).toBeInTheDocument();
@@ -219,7 +213,7 @@ describe("Riwayat Cuti page", () => {
 				empty: true,
 				content: [],
 			},
-			additional: [],
+			kuotaTahunSebelumnya: [],
 		});
 		renderPage();
 
@@ -232,6 +226,24 @@ describe("Riwayat Cuti page", () => {
 
 		expect(await screen.findByText("Gagal memuat data")).toBeInTheDocument();
 		expect(screen.getByText("Coba lagi")).toBeInTheDocument();
+	});
+
+	it("404 dari backend → 'Data tidak ditemukan', bukan 'Gagal memuat data'", async () => {
+		vi.mocked(globalThis.fetch).mockImplementation(async (url: string) => {
+			const s = typeof url === "string" ? url : url instanceof Request ? url.url : String(url);
+			if (s.includes("/cuti/pengajuan/") && s.includes("/pegawai")) {
+				return new Response("Not Found", { status: 404 });
+			}
+			if (s.includes("/cuti/kuota")) {
+				return okJson(MOCK_KUOTA_PAGE_CONTENT);
+			}
+			return okJson({});
+		});
+		renderPage();
+
+		expect(await screen.findByText("Data tidak ditemukan")).toBeInTheDocument();
+		expect(screen.queryByText("Gagal memuat data")).not.toBeInTheDocument();
+		expect(screen.queryByText("Coba lagi")).not.toBeInTheDocument();
 	});
 
 	it("ganti tahun → router.replace dengan tahun= (K-C3 URL source of truth)", async () => {

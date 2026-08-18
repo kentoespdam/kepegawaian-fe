@@ -10,9 +10,10 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { labelStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, formatDate } from "@/lib/utils";
-import type { CutiKuotaResponse, SingleResultCutiKuotaPegawaiResponse } from "@/types/cuti/kuota";
+import { apiErrorMessage, throwIfNotOk } from "@/lib/utils";
+import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
 import { KuotaFormSheet } from "./kuota-form-sheet";
 import { KuotaImportDialog } from "./kuota-import-dialog";
 
@@ -50,8 +51,8 @@ export function KuotaPageClient() {
 			if (nipam) params.nipam = nipam;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data kuota");
-			const body = (await res.json()) as SingleResultCutiKuotaPegawaiResponse;
+			throwIfNotOk(res, "Gagal memuat data kuota");
+			const body = (await res.json()) as { data: CutiKuotaPegawaiResponse };
 			return body.data;
 		},
 		placeholderData: keepPreviousData,
@@ -93,16 +94,41 @@ export function KuotaPageClient() {
 
 	const pageView = fromPage(query.data?.page);
 
+	// ADR-0040: baris kuota tahun sebelumnya (Y−1) by pegawaiId — blok kolom carry-over
+	const prevByPegawai = new Map<number | undefined, CutiKuotaResponse>(
+		(query.data?.kuotaTahunSebelumnya ?? []).map((p) => [p.pegawai?.id, p]),
+	);
+
 	const columns: Column<CutiKuotaResponse>[] = [
-		{ id: "no", header: "No" },
-		{ id: "nama", header: "Nama Pegawai", primary: true, cell: (r) => r.pegawai?.nama ?? "—" },
 		{ id: "nipam", header: "NIPAM", cell: (r) => r.pegawai?.nipam ?? "—" },
-		{ id: "tahun", header: "Tahun", cell: (r) => r.tahun ?? "—" },
-		{ id: "kuota", header: "Kuota", align: "right", cell: (r) => r.kuota ?? "—" },
-		{ id: "tambahan", header: "Tambahan", align: "right", cell: (r) => r.kuotaTambahan ?? "—" },
-		{ id: "terpakai", header: "Terpakai", align: "right", cell: (r) => r.kuotaTerpakai ?? "—" },
-		{ id: "sisa", header: "Sisa", align: "right", cell: (r) => r.sisaKuota ?? "—" },
-		{ id: "expired", header: "Expired", cell: (r) => formatDate(r.expired) },
+		{ id: "nama", header: "Nama Pegawai", primary: true, cell: (r) => r.pegawai?.nama ?? "—" },
+		{ id: "status", header: "Status Pegawai", cell: (r) => labelStatus(r.pegawai?.statusPegawai) },
+		{ id: "jabatan", header: "Jabatan", cell: (r) => r.pegawai?.jabatan ?? "—" },
+		// Kuota = kuota + kuotaTambahan (konsisten dengan strip K-C5)
+		{ id: "kuota-y", header: `Kuota ${tahun}`, align: "right", cell: (r) => (r.kuota ?? 0) + (r.kuotaTambahan ?? 0) },
+		{ id: "terpakai-y", header: `Terpakai ${tahun}`, align: "right", cell: (r) => r.kuotaTerpakai ?? "—" },
+		{ id: "sisa-y", header: `Sisa ${tahun}`, align: "right", cell: (r) => r.sisaKuota ?? "—" },
+		{
+			id: "kuota-prev",
+			header: `Kuota ${tahun - 1}`,
+			align: "right",
+			cell: (r) => {
+				const p = prevByPegawai.get(r.pegawai?.id);
+				return p ? (p.kuota ?? 0) + (p.kuotaTambahan ?? 0) : "—";
+			},
+		},
+		{
+			id: "terpakai-prev",
+			header: `Terpakai ${tahun - 1}`,
+			align: "right",
+			cell: (r) => prevByPegawai.get(r.pegawai?.id)?.kuotaTerpakai ?? "—",
+		},
+		{
+			id: "sisa-prev",
+			header: `Sisa ${tahun - 1}`,
+			align: "right",
+			cell: (r) => prevByPegawai.get(r.pegawai?.id)?.sisaKuota ?? "—",
+		},
 		// Aksi custom (bukan onEdit/onDelete bawaan DataTable — label "Edit Profil" tak tepat untuk kuota)
 		{
 			id: "aksi",
@@ -138,10 +164,6 @@ export function KuotaPageClient() {
 			),
 		},
 	];
-
-	const columnsWithNo = columns.map((col) =>
-		col.id === "no" ? { ...col, cell: (_r: CutiKuotaResponse, i: number) => String((page - 1) * size + i + 1) } : col,
-	);
 
 	return (
 		<div className="space-y-4">
@@ -186,7 +208,7 @@ export function KuotaPageClient() {
 						</Button>
 					</DataTableToolbar>
 				}
-				columns={columnsWithNo}
+				columns={columns}
 				data={pageView.rows ?? []}
 				isLoading={query.isPending}
 				isPlaceholder={query.isPlaceholderData}

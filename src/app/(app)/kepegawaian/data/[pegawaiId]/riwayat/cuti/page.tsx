@@ -15,7 +15,7 @@ import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
 import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
 
@@ -76,10 +76,9 @@ function KuotaStrip({
 		);
 	}
 
-	// K-C5: container respons punya page (paged) + additional (array) — ambil baris
-	// tahun terpilih dari container mana pun yang terisi (verifikasi bentuk BE).
-	const rows = [...(data?.page?.content ?? []), ...(data?.additional ?? [])];
-	const row: CutiKuotaResponse | undefined = rows.find((r) => r.tahun === tahun);
+	// K-C5 (ADR-0040): index selalu 200 + page — baris tahun terpilih ada di page.content
+	// (filter pegawaiId+tahun → ≤1 baris). KuotaTahunSebelumnya diabaikan oleh strip.
+	const row: CutiKuotaResponse | undefined = (data?.page?.content ?? []).find((r) => r.tahun === tahun);
 
 	const kuota = (row?.kuota ?? 0) + (row?.kuotaTambahan ?? 0);
 	const diambil = row?.kuotaTerpakai ?? 0;
@@ -213,7 +212,7 @@ export default function CutiPage() {
 				tahun: String(tahun),
 			}).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/${pegawaiId}/pegawai?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data cuti");
+			throwIfNotOk(res, "Gagal memuat data cuti");
 			const body = (await res.json()) as PageResultPageCutiPengajuanResponse;
 			return body.data;
 		},
@@ -226,7 +225,7 @@ export default function CutiPage() {
 		queryFn: async () => {
 			const qs = new URLSearchParams({ pegawaiId, tahun: String(tahun) }).toString();
 			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat kuota cuti");
+			throwIfNotOk(res, "Gagal memuat kuota cuti");
 			const body = (await res.json()) as { data: CutiKuotaPegawaiResponse };
 			return body.data;
 		},

@@ -34,7 +34,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Skeleton } from "@/components/ui/skeleton";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, cn, formatDate } from "@/lib/utils";
+import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
 import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
 import { PengajuanFormSheet } from "./pengajuan-form-sheet";
@@ -92,10 +92,9 @@ function KuotaStrip({
 		);
 	}
 
-	// K-C5: container punya page (paged) + additional (array) — ambil baris tahun
-	// terpilih dari container mana pun yang terisi.
-	const rows = [...(data?.page?.content ?? []), ...(data?.additional ?? [])];
-	const row: CutiKuotaResponse | undefined = rows.find((r) => r.tahun === tahun);
+	// K-C5 (ADR-0040): index selalu 200 + page — baris tahun terpilih ada di page.content
+	// (filter pegawaiId+tahun → ≤1 baris). KuotaTahunSebelumnya diabaikan oleh strip.
+	const row: CutiKuotaResponse | undefined = (data?.page?.content ?? []).find((r) => r.tahun === tahun);
 
 	const kuota = (row?.kuota ?? 0) + (row?.kuotaTambahan ?? 0);
 	const diambil = row?.kuotaTerpakai ?? 0;
@@ -180,7 +179,7 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 				tahun: String(tahun),
 			}).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/${pegawaiId}/pegawai?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat pengajuan cuti");
+			throwIfNotOk(res, "Gagal memuat pengajuan cuti");
 			const body = (await res.json()) as PageResultPageCutiPengajuanResponse;
 			return body.data;
 		},
@@ -195,7 +194,7 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 		queryFn: async () => {
 			const qs = new URLSearchParams({ pegawaiId: String(pegawaiId), tahun: String(tahun) }).toString();
 			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat kuota cuti");
+			throwIfNotOk(res, "Gagal memuat kuota cuti");
 			const body = (await res.json()) as { data: CutiKuotaPegawaiResponse };
 			return body.data;
 		},

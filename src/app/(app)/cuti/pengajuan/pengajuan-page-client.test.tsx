@@ -60,7 +60,7 @@ function mockFetch() {
 		}
 		// kuota strip
 		if (s.includes("/cuti/kuota")) {
-			return okJson({ page: { content: [] }, additional: [] });
+			return okJson({ page: { content: [] } });
 		}
 		return okJson([]);
 	});

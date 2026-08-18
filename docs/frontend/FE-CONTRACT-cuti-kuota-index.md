@@ -106,11 +106,11 @@ const rows = page.content; // [] saat kosong — bukan error
 
 ## 5. Checklist Aksi Tim FE
 
-- [ ] Ganti akses `data.additional` → `data.kuotaTahunSebelumnya` (rename di typed interface / model).
-- [ ] Hapus ketergantungan pada `message` ("Data Found"/"Data not found!") di halaman kuota — cek `status` saja.
-- [ ] Ubah penanganan "tidak ada data": jangan lagi mengharap 404 — cek `data.page.content.length === 0` pada 200.
-- [ ] Pastikan tipe envelope `PageResult` (tanpa `errors`/`message`) tidak dipakai kode bersama yang membutuhkan field tsb.
-- [ ] Endpoint detail (`/{id}`, `/{pegawaiId}/{tahun}/sisa`) tetap `SingleResult` + 404 — jangan diubah.
+- [x] Ganti akses `data.additional` → `data.kuotaTahunSebelumnya` (rename di typed interface / model).
+- [x] Hapus ketergantungan pada `message` ("Data Found"/"Data not found!") di halaman kuota — cek `status` saja.
+- [x] Ubah penanganan "tidak ada data": jangan lagi mengharap 404 — cek `data.page.content.length === 0` pada 200.
+- [x] Pastikan tipe envelope `PageResult` (tanpa `errors`/`message`) tidak dipakai kode bersama yang membutuhkan field tsb.
+- [x] Endpoint detail (`/{id}`, `/{pegawaiId}/{tahun}/sisa`) tetap `SingleResult` + 404 — jangan diubah.
 
 ## 6. Keputusan FE — hasil grill 2026-08-18 (status: DIKERJAKAN)
 

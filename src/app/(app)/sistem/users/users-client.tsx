@@ -24,11 +24,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
 import type {
 	AuthPostRequest,
+	PageResultPageUserResponse,
 	PageUserResponse,
-	SingleResultPageUserResponse,
 	UserPatchStatusRequest,
 	UserResponse,
 } from "@/types/system/users";
@@ -38,7 +39,7 @@ function useAllRoles() {
 		queryKey: ["system-roles-list"],
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/roles/list");
-			if (!res.ok) throw new Error("Gagal memuat role");
+			throwIfNotOk(res, "Gagal memuat role");
 			const body = (await res.json()) as ListResultPrefRole;
 			return body.data ?? [];
 		},
@@ -137,8 +138,8 @@ export function UsersClient() {
 			if (nama) params.nama = nama;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/system/users?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat user");
-			const body = (await res.json()) as SingleResultPageUserResponse;
+			throwIfNotOk(res, "Gagal memuat user");
+			const body = (await res.json()) as PageResultPageUserResponse;
 			return body.data;
 		},
 		placeholderData: keepPreviousData,
