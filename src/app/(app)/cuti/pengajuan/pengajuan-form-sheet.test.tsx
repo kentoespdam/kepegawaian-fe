@@ -32,13 +32,13 @@ function mockFetch() {
 			postInit = init;
 			return okJson({});
 		}
-		if (s.includes("/cuti/jenis/list") && s.includes("parentId")) {
-			return okJson([{ id: 11, nama: "Ibadah Haji" }]);
-		}
 		if (s.includes("/cuti/jenis/list")) {
+			// CU-16: flat list ber-parentId — combo jenis = root (parentId null), sub-jenis = turunan
 			return okJson([
-				{ id: 1, nama: "Cuti Tahunan" },
-				{ id: 2, nama: "Cuti Ibadah" },
+				{ id: 1, nama: "Cuti Tahunan", parentId: null },
+				{ id: 2, nama: "Cuti Ibadah", parentId: null },
+				{ id: 11, nama: "Ibadah Haji", parentId: 2 },
+				{ id: 12, nama: "Ibadah Umroh", parentId: 2 },
 			]);
 		}
 		if (s.includes("/total-hari-kerja")) return okJson(3);
@@ -94,6 +94,8 @@ describe("PengajuanFormSheet", () => {
 		// ponytail: combobox FK tak expose label sebagai accessible name — hitung jumlahnya
 		expect(screen.getAllByRole("combobox").length).toBe(1); // hanya jenis
 		await userEvent.click(screen.getAllByRole("combobox")[0]);
+		// CU-16: sub-jenis TIDAK tampil di combo jenis (hanya root / parentId null)
+		expect(screen.queryByRole("option", { name: "Ibadah Haji" })).toBeNull();
 		await userEvent.click(await screen.findByRole("option", { name: "Cuti Ibadah" }));
 		await waitFor(() => expect(screen.getAllByRole("combobox").length).toBe(2)); // + sub-jenis
 

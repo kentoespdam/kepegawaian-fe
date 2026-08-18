@@ -29,14 +29,14 @@
 
 ### Step 1 — `docs/api/cuti/api.json`
 
-- [ ] Tambah schema `ListResultCutiJenisMiniResponse` — salin `ListResultCutiJenisResponse`,
+- [x] Tambah schema `ListResultCutiJenisMiniResponse` — salin `ListResultCutiJenisResponse`,
       ganti `data.items.$ref` → `#/components/schemas/CutiJenisMiniResponse`.
-- [ ] Re-point response 200 `GET /cuti/jenis/list`: `$ref` → `ListResultCutiJenisMiniResponse`.
-- [ ] `CutiJenisMiniResponse` schema sudah punya `parentId` (working tree) — verifikasi.
+- [x] Re-point response 200 `GET /cuti/jenis/list`: `$ref` → `ListResultCutiJenisMiniResponse`.
+- [x] `CutiJenisMiniResponse` schema sudah punya `parentId` (working tree) — verifikasi.
 
 ### Step 2 — Regenerate tipe
 
-- [ ] `node docs/api/extract-types.js` → `src/types/cuti/jenis.ts` (type `ListResultCutiJenisMiniResponse`
+- [x] `node docs/api/extract-types.js` → `src/types/cuti/jenis.ts` (type `ListResultCutiJenisMiniResponse`
       = `Envelope<CutiJenisMiniResponse[]>`) + `src/types/_shared.ts` (`parentId` di `CutiJenisMiniResponse`).
       Jangan edit manual — hasil regenerate menggantikan edit manual yang ada.
 
@@ -44,25 +44,25 @@
 
 File: `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.tsx`
 
-- [ ] Import & cast → `ListResultCutiJenisMiniResponse` (2 query).
-- [ ] Satu fetch flat list (hapus `subJenisQuery` `?parentId=`):
+- [x] Import & cast → `ListResultCutiJenisMiniResponse`.
+- [x] Satu fetch flat list (hapus `subJenisQuery` `?parentId=`):
       - Combo **Jenis Cuti** = `data.filter((i) => i.parentId == null)` → `{value, label}`.
       - Combo **Sub-Jenis** = derive client-side `data.filter((i) => i.parentId === jenisCutiId)`.
       - CU-8 tetap: `subJenisOptions.length > 0` → tampilkan field; loading cukup `jenisQuery.isPending`.
-- [ ] Update komentar "tanpa parentId" yang sudah usang.
+- [x] Update komentar "tanpa parentId" yang sudah usang.
 
 ### Step 4 — Test
 
 File: `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.test.tsx`
 
-- [ ] Mock flat list ber-`parentId`: root `{id:1, parentId:null}`, `{id:2, parentId:null}` +
+- [x] Mock flat list ber-`parentId`: root `{id:1, parentId:null}`, `{id:2, parentId:null}` +
       sub-jenis `{id:11, parentId:2}` (dll).
-- [ ] Hapus branch mock `/cuti/jenis/list?parentId`.
-- [ ] Assert sub-jenis ("Ibadah Haji") **tidak** muncul sebagai option combo jenis.
-- [ ] Assert alur berantai tetap: pilih "Cuti Ibadah" → sub-jenis muncul → POST body benar.
+- [x] Hapus branch mock `/cuti/jenis/list?parentId`.
+- [x] Assert sub-jenis ("Ibadah Haji") **tidak** muncul sebagai option combo jenis.
+- [x] Assert alur berantai tetap: pilih "Cuti Ibadah" → sub-jenis muncul → POST body benar.
 
 ### Step 5 — Quality gates & ship
 
-- [ ] `bun run build` (zero error), `bunx biome check`, `bun run test`.
-- [ ] `npx gitnexus analyze` + `detect-changes` — scope hanya cuti/pengajuan + docs cuti.
-- [ ] Commit `<type>: cuti: ...` → `git pull --rebase` → `bd dolt push` → `git push` → verify.
+- [x] `bun run build` (zero error), `bunx biome check`, `bun run test`.
+- [x] `npx gitnexus analyze` + `detect-changes` — scope hanya cuti/pengajuan + docs cuti.
+- [x] Commit `<type>: cuti: ...` → `git pull --rebase` → `bd dolt push` → `git push` → verify.

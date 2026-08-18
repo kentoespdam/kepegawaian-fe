@@ -196,6 +196,7 @@ export interface JabatanMiniResponse {
 export interface CutiJenisMiniResponse {
 	id?: number; // int64
 	nama?: string;
+	parentId?: number; // int64
 }
 
 export type SavedResultLong = Envelope<number>;

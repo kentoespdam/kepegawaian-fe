@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { apiErrorMessage } from "@/lib/utils";
-import type { ListResultCutiJenisResponse } from "@/types/cuti/jenis";
+import type { ListResultCutiJenisMiniResponse } from "@/types/cuti/jenis";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 
 // ── Zod (CU-8) ──
@@ -102,33 +102,26 @@ export function PengajuanFormSheet({
 		}
 	}, [open, editing, reset]);
 
-	// ── Jenis Cuti (tanpa parentId) — data referensi, staleTime panjang ──
+	// ── Jenis & Sub-Jenis — satu fetch flat list; filter parentId client-side (CU-16) ──
 	const jenisQuery = useQuery({
 		queryKey: ["cuti-jenis-list"],
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/cuti/jenis/list");
 			if (!res.ok) throw new Error("Gagal memuat jenis cuti");
-			const body = (await res.json()) as ListResultCutiJenisResponse;
-			return (body.data ?? []).map((i) => ({ value: String(i.id), label: i.nama ?? "" }));
+			const body = (await res.json()) as ListResultCutiJenisMiniResponse;
+			return body.data ?? [];
 		},
 		staleTime: 300_000,
 	});
 
-	// ── Sub-Jenis (berantai) — hanya fetch saat jenisCutiId ada ──
-	const subJenisQuery = useQuery({
-		queryKey: ["cuti-jenis-list", jenisCutiId],
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/cuti/jenis/list?parentId=${jenisCutiId}`);
-			if (!res.ok) throw new Error("Gagal memuat sub-jenis cuti");
-			const body = (await res.json()) as ListResultCutiJenisResponse;
-			return (body.data ?? []).map((i) => ({ value: String(i.id), label: i.nama ?? "" }));
-		},
-		enabled: jenisCutiId != null && jenisCutiId > 0,
-		staleTime: 300_000,
-	});
-
+	// CU-16: combo Jenis = root saja (parentId null); combo Sub-Jenis = turunan jenis terpilih.
 	// ponytail: sub-jenis kosong → field tidak ditampilkan (bukan tampil + disabled) — CU-8
-	const subJenisOptions = subJenisQuery.data ?? [];
+	const jenisOptions = (jenisQuery.data ?? [])
+		.filter((i) => i.parentId == null)
+		.map((i) => ({ value: String(i.id), label: i.nama ?? "" }));
+	const subJenisOptions = (jenisQuery.data ?? [])
+		.filter((i) => i.parentId === jenisCutiId)
+		.map((i) => ({ value: String(i.id), label: i.nama ?? "" }));
 
 	// ── Jumlah Hari Kerja (fetched saat kedua tanggal terisi) ──
 	const hariKerjaQuery = useQuery({
@@ -218,7 +211,7 @@ export function PengajuanFormSheet({
 					{/* ── Jenis & Sub-Jenis (berantai) ── */}
 					<FieldFk
 						label="Jenis Cuti"
-						options={jenisQuery.data ?? []}
+						options={jenisOptions}
 						value={jenisCutiId != null ? String(jenisCutiId) : undefined}
 						onChange={(v) => {
 							const id = v ? Number(v) : undefined;
@@ -236,7 +229,7 @@ export function PengajuanFormSheet({
 							options={subJenisOptions}
 							value={watch("subJenisCutiId") != null ? String(watch("subJenisCutiId")) : undefined}
 							onChange={(v) => setValue("subJenisCutiId", v ? Number(v) : undefined)}
-							loading={subJenisQuery.isPending}
+							loading={jenisQuery.isPending}
 						/>
 					)}
 

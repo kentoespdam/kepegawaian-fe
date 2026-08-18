@@ -43,6 +43,6 @@ export interface CutiJenisPostRequest {
 	potongKuotaTahunan?: boolean;
 }
 
-export type ListResultCutiJenisResponse = Envelope<CutiJenisResponse[]>;
+export type ListResultCutiJenisMiniResponse = Envelope<CutiJenisMiniResponse[]>;
 
 export type { CutiJenisMiniResponse, DeletedResult, PageableObject, SavedResultLong, SortObject } from "../_shared";
