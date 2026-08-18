@@ -9,7 +9,7 @@
 
 ## Status grill
 
-Grilling 2026-08-18. Keputusan **CU-1 – CU-14** di bawah **terkunci** — jangan re-litigasi.
+Grilling 2026-08-18. Keputusan **CU-1 – CU-18** di bawah **terkunci** — jangan re-litigasi.
 
 ---
 
@@ -28,7 +28,9 @@ Grilling 2026-08-18. Keputusan **CU-1 – CU-14** di bawah **terkunci** — jang
 | **Approval Chain** | Rantai persetujuan multi-level: Atasan → SDM → Direksi. Dikelola backend (`picSaatIni` = jabatan approver saat ini). |
 | **ApprovalStatus** | Enum: `PENDING \| APPROVED \| CONFIRMED \| REJECTED \| CANCELED \| RETURNED`. |
 | **ReadWriteStatus** | Enum endpoint `/approval`: `NONE \| READ \| WRITE` — menandai apakah user yang login punya hak aksi atas sebuah record. |
-| **Persetujuan** | Halaman di mana approver (Atasan/SDM/Direksi) melihat dan memutuskan pengajuan yang menunggu aksi mereka. |
+| **Persetujuan** | Halaman di mana approver (Atasan/SDM/Direksi) melihat dan memutuskan pengajuan yang menunggu aksi mereka. Sejak CU-18: menu & halaman **hanya untuk approver** — non-approver tidak melihat menu, akses langsung → `forbidden()`. |
+| **Approver (Persetujuan Cuti)** | Pegawai yang berada dalam rantai approval cuti (`picSaatIni` = jabatan approver saat ini) — berhak melihat & memutuskan pengajuan. Ditentukan **posisional** oleh backend (struktur jabatan), **bukan** permission RBAC (`USER` role tidak memegang `CUTI:APPROVE`; supervisor ber-role `USER` tetap approver). Sinonim bahasa user: "punya anak buah". |
+| **Non-Approver (Staf)** | Pegawai tanpa posisi approver dalam rantai approval (umumnya jabatan staf) — menu Persetujuan Cuti disembunyikan & akses langsung di-guard `forbidden()` (CU-18). |
 | **Admin/HRD** | Role yang dapat mengakses & mengelola Kuota Cuti (gate `CUTI:WRITE`). Sebelumnya disebut "SDM" — diganti 2026-08-18. |
 | **Kuota Tahun Sebelumnya** | Baris `CutiKuotaResponse` tahun − 1 dari tahun yang difilter, dikembalikan backend di `data.kuotaTahunSebelumnya` pada index `GET /cuti/kuota` — dipakai grid carry-over (CU-15). Bukan pengganti `sisaKuota` per baris. |
 
@@ -42,7 +44,7 @@ sidebar global di `AppShell` (modul "Cuti").
 ```
 /cuti/kuota        — Kuota Cuti (Admin/HRD only)
 /cuti/pengajuan    — Pengajuan Cuti (semua pegawai)
-/cuti/persetujuan  — Persetujuan Cuti (semua bisa lihat, konten per-role)
+/cuti/persetujuan  — Persetujuan Cuti (approver only — CU-18)
 ```
 
 > Sub-sidebar lateral pernah ada di `(app)/cuti/layout.tsx` (pola riwayat/pendukung)
@@ -50,7 +52,8 @@ sidebar global di `AppShell` (modul "Cuti").
 
 Item "Kuota Cuti" di sidebar **hanya tampil untuk role Admin/HRD** (gate `CUTI:WRITE`).
 Route-nya tetap di-guard `forbidden()` di page — **unmount, bukan hide/disable**
-(ADR-0001 RBAC pattern). Pengajuan & Persetujuan selalu tampil.
+(ADR-0001 RBAC pattern). Pengajuan selalu tampil; **Persetujuan sejak CU-18 approver-only** —
+menu disembunyikan utk non-approver & page di-guard `forbidden()` (bukan sekadar hide).
 
 > **Reversal (2026-08-18):** keputusan awal "item Kuota Cuti selalu tampil + RBAC
 > hanya di page" dibatalkan — user meminta menu disembunyikan untuk non-Admin/HRD.
@@ -215,7 +218,12 @@ sederhana dengan kalimat "Batalkan pengajuan cuti ini?" karena tidak ada input t
 
 ## CU-10 — Persetujuan Cuti: Scope & Tab
 
-Halaman `/cuti/persetujuan` dapat diakses oleh **semua pegawai yang login**.
+> **Revisi (2026-08-18, CU-18):** halaman & menu Persetujuan Cuti kini **hanya untuk approver**
+> (punya anak buah). Staf/non-approver tidak melihat menu; akses langsung → `forbidden()`.
+> Detail keputusan di **CU-18**.
+
+Halaman `/cuti/persetujuan` dapat diakses oleh **approver** — pegawai yang berada dalam
+rantai approval (backend flag `isCutiApprover`, CU-18).
 
 Konten bersumber dari `GET /cuti/pengajuan/approval` yang wajib kirim:
 - `picSaatIniId` = `pegawaiId` dari session
@@ -227,8 +235,9 @@ Konten bersumber dari `GET /cuti/pengajuan/approval` yang wajib kirim:
 - **"Riwayat Persetujuan"** — filter `approvalCutiStatus=APPROVED,CONFIRMED,REJECTED,...`
   (semua status non-PENDING; atau dipisah per-query jika perlu)
 
-Jika pegawai biasa (tidak dalam rantai approval) → backend mengembalikan list kosong.
-Tampilkan empty state standar tanpa error.
+Jika approver belum punya pengajuan yang menunggu → backend mengembalikan list kosong.
+Tampilkan empty state standar tanpa error. (Pegawai non-approver tidak sampai di sini —
+di-guard `forbidden()` di CU-18.)
 
 ---
 
@@ -358,6 +367,44 @@ lewat** (saat ini bisa — celah yang ditutup):
 
 Implementasi: prop opsional `min` di `FieldDate` (shared) → `disabled={{ before }}` di
 Calendar (react-day-picker). 14 form lain tidak tersentuh (prop default `undefined`).
+
+---
+
+## CU-18 — Persetujuan Cuti: Gate Approver (revisi CU-10, 2026-08-18)
+
+**Latar:** review page approval dengan role `USER`. Ekspektasi: semua user bisa membuka menu
+approval **saat punya anak buah** (kecuali jabatan staf). Ternyata user `890300426`
+(jabatan supervisor, NIPAM) mendapat "Akun ini tidak terhubung ke data pegawai".
+
+**Temuan (grill 2026-08-18):**
+1. Error tsb BUKAN spesifik page — itu **identity bridge putus**: `getPegawaiSession()`
+   memanggil `GET /pegawai/{$id}` dengan asumsi `$id = pegawaiId` (ADR-0006), tapi akun
+   diprovisioning **by NIPAM** (`POST /system/users {nipam, ...}`) → `$id` ≠ `pegawaiId`
+   untuk user tsb → 404 → `pegawai: null` di Dashboard, Pengajuan, DAN Persetujuan.
+2. Chain approval bersifat **posisional** (`picSaatIni` = jabatan approver), bukan
+   permission: supervisor = role `USER` yang **tidak** memegang `CUTI:APPROVE`. Gate
+   permission tidak bisa menyatakan "punya anak buah".
+
+**Keputusan (D1–D5):**
+1. **D1 — Bridge = BE resolve by principal.** Backend yang memetakan `$id` → pegawai
+   (via NIPAM/provisioning). FE `getPegawaiSession()` tidak berubah. Satu fix → semua
+   halaman self-service beres. Lihat `docs/BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md`.
+2. **D2 — Menu approver-only.** Backend flag `isCutiApprover` (posisional). Sidebar
+   menyembunyikan item "Persetujuan Cuti" saat flag `false` (staff/non-approver).
+3. **D3 — Page guard `forbidden()`.** Non-approver yang buka `/cuti/persetujuan` langsung
+   → `forbidden()` (pola ADR-0001/CU-1: unmount, bukan hide/disable).
+4. **D4 — Flag numpang `GET /account/me`.** Field baru di respons yang sudah di-fetch tiap
+   halaman oleh `getAccountSession()` → root layout → `AppShell`. Zero fetch tambahan, no flash.
+5. **D5 — Empty state "tidak terhubung" di page persetujuan dipertahankan** sebagai
+   defensive fallback (ter-render hanya jika gate lolos tapi sesi pegawai `null` =
+   inkonsistensi BE). Halaman Pengajuan (CU-6) & Dashboard tidak berubah.
+
+**Dampak FE:** `app-shell.tsx` (gate dinamis via prop baru), `(app)/layout.tsx`
+(`getAccountSession()` → `isCutiApprover`), `cuti/persetujuan/page.tsx` (guard
+`forbidden()`), tipe `src/types/account/me.ts` (sync via `bun run spec:sync`).
+
+ADR: [ADR-0041](../adr/0041-persetujuan-cuti-gate-approver.md) ·
+BE: [BE-REQUIREMENT](../BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md)
 
 ---
 
