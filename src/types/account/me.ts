@@ -15,6 +15,7 @@ export interface MeResponse {
 	name?: string;
 	roles?: string[];
 	permissions?: string[];
+	isCutiApprover?: boolean;
 }
 
 export type SingleResultMeResponse = Envelope<MeResponse>;

@@ -112,6 +112,10 @@
 						"items": {
 							"type": "string"
 						}
+					},
+					"isCutiApprover": {
+						"type": "boolean",
+						"description": "Approver cuti posisional (ada dalam rantai approval / punya anak buah) — CU-18/ADR-0041"
 					}
 				}
 			},

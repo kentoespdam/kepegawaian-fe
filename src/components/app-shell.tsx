@@ -91,12 +91,15 @@ export function AppShell({
 	user,
 	roles,
 	permissions,
+	isCutiApprover,
 	children,
 	defaultOpen = true,
 }: {
 	user: AppwriteUser;
 	roles: string[];
 	permissions: string[];
+	// CU-18/ADR-0041: menu Persetujuan Cuti hanya utk approver (flag posisional dari /account/me)
+	isCutiApprover: boolean;
 	children: React.ReactNode;
 	defaultOpen?: boolean;
 }) {
@@ -108,7 +111,10 @@ export function AppShell({
 	// Filter modules by RBAC — only show groups with at least one viewable entity
 	const visibleModules = MODULES.map((mod) => ({
 		...mod,
-		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles),
+		// CU-18: item "persetujuan" (gate null) tampil hanya saat isCutiApprover — non-approver disembunyikan
+		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles).filter(
+			(e) => isCutiApprover || e.id !== "persetujuan",
+		),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 
 	// All visible groups default to open (tidak di-persist)

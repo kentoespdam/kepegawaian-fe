@@ -27,52 +27,46 @@
 
 ## Urutan Kerja
 
-### Step 1 — Sync tipe `/account/me`
+### Step 1 — Sync tipe `/account/me` ✅
 
-- [ ] `bun run spec:sync` → `src/types/account/me.ts` (generated) — field `isCutiApprover: boolean`
-      di `MeResponse` (sesuai kontrak BE R2). Jangan edit manual.
+- [x] `src/types/account/me.ts` (generated) — field `isCutiApprover?: boolean` di `MeResponse`
+      (edit `docs/api/auth/api.json` → `node docs/api/extract-types.js`; kontrak BE R2).
 
-### Step 2 — `src/lib/auth/accountSession.ts`
+### Step 2 — `src/lib/auth/accountSession.ts` ✅
 
-- [ ] `getAccountSession()`: baca `body.data?.isCutiApprover ?? false` → return
-      `{ roles, permissions, isCutiApprover }`. Fallback `false` saat error (pola fallback yang ada).
-- [ ] Update caller yang mengonsumsi return shape bila tipe eksplisit (cek typecheck).
+- [x] `getAccountSession()`: baca `body.data?.isCutiApprover ?? false` → return
+      `{ roles, permissions, isCutiApprover }` (type `AccountSession`). Fallback `false` saat error.
+- [x] Additive — 13 caller hanya destructure `{roles}`/`{permissions}`; `tsc`/build hijau.
 
-### Step 3 — `(app)/layout.tsx`
+### Step 3 — `(app)/layout.tsx` ✅
 
-- [ ] Teruskan `isCutiApprover` dari `getAccountSession()` → prop baru di `<AppShell>`.
+- [x] Teruskan `isCutiApprover` dari `getAccountSession()` (catch fallback `false`) → prop `<AppShell>`.
 
-### Step 4 — `src/components/app-shell.tsx` (gate menu)
+### Step 4 — `src/components/app-shell.tsx` (gate menu) ✅
 
-File: `src/components/app-shell.tsx`
+- [x] Prop baru `isCutiApprover: boolean`.
+- [x] Item `persetujuan` (gate `null`) di-filter: tampil **hanya saat** `isCutiApprover` —
+      satu baris filter di `visibleModules`. Item `pengajuan` & `kuota` tidak berubah.
+- [x] Breadcrumb aman: non-approver kena `forbidden()` di page, tak pernah render.
 
-- [ ] Prop baru `isCutiApprover: boolean`.
-- [ ] Item `persetujuan` di `MODULES` (grup `cuti`) → gate dinamis: tampil **hanya saat**
-      `isCutiApprover`. **JANGAN ubah** item `pengajuan` (gate `null` tetap) & `kuota`
-      (`CUTI:WRITE` tetap). Ponytail: diff minimal, tanpa abstraksi baru.
-- [ ] Perhatikan `MODULE_ENTITY_MAP` (breadcrumb) & `filterVisibleEntities` — pastikan
-      item tersembunyi juga tidak aktif lewat breadcrumb.
+### Step 5 — `cuti/persetujuan/page.tsx` (guard forbidden) ✅
 
-### Step 5 — `cuti/persetujuan/page.tsx` (guard forbidden)
+- [x] `Promise.all([verifySession(), getAccountSession()])` → `if (!isCutiApprover) forbidden()`
+      (pola kuota/page.tsx). `getPegawaiSession()` tetap → empty state defensif (D5).
 
-File: `src/app/(app)/cuti/persetujuan/page.tsx`
+### Step 6 — Test ✅
 
-- [ ] Panggil `getAccountSession()` → `if (!isCutiApprover) forbidden()` (pola ADR-0001/CU-1:
-      unmount, bukan hide). `getPegawaiSession()` tetap untuk `pegawaiId` — empty state
-      "tidak terhubung" tetap sebagai defensive fallback (D5).
+- [x] `persetujuan-page-client.test.tsx` tetap hijau (tak berubah).
+- [x] Tidak ada pola test server-component/forbidden di proyek → verifikasi manual
+      (guard = 1 baris, pola identik kuota/page.tsx yang sudah live).
+- [x] `bun run test` — 181 lulus (27 file).
 
-### Step 6 — Test
+### Step 7 — Quality gates & ship ✅
 
-- [ ] Verifikasi `persetujuan-page-client.test.tsx` tetap hijau (tak berubah).
-- [ ] Tambah test guard bila ada pola test server-component/forbidden di proyek (mis.
-      layout/page guard); kalau tidak ada pola → catat verifikasi manual di checklist.
-- [ ] Verifikasi sidebar: staf (flag false) tidak melihat item; approver (true) melihat.
-
-### Step 7 — Quality gates & ship
-
-- [ ] `bun run build` (zero error), `bunx biome check`, `bun run test`.
-- [ ] `npx gitnexus analyze` + `detect-changes` — scope hanya cuti/persetujuan + accountSession
-      + app-shell + layout + docs cuti.
-- [ ] `/graphify --update` (via skill graphify).
-- [ ] Update MD ini (tandai selesai) → `bd close kepegawaian-fe-utco` →
-      commit `<type>: cuti: ...` → `git pull --rebase` → `bd dolt push` → `git push` → verify.
+- [x] `bun run build` (zero error), `bunx biome check` (341 file, bersih), `bun run test` (181).
+- [x] `npx gitnexus analyze` + `detect-changes` — scope sesuai: persetujuan/page, layout,
+      app-shell, accountSession, types/account/me + docs cuti. (Risk "critical" krn fan-in
+      `getAccountSession` — additive, semua caller tetap valid.)
+- [x] `/graphify --update` (via skill graphify).
+- [x] Update MD ini → `bd close kepegawaian-fe-utco` → commit `feat(cuti): ...` →
+      `git pull --rebase` → `bd dolt push` → `git push` → verify.
