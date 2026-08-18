@@ -22,6 +22,7 @@ Grilling 2026-08-18. Keputusan **CU-1 – CU-14** di bawah **terkunci** — jang
 | **Sisa Kuota** | Hari cuti yang masih bisa diambil = Kuota Total − Kuota Terpakai (`sisaKuota`). Dihitung oleh backend. |
 | **Jenis Cuti** | Kategori cuti (Cuti Tahunan, Cuti Sakit, Cuti Ibadah, dll.). Ada yang punya sub-jenis (berantai). |
 | **Sub-Jenis Cuti** | Turunan dari Jenis Cuti (contoh: Ibadah Haji, Ibadah Umroh di bawah Cuti Ibadah). |
+| **ParentId (Jenis Cuti)** | `parentId` pada `CutiJenisMiniResponse` — id parent jenis cuti dalam pohon `CutiJenis` ber-induk. `null` = **root** (tidak berinduk) ATAU parent tidak ikut di-select query (mini yang mewakili root/parent di jalur JOOQ). **Jangan** pakai `parentId === null` sebagai penanda "data rusak" — pakai `parent == null` (di `/cuti/jenis/*`) atau `subJenisCuti == null` (di pengajuan). Relasi yang valid untuk satu baris pengajuan: `subJenisCuti.parentId === jenisCuti.id`. |
 | **Pengajuan Cuti** | Permintaan formal pegawai untuk mengambil cuti dalam rentang tanggal tertentu. Dibuat oleh pegawai untuk diri sendiri. |
 | **Klaim Cuti** | Jenis pengajuan khusus — pegawai mengklaim hari-hari spesifik dari sebuah pengajuan yang sudah ada (`KLAIM_CUTI`). Beda dari `PENGAJUAN_CUTI`. |
 | **Approval Chain** | Rantai persetujuan multi-level: Atasan → SDM → Direksi. Dikelola backend (`picSaatIni` = jabatan approver saat ini). |
@@ -308,6 +309,32 @@ Keputusan FE (hasil grill 2026-08-18):
    inline `as { data: CutiKuotaPegawaiResponse }` seperti pola K-C5.
 
 > Keputusan FE atas kontrak ini tercatat di **ADR-0040 FE** (`docs/adr/0040-grid-kuota-carry-over-dua-tahun.md`).
+
+---
+
+## CU-16 — List Jenis Cuti: Response Mini + `parentId` + Rule Combo (2026-08-18)
+
+Backend `rewrite/master-cqrs` mengubah `GET /cuti/jenis/list`:
+
+- Response **`ListResultCutiJenisResponse` → `ListResultCutiJenisMiniResponse`** — item
+  `CutiJenisResponse` (objek penuh + `parent` nested) → **`CutiJenisMiniResponse`**
+  (`{id, nama, parentId}`) langsung. `parentId` diambil dari kolom `parent_id` — **riil**,
+  `null` hanya jika jenis tsb. **root**.
+- Mini nested di endpoint lain (`/cuti/jenis` index/detail → field `parent`; pengajuan →
+  `jenisCuti`/`subJenisCuti`) **tidak** mendapat `parentId` riil (parent tidak di-select
+  query) — lihat glossary **ParentId (Jenis Cuti)**. **Jangan** pakai `parentId === null`
+  sebagai penanda "data rusak" — untuk itu pakai `parent == null` / `subJenisCuti == null`.
+- Envelope tetap `ListResult` (`{data: [...]}`) — hanya item type yang berubah.
+
+Keputusan FE (hasil grill 2026-08-18):
+1. **Rule combo (form pengajuan):** combo **Jenis Cuti** menampilkan item `parentId == null`
+   (root saja — sub-jenis TIDAK ikut); combo **Sub-Jenis Cuti** menampilkan item
+   `parentId === jenisCutiId` (turunan langsung dari jenis terpilih). Filter **client-side**
+   dari SATU fetch flat `/cuti/jenis/list` — query berantai `?parentId=` **dihapus** (CU-8
+   tetap: sub-jenis kosong → field disembunyikan).
+2. Cast response memakai tipe generated baru `ListResultCutiJenisMiniResponse`.
+3. Tanpa ADR — perubahan aditif, didokumentasikan di FE-CONTRACT
+   (`docs/frontend/FE-CONTRACT-cuti-jenis-mini-parentid.md`).
 
 ---
 
