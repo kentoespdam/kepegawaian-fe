@@ -62,7 +62,17 @@ const MODULES = [
 			},
 		],
 	},
-	{ id: "cuti", label: "Cuti", icon: CalendarRange, entities: [] },
+	{
+		id: "cuti",
+		label: "Cuti",
+		icon: CalendarRange,
+		entities: [
+			// ponytail: gate null semua — item sidebar selalu tampil, RBAC kuota di-handle di page (CU-1)
+			{ id: "kuota", label: "Kuota Cuti", href: "/cuti/kuota", gate: null },
+			{ id: "pengajuan", label: "Pengajuan Cuti", href: "/cuti/pengajuan", gate: null },
+			{ id: "persetujuan", label: "Persetujuan Cuti", href: "/cuti/persetujuan", gate: null },
+		],
+	},
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
 	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
 	{

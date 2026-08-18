@@ -63,24 +63,21 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue A — Infrastruktur: Layout + Route Stub + Sidebar
+### Issue A — Infrastruktur: Layout + Route Stub + Sidebar ✅ selesai 2026-08-18
 
 **Depends on:** —  (paling awal, kerjakan dulu)
 
 **Scope:**
-- [ ] Tambah entri "Cuti" ke sidebar utama (`app-shell.tsx` atau komponen sidebar)
-- [ ] Buat `src/app/(app)/cuti/layout.tsx`:
-  - Sub-sidebar lateral dengan 3 item: Kuota Cuti, Pengajuan Cuti, Persetujuan Cuti
-  - Kuota Cuti: link ke `/cuti/kuota` — item tetap tampil, RBAC di-handle di page-nya
-  - Pola: ikuti `kepegawaian/terminasi/layout.tsx` atau layout sub-menu yang sudah ada
-- [ ] Buat `src/app/(app)/cuti/page.tsx` — redirect `permanentRedirect("/cuti/pengajuan")`
-- [ ] Verifikasi routing: `/cuti`, `/cuti/kuota`, `/cuti/pengajuan`, `/cuti/persetujuan` terdaftar
-- [ ] `bun run build` — zero error
+- [x] Tambah entri "Cuti" ke sidebar utama (`app-shell.tsx`) — 3 sub-item gate `null` (semua tampil, RBAC kuota di page)
+- [x] Buat `src/app/(app)/cuti/layout.tsx`: sub-sidebar lateral 3 item (pola rail `riwayat/layout.tsx` — statis tanpa fetch, active state via prefix match)
+- [x] Buat `src/app/(app)/cuti/page.tsx` — `permanentRedirect("/cuti/pengajuan")`
+- [x] Verifikasi routing: `/cuti` terdaftar di build; `/cuti/kuota` · `/cuti/pengajuan` · `/cuti/persetujuan` terdaftar saat page-nya dibuat (Issue B/D/F)
+- [x] `bun run build` — zero error · `bunx biome check` — zero lint · `bun run test` — 174 hijau
 
 **DoD:**
-- Navigasi ke `/cuti` redirect ke `/cuti/pengajuan`
-- Sub-sidebar muncul dengan 3 item, active state highlight sesuai route
-- `bun run build` clean
+- [x] Navigasi ke `/cuti` redirect ke `/cuti/pengajuan`
+- [x] Sub-sidebar muncul dengan 3 item, active state highlight sesuai route
+- [x] `bun run build` clean
 
 ---
 
