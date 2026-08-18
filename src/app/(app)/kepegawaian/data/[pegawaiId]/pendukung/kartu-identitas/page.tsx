@@ -18,7 +18,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { formatDate } from "@/lib/utils";
+import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { KartuIdentitasQuery, PageResultPageKartuIdentitasQuery } from "@/types/profil/kartu-identitas";
 import { KartuIdentitasFormSheet } from "./kartu-identitas-form-sheet";
@@ -127,7 +127,7 @@ export default function KartuIdentitasPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -156,7 +156,7 @@ export default function KartuIdentitasPage() {
 			if (nomorKartu) params.nomorKartu = nomorKartu;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/kartu-identitas?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data kartu identitas");
+			throwIfNotOk(res, "Gagal memuat data kartu identitas");
 			const body = (await res.json()) as PageResultPageKartuIdentitasQuery;
 			return body.data;
 		},

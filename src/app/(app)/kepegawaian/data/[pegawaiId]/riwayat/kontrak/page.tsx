@@ -16,7 +16,7 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { labelAksiKontrak } from "@/lib/riwayat-constants";
-import { formatDate } from "@/lib/utils";
+import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatKontrakQuery } from "@/types/kepegawaian/riwayat";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import { KontrakFormSheet } from "./kontrak-form-sheet";
@@ -130,7 +130,7 @@ export default function KontrakPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -147,7 +147,7 @@ export default function KontrakPage() {
 			if (nomorKontrak) params.nomorKontrak = nomorKontrak;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/kontrak/pegawai/${pegawaiId}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data kontrak");
+			throwIfNotOk(res, "Gagal memuat data kontrak");
 			const body = await res.json();
 			return body.data;
 		},

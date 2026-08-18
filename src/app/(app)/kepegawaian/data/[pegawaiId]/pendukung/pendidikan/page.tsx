@@ -18,6 +18,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { PageResultPagePendidikanQuery, PendidikanQuery } from "@/types/profil/pendidikan";
 import { PendidikanFormSheet } from "./pendidikan-form-sheet";
@@ -143,7 +144,7 @@ export default function PendidikanPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -172,7 +173,7 @@ export default function PendidikanPage() {
 			if (jenjangId) params.jenjangId = jenjangId;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/pendidikan?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data pendidikan");
+			throwIfNotOk(res, "Gagal memuat data pendidikan");
 			const body = (await res.json()) as PageResultPagePendidikanQuery;
 			return body.data;
 		},

@@ -52,7 +52,7 @@ sub-route:
 ## Konsekuensi
 
 - Sidebar mendapat entri baru "Cuti" sejajar dengan "Kepegawaian" dan "Master"
-- Layout `(app)/cuti/layout.tsx` baru diperlukan (sub-sidebar lateral)
+- Navigasi sub-route memakai entri modul "Cuti" di sidebar global AppShell (tanpa layout khusus — sub-sidebar lateral sempat dibuat tapi dihapus karena duplikat)
 - Tidak ada duplikasi kode antara `riwayat/cuti` (read-only) dan `cuti/` (operasional) —
   keduanya adalah halaman berbeda dengan tujuan berbeda
 - `docs/context/cuti.md` menjadi dokumen konteks untuk `(app)/cuti/**`

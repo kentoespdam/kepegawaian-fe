@@ -67,8 +67,9 @@ const MODULES = [
 		label: "Cuti",
 		icon: CalendarRange,
 		entities: [
-			// ponytail: gate null semua — item sidebar selalu tampil, RBAC kuota di-handle di page (CU-1)
-			{ id: "kuota", label: "Kuota Cuti", href: "/cuti/kuota", gate: null },
+			// ponytail: kuota di-gate CUTI:WRITE (hanya Admin/HRD) — page tetap di-guard forbidden() juga;
+			// pengajuan & persetujuan selalu tampil (CU-1/CU-2)
+			{ id: "kuota", label: "Kuota Cuti", href: "/cuti/kuota", gate: PERMISSION.CUTI_WRITE },
 			{ id: "pengajuan", label: "Pengajuan Cuti", href: "/cuti/pengajuan", gate: null },
 			{ id: "persetujuan", label: "Persetujuan Cuti", href: "/cuti/persetujuan", gate: null },
 		],

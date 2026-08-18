@@ -17,7 +17,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { formatDate } from "@/lib/utils";
+import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatSpQuery } from "@/types/kepegawaian/riwayat";
 import { SpFormSheet } from "./sp-form-sheet";
 
@@ -188,7 +188,7 @@ export default function SpPage() {
 			if (jenisSpId) params.jenisSpId = jenisSpId;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/sp/pegawai/${pegawaiId}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data SP");
+			throwIfNotOk(res, "Gagal memuat data SP");
 			const body = await res.json();
 			return body.data;
 		},

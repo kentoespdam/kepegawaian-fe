@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 import type { PegawaiResponseRingkasan, PegawaiTableResponse } from "@/types/pegawai/pegawai";
 import type { BiodataQuery } from "@/types/profil/biodata";
 import { DataPegawaiToolbar } from "./data-pegawai-toolbar";
@@ -101,7 +102,7 @@ export function DataPegawaiClient() {
 		queryFn: async () => {
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`${activeTab.endpoint}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data");
+			throwIfNotOk(res, "Gagal memuat data");
 			const body = await res.json();
 			return body.data;
 		},
@@ -113,7 +114,7 @@ export function DataPegawaiClient() {
 		queryKey: ["ringkasan", selectedId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${selectedId}/ringkasan`);
-			if (!res.ok) throw new Error("Gagal memuat ringkasan");
+			throwIfNotOk(res, "Gagal memuat ringkasan");
 			const body = await res.json();
 			return body.data as PegawaiResponseRingkasan;
 		},

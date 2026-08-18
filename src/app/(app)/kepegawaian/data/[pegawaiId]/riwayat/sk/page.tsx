@@ -17,7 +17,7 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { JENIS_SK_OPTIONS, labelJenisSk } from "@/lib/riwayat-constants";
-import { formatDate, rupiah } from "@/lib/utils";
+import { formatDate, rupiah, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatSkQuery } from "@/types/kepegawaian/riwayat";
 import { SkLampiranCard } from "./lampiran-card";
 import { SkFormSheet } from "./sk-form-sheet";
@@ -184,7 +184,7 @@ export default function SkPage() {
 			if (jenisSkFilter) params.jenisSk = jenisSkFilter;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/sk/pegawai/${pegawaiId}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data SK");
+			throwIfNotOk(res, "Gagal memuat data SK");
 			const body = await res.json();
 			return body.data;
 		},

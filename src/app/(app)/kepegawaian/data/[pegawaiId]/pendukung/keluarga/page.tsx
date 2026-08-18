@@ -24,7 +24,7 @@ import {
 	labelStatusPendidikanKeluarga,
 } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { formatDate } from "@/lib/utils";
+import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { PageResultPageProfilKeluargaQuery, ProfilKeluargaQuery } from "@/types/profil/keluarga";
 import { KeluargaFormSheet } from "./keluarga-form-sheet";
@@ -131,7 +131,7 @@ export default function KeluargaPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -158,7 +158,7 @@ export default function KeluargaPage() {
 			if (hubunganKeluarga) params.hubunganKeluarga = hubunganKeluarga; // angka (spike fnfh.5)
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/keluarga?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data keluarga");
+			throwIfNotOk(res, "Gagal memuat data keluarga");
 			const body = (await res.json()) as PageResultPageProfilKeluargaQuery;
 			return body.data;
 		},

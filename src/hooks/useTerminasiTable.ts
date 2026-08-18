@@ -1,6 +1,7 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 
 export const TERMINASI_TABS = [
 	{
@@ -45,7 +46,7 @@ export function useTerminasiTable() {
 		queryFn: async () => {
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`${activeTab.endpoint}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data");
+			throwIfNotOk(res, "Gagal memuat data");
 			const body = await res.json();
 			return body.data;
 		},

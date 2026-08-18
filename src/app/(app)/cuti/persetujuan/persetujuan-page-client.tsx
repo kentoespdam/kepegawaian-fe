@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, cn, formatDate } from "@/lib/utils";
+import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiApprovalChainResponse, PageResultPageCutiApprovalChainResponse } from "@/types/cuti/pengajuan";
 import { type ApprovalAction, ApprovalConfirmDialog } from "./approval-confirm-dialog";
 
@@ -92,7 +92,7 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 			if (tab === "menunggu") params.approvalCutiStatus = "PENDING";
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/approval?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data persetujuan");
+			throwIfNotOk(res, "Gagal memuat data persetujuan");
 			const body = (await res.json()) as PageResultPageCutiApprovalChainResponse;
 			return body.data;
 		},

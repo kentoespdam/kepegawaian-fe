@@ -16,6 +16,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { PageResultPagePengalamanKerjaQuery, PengalamanKerjaQuery } from "@/types/profil/pengalaman-kerja";
 import { PengalamanKerjaFormSheet } from "./pengalaman-kerja-form-sheet";
@@ -108,7 +109,7 @@ export default function PengalamanKerjaPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -137,7 +138,7 @@ export default function PengalamanKerjaPage() {
 			if (jabatan) params.jabatan = jabatan;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/pengalaman-kerja?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data pengalaman kerja");
+			throwIfNotOk(res, "Gagal memuat data pengalaman kerja");
 			const body = (await res.json()) as PageResultPagePengalamanKerjaQuery;
 			return body.data;
 		},

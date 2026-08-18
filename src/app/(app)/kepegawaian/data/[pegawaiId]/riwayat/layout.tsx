@@ -5,7 +5,7 @@ import { AlertTriangle, ArrowLeft, CalendarRange, FileSignature, FileText, Noteb
 import Link from "next/link";
 import { useParams, usePathname } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { cn, isNotFound, throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 
 // ponytail: icon per item untuk scannability — mapping id→icon sekali di sini
@@ -94,10 +94,12 @@ function HeaderSkeleton() {
 	);
 }
 
-function HeaderError() {
+function HeaderError({ error }: { error: Error | null }) {
 	return (
 		<div>
-			<p className="text-sm text-muted-foreground">Gagal memuat data pegawai</p>
+			<p className="text-sm text-muted-foreground">
+				{isNotFound(error) ? "Data pegawai tidak ditemukan" : "Gagal memuat data pegawai"}
+			</p>
 		</div>
 	);
 }
@@ -125,7 +127,7 @@ export default function RiwayatLayout({ children }: { children: React.ReactNode 
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -147,7 +149,7 @@ export default function RiwayatLayout({ children }: { children: React.ReactNode 
 					{sessionQuery.isPending ? (
 						<HeaderSkeleton />
 					) : sessionQuery.isError ? (
-						<HeaderError />
+						<HeaderError error={sessionQuery.error} />
 					) : (
 						<Header title={pageTitle} nipam={sessionQuery.data?.nipam} nama={sessionQuery.data?.nama} />
 					)}

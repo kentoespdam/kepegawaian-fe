@@ -4,7 +4,7 @@ import { AlertTriangle, FileX2, FolderOpen, History, Pencil, RefreshCw, Wallet }
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { labelAgama, labelJk, labelKawin, labelStatus } from "@/lib/enum-labels";
-import { formatDate } from "@/lib/utils";
+import { cn, formatDate, isNotFound } from "@/lib/utils";
 import type { PegawaiResponseRingkasan } from "@/types/pegawai/pegawai";
 
 interface Props {
@@ -133,17 +133,32 @@ export function RingkasanPanel({
 	}
 
 	if (isError) {
+		// 404 = pegawai tidak ada → bedakan dari kegagalan fetch (pesan + retry)
+		const notFound = isNotFound(error);
 		return (
 			<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-				<div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
-					<AlertTriangle className="size-6 text-destructive" />
+				<div
+					className={cn(
+						"flex size-12 items-center justify-center rounded-full",
+						notFound ? "bg-muted" : "bg-destructive/10",
+					)}
+				>
+					{notFound ? (
+						<FileX2 className="size-6 text-muted-foreground" />
+					) : (
+						<AlertTriangle className="size-6 text-destructive" />
+					)}
 				</div>
-				<p className="text-sm font-medium text-foreground">Gagal memuat ringkasan</p>
-				{error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
-				<Button variant="outline" size="sm" onClick={onRetry}>
-					<RefreshCw className="mr-1.5 size-3.5" />
-					Coba lagi
-				</Button>
+				<p className="text-sm font-medium text-foreground">
+					{notFound ? "Data pegawai tidak ditemukan" : "Gagal memuat ringkasan"}
+				</p>
+				{!notFound && error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
+				{!notFound && (
+					<Button variant="outline" size="sm" onClick={onRetry}>
+						<RefreshCw className="mr-1.5 size-3.5" />
+						Coba lagi
+					</Button>
+				)}
 			</div>
 		);
 	}

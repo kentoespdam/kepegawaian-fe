@@ -21,7 +21,7 @@ import { useSelfPendidikanMutation } from "@/hooks/useSelfPendidikanMutation";
 import { useSelfPengalamanKerjaMutation } from "@/hooks/useSelfPengalamanKerjaMutation";
 import type { SelfProfilCrud } from "@/hooks/useSelfProfilMutation";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { cn, formatDate } from "@/lib/utils";
+import { cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { Page } from "@/types/_shared";
 import { SectionCrudSlot } from "./section-crud-slot";
 
@@ -267,7 +267,7 @@ function fetchSection(conf: SectionConf, pegawaiId: number, nik: string | null, 
 		last: boolean;
 	}> => {
 		const res = await fetch(url);
-		if (!res.ok) throw new Error("Gagal memuat data");
+		throwIfNotOk(res, "Gagal memuat data");
 		const body = await res.json();
 		if (conf.isSingleItem) {
 			const items = body.data ? (Array.isArray(body.data) ? body.data : [body.data]) : [];

@@ -18,6 +18,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
+import { throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { KeahlianQuery, PageResultPageKeahlianQuery } from "@/types/profil/keahlian";
 import { KeahlianFormSheet } from "./keahlian-form-sheet";
@@ -122,7 +123,7 @@ export default function KeahlianPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -149,7 +150,7 @@ export default function KeahlianPage() {
 			if (jenisKeahlianId) params.jenisKeahlianId = jenisKeahlianId;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/keahlian?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data keahlian");
+			throwIfNotOk(res, "Gagal memuat data keahlian");
 			const body = (await res.json()) as PageResultPageKeahlianQuery;
 			return body.data;
 		},

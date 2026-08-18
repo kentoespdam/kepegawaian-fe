@@ -17,7 +17,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
+import { cn, isNotFound } from "@/lib/utils";
 
 export interface Column<T> {
 	id: string;
@@ -103,17 +103,30 @@ export function DataTable<T>({
 	const cardStatic = bare ? "" : "rounded-lg border bg-card shadow-md";
 
 	if (isError) {
+		// 404 = resource tidak ada (bukan kegagalan fetch) → pesan berbeda, tanpa retry
+		const notFound = isNotFound(error);
 		return (
 			<div>
 				{toolbar}
 				<div className={cardStatic}>
 					<div className="flex flex-col items-center justify-center gap-3 py-16 text-center">
-						<div className="flex size-12 items-center justify-center rounded-full bg-destructive/10">
-							<AlertTriangle className="size-6 text-destructive" />
+						<div
+							className={cn(
+								"flex size-12 items-center justify-center rounded-full",
+								notFound ? "bg-muted" : "bg-destructive/10",
+							)}
+						>
+							{notFound ? (
+								<FileX2 className="size-6 text-muted-foreground" />
+							) : (
+								<AlertTriangle className="size-6 text-destructive" />
+							)}
 						</div>
-						<p className="text-sm font-medium text-foreground">Gagal memuat data</p>
-						{error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
-						{onRetry && (
+						<p className="text-sm font-medium text-foreground">
+							{notFound ? "Data tidak ditemukan" : "Gagal memuat data"}
+						</p>
+						{!notFound && error?.message && <p className="text-sm text-muted-foreground">{error.message}</p>}
+						{!notFound && onRetry && (
 							<Button variant="outline" size="sm" onClick={onRetry}>
 								<RefreshCw className="mr-1.5 size-3.5" />
 								Coba lagi

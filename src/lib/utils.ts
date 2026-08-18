@@ -90,6 +90,33 @@ export function apiErrorMessage(body: unknown, fallback: string): string {
 	return detail ?? title ?? message ?? fallback;
 }
 
+/**
+ * Error HTTP dengan status — biar UI bisa membedakan 404 (data memang tidak ada)
+ * dari kegagalan lain (5xx / network) saat menampilkan state error.
+ */
+export class HttpError extends Error {
+	status: number;
+	constructor(status: number, message: string) {
+		super(message);
+		this.name = "HttpError";
+		this.status = status;
+	}
+}
+
+/** True bila error berasal dari respons HTTP 404 (resource tidak ditemukan). */
+export function isNotFound(err: unknown): boolean {
+	return err instanceof HttpError && err.status === 404;
+}
+
+/**
+ * Lempar HttpError bila respons tidak ok — status HTTP ikut terbawa sehingga UI
+ * bisa menampilkan "Data tidak ditemukan" (404) vs "Gagal memuat data" (lainnya).
+ */
+export function throwIfNotOk(res: Response, fallback: string): Response {
+	if (!res.ok) throw new HttpError(res.status, fallback);
+	return res;
+}
+
 export function formatDate(date: unknown): string {
 	if (typeof date !== "string") return "-";
 	if (!date) return "-";

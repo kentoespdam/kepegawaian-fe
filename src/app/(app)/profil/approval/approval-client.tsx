@@ -14,7 +14,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { cn } from "@/lib/utils";
+import { cn, throwIfNotOk } from "@/lib/utils";
 import type {
 	PageResultPageProfileUpdateQuery,
 	ProfileUpdateQuery,
@@ -191,7 +191,7 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 			if (nipam) params.nipam = nipam;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/profil-update?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat antrian approval");
+			throwIfNotOk(res, "Gagal memuat antrian approval");
 			const body = (await res.json()) as PageResultPageProfileUpdateQuery;
 			return body.data;
 		},
@@ -206,7 +206,7 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 		queryFn: async () => {
 			if (selectedId == null) return null;
 			const res = await fetch(`/api/proxy/profil/profil-update/${selectedId}`);
-			if (!res.ok) throw new Error("Gagal memuat detail");
+			throwIfNotOk(res, "Gagal memuat detail");
 			const body = (await res.json()) as SingleResultProfilUpdateDetailObject;
 			return body.data;
 		},

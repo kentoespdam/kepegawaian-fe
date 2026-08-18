@@ -16,7 +16,7 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { JENIS_MUTASI_OPTIONS, labelJenisMutasi } from "@/lib/riwayat-constants";
-import { formatDate, rupiah } from "@/lib/utils";
+import { formatDate, rupiah, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
 import { MutasiLampiranCard } from "./lampiran-card";
 import { MutasiFormSheet } from "./mutasi-form-sheet";
@@ -213,7 +213,7 @@ export default function MutasiPage() {
 			if (jenisMutasiFilter) params.jenisMutasi = jenisMutasiFilter;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/mutasi/pegawai/${pegawaiId}?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data mutasi");
+			throwIfNotOk(res, "Gagal memuat data mutasi");
 			const body = await res.json();
 			return body.data;
 		},

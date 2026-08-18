@@ -18,7 +18,7 @@ import { useFkOptions } from "@/hooks/useFkOptions";
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { formatDate } from "@/lib/utils";
+import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { PageResultPagePelatihanQuery, PelatihanQuery } from "@/types/profil/pelatihan";
 import { PelatihanFormSheet } from "./pelatihan-form-sheet";
@@ -136,7 +136,7 @@ export default function PelatihanPage() {
 		queryKey: ["pegawai-session", pegawaiId],
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
+			throwIfNotOk(res, "Gagal memuat data pegawai");
 			const body = (await res.json()) as SingleResultPegawaiResponseSession;
 			return body.data;
 		},
@@ -167,7 +167,7 @@ export default function PelatihanPage() {
 			if (lembaga) params.lembaga = lembaga;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/pelatihan?${qs}`);
-			if (!res.ok) throw new Error("Gagal memuat data pelatihan");
+			throwIfNotOk(res, "Gagal memuat data pelatihan");
 			const body = (await res.json()) as PageResultPagePelatihanQuery;
 			return body.data;
 		},
