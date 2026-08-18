@@ -28,57 +28,77 @@ Grilling 2026-08-18. Keputusan **CU-1 – CU-14** di bawah **terkunci** — jang
 | **ApprovalStatus** | Enum: `PENDING \| APPROVED \| CONFIRMED \| REJECTED \| CANCELED \| RETURNED`. |
 | **ReadWriteStatus** | Enum endpoint `/approval`: `NONE \| READ \| WRITE` — menandai apakah user yang login punya hak aksi atas sebuah record. |
 | **Persetujuan** | Halaman di mana approver (Atasan/SDM/Direksi) melihat dan memutuskan pengajuan yang menunggu aksi mereka. |
-| **SDM** | Role Sumber Daya Manusia — satu-satunya role yang dapat mengakses Kuota Cuti. |
+| **Admin/HRD** | Role yang dapat mengakses & mengelola Kuota Cuti (gate `CUTI:WRITE`). Sebelumnya disebut "SDM" — diganti 2026-08-18. |
+| **Kuota Tahun Sebelumnya** | Baris `CutiKuotaResponse` tahun − 1 dari tahun yang difilter, dikembalikan backend di `data.kuotaTahunSebelumnya` pada index `GET /cuti/kuota` — dipakai grid carry-over (CU-15). Bukan pengganti `sisaKuota` per baris. |
 
 ---
 
 ## CU-1 — Struktur Route & Layout
 
-Route modul cuti berada di `(app)/cuti/` dengan sidebar lateral (sub-menu).
+Route modul cuti berada di `(app)/cuti/` tanpa layout khusus — navigasi memakai
+sidebar global di `AppShell` (modul "Cuti").
 
 ```
-/cuti/kuota        — Kuota Cuti (SDM only)
+/cuti/kuota        — Kuota Cuti (Admin/HRD only)
 /cuti/pengajuan    — Pengajuan Cuti (semua pegawai)
 /cuti/persetujuan  — Persetujuan Cuti (semua bisa lihat, konten per-role)
 ```
 
-Layout `(app)/cuti/layout.tsx` berisi sub-sidebar lateral (pola sama dengan modul lain).
-Menu "Kuota Cuti" tetap **tampil** di sidebar, namun route-nya di-guard oleh RBAC
-(`forbidden()` jika bukan SDM). **Unmount, bukan hide/disable** (ADR-0001 RBAC pattern).
+> Sub-sidebar lateral pernah ada di `(app)/cuti/layout.tsx` (pola riwayat/pendukung)
+> tapi dihapus karena duplikat dengan entri modul "Cuti" di sidebar global AppShell.
 
-> **Alternatif yang di-drop:** Menyembunyikan item "Kuota Cuti" dari sidebar jika bukan SDM.
-> Ditolak karena pattern proyek adalah unmount content (`null`/`forbidden()`), bukan hide menu.
-> Sidebar tetap konsisten untuk semua role.
+Item "Kuota Cuti" di sidebar **hanya tampil untuk role Admin/HRD** (gate `CUTI:WRITE`).
+Route-nya tetap di-guard `forbidden()` di page — **unmount, bukan hide/disable**
+(ADR-0001 RBAC pattern). Pengajuan & Persetujuan selalu tampil.
+
+> **Reversal (2026-08-18):** keputusan awal "item Kuota Cuti selalu tampil + RBAC
+> hanya di page" dibatalkan — user meminta menu disembunyikan untuk non-Admin/HRD.
+> Gate memakai permission `CUTI:WRITE` (bukan hardcode nama role) sesuai FE-GUIDE §7.
 
 ---
 
 ## CU-2 — Kuota Cuti: RBAC & Akses
 
-Halaman `/cuti/kuota` hanya dapat diakses oleh role **SDM**.
-Gate: `can(roles, "manage", "kuota-cuti")` → `forbidden()` di server component level.
+Halaman `/cuti/kuota` hanya dapat diakses oleh role **Admin/HRD** — gate
+`hasPermission(permissions, PERMISSION.CUTI_WRITE)` → `forbidden()` di server
+component level. Entri sidebar memakai gate yang sama (`CUTI:WRITE`), jadi
+non-Admin/HRD tidak melihat menu "Kuota Cuti" (CU-1).
 
-Semua operasi (CRUD + Import) hanya tersedia untuk SDM. Pegawai lain yang mencoba akses
-URL langsung mendapat halaman `forbidden`.
+Semua operasi (CRUD + Import) hanya tersedia untuk Admin/HRD. Pegawai lain yang
+mencoba akses URL langsung mendapat halaman `forbidden`.
 
 ---
 
-## CU-3 — Kuota Cuti: Tabel + Filter
+## CU-3 — Kuota Cuti: Grid Carry-Over Dua Tahun (revisi 2026-08-18)
 
-Sumber: `GET /cuti/kuota` dengan filter default **tahun berjalan**.
+Sumber: `GET /cuti/kuota` (envelope `PageResult` — lihat CU-15) dengan filter default
+**tahun berjalan**. **Satu baris per pegawai** — data tahun filter (Y) dari `page.content`,
+data tahun sebelumnya (Y−1) dari `kuotaTahunSebelumnya` (match by `pegawaiId`).
 
-**Kolom tabel:**
+**Kolom grid:**
 | Kolom | Sumber |
 |-------|--------|
-| No | offset paging pattern |
-| Nama Pegawai | `pegawai.nama` |
 | NIPAM | `pegawai.nipam` |
-| Tahun | `tahun` |
-| Kuota | `kuota` |
-| Tambahan | `kuotaTambahan` |
-| Terpakai | `kuotaTerpakai` |
-| Sisa | `sisaKuota` |
-| Expired | `expired` (format tanggal) |
+| Nama Pegawai | `pegawai.nama` |
+| Status Pegawai | `pegawai.statusPegawai` → `labelStatus()` |
+| Jabatan | `pegawai.jabatan` |
+| Kuota {Y} | `kuota + kuotaTambahan` (baris tahun filter di `page.content`) |
+| Terpakai {Y} | `kuotaTerpakai` |
+| Sisa {Y} | `sisaKuota` |
+| Kuota {Y−1} | `kuota + kuotaTambahan` (baris tahun filter − 1 di `kuotaTahunSebelumnya`) |
+| Terpakai {Y−1} | `kuotaTerpakai` |
+| Sisa {Y−1} | `sisaKuota` |
 | Aksi | Edit · Hapus |
+
+Header dinamis: `{Y}` = tahun filter (contoh "Kuota 2026"), `{Y−1}` = tahun filter − 1
+("Kuota 2025"). Pegawai tanpa baris tahun sebelumnya → kolom Y−1 tampil "—".
+Kolom lama yang **dihapus**: No, Tahun, Tambahan, Expired.
+
+**Filter toolbar:**
+- Select Tahun (default tahun berjalan, rentang 5 tahun)
+- Input pencarian Nama/NIPAM (query param `nama` / `nipam`)
+
+URL = sumber kebenaran: `?tahun=2026&nama=&page=&size=`
 
 **Filter toolbar:**
 - Select Tahun (default tahun berjalan, rentang 5 tahun)
@@ -268,6 +288,27 @@ Mengikuti pattern proyek (CONTEXT-MAP §table-states):
 
 ---
 
+## CU-15 — Kontrak Index Kuota: PageResult + `kuotaTahunSebelumnya` (2026-08-18)
+
+Backend `rewrite/master-cqrs` mengubah kontrak index `GET /cuti/kuota`:
+
+- Envelope `SingleResult` → **`PageResult`** (tanpa `message`/`errors`).
+- `data.additional` → **`data.kuotaTahunSebelumnya`** (baris tahun − 1) — `additional` hilang total.
+- Tidak ada data → **HTTP 200 + page kosong** (bukan 404).
+
+Keputusan FE (hasil grill 2026-08-18):
+1. `kuotaTahunSebelumnya` dipakai **grid carry-over** di `/cuti/kuota` (CU-3 revisi).
+2. **K-C5** (strip 3 kartu di `pengajuan` & `riwayat/cuti`): baca `page.content` saja
+   (baris tahun terpilih, filter `pegawaiId`+`tahun` → ≤1 baris) — pencarian `additional`
+   dan handling `isNotFound` dihapus. Strip **mengabaikan** `kuotaTahunSebelumnya`.
+3. Detail `/{id}` & `/{pegawaiId}/{tahun}/sisa` **tetap** `SingleResult` + 404 — tidak berubah.
+4. Tipe di-sync via `bun run spec:sync` (spec live backend) → `src/types/cuti/kuota.ts`
+   (generated — jangan diedit manual). `PageResultCutiKuotaPegawaiResponse = PageEnvelope<unknown>`
+   tidak merepresentasikan shape (`data` = `{ page, kuotaTahunSebelumnya }`) → pakai cast
+   inline `as { data: CutiKuotaPegawaiResponse }` seperti pola K-C5.
+
+---
+
 ## CU-14 — Fetch Pattern
 
 Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan** `src/lib/api/client.ts`
@@ -286,7 +327,7 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 
 | Operasi | Endpoint | Body/Params |
 |---------|----------|-------------|
-| List kuota | `GET /cuti/kuota` | `?tahun&nama&nipam&page&size` |
+| List kuota | `GET /cuti/kuota` | `?tahun&nama&nipam&page&size` → `PageResult` (`page` + `kuotaTahunSebelumnya`) |
 | Detail kuota | `GET /cuti/kuota/{id}` | — |
 | Tambah kuota | `POST /cuti/kuota` | `CutiKuotaPostRequest` |
 | Edit kuota | `PUT /cuti/kuota/{id}` | `CutiKuotaPutRequest` |

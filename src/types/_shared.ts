@@ -210,11 +210,11 @@ export interface SortObject {
 
 export interface PageableObject {
 	offset?: number; // int64
-	unpaged?: boolean;
 	paged?: boolean;
 	pageNumber?: number; // int32
 	pageSize?: number; // int32
 	sort?: SortObject;
+	unpaged?: boolean;
 }
 
 export type SingleResultInteger = Envelope<number>;

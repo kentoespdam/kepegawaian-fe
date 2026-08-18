@@ -5875,9 +5875,6 @@
 						"type": "integer",
 						"format": "int64"
 					},
-					"unpaged": {
-						"type": "boolean"
-					},
 					"paged": {
 						"type": "boolean"
 					},
@@ -5891,6 +5888,9 @@
 					},
 					"sort": {
 						"$ref": "#/components/schemas/SortObject"
+					},
+					"unpaged": {
+						"type": "boolean"
 					}
 				}
 			},

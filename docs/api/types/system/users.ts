@@ -8,7 +8,7 @@
  * Endpoint : GET /system/users, PATCH /system/users/pref/{id}, PATCH /system/users/{id}/status, POST /system/users
  */
 
-import type { Envelope, Page, PageQuery, PrefRole } from "../_shared";
+import type { Envelope, Page, PageEnvelope, PageQuery, PrefRole } from "../_shared";
 
 export interface UsersSearchParams extends PageQuery {
 	nipam?: string;
@@ -39,7 +39,7 @@ export interface UserResponse {
 
 export type PageUserResponse = Page<UserResponse>;
 
-export type SingleResultPageUserResponse = Envelope<PageUserResponse>;
+export type PageResultPageUserResponse = PageEnvelope<UserResponse>;
 
 export interface AuthPostRequest {
 	id?: string;
