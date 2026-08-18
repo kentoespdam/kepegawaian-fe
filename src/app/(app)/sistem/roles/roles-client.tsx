@@ -1,8 +1,8 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
-import { useState } from "react";
+import { KeyRound, Pencil, Plus, Search, Shield, ShieldCheck, Trash2, X } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -10,8 +10,10 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { cn } from "@/lib/utils";
 import type { ListResultPrefPermission } from "@/types/system/permissions";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
+import { RolePermissionDialog } from "./role-permission-dialog";
 
 /** Dialog buat/edit role — POST saat create, PUT saat edit. */
 function RoleFormDialog({
@@ -30,43 +32,67 @@ function RoleFormDialog({
 	const [id, setId] = useState("");
 	const [description, setDescription] = useState("");
 
-	// Reset form tiap dialog dibuka (create: kosong; edit: isi dari role).
-	if (open && role !== null && id === "" && description === "") {
-		setId(role.id);
-		setDescription(role.description ?? "");
-	}
+	useEffect(() => {
+		if (open) {
+			setId(role?.id ?? "");
+			setDescription(role?.description ?? "");
+		}
+	}, [open, role]);
 
-	const submit = () => {
+	const submit = (e?: React.FormEvent) => {
+		if (e) e.preventDefault();
 		if (role === null && !id.trim()) return;
 		onSubmit({ id: role?.id ?? id.trim(), description: description.trim() || undefined });
 	};
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-sm">
+			<DialogContent className="sm:max-w-md">
 				<DialogHeader>
-					<DialogTitle>{role === null ? "Tambah role" : `Edit role — ${role.id}`}</DialogTitle>
+					<DialogTitle className="flex items-center gap-2">
+						<Shield className="size-4 text-primary" />
+						{role === null ? "Tambah Role Baru" : `Edit Role — ${role.id}`}
+					</DialogTitle>
 				</DialogHeader>
-				<div className="space-y-3">
+				<form onSubmit={submit} className="space-y-4 pt-2">
 					{role === null && (
 						<div className="space-y-1.5">
-							<Label htmlFor="role-id">ID role</Label>
-							<Input id="role-id" value={id} onChange={(e) => setId(e.target.value)} placeholder="mis. HRD" />
+							<Label htmlFor="role-id" className="text-xs font-semibold">
+								ID / Kode Role <span className="text-destructive">*</span>
+							</Label>
+							<Input
+								id="role-id"
+								value={id}
+								onChange={(e) => setId(e.target.value)}
+								placeholder="mis. HRD, ADMIN_UNIT, STAF"
+								className="font-mono text-sm"
+								autoFocus
+							/>
+							<p className="text-[11px] text-muted-foreground">
+								Gunakan huruf kapital dan garis bawah tanpa spasi (contoh: KEPALA_BAGIAN).
+							</p>
 						</div>
 					)}
 					<div className="space-y-1.5">
-						<Label htmlFor="role-desc">Deskripsi</Label>
+						<Label htmlFor="role-desc" className="text-xs font-semibold">
+							Deskripsi Role
+						</Label>
 						<Input
 							id="role-desc"
 							value={description}
 							onChange={(e) => setDescription(e.target.value)}
-							placeholder="Opsional — keterangan singkat role"
+							placeholder="Keterangan singkat fungsi atau cakupan wewenang role"
 						/>
 					</div>
-					<Button className="w-full" disabled={isPending} onClick={submit}>
-						{role === null ? "Simpan role" : "Simpan perubahan"}
-					</Button>
-				</div>
+					<div className="flex justify-end gap-2 pt-2">
+						<Button type="button" variant="outline" size="sm" onClick={() => onOpenChange(false)}>
+							Batal
+						</Button>
+						<Button type="submit" size="sm" disabled={isPending || (role === null && !id.trim())}>
+							{isPending ? "Menyimpan..." : role === null ? "Buat Role" : "Simpan Perubahan"}
+						</Button>
+					</div>
+				</form>
 			</DialogContent>
 		</Dialog>
 	);
@@ -78,7 +104,7 @@ function useAllPermissions() {
 		queryKey: ["system-permissions"],
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/permissions");
-			if (!res.ok) throw new Error("Gagal memuat permission");
+			if (!res.ok) throw new Error("Gagal memuat katalog permission");
 			const body = (await res.json()) as ListResultPrefPermission;
 			return body.data ?? [];
 		},
@@ -92,7 +118,7 @@ function useAllRoles() {
 		queryKey: ["system-roles"],
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/roles/list");
-			if (!res.ok) throw new Error("Gagal memuat role");
+			if (!res.ok) throw new Error("Gagal memuat daftar role");
 			const body = (await res.json()) as ListResultPrefRole;
 			return body.data ?? [];
 		},
@@ -108,10 +134,17 @@ export function RolesClient() {
 	const roles = rolesQuery.data ?? [];
 	const allPerms = permsQuery.data ?? [];
 
-	const [selectedRole, setSelectedRole] = useState<PrefRole | null>(null);
+	const [tableSearch, setTableSearch] = useState("");
+	const [selectedRoleId, setSelectedRoleId] = useState<string | null>(null);
 	const [roleForm, setRoleForm] = useState<{ open: boolean; role: PrefRole | null }>({ open: false, role: null });
 	const [deleteRole, setDeleteRole] = useState<PrefRole | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
+
+	// Reactive selected role derived from live queries
+	const selectedRole = useMemo(() => {
+		if (!selectedRoleId) return null;
+		return roles.find((r) => r.id === selectedRoleId) ?? null;
+	}, [roles, selectedRoleId]);
 
 	const deleteRoleMutation = useMutation({
 		mutationFn: async (roleId: string) => {
@@ -122,7 +155,7 @@ export function RolesClient() {
 			}
 		},
 		onSuccess: () => {
-			toast.success("Role dihapus");
+			toast.success("Role berhasil dihapus");
 			setDeleteRole(null);
 			setDeleteError(null);
 			qc.invalidateQueries({ queryKey: ["system-roles"] });
@@ -143,145 +176,206 @@ export function RolesClient() {
 			}
 		},
 		onSuccess: () => {
-			toast.success(roleForm.role ? "Role diperbarui" : "Role dibuat");
+			toast.success(roleForm.role ? "Role berhasil diperbarui" : "Role baru berhasil dibuat");
 			setRoleForm({ open: false, role: null });
 			qc.invalidateQueries({ queryKey: ["system-roles"] });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});
 
-	const toggleMutation = useMutation({
-		mutationFn: async ({ roleId, permName, assign }: { roleId: string; permName: string; assign: boolean }) => {
-			const res = await fetch(`/api/proxy/system/roles/${roleId}/permissions/${permName}`, {
-				method: assign ? "POST" : "DELETE",
-			});
-			if (!res.ok && res.status !== 409) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? (assign ? "Gagal menetapkan permission" : "Gagal mencabut permission"));
-			}
-		},
-		onSuccess: (_d, { assign }) => {
-			toast.success(assign ? "Permission ditetapkan" : "Permission dicabut");
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
-		},
-		onError: (e: Error) => toast.error(e.message),
-	});
+	// Filtered roles based on table search
+	const filteredRoles = useMemo(() => {
+		const q = tableSearch.trim().toLowerCase();
+		if (!q) return roles;
+		return roles.filter((r) => r.id.toLowerCase().includes(q) || r.description?.toLowerCase().includes(q));
+	}, [roles, tableSearch]);
 
-	const rolePerms = new Set((selectedRole?.permissions ?? []).map((p) => p.name));
-
-	const handleToggle = (permName: string, assign: boolean) => {
-		if (!selectedRole) return;
-		toggleMutation.mutate({ roleId: selectedRole.id, permName, assign });
-	};
+	const totalCatalogPermCount = allPerms.length;
 
 	return (
 		<>
 			<div className="space-y-4">
-				<div className="flex items-center justify-between">
-					<p className="text-sm text-muted-foreground">Daftar role sistem beserta permission-nya.</p>
-					<Button size="sm" onClick={() => setRoleForm({ open: true, role: null })}>
-						<Plus className="mr-1.5 size-4" />
-						Tambah role
-					</Button>
+				{/* Top Actions & Search Bar */}
+				<div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+					<div>
+						<h3 className="text-base font-semibold tracking-tight text-foreground">Manajemen Role & Hak Akses</h3>
+						<p className="text-xs text-muted-foreground">
+							Kelola wewenang dan izin akses pengguna berdasarkan perannya dalam sistem.
+						</p>
+					</div>
+
+					<div className="flex items-center gap-2">
+						<Button size="sm" onClick={() => setRoleForm({ open: true, role: null })} className="gap-1.5 shadow-xs">
+							<Plus className="size-4" />
+							Tambah Role
+						</Button>
+					</div>
 				</div>
-				{rolesQuery.isPending && <p className="text-sm text-muted-foreground">Memuat role...</p>}
+
+				{/* Search & Statistics Filter Bar */}
+				<div className="flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+					<div className="relative w-full max-w-sm">
+						<Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+						<Input
+							placeholder="Cari ID role atau deskripsi..."
+							value={tableSearch}
+							onChange={(e) => setTableSearch(e.target.value)}
+							className="h-9 pl-9 pr-8 text-xs sm:text-sm"
+						/>
+						{tableSearch && (
+							<button
+								type="button"
+								onClick={() => setTableSearch("")}
+								className="absolute right-2.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+								aria-label="Bersihkan pencarian"
+							>
+								<X className="size-3.5" />
+							</button>
+						)}
+					</div>
+
+					<div className="flex items-center gap-2 text-xs text-muted-foreground">
+						<span>
+							Total: <strong className="text-foreground">{roles.length}</strong> Role
+						</span>
+						<span>•</span>
+						<span>
+							Katalog: <strong className="text-foreground">{totalCatalogPermCount}</strong> Permission
+						</span>
+					</div>
+				</div>
+
+				{/* Loading & Error States */}
+				{rolesQuery.isPending && (
+					<div className="rounded-xl border bg-card p-8 text-center text-sm text-muted-foreground">
+						Memuat daftar role sistem...
+					</div>
+				)}
+
 				{rolesQuery.isError && (
-					<p className="text-sm text-destructive">
+					<div className="rounded-xl border border-destructive/20 bg-destructive/5 p-6 text-center text-sm text-destructive">
 						Gagal memuat role.{" "}
-						<Button variant="link" size="sm" className="h-auto p-0" onClick={() => rolesQuery.refetch()}>
+						<Button variant="link" size="sm" className="h-auto p-0 font-medium" onClick={() => rolesQuery.refetch()}>
 							Coba lagi
 						</Button>
-					</p>
+					</div>
 				)}
-				{roles.length > 0 && (
-					<div className="overflow-hidden rounded-lg border bg-card">
+
+				{/* Roles Data Table */}
+				{!rolesQuery.isPending && !rolesQuery.isError && (
+					<div className="overflow-hidden rounded-xl border bg-card shadow-xs">
 						<table className="w-full text-sm">
-							<thead className="bg-muted/50 text-left text-xs uppercase text-muted-foreground">
+							<thead className="border-b bg-muted/40 text-left text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 								<tr>
-									<th className="px-4 py-2.5">Role</th>
-									<th className="px-4 py-2.5">Deskripsi</th>
-									<th className="px-4 py-2.5">Permission</th>
-									<th className="px-4 py-2.5 text-right">Aksi</th>
+									<th className="px-5 py-3">Role</th>
+									<th className="px-5 py-3">Deskripsi Wewenang</th>
+									<th className="px-5 py-3">Hak Akses (Permission)</th>
+									<th className="px-5 py-3 text-right">Aksi</th>
 								</tr>
 							</thead>
-							<tbody>
-								{roles.map((role) => (
-									<tr key={role.id} className="border-t hover:bg-muted/30">
-										<td className="px-4 py-2.5 font-medium">{role.id}</td>
-										<td className="max-w-48 truncate px-4 py-2.5 text-muted-foreground">{role.description ?? "—"}</td>
-										<td className="px-4 py-2.5">
-											<Button
-												variant="outline"
-												size="sm"
-												onClick={() => setSelectedRole(role)}
-												aria-label={`Kelola permission ${role.id}`}
-											>
-												<Badge variant="secondary" className="mr-2">
-													{(role.permissions ?? []).length}
-												</Badge>
-												Kelola
-											</Button>
-										</td>
-										<td className="px-4 py-2.5 text-right">
-											<div className="flex justify-end gap-1">
-												<Button
-													variant="ghost"
-													size="sm"
-													onClick={() => setRoleForm({ open: true, role })}
-													aria-label={`Edit role ${role.id}`}
-												>
-													<Pencil className="size-4" />
-												</Button>
-												<Button
-													variant="ghost"
-													size="sm"
-													onClick={() => {
-														setDeleteError(null);
-														setDeleteRole(role);
-													}}
-													aria-label={`Hapus role ${role.id}`}
-												>
-													<Trash2 className="size-4" />
-												</Button>
-											</div>
+							<tbody className="divide-y divide-border/60">
+								{filteredRoles.length === 0 ? (
+									<tr>
+										<td colSpan={4} className="px-5 py-8 text-center text-xs text-muted-foreground">
+											{tableSearch
+												? `Tidak ditemukan role yang cocok dengan "${tableSearch}".`
+												: "Belum ada role yang terdaftar dalam sistem."}
 										</td>
 									</tr>
-								))}
+								) : (
+									filteredRoles.map((role) => {
+										const permCount = (role.permissions ?? []).length;
+
+										return (
+											<tr key={role.id} className="group transition-colors hover:bg-muted/30">
+												{/* Role ID */}
+												<td className="px-5 py-3.5">
+													<div className="flex items-center gap-2">
+														<div className="flex size-7 items-center justify-center rounded-md bg-primary/10 text-primary">
+															<ShieldCheck className="size-4" />
+														</div>
+														<span className="font-mono text-xs font-semibold text-foreground">{role.id}</span>
+													</div>
+												</td>
+
+												{/* Description */}
+												<td className="max-w-xs px-5 py-3.5 text-xs text-muted-foreground">
+													{role.description || "—"}
+												</td>
+
+												{/* Permission Count & Quick Button */}
+												<td className="px-5 py-3.5">
+													<Button
+														variant="outline"
+														size="sm"
+														className="h-8 gap-2 border-border/80 text-xs font-medium hover:border-primary/50 hover:bg-primary/5 hover:text-primary"
+														onClick={() => setSelectedRoleId(role.id)}
+														aria-label={`Kelola hak akses role ${role.id}`}
+													>
+														<KeyRound className="size-3.5 text-muted-foreground group-hover:text-primary" />
+														<span>Kelola Permission</span>
+														<Badge
+															variant="secondary"
+															className={cn(
+																"ml-1 font-mono text-[11px]",
+																permCount > 0 ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground",
+															)}
+														>
+															{permCount} / {totalCatalogPermCount}
+														</Badge>
+													</Button>
+												</td>
+
+												{/* Actions */}
+												<td className="px-5 py-3.5 text-right">
+													<div className="flex justify-end gap-1">
+														<Button
+															variant="ghost"
+															size="icon-sm"
+															className="size-8 text-muted-foreground hover:text-foreground"
+															onClick={() => setRoleForm({ open: true, role })}
+															aria-label={`Edit role ${role.id}`}
+															title="Edit role"
+														>
+															<Pencil className="size-3.5" />
+														</Button>
+														<Button
+															variant="ghost"
+															size="icon-sm"
+															className="size-8 text-muted-foreground hover:text-destructive"
+															onClick={() => {
+																setDeleteError(null);
+																setDeleteRole(role);
+															}}
+															aria-label={`Hapus role ${role.id}`}
+															title="Hapus role"
+														>
+															<Trash2 className="size-3.5" />
+														</Button>
+													</div>
+												</td>
+											</tr>
+										);
+									})
+								)}
 							</tbody>
 						</table>
 					</div>
 				)}
 			</div>
 
-			<Dialog open={selectedRole != null} onOpenChange={(v) => !v && setSelectedRole(null)}>
-				<DialogContent className="flex max-h-[85dvh] flex-col gap-0 p-0 sm:max-w-lg">
-					<DialogHeader className="shrink-0 border-b px-4 py-3">
-						<DialogTitle>Permission — {selectedRole?.id}</DialogTitle>
-					</DialogHeader>
-					<div className="flex-1 space-y-1 overflow-y-auto p-4">
-						{permsQuery.isPending && <p className="text-sm text-muted-foreground">Memuat permission...</p>}
-						{allPerms.map((perm) => {
-							const name = perm.name ?? "";
-							const assigned = rolePerms.has(name);
-							return (
-								<div key={name} className="flex items-center justify-between rounded-lg border px-3 py-2">
-									<span className="font-mono text-xs">{name}</span>
-									<Button
-										variant={assigned ? "secondary" : "outline"}
-										size="sm"
-										disabled={toggleMutation.isPending}
-										onClick={() => handleToggle(name, !assigned)}
-									>
-										{assigned ? <Check className="mr-1.5 size-3.5" /> : <X className="mr-1.5 size-3.5" />}
-										{assigned ? "Dicabut" : "Tetapkan"}
-									</Button>
-								</div>
-							);
-						})}
-					</div>
-				</DialogContent>
-			</Dialog>
+			{/* Comprehensive Role Permission Management Dialog */}
+			<RolePermissionDialog
+				open={selectedRoleId !== null}
+				onOpenChange={(v) => {
+					if (!v) setSelectedRoleId(null);
+				}}
+				role={selectedRole}
+				allPermissions={allPerms}
+				isLoadingPermissions={permsQuery.isPending}
+			/>
 
+			{/* Role Create / Edit Dialog */}
 			<RoleFormDialog
 				open={roleForm.open}
 				onOpenChange={(v) => !v && setRoleForm({ open: false, role: null })}
@@ -290,6 +384,7 @@ export function RolesClient() {
 				isPending={saveRoleMutation.isPending}
 			/>
 
+			{/* Role Delete Confirmation Dialog */}
 			<ConfirmDeleteDialog
 				open={deleteRole != null}
 				onOpenChange={(v) => !v && setDeleteRole(null)}
