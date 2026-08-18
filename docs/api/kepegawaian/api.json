@@ -3,42 +3,89 @@
 	"info": {
 		"title": "Kepegawaian Rest API",
 		"description": "Need JWT Token for execute this API",
-		"contact": { "name": "Kent-Os", "email": "kentoes.pdam@gmail.com" },
-		"license": { "name": "License of API", "url": "API license URL" },
+		"contact": {
+			"name": "Kent-Os",
+			"email": "kentoes.pdam@gmail.com"
+		},
+		"license": {
+			"name": "License of API",
+			"url": "API license URL"
+		},
 		"version": "1.0.0"
 	},
-	"servers": [{ "url": "http://192.168.1.211:8080", "description": "Generated server url" }],
-	"security": [{ "BearerAuthentication": [] }],
+	"servers": [
+		{
+			"url": "http://192.168.1.211:8080",
+			"description": "Generated server url"
+		}
+	],
+	"security": [
+		{
+			"BearerAuthentication": []
+		}
+	],
 	"paths": {
 		"/kepegawaian/riwayat/terminasi/{id}": {
 			"get": {
 				"tags": ["riwayat-terminasi-controller"],
-				"operationId": "detail",
+				"operationId": "detail_2",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultRiwayatTerminasiQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultRiwayatTerminasiQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"put": {
 				"tags": ["riwayat-terminasi-controller"],
-				"operationId": "update",
+				"operationId": "update_35",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"requestBody": {
 					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatTerminasiPutRequest" } }
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatTerminasiPutRequest"
+							}
+						}
 					}
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -46,43 +93,91 @@
 		"/kepegawaian/riwayat/sp/{id}": {
 			"get": {
 				"tags": ["riwayat-sp-controller"],
-				"operationId": "detail_1",
+				"operationId": "detail_3",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultRiwayatSpQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultRiwayatSpQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"put": {
 				"tags": ["riwayat-sp-controller"],
-				"operationId": "update_1",
+				"operationId": "update_36",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatSpPutRequest" } } }
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatSpPutRequest"
+							}
+						}
+					}
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			},
 			"delete": {
 				"tags": ["riwayat-sp-controller"],
-				"operationId": "delete",
+				"operationId": "delete_16",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletedResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -90,44 +185,92 @@
 		"/kepegawaian/riwayat/sk/{id}": {
 			"get": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "detail_2",
+				"operationId": "detail_4",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultRiwayatSkQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultRiwayatSkQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"put": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "update_2",
+				"operationId": "update_37",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatSkPutRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatSkPutRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			},
 			"delete": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "delete_1",
+				"operationId": "delete_17",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletedResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -135,44 +278,92 @@
 		"/kepegawaian/riwayat/mutasi/{id}": {
 			"get": {
 				"tags": ["riwayat-mutasi-controller"],
-				"operationId": "detail_3",
+				"operationId": "detail_5",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultRiwayatMutasiQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultRiwayatMutasiQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"put": {
 				"tags": ["riwayat-mutasi-controller"],
-				"operationId": "update_3",
+				"operationId": "update_38",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatMutasiPutRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatMutasiPutRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			},
 			"delete": {
 				"tags": ["riwayat-mutasi-controller"],
-				"operationId": "delete_2",
+				"operationId": "delete_18",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletedResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -180,44 +371,92 @@
 		"/kepegawaian/riwayat/kontrak/{id}": {
 			"get": {
 				"tags": ["riwayat-kontrak-controller"],
-				"operationId": "findById",
+				"operationId": "findById_25",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultRiwayatKontrakQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultRiwayatKontrakQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"put": {
 				"tags": ["riwayat-kontrak-controller"],
-				"operationId": "update_4",
+				"operationId": "update_39",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatKontrakPutRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatKontrakPutRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			},
 			"delete": {
 				"tags": ["riwayat-kontrak-controller"],
-				"operationId": "delete_3",
+				"operationId": "delete_19",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletedResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -225,82 +464,169 @@
 		"/kepegawaian/riwayat/terminasi": {
 			"get": {
 				"tags": ["riwayat-terminasi-controller"],
-				"operationId": "index",
+				"operationId": "index_35",
 				"parameters": [
 					{
 						"name": "tahunPensiun",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32" }
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
 					},
 					{
 						"name": "alasanTerminasiId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nipam",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "nama",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "jabatanId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
 					{
 						"name": "organisasiId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
 					{
 						"name": "golonganId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "tanggalTerminasi",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "format": "date" }
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatTerminasiQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatTerminasiQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"post": {
 				"tags": ["riwayat-terminasi-controller"],
-				"operationId": "create",
+				"operationId": "create_8",
 				"requestBody": {
 					"content": {
-						"multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatTerminasiPostRequest" } }
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatTerminasiPostRequest"
+							}
+						}
 					}
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -308,14 +634,26 @@
 		"/kepegawaian/riwayat/sp": {
 			"post": {
 				"tags": ["riwayat-sp-controller"],
-				"operationId": "create_1",
+				"operationId": "create_9",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/RiwayatSpPostRequest" } } }
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatSpPostRequest"
+							}
+						}
+					}
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -323,10 +661,25 @@
 		"/kepegawaian/riwayat/sk": {
 			"get": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "index_1",
+				"operationId": "index_36",
 				"parameters": [
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenisSk",
 						"in": "query",
@@ -350,46 +703,86 @@
 						"name": "golonganId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatSkQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatSkQuery"
+								}
+							}
+						}
 					}
 				}
 			},
 			"post": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "save",
+				"operationId": "save_29",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatSkPostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatSkPostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -397,15 +790,27 @@
 		"/kepegawaian/riwayat/mutasi": {
 			"post": {
 				"tags": ["riwayat-mutasi-controller"],
-				"operationId": "save_1",
+				"operationId": "save_30",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatMutasiPostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatMutasiPostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -413,15 +818,27 @@
 		"/kepegawaian/riwayat/kontrak": {
 			"post": {
 				"tags": ["riwayat-kontrak-controller"],
-				"operationId": "save_2",
+				"operationId": "save_31",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/RiwayatKontrakPostRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RiwayatKontrakPostRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -429,14 +846,26 @@
 		"/kepegawaian/lampiran": {
 			"post": {
 				"tags": ["lampiran-sk-controller"],
-				"operationId": "create_2",
+				"operationId": "create_10",
 				"requestBody": {
-					"content": { "multipart/form-data": { "schema": { "$ref": "#/components/schemas/LampiranSkPostRequest" } } }
+					"content": {
+						"multipart/form-data": {
+							"schema": {
+								"$ref": "#/components/schemas/LampiranSkPostRequest"
+							}
+						}
+					}
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -446,13 +875,25 @@
 				"tags": ["lampiran-sk-controller"],
 				"operationId": "acceptLampiran",
 				"requestBody": {
-					"content": { "application/json": { "schema": { "$ref": "#/components/schemas/LampiranSkAcceptRequest" } } },
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/LampiranSkAcceptRequest"
+							}
+						}
+					},
 					"required": true
 				},
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultLong" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SavedResultLong"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -466,61 +907,138 @@
 						"name": "tahunPensiun",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32" }
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
 					},
 					{
 						"name": "alasanTerminasiId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "nama", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nipam",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "nama",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "jabatanId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
 					{
 						"name": "organisasiId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
 					{
 						"name": "golonganId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "tanggalTerminasi",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "format": "date" }
+						"schema": {
+							"type": "string",
+							"format": "date"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPagePegawaiResponse" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPagePegawaiResponse"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -528,46 +1046,121 @@
 		"/kepegawaian/riwayat/sp/{id}/file": {
 			"get": {
 				"tags": ["riwayat-sp-controller"],
-				"operationId": "getFile",
+				"operationId": "getFile_1",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
-				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
-			}
-		},
-		"/kepegawaian/riwayat/sp/pegawai/{id}": {
-			"get": {
-				"tags": ["riwayat-sp-controller"],
-				"operationId": "index_2",
-				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nomorSp", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "jenisSpId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
 					{
-						"name": "page",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
-					},
-					{
-						"name": "size",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
-					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
-					{
-						"name": "sortDirection",
-						"in": "query",
-						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatSpQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
+			}
+		},
+		"/kepegawaian/riwayat/sp/pegawai/{id}": {
+			"get": {
+				"tags": ["riwayat-sp-controller"],
+				"operationId": "index_48",
+				"parameters": [
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nomorSp",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "jenisSpId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
+					},
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatSpQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -577,9 +1170,32 @@
 				"tags": ["riwayat-sk-controller"],
 				"operationId": "findByPegawaiId",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenisSk",
 						"in": "query",
@@ -603,32 +1219,60 @@
 						"name": "golonganId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatSkQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatSkQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -636,10 +1280,25 @@
 		"/kepegawaian/riwayat/sk/list": {
 			"get": {
 				"tags": ["riwayat-sk-controller"],
-				"operationId": "list",
+				"operationId": "list_25",
 				"parameters": [
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenisSk",
 						"in": "query",
@@ -659,12 +1318,26 @@
 							]
 						}
 					},
-					{ "name": "golonganId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "golonganId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultRiwayatSkQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ListResultRiwayatSkQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -672,17 +1345,43 @@
 		"/kepegawaian/riwayat/mutasi/pegawai/{id}": {
 			"get": {
 				"tags": ["riwayat-mutasi-controller"],
-				"operationId": "index_3",
+				"operationId": "index_49",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
 					{
 						"name": "riwayatSkId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "nomorSk", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "nomorSk",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenisMutasi",
 						"in": "query",
@@ -704,49 +1403,119 @@
 						"name": "organisasiId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "namaOrganisasi", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "jabatanId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "namaJabatan", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "namaOrganisasi",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "jabatanId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "namaJabatan",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "organisasiLamaId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "namaOrganisasiLama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "namaOrganisasiLama",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jabatanLamaId",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int64" }
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
 					},
-					{ "name": "namaJabatanLama", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "namaJabatanLama",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatMutasiQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatMutasiQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -754,35 +1523,83 @@
 		"/kepegawaian/riwayat/kontrak/pegawai/{id}": {
 			"get": {
 				"tags": ["riwayat-kontrak-controller"],
-				"operationId": "index_4",
+				"operationId": "index_50",
 				"parameters": [
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "pegawaiId", "in": "query", "required": false, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "nomorKontrak", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "pegawaiId",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "nomorKontrak",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "page",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"minimum": 0
+						}
 					},
 					{
 						"name": "size",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+						"schema": {
+							"type": "integer",
+							"format": "int32",
+							"maximum": 100,
+							"minimum": 1
+						}
 					},
-					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortBy",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "sortDirection",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+						"schema": {
+							"type": "string",
+							"pattern": "(?i)asc|desc"
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageRiwayatKontrakQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/PageResultPageRiwayatKontrakQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -811,12 +1628,26 @@
 							]
 						}
 					},
-					{ "name": "refId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "refId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultLampiranSkQuery" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/ListResultLampiranSkQuery"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -824,7 +1655,7 @@
 		"/kepegawaian/lampiran/file/{jenis}/{id}": {
 			"get": {
 				"tags": ["lampiran-sk-controller"],
-				"operationId": "getFile_1",
+				"operationId": "getFile_2",
 				"parameters": [
 					{
 						"name": "jenis",
@@ -845,15 +1676,34 @@
 							]
 						}
 					},
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/kepegawaian/lampiran/{ref}/{refId}/{id}": {
 			"delete": {
 				"tags": ["lampiran-sk-controller"],
-				"operationId": "delete_4",
+				"operationId": "delete_31",
 				"parameters": [
 					{
 						"name": "ref",
@@ -874,13 +1724,35 @@
 							]
 						}
 					},
-					{ "name": "refId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
-					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+					{
+						"name": "refId",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					},
+					{
+						"name": "id",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int64"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/DeletedResult" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/DeletedResult"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -888,53 +1760,45 @@
 	},
 	"components": {
 		"schemas": {
-			"RiwayatTerminasiPutRequest": {
+			"AlasanBerhentiResponse": {
 				"type": "object",
 				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
+					"id": {
+						"type": "integer",
+						"format": "int64"
 					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"notes": { "type": "string" },
-					"alasanTerminasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nipam": { "type": "string", "minLength": 1 },
-					"nama": { "type": "string", "minLength": 1 },
-					"organisasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"jabatanId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"fileName": { "type": "string", "format": "binary" }
-				},
-				"required": [
-					"alasanTerminasiId",
-					"jabatanId",
-					"jenisSk",
-					"nama",
-					"nipam",
-					"nomorSk",
-					"organisasiId",
-					"pegawaiId",
-					"tanggalSk",
-					"tmtBerlaku"
-				]
+					"nama": {
+						"type": "string"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
 			},
-			"SavedResultLong": {
+			"Biodata": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"nik": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"gelarDepan": {
+						"type": "string"
+					},
+					"gelarBelakang": {
+						"type": "string"
+					}
+				}
+			},
+			"DeletedResult": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -1004,51 +1868,142 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "type": "integer", "format": "int64" },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "string"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
-			"RiwayatSpPutRequest": {
+			"Golongan": {
 				"type": "object",
 				"properties": {
-					"nomorSp": { "type": "string", "minLength": 1 },
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"organisasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"jabatanId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"tanggalSp": { "type": "string", "format": "date" },
-					"jenisSpId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"sanksiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"sanksiNotes": { "type": "string" },
-					"tanggalEksekusiSanksi": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"penandaTangan": { "type": "string", "minLength": 1 },
-					"jabatanPenandaTangan": { "type": "string", "minLength": 1 },
-					"fileName": { "type": "string", "format": "binary" },
-					"notes": { "type": "string" }
-				},
-				"required": [
-					"jabatanId",
-					"jabatanPenandaTangan",
-					"jenisSpId",
-					"nomorSp",
-					"organisasiId",
-					"pegawaiId",
-					"penandaTangan",
-					"sanksiId",
-					"tanggalMulai",
-					"tanggalSelesai",
-					"tanggalSp"
-				]
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"golongan": {
+						"type": "string"
+					},
+					"pangkat": {
+						"type": "string"
+					}
+				}
 			},
-			"RiwayatSkPutRequest": {
+			"GolonganResponse": {
 				"type": "object",
 				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"golongan": {
+						"type": "string"
+					},
+					"pangkat": {
+						"type": "string"
+					}
+				}
+			},
+			"Grade": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"grade": {
+						"type": "integer",
+						"format": "int32"
+					}
+				}
+			},
+			"Jabatan": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					}
+				}
+			},
+			"JabatanMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"kode": {
+						"type": "string"
+					},
+					"level": {
+						"$ref": "#/components/schemas/LevelResponse"
+					},
+					"nama": {
+						"type": "string"
+					}
+				}
+			},
+			"JenisSpMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"kode": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"sanksiSp": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/SanksiMiniResponse"
+						}
+					}
+				}
+			},
+			"KodePajak": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"kode": {
+						"type": "string"
+					}
+				}
+			},
+			"LampiranSkAcceptRequest": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"ref": {
 						"type": "string",
 						"enum": [
 							"SK_KENAIKAN_PANGKAT_GOLONGAN",
@@ -1062,268 +2017,13 @@
 							"SK_KENAIKAN_GAJI_BERKALA"
 						]
 					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
-					"notes": { "type": "string" }
+					"refId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					}
 				},
-				"required": ["jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
-			},
-			"RiwayatMutasiPutRequest": {
-				"type": "object",
-				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
-					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"notes": { "type": "string" },
-					"jenisMutasi": {
-						"type": "string",
-						"enum": [
-							"PENGANGKATAN_PERTAMA",
-							"MUTASI_LOKER",
-							"MUTASI_JABATAN",
-							"MUTASI_GOLONGAN",
-							"MUTASI_GAJI",
-							"MUTASI_GAJI_BERKALA",
-							"TERMINASI"
-						]
-					},
-					"tanggalBerakhir": { "type": "string", "format": "date" },
-					"organisasiId": { "type": "integer", "format": "int64" },
-					"jabatanId": { "type": "integer", "format": "int64" },
-					"profesiId": { "type": "integer", "format": "int64" },
-					"organisasiLamaId": { "type": "integer", "format": "int64" },
-					"jabatanLamaId": { "type": "integer", "format": "int64" },
-					"golonganLamaId": { "type": "integer", "format": "int64" },
-					"profesiLamaId": { "type": "integer", "format": "int64" }
-				},
-				"required": ["jenisMutasi", "jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
-			},
-			"RiwayatKontrakPutRequest": {
-				"type": "object",
-				"properties": {
-					"jenisKontrak": { "type": "string", "enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"] },
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nipam": { "type": "string", "minLength": 1 },
-					"nama": { "type": "string", "minLength": 1 },
-					"nomorKontrak": { "type": "string", "minLength": 1 },
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double", "minimum": 0 },
-					"isLatest": { "type": "boolean" },
-					"notes": { "type": "string" }
-				},
-				"required": ["golonganId", "nama", "nipam", "nomorKontrak", "pegawaiId", "tanggalMulai", "tanggalSk"]
-			},
-			"RiwayatTerminasiPostRequest": {
-				"type": "object",
-				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
-					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"notes": { "type": "string" },
-					"alasanTerminasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nipam": { "type": "string", "minLength": 1 },
-					"nama": { "type": "string", "minLength": 1 },
-					"organisasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"jabatanId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"fileName": { "type": "string", "format": "binary" }
-				},
-				"required": [
-					"alasanTerminasiId",
-					"jabatanId",
-					"jenisSk",
-					"nama",
-					"nipam",
-					"nomorSk",
-					"organisasiId",
-					"pegawaiId",
-					"tanggalSk",
-					"tmtBerlaku"
-				]
-			},
-			"RiwayatSpPostRequest": {
-				"type": "object",
-				"properties": {
-					"nomorSp": { "type": "string", "minLength": 1 },
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"organisasiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"jabatanId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"tanggalSp": { "type": "string", "format": "date" },
-					"jenisSpId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"sanksiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"sanksiNotes": { "type": "string" },
-					"tanggalEksekusiSanksi": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"penandaTangan": { "type": "string", "minLength": 1 },
-					"jabatanPenandaTangan": { "type": "string", "minLength": 1 },
-					"fileName": { "type": "string", "format": "binary" },
-					"notes": { "type": "string" }
-				},
-				"required": [
-					"jabatanId",
-					"jabatanPenandaTangan",
-					"jenisSpId",
-					"nomorSp",
-					"organisasiId",
-					"pegawaiId",
-					"penandaTangan",
-					"sanksiId",
-					"tanggalMulai",
-					"tanggalSelesai",
-					"tanggalSp"
-				]
-			},
-			"RiwayatSkPostRequest": {
-				"type": "object",
-				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
-					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
-					"notes": { "type": "string" }
-				},
-				"required": ["jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
-			},
-			"RiwayatMutasiPostRequest": {
-				"type": "object",
-				"properties": {
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nomorSk": { "type": "string", "minLength": 1 },
-					"jenisSk": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
-					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"notes": { "type": "string" },
-					"jenisMutasi": {
-						"type": "string",
-						"enum": [
-							"PENGANGKATAN_PERTAMA",
-							"MUTASI_LOKER",
-							"MUTASI_JABATAN",
-							"MUTASI_GOLONGAN",
-							"MUTASI_GAJI",
-							"MUTASI_GAJI_BERKALA",
-							"TERMINASI"
-						]
-					},
-					"tanggalBerakhir": { "type": "string", "format": "date" },
-					"organisasiId": { "type": "integer", "format": "int64" },
-					"jabatanId": { "type": "integer", "format": "int64" },
-					"profesiId": { "type": "integer", "format": "int64" },
-					"organisasiLamaId": { "type": "integer", "format": "int64" },
-					"jabatanLamaId": { "type": "integer", "format": "int64" },
-					"golonganLamaId": { "type": "integer", "format": "int64" },
-					"profesiLamaId": { "type": "integer", "format": "int64" }
-				},
-				"required": ["jenisMutasi", "jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
-			},
-			"RiwayatKontrakPostRequest": {
-				"type": "object",
-				"properties": {
-					"jenisKontrak": { "type": "string", "enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"] },
-					"pegawaiId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"nipam": { "type": "string", "minLength": 1 },
-					"nama": { "type": "string", "minLength": 1 },
-					"nomorKontrak": { "type": "string", "minLength": 1 },
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"golonganId": { "type": "integer", "format": "int64" },
-					"gajiPokok": { "type": "number", "format": "double", "minimum": 0 },
-					"isLatest": { "type": "boolean" },
-					"notes": { "type": "string" }
-				},
-				"required": ["golonganId", "nama", "nipam", "nomorKontrak", "pegawaiId", "tanggalMulai", "tanggalSk"]
+				"required": ["id", "ref", "refId"]
 			},
 			"LampiranSkPostRequest": {
 				"type": "object",
@@ -1342,99 +2042,28 @@
 							"SK_KENAIKAN_GAJI_BERKALA"
 						]
 					},
-					"refId": { "type": "integer", "format": "int64", "minimum": 1 },
-					"fileName": { "type": "string", "format": "binary" },
-					"notes": { "type": "string" }
+					"refId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"fileName": {
+						"type": "string",
+						"format": "binary"
+					},
+					"notes": {
+						"type": "string"
+					}
 				},
 				"required": ["fileName"]
-			},
-			"LampiranSkAcceptRequest": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64", "minimum": 1 },
-					"ref": {
-						"type": "string",
-						"enum": [
-							"SK_KENAIKAN_PANGKAT_GOLONGAN",
-							"SK_CAPEG",
-							"SK_PEGAWAI_TETAP",
-							"SK_JABATAN",
-							"SK_MUTASI",
-							"SK_PENSIUN",
-							"SK_LAINNYA",
-							"SK_PENYESUAIAN_GAJI",
-							"SK_KENAIKAN_GAJI_BERKALA"
-						]
-					},
-					"refId": { "type": "integer", "format": "int64", "minimum": 1 }
-				},
-				"required": ["id", "ref", "refId"]
-			},
-			"AlasanBerhentiResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"nama": { "type": "string" },
-					"notes": { "type": "string" }
-				}
-			},
-			"Biodata": {
-				"type": "object",
-				"properties": {
-					"nik": { "type": "string" },
-					"nama": { "type": "string" },
-					"gelarDepan": { "type": "string" },
-					"gelarBelakang": { "type": "string" }
-				}
-			},
-			"Golongan": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"golongan": { "type": "string" },
-					"pangkat": { "type": "string" }
-				}
-			},
-			"GolonganResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"golongan": { "type": "string" },
-					"pangkat": { "type": "string" }
-				}
-			},
-			"Grade": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"grade": { "type": "integer", "format": "int32" }
-				}
-			},
-			"Jabatan": {
-				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
-			},
-			"JabatanMiniResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"kode": { "type": "string" },
-					"level": { "$ref": "#/components/schemas/LevelResponse" },
-					"nama": { "type": "string" }
-				}
-			},
-			"KodePajak": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"nama": { "type": "string" },
-					"kode": { "type": "string" }
-				}
 			},
 			"LampiranSkQuery": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "integer", "format": "int64" },
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
 					"ref": {
 						"type": "string",
 						"enum": [
@@ -1449,36 +2078,50 @@
 							"SK_KENAIKAN_GAJI_BERKALA"
 						]
 					},
-					"refId": { "type": "integer", "format": "int64" },
-					"fileName": { "type": "string" },
-					"mimeType": { "type": "string" },
-					"notes": { "type": "string" },
-					"disetujui": { "type": "boolean" },
-					"disetujuiOleh": { "type": "string" },
-					"tanggalDisetujui": { "type": "string", "format": "date-time" }
+					"refId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"fileName": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"notes": {
+						"type": "string"
+					},
+					"disetujui": {
+						"type": "boolean"
+					},
+					"disetujuiOleh": {
+						"type": "string"
+					},
+					"tanggalDisetujui": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
 			"LevelResponse": {
 				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
-			},
-			"Organisasi": {
-				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
-			},
-			"OrganisasiMiniResponse": {
-				"type": "object",
 				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"kode": { "type": "string" },
-					"nama": { "type": "string" },
-					"shortName": { "type": "string" }
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					}
 				}
 			},
-			"PageResultPageRiwayatTerminasiQuery": {
+			"ListResultLampiranSkQuery": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -1548,52 +2191,998 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"data": { "$ref": "#/components/schemas/PageRiwayatTerminasiQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/LampiranSkQuery"
+						}
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"ListResultRiwayatSkQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatSkQuery"
+						}
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"Organisasi": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					}
+				}
+			},
+			"OrganisasiMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"kode": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"shortName": {
+						"type": "string"
+					}
+				}
+			},
+			"PagePegawaiResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/PegawaiResponse"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageResultPagePegawaiResponse": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PagePegawaiResponse"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageResultPageRiwayatKontrakQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PageRiwayatKontrakQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageResultPageRiwayatMutasiQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PageRiwayatMutasiQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageResultPageRiwayatSkQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PageRiwayatSkQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageResultPageRiwayatSpQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PageRiwayatSpQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageResultPageRiwayatTerminasiQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": {
+						"$ref": "#/components/schemas/PageRiwayatTerminasiQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"PageRiwayatKontrakQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatKontrakQuery"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageRiwayatMutasiQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatMutasiQuery"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageRiwayatSkQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatSkQuery"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
+				}
+			},
+			"PageRiwayatSpQuery": {
+				"type": "object",
+				"properties": {
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatSpQuery"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
 				}
 			},
 			"PageRiwayatTerminasiQuery": {
 				"type": "object",
 				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatTerminasiQuery" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
+					"totalElements": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"totalPages": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"size": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"content": {
+						"type": "array",
+						"items": {
+							"$ref": "#/components/schemas/RiwayatTerminasiQuery"
+						}
+					},
+					"number": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"numberOfElements": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageable": {
+						"$ref": "#/components/schemas/PageableObject"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					},
+					"first": {
+						"type": "boolean"
+					},
+					"last": {
+						"type": "boolean"
+					},
+					"empty": {
+						"type": "boolean"
+					}
 				}
 			},
 			"PageableObject": {
 				"type": "object",
 				"properties": {
-					"offset": { "type": "integer", "format": "int64" },
-					"paged": { "type": "boolean" },
-					"pageNumber": { "type": "integer", "format": "int32" },
-					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"unpaged": { "type": "boolean" }
+					"offset": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"unpaged": {
+						"type": "boolean"
+					},
+					"paged": {
+						"type": "boolean"
+					},
+					"pageNumber": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"pageSize": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"sort": {
+						"$ref": "#/components/schemas/SortObject"
+					}
 				}
 			},
 			"PegawaiResponse": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"nipam": { "type": "string" },
-					"biodata": { "$ref": "#/components/schemas/Biodata" },
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"biodata": {
+						"$ref": "#/components/schemas/Biodata"
+					},
 					"statusPegawai": {
 						"type": "string",
 						"enum": ["KONTRAK", "CAPEG", "PEGAWAI", "CALON_HONORER", "HONORER", "NON_PEGAWAI"]
 					},
-					"organisasi": { "$ref": "#/components/schemas/Organisasi" },
-					"jabatan": { "$ref": "#/components/schemas/Jabatan" },
-					"profesi": { "$ref": "#/components/schemas/Profesi" },
-					"golongan": { "$ref": "#/components/schemas/Golongan" },
-					"grade": { "$ref": "#/components/schemas/Grade" },
+					"organisasi": {
+						"$ref": "#/components/schemas/Organisasi"
+					},
+					"jabatan": {
+						"$ref": "#/components/schemas/Jabatan"
+					},
+					"profesi": {
+						"$ref": "#/components/schemas/Profesi"
+					},
+					"golongan": {
+						"$ref": "#/components/schemas/Golongan"
+					},
+					"grade": {
+						"$ref": "#/components/schemas/Grade"
+					},
 					"statusKerja": {
 						"type": "string",
 						"enum": [
@@ -1607,40 +3196,269 @@
 							"DITOLAK"
 						]
 					},
-					"refSkCapegId": { "type": "integer", "format": "int64" },
-					"tmtKerja": { "type": "string", "format": "date" },
-					"tmtPensiun": { "type": "string", "format": "date" },
-					"refSkPegawaiId": { "type": "integer", "format": "int64" },
-					"tmtPegawai": { "type": "string", "format": "date" },
-					"refSkGolId": { "type": "integer", "format": "int64" },
-					"tmtGolongan": { "type": "string", "format": "date" },
-					"refSkJabatanId": { "type": "integer", "format": "int64" },
-					"tmtJabatan": { "type": "string", "format": "date" },
-					"refSkMutasiId": { "type": "integer", "format": "int64" },
-					"tmtMutasi": { "type": "string", "format": "date" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"phdp": { "type": "number", "format": "double" },
-					"jmlTanggungan": { "type": "integer", "format": "int32" },
-					"kodePajak": { "$ref": "#/components/schemas/KodePajak" },
-					"isAskes": { "type": "boolean" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"email": { "type": "string" },
-					"absensiId": { "type": "integer", "format": "int64" },
-					"notes": { "type": "string" }
+					"refSkCapegId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"tmtKerja": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtPensiun": {
+						"type": "string",
+						"format": "date"
+					},
+					"refSkPegawaiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"tmtPegawai": {
+						"type": "string",
+						"format": "date"
+					},
+					"refSkGolId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"tmtGolongan": {
+						"type": "string",
+						"format": "date"
+					},
+					"refSkJabatanId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"tmtJabatan": {
+						"type": "string",
+						"format": "date"
+					},
+					"refSkMutasiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"tmtMutasi": {
+						"type": "string",
+						"format": "date"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"phdp": {
+						"type": "number",
+						"format": "double"
+					},
+					"jmlTanggungan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kodePajak": {
+						"$ref": "#/components/schemas/KodePajak"
+					},
+					"isAskes": {
+						"type": "boolean"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"email": {
+						"type": "string"
+					},
+					"absensiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"notes": {
+						"type": "string"
+					}
 				}
 			},
 			"Profesi": {
 				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					}
+				}
 			},
-			"RiwayatSkQuery": {
+			"ProfesiMiniResponse": {
 				"type": "object",
 				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"nomorSk": { "type": "string" },
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nama": {
+						"type": "string"
+					}
+				}
+			},
+			"RiwayatKontrakPostRequest": {
+				"type": "object",
+				"properties": {
+					"jenisKontrak": {
+						"type": "string",
+						"enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"]
+					},
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nipam": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nama": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nomorKontrak": {
+						"type": "string",
+						"minLength": 1
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					},
+					"isLatest": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": ["golonganId", "nama", "nipam", "nomorKontrak", "pegawaiId", "tanggalMulai", "tanggalSk"]
+			},
+			"RiwayatKontrakPutRequest": {
+				"type": "object",
+				"properties": {
+					"jenisKontrak": {
+						"type": "string",
+						"enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"]
+					},
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nipam": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nama": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nomorKontrak": {
+						"type": "string",
+						"minLength": 1
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double",
+						"minimum": 0
+					},
+					"isLatest": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": ["golonganId", "nama", "nipam", "nomorKontrak", "pegawaiId", "tanggalMulai", "tanggalSk"]
+			},
+			"RiwayatKontrakQuery": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"jenisKontrak": {
+						"type": "string",
+						"enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"]
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"nomorKontrak": {
+						"type": "string"
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
+			},
+			"RiwayatMutasiPostRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
 					"jenisSk": {
 						"type": "string",
 						"enum": [
@@ -1655,700 +3473,45 @@
 							"SK_KENAIKAN_GAJI_BERKALA"
 						]
 					},
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"golongan": { "$ref": "#/components/schemas/GolonganResponse" },
-					"gajiPokok": { "type": "number", "format": "double" },
-					"mkgTahun": { "type": "integer", "format": "int32" },
-					"mkgBulan": { "type": "integer", "format": "int32" },
-					"kenaikanBerikutnya": { "type": "string", "format": "date" },
-					"mkgbTahun": { "type": "integer", "format": "int32" },
-					"mkgbBulan": { "type": "integer", "format": "int32" },
-					"updateMaster": { "type": "boolean" },
-					"notes": { "type": "string" }
-				}
-			},
-			"RiwayatTerminasiQuery": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"alasanTerminasi": { "$ref": "#/components/schemas/AlasanBerhentiResponse" },
-					"pegawai": { "$ref": "#/components/schemas/PegawaiResponse" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"nomorSk": { "type": "string" },
-					"skTerminasi": { "$ref": "#/components/schemas/RiwayatSkQuery" },
-					"lampiranSkTerminasi": { "$ref": "#/components/schemas/LampiranSkQuery" },
-					"organisasi": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
-					"namaOrganisasi": { "type": "string" },
-					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
-					"namaJabatan": { "type": "string" },
-					"golongan": { "$ref": "#/components/schemas/GolonganResponse" },
-					"namaGolongan": { "type": "string" },
-					"tanggalTerminasi": { "type": "string", "format": "date" },
-					"tahunTerminasi": { "type": "integer", "format": "int32" },
-					"masaKerja": { "type": "integer", "format": "int32" },
-					"notes": { "type": "string" }
-				}
-			},
-			"SortObject": {
-				"type": "object",
-				"properties": {
-					"empty": { "type": "boolean" },
-					"sorted": { "type": "boolean" },
-					"unsorted": { "type": "boolean" }
-				}
-			},
-			"SingleResultRiwayatTerminasiQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
+					"tanggalSk": {
 						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+						"format": "date"
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/RiwayatTerminasiQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PagePegawaiResponse": {
-				"type": "object",
-				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/PegawaiResponse" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"PageResultPagePegawaiResponse": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
+					"tmtBerlaku": {
 						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+						"format": "date"
 					},
-					"data": { "$ref": "#/components/schemas/PagePegawaiResponse" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"JenisSpMiniResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"kode": { "type": "string" },
-					"nama": { "type": "string" },
-					"sanksiSp": { "type": "array", "items": { "$ref": "#/components/schemas/SanksiMiniResponse" } }
-				}
-			},
-			"RiwayatSpQuery": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"pegawaiId": { "type": "integer", "format": "int64" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"organisasi": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
-					"namaOrganisasi": { "type": "string" },
-					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
-					"namaJabatan": { "type": "string" },
-					"nomorSp": { "type": "string" },
-					"tanggalSp": { "type": "string", "format": "date" },
-					"jenisSp": { "$ref": "#/components/schemas/JenisSpMiniResponse" },
-					"sanksi": { "$ref": "#/components/schemas/SanksiMiniResponse" },
-					"sanksiNotes": { "type": "string" },
-					"tanggalEksekusiSanksi": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"penandaTangan": { "type": "string" },
-					"jabatanPenandaTangan": { "type": "string" },
-					"fileName": { "type": "string" },
-					"mimeType": { "type": "string" },
-					"notes": { "type": "string" }
-				}
-			},
-			"SanksiMiniResponse": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"kode": { "type": "string" },
-					"keterangan": { "type": "string" },
-					"jenisSpId": { "type": "integer", "format": "int64" }
-				}
-			},
-			"SingleResultRiwayatSpQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kenaikanBerikutnya": {
 						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+						"format": "date"
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/RiwayatSpQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageResultPageRiwayatSpQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+					"mkgbTahun": {
+						"type": "integer",
+						"format": "int32"
 					},
-					"data": { "$ref": "#/components/schemas/PageRiwayatSpQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageRiwayatSpQuery": {
-				"type": "object",
-				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatSpQuery" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"PageResultPageRiwayatSkQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+					"mkgbBulan": {
+						"type": "integer",
+						"format": "int32"
 					},
-					"data": { "$ref": "#/components/schemas/PageRiwayatSkQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageRiwayatSkQuery": {
-				"type": "object",
-				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatSkQuery" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"SingleResultRiwayatSkQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+					"notes": {
+						"type": "string"
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/RiwayatSkQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"ListResultRiwayatSkQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
-					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatSkQuery" } },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"ProfesiMiniResponse": {
-				"type": "object",
-				"properties": { "id": { "type": "integer", "format": "int64" }, "nama": { "type": "string" } }
-			},
-			"RiwayatMutasiQuery": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"skMutasi": { "$ref": "#/components/schemas/RiwayatSkQuery" },
 					"jenisMutasi": {
 						"type": "string",
 						"enum": [
@@ -2361,29 +3524,942 @@
 							"TERMINASI"
 						]
 					},
-					"tmtBerlaku": { "type": "string", "format": "date" },
-					"tanggalBerakhir": { "type": "string", "format": "date" },
-					"golongan": { "$ref": "#/components/schemas/GolonganResponse" },
-					"organisasi": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
-					"namaOrganisasi": { "type": "string" },
-					"jabatan": { "$ref": "#/components/schemas/JabatanMiniResponse" },
-					"namaJabatan": { "type": "string" },
-					"profesi": { "$ref": "#/components/schemas/ProfesiMiniResponse" },
-					"namaProfesi": { "type": "string" },
-					"golonganLama": { "$ref": "#/components/schemas/GolonganResponse" },
-					"organisasiLama": { "$ref": "#/components/schemas/OrganisasiMiniResponse" },
-					"namaOrganisasiLama": { "type": "string" },
-					"jabatanLama": { "$ref": "#/components/schemas/JabatanMiniResponse" },
-					"namaJabatanLama": { "type": "string" },
-					"profesiLama": { "$ref": "#/components/schemas/ProfesiMiniResponse" },
-					"namaProfesiLama": { "type": "string" },
-					"notes": { "type": "string" }
-				}
+					"tanggalBerakhir": {
+						"type": "string",
+						"format": "date"
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"profesiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"organisasiLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"jabatanLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"golonganLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"profesiLamaId": {
+						"type": "integer",
+						"format": "int64"
+					}
+				},
+				"required": ["jenisMutasi", "jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
 			},
-			"SingleResultRiwayatMutasiQuery": {
+			"RiwayatMutasiPutRequest": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kenaikanBerikutnya": {
+						"type": "string",
+						"format": "date"
+					},
+					"mkgbTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgbBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"notes": {
+						"type": "string"
+					},
+					"jenisMutasi": {
+						"type": "string",
+						"enum": [
+							"PENGANGKATAN_PERTAMA",
+							"MUTASI_LOKER",
+							"MUTASI_JABATAN",
+							"MUTASI_GOLONGAN",
+							"MUTASI_GAJI",
+							"MUTASI_GAJI_BERKALA",
+							"TERMINASI"
+						]
+					},
+					"tanggalBerakhir": {
+						"type": "string",
+						"format": "date"
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"profesiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"organisasiLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"jabatanLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"golonganLamaId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"profesiLamaId": {
+						"type": "integer",
+						"format": "int64"
+					}
+				},
+				"required": ["jenisMutasi", "jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
+			},
+			"RiwayatMutasiQuery": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"skMutasi": {
+						"$ref": "#/components/schemas/RiwayatSkQuery"
+					},
+					"jenisMutasi": {
+						"type": "string",
+						"enum": [
+							"PENGANGKATAN_PERTAMA",
+							"MUTASI_LOKER",
+							"MUTASI_JABATAN",
+							"MUTASI_GOLONGAN",
+							"MUTASI_GAJI",
+							"MUTASI_GAJI_BERKALA",
+							"TERMINASI"
+						]
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalBerakhir": {
+						"type": "string",
+						"format": "date"
+					},
+					"golongan": {
+						"$ref": "#/components/schemas/GolonganResponse"
+					},
+					"organisasi": {
+						"$ref": "#/components/schemas/OrganisasiMiniResponse"
+					},
+					"namaOrganisasi": {
+						"type": "string"
+					},
+					"jabatan": {
+						"$ref": "#/components/schemas/JabatanMiniResponse"
+					},
+					"namaJabatan": {
+						"type": "string"
+					},
+					"profesi": {
+						"$ref": "#/components/schemas/ProfesiMiniResponse"
+					},
+					"namaProfesi": {
+						"type": "string"
+					},
+					"golonganLama": {
+						"$ref": "#/components/schemas/GolonganResponse"
+					},
+					"organisasiLama": {
+						"$ref": "#/components/schemas/OrganisasiMiniResponse"
+					},
+					"namaOrganisasiLama": {
+						"type": "string"
+					},
+					"jabatanLama": {
+						"$ref": "#/components/schemas/JabatanMiniResponse"
+					},
+					"namaJabatanLama": {
+						"type": "string"
+					},
+					"profesiLama": {
+						"$ref": "#/components/schemas/ProfesiMiniResponse"
+					},
+					"namaProfesiLama": {
+						"type": "string"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
+			},
+			"RiwayatSkPostRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kenaikanBerikutnya": {
+						"type": "string",
+						"format": "date"
+					},
+					"mkgbTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgbBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"updateMaster": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": ["jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
+			},
+			"RiwayatSkPutRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kenaikanBerikutnya": {
+						"type": "string",
+						"format": "date"
+					},
+					"mkgbTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgbBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"updateMaster": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": ["jenisSk", "nomorSk", "pegawaiId", "tanggalSk", "tmtBerlaku"]
+			},
+			"RiwayatSkQuery": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"nomorSk": {
+						"type": "string"
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golongan": {
+						"$ref": "#/components/schemas/GolonganResponse"
+					},
+					"gajiPokok": {
+						"type": "number",
+						"format": "double"
+					},
+					"mkgTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"kenaikanBerikutnya": {
+						"type": "string",
+						"format": "date"
+					},
+					"mkgbTahun": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"mkgbBulan": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"updateMaster": {
+						"type": "boolean"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
+			},
+			"RiwayatSpPostRequest": {
+				"type": "object",
+				"properties": {
+					"nomorSp": {
+						"type": "string",
+						"minLength": 1
+					},
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"tanggalSp": {
+						"type": "string",
+						"format": "date"
+					},
+					"jenisSpId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"sanksiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"sanksiNotes": {
+						"type": "string"
+					},
+					"tanggalEksekusiSanksi": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"penandaTangan": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jabatanPenandaTangan": {
+						"type": "string",
+						"minLength": 1
+					},
+					"fileName": {
+						"type": "string",
+						"format": "binary"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"jabatanId",
+					"jabatanPenandaTangan",
+					"jenisSpId",
+					"nomorSp",
+					"organisasiId",
+					"pegawaiId",
+					"penandaTangan",
+					"sanksiId",
+					"tanggalMulai",
+					"tanggalSelesai",
+					"tanggalSp"
+				]
+			},
+			"RiwayatSpPutRequest": {
+				"type": "object",
+				"properties": {
+					"nomorSp": {
+						"type": "string",
+						"minLength": 1
+					},
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"tanggalSp": {
+						"type": "string",
+						"format": "date"
+					},
+					"jenisSpId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"sanksiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"sanksiNotes": {
+						"type": "string"
+					},
+					"tanggalEksekusiSanksi": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"penandaTangan": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jabatanPenandaTangan": {
+						"type": "string",
+						"minLength": 1
+					},
+					"fileName": {
+						"type": "string",
+						"format": "binary"
+					},
+					"notes": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"jabatanId",
+					"jabatanPenandaTangan",
+					"jenisSpId",
+					"nomorSp",
+					"organisasiId",
+					"pegawaiId",
+					"penandaTangan",
+					"sanksiId",
+					"tanggalMulai",
+					"tanggalSelesai",
+					"tanggalSp"
+				]
+			},
+			"RiwayatSpQuery": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"organisasi": {
+						"$ref": "#/components/schemas/OrganisasiMiniResponse"
+					},
+					"namaOrganisasi": {
+						"type": "string"
+					},
+					"jabatan": {
+						"$ref": "#/components/schemas/JabatanMiniResponse"
+					},
+					"namaJabatan": {
+						"type": "string"
+					},
+					"nomorSp": {
+						"type": "string"
+					},
+					"tanggalSp": {
+						"type": "string",
+						"format": "date"
+					},
+					"jenisSp": {
+						"$ref": "#/components/schemas/JenisSpMiniResponse"
+					},
+					"sanksi": {
+						"$ref": "#/components/schemas/SanksiMiniResponse"
+					},
+					"sanksiNotes": {
+						"type": "string"
+					},
+					"tanggalEksekusiSanksi": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalMulai": {
+						"type": "string",
+						"format": "date"
+					},
+					"tanggalSelesai": {
+						"type": "string",
+						"format": "date"
+					},
+					"penandaTangan": {
+						"type": "string"
+					},
+					"jabatanPenandaTangan": {
+						"type": "string"
+					},
+					"fileName": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
+			},
+			"RiwayatTerminasiPostRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"notes": {
+						"type": "string"
+					},
+					"alasanTerminasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nipam": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nama": {
+						"type": "string",
+						"minLength": 1
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"fileName": {
+						"type": "string",
+						"format": "binary"
+					}
+				},
+				"required": [
+					"alasanTerminasiId",
+					"jabatanId",
+					"jenisSk",
+					"nama",
+					"nipam",
+					"nomorSk",
+					"organisasiId",
+					"pegawaiId",
+					"tanggalSk",
+					"tmtBerlaku"
+				]
+			},
+			"RiwayatTerminasiPutRequest": {
+				"type": "object",
+				"properties": {
+					"pegawaiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nomorSk": {
+						"type": "string",
+						"minLength": 1
+					},
+					"jenisSk": {
+						"type": "string",
+						"enum": [
+							"SK_KENAIKAN_PANGKAT_GOLONGAN",
+							"SK_CAPEG",
+							"SK_PEGAWAI_TETAP",
+							"SK_JABATAN",
+							"SK_MUTASI",
+							"SK_PENSIUN",
+							"SK_LAINNYA",
+							"SK_PENYESUAIAN_GAJI",
+							"SK_KENAIKAN_GAJI_BERKALA"
+						]
+					},
+					"tanggalSk": {
+						"type": "string",
+						"format": "date"
+					},
+					"tmtBerlaku": {
+						"type": "string",
+						"format": "date"
+					},
+					"golonganId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"notes": {
+						"type": "string"
+					},
+					"alasanTerminasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"nipam": {
+						"type": "string",
+						"minLength": 1
+					},
+					"nama": {
+						"type": "string",
+						"minLength": 1
+					},
+					"organisasiId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"jabatanId": {
+						"type": "integer",
+						"format": "int64",
+						"minimum": 1
+					},
+					"fileName": {
+						"type": "string",
+						"format": "binary"
+					}
+				},
+				"required": [
+					"alasanTerminasiId",
+					"jabatanId",
+					"jenisSk",
+					"nama",
+					"nipam",
+					"nomorSk",
+					"organisasiId",
+					"pegawaiId",
+					"tanggalSk",
+					"tmtBerlaku"
+				]
+			},
+			"RiwayatTerminasiQuery": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"alasanTerminasi": {
+						"$ref": "#/components/schemas/AlasanBerhentiResponse"
+					},
+					"pegawai": {
+						"$ref": "#/components/schemas/PegawaiResponse"
+					},
+					"nipam": {
+						"type": "string"
+					},
+					"nama": {
+						"type": "string"
+					},
+					"nomorSk": {
+						"type": "string"
+					},
+					"skTerminasi": {
+						"$ref": "#/components/schemas/RiwayatSkQuery"
+					},
+					"lampiranSkTerminasi": {
+						"$ref": "#/components/schemas/LampiranSkQuery"
+					},
+					"organisasi": {
+						"$ref": "#/components/schemas/OrganisasiMiniResponse"
+					},
+					"namaOrganisasi": {
+						"type": "string"
+					},
+					"jabatan": {
+						"$ref": "#/components/schemas/JabatanMiniResponse"
+					},
+					"namaJabatan": {
+						"type": "string"
+					},
+					"golongan": {
+						"$ref": "#/components/schemas/GolonganResponse"
+					},
+					"namaGolongan": {
+						"type": "string"
+					},
+					"tanggalTerminasi": {
+						"type": "string",
+						"format": "date"
+					},
+					"tahunTerminasi": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"masaKerja": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"notes": {
+						"type": "string"
+					}
+				}
+			},
+			"SanksiMiniResponse": {
+				"type": "object",
+				"properties": {
+					"id": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"kode": {
+						"type": "string"
+					},
+					"keterangan": {
+						"type": "string"
+					},
+					"jenisSpId": {
+						"type": "integer",
+						"format": "int64"
+					}
+				}
+			},
+			"SavedResultLong": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -2453,123 +4529,32 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/RiwayatMutasiQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageResultPageRiwayatMutasiQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
 					},
-					"data": { "$ref": "#/components/schemas/PageRiwayatMutasiQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageRiwayatMutasiQuery": {
-				"type": "object",
-				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatMutasiQuery" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"RiwayatKontrakQuery": {
-				"type": "object",
-				"properties": {
-					"id": { "type": "integer", "format": "int64" },
-					"jenisKontrak": { "type": "string", "enum": ["PERPANJANGAN", "PENGANGKATAN", "TERMINASI"] },
-					"nipam": { "type": "string" },
-					"nama": { "type": "string" },
-					"nomorKontrak": { "type": "string" },
-					"tanggalSk": { "type": "string", "format": "date" },
-					"tanggalMulai": { "type": "string", "format": "date" },
-					"tanggalSelesai": { "type": "string", "format": "date" },
-					"notes": { "type": "string" }
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"type": "integer",
+						"format": "int64"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
 			"SingleResultRiwayatKontrakQuery": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -2639,16 +4624,31 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "$ref": "#/components/schemas/RiwayatKontrakQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RiwayatKontrakQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
-			"PageResultPageRiwayatKontrakQuery": {
+			"SingleResultRiwayatMutasiQuery": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -2718,30 +4718,31 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"data": { "$ref": "#/components/schemas/PageRiwayatKontrakQuery" },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RiwayatMutasiQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
-			"PageRiwayatKontrakQuery": {
+			"SingleResultRiwayatSkQuery": {
 				"type": "object",
 				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/RiwayatKontrakQuery" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"ListResultLampiranSkQuery": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -2811,16 +4812,31 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "type": "array", "items": { "$ref": "#/components/schemas/LampiranSkQuery" } },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RiwayatSkQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			},
-			"DeletedResult": {
+			"SingleResultRiwayatSpQuery": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -2890,13 +4906,139 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
-					"data": { "type": "string" },
-					"timestamp": { "type": "string", "format": "date-time" }
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RiwayatSpQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"SingleResultRiwayatTerminasiQuery": {
+				"type": "object",
+				"properties": {
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
+					"data": {
+						"$ref": "#/components/schemas/RiwayatTerminasiQuery"
+					},
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
+				}
+			},
+			"SortObject": {
+				"type": "object",
+				"properties": {
+					"empty": {
+						"type": "boolean"
+					},
+					"sorted": {
+						"type": "boolean"
+					},
+					"unsorted": {
+						"type": "boolean"
+					}
 				}
 			}
 		},
-		"securitySchemes": { "BearerAuthentication": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } }
+		"securitySchemes": {
+			"BearerAuthentication": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
 	}
 }

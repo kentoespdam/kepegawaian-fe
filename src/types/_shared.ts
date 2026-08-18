@@ -126,12 +126,12 @@ export type StatusBerhenti =
 	| "DITERIMA"
 	| "DIREKOMENDASIKAN"
 	| "DITOLAK";
+/** Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP). */
+export type TingkatKemampuan = "KURANG" | "BAIK" | "CUKUP";
 /** Hubungan keluarga (SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA). */
 export type HubunganKeluarga = "SUAMI" | "ISTRI" | "AYAH" | "IBU" | "ANAK" | "SAUDARA";
 /** Status pendidikan anggota keluarga (BELUM_SEKOLAH, SEKOLAH, SELESAI_SEKOLAH). */
 export type StatusPendidikanKeluarga = "BELUM_SEKOLAH" | "SEKOLAH" | "SELESAI_SEKOLAH";
-/** Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP). */
-export type TingkatKemampuan = "KURANG" | "BAIK" | "CUKUP";
 
 /** Wrapper standar semua response. Union: sukses (data + message) | error (errors). */
 export type Envelope<T> =

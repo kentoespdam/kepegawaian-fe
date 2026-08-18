@@ -3,12 +3,27 @@
 	"info": {
 		"title": "Kepegawaian Rest API",
 		"description": "Need JWT Token for execute this API",
-		"contact": { "name": "Kent-Os", "email": "kentoes.pdam@gmail.com" },
-		"license": { "name": "License of API", "url": "API license URL" },
+		"contact": {
+			"name": "Kent-Os",
+			"email": "kentoes.pdam@gmail.com"
+		},
+		"license": {
+			"name": "License of API",
+			"url": "API license URL"
+		},
 		"version": "1.0.0"
 	},
-	"servers": [{ "url": "http://192.168.1.211:8080", "description": "Generated server url" }],
-	"security": [{ "BearerAuthentication": [] }],
+	"servers": [
+		{
+			"url": "http://192.168.1.211:8080",
+			"description": "Generated server url"
+		}
+	],
+	"security": [
+		{
+			"BearerAuthentication": []
+		}
+	],
 	"paths": {
 		"/laporan/kepegawaian/statistik/umur": {
 			"get": {
@@ -17,7 +32,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -29,7 +50,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -39,13 +66,35 @@
 				"tags": ["laporan-statistik-controller"],
 				"operationId": "lapStatistikPendidikan2",
 				"parameters": [
-					{ "name": "tahun", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } },
-					{ "name": "bulan", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } }
+					{
+						"name": "tahun",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "bulan",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -55,10 +104,37 @@
 				"tags": ["laporan-statistik-controller"],
 				"operationId": "lapStatistikPendidikan2Excel",
 				"parameters": [
-					{ "name": "tahun", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } },
-					{ "name": "bulan", "in": "path", "required": true, "schema": { "type": "integer", "format": "int32" } }
+					{
+						"name": "tahun",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					},
+					{
+						"name": "bulan",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "integer",
+							"format": "int32"
+						}
+					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/statistik/pendidikan1": {
@@ -68,7 +144,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -80,7 +162,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -92,7 +180,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -104,7 +198,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -116,7 +216,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -128,7 +234,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -138,8 +250,22 @@
 				"tags": ["laporan-mutasi-controller"],
 				"operationId": "lapMutasi",
 				"parameters": [
-					{ "name": "from_date", "in": "path", "required": true, "schema": { "type": "string" } },
-					{ "name": "to_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{
+						"name": "from_date",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "to_date",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenis_mutasi",
 						"in": "query",
@@ -161,7 +287,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -171,8 +303,22 @@
 				"tags": ["laporan-mutasi-controller"],
 				"operationId": "lapMutasiExcel",
 				"parameters": [
-					{ "name": "from_date", "in": "path", "required": true, "schema": { "type": "string" } },
-					{ "name": "to_date", "in": "path", "required": true, "schema": { "type": "string" } },
+					{
+						"name": "from_date",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"name": "to_date",
+						"in": "path",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"name": "jenis_mutasi",
 						"in": "query",
@@ -191,7 +337,18 @@
 						}
 					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/lepas_tanggungan_anak": {
@@ -203,13 +360,23 @@
 						"name": "filter",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+						"schema": {
+							"type": "string",
+							"default": "BULAN_INI",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2"]
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -223,10 +390,25 @@
 						"name": "filter",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+						"schema": {
+							"type": "string",
+							"default": "BULAN_INI",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2"]
+						}
 					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/lepas_tanggungan_anak/count": {
@@ -238,13 +420,23 @@
 						"name": "filter",
 						"in": "query",
 						"required": false,
-						"schema": { "type": "string", "default": "BULAN_INI", "enum": ["BULAN_INI", "GTE_1", "GTE_2"] }
+						"schema": {
+							"type": "string",
+							"default": "BULAN_INI",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2"]
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -268,7 +460,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -289,7 +487,18 @@
 						}
 					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/kenaikan_berkala": {
@@ -301,19 +510,31 @@
 						"name": "filter",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+						"schema": {
+							"type": "string",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"]
+						}
 					},
 					{
 						"name": "jenisSk",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+						"schema": {
+							"type": "string",
+							"enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"]
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -327,16 +548,33 @@
 						"name": "filter",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+						"schema": {
+							"type": "string",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"]
+						}
 					},
 					{
 						"name": "jenisSk",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+						"schema": {
+							"type": "string",
+							"enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"]
+						}
 					}
 				],
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/kenaikan_berkala/count": {
@@ -348,19 +586,31 @@
 						"name": "filter",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"] }
+						"schema": {
+							"type": "string",
+							"enum": ["BULAN_INI", "GTE_1", "GTE_2", "TAHUN_INI"]
+						}
 					},
 					{
 						"name": "jenisSk",
 						"in": "query",
 						"required": true,
-						"schema": { "type": "string", "enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"] }
+						"schema": {
+							"type": "string",
+							"enum": ["SK_KENAIKAN_PANGKAT_GOLONGAN", "SK_KENAIKAN_GAJI_BERKALA"]
+						}
 					}
 				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -372,7 +622,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -381,7 +637,18 @@
 			"get": {
 				"tags": ["laporan-duk-controller"],
 				"operationId": "lapDukExcel",
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		},
 		"/laporan/kepegawaian/dnp": {
@@ -391,7 +658,13 @@
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultObject" } } }
+						"content": {
+							"*/*": {
+								"schema": {
+									"$ref": "#/components/schemas/SingleResultObject"
+								}
+							}
+						}
 					}
 				}
 			}
@@ -400,7 +673,18 @@
 			"get": {
 				"tags": ["laporan-dnp-controller"],
 				"operationId": "lapDnpExcel",
-				"responses": { "200": { "description": "OK", "content": { "*/*": { "schema": { "type": "object" } } } } }
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"*/*": {
+								"schema": {
+									"type": "object"
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 	},
@@ -409,7 +693,10 @@
 			"SingleResultObject": {
 				"type": "object",
 				"properties": {
-					"status": { "type": "integer", "format": "int32" },
+					"status": {
+						"type": "integer",
+						"format": "int32"
+					},
 					"statusText": {
 						"type": "string",
 						"enum": [
@@ -479,13 +766,29 @@
 							"511 NETWORK_AUTHENTICATION_REQUIRED"
 						]
 					},
-					"errors": { "type": "array", "items": { "type": "string" } },
-					"message": { "type": "string" },
+					"errors": {
+						"type": "array",
+						"items": {
+							"type": "string"
+						}
+					},
+					"message": {
+						"type": "string"
+					},
 					"data": {},
-					"timestamp": { "type": "string", "format": "date-time" }
+					"timestamp": {
+						"type": "string",
+						"format": "date-time"
+					}
 				}
 			}
 		},
-		"securitySchemes": { "BearerAuthentication": { "type": "http", "scheme": "bearer", "bearerFormat": "JWT" } }
+		"securitySchemes": {
+			"BearerAuthentication": {
+				"type": "http",
+				"scheme": "bearer",
+				"bearerFormat": "JWT"
+			}
+		}
 	}
 }
