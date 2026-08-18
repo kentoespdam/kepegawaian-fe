@@ -138,12 +138,15 @@ export function FieldDate({
 	onChange,
 	error,
 	required,
+	min,
 }: {
 	label: string;
 	value: string | undefined;
 	onChange: (v: string) => void;
 	error?: string;
 	required?: boolean;
+	/** Tanggal minimum (YYYY-MM-DD) — tanggal sebelum ini di-disable di kalender. */
+	min?: string;
 }) {
 	const [open, setOpen] = React.useState(false);
 	const date = toDate(value ?? "");
@@ -180,6 +183,7 @@ export function FieldDate({
 							onChange(toStr(d));
 							setOpen(false);
 						}}
+						disabled={min ? { before: new Date(`${min}T00:00:00`) } : undefined}
 					/>
 				</PopoverContent>
 			</Popover>

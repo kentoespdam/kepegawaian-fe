@@ -17,17 +17,37 @@ import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 
 // ── Zod (CU-8) ──
 
-const schema = z.object({
-	jenisCutiId: z.number().min(1, "Jenis cuti wajib dipilih"),
-	subJenisCutiId: z.number().optional(),
-	tanggalMulai: z.string().min(1, "Tanggal mulai wajib"),
-	tanggalSelesai: z.string().min(1, "Tanggal selesai wajib"),
-	jumlahHariKerja: z.number().min(1, "Jumlah hari kerja wajib"),
-	alasan: z.string().min(1, "Alasan wajib diisi"),
-});
+const schema = z
+	.object({
+		jenisCutiId: z.number().min(1, "Jenis cuti wajib dipilih"),
+		subJenisCutiId: z.number().optional(),
+		tanggalMulai: z.string().min(1, "Tanggal mulai wajib"),
+		tanggalSelesai: z.string().min(1, "Tanggal selesai wajib"),
+		jumlahHariKerja: z.number().min(1, "Jumlah hari kerja wajib"),
+		alasan: z.string().min(1, "Alasan wajib diisi"),
+	})
+	.superRefine((v, ctx) => {
+		// CU-17: selesai tidak boleh sebelum mulai (string YYYY-MM-DD → bisa dibandingkan)
+		if (v.tanggalMulai && v.tanggalSelesai && v.tanggalSelesai < v.tanggalMulai) {
+			ctx.addIssue({
+				code: "custom",
+				path: ["tanggalSelesai"],
+				message: "Tanggal selesai tidak boleh sebelum tanggal mulai",
+			});
+		}
+	});
 type FormValues = z.infer<typeof schema>;
 
 // ── Helpers ──
+
+/** Besok (today + 1) sebagai YYYY-MM-DD — CU-17 (literal, tanpa skip weekend/libur). */
+function besok(): string {
+	const d = new Date();
+	d.setDate(d.getDate() + 1);
+	const m = String(d.getMonth() + 1).padStart(2, "0");
+	const day = String(d.getDate()).padStart(2, "0");
+	return `${d.getFullYear()}-${m}-${day}`;
+}
 
 /** Selisih hari kalender + 1 (inklusi kedua ujung) — CU-8. */
 function selisihHari(mulai: string | undefined, selesai: string | undefined): number | null {
@@ -63,6 +83,7 @@ export function PengajuanFormSheet({
 
 	const {
 		setValue,
+		setError,
 		watch,
 		handleSubmit: rhfSubmit,
 		reset,
@@ -73,6 +94,7 @@ export function PengajuanFormSheet({
 
 	const tanggalMulai = watch("tanggalMulai");
 	const tanggalSelesai = watch("tanggalSelesai");
+	const minMulai = besok(); // CU-17: min Tanggal Mulai = besok (form baru; edit tetap simpan tanggal lama)
 	const jumlahHari = useMemo(() => selisihHari(tanggalMulai, tanggalSelesai), [tanggalMulai, tanggalSelesai]);
 
 	// ── Pre-fill saat open ──
@@ -192,7 +214,14 @@ export function PengajuanFormSheet({
 				</SheetHeader>
 				<Separator />
 				<form
-					onSubmit={rhfSubmit((v) => saveMutation.mutate(v))}
+					onSubmit={rhfSubmit((v) => {
+						// CU-17: guard min-besok hanya untuk form baru — edit tetap bisa simpan tanggal lama
+						if (!editing && v.tanggalMulai < minMulai) {
+							setError("tanggalMulai", { message: "Tanggal mulai tidak boleh sebelum besok" });
+							return;
+						}
+						saveMutation.mutate(v);
+					})}
 					className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0"
 				>
 					{/* ── Info Pegawai (read-only header) — CU-8 ── */}
@@ -240,6 +269,7 @@ export function PengajuanFormSheet({
 							value={tanggalMulai}
 							onChange={(v) => setValue("tanggalMulai", v)}
 							required
+							min={minMulai}
 							error={errors.tanggalMulai?.message}
 						/>
 						<FieldDate
@@ -247,6 +277,7 @@ export function PengajuanFormSheet({
 							value={tanggalSelesai}
 							onChange={(v) => setValue("tanggalSelesai", v)}
 							required
+							min={tanggalMulai || minMulai}
 							error={errors.tanggalSelesai?.message}
 						/>
 					</div>

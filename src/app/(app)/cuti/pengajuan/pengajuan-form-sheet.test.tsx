@@ -63,10 +63,11 @@ function renderSheet(editing = null) {
 	);
 }
 
-/** Pilih tanggal hari ini di popover kalender yang terbuka. */
-async function pickTodayInOpenPopover() {
-	const today = new Date();
-	const dataDay = `${today.getMonth() + 1}/${today.getDate()}/${today.getFullYear()}`;
+/** Pilih tanggal BESOK di popover kalender yang terbuka (CU-17: min mulai = besok). */
+async function pickTomorrowInOpenPopover() {
+	const tomorrow = new Date();
+	tomorrow.setDate(tomorrow.getDate() + 1);
+	const dataDay = `${tomorrow.getMonth() + 1}/${tomorrow.getDate()}/${tomorrow.getFullYear()}`;
 	const day = document.querySelector(`[data-day="${dataDay}"]`);
 	if (!day) throw new Error(`Day button ${dataDay} not found in open calendar`);
 	await userEvent.click(day as HTMLElement);
@@ -75,7 +76,7 @@ async function pickTodayInOpenPopover() {
 async function pickDateByLabel(label: string) {
 	const field = screen.getByText(label).closest("div") as HTMLElement;
 	await userEvent.click(within(field).getByText("Pilih tanggal"));
-	await pickTodayInOpenPopover();
+	await pickTomorrowInOpenPopover();
 }
 
 describe("PengajuanFormSheet", () => {

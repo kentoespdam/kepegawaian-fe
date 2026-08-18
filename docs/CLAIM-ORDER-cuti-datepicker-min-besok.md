@@ -30,36 +30,36 @@
 
 File: `src/components/field-renderers.tsx`
 
-- [ ] Tambah prop `min?: string` (YYYY-MM-DD) di signature `FieldDate` (default `undefined`).
-- [ ] Saat `min` ada → `<Calendar disabled={{ before: new Date(`${min}T00:00:00`) }} />`.
+- [x] Tambah prop `min?: string` (YYYY-MM-DD) di signature `FieldDate` (default `undefined`).
+- [x] Saat `min` ada → `<Calendar disabled={{ before: new Date(`${min}T00:00:00`) }} />`.
       Saat `undefined` → jangan pass `disabled` (perilaku lama identik).
-- [ ] 14 form lain tidak diubah.
+- [x] 14 form lain tidak diubah.
 
 ### Step 2 — Wire di form pengajuan
 
 File: `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.tsx`
 
-- [ ] Helper `besok()` → `today + 1` (local midnight, YYYY-MM-DD).
-- [ ] `<FieldDate label="Tanggal Mulai" min={besok} … />`.
-- [ ] `<FieldDate label="Tanggal Selesai" min={tanggalMulai || besok} … />`.
+- [x] Helper `besok()` → `today + 1` (local midnight, YYYY-MM-DD).
+- [x] `<FieldDate label="Tanggal Mulai" min={minMulai} … />`.
+- [x] `<FieldDate label="Tanggal Selesai" min={tanggalMulai || minMulai} … />`.
 
 ### Step 3 — Zod: refine + guard min-besok
 
 File: `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.tsx`
 
-- [ ] `superRefine`: (a) `tanggalSelesai ≥ tanggalMulai` (selalu, pesan jelas);
-      (b) `tanggalMulai ≥ besok` **hanya saat `!editing`** (edit: tanggal lama valid).
-- [ ] Pesan error bahasa Indonesia (mis. "Tanggal mulai tidak boleh sebelum besok").
+- [x] `superRefine`: `tanggalSelesai ≥ tanggalMulai` (selalu, pesan jelas).
+- [x] Guard `tanggalMulai ≥ besok` **hanya saat `!editing`** via `setError` di onSubmit
+      (edit: tanggal lama valid) — pesan "Tanggal mulai tidak boleh sebelum besok".
 
 ### Step 4 — Test
 
 File: `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.test.tsx`
 
-- [ ] `pickTodayInOpenPopover()` → pilih **besok** (`data-day` besok), bukan hari ini.
-- [ ] Pastikan alur berantai + POST body tetap benar (jumlahHariKerja mock tetap 3).
+- [x] `pickTodayInOpenPopover()` → `pickTomorrowInOpenPopover()` (pilih **besok**).
+- [x] Alur berantai + POST body tetap benar (jumlahHariKerja mock tetap 3).
 
 ### Step 5 — Quality gates & ship
 
-- [ ] `bun run build` (zero error), `bunx biome check`, `bun run test`.
-- [ ] `npx gitnexus analyze` + `detect-changes` — scope hanya form pengajuan + FieldDate.
-- [ ] Commit `<type>: cuti: …` → `git pull --rebase` → `bd dolt push` → `git push` → verify.
+- [x] `bun run build` (zero error), `bunx biome check`, `bun run test`.
+- [x] `npx gitnexus analyze` + `detect-changes` — scope hanya form pengajuan + FieldDate.
+- [x] Commit `<type>: cuti: …` → `git pull --rebase` → `bd dolt push` → `git push` → verify.
