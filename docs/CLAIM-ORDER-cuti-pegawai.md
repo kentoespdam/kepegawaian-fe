@@ -134,35 +134,28 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue D — Pengajuan Cuti: Tabel + Strip Kartu + Cancel
+### Issue D — Pengajuan Cuti: Tabel + Strip Kartu + Cancel ✅ selesai 2026-08-18
 
 **Depends on:** Issue A selesai `[paralel dengan Issue B/C]`
 
 **Scope:**
-- [ ] `src/app/(app)/cuti/pengajuan/page.tsx`:
-  - Server component — `verifySession()` → ambil `pegawaiId` dari session
-  - Semua pegawai bisa akses — tidak ada gate RBAC khusus
-  - Render `<PengajuanPageClient pegawaiId={pegawaiId} />`
-- [ ] `src/app/(app)/cuti/pengajuan/pengajuan-page-client.tsx`:
-  - Strip 3 kartu (Kuota/Diambil/Sisa): `GET /api/proxy/cuti/kuota?pegawaiId&tahun`
-    - Ikuti pola defensif dari `riwayat/cuti/page.tsx` (baca `page.content` ∪ `additional`)
-    - isPending → skeleton kartu; error → inline `—` bukan toast
-  - Query tabel: `GET /api/proxy/cuti/pengajuan/{pegawaiId}/pegawai?tahun&page&size`
-    - queryKey: `["cuti-pengajuan", pegawaiId, tahun, page, size]`
-    - staleTime/gcTime standard
-  - Toolbar: Select Tahun (5 tahun, default tahun berjalan)
-  - Kolom: No · Jenis Cuti (+ sub-jenis) · Periode · Jumlah Hari Kerja · Status · Aksi
-  - Kolom Aksi: tombol "Batalkan" hanya jika `approvalCutiStatus === "PENDING"`
-  - Cancel: dialog konfirmasi sederhana → `DELETE /api/proxy/cuti/pengajuan/{id}`
-    → toast sukses → invalidate
-  - State: isPending skeleton · isPlaceholderData dim · isError inline
-- [ ] Pastikan `enum-labels.ts` punya label untuk semua 6 status `approvalCutiStatus`
-- [ ] `bun run build` · `bunx biome check` · `bun run test`
+- [x] `src/app/(app)/cuti/pengajuan/page.tsx`: server — `getPegawaiSession()` → `pegawai.id`; semua pegawai bisa akses, tanpa gate RBAC; `pegawai` null (akun belum terhubung) → empty state di client
+- [x] `src/app/(app)/cuti/pengajuan/pengajuan-page-client.tsx`:
+  - Strip 3 kartu (Kuota/Diambil/Sisa): `GET /api/proxy/cuti/kuota?pegawaiId&tahun` — pola defensif `page.content` ∪ `additional` (K-C5), skeleton saat pending, error → inline `—`
+  - Query tabel: `GET /api/proxy/cuti/pengajuan/{pegawaiId}/pegawai?tahun&page&size` — queryKey `["cuti-pengajuan", pegawaiId, tahun, page, size]`, sort `tanggalMulai` desc, staleTime 30s/gcTime 5m
+  - Toolbar: Select Tahun (5 tahun) — URL source of truth
+  - Kolom: No · Jenis Cuti (+ sub-jenis kecil) · Periode · Jumlah Hari Kerja · Status (badge) · Aksi
+  - Kolom Aksi: tombol "Batalkan" hanya jika `approvalCutiStatus === "PENDING"` (CU-9)
+  - Cancel: `AlertDialog` konfirmasi sederhana (bukan ConfirmDeleteDialog — tanpa ketik HAPUS, CU-9) → `DELETE /api/proxy/cuti/pengajuan/{id}` → toast sukses → invalidate pengajuan + kuota
+  - State: isPending skeleton · isPlaceholderData dim · isError inline (bawaan `<DataTable>`)
+- [x] `enum-labels.ts` sudah punya label + tone semua 6 status (`STATUS_APPROVAL`: PENDING/APPROVED/CONFIRMED/REJECTED/CANCELED/RETURNED) — tidak diubah
+- [x] Test baru `pengajuan-page-client.test.tsx` (tombol Batalkan hanya PENDING + DELETE id benar)
+- [x] `bun run build` zero error · `bunx biome check` zero lint · `bun run test` — 178 hijau
 
 **DoD:**
-- Strip kartu tampil (Kuota/Diambil/Sisa) untuk pegawai login
-- Tabel riwayat pengajuan diri sendiri dengan filter tahun
-- Tombol "Batalkan" hanya muncul untuk status PENDING dan berfungsi
+- [x] Strip kartu tampil (Kuota/Diambil/Sisa) untuk pegawai login
+- [x] Tabel riwayat pengajuan diri sendiri dengan filter tahun
+- [x] Tombol "Batalkan" hanya muncul untuk status PENDING dan berfungsi
 
 ---
 
