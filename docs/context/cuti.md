@@ -339,6 +339,28 @@ Keputusan FE (hasil grill 2026-08-18):
 
 ---
 
+## CU-17 — Rule Minimum Tanggal Pengajuan Cuti (2026-08-18)
+
+Form pengajuan cuti membatasi tanggal agar **tidak bisa mengajukan ke tanggal yang sudah
+lewat** (saat ini bisa — celah yang ditutup):
+
+- **Tanggal Mulai** minimum = **besok** (`today + 1` kalender, literal — tanpa skip
+  weekend/libur). Hari ini & tanggal lewat tidak bisa dipilih.
+- **Tanggal Selesai** minimum = **Tanggal Mulai** terpilih (belum dipilih → besok).
+  Otomatis menjamin selesai ≥ besok karena mulai ≥ besok.
+- **Zod refine** `tanggalSelesai ≥ tanggalMulai` ditambahkan (sebelumnya tidak ada —
+  selesai < mulai cuma terblokir efek samping `jumlahHariKerja`).
+- **Edit mode dikecualikan** dari guard min-besok: tanggal lama (bisa di masa lalu)
+  tetap valid & bisa disimpan. Picker tetap disable tanggal sebelum besok untuk pilihan
+  baru.
+- **Gap BE (FE-only):** backend masih menerima tanggal lewat — guard ini sisi FE saja.
+  Klaim cuti belum punya UI FE → tidak terpengaruh.
+
+Implementasi: prop opsional `min` di `FieldDate` (shared) → `disabled={{ before }}` di
+Calendar (react-day-picker). 14 form lain tidak tersentuh (prop default `undefined`).
+
+---
+
 ## CU-14 — Fetch Pattern
 
 Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan** `src/lib/api/client.ts`
