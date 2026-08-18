@@ -1,7 +1,6 @@
 "use client";
-
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Pencil, Plus, Trash2 } from "lucide-react";
+import { FileSpreadsheet, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -15,6 +14,7 @@ import { fromPage, toApiParams } from "@/lib/paging";
 import { apiErrorMessage, formatDate } from "@/lib/utils";
 import type { CutiKuotaResponse, SingleResultCutiKuotaPegawaiResponse } from "@/types/cuti/kuota";
 import { KuotaFormSheet } from "./kuota-form-sheet";
+import { KuotaImportDialog } from "./kuota-import-dialog";
 
 const CURRENT_YEAR = new Date().getFullYear();
 // ponytail: rentang 5 tahun (tahun berjalan − 4 .. tahun berjalan) — CU-3
@@ -36,6 +36,7 @@ export function KuotaPageClient() {
 
 	// Satu Sheet per halaman — state editing: null = tambah, row = edit (CU-4)
 	const [sheetOpen, setSheetOpen] = useState(false);
+	const [importOpen, setImportOpen] = useState(false);
 	const [editing, setEditing] = useState<CutiKuotaResponse | null>(null);
 	const [deleting, setDeleting] = useState<CutiKuotaResponse | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -168,6 +169,10 @@ export function KuotaPageClient() {
 								))}
 							</SelectContent>
 						</Select>
+						<Button size="sm" variant="outline" className="gap-1.5" onClick={() => setImportOpen(true)}>
+							<FileSpreadsheet className="size-4" />
+							Import
+						</Button>
 						<Button
 							size="sm"
 							className="gap-1.5"
@@ -206,6 +211,8 @@ export function KuotaPageClient() {
 
 			{/* Satu Sheet per halaman — Tambah (editing=null) atau Edit (editing=row) */}
 			<KuotaFormSheet open={sheetOpen} onOpenChange={setSheetOpen} editing={editing} />
+
+			<KuotaImportDialog open={importOpen} onOpenChange={setImportOpen} />
 
 			<ConfirmDeleteDialog
 				open={deleting != null}

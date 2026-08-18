@@ -111,26 +111,26 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue C — Kuota Cuti: Import Batch + Download Template
+### Issue C — Kuota Cuti: Import Batch + Download Template ✅ selesai 2026-08-18
 
 **Depends on:** Issue B selesai
 
 **Scope:**
-- [ ] Tambah tombol "Unduh Template" di toolbar Kuota:
-  - Klik → `GET /api/proxy/cuti/kuota/template` → trigger download (pakai `window.open` atau anchor `download`)
-- [ ] Dialog Import:
-  - Tombol "Import" di toolbar → buka modal dialog
-  - Field: Select Tahun (integer, ≥2000) + File input (accept Excel/CSV)
-  - Submit → `POST /api/proxy/cuti/kuota/import` (multipart/form-data)
-  - Response `SavedResultString.data` berisi summary → tampilkan di info panel dalam dialog
-  - Sukses → tutup dialog + invalidate query kuota + toast ringkas
-  - Error → tampilkan error dalam dialog (jangan toast; user perlu baca detail)
-- [ ] `bun run build` · `bunx biome check`
+- [x] Tombol "Unduh Template" (dalam Dialog Import — CU-5): `GET /api/proxy/cuti/kuota/template` → blob → anchor `download` (filename dari `content-disposition`)
+- [x] `src/app/(app)/cuti/kuota/kuota-import-dialog.tsx` (file terpisah, pola form-sheet):
+  - Tombol "Import" di toolbar → Dialog: Select Tahun (5 tahun) + File input (accept `.xlsx,.xls,.csv`)
+  - Submit → `POST /api/proxy/cuti/kuota/import` (multipart: `tahun` + `file`)
+  - Response `SavedResultString.data` summary → info panel **dalam dialog** (bukan toast)
+  - Sukses → tutup dialog + invalidate `["cuti-kuota"]` + toast ringkas
+  - Error → inline dalam dialog (user perlu baca detail — CU-5)
+- [x] Test baru `kuota-import-dialog.test.tsx` (multipart tahun+file + summary inline)
+- [x] `bun run build` zero error · `bunx biome check` zero lint · `bun run test` — 177 hijau
+- [x] 🛠 Fix infra: `vitest.config.ts` `testTimeout: 15_000` — test jsdom berat (Sheet+Calendar+combobox) flaky-timeout 5s di bawah beban paralel full suite (kontrak/sk/terminasi/edit-profil — pre-existing, bukan dari Issue C)
 
 **DoD:**
-- Download template memicu file download
-- Upload file + tahun → summary sukses/gagal ditampilkan
-- Tabel refresh setelah import sukses
+- [x] Download template memicu file download
+- [x] Upload file + tahun → summary sukses/gagal ditampilkan
+- [x] Tabel refresh setelah import sukses
 
 ---
 

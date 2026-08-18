@@ -1,16 +1,16 @@
 # Graph Report - kepegawaian-fe  (2026-08-18)
 
 ## Corpus Check
-- 270 files · ~99,051 words
+- 272 files · ~99,902 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1511 nodes · 4686 edges · 68 communities (67 shown, 1 thin omitted)
+- 1519 nodes · 4715 edges · 60 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS · INFERRED: 16 edges (avg confidence: 0.56)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `98c1b067`
+- Built from commit: `fe5f70a4`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -41,23 +41,16 @@
 - pendukung/layout.tsx
 - cuti/page.tsx
 - data-pegawai-client.tsx
-- app-shell.tsx
-- jenis-sp.ts
 - master-entity-types.ts
 - SortObject
 - cuti/page.test.tsx
 - command.tsx
 - roles.test.tsx
 - terminasi-form-sheet.test.tsx
-- sanksi/form.tsx
 - jabatan.ts
-- riwayat-constants.ts
-- field-renderers.tsx
-- JenisSk
 - profesi/form.tsx
 - pdf-viewer.test.tsx
 - profesi.ts
-- sp/page.tsx
 - jenis-keahlian.ts
 - types/_shared.ts
 - PageQuery
@@ -68,7 +61,6 @@
 - kontrak-form-sheet.test.tsx
 - profil/page.tsx
 - potongan-tkk.ts
-- keahlian-form-sheet.tsx
 - parameter-setting.ts
 - Envelope
 - phdp.ts
@@ -84,7 +76,7 @@
 ## God Nodes (most connected - your core abstractions)
 1. `cn()` - 182 edges
 2. `PageQuery` - 85 edges
-3. `Button()` - 57 edges
+3. `Button()` - 58 edges
 4. `hasPermission()` - 57 edges
 5. `verifySession` - 57 edges
 6. `Page` - 49 edges
@@ -94,53 +86,57 @@
 10. `PageableObject` - 42 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `KuotaFormSheet()` --indirect_call--> `t()`  [INFERRED]
+  src/app/(app)/cuti/kuota/kuota-form-sheet.tsx → src/app/(app)/kepegawaian/dashboard/section-right-panel.tsx
+- `CutiLayout()` --calls--> `cn()`  [EXTRACTED]
+  src/app/(app)/cuti/layout.tsx → src/lib/utils.ts
 - `Field()` --calls--> `cn()`  [EXTRACTED]
   src/app/(app)/kepegawaian/dashboard/section-left-panel.tsx → src/lib/utils.ts
+- `KuotaStrip()` --calls--> `cn()`  [EXTRACTED]
+  src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/cuti/page.tsx → src/lib/utils.ts
 - `Rail()` --calls--> `cn()`  [EXTRACTED]
   src/app/(app)/kepegawaian/data/[pegawaiId]/riwayat/layout.tsx → src/lib/utils.ts
-- `AlertDialogOverlay()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/alert-dialog.tsx → src/lib/utils.ts
-- `AlertDialogMedia()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/alert-dialog.tsx → src/lib/utils.ts
-- `AvatarImage()` --calls--> `cn()`  [EXTRACTED]
-  src/components/ui/avatar.tsx → src/lib/utils.ts
 
 ## Import Cycles
 - None detected.
 
-## Communities (68 total, 1 thin omitted)
+## Communities (60 total, 0 thin omitted)
 
 ### Community 0 - "verifySession"
-Cohesion: 0.14
-Nodes (13): nameCol, simpleNameSchema, jenisKeahlianConfig, jenisKitasConfig, jenisPelatihanConfig, levelConfig, JenisKeahlianPostRequest, JenisKeahlianQuery (+5 more)
+Cohesion: 0.22
+Nodes (17): CutiKuotaPage(), DataPegawaiPage(), PendukungPage(), RiwayatPage(), TambahPegawaiPage(), TerminasiPage(), EntityMeta, Home() (+9 more)
 
 ### Community 1 - "pengalaman-kerja.ts"
-Cohesion: 0.10
-Nodes (10): ENABLED_CATEGORIES, ITEM_ICONS, PAGE_TITLES, Rail(), RAIL_ITEMS, ITEM_ICONS, PAGE_TITLES, Rail() (+2 more)
+Cohesion: 0.20
+Nodes (5): ENABLED_CATEGORIES, ITEM_ICONS, PAGE_TITLES, Rail(), RAIL_ITEMS
 
 ### Community 2 - "Page"
-Cohesion: 0.50
-Nodes (3): hariLiburConfig, HariLiburPostRequest, HariLiburQuery
+Cohesion: 0.20
+Nodes (4): ITEM_ICONS, PAGE_TITLES, Rail(), RAIL_ITEMS
 
 ### Community 3 - "section-left-panel.tsx"
 Cohesion: 0.08
-Nodes (39): Field(), SectionLeftPanel(), KeluargaToolbar(), StatusBadge(), Props, RingkasanPanel(), Accordion(), AccordionContent() (+31 more)
+Nodes (38): Field(), SectionLeftPanel(), KeluargaToolbar(), StatusBadge(), Props, RingkasanPanel(), Accordion(), AccordionContent() (+30 more)
 
 ### Community 4 - "keluarga-form-sheet.tsx"
-Cohesion: 0.10
-Nodes (18): CURRENT_YEAR, FormValues, normalizeFk(), PendidikanFormSheet(), Props, schema, CURRENT_YEAR, FormValues (+10 more)
+Cohesion: 0.05
+Nodes (81): t(), FormValues, Props, schema, SheetEditProfil(), toDefaults(), FormValues, KartuIdentitasFormSheet() (+73 more)
+
+### Community 5 - "kartu-identitas/page.tsx"
+Cohesion: 0.33
+Nodes (6): TerminasiClient(), queryClient, TERMINASI_TABS, TerminasiTabId, useTerminasiTable(), formatDate()
 
 ### Community 6 - "cn"
-Cohesion: 0.08
-Nodes (37): CutiLayout(), RAIL_ITEMS, KuotaStrip(), ChangePasswordForm(), Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink() (+29 more)
+Cohesion: 0.28
+Nodes (7): golonganConfig, GolonganPostRequest, GolonganQuery, ListResultGolonganListResponse, PageGolonganQuery, PageResultPageGolonganQuery, SingleResultGolonganQuery
 
 ### Community 7 - "riwayat.ts"
-Cohesion: 0.08
-Nodes (26): AlasanBerhentiResponse, JenisAksiKontrak, JenisRiwayatKepegawaian, ListResultRiwayatSkQuery, PagePegawaiResponse, PageResultPagePegawaiResponse, PageResultPageRiwayatKontrakQuery, PageResultPageRiwayatMutasiQuery (+18 more)
+Cohesion: 0.06
+Nodes (42): Props, SkLampiranCard(), LampiranSkAcceptRequest, LampiranSkPostRequest, AlasanBerhentiResponse, JenisAksiKontrak, JenisRiwayatKepegawaian, ListResultRiwayatSkQuery (+34 more)
 
 ### Community 8 - "approval-client.tsx"
-Cohesion: 0.10
-Nodes (37): KuotaPageClient(), fetchSection(), biodataColumns, DataPegawaiClient(), FILTER_PARAMS, pegawaiColumns, TABS, KartuIdentitasPage() (+29 more)
+Cohesion: 0.12
+Nodes (31): KuotaPageClient(), fetchSection(), biodataColumns, DataPegawaiClient(), FILTER_PARAMS, pegawaiColumns, TABS, KartuIdentitasPage() (+23 more)
 
 ### Community 9 - "batch.ts"
 Cohesion: 0.07
@@ -148,143 +144,115 @@ Nodes (31): BatchSearchParams, GajiBatchMasterPostRequest, GajiBatchMasterProses
 
 ### Community 10 - "section-right-panel.tsx"
 Cohesion: 0.07
-Nodes (48): SectionCrudSlot(), CrudConfig, hubunganKeluarga(), jenisMutasi(), rp(), SectionRightPanel(), SECTIONS, val() (+40 more)
+Nodes (49): SectionCrudSlot(), CrudConfig, hubunganKeluarga(), jenisMutasi(), rp(), SectionRightPanel(), SECTIONS, val() (+41 more)
 
 ### Community 11 - "pengajuan.ts"
-Cohesion: 0.17
-Nodes (11): CutiApprovalChainResponse, CutiPengajuanKlaimPostRequest, CutiPengajuanPostRequest, CutiPengajuanPutRequest, KlaimCuti, PageCutiApprovalChainResponse, PageCutiPengajuanResponse, PageResultPageCutiApprovalChainResponse (+3 more)
+Cohesion: 0.29
+Nodes (6): GradeSearchParams, ListResultGradeListResponse, ListResultGradeQuery, PageGradeQuery, PageResultPageGradeQuery, SingleResultGradeQuery
 
 ### Community 12 - "users-client.tsx"
-Cohesion: 0.11
-Nodes (25): RolePermissionDialogProps, makeColumns(), useAllRoles(), UsersClient(), AlertDialog(), AlertDialogAction(), AlertDialogCancel(), AlertDialogContent() (+17 more)
+Cohesion: 0.10
+Nodes (26): RolePermissionDialogProps, makeColumns(), useAllRoles(), UsersClient(), AlertDialog(), AlertDialogAction(), AlertDialogCancel(), AlertDialogContent() (+18 more)
 
 ### Community 13 - "dropdown-menu.tsx"
 Cohesion: 0.10
 Nodes (21): Avatar(), AvatarBadge(), AvatarFallback(), AvatarGroup(), AvatarGroupCount(), AvatarImage(), DropdownMenu(), DropdownMenuCheckboxItem() (+13 more)
 
 ### Community 14 - "jenjang-pendidikan.ts"
-Cohesion: 0.09
-Nodes (21): JenjangPendidikanPutRequest, JenjangPendidikanSearchParams, ListResultJenjangPendidikanResponse, PageJenjangPendidikanResponse, PageResultPageJenjangPendidikanResponse, SingleResultJenjangPendidikanResponse, LevelSearchParams, ListResultLevelResponse (+13 more)
+Cohesion: 0.07
+Nodes (29): ListResultLampiranSkQuery, JenisKitasSearchParams, ListResultJenisKitasListResponse, PageJenisKitasQuery, PageResultPageJenisKitasQuery, SingleResultJenisKitasQuery, JenjangPendidikanPutRequest, JenjangPendidikanSearchParams (+21 more)
 
 ### Community 15 - "sidebar.tsx"
-Cohesion: 0.09
-Nodes (27): SheetContent(), SheetDescription(), SheetHeader(), SheetTitle(), Sidebar(), SidebarContext, SidebarContextProps, SidebarGroup() (+19 more)
+Cohesion: 0.07
+Nodes (50): Breadcrumb(), BreadcrumbEllipsis(), BreadcrumbItem(), BreadcrumbLink(), BreadcrumbList(), BreadcrumbPage(), BreadcrumbSeparator(), ScrollArea() (+42 more)
 
 ### Community 16 - "_config-kit.ts"
-Cohesion: 0.13
-Nodes (23): ADR-0008, alasanBerhentiConfig, FKSource, makeConfig(), namaWajib, nameField, gradeConfig, jabatanConfig (+15 more)
+Cohesion: 0.12
+Nodes (28): ADR-0008, alasanBerhentiConfig, EntityConfig, FKSource, makeConfig(), namaWajib, nameCol, nameField (+20 more)
 
 ### Community 17 - "useFkOptions"
-Cohesion: 0.16
-Nodes (20): DataPegawaiToolbar(), DataPegawaiToolbarProps, FilterDef, labelMap(), POPOVER_FILTERS, PopoverFilterContent(), FormValues, Props (+12 more)
+Cohesion: 0.11
+Nodes (25): DataPegawaiToolbar(), DataPegawaiToolbarProps, FilterDef, labelMap(), POPOVER_FILTERS, PopoverFilterContent(), FormValues, Props (+17 more)
 
 ### Community 18 - "sp-form-sheet.tsx"
-Cohesion: 0.15
-Nodes (17): ActionType, getActionBadgeInfo(), MODULE_REGISTRY, ModuleConfig, PERMISSION_DEFINITIONS, PermissionDefinition, resolveModuleConfig(), resolvePermissionMeta() (+9 more)
+Cohesion: 0.21
+Nodes (11): ActionType, getActionBadgeInfo(), MODULE_REGISTRY, ModuleConfig, PERMISSION_DEFINITIONS, PermissionDefinition, resolveModuleConfig(), resolvePermissionMeta() (+3 more)
 
 ### Community 19 - "hasPermission"
-Cohesion: 0.11
-Nodes (37): CutiKuotaPage(), DataPegawaiPage(), PendukungPage(), RiwayatPage(), TambahPegawaiPage(), TerminasiPage(), AppLayout(), AlasanBerhentiPage() (+29 more)
+Cohesion: 0.06
+Nodes (55): ADR-0001, ADR-0010, DashboardClient(), DashboardPage(), AppLayout(), AlasanBerhentiPage(), EntityFormModal(), GolonganPage() (+47 more)
 
 ### Community 20 - "pegawai.ts"
-Cohesion: 0.19
-Nodes (24): BiodataPatchRequest, BiodataResponse, PegawaiPatchProfil, PegawaiPostRequest, PegawaiPutRequest, BiodataDetail, BiodataPostRequest, BiodataPutRequest (+16 more)
+Cohesion: 0.21
+Nodes (22): BiodataPatchRequest, BiodataResponse, PegawaiPatchProfil, PegawaiPostRequest, PegawaiPutRequest, BiodataDashboardResponse, BiodataDetail, BiodataPostRequest (+14 more)
 
 ### Community 21 - "keluarga.ts"
-Cohesion: 0.16
-Nodes (18): AppShell(), MODULE_ENTITY_MAP, MODULES, SidebarContent(), SidebarFooter(), SidebarHeader(), SidebarInset(), SidebarMenu() (+10 more)
+Cohesion: 0.24
+Nodes (10): AppShell(), MODULE_ENTITY_MAP, MODULES, Entity, MASTER_ENTITIES, entityGate(), entityHref(), filterVisibleEntities() (+2 more)
 
 ### Community 22 - "keluarga/page.tsx"
-Cohesion: 0.07
-Nodes (58): CURRENT_YEAR, YEAR_OPTIONS, CrudLike, Editing, SectionCrudSlotProps, SlotQuery, SectionConf, KARTU_COLUMNS (+50 more)
+Cohesion: 0.09
+Nodes (31): CURRENT_YEAR, YEAR_OPTIONS, CURRENT_YEAR, CUTI_COLUMNS, KuotaStrip(), STATUS_ICONS, YEAR_OPTIONS, MUTASI_COLUMNS (+23 more)
 
 ### Community 23 - "pendukung/layout.tsx"
-Cohesion: 0.09
-Nodes (27): ADR-0001, ADR-0010, DashboardClient(), DashboardPage(), MOCK_DETAIL, MOCK_DETAIL_NO_SOFT_FK, mockFetch(), okJson() (+19 more)
+Cohesion: 0.33
+Nodes (4): MOCK_DETAIL, MOCK_DETAIL_NO_SOFT_FK, mockFetch(), okJson()
 
 ### Community 24 - "cuti/page.tsx"
-Cohesion: 0.31
-Nodes (8): EntityConfig, resolveFkLabel(), useMasterTable(), UseMasterTableOpts, buildTreeOptions(), computeSubtreeIds(), Computed, Resolved
+Cohesion: 0.40
+Nodes (3): LoginForm(), loginRequest(), useLogin()
 
 ### Community 25 - "data-pegawai-client.tsx"
-Cohesion: 0.14
-Nodes (16): FileCell(), isImage(), isPdf(), SP_COLUMNS, val(), BadgeItem, BadgeManager(), BadgeManagerProps (+8 more)
-
-### Community 26 - "app-shell.tsx"
-Cohesion: 0.36
-Nodes (6): ProfesiForm(), ProfesiFormProps, profesiDefaults(), ProfesiFormValues, profesiSchema, Textarea()
-
-### Community 27 - "jenis-sp.ts"
-Cohesion: 0.25
-Nodes (7): JenisSpPutRequest, JenisSpSearchParams, ListResultJenisSpListResponse, PageJenisSpQuery, PageResultPageJenisSpQuery, SanksiRow, SingleResultJenisSpQuery
+Cohesion: 0.19
+Nodes (9): FileCell(), isImage(), isPdf(), SP_COLUMNS, val(), DataTableToolbarProps, FilterField, FKSource (+1 more)
 
 ### Community 28 - "master-entity-types.ts"
-Cohesion: 0.14
-Nodes (23): MasterEntityName, MasterEntityTypes, golonganConfig, boolOpt, sanksiConfig, AlasanBerhentiListResponse, GolonganListResponse, GolonganPostRequest (+15 more)
+Cohesion: 0.11
+Nodes (34): MasterEntityName, MasterEntityTypes, AlasanBerhentiListResponse, AlasanBerhentiPostRequest, AlasanBerhentiQuery, GolonganListResponse, GradeListResponse, GradePostRequest (+26 more)
 
 ### Community 29 - "SortObject"
-Cohesion: 0.14
-Nodes (11): SingleResultString, ListResultStatusPegawaiResponse, StatusPegawaiResponse, Envelope, PrefPermission, PagePrefRole, PageResultPagePrefRole, PrefRoleStoreRequest (+3 more)
+Cohesion: 0.12
+Nodes (12): SingleResultString, ListResultStatusPegawaiResponse, StatusPegawaiResponse, Envelope, ListResultPrefPermission, ListResultPrefRole, PagePrefRole, PageResultPagePrefRole (+4 more)
 
 ### Community 30 - "cuti/page.test.tsx"
-Cohesion: 0.13
-Nodes (13): KUOTA_ROW, MOCK_KUOTA_ADDITIONAL, MOCK_KUOTA_PAGE_CONTENT, MOCK_PAGE, MOCK_ROWS, mockDefaultFetch(), okJson(), YEAR (+5 more)
+Cohesion: 0.08
+Nodes (21): KARTU_COLUMNS, val(), KUOTA_ROW, MOCK_KUOTA_ADDITIONAL, MOCK_KUOTA_PAGE_CONTENT, MOCK_PAGE, MOCK_ROWS, mockDefaultFetch() (+13 more)
 
 ### Community 31 - "command.tsx"
-Cohesion: 0.16
-Nodes (19): FKComboboxFilterProps, FKComboboxProps, Command(), CommandDialog(), CommandEmpty(), CommandGroup(), CommandInput(), CommandItem() (+11 more)
+Cohesion: 0.11
+Nodes (26): ProfesiForm(), ProfesiFormProps, profesiDefaults(), ProfesiFormValues, profesiSchema, FKComboboxFilterProps, FKCombobox(), FKComboboxProps (+18 more)
 
 ### Community 32 - "roles.test.tsx"
-Cohesion: 0.09
-Nodes (22): GradeResponse, JenisKitasResponse, KartuIdentitasMiniResponse, PagePegawaiTableResponse, PageResultPagePegawaiTableResponse, PegawaiBatchIdsRequest, PegawaiResponseMutasiContext, PegawaiResponseSession (+14 more)
+Cohesion: 0.08
+Nodes (23): GradeResponse, JenisKitasResponse, KartuIdentitasMiniResponse, PagePegawaiTableResponse, PageResultPagePegawaiTableResponse, PegawaiBatchIdsRequest, PegawaiResponseMutasiContext, PegawaiResponseSession (+15 more)
 
 ### Community 33 - "terminasi-form-sheet.test.tsx"
 Cohesion: 0.24
 Nodes (5): mockFetch(), okJson(), pickDateByLabel(), pickTodayInOpenPopover(), ResizeObserverMock
 
-### Community 34 - "sanksi/form.tsx"
-Cohesion: 0.13
-Nodes (11): FormValues, JENIS_SK_BY_MUTASI, MutasiFormSheet(), normalizeFk(), Props, schema, FullSanksiPayload, api (+3 more)
-
 ### Community 35 - "jabatan.ts"
-Cohesion: 0.25
-Nodes (7): JabatanPutRequest, JabatanSearchParams, ListResultJabatanListResponse, ListResultJabatanQuery, PageJabatanQuery, PageResultPageJabatanQuery, SingleResultJabatanQuery
-
-### Community 36 - "riwayat-constants.ts"
-Cohesion: 0.25
-Nodes (7): CutiJenisPostRequest, CutiJenisPutRequest, JenisSearchParams, ListResultCutiJenisResponse, PageCutiJenisResponse, PageResultPageCutiJenisResponse, SingleResultCutiJenisResponse
-
-### Community 37 - "field-renderers.tsx"
-Cohesion: 0.14
-Nodes (18): FormValues, Props, schema, SheetEditProfil(), toDefaults(), FieldDate(), FieldFk(), FieldSelect() (+10 more)
-
-### Community 38 - "JenisSk"
-Cohesion: 0.16
-Nodes (14): Props, SkLampiranCard(), LampiranSkAcceptRequest, LampiranSkPostRequest, ListResultLampiranSkQuery, RiwayatMutasiPostRequest, RiwayatMutasiPutRequest, RiwayatSkPostRequest (+6 more)
+Cohesion: 0.18
+Nodes (13): jabatanConfig, JabatanPostRequest, JabatanPutRequest, JabatanQuery, JabatanSearchParams, ListResultJabatanListResponse, ListResultJabatanQuery, PageJabatanQuery (+5 more)
 
 ### Community 39 - "profesi/form.tsx"
-Cohesion: 0.23
-Nodes (10): SanksiForm(), SanksiFormProps, sanksiDefaults(), SanksiFormValues, sanksiSchema, SWITCH_LABELS, SwitchField, FKCombobox() (+2 more)
+Cohesion: 0.10
+Nodes (16): SanksiForm(), SanksiFormProps, sanksiDefaults(), SanksiFormValues, sanksiSchema, SWITCH_LABELS, SwitchField, inter (+8 more)
 
 ### Community 40 - "pdf-viewer.test.tsx"
-Cohesion: 0.15
-Nodes (6): PdfViewer(), PdfViewerProps, MOCK_PDF_BUFFER, mockCreateObjectURL, mockResizeObserver, mockRevokeObjectURL
+Cohesion: 0.18
+Nodes (4): MOCK_PDF_BUFFER, mockCreateObjectURL, mockResizeObserver, mockRevokeObjectURL
 
 ### Community 41 - "profesi.ts"
-Cohesion: 0.13
-Nodes (15): profesiConfig, AlatKerjaPostRequest, AlatKerjaRow, ApdPostRequest, ApdRow, GradeMiniResponse, ListResultProfesiListResponse, PageProfesiDetail (+7 more)
-
-### Community 42 - "sp/page.tsx"
-Cohesion: 0.38
-Nodes (4): inter, metadata, handleSessionExpired(), Providers()
+Cohesion: 0.14
+Nodes (13): profesiConfig, AlatKerjaPostRequest, AlatKerjaRow, ApdPostRequest, ApdRow, GradeMiniResponse, ListResultProfesiListResponse, PageProfesiDetail (+5 more)
 
 ### Community 43 - "jenis-keahlian.ts"
-Cohesion: 0.06
-Nodes (39): AlasanBerhentiSearchParams, ListResultAlasanBerhentiListResponse, PageAlasanBerhentiQuery, PageResultPageAlasanBerhentiQuery, SingleResultAlasanBerhentiQuery, GradeSearchParams, ListResultGradeListResponse, ListResultGradeQuery (+31 more)
+Cohesion: 0.08
+Nodes (23): AlasanBerhentiSearchParams, ListResultAlasanBerhentiListResponse, PageAlasanBerhentiQuery, PageResultPageAlasanBerhentiQuery, SingleResultAlasanBerhentiQuery, JenisSpPutRequest, JenisSpSearchParams, ListResultJenisSpListResponse (+15 more)
 
 ### Community 44 - "types/_shared.ts"
 Cohesion: 0.05
-Nodes (63): GajiProfilPostRequest, GajiProfilPutRequest, ListResultGajiProfilResponse, PageGajiProfilResponse, PageResultPageGajiProfilResponse, ProfilSearchParams, SingleResultGajiProfilResponse, KartuIdentitasDetail (+55 more)
+Nodes (73): GajiProfilPostRequest, GajiProfilPutRequest, ListResultGajiProfilResponse, PageGajiProfilResponse, PageResultPageGajiProfilResponse, ProfilSearchParams, SingleResultGajiProfilResponse, KartuIdentitasDetail (+65 more)
 
 ### Community 45 - "PageQuery"
 Cohesion: 0.67
@@ -295,40 +263,36 @@ Cohesion: 0.17
 Nodes (11): DasarGajiMiniResponse, DetailDasarGajiNominal, DetailDasarGajiPostRequest, DetailDasarGajiPutRequest, DetailDasarGajiResponse, DetailDasarGajiSearchParams, ListResultDetailDasarGajiResponse, PageDetailDasarGajiResponse (+3 more)
 
 ### Community 48 - "button.tsx"
-Cohesion: 0.13
-Nodes (14): FormValues, Props, schema, RFC-7807, Data, schema, Data, LoginForm() (+6 more)
+Cohesion: 0.08
+Nodes (38): FormValues, KuotaFormSheet(), numField, schema, toNum(), CURRENT_YEAR, KuotaImportDialog(), KuotaImportDialogProps (+30 more)
 
 ### Community 50 - "sanksi.ts"
 Cohesion: 0.18
 Nodes (10): JenisSpSimple, ListResultSanksiJenisSpList, ListResultSanksiQuery, PageResultPageSanksiQuery, PageSanksiQuery, PatchSanksiJenisSpRequest, SanksiJenisSpList, SanksiPutRequest (+2 more)
 
 ### Community 51 - "utils.ts"
-Cohesion: 0.17
-Nodes (14): FormValues, KontrakFormSheet(), normalizeFk(), Props, schema, useGolonganOptions(), Checkbox(), JENIS_AKSI_KONTRAK_OPTIONS (+6 more)
+Cohesion: 0.50
+Nodes (6): JENIS_AKSI_KONTRAK_OPTIONS, JENIS_MUTASI_OPTIONS, JENIS_SK_OPTIONS, labelAksiKontrak(), labelJenisMutasi(), labelJenisSk()
 
 ### Community 52 - "kontrak-form-sheet.test.tsx"
 Cohesion: 0.24
 Nodes (5): mockFetch(), okJson(), pickDateByLabel(), pickTodayInOpenPopover(), ResizeObserverMock
 
 ### Community 53 - "profil/page.tsx"
-Cohesion: 0.14
-Nodes (15): FormValues, schema, RFC-7807, EntityFormModal(), EntityFormModalProps, CrudForm(), LampiranUploadModal(), LampiranUploadModalProps (+7 more)
+Cohesion: 0.08
+Nodes (31): CrudLike, Editing, SectionCrudSlotProps, SlotQuery, SectionConf, KEAHLIAN_COLUMNS, TINGKAT_LABEL, val() (+23 more)
 
 ### Community 54 - "potongan-tkk.ts"
 Cohesion: 0.40
 Nodes (5): PegawaiPatchGaji, GajiBatchMasterResponse, GajiPotonganTkkPostRequest, GajiPotonganTkkPutRequest, StatusKepegawaian
 
-### Community 55 - "keahlian-form-sheet.tsx"
-Cohesion: 0.25
-Nodes (8): CURRENT_YEAR, FormValues, KeahlianFormSheet(), normalizeFk(), Props, schema, TINGKAT_OPTIONS, SingleResultKeahlianDetail
-
 ### Community 57 - "parameter-setting.ts"
-Cohesion: 0.22
-Nodes (8): GajiParameterSettingPostRequest, GajiParameterSettingPutRequest, GajiParameterSettingResponse, ListResultGajiParameterSettingResponse, PageGajiParameterSettingResponse, PageResultPageGajiParameterSettingResponse, ParameterSettingSearchParams, SingleResultGajiParameterSettingResponse
+Cohesion: 0.09
+Nodes (22): KepegawaianSearchParams, SingleResultObject, GolonganSearchParams, JenisKeahlianSearchParams, ListResultJenisKeahlianListResponse, PageJenisKeahlianQuery, PageResultPageJenisKeahlianQuery, SingleResultJenisKeahlianQuery (+14 more)
 
 ### Community 58 - "Envelope"
-Cohesion: 0.22
-Nodes (8): GajiPendapatanNonPajakPostRequest, GajiPendapatanNonPajakPutRequest, ListResultGajiPendapatanNonPajakResponse, PageGajiPendapatanNonPajakResponse, PageResultPageGajiPendapatanNonPajakResponse, PendapatanNonPajakSearchParams, SingleResultGajiPendapatanNonPajakResponse, GajiPendapatanNonPajakResponse
+Cohesion: 0.08
+Nodes (23): HariLiburSearchParams, ListResultHariLiburListResponse, PageHariLiburQuery, PageResultPageHariLiburQuery, SingleResultHariLiburQuery, GajiPendapatanNonPajakPostRequest, GajiPendapatanNonPajakPutRequest, ListResultGajiPendapatanNonPajakResponse (+15 more)
 
 ### Community 59 - "phdp.ts"
 Cohesion: 0.22
@@ -339,52 +303,51 @@ Cohesion: 0.22
 Nodes (8): GajiTunjanganPostRequest, GajiTunjanganPutRequest, JenisTunjangan, ListResultMapStringObject, PageGajiTunjanganResponse, PageResultPageGajiTunjanganResponse, SingleResultGajiTunjanganResponse, TunjanganSearchParams
 
 ### Community 61 - "input-group.tsx"
-Cohesion: 0.08
-Nodes (27): ApprovalSearchParams, CutiApprovalMiniResponse, CutiApprovalPostRequest, PageCutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse, CutiKuotaImportRequest, CutiKuotaPegawaiResponse, CutiKuotaPostRequest (+19 more)
+Cohesion: 0.06
+Nodes (41): ApprovalSearchParams, CutiApprovalMiniResponse, CutiApprovalPostRequest, PageCutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse, CutiJenisPostRequest, CutiJenisPutRequest, CutiJenisResponse (+33 more)
 
 ### Community 64 - "grade.config.ts"
-Cohesion: 0.12
-Nodes (16): FormValues, KuotaFormSheet(), KuotaFormSheetProps, numField, schema, mockFetch(), okJson(), pickDateByLabel() (+8 more)
+Cohesion: 0.20
+Nodes (7): KuotaFormSheetProps, mockFetch(), okJson(), pickDateByLabel(), pickTodayInOpenPopover(), ResizeObserverMock, CutiKuotaResponse
 
 ### Community 65 - "edit-gaji-sheet.test.tsx"
 Cohesion: 0.33
 Nodes (4): MOCK_DETAIL, MOCK_DETAIL_NO_RUMAH_DINAS, mockFetch(), okJson()
 
 ### Community 70 - "organisasi.ts"
-Cohesion: 0.10
-Nodes (20): KepegawaianSearchParams, SingleResultObject, GolonganSearchParams, ListResultGolonganListResponse, PageGolonganQuery, PageResultPageGolonganQuery, SingleResultGolonganQuery, JenisKitasSearchParams (+12 more)
+Cohesion: 0.25
+Nodes (7): ListResultOrganisasiListResponse, ListResultOrganisasiQuery, OrganisasiPutRequest, OrganisasiSearchParams, PageOrganisasiQuery, PageResultPageOrganisasiQuery, SingleResultOrganisasiQuery
 
 ### Community 80 - "sk-form-sheet.tsx"
-Cohesion: 0.18
-Nodes (11): FormValues, normalizeFk(), Props, schema, SkFormSheet(), fillRequiredFields(), mockFetch(), okJson() (+3 more)
+Cohesion: 0.47
+Nodes (4): fillRequiredFields(), mockFetch(), okJson(), pickTodayInOpenPopover()
 
 ### Community 81 - "GolonganResponse"
-Cohesion: 0.15
-Nodes (18): MutasiLampiranCard(), Props, Props, CutiJenisResponse, CutiPengajuanMiniResponse, CutiPengajuanResponse, RiwayatMutasiQuery, RiwayatTerminasiQuery (+10 more)
+Cohesion: 0.18
+Nodes (11): MutasiLampiranCard(), Props, Props, RiwayatMutasiQuery, RiwayatTerminasiQuery, RiwayatSkResponse, GajiPotonganTkkResponse, GajiTunjanganResponse (+3 more)
 
 ### Community 82 - "pelatihan-form-sheet.tsx"
-Cohesion: 0.11
-Nodes (23): FormValues, KartuIdentitasFormSheet(), normalizeFk(), Props, schema, FormValues, KeluargaFormSheet(), normalizeFk() (+15 more)
+Cohesion: 0.15
+Nodes (9): CutiLayout(), RAIL_ITEMS, ChangePasswordForm(), PdfViewer(), PdfViewerProps, Checkbox(), changePassword(), useChangePassword() (+1 more)
 
 ## Knowledge Gaps
-- **419 isolated node(s):** `numField`, `schema`, `FormValues`, `CURRENT_YEAR`, `YEAR_OPTIONS` (+414 more)
+- **422 isolated node(s):** `numField`, `schema`, `FormValues`, `CURRENT_YEAR`, `YEAR_OPTIONS` (+417 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **1 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `cn()` connect `cn` to `pengalaman-kerja.ts`, `section-left-panel.tsx`, `keluarga-form-sheet.tsx`, `approval-client.tsx`, `section-right-panel.tsx`, `users-client.tsx`, `dropdown-menu.tsx`, `sidebar.tsx`, `sp-form-sheet.tsx`, `keluarga.ts`, `keluarga/page.tsx`, `app-shell.tsx`, `command.tsx`, `sanksi/form.tsx`, `field-renderers.tsx`, `profesi/form.tsx`, `pdf-viewer.test.tsx`, `button.tsx`, `utils.ts`, `profil/page.tsx`, `pelatihan-form-sheet.tsx`?**
-  _High betweenness centrality (0.149) - this node is a cross-community bridge._
-- **Why does `PageQuery` connect `organisasi.ts` to `riwayat.ts`, `batch.ts`, `pengajuan.ts`, `users-client.tsx`, `jenjang-pendidikan.ts`, `pegawai.ts`, `jenis-sp.ts`, `SortObject`, `roles.test.tsx`, `jabatan.ts`, `riwayat-constants.ts`, `profesi.ts`, `jenis-keahlian.ts`, `types/_shared.ts`, `detail-dasar-gaji.ts`, `sanksi.ts`, `parameter-setting.ts`, `Envelope`, `phdp.ts`, `tunjangan.ts`, `input-group.tsx`?**
-  _High betweenness centrality (0.099) - this node is a cross-community bridge._
-- **Why does `Page` connect `jenjang-pendidikan.ts` to `riwayat.ts`, `approval-client.tsx`, `batch.ts`, `section-right-panel.tsx`, `pengajuan.ts`, `users-client.tsx`, `_config-kit.ts`, `pegawai.ts`, `jenis-sp.ts`, `master-entity-types.ts`, `SortObject`, `roles.test.tsx`, `jabatan.ts`, `riwayat-constants.ts`, `profesi.ts`, `jenis-keahlian.ts`, `types/_shared.ts`, `detail-dasar-gaji.ts`, `sanksi.ts`, `parameter-setting.ts`, `Envelope`, `phdp.ts`, `tunjangan.ts`, `input-group.tsx`, `organisasi.ts`?**
-  _High betweenness centrality (0.063) - this node is a cross-community bridge._
+- **Why does `cn()` connect `sidebar.tsx` to `pengalaman-kerja.ts`, `Page`, `section-left-panel.tsx`, `keluarga-form-sheet.tsx`, `profesi/form.tsx`, `approval-client.tsx`, `section-right-panel.tsx`, `users-client.tsx`, `dropdown-menu.tsx`, `button.tsx`, `useFkOptions`, `pelatihan-form-sheet.tsx`, `sp-form-sheet.tsx`, `hasPermission`, `profil/page.tsx`, `keluarga/page.tsx`, `keluarga.ts`, `command.tsx`?**
+  _High betweenness centrality (0.143) - this node is a cross-community bridge._
+- **Why does `Page` connect `Envelope` to `cn`, `riwayat.ts`, `approval-client.tsx`, `batch.ts`, `section-right-panel.tsx`, `pengajuan.ts`, `users-client.tsx`, `jenjang-pendidikan.ts`, `_config-kit.ts`, `pegawai.ts`, `master-entity-types.ts`, `SortObject`, `roles.test.tsx`, `jabatan.ts`, `profesi.ts`, `jenis-keahlian.ts`, `types/_shared.ts`, `detail-dasar-gaji.ts`, `sanksi.ts`, `parameter-setting.ts`, `phdp.ts`, `tunjangan.ts`, `input-group.tsx`, `organisasi.ts`?**
+  _High betweenness centrality (0.076) - this node is a cross-community bridge._
+- **Why does `PageQuery` connect `parameter-setting.ts` to `cn`, `riwayat.ts`, `batch.ts`, `pengajuan.ts`, `users-client.tsx`, `jenjang-pendidikan.ts`, `pegawai.ts`, `SortObject`, `roles.test.tsx`, `jabatan.ts`, `profesi.ts`, `jenis-keahlian.ts`, `types/_shared.ts`, `detail-dasar-gaji.ts`, `sanksi.ts`, `Envelope`, `phdp.ts`, `tunjangan.ts`, `input-group.tsx`, `organisasi.ts`?**
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **What connects `numField`, `schema`, `FormValues` to the rest of the system?**
-  _419 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `verifySession` be split into smaller, more focused modules?**
-  _Cohesion score 0.13970588235294118 - nodes in this community are weakly interconnected._
-- **Should `pengalaman-kerja.ts` be split into smaller, more focused modules?**
-  _Cohesion score 0.09881422924901186 - nodes in this community are weakly interconnected._
+  _422 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `section-left-panel.tsx` be split into smaller, more focused modules?**
-  _Cohesion score 0.0815686274509804 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08489795918367347 - nodes in this community are weakly interconnected._
+- **Should `keluarga-form-sheet.tsx` be split into smaller, more focused modules?**
+  _Cohesion score 0.052564102564102565 - nodes in this community are weakly interconnected._
+- **Should `riwayat.ts` be split into smaller, more focused modules?**
+  _Cohesion score 0.05813953488372093 - nodes in this community are weakly interconnected._
