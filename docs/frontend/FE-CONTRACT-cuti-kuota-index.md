@@ -6,7 +6,7 @@
 |------|-------|
 | Branch | `rewrite/master-cqrs` |
 | Tanggal | 2026-08-18 |
-| ADR terkait | ADR-0040 (deviasi index kuota) & ADR-0014 (detail → 404) — **milik repo backend `rewrite/master-cqrs`, TIDAK ada di repo FE ini** (ADR-0014 di sini berjudul lain). Jangan dicari di `docs/adr/` FE. |
+| ADR terkait | ADR-0040 backend `rewrite/master-cqrs` (deviasi index kuota — ada di repo backend, **tidak di repo FE**) · **ADR-0040 FE** ([0040-grid-kuota-carry-over-dua-tahun](../adr/0040-grid-kuota-carry-over-dua-tahun.md)) = keputusan FE atas kontrak ini · ADR-0014 backend (detail → 404, tidak ada di FE — ADR-0014 FE berjudul lain) |
 | Ruang lingkup | Hanya `GET /cuti/kuota` (index). Detail `/{id}` & sisa `/{pegawaiId}/{tahun}/sisa` **tidak berubah** |
 
 ---
@@ -124,3 +124,6 @@ const rows = page.content; // [] saat kosong — bukan error
    (filter `pegawaiId`+`tahun`), hapus `additional` & handling `isNotFound`.
 4. **Penting**: `additional` hilang total — pemakaian K-C5 yang memanggil endpoint yang sama
    (`/cuti/kuota?pegawaiId&tahun`) ikut terdampak walau di luar "ruang lingkup" dokumen ini.
+
+Keputusan FE selengkapnya tercatat di **ADR-0040 FE** (`docs/adr/0040-grid-kuota-carry-over-dua-tahun.md`)
+dan `docs/context/cuti.md` CU-3/CU-15.

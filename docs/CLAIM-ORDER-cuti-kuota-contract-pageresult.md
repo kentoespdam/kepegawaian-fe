@@ -3,7 +3,8 @@
 > **Konteks:** Backend `rewrite/master-cqrs` mengubah kontrak index kuota cuti — envelope
 > `SingleResult` → `PageResult`, `data.additional` → `data.kuotaTahunSebelumnya`, kosong →
 > 200 + page kosong. Dokumen kontrak: `docs/frontend/FE-CONTRACT-cuti-kuota-index.md`.
-> Keputusan grill 2026-08-18: `docs/context/cuti.md` CU-3 (revisi) & CU-15.
+> Keputusan grill 2026-08-18: `docs/context/cuti.md` CU-3 (revisi) & CU-15, **ADR-0040 FE**
+> (`docs/adr/0040-grid-kuota-carry-over-dua-tahun.md`).
 > **Status:** spec sudah di-sync (`bun run spec:sync`) — tipe generated sudah baru.
 
 ## Konteks
@@ -80,5 +81,6 @@ File:
 
 - `docs/frontend/FE-CONTRACT-cuti-kuota-index.md` — kontrak (bagian 6 = keputusan FE).
 - `docs/context/cuti.md` — CU-3 (grid carry-over), CU-15 (kontrak PageResult), terminologi.
+- `docs/adr/0040-grid-kuota-carry-over-dua-tahun.md` — ADR keputusan grid carry-over.
 - `src/types/cuti/kuota.ts` — tipe generated baru.
 - `src/lib/enum-labels.ts` — `labelStatus()` untuk kolom Status Pegawai.

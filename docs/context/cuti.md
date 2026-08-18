@@ -307,6 +307,8 @@ Keputusan FE (hasil grill 2026-08-18):
    tidak merepresentasikan shape (`data` = `{ page, kuotaTahunSebelumnya }`) → pakai cast
    inline `as { data: CutiKuotaPegawaiResponse }` seperti pola K-C5.
 
+> Keputusan FE atas kontrak ini tercatat di **ADR-0040 FE** (`docs/adr/0040-grid-kuota-carry-over-dua-tahun.md`).
+
 ---
 
 ## CU-14 — Fetch Pattern
