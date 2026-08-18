@@ -77,5 +77,15 @@
   "75": "grade.ts",
   "76": "PageableObject",
   "77": "DeletedResult",
-  "78": "RiwayatSpQuery"
+  "78": "RiwayatSpQuery",
+  "79": "utils.ts",
+  "80": "sk-form-sheet.tsx",
+  "81": "GolonganResponse",
+  "82": "pelatihan-form-sheet.tsx",
+  "83": "jenjang-pendidikan.ts",
+  "84": "level.ts",
+  "85": "dashboard-client.tsx",
+  "86": "PageableObject",
+  "87": "accountSession.ts",
+  "88": "(app)/cuti/page.tsx"
 }

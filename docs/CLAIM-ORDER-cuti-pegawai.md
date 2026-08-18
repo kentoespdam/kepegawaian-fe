@@ -81,36 +81,33 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue B — Kuota Cuti: Tabel + Filter + CRUD Sheet
+### Issue B — Kuota Cuti: Tabel + Filter + CRUD Sheet ✅ selesai 2026-08-18
 
 **Depends on:** Issue A selesai
 
 **Scope:**
-- [ ] `src/app/(app)/cuti/kuota/page.tsx`:
-  - Server component — `verifySession()` + `getAccountSession()`
-  - Gate RBAC: `can(roles, "manage", "kuota-cuti")` → `forbidden()` jika bukan SDM
-  - Render `<KuotaPageClient />`
-- [ ] `src/app/(app)/cuti/kuota/kuota-page-client.tsx`:
-  - Query: `GET /api/proxy/cuti/kuota` — queryKey `["cuti-kuota", tahun, nama, nipam, page, size]`
+- [x] `src/app/(app)/cuti/kuota/page.tsx`: server thin — `verifySession()` + `getAccountSession()`
+  - Gate RBAC: `hasPermission(permissions, PERMISSION.CUTI_WRITE)` → `forbidden()` (katalog BE: `CUTI:WRITE` = "Kelola jenis/kuota cuti" — SDM; catatan: `can(roles,"manage","kuota-cuti")` di docs tidak ada di kode — pola nyata = `hasPermission`)
+- [x] `src/app/(app)/cuti/kuota/kuota-page-client.tsx`:
+  - Query `GET /api/proxy/cuti/kuota` — queryKey `["cuti-kuota", tahun, nama, nipam, page, size]` (CU-14)
   - `staleTime: 30_000`, `gcTime: 300_000`, `placeholderData: keepPreviousData`
-  - Toolbar: Select Tahun (rentang 5 tahun, default tahun berjalan) + search Nama/NIPAM
-  - URL = sumber kebenaran (`tahun`, `nama`, `nipam`, `page`, `size` di searchParams)
+  - Toolbar `DataTableToolbar`: search Nama + NIPAM (debounce 400ms) + Select Tahun 5 tahun
+  - URL = sumber kebenaran (`tahun`, `nama`, `nipam`, `page`, `size`)
   - Kolom: No · Nama Pegawai · NIPAM · Tahun · Kuota · Tambahan · Terpakai · Sisa · Expired · Aksi
-  - Tombol "+ Tambah" → Sheet form Tambah
-  - Aksi row: Edit (sheet) · Hapus (`<ConfirmDeleteDialog>`)
-  - State: isPending → skeleton · isPlaceholderData → dim · isError → inline retry
-- [ ] Form Sheet (Tambah + Edit):
-  - Field: Pegawai picker (FK `/pegawai/list`), Tahun, Kuota, Kuota Tambahan, Sisa Kuota, Expired
-  - Zod schema: `pegawaiId` required, `tahun` required (≥2000), `expired` required
-  - Edit mode: pre-fill dari data row
-  - `POST /cuti/kuota` / `PUT /cuti/kuota/{id}` → toast sukses/gagal → invalidate
-- [ ] Hapus: `DELETE /cuti/kuota/{id}` → `<ConfirmDeleteDialog>` (type HAPUS) → handle 409 inline
-- [ ] `bun run build` · `bunx biome check` · `bun run test`
+  - Kolom Aksi custom (Edit/Hapus) — bukan onEdit/onDelete bawaan DataTable (label "Edit Profil" tak tepat)
+  - Tombol "+ Tambah" → Sheet form; state: isPending skeleton · isPlaceholderData dim · isError inline retry (bawaan `<DataTable>`)
+- [x] `src/app/(app)/cuti/kuota/kuota-form-sheet.tsx` (file terpisah, pola terminasi-form-sheet):
+  - Pegawai picker (search dialog `/pegawai/list?search&statusKerja=KARYAWAN_AKTIF`), Tahun, Kuota, Kuota Tambahan, Sisa Kuota, Expired (`FieldDate`)
+  - Zod: `pegawaiId` required, `tahun` required (min 2000), `expired` required; numerik opsional string-kosong → `undefined` (bukan 0)
+  - Edit mode: pre-fill dari row; `POST /cuti/kuota` / `PUT /cuti/kuota/{id}` → toast → invalidate `["cuti-kuota"]`
+- [x] Hapus: `DELETE /cuti/kuota/{id}` → `<ConfirmDeleteDialog>` (ketik HAPUS) → error (409) inline di dialog
+- [x] Test baru `kuota-form-sheet.test.tsx` (2 test: POST undefined-vs-0 + PUT prefill)
+- [x] `bun run build` zero error · `bunx biome check` zero lint · `bun run test` — 176 hijau
 
 **DoD:**
-- SDM dapat melihat tabel kuota, filter tahun + nama/NIPAM berfungsi
-- CRUD (tambah/edit/hapus) berfungsi + toast sukses/gagal
-- Non-SDM mendapat `forbidden()` saat akses `/cuti/kuota`
+- [x] SDM dapat melihat tabel kuota, filter tahun + nama/NIPAM berfungsi
+- [x] CRUD (tambah/edit/hapus) berfungsi + toast sukses/gagal
+- [x] Non-SDM mendapat `forbidden()` saat akses `/cuti/kuota`
 
 ---
 
