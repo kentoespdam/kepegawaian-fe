@@ -159,41 +159,30 @@ src/components/app-shell.tsx atau sidebar        [MODIF] tambah entri menu Cuti
 
 ---
 
-### Issue E — Pengajuan Cuti: Form Tambah & Edit
+### Issue E — Pengajuan Cuti: Form Tambah & Edit ✅ selesai 2026-08-18
 
 **Depends on:** Issue D selesai
 
 **Scope:**
-- [ ] Sheet form Pengajuan Cuti di `pengajuan-page-client.tsx`:
-  - **Info Pegawai** (read-only header): Nama, NIPAM, Jabatan dari session
-  - **Jenis Cuti** (combobox): `GET /api/proxy/cuti/jenis/list` (tanpa parentId) → `ListResultCutiJenisResponse`
-    - staleTime lebih panjang (`staleTime: 300_000`) — data referensi jarang berubah
-  - **Sub-Jenis Cuti** (combobox, conditional): muncul saat `jenisCutiId` dipilih
-    - `GET /api/proxy/cuti/jenis/list?parentId={jenisCutiId}` — refetch saat jenisCutiId berubah
-    - Jika list kosong → field tidak ditampilkan (bukan tampil + disabled)
-  - **Tanggal Mulai** (date picker)
-  - **Tanggal Selesai** (date picker, harus ≥ Tanggal Mulai)
-  - **Jumlah Hari** (read-only, computed: selisih hari kalender kedua tanggal + 1)
-  - **Jumlah Hari Kerja** (read-only, fetched):
-    - Trigger saat kedua tanggal terisi → `GET /cuti/pengajuan/{tglMulai}/{tglSelesai}/total-hari-kerja`
-    - Loading state di field ini saat fetch berlangsung
-    - Error fetch → tampilkan `—` inline, bukan toast
-  - **Alasan** (textarea, required)
-- [ ] Zod schema: `jenisCutiId` required, `subJenisCutiId` optional, `tanggalMulai` required,
-  `tanggalSelesai` required, `jumlahHariKerja` required, `alasan` required (minLength 1)
-- [ ] Submit: `POST /cuti/pengajuan` dengan `CutiPengajuanPostRequest`
-  - `pegawaiId` dari session
-  - `csrfToken`: cek pola yang sudah ada di proyek (lihat mutasi lain di kepegawaian)
-  - Toast sukses → invalidate `["cuti-pengajuan", ...]` + `["cuti-kuota", ...]`
-- [ ] Edit mode: pre-fill form dari data row, `PUT /cuti/pengajuan/{id}`
-  - Hanya bisa edit jika `approvalCutiStatus === "PENDING"`
-- [ ] `bun run build` · `bunx biome check` · `bun run test`
+- [x] `src/app/(app)/cuti/pengajuan/pengajuan-form-sheet.tsx` (file terpisah, pola kuota-form-sheet):
+  - **Info Pegawai** read-only header: Nama, NIPAM, Jabatan — di-pass dari page (`getPegawaiSession` → `pegawai.biodata.nama/nipam/jabatan.nama`)
+  - **Jenis Cuti** (FieldFk combobox): `GET /api/proxy/cuti/jenis/list` → `ListResultCutiJenisResponse`, `staleTime: 300_000`
+  - **Sub-Jenis Cuti** (conditional): `GET /cuti/jenis/list?parentId={jenisCutiId}` — refetch saat jenis berubah; list kosong → field tidak dirender (bukan disabled) — CU-8
+  - **Tanggal Mulai/Selesai** (FieldDate); **Jumlah Hari** computed (selisih + 1, inline `—` saat tak lengkap)
+  - **Jumlah Hari Kerja** (read-only fetched): `GET /cuti/pengajuan/{tglMulai}/{tglSelesai}/total-hari-kerja` — loading spinner, error → inline `—` (CU-13), sync ke field `jumlahHariKerja`
+  - **Alasan** (FieldTextarea, required)
+- [x] Zod: `jenisCutiId` required, `subJenisCutiId` optional, `tanggalMulai`/`tanggalSelesai` required, `jumlahHariKerja` required (min 1), `alasan` required
+- [x] Submit `POST /cuti/pengajuan` (`CutiPengajuanPostRequest`): `pegawaiId` dari session; **`csrfToken`** — spike: FE tak punya mekanisme mint (docs kata "otomatis" tapi belum ada kode) → fetch `GET /api/proxy/auth/csrf-token` (`SingleResultString`) saat submit; toast sukses → invalidate `["cuti-pengajuan"]` + `["cuti-kuota"]`
+- [x] Edit mode: pre-fill dari row, `PUT /cuti/pengajuan/{id}` — tombol Edit hanya di baris `approvalCutiStatus === "PENDING"` (CU-8)
+- [x] Tombol "+ Ajukan Cuti" di toolbar; satu Sheet per halaman (editing null=create / row=edit)
+- [x] Test baru `pengajuan-form-sheet.test.tsx` (sub-jenis muncul hanya saat parent punya anak + POST kirim csrfToken & jumlahHariKerja hasil fetch)
+- [x] `bun run build` zero error · `bunx biome check` zero lint · `bun run test` — 179 hijau
 
 **DoD:**
-- Form buka sebagai Sheet, info pegawai tampil read-only di header
-- Jenis Cuti + Sub-Jenis berantai (sub-jenis muncul/hilang sesuai pilihan jenis)
-- Tanggal → auto-fill hari kerja dari endpoint BE
-- Submit berhasil → tabel refresh + kartu kuota refresh
+- [x] Form buka sebagai Sheet, info pegawai tampil read-only di header
+- [x] Jenis Cuti + Sub-Jenis berantai (sub-jenis muncul/hilang sesuai pilihan jenis)
+- [x] Tanggal → auto-fill hari kerja dari endpoint BE
+- [x] Submit berhasil → tabel refresh + kartu kuota refresh
 
 ---
 

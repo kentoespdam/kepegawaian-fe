@@ -8,7 +8,12 @@ export default async function CutiPengajuanPage() {
 	// pegawai null (akun belum terhubung) → client render empty state.
 	return (
 		<Suspense fallback={<div className="p-6 text-muted-foreground">Memuat...</div>}>
-			<PengajuanPageClient pegawaiId={pegawai?.id ?? null} />
+			<PengajuanPageClient
+				pegawaiId={pegawai?.id ?? null}
+				nama={pegawai?.biodata?.nama ?? null}
+				nipam={pegawai?.nipam ?? null}
+				jabatan={pegawai?.jabatan?.nama ?? null}
+			/>
 		</Suspense>
 	);
 }

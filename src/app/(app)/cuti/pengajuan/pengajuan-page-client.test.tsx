@@ -70,7 +70,7 @@ function renderClient() {
 	const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 	return render(
 		<QueryClientProvider client={qc}>
-			<PengajuanPageClient pegawaiId={9} />
+			<PengajuanPageClient pegawaiId={9} nama="Budi Santoso" nipam="19800101" jabatan="Staf" />
 		</QueryClientProvider>,
 	);
 }

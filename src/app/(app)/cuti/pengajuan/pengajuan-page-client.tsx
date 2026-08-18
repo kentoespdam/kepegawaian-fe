@@ -1,7 +1,17 @@
 "use client";
-
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Ban, CalendarCheck, CalendarDays, CircleCheck, CircleX, Clock, StickyNoteMinus, Undo2 } from "lucide-react";
+import {
+	Ban,
+	CalendarCheck,
+	CalendarDays,
+	CircleCheck,
+	CircleX,
+	Clock,
+	Pencil,
+	Plus,
+	StickyNoteMinus,
+	Undo2,
+} from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -27,6 +37,7 @@ import { fromPage, toApiParams } from "@/lib/paging";
 import { apiErrorMessage, cn, formatDate } from "@/lib/utils";
 import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
 import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
+import { PengajuanFormSheet } from "./pengajuan-form-sheet";
 
 const CURRENT_YEAR = new Date().getFullYear();
 // ponytail: rentang 5 tahun (tahun berjalan − 4 .. tahun berjalan)
@@ -126,9 +137,12 @@ function KuotaStrip({
 
 interface PengajuanPageClientProps {
 	pegawaiId: number | null;
+	nama: string | null;
+	nipam: string | null;
+	jabatan: string | null;
 }
 
-export function PengajuanPageClient({ pegawaiId }: PengajuanPageClientProps) {
+export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: PengajuanPageClientProps) {
 	const sp = useSearchParams();
 	const router = useRouter();
 	const qc = useQueryClient();
@@ -141,6 +155,9 @@ export function PengajuanPageClient({ pegawaiId }: PengajuanPageClientProps) {
 
 	const [cancelRow, setCancelRow] = useState<CutiPengajuanResponse | null>(null);
 	const [cancelError, setCancelError] = useState<string | null>(null);
+	// Satu Sheet per halaman — editing: null = tambah, row = edit (CU-8, hanya PENDING)
+	const [sheetOpen, setSheetOpen] = useState(false);
+	const [editing, setEditing] = useState<CutiPengajuanResponse | null>(null);
 
 	const nav = (updates: Record<string, string | undefined>) => {
 		const p = new URLSearchParams(sp.toString());
@@ -230,25 +247,39 @@ export function PengajuanPageClient({ pegawaiId }: PengajuanPageClientProps) {
 		},
 		{ id: "jumlahHariKerja", header: "Jumlah Hari Kerja", align: "right", cell: (row) => row.jumlahHariKerja ?? "—" },
 		{ id: "status", header: "Status", cell: (row) => <StatusBadge status={row.approvalCutiStatus} /> },
-		// Aksi: Batalkan hanya PENDING (CU-9) — dialog konfirmasi sederhana
+		// Aksi: Edit + Batalkan hanya PENDING (CU-8/CU-9)
 		{
 			id: "aksi",
 			header: "Aksi",
 			align: "right",
 			cell: (row) =>
 				row.approvalCutiStatus === "PENDING" ? (
-					<Button
-						variant="outline"
-						size="sm"
-						className="h-8 gap-1 text-muted-foreground hover:text-destructive hover:border-destructive/50"
-						onClick={() => {
-							setCancelError(null);
-							setCancelRow(row);
-						}}
-					>
-						<Ban className="size-3.5" />
-						Batalkan
-					</Button>
+					<div className="inline-flex items-center gap-1">
+						<Button
+							variant="ghost"
+							size="icon"
+							title="Edit"
+							onClick={() => {
+								setEditing(row);
+								setSheetOpen(true);
+							}}
+							aria-label="Edit pengajuan cuti"
+						>
+							<Pencil className="size-4" />
+						</Button>
+						<Button
+							variant="ghost"
+							size="icon"
+							title="Batalkan"
+							onClick={() => {
+								setCancelError(null);
+								setCancelRow(row);
+							}}
+							aria-label="Batalkan pengajuan cuti"
+						>
+							<Ban className="size-4 text-destructive" />
+						</Button>
+					</div>
 				) : null,
 		},
 	];
@@ -290,6 +321,17 @@ export function PengajuanPageClient({ pegawaiId }: PengajuanPageClientProps) {
 								))}
 							</SelectContent>
 						</Select>
+						<Button
+							size="sm"
+							className="gap-1.5"
+							onClick={() => {
+								setEditing(null);
+								setSheetOpen(true);
+							}}
+						>
+							<Plus className="size-4" />
+							Ajukan Cuti
+						</Button>
 					</DataTableToolbar>
 				}
 				columns={columnsWithNo}
@@ -316,6 +358,17 @@ export function PengajuanPageClient({ pegawaiId }: PengajuanPageClientProps) {
 			/>
 
 			{/* Dialog konfirmasi cancel — bukan ConfirmDeleteDialog (tanpa ketik HAPUS, CU-9) */}
+			{/* Satu Sheet per halaman — Tambah (editing=null) atau Edit (editing=row) */}
+			<PengajuanFormSheet
+				open={sheetOpen}
+				onOpenChange={setSheetOpen}
+				pegawaiId={pegawaiId}
+				nama={nama}
+				nipam={nipam}
+				jabatan={jabatan}
+				editing={editing}
+			/>
+
 			<AlertDialog open={cancelRow != null} onOpenChange={(v) => !v && setCancelRow(null)}>
 				<AlertDialogContent>
 					<AlertDialogHeader>
