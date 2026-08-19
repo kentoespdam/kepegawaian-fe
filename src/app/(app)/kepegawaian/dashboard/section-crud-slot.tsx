@@ -9,7 +9,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import type { SectionConf } from "./section-right-panel";
+import type { SectionConf } from "@/types/kepegawaian/dashboard";
 
 interface SlotQuery {
 	data?:

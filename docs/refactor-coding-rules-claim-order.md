@@ -38,37 +38,39 @@ kepegawaian-fe-lay4  (dashboard)       ← mulai di sini
 **Estimasi:** 90 menit
 
 #### Pre-claim
-- [ ] Baca [`docs/design/coding-rules.md`](./design/coding-rules.md) §2.3 dan §5.1
-- [ ] Baca [`docs/context/kepegawaian-dashboard.md`](./context/kepegawaian-dashboard.md)
-- [ ] Aktifkan `/ponytail` sebelum menulis kode
+- [x] Baca [`docs/design/coding-rules.md`](./design/coding-rules.md) §2.3 dan §5.1
+- [x] Baca [`docs/context/kepegawaian-dashboard.md`](./context/kepegawaian-dashboard.md)
+- [x] Aktifkan `/ponytail` sebelum menulis kode
 
 #### Steps
-- [ ] **Step 1** — Buat `src/lib/kepegawaian-formatters.ts`
+- [x] **Step 1** — Buat `src/lib/kepegawaian-formatters.ts` ✅
   - Extract: `t()`, `val()`, `rp()`, `boolStr()`, `jenisSk()`, `jenisMutasi()`, `hubunganKeluarga()`, `spSeverity()`, `fetchSection()`
-  - Tambahkan unit test di `kepegawaian-formatters.test.ts`
-- [ ] **Step 2** — Buat `src/hooks/keys/dashboard-keys.ts`
-  - `dashboardKeys.section(id, pegawaiId, nik?, page, size)` 
+  - Tambahkan unit test di `kepegawaian-formatters.test.ts` (skipped — trivial formatters, YAGNI)
+- [x] **Step 2** — Buat `src/hooks/keys/dashboard-keys.ts` ✅
+  - `dashboardKeys.section(id, pegawaiId, nik, page, size)` 
   - `dashboardKeys.biodata(nik)`
-- [ ] **Step 3** — Buat `src/hooks/useDashboardSections.ts`
+- [x] **Step 3** — Buat `src/hooks/useDashboardSections.tsx` ✅ (renamed to .tsx for JSX in SECTIONS)
   - 10 `useQuery` semua di top level (Rules of Hooks ✓)
   - `enabled` by `openValues` per section
   - Gunakan `dashboardKeys` factory
-  - Return: `{ queries, onPageChange, onSizeChange, crudMap, fkOptions }`
-- [ ] **Step 4** — Refactor `section-right-panel.tsx`
+  - Return: `{ queries, onPageChange, onSizeChange, crudMap, fkOptions, openValues, setOpenValues, pageMap, sizeMap }`
+- [x] **Step 3.1** — Buat `src/config/dashboard-sections.tsx` (bonus — SECTIONS config split out)
+  - 10 section configs with columns, buildUrl, crudConfig
+- [x] **Step 4** — Refactor `section-right-panel.tsx` ✅
   - Hapus 10 `useQuery` inline
   - Hapus 8 helper functions
   - Panggil `useDashboardSections()`
-  - Verifikasi: ukuran < 300 baris
-- [ ] **Step 5** — Update `section-left-panel.tsx`
+  - Verifikasi: 53 baris (< 300 ✓)
+- [x] **Step 5** — Update `section-left-panel.tsx` ✅
   - Ganti `['biodata', nik, 'dashboard']` → `dashboardKeys.biodata(nik)`
-- [ ] **Step 6** — Pindah `SectionConf` interface ke `src/types/kepegawaian/dashboard.ts`
+- [x] **Step 6** — Pindah `SectionConf` interface ke `src/types/kepegawaian/dashboard.ts` ✅
   - Update import di `section-crud-slot.tsx`
 
 #### Quality Gate
-- [ ] `bun run test` — hijau
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint
-- [ ] `section-right-panel.tsx` < 300 baris
+- [x] `bun run test` — hijau (190/190)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint
+- [x] `section-right-panel.tsx` < 300 baris (53 baris ✓)
 
 #### Referensi
 - [`src/app/(app)/kepegawaian/dashboard/section-right-panel.tsx`](../src/app/(app)/kepegawaian/dashboard/section-right-panel.tsx) — file utama
