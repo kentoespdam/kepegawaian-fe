@@ -196,9 +196,9 @@ export function AppShell({
 					</SidebarContent>
 					<SidebarFooter>
 						<p className="px-2 py-1 text-[0.65rem] text-sidebar-foreground/40">© 2026 Perumdam Tirta Satria</p>
-					</SidebarFooter>
-				</Sidebar>
-				<SidebarInset className="min-w-0">
+					</SidebarFooter>{" "}
+				</Sidebar>{" "}
+				<SidebarInset className="min-w-0" id="main-content" tabIndex={-1}>
 					<header className="relative flex h-16 items-center justify-between border-b border-border bg-card px-4 shadow-sm shrink-0">
 						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
 						<div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
