@@ -35,7 +35,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
-import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
+import type { CutiKuotaSisa } from "@/types/cuti/kuota";
 import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
 import { PengajuanFormSheet } from "./pengajuan-form-sheet";
 
@@ -67,19 +67,17 @@ function StatusBadge({ status }: { status?: string }) {
 
 function KuotaStrip({
 	data,
-	tahun,
 	isPending,
 	isError,
 }: {
-	data: CutiKuotaPegawaiResponse | undefined;
-	tahun: number;
+	data: CutiKuotaSisa | undefined;
 	isPending: boolean;
 	isError: boolean;
 }) {
 	if (isPending) {
 		return (
-			<div className="grid grid-cols-3 gap-3 max-sm:grid-cols-1">
-				{[0, 1, 2].map((i) => (
+			<div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
+				{[0, 1].map((i) => (
 					<div key={i} className="flex items-center gap-3 rounded-lg border bg-card p-4 shadow-sm">
 						<Skeleton className="size-10 shrink-0 rounded-md" />
 						<div className="space-y-1.5">
@@ -92,24 +90,27 @@ function KuotaStrip({
 		);
 	}
 
-	// K-C5 (ADR-0040): index selalu 200 + page — baris tahun terpilih ada di page.content
-	// (filter pegawaiId+tahun → ≤1 baris). KuotaTahunSebelumnya diabaikan oleh strip.
-	const row: CutiKuotaResponse | undefined = (data?.page?.content ?? []).find((r) => r.tahun === tahun);
-
-	const kuota = (row?.kuota ?? 0) + (row?.kuotaTambahan ?? 0);
-	const diambil = row?.kuotaTerpakai ?? 0;
-	const sisa = row?.sisaKuota ?? 0;
-	const noRecord = !row;
+	// CU-21 (ADR-0043): dedicated /sisa endpoint — return { sisaCutiTahunIni, sisaCutiTahunLalu }
+	const noData = !data;
 
 	const cards = [
-		{ label: "Kuota Cuti", icon: CalendarDays, value: kuota, tone: "text-primary bg-primary/10" },
-		{ label: "Diambil", icon: CalendarCheck, value: diambil, tone: "text-success bg-success/10" },
-		{ label: "Sisa", icon: StickyNoteMinus, value: sisa, tone: "text-warning bg-warning/10" },
+		{
+			label: "Sisa Tahun Ini",
+			icon: StickyNoteMinus,
+			value: data?.sisaCutiTahunIni,
+			tone: "text-warning bg-warning/10",
+		},
+		{
+			label: "Sisa Tahun Lalu",
+			icon: CalendarCheck,
+			value: data?.sisaCutiTahunLalu,
+			tone: "text-success bg-success/10",
+		},
 	] as const;
 
 	return (
 		<div className="space-y-2">
-			<div className="grid grid-cols-3 gap-3 max-sm:grid-cols-1">
+			<div className="grid grid-cols-2 gap-3 max-sm:grid-cols-1">
 				{cards.map((c) => (
 					<div key={c.label} className="flex items-center gap-3 rounded-lg border bg-card p-4 shadow-sm">
 						<div className={cn("flex size-10 shrink-0 items-center justify-center rounded-md", c.tone)}>
@@ -119,7 +120,7 @@ function KuotaStrip({
 							<p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">{c.label}</p>
 							{/* ponytail: error fetch → inline "—" bukan toast (CU-13) */}
 							<p className="text-2xl font-semibold tabular-nums text-foreground">
-								{isError || noRecord ? "—" : c.value}
+								{isError || noData ? "—" : (c.value ?? "—")}
 							</p>
 						</div>
 					</div>
@@ -127,7 +128,7 @@ function KuotaStrip({
 			</div>
 			{isError ? (
 				<p className="text-sm text-muted-foreground">Gagal memuat kuota cuti.</p>
-			) : noRecord ? (
+			) : noData ? (
 				<p className="text-sm text-muted-foreground">Belum ada kuota tahun ini.</p>
 			) : null}
 		</div>
@@ -192,10 +193,9 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 	const kuotaQuery = useQuery({
 		queryKey: ["cuti-kuota", pegawaiId, tahun],
 		queryFn: async () => {
-			const qs = new URLSearchParams({ pegawaiId: String(pegawaiId), tahun: String(tahun) }).toString();
-			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);
+			const res = await fetch(`/api/proxy/cuti/kuota/${pegawaiId}/${tahun}/sisa`);
 			throwIfNotOk(res, "Gagal memuat kuota cuti");
-			const body = (await res.json()) as { data: CutiKuotaPegawaiResponse };
+			const body = (await res.json()) as { data: CutiKuotaSisa };
 			return body.data;
 		},
 		enabled: pegawaiId != null,
@@ -303,7 +303,7 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 
 	return (
 		<div className="space-y-4">
-			<KuotaStrip data={kuotaQuery.data} tahun={tahun} isPending={kuotaQuery.isPending} isError={kuotaQuery.isError} />
+			<KuotaStrip data={kuotaQuery.data} isPending={kuotaQuery.isPending} isError={kuotaQuery.isError} />
 
 			<DataTable<CutiPengajuanResponse>
 				toolbar={
