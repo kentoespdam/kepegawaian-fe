@@ -9,7 +9,7 @@
 
 ## Status grill
 
-Grilling 2026-08-18. Keputusan **CU-1 – CU-18** di bawah **terkunci** — jangan re-litigasi.
+Grilling 2026-08-19. Keputusan **CU-1 – CU-19** di bawah **terkunci** — jangan re-litigasi.
 
 ---
 
@@ -463,6 +463,65 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 | Kuota strip (self) | `GET /cuti/kuota?pegawaiId&tahun` | — |
 | List approval | `GET /cuti/pengajuan/approval` | `?tahun&picSaatIniId={jabatanId approver}&page&size` (`approvalCutiStatus` opsional, default `PENDING` — R3) |
 | Aksi approval | `POST /cuti/approval` | `CutiApprovalPostRequest` |
+| Riwayat approval | `GET /cuti/approval/{cutiId}` | `?page&size` → `PageResult` (`CutiApprovalMiniResponse`: approver, jabatan, approvalLevel, approvalStatus, notes, createdAt) |
+
+---
+
+## CU-19 — Detail Modal Persetujuan Cuti (2026-08-19)
+
+Tombol Setujui/Tolak di kolom Aksi tabel **dihapus** — semua aksi approve/reject hanya
+dilakukan melalui **modal detail** yang dibuka dari kolom Aksi.
+
+### Trigger & Kolom Aksi
+- **Kolom Aksi** hanya menampilkan **ikon Detail** (eye/chevron-right) — bukan tombol Setujui/Tolak.
+- **Klik ikon Detail** → buka Dialog detail pengajuan. Baris tabel **tidak clickable**
+  (hanya ikon di kolom Aksi).
+- Jika `readWriteStatus !== "WRITE"` ATAU status sudah final (APPROVED/CONFIRMED/
+  REJECTED/CANCELED/RETURNED) → tombol aksi di footer **disembunyikan** (read-only mode).
+
+### Dialog Structure
+- **Komponen**: `Dialog` (modal tengah layar), bukan Sheet (drawer).
+- **2 tab** di dalam dialog:
+  - **Tab "Detail"**: Info pegawai (nama, NIPAM, jabatan, organisasi) + detail cuti
+    (jenis cuti, sub-jenis, periode, jumlah hari/hari kerja, alasan, status badge).
+  - **Tab "Riwayat"**: Daftar riwayat approval chain — fetch dari
+    `GET /cuti/approval/{cutiId}?size=100` (ambil semua, chain ≤5 level).
+    Setiap baris: nama approver, jabatan, level, status (badge), catatan, timestamp.
+- **Footer dialog** (selalu visible, tidak tersembunyi di tab):
+  - Tombol **Setujui** (primary/green) + **Tolak** (outline/destructive)
+  - Hanya tampil jika `readWriteStatus === "WRITE"` DAN status masih PENDING.
+
+### Inline Expansion — Konfirmasi Aksi
+Klik Setujui/Tolak → **area notes + tombol konfirmasi muncul inline** di dialog yang sama
+(bukan nested dialog baru). Flow:
+1. User klik Setujui atau Tolak
+2. Di bawah tombol, area expand menampilkan:
+   - Label "Catatan" + `<Textarea>` (wajib untuk Approve DAN Reject — CU-12)
+   - Tombol "Konfirmasi Setujui" / "Konfirmasi Tolak" (primary/destructive)
+   - Tombol "Batal" untuk collapse kembali
+3. Submit → `useMutation` → toast sukses/gagal → `invalidateQueries` → tutup dialog
+
+### Fetch Pattern
+- **Detail pengajuan**: data sudah ada di baris tabel (`refCuti` dari `CutiApprovalChainResponse`)
+  — tidak perlu fetch tambahan.
+- **Riwayat approval**: fetch lazy saat modal dibuka
+  — `useQuery` dengan `enabled: open && cutiId != null`.
+  Endpoint: `GET /cuti/approval/{cutiId}?size=100`.
+  Query key: `["cuti-approval-history", cutiId]`.
+
+### Edge Cases
+1. **Read-only mode** (`readWriteStatus !== "WRITE"`): footer hanya "Tutup", tidak ada
+   tombol aksi. User bisa melihat detail + riwayat tapi tidak bisa approve/reject.
+2. **Status final** (bukan PENDING): tombol aksi juga tidak ditampilkan — riwayat sudah final.
+3. **Riwayat kosong**: empty state di tab Riwayat ("Belum ada riwayat approval").
+4. **Dialog close**: ESC / klik X / klik backdrop = tutup dialog, reset state notes.
+5. **Loading state**: skeleton saat fetch riwayat approval.
+
+### Komponen yang Berubah
+- `persetujuan-page-client.tsx`: hapus kolom tombol Setujui/Tolak, ganti dengan ikon Detail;
+  tambah state `detailRow` untuk modal; mounting `DetailApprovalDialog`.
+- `approval-confirm-dialog.tsx` → rename/refactor jadi `detail-approval-dialog.tsx`:
+  Dialog dengan 2 tab + footer aksi + inline expansion notes.
 
 ---
 
