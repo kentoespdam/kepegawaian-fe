@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { useAuth } from "@/hooks/useAuth";
@@ -76,14 +76,11 @@ export function DataPegawaiClient() {
 	const sortDir = sp.get("sortDirection") as "asc" | "desc" | undefined;
 
 	// Ambil filter values dari URL
-	const filterValues = useMemo(() => {
-		const v: Record<string, string> = {};
-		for (const key of FILTER_PARAMS) {
-			const val = sp.get(key);
-			if (val) v[key] = val;
-		}
-		return v;
-	}, [sp]);
+	const filterValues: Record<string, string> = {};
+	for (const key of FILTER_PARAMS) {
+		const val = sp.get(key);
+		if (val) filterValues[key] = val;
+	}
 
 	const hasActiveFilter = Object.keys(filterValues).length > 0;
 
@@ -217,7 +214,7 @@ export function DataPegawaiClient() {
 					<div className="lg:w-95 shrink-0">
 						<div className="rounded-lg border bg-card shadow-md sticky top-4 max-h-[calc(100vh-12rem)] overflow-y-auto">
 							{/* Accent line — konsisten dengan topbar */}
-							<div className="h-0.5 bg-gradient-to-r from-primary/40 via-primary to-primary/40 rounded-t-lg" />
+							<div className="h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40 rounded-t-lg" />
 							<div className="p-4">
 								<h2 className="text-sm font-bold text-foreground mb-4 uppercase tracking-wider">
 									Ringkasan Data Karyawan

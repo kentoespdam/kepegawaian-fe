@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FKCombobox } from "@/components/fk-combobox";
 import { Button } from "@/components/ui/button";
@@ -57,16 +56,13 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 			}
 		: null;
 
-	const jabOpts = useMemo(() => {
-		const opts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-			value: String(i.id),
-			label: String(i.nama ?? ""),
-		}));
-		if (preservedJabatan && !opts.find((o) => o.value === preservedJabatan.value)) {
-			opts.unshift(preservedJabatan);
-		}
-		return opts;
-	}, [jabQuery.data, preservedJabatan]);
+	const jabOpts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
+	if (preservedJabatan && !jabOpts.find((o) => o.value === preservedJabatan.value)) {
+		jabOpts.unshift(preservedJabatan);
+	}
 
 	// Cascade grade by jabatan's levelId
 	const gradeQuery = useQuery({
@@ -76,48 +72,41 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 	});
 
 	// Lookup jabatan id → full item (to extract levelId)
-	const jabatanLookup = useMemo(() => {
-		const map: Record<string, Record<string, unknown>> = {};
-		for (const item of (jabQuery.data ?? []) as Record<string, unknown>[]) {
-			map[String(item.id)] = item;
-		}
-		// Preserve editing jabatan in lookup (for edit mode)
-		if (editing?.jabatan) {
-			const jab = editing.jabatan as Record<string, unknown>;
-			if (jab.id && !map[String(jab.id)]) map[String(jab.id)] = jab;
-		}
-		return map;
-	}, [jabQuery.data, editing?.jabatan]);
+	const jabatanLookup: Record<string, Record<string, unknown>> = {};
+	for (const item of (jabQuery.data ?? []) as Record<string, unknown>[]) {
+		jabatanLookup[String(item.id)] = item;
+	}
+	if (editing?.jabatan) {
+		const jab = editing.jabatan as Record<string, unknown>;
+		if (jab.id && !jabatanLookup[String(jab.id)]) jabatanLookup[String(jab.id)] = jab;
+	}
 
 	const watchedJabatanId = watch("jabatanId");
 
-	const selectedLevelId = useMemo(() => {
+	const selectedLevelId = (() => {
 		if (!watchedJabatanId) return undefined;
 		const item = jabatanLookup[String(watchedJabatanId)];
 		if (!item) return undefined;
 		const level = item.level as Record<string, unknown> | undefined;
 		return level?.id ? Number(level.id) : undefined;
-	}, [watchedJabatanId, jabatanLookup]);
+	})();
 
-	// Preserve grade for edit mode
-	const preservedGrade = useMemo(() => {
+	const preservedGrade = (() => {
 		if (!editing?.grade) return null;
 		const g = editing.grade as Record<string, unknown>;
 		return g.id ? { value: String(g.id), label: `Grade ${g.grade ?? ""}` } : null;
-	}, [editing?.grade]);
+	})();
 
-	// Filter grade options by selectedLevelId
-	const filteredGradeOpts = useMemo(() => {
+	const filteredGradeOpts = (() => {
 		if (!selectedLevelId) return [];
 		const grades = ((gradeQuery.data ?? []) as Record<string, unknown>[])
 			.filter((item) => Number(item.levelId) === selectedLevelId)
 			.map((item) => ({ value: String(item.id), label: `Grade ${item.grade}` }));
-		// Include preserved grade even if level mismatch (edit mode safety)
 		if (preservedGrade && !grades.find((o) => o.value === preservedGrade.value)) {
 			grades.unshift(preservedGrade);
 		}
 		return grades;
-	}, [gradeQuery.data, selectedLevelId, preservedGrade]);
+	})();
 
 	const onFormSubmit = async (values: ProfesiFormValues) => {
 		setError(null);

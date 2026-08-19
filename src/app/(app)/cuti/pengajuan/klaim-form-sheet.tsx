@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -80,7 +80,7 @@ export function KlaimFormSheet({ open, onOpenChange, pegawaiId, pengajuan }: Kla
 
 	const tanggalMulai = watch("tanggalMulai");
 	const tanggalSelesai = watch("tanggalSelesai");
-	const jumlahHari = useMemo(() => hitungHari(tanggalMulai, tanggalSelesai), [tanggalMulai, tanggalSelesai]);
+	const jumlahHari = hitungHari(tanggalMulai, tanggalSelesai);
 
 	// CU-25: Default = full range dari pengajuan asal
 	useEffect(() => {

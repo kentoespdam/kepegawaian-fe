@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { KeyRound, Pencil, Plus, Search, Shield, ShieldCheck, Trash2, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
@@ -141,10 +141,10 @@ export function RolesClient() {
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 
 	// Reactive selected role derived from live queries
-	const selectedRole = useMemo(() => {
+	const selectedRole = (() => {
 		if (!selectedRoleId) return null;
 		return roles.find((r) => r.id === selectedRoleId) ?? null;
-	}, [roles, selectedRoleId]);
+	})();
 
 	const deleteRoleMutation = useMutation({
 		mutationFn: async (roleId: string) => {
@@ -184,11 +184,11 @@ export function RolesClient() {
 	});
 
 	// Filtered roles based on table search
-	const filteredRoles = useMemo(() => {
+	const filteredRoles = (() => {
 		const q = tableSearch.trim().toLowerCase();
 		if (!q) return roles;
 		return roles.filter((r) => r.id.toLowerCase().includes(q) || r.description?.toLowerCase().includes(q));
-	}, [roles, tableSearch]);
+	})();
 
 	const totalCatalogPermCount = allPerms.length;
 

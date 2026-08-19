@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -92,10 +91,10 @@ export function PelatihanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose 
 
 	const jenisPelatihanOpts = useFkOptions("jenis-pelatihan");
 
-	const defaults = useMemo(() => {
+	const defaults = (() => {
 		if (editingId) return normalizeFk(detailQuery.data);
 		return {};
-	}, [editingId, detailQuery.data]);
+	})();
 
 	const {
 		setValue,

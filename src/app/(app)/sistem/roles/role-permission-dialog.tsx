@@ -2,7 +2,7 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckCheck, Filter, Layers, Loader2, RotateCcw, Search, ShieldCheck, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,17 +38,17 @@ export function RolePermissionDialog({
 	const [isBatchPending, setIsBatchPending] = useState(false);
 
 	// Parse current permissions of the role into a fast Set
-	const activePermSet = useMemo(() => {
+	const activePermSet = (() => {
 		return new Set((role?.permissions ?? []).map((p) => p.name).filter(Boolean) as string[]);
-	}, [role?.permissions]);
+	})();
 
 	// Transform all available permissions with metadata
-	const parsedPermissions = useMemo(() => {
+	const parsedPermissions = (() => {
 		return allPermissions.map((p) => resolvePermissionMeta(p.name ?? "")).filter((p) => p.code.length > 0);
-	}, [allPermissions]);
+	})();
 
 	// Group permissions by module
-	const groupedModules = useMemo(() => {
+	const groupedModules = (() => {
 		const groups: Record<
 			string,
 			{
@@ -70,10 +70,10 @@ export function RolePermissionDialog({
 		}
 
 		return Object.values(groups);
-	}, [parsedPermissions]);
+	})();
 
 	// Filtered list based on search, status filter, and module filter
-	const filteredGroups = useMemo(() => {
+	const filteredGroups = (() => {
 		const query = searchQuery.trim().toLowerCase();
 
 		return groupedModules
@@ -103,7 +103,7 @@ export function RolePermissionDialog({
 				};
 			})
 			.filter((group) => group.permissions.length > 0);
-	}, [groupedModules, searchQuery, statusFilter, selectedModule, activePermSet]);
+	})();
 
 	// Global metrics
 	const totalPermissionsCount = parsedPermissions.length;
@@ -188,7 +188,7 @@ export function RolePermissionDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="flex h-[90dvh] max-h-[900px] w-full max-w-4xl flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
+			<DialogContent className="flex h-[90dvh] max-h-225 w-full max-w-4xl flex-col gap-0 overflow-hidden p-0 sm:max-w-4xl">
 				{/* Dialog Header */}
 				<DialogHeader className="shrink-0 border-b bg-card px-6 py-4">
 					<div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -514,7 +514,7 @@ export function RolePermissionDialog({
 														className={cn(
 															"group relative flex cursor-pointer items-center justify-between gap-4 px-4 py-3 transition-colors outline-none",
 															"hover:bg-muted/40 focus-within:bg-muted/50",
-															isActive && "bg-primary/[0.02]",
+															isActive && "bg-primary/2",
 														)}
 													>
 														{/* Left Column: Action badge + Name & Description */}

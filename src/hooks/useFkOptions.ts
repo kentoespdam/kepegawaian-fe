@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { api } from "@/lib/api/client";
 
 /**
@@ -14,12 +13,8 @@ export function useFkOptions(entity: string, labelFn?: (i: Record<string, unknow
 		queryFn: () => api.listAll<Record<string, unknown>>(entity),
 		staleTime: 300_000,
 	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: labelFn?.(i) ?? String(i.nama ?? ""),
-			})),
-		[query.data, labelFn],
-	);
+	return ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: labelFn?.(i) ?? String(i.nama ?? ""),
+	}));
 }

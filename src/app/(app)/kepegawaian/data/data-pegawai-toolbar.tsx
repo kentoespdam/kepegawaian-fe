@@ -1,7 +1,7 @@
 "use client";
 
 import { FilterX, Plus, X } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
 import { Button } from "@/components/ui/button";
@@ -157,18 +157,15 @@ export function DataPegawaiToolbar({
 	const statusPegawaiOpts = useStatusPegawaiOptions();
 	const statusKerjaOpts = useStatusKerjaOptions();
 
-	// Build chip label lookup per FK key
-	const chipMaps = useMemo<Record<string, Record<string, string>>>(() => {
-		const m: Record<string, Record<string, string>> = {};
-		m.organisasiId = labelMap(organisasiOpts);
-		m.jabatanId = labelMap(jabatanOpts);
-		m.profesiId = labelMap(profesiOpts);
-		m.golonganId = labelMap(golonganOpts);
-		m.gradeId = labelMap(gradeOpts);
-		m.statusPegawai = labelMap(statusPegawaiOpts);
-		m.statusKerja = labelMap(statusKerjaOpts);
-		return m;
-	}, [organisasiOpts, jabatanOpts, profesiOpts, golonganOpts, gradeOpts, statusPegawaiOpts, statusKerjaOpts]);
+	const chipMaps: Record<string, Record<string, string>> = {
+		organisasiId: labelMap(organisasiOpts),
+		jabatanId: labelMap(jabatanOpts),
+		profesiId: labelMap(profesiOpts),
+		golonganId: labelMap(golonganOpts),
+		gradeId: labelMap(gradeOpts),
+		statusPegawai: labelMap(statusPegawaiOpts),
+		statusKerja: labelMap(statusKerjaOpts),
+	};
 
 	const [namaLocal, setNamaLocal] = useState(values.nama ?? "");
 	const [nipamLocal, setNipamLocal] = useState(values.nipam ?? "");
@@ -184,32 +181,26 @@ export function DataPegawaiToolbar({
 		setNipamLocal(values.nipam ?? "");
 	}, [values.nipam]);
 
-	const activeChips = useMemo(
-		() =>
-			Object.entries(values)
-				.filter(([, v]) => v && v !== values.nama && v !== values.nipam)
-				.map(([k, v]) => {
-					// Prefer label from chipMaps (FK + enum), fallback to raw value
-					if (chipMaps[k]) {
-						const name = chipMaps[k][v];
-						if (name) return { key: k, label: k === "statusPegawai" ? `Status: ${name}` : name };
-					}
-					// Remaining simple fields
-					switch (k) {
-						case "nama":
-							return { key: k, label: `Nama: ${v}` };
-						case "nipam":
-							return { key: k, label: `NIPAM: ${v}` };
-						case "nik":
-							return { key: k, label: `NIK: ${v}` };
-						case "jenisKelamin":
-							return { key: k, label: v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan" };
-						default:
-							return { key: k, label: v };
-					}
-				}),
-		[values, chipMaps],
-	);
+	const activeChips = Object.entries(values)
+		.filter(([, v]) => v && v !== values.nama && v !== values.nipam)
+		.map(([k, v]) => {
+			if (chipMaps[k]) {
+				const name = chipMaps[k][v];
+				if (name) return { key: k, label: k === "statusPegawai" ? `Status: ${name}` : name };
+			}
+			switch (k) {
+				case "nama":
+					return { key: k, label: `Nama: ${v}` };
+				case "nipam":
+					return { key: k, label: `NIPAM: ${v}` };
+				case "nik":
+					return { key: k, label: `NIK: ${v}` };
+				case "jenisKelamin":
+					return { key: k, label: v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan" };
+				default:
+					return { key: k, label: v };
+			}
+		});
 
 	return (
 		<div className="mb-3 space-y-2">

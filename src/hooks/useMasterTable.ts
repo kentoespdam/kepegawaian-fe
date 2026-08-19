@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+
 import type { EntityConfig } from "@/config/master-config";
 import { api } from "@/lib/api/client";
 import { buildTreeOptions } from "@/lib/master/tree-utils";
@@ -55,85 +55,74 @@ export function useMasterTable<TQuery extends Record<string, unknown>>({
 		staleTime: 300_000,
 	});
 
-	// Build FK lookup map: field → Map<id, item>
-	const fkLookup = useMemo(() => {
-		const map = new Map<string, Map<string, Record<string, unknown>>>();
-		const allData = [
-			fkQ1.data as Record<string, unknown>[] | undefined,
-			fkQ2.data as Record<string, unknown>[] | undefined,
-			fkQ3.data as Record<string, unknown>[] | undefined,
-		];
-		for (let i = 0; i < fkSources.length; i++) {
-			const data = allData[i] ?? [];
-			const m = new Map<string, Record<string, unknown>>();
-			for (const item of data) m.set(String(item.id), item);
-			map.set(fkSources[i]?.field, m);
-		}
-		return map;
-	}, [fkSources, fkQ1.data, fkQ2.data, fkQ3.data]);
+	const fkLookup = new Map<string, Map<string, Record<string, unknown>>>();
+	const allData = [
+		fkQ1.data as Record<string, unknown>[] | undefined,
+		fkQ2.data as Record<string, unknown>[] | undefined,
+		fkQ3.data as Record<string, unknown>[] | undefined,
+	];
+	for (let i = 0; i < fkSources.length; i++) {
+		const data = allData[i] ?? [];
+		const m = new Map<string, Record<string, unknown>>();
+		for (const item of data) m.set(String(item.id), item);
+		fkLookup.set(fkSources[i]?.field, m);
+	}
 
 	// Resolve FK display names + tree parent name in table items
-	const resolvedItems = useMemo(
-		() =>
-			(Array.isArray(listData) ? listData : []).map((item) => {
-				const e: Record<string, unknown> = { ...item } as Record<string, unknown>;
-				if (cfg.treeField) {
-					const pid = String(item[cfg.treeField] ?? "");
-					e._parentName = pid
-						? String((Array.isArray(treeItems) ? treeItems : []).find((x) => String(x.id) === pid)?.nama ?? pid)
-						: "";
-				}
-				for (const fk of fkSources) {
-					const fkId = String(item[fk.field] ?? "");
-					const nameField = `_${fk.field.replace("Id", "")}Name`;
-					const lookupMap = fkLookup.get(fk.field);
-					if (lookupMap && fkId) {
-						const fkItem = lookupMap.get(fkId);
-						e[nameField] = fkItem ? resolveFkLabel(fk, fkItem) : fkId;
-					}
-				}
-				return e as Resolved<TQuery>;
-			}),
-		[listData, treeItems, cfg.treeField, fkSources, fkLookup],
-	) as Resolved<TQuery>[];
+	const resolvedItems = (Array.isArray(listData) ? listData : []).map((item) => {
+		const e: Record<string, unknown> = { ...item } as Record<string, unknown>;
+		if (cfg.treeField) {
+			const pid = String(item[cfg.treeField] ?? "");
+			e._parentName = pid
+				? String((Array.isArray(treeItems) ? treeItems : []).find((x) => String(x.id) === pid)?.nama ?? pid)
+				: "";
+		}
+		for (const fk of fkSources) {
+			const fkId = String(item[fk.field] ?? "");
+			const nameField = `_${fk.field.replace("Id", "")}Name`;
+			const lookupMap = fkLookup.get(fk.field);
+			if (lookupMap && fkId) {
+				const fkItem = lookupMap.get(fkId);
+				e[nameField] = fkItem ? resolveFkLabel(fk, fkItem) : fkId;
+			}
+		}
+		return e as Resolved<TQuery>;
+	}) as Resolved<TQuery>[];
 
 	// Enrich form fields with tree parent + FK dropdown options
-	const formFields = useMemo(() => {
-		let ff = [...cfg.fields];
-		if (cfg.treeField) {
-			const opts = buildTreeOptions(treeItems, editing?.id as string | undefined, cfg.treeField);
-			ff = [...ff, { name: cfg.treeField, label: "Parent", type: "combobox" as const, options: opts }];
-		}
-		return ff.map((f) => {
-			if (f.type !== "select" || f.options) return f;
-			const fk = fkSources.find((s) => s.field === f.name);
-			if (!fk) return f;
-			const lm = fkLookup.get(fk.field);
-			const opts = lm
-				? [...lm.entries()].map(([value, item]) => ({
-						value,
-						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
-					}))
-				: [];
-			return { ...f, type: "combobox" as const, options: opts };
-		});
-	}, [cfg.fields, cfg.treeField, treeItems, editing, fkSources, fkLookup]);
+	const treeOpts = cfg.treeField
+		? buildTreeOptions(treeItems, editing?.id as string | undefined, cfg.treeField)
+		: undefined;
+	const treeFieldEntry =
+		treeOpts && cfg.treeField
+			? [{ name: cfg.treeField, label: "Parent", type: "combobox" as const, options: treeOpts }]
+			: [];
+	const formFields = [...cfg.fields, ...treeFieldEntry].map((f) => {
+		if (f.type !== "select" || f.options) return f;
+		const fk = fkSources.find((s) => s.field === f.name);
+		if (!fk) return f;
+		const lm = fkLookup.get(fk.field);
+		const opts = lm
+			? [...lm.entries()].map(([value, item]) => ({
+					value,
+					label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
+				}))
+			: [];
+		return { ...f, type: "combobox" as const, options: opts };
+	});
 
 	// FK options for filter toolbar — keyed by FK field name
-	const fkOptions = useMemo(() => {
-		const result: Record<string, { value: string; label: string }[]> = {};
-		for (let i = 0; i < fkSources.length; i++) {
-			const fk = fkSources[i];
-			const lm = fkLookup.get(fk.field);
-			result[fk.field] = lm
-				? [...lm.entries()].map(([value, item]) => ({
-						value,
-						label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
-					}))
-				: [];
-		}
-		return result;
-	}, [fkSources, fkLookup]);
+	const fkOptions: Record<string, { value: string; label: string }[]> = {};
+	for (let i = 0; i < fkSources.length; i++) {
+		const fk = fkSources[i];
+		const lm = fkLookup.get(fk.field);
+		fkOptions[fk.field] = lm
+			? [...lm.entries()].map(([value, item]) => ({
+					value,
+					label: fk.formatLabel ? fk.formatLabel(item) : String(item.nama ?? value),
+				}))
+			: [];
+	}
 
 	return { resolvedItems, formFields, fkOptions };
 }

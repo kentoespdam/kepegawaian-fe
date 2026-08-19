@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
@@ -51,14 +50,10 @@ export function TambahPegawaiForm() {
 		enabled: !!organisasiId,
 		staleTime: 300_000,
 	});
-	const jabOpts = useMemo(
-		() =>
-			((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: String(i.nama ?? ""),
-			})),
-		[jabQuery.data],
-	);
+	const jabOpts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
 
 	const onOrgChange = (v: string | undefined) => {
 		setValue("organisasiId", v, { shouldValidate: true });

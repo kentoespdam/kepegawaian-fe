@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 
 export function usePajakOptions() {
 	const query = useQuery({
@@ -12,14 +11,10 @@ export function usePajakOptions() {
 		},
 		staleTime: 300_000,
 	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: String(i.kode ?? ""),
-			})),
-		[query.data],
-	);
+	return ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.kode ?? ""),
+	}));
 }
 
 function useEnumOptions(url: string, queryKey: string) {
@@ -33,14 +28,10 @@ function useEnumOptions(url: string, queryKey: string) {
 		},
 		staleTime: 300_000,
 	});
-	return useMemo(
-		() =>
-			(query.data ?? []).map((i) => ({
-				value: String(i.id),
-				label: String(i.nama ?? ""),
-			})),
-		[query.data],
-	);
+	return (query.data ?? []).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
 }
 
 export function useStatusPegawaiOptions() {

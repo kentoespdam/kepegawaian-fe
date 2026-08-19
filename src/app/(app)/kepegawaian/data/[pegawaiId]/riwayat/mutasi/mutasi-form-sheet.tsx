@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2, Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -133,7 +133,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	// ── Form defaults ──
 	// ponytail: create mode populates *LamaId from mutasi-context; edit mode from record
 
-	const defaults = useMemo(() => {
+	const defaults = (() => {
 		if (editingId) return normalizeFk(detailQuery.data);
 		const ctx = mutasiCtxQuery.data;
 		if (!ctx) return { pegawaiId: Number(pegawaiId) };
@@ -144,7 +144,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 			jabatanLamaId: String(ctx.jabatan?.id ?? ""),
 			profesiLamaId: String(ctx.profesi?.id ?? ""),
 		};
-	}, [editingId, detailQuery.data, mutasiCtxQuery.data, pegawaiId]);
+	})();
 
 	const {
 		setValue,
@@ -174,14 +174,10 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 		enabled: !!organisasiId,
 		staleTime: 300_000,
 	});
-	const jabOpts = useMemo(
-		() =>
-			((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: String(i.nama ?? ""),
-			})),
-		[jabQuery.data],
-	);
+	const jabOpts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
 
 	const jabatanId = watch("jabatanId");
 	const profesiQuery = useQuery({
@@ -190,14 +186,10 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 		enabled: !!jabatanId,
 		staleTime: 300_000,
 	});
-	const profesiOpts = useMemo(
-		() =>
-			((profesiQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: String(i.nama ?? ""),
-			})),
-		[profesiQuery.data],
-	);
+	const profesiOpts = ((profesiQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
 
 	// ── Gaji lookup ──
 

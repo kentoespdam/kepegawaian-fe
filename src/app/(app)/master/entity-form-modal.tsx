@@ -1,6 +1,5 @@
 "use client";
 
-import { useMemo } from "react";
 import type { FormField } from "@/components/crud-form";
 import { CrudForm } from "@/components/crud-form";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -40,9 +39,7 @@ export function EntityFormModal({
 		if (!v) setDialogOpen(false);
 	};
 
-	// ponytail: semua bentuk form defaultValues ekstrak scalar id dari nested object FK
-	// Nested key = field minus trailing "Id" (organisasiId→organisasi, parentId→parent)
-	const formDefaults = useMemo(() => {
+	const formDefaults = (() => {
 		if (!editing) return undefined;
 		const combos = new Set<string>();
 		if (cfg.treeField) combos.add(cfg.treeField);
@@ -55,7 +52,7 @@ export function EntityFormModal({
 			defs[f] = String(v && typeof v === "object" ? ((v as Record<string, unknown>).id ?? "") : (v ?? "")) || undefined;
 		}
 		return defs;
-	}, [editing, cfg.treeField, cfg.fkSources]);
+	})();
 
 	if (entity === "sanksi") {
 		return (

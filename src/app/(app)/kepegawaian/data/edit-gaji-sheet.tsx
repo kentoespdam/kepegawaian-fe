@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -54,14 +53,10 @@ function useGajiProfilOptions() {
 		},
 		staleTime: 300_000,
 	});
-	return useMemo(
-		() =>
-			((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
-				value: String(i.id),
-				label: String(i.nama ?? ""),
-			})),
-		[query.data],
-	);
+	return ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
 }
 
 interface Props {
@@ -85,7 +80,7 @@ export function SheetEditGaji({ pegawaiId, onClose }: Props) {
 		staleTime: 60_000,
 	});
 
-	const defaults = useMemo(() => (detailQuery.data ? toDefaults(detailQuery.data) : undefined), [detailQuery.data]);
+	const defaults = detailQuery.data ? toDefaults(detailQuery.data) : undefined;
 
 	const {
 		handleSubmit: rhfSubmit,

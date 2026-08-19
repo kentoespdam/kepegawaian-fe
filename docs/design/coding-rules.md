@@ -302,7 +302,7 @@ Token & skeleton di `globals.css` = visual-foundation §1. Gunakan `@theme` bloc
 ### 4.3. Aturan Aksesibilitas Visual
 
 - **Jangan** bergantung warna saja untuk status (WCAG SC 1.4.1) — selalu **ikon + teks**.
-- Dark mode = light-only rilis 1; `.dark {}` di-scaffold kosong. Jangan bangun toggle tema.
+- Dark mode via `next-themes` sudah aktif (toggle di user-menu). Biarkan — tidak perlu ubah.
 - Tipografi: **Inter** self-hosted, berat **400/500/600** saja (**dilarang ≤300**).
 - `tabular-nums` di kolom angka tabel.
 - Touch target ≥ **44px** untuk elemen interaktif.

@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays, Loader2, UserRound } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -95,7 +95,7 @@ export function PengajuanFormSheet({
 	const tanggalMulai = watch("tanggalMulai");
 	const tanggalSelesai = watch("tanggalSelesai");
 	const minMulai = besok(); // CU-17: min Tanggal Mulai = besok (form baru; edit tetap simpan tanggal lama)
-	const jumlahHari = useMemo(() => selisihHari(tanggalMulai, tanggalSelesai), [tanggalMulai, tanggalSelesai]);
+	const jumlahHari = selisihHari(tanggalMulai, tanggalSelesai);
 
 	// ── Pre-fill saat open ──
 	useEffect(() => {

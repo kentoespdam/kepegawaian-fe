@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
-import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { FKCombobox } from "@/components/fk-combobox";
 import { MasterSwitch } from "@/components/master-switch";
@@ -32,14 +31,10 @@ export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, s
 		staleTime: 300_000,
 	});
 
-	const jenisSpOpts = useMemo(
-		() =>
-			(jenisSpRaw ?? []).map((item) => ({
-				value: String(item.id ?? ""),
-				label: item.kode ? `${item.kode} — ${item.nama}` : `${item.nama}`,
-			})),
-		[jenisSpRaw],
-	);
+	const jenisSpOpts = (jenisSpRaw ?? []).map((item) => ({
+		value: String(item.id ?? ""),
+		label: item.kode ? `${item.kode} — ${item.nama}` : `${item.nama}`,
+	}));
 
 	const {
 		register,
