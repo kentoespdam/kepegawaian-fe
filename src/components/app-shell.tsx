@@ -57,8 +57,13 @@ const MODULES = [
 		entities: [
 			// ponytail: Dashboard = no gate (terbuka semua login)
 			{ id: "dashboard", label: "Dashboard", href: "/kepegawaian/dashboard", gate: null },
-			{ id: "pegawai", label: "Data Pegawai", href: "/kepegawaian/data", gate: PERMISSION.PEGAWAI_READ },
-			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: PERMISSION.PEGAWAI_READ },
+			{
+				id: "pegawai",
+				label: "Data Pegawai",
+				href: "/kepegawaian/data",
+				gate: ["ADMIN", "HRD"],
+			},
+			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: ["ADMIN", "HRD"] },
 		],
 	},
 	{
@@ -81,8 +86,8 @@ const MODULES = [
 		label: "Sistem",
 		icon: Settings,
 		entities: [
-			{ id: "roles", label: "Manajemen Role", href: "/sistem/roles", gate: PERMISSION.SYSTEM_MANAGE_ROLE },
-			{ id: "users", label: "Manajemen User", href: "/sistem/users", gate: PERMISSION.SYSTEM_MANAGE_USER },
+			{ id: "roles", label: "Manajemen Role", href: "/sistem/roles", gate: ["SYSTEM"] },
+			{ id: "users", label: "Manajemen User", href: "/sistem/users", gate: ["SYSTEM"] },
 		],
 	},
 ];
