@@ -9,7 +9,7 @@
 
 ## Status grill
 
-Grilling 2026-08-19. Keputusan **CU-1 – CU-19** di bawah **terkunci** — jangan re-litigasi.
+Grilling 2026-08-19. Keputusan **CU-1 – CU-33** di bawah **terkunci** — jangan re-litigasi.
 
 ---
 
@@ -447,7 +447,10 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 | Hapus kuota | `DELETE /cuti/kuota/{id}` | — |
 | Download template | `GET /cuti/kuota/template` | — |
 | Import batch | `POST /cuti/kuota/import` | `multipart/form-data { tahun, file }` |
-| List pengajuan (self) | `GET /cuti/pengajuan/{pegawaiId}/pegawai` | `?tahun&page&size` |
+| List pengajuan (self) | `GET /cuti/pengajuan/{pegawaiId}/pegawai` | `?tahun&page&size&jenisPengajuanCuti` |
+| Klaim cuti | `POST /cuti/pengajuan/klaim` | `CutiPengajuanKlaimPostRequest` |
+| Update klaim | `PUT /cuti/pengajuan/klaim/{id}` | `CutiPengajuanKlaimPostRequest` |
+| Approval klaim | `POST /cuti/approval/klaim` | `CutiApprovalPostRequest` |
 | Detail pengajuan | `GET /cuti/pengajuan/{id}` | — |
 | Tambah pengajuan | `POST /cuti/pengajuan` | `CutiPengajuanPostRequest` |
 | Edit pengajuan | `PUT /cuti/pengajuan/{id}` | `CutiPengajuanPutRequest` |
@@ -541,6 +544,151 @@ apa yang dibutuhkan: `sisaCutiTahunIni` + `sisaCutiTahunLalu` (carry-over).
 **Backend:** real-time calculation (sisa = kuota + tambahan - terpakai).
 
 ADR: [ADR-0043](../adr/0043-pengajuan-kuota-strip-endpoint-sisa.md)
+
+---
+
+## CU-22 — Klaim Cuti: Siapa yang Klaim (2026-08-19)
+
+Klaim cuti bersifat **self-service** — pegawai yang bersangkutan mengklaim hari-hari
+aktual yang diambil dari sebuah pengajuan yang sudah disetujui. Bukan oleh atasan/HRD.
+
+Flow:
+1. Pegawai mengajukan cuti (PENGAJUAN_CUTI) → approval chain → status APPROVED
+2. Pegawai mengklaim hari-hari aktual (KLAIM_CUTI) → approval chain baru (Supervisor SDM)
+
+---
+
+## CU-23 — Klaim Cuti: Prasyarat Status (2026-08-19)
+
+Pengajuan cuti harus berstatus **`APPROVED`** agar bisa diklaim. Status lain (PENDING,
+REJECTED, CANCELED, RETURNED) → tombol Klaim tidak muncul.
+
+`isClaimed === true` → tombol Klaim juga tidak muncul (prevent re-claiming, CU-30).
+
+---
+
+## CU-24 — Klaim Cuti: UI Akses (2026-08-19)
+
+Tombol **"Klaim"** muncul di kolom Aksi tabel pengajuan dengan syarat:
+- `approvalCutiStatus === "APPROVED"`
+- `isClaimed !== true`
+- `jenisPengajuanCuti === "PENGAJUAN_CUTI"` (hanya pengajuan asal, bukan klaim itu sendiri)
+
+Klik "Klaim" → buka **Sheet (drawer kanan)** berisi form klaim.
+
+---
+
+## CU-25 — Klaim Cuti: Form (2026-08-19)
+
+Form ditampilkan sebagai **Sheet (drawer kanan)** — konsisten dengan pola CrudForm proyek.
+
+**Field form:**
+1. **Info Pengajuan Asal** (read-only): Jenis Cuti, Periode (tanggalMulai – tanggalSelesai),
+   Jumlah Hari — ditampilkan sebagai konteks di atas form.
+2. **Tanggal Mulai Klaim** (date picker) — required, minimum = `tanggalMulai` pengajuan asal,
+   maximum = `tanggalSelesai` pengajuan asal.
+3. **Tanggal Selesai Klaim** (date picker) — required, minimum = Tanggal Mulai Klaim,
+   maximum = `tanggalSelesai` pengajuan asal.
+4. **Jumlah Hari Klaim** (read-only, calculated: `Selesai − Mulai + 1`).
+5. **Keterangan** (textarea) — optional (CU-33).
+
+**Validasi:** Tanggal Mulai & Selesai harus dalam rentang pengajuan asal.
+
+**Submit:** Generate `listHari` client-side dari range (expand ke array tanggal), lalu POST
+ke `POST /cuti/pengajuan/klaim`.
+
+---
+
+## CU-26 — Klaim Cuti: Range Picker (2026-08-19)
+
+Pilihan `listHari` menggunakan **range picker** (dua date picker: Mulai & Selesai) dalam
+rentang pengajuan asal. Bukan multi-select calendar.
+
+**Mengapa:** klaim cuti umumnya **berurutan** (tidak meloncat) — misal apply 1–5 Juni,
+klaim 1–3 Juni. Range picker lebih cepat dan natural untuk use case ini.
+
+Default: Mulai = `tanggalMulai` pengajuan, Selesai = `tanggalSelesai` pengajuan (full range).
+User tinggal adjust Selesai jika hanya mengambil sebagian hari.
+
+**Edge case non-sequential:** untuk sekarang tidak didukung. Jika dibutuhkan di masa
+depan, bisa ditambahkan sebagai follow-up (multi-select calendar mode).
+
+---
+
+## CU-27 — Klaim Cuti: Sekali Selesai (2026-08-19)
+
+Klaim harus dilakukan **sekali selesai** — semua hari yang diambil dipilih dalam satu
+klaim. Tidak boleh split/bertahap.
+
+Setelah klaim di-submit, `isClaimed` jadi `true` → tombol Klaim hilang dari tabel.
+Klaim yang sudah di-approve tidak bisa diubah.
+
+---
+
+## CU-28 — Klaim Cuti: Approval Chain (2026-08-19)
+
+Backend menentukan rantai approval klaim. Default: langsung ke **Supervisor SDM**
+(bukan multi-level seperti pengajuan asal).
+
+Klaim menggunakan endpoint yang sama: `POST /cuti/approval/klaim` dengan body
+`CutiApprovalPostRequest`. Approval klaim tampil di halaman Persetujuan Cuti
+(sama seperti approval pengajuan biasa).
+
+---
+
+## CU-29 — Klaim Cuti: Badge di Tabel Pengajuan (2026-08-19)
+
+Tabel pengajuan (`/cuti/pengajuan`) menampilkan **semua record** — baik `PENGAJUAN_CUTI`
+maupun `KLAIM_CUTI`. Setiap baris punya **badge** di kolom "Jenis":
+
+| Badge | Keterangan |
+|-------|------------|
+| `PENGAJUAN` | Pengajuan cuti asal |
+| `KLAIM` | Klaim dari pengajuan yang sudah approved |
+
+Badge menggunakan variant warna berbeda untuk visual distinction.
+
+---
+
+## CU-30 — Klaim Cuti: `isClaimed` (2026-08-19)
+
+`isClaimed` pada `CutiPengajuanMiniResponse` berfungsi sebagai **block action**:
+- `isClaimed === true` → tombol Klaim **tidak muncul** di kolom Aksi (prevent re-claiming)
+- `isClaimed === false` → tombol Klaim muncul jika status APPROVED (CU-23)
+
+`isClaimed` reset ke `false` jika klaim **ditolak (REJECTED)** — pegawai boleh klaim ulang
+(CU-32).
+
+---
+
+## CU-31 — Klaim Cuti: Filter Tabel (2026-08-19)
+
+Toolbar tabel pengajuan mendapat **filter dropdown `jenisPengajuanCuti`**:
+
+| Opsi | Query Param | Keterangan |
+|------|-------------|------------|
+| Semua | (tidak dikirim) | Default — tampilkan semua record |
+| Pengajuan | `jenisPengajuanCuti=PENGAJUAN_CUTI` | Hanya pengajuan asal |
+| Klaim | `jenisPengajuanCuti=KLAIM_CUTI` | Hanya klaim |
+
+URL-driven: `?tahun=2026&jenisPengajuanCuti=KLAIM_CUTI&page=&size=`
+
+---
+
+## CU-32 — Klaim Cuti: Klaim Ditolak (2026-08-19)
+
+Jika klaim **ditolak (REJECTED)**:
+- `isClaimed` pada pengajuan asal **reset ke `false`**
+- Pegawai boleh **klaim ulang** dari pengajuan yang sama
+- Klaim yang ditolak tetap muncul di tabel sebagai riwayat (badge `KLAIM`, status `Ditolak`)
+
+---
+
+## CU-33 — Klaim Cuti: Keterangan Optional (2026-08-19)
+
+Field `keterangan` pada form klaim bersifat **optional** — mengikuti backend spec.
+Klaim ini sudah jelas konteksnya (confirmasi hari yang diambil), tidak perlu alasan
+tambahan kecuali ada yang tidak biasa.
 
 ---
 
