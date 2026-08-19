@@ -10,6 +10,7 @@ import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { apiErrorMessage } from "@/lib/utils";
 import type { PelatihanDetail, SingleResultPelatihanDetail } from "@/types/profil/pelatihan";
@@ -78,7 +79,7 @@ export function PelatihanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose 
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-pelatihan-detail", editingId],
+		queryKey: profilKeys.pelatihan.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/profil/pelatihan/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data pelatihan");
@@ -137,7 +138,7 @@ export function PelatihanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose 
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Pelatihan berhasil diperbarui" : "Pelatihan berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["profil-pelatihan", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.pelatihan.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

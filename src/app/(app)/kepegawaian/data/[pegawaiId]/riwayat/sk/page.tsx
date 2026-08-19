@@ -12,6 +12,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
@@ -177,7 +178,7 @@ export default function SkPage() {
 	const hasActive = !!(nomorSk || jenisSkFilter);
 
 	const query = useQuery({
-		queryKey: ["riwayat-sk", pegawaiId, page, size, nomorSk, jenisSkFilter],
+		queryKey: riwayatKeys.sk.list(pegawaiId, { page, size, nomorSk, jenisSkFilter }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }) };
 			if (nomorSk) params.nomorSk = nomorSk;
@@ -236,7 +237,7 @@ export default function SkPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("SK berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["riwayat-sk", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.sk.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

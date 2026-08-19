@@ -11,6 +11,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
@@ -206,7 +207,7 @@ export default function MutasiPage() {
 	const hasActive = !!(nomorSk || jenisMutasiFilter);
 
 	const query = useQuery({
-		queryKey: ["riwayat-mutasi", pegawaiId, page, size, nomorSk, jenisMutasiFilter],
+		queryKey: riwayatKeys.mutasi.list(pegawaiId, { page, size, nomorSk, jenisMutasiFilter }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }) };
 			if (nomorSk) params.nomorSk = nomorSk;
@@ -265,7 +266,7 @@ export default function MutasiPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Mutasi berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["riwayat-mutasi", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.mutasi.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

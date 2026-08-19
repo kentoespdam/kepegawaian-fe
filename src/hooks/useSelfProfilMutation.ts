@@ -16,7 +16,7 @@ interface Options {
 		put: (id: string | number) => string;
 		delete: (id: string | number) => string;
 	};
-	queryKey: string[];
+	queryKey: readonly (string | number)[];
 	label: string;
 	nik: string | null;
 }

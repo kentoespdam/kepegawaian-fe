@@ -12,6 +12,8 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { profilKeys } from "@/hooks/keys/profil-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
 // ponytail: import modul langsung — verifySession server-only
@@ -120,7 +122,7 @@ export default function KeahlianPage() {
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -144,7 +146,7 @@ export default function KeahlianPage() {
 	const hasActive = !!jenisKeahlianId;
 
 	const query = useQuery({
-		queryKey: ["profil-keahlian", pegawaiId, page, size, jenisKeahlianId, nik],
+		queryKey: profilKeys.keahlian.list(pegawaiId, { page, size, jenisKeahlianId, nik }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
 			if (jenisKeahlianId) params.jenisKeahlianId = jenisKeahlianId;
@@ -202,7 +204,7 @@ export default function KeahlianPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Keahlian berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["profil-keahlian", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.keahlian.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

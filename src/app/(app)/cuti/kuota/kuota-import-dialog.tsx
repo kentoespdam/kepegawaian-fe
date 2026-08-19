@@ -9,6 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { apiErrorMessage } from "@/lib/utils";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -67,7 +68,7 @@ export function KuotaImportDialog({ open, onOpenChange }: KuotaImportDialogProps
 			setResult(summary);
 			toast.success("Kuota berhasil diimport");
 			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
 		onError: (e: Error) => setError(e.message),
 	});

@@ -11,6 +11,8 @@ import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/com
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { masterKeys } from "@/hooks/keys/master-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { JENIS_MUTASI_OPTIONS } from "@/lib/riwayat-constants";
@@ -108,7 +110,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	// ── Queries ──
 
 	const detailQuery = useQuery({
-		queryKey: ["riwayat-mutasi-detail", editingId],
+		queryKey: riwayatKeys.mutasi.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/mutasi/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data mutasi");
@@ -120,7 +122,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	});
 
 	const mutasiCtxQuery = useQuery({
-		queryKey: ["pegawai-mutasi-context", pegawaiId],
+		queryKey: riwayatKeys.mutasiContext(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/mutasi-context`);
 			if (!res.ok) throw new Error("Gagal memuat data pegawai");
@@ -169,7 +171,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	const orgOpts = useFkOptions("organisasi");
 
 	const jabQuery = useQuery({
-		queryKey: ["jabatan", "organisasi", organisasiId],
+		queryKey: masterKeys.list("jabatan", { organisasiId }),
 		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(organisasiId)),
 		enabled: !!organisasiId,
 		staleTime: 300_000,
@@ -181,7 +183,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 
 	const jabatanId = watch("jabatanId");
 	const profesiQuery = useQuery({
-		queryKey: ["profesi", "jabatan", jabatanId],
+		queryKey: masterKeys.list("profesi", { jabatanId }),
 		queryFn: () => api.listBy<Record<string, unknown>>("profesi", "jabatan", String(jabatanId)),
 		enabled: !!jabatanId,
 		staleTime: 300_000,
@@ -298,7 +300,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Mutasi berhasil diperbarui" : "Mutasi berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["riwayat-mutasi", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.mutasi.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

@@ -10,6 +10,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { labelStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { apiErrorMessage, throwIfNotOk } from "@/lib/utils";
@@ -44,7 +45,7 @@ export function KuotaPageClient() {
 
 	const query = useQuery({
 		// CU-14: queryKey bawa semua param yang mempengaruhi hasil
-		queryKey: ["cuti-kuota", tahun, nama, nipam, page, size],
+		queryKey: cutiKeys.kuota.list({ tahun, nama, nipam, page, size }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), tahun: String(tahun) };
 			if (nama) params.nama = nama;
@@ -72,7 +73,7 @@ export function KuotaPageClient() {
 			toast.success("Kuota cuti berhasil dihapus");
 			setDeleting(null);
 			setDeleteError(null);
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
 		// 409 → inline di dialog (bukan toast) — kontrak status (coding-rules §6)
 		onError: (e: Error) => setDeleteError(e.message),

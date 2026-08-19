@@ -13,6 +13,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { apiErrorMessage } from "@/lib/utils";
 import type { CutiKuotaPostRequest, CutiKuotaResponse } from "@/types/cuti/kuota";
 import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
@@ -73,7 +74,7 @@ export function KuotaFormSheet({ open, onOpenChange, editing }: KuotaFormSheetPr
 
 	const searchEnabled = debouncedSearch.length >= 2;
 	const pegawaiSearch = useQuery({
-		queryKey: ["pegawai-search-aktif", debouncedSearch],
+		queryKey: ["pegawai-search", debouncedSearch],
 		queryFn: async () => {
 			const res = await fetch(
 				`/api/proxy/pegawai/list?search=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF`,
@@ -153,7 +154,7 @@ export function KuotaFormSheet({ open, onOpenChange, editing }: KuotaFormSheetPr
 		onSuccess: () => {
 			toast.success(editing ? "Kuota cuti berhasil diperbarui" : "Kuota cuti berhasil ditambahkan");
 			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});

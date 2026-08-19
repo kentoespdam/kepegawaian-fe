@@ -10,6 +10,7 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
@@ -184,7 +185,7 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 	};
 
 	const query = useQuery({
-		queryKey: ["profil-update", page, size, nama, nipam, status],
+		queryKey: profilKeys.update.list({ page, size, nama, nipam, status }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), approvalStatus: status };
 			if (nama) params.nama = nama;
@@ -202,7 +203,7 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 	const pageView = fromPage(query.data);
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-update-detail", selectedId],
+		queryKey: profilKeys.update.detail(selectedId),
 		queryFn: async () => {
 			if (selectedId == null) return null;
 			const res = await fetch(`/api/proxy/profil/profil-update/${selectedId}`);
@@ -228,7 +229,7 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 		onSuccess: (_d, { approval }) => {
 			toast.success(approval === "APPROVED" ? "Perubahan disetujui" : "Perubahan ditolak");
 			setSelectedId(null);
-			qc.invalidateQueries({ queryKey: ["profil-update"] });
+			qc.invalidateQueries({ queryKey: profilKeys.update.all() });
 		},
 		onError: (e: Error) => setActionError(e.message),
 	});

@@ -40,6 +40,9 @@ const schema = z.object({
 	notes: z.string().optional(),
 });
 
+import { masterKeys } from "@/hooks/keys/master-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
+
 type FormValues = z.infer<typeof schema>;
 
 // ── Section label ──
@@ -65,7 +68,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	// ── Detail fetch ──
 
 	const detailQuery = useQuery({
-		queryKey: ["riwayat-sp-detail", editingId],
+		queryKey: riwayatKeys.sp.detail(editingId),
 		queryFn: async () => {
 			if (!editingId) return undefined;
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/sp/${editingId}`);
@@ -114,7 +117,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	// ── FK options ──
 
 	const jenisSpQuery = useQuery({
-		queryKey: ["jenis-sp-list"],
+		queryKey: masterKeys.list("jenis-sp"),
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/master/jenis-sp/list");
 			if (!res.ok) return [];
@@ -241,7 +244,7 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			}
 
 			toast.success(editingId ? "SP berhasil diperbarui" : "SP berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["riwayat-sp", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.sp.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

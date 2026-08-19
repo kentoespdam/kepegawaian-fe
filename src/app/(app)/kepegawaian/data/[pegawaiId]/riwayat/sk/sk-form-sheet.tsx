@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_SK_OPTIONS } from "@/lib/riwayat-constants";
 import { apiErrorMessage } from "@/lib/utils";
@@ -83,7 +84,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["riwayat-sk-detail", editingId],
+		queryKey: riwayatKeys.sk.detail(editingId),
 		queryFn: async () => {
 			if (!editingId) return undefined;
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/sk/${editingId}`);
@@ -148,7 +149,7 @@ export function SkFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 			}
 
 			toast.success(editingId ? "SK berhasil diperbarui" : "SK berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["riwayat-sk", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.sk.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

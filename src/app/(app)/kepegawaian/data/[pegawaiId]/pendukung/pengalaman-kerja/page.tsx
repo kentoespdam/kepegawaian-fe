@@ -11,6 +11,8 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Button } from "@/components/ui/button";
+import { profilKeys } from "@/hooks/keys/profil-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 // ponytail: import modul langsung — verifySession server-only
 import { forbidden, hasPermission } from "@/lib/auth/can";
@@ -106,7 +108,7 @@ export default function PengalamanKerjaPage() {
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -131,7 +133,7 @@ export default function PengalamanKerjaPage() {
 	const hasActive = !!(namaPerusahaan || jabatan);
 
 	const query = useQuery({
-		queryKey: ["profil-pengalaman-kerja", pegawaiId, page, size, namaPerusahaan, jabatan, nik],
+		queryKey: profilKeys.pengalamanKerja.list(pegawaiId, { page, size, namaPerusahaan, jabatan, nik }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
 			if (namaPerusahaan) params.namaPerusahaan = namaPerusahaan;
@@ -190,7 +192,7 @@ export default function PengalamanKerjaPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Pengalaman kerja berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["profil-pengalaman-kerja", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.pengalamanKerja.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

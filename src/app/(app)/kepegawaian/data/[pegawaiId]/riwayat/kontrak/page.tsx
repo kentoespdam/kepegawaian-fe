@@ -11,6 +11,7 @@ import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
@@ -127,7 +128,7 @@ export default function KontrakPage() {
 
 	// ponytail: dedupe dengan layout — queryKey sama, cache hit, zero extra network
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -141,7 +142,7 @@ export default function KontrakPage() {
 	const hasActive = !!nomorKontrak;
 
 	const query = useQuery({
-		queryKey: ["riwayat-kontrak", pegawaiId, page, size, nomorKontrak],
+		queryKey: riwayatKeys.kontrak.list(pegawaiId, { page, size, nomorKontrak }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }) };
 			if (nomorKontrak) params.nomorKontrak = nomorKontrak;
@@ -195,7 +196,7 @@ export default function KontrakPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Kontrak berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["riwayat-kontrak", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.kontrak.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

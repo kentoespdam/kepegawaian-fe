@@ -12,6 +12,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { JENIS_AKSI_KONTRAK_OPTIONS } from "@/lib/riwayat-constants";
 import { apiErrorMessage } from "@/lib/utils";
@@ -83,7 +84,7 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["riwayat-kontrak-detail", editingId],
+		queryKey: riwayatKeys.kontrak.detail(editingId),
 		queryFn: async () => {
 			if (!editingId) return undefined;
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/kontrak/${editingId}`);
@@ -148,7 +149,7 @@ export function KontrakFormSheet({ pegawaiId, editingId, isOpen, onClose }: Prop
 			}
 
 			toast.success(editingId ? "Kontrak berhasil diperbarui" : "Kontrak berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["riwayat-kontrak", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.kontrak.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

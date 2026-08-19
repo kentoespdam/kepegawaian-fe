@@ -23,6 +23,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { systemKeys } from "@/hooks/keys/system-keys";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { throwIfNotOk } from "@/lib/utils";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
@@ -36,7 +37,7 @@ import type {
 
 function useAllRoles() {
 	return useQuery({
-		queryKey: ["system-roles-list"],
+		queryKey: systemKeys.roles.list(),
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/roles/list");
 			throwIfNotOk(res, "Gagal memuat role");
@@ -131,7 +132,7 @@ export function UsersClient() {
 	};
 
 	const query = useQuery({
-		queryKey: ["system-users", page, size, nipam, nama],
+		queryKey: systemKeys.users.list({ page, size, nipam, nama }),
 		queryFn: async () => {
 			const params: Record<string, string> = toApiParams({ page, size });
 			if (nipam) params.nipam = nipam;
@@ -172,7 +173,7 @@ export function UsersClient() {
 		onSuccess: () => {
 			toast.success("Role user diperbarui");
 			setEditingUser(null);
-			qc.invalidateQueries({ queryKey: ["system-users"] });
+			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});
@@ -193,7 +194,7 @@ export function UsersClient() {
 		onSuccess: () => {
 			toast.success("Status user diperbarui");
 			setToggleUser(null);
-			qc.invalidateQueries({ queryKey: ["system-users"] });
+			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
 		},
 		onError: (e: Error) => setToggleError(e.message),
 	});
@@ -214,7 +215,7 @@ export function UsersClient() {
 			toast.success("User dibuat");
 			setCreateOpen(false);
 			setCreateError(null);
-			qc.invalidateQueries({ queryKey: ["system-users"] });
+			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
 		},
 		onError: (e: Error) => setCreateError(e.message),
 	});

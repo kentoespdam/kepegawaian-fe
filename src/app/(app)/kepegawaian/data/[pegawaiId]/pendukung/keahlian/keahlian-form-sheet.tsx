@@ -10,6 +10,7 @@ import { FieldFk, FieldSelect, FieldText } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { apiErrorMessage } from "@/lib/utils";
 import type { KeahlianDetail, SingleResultKeahlianDetail } from "@/types/profil/keahlian";
@@ -71,7 +72,7 @@ export function KeahlianFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-keahlian-detail", editingId],
+		queryKey: profilKeys.keahlian.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/profil/keahlian/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data keahlian");
@@ -126,7 +127,7 @@ export function KeahlianFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Keahlian berhasil diperbarui" : "Keahlian berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["profil-keahlian", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.keahlian.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

@@ -12,6 +12,8 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { profilKeys } from "@/hooks/keys/profil-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 // ponytail: import modul langsung — verifySession server-only
 import { forbidden, hasPermission } from "@/lib/auth/can";
@@ -128,7 +130,7 @@ export default function KeluargaPage() {
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -152,7 +154,7 @@ export default function KeluargaPage() {
 	const hasActive = !!hubunganKeluarga;
 
 	const query = useQuery({
-		queryKey: ["profil-keluarga", pegawaiId, page, size, hubunganKeluarga, nik],
+		queryKey: profilKeys.keluarga.list(pegawaiId, { page, size, hubunganKeluarga, nik }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
 			if (hubunganKeluarga) params.hubunganKeluarga = hubunganKeluarga; // angka (spike fnfh.5)
@@ -210,7 +212,7 @@ export default function KeluargaPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Keluarga berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["profil-keluarga", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.keluarga.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

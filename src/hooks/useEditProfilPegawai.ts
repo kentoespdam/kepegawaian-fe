@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { masterKeys } from "@/hooks/keys/master-keys";
 import { pegawaiKeys } from "@/hooks/keys/pegawai-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
@@ -87,7 +88,7 @@ export function useEditProfilPegawai({ pegawaiId, onClose }: { pegawaiId: string
 
 	const organisasiId = watch("organisasiId");
 	const jabQuery = useQuery({
-		queryKey: ["jabatan", "organisasi", organisasiId],
+		queryKey: masterKeys.list("jabatan", { organisasiId }),
 		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(organisasiId)),
 		enabled: !!organisasiId,
 		staleTime: 300_000,

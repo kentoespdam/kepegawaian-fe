@@ -8,6 +8,8 @@ import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
+import { masterKeys } from "@/hooks/keys/master-keys";
+import { pegawaiKeys } from "@/hooks/keys/pegawai-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
 import { api } from "@/lib/api/client";
@@ -45,7 +47,7 @@ export function TambahPegawaiForm() {
 
 	// Cascade jabatan by organisasi
 	const jabQuery = useQuery({
-		queryKey: ["jabatan", "organisasi", organisasiId],
+		queryKey: masterKeys.list("jabatan", { organisasiId }),
 		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(organisasiId)),
 		enabled: !!organisasiId,
 		staleTime: 300_000,
@@ -103,7 +105,7 @@ export function TambahPegawaiForm() {
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan data"));
 			}
 			toast.success("Data pegawai berhasil disimpan");
-			qc.invalidateQueries({ queryKey: ["/api/proxy/pegawai"] });
+			qc.invalidateQueries({ queryKey: pegawaiKeys.lists() });
 			router.push("/kepegawaian/data");
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

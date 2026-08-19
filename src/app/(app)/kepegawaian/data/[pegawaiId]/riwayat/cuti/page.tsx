@@ -9,6 +9,8 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 // ponytail: import modul langsung (bukan barrel @/lib/auth) — verifySession server-only
 import { forbidden, hasPermission } from "@/lib/auth/can";
@@ -205,7 +207,7 @@ export default function CutiPage() {
 
 	// ponytail: sort default tanggalMulai desc (K-C4) — fixed, tak perlu di queryKey
 	const query = useQuery({
-		queryKey: ["riwayat-cuti", pegawaiId, page, size, tahun],
+		queryKey: riwayatKeys.cuti.list(pegawaiId, { page, size, tahun }),
 		queryFn: async () => {
 			const qs = new URLSearchParams({
 				...toApiParams({ page, size, sortBy: "tanggalMulai", sortDir: "desc" }),
@@ -221,7 +223,7 @@ export default function CutiPage() {
 	});
 
 	const kuotaQuery = useQuery({
-		queryKey: ["cuti-kuota", pegawaiId, tahun],
+		queryKey: cutiKeys.kuota.detail(pegawaiId, tahun),
 		queryFn: async () => {
 			const qs = new URLSearchParams({ pegawaiId, tahun: String(tahun) }).toString();
 			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);

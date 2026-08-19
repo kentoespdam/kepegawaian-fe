@@ -72,7 +72,7 @@ export function useTerminasiForm({
 
 	const searchEnabled = debouncedSearch.length >= 2;
 	const pegawaiSearch = useQuery({
-		queryKey: ["pegawai-search-aktif", debouncedSearch],
+		queryKey: ["pegawai-search", debouncedSearch],
 		queryFn: async () => {
 			if (!searchEnabled) return [] as PegawaiListResponse[];
 			const res = await fetch(

@@ -1,4 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { masterKeys } from "@/hooks/keys/master-keys";
 import { api } from "@/lib/api/client";
 
 /**
@@ -33,18 +34,18 @@ export function useSanksiMutations(jenisSpId: number) {
 	const create = useMutation({
 		mutationFn: (data: Omit<FullSanksiPayload, "jenisSpId">) =>
 			api.create<FullSanksiPayload>("sanksi", { ...data, jenisSpId }),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["jenis-sp"] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: masterKeys.all("jenis-sp") }),
 	});
 
 	const update = useMutation({
 		mutationFn: ({ id, data }: { id: string; data: Omit<FullSanksiPayload, "jenisSpId"> }) =>
 			api.update<FullSanksiPayload>("sanksi", id, { ...data, jenisSpId }),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["jenis-sp"] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: masterKeys.all("jenis-sp") }),
 	});
 
 	const remove = useMutation({
 		mutationFn: (id: string) => api.remove("sanksi", id),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["jenis-sp"] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: masterKeys.all("jenis-sp") }),
 	});
 
 	return { create, update, remove };

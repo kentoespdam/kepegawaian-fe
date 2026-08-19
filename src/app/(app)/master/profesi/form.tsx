@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { masterKeys } from "@/hooks/keys/master-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { api } from "@/lib/api/client";
 import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./schema";
@@ -42,7 +43,7 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 
 	// Cascade jabatan by organisasi — enabled hanya jika org terpilih
 	const jabQuery = useQuery({
-		queryKey: ["jabatan", "organisasi", orgId],
+		queryKey: masterKeys.list("jabatan", { organisasiId: orgId }),
 		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(orgId)),
 		enabled: !!orgId,
 		staleTime: 300_000,
@@ -66,7 +67,7 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 
 	// Cascade grade by jabatan's levelId
 	const gradeQuery = useQuery({
-		queryKey: ["grade", "list"],
+		queryKey: masterKeys.list("grade"),
 		queryFn: () => api.listAll<Record<string, unknown>>("grade"),
 		staleTime: 300_000,
 	});

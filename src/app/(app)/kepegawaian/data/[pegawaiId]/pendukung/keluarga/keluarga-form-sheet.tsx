@@ -10,6 +10,7 @@ import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/com
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { ENUMS } from "@/lib/enums";
 import { apiErrorMessage } from "@/lib/utils";
@@ -66,7 +67,7 @@ export function KeluargaFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-keluarga-detail", editingId],
+		queryKey: profilKeys.keluarga.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/profil/keluarga/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data keluarga");
@@ -126,7 +127,7 @@ export function KeluargaFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Anggota keluarga berhasil diperbarui" : "Anggota keluarga berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["profil-keluarga", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.keluarga.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

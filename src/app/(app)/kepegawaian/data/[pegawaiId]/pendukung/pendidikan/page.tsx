@@ -12,6 +12,8 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { profilKeys } from "@/hooks/keys/profil-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
 // ponytail: import modul langsung — verifySession server-only
@@ -141,7 +143,7 @@ export default function PendidikanPage() {
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -166,7 +168,7 @@ export default function PendidikanPage() {
 	const hasActive = !!(institusi || jenjangId);
 
 	const query = useQuery({
-		queryKey: ["profil-pendidikan", pegawaiId, page, size, institusi, jenjangId, nik],
+		queryKey: profilKeys.pendidikan.list(pegawaiId, { page, size, institusi, jenjangId, nik }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
 			if (institusi) params.institusi = institusi;
@@ -225,7 +227,7 @@ export default function PendidikanPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Pendidikan berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["profil-pendidikan", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.pendidikan.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

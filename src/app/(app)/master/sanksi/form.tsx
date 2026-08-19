@@ -9,6 +9,7 @@ import { MasterSwitch } from "@/components/master-switch";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { masterKeys } from "@/hooks/keys/master-keys";
 import { api } from "@/lib/api/client";
 import type { JenisSpListResponse } from "@/types/master/jenis-sp";
 import { type SanksiFormValues, SWITCH_LABELS, sanksiDefaults, sanksiSchema } from "./schema";
@@ -26,7 +27,7 @@ interface SanksiFormProps {
 
 export function SanksiForm({ editing, onCancel, error, setError, isSubmitting, submit }: SanksiFormProps) {
 	const { data: jenisSpRaw } = useQuery<JenisSpListResponse[]>({
-		queryKey: ["jenis-sp", "list"],
+		queryKey: masterKeys.list("jenis-sp"),
 		queryFn: () => api.listAll<JenisSpListResponse[]>("jenis-sp"),
 		staleTime: 300_000,
 	});

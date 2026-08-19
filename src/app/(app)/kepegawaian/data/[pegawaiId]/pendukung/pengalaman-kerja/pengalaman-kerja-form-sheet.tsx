@@ -10,6 +10,7 @@ import { FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { apiErrorMessage } from "@/lib/utils";
 import type { PengalamanKerjaDetail, SingleResultPengalamanKerjaDetail } from "@/types/profil/pengalaman-kerja";
 
@@ -70,7 +71,7 @@ export function PengalamanKerjaFormSheet({ pegawaiId, nik, editingId, isOpen, on
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-pengalaman-kerja-detail", editingId],
+		queryKey: profilKeys.pengalamanKerja.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/profil/pengalaman-kerja/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data pengalaman kerja");
@@ -126,7 +127,7 @@ export function PengalamanKerjaFormSheet({ pegawaiId, nik, editingId, isOpen, on
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Pengalaman kerja berhasil diperbarui" : "Pengalaman kerja berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["profil-pengalaman-kerja", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.pengalamanKerja.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

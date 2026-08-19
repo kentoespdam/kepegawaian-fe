@@ -11,6 +11,7 @@ import { FieldDate, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { formatDate } from "@/lib/utils";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 
@@ -121,8 +122,8 @@ export function KlaimFormSheet({ open, onOpenChange, pegawaiId, pengajuan }: Kla
 		onSuccess: () => {
 			toast.success("Klaim cuti berhasil dikirim");
 			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() });
+			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});

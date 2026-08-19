@@ -12,6 +12,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
 import { Button } from "@/components/ui/button";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { hasPermission } from "@/lib/auth/can";
@@ -181,7 +182,7 @@ export default function SpPage() {
 	const hasActive = !!(nomorSp || jenisSpId);
 
 	const query = useQuery({
-		queryKey: ["riwayat-sp", pegawaiId, page, size, nomorSp, jenisSpId],
+		queryKey: riwayatKeys.sp.list(pegawaiId, { page, size, nomorSp, jenisSpId }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }) };
 			if (nomorSp) params.nomorSp = nomorSp;
@@ -246,7 +247,7 @@ export default function SpPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("SP berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["riwayat-sp", pegawaiId] });
+			qc.invalidateQueries({ queryKey: riwayatKeys.sp.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");

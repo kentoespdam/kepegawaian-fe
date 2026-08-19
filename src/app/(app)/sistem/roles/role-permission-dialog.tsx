@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { systemKeys } from "@/hooks/keys/system-keys";
 import { cn } from "@/lib/utils";
 import type { PrefPermission } from "@/types/system/permissions";
 import type { PrefRole } from "@/types/system/roles";
@@ -133,7 +134,7 @@ export function RolePermissionDialog({
 					? `Hak akses ${permName} berhasil diberikan ke role ${role?.id}`
 					: `Hak akses ${permName} berhasil dicabut dari role ${role?.id}`,
 			);
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
+			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
 		},
 		onError: (e: Error) => {
 			toast.error(e.message);
@@ -169,11 +170,11 @@ export function RolePermissionDialog({
 					? `${targetPerms.length} hak akses berhasil diaktifkan untuk role ${role.id}`
 					: `${targetPerms.length} hak akses berhasil dicabut dari role ${role.id}`,
 			);
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
+			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
 		} catch (err: unknown) {
 			const msg = err instanceof Error ? err.message : "Gagal memproses perubahan batch";
 			toast.error(msg);
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
+			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
 		} finally {
 			setIsBatchPending(false);
 		}

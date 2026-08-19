@@ -11,6 +11,7 @@ import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { apiErrorMessage } from "@/lib/utils";
 import type { ListResultCutiJenisMiniResponse } from "@/types/cuti/jenis";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
@@ -126,7 +127,7 @@ export function PengajuanFormSheet({
 
 	// ── Jenis & Sub-Jenis — satu fetch flat list; filter parentId client-side (CU-16) ──
 	const jenisQuery = useQuery({
-		queryKey: ["cuti-jenis-list"],
+		queryKey: cutiKeys.jenisList(),
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/cuti/jenis/list");
 			if (!res.ok) throw new Error("Gagal memuat jenis cuti");
@@ -147,7 +148,7 @@ export function PengajuanFormSheet({
 
 	// ── Jumlah Hari Kerja (fetched saat kedua tanggal terisi) ──
 	const hariKerjaQuery = useQuery({
-		queryKey: ["cuti-total-hari-kerja", tanggalMulai, tanggalSelesai],
+		queryKey: cutiKeys.totalHariKerja(tanggalMulai, tanggalSelesai),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/cuti/pengajuan/${tanggalMulai}/${tanggalSelesai}/total-hari-kerja`);
 			if (!res.ok) throw new Error("Gagal menghitung hari kerja");
@@ -197,8 +198,8 @@ export function PengajuanFormSheet({
 		onSuccess: () => {
 			toast.success(editing ? "Pengajuan cuti diperbarui" : "Pengajuan cuti berhasil dikirim");
 			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() });
+			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});

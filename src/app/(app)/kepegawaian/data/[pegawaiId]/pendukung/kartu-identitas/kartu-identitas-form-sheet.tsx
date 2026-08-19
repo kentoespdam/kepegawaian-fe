@@ -10,6 +10,7 @@ import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { profilKeys } from "@/hooks/keys/profil-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { apiErrorMessage } from "@/lib/utils";
 import type { KartuIdentitasDetail, SingleResultKartuIdentitasDetail } from "@/types/profil/kartu-identitas";
@@ -56,7 +57,7 @@ export function KartuIdentitasFormSheet({ pegawaiId, nik, editingId, isOpen, onC
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({
-		queryKey: ["profil-kartu-identitas-detail", editingId],
+		queryKey: profilKeys.kartuIdentitas.detail(editingId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/profil/kartu-identitas/${editingId}`);
 			if (!res.ok) throw new Error("Gagal memuat data kartu identitas");
@@ -112,7 +113,7 @@ export function KartuIdentitasFormSheet({ pegawaiId, nik, editingId, isOpen, onC
 				throw new Error(apiErrorMessage(body, "Gagal menyimpan"));
 			}
 			toast.success(editingId ? "Kartu identitas berhasil diperbarui" : "Kartu identitas berhasil ditambahkan");
-			qc.invalidateQueries({ queryKey: ["profil-kartu-identitas", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.kartuIdentitas.all() });
 			onClose();
 		} catch (e: unknown) {
 			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";

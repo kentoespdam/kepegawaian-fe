@@ -18,6 +18,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse } from "@/types/cuti/approval";
@@ -105,7 +106,7 @@ function DetailTab({ row }: { row: CutiApprovalChainResponse }) {
 
 function RiwayatTab({ cutiId }: { cutiId: number }) {
 	const q = useQuery({
-		queryKey: ["cuti-approval-history", cutiId],
+		queryKey: cutiKeys.approvalHistory(cutiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/cuti/approval/${cutiId}?size=100`);
 			throwIfNotOk(res, "Gagal memuat riwayat approval");
@@ -222,9 +223,9 @@ export function DetailApprovalDialog({
 			toast.success(action === "APPROVE" ? "Pengajuan disetujui" : "Pengajuan ditolak");
 			resetState();
 			await Promise.all([
-				qc.invalidateQueries({ queryKey: ["cuti-persetujuan"] }),
-				qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] }),
-				qc.invalidateQueries({ queryKey: ["cuti-kuota"] }),
+				qc.invalidateQueries({ queryKey: cutiKeys.persetujuan.all() }),
+				qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() }),
+				qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() }),
 			]);
 			onActionComplete();
 		},

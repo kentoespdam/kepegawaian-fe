@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { systemKeys } from "@/hooks/keys/system-keys";
 import { cn } from "@/lib/utils";
 import type { ListResultPrefPermission } from "@/types/system/permissions";
 import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
@@ -101,7 +102,7 @@ function RoleFormDialog({
 /** Ambil SEMUA permission yang tersedia di sistem (read-only, katalog). */
 function useAllPermissions() {
 	return useQuery({
-		queryKey: ["system-permissions"],
+		queryKey: systemKeys.permissions(),
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/permissions");
 			if (!res.ok) throw new Error("Gagal memuat katalog permission");
@@ -115,7 +116,7 @@ function useAllPermissions() {
 /** Ambil semua role + permission yang dimilikinya (list endpoint, tanpa paging). */
 function useAllRoles() {
 	return useQuery({
-		queryKey: ["system-roles"],
+		queryKey: systemKeys.roles.all(),
 		queryFn: async () => {
 			const res = await fetch("/api/proxy/system/roles/list");
 			if (!res.ok) throw new Error("Gagal memuat daftar role");
@@ -158,7 +159,7 @@ export function RolesClient() {
 			toast.success("Role berhasil dihapus");
 			setDeleteRole(null);
 			setDeleteError(null);
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
+			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
 		},
 		onError: (e: Error) => setDeleteError(e.message),
 	});
@@ -178,7 +179,7 @@ export function RolesClient() {
 		onSuccess: () => {
 			toast.success(roleForm.role ? "Role berhasil diperbarui" : "Role baru berhasil dibuat");
 			setRoleForm({ open: false, role: null });
-			qc.invalidateQueries({ queryKey: ["system-roles"] });
+			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
 		},
 		onError: (e: Error) => toast.error(e.message),
 	});

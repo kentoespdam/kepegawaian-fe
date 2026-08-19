@@ -10,6 +10,7 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { cn, formatDate, throwIfNotOk } from "@/lib/utils";
@@ -89,7 +90,7 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 
 	const query = useQuery({
 		// CU-20: approvalCutiStatus wajib (BE 400), readWriteStatus opsional
-		queryKey: ["cuti-persetujuan", jabatanId, tahun, page, size, statusParam, readWriteStatus],
+		queryKey: cutiKeys.persetujuan.list({ jabatanId, tahun, page, size, statusParam, readWriteStatus }),
 		queryFn: async () => {
 			const params: Record<string, string> = {
 				...toApiParams({ page, size }),

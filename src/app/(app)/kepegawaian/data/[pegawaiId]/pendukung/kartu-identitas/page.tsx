@@ -12,6 +12,8 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { profilKeys } from "@/hooks/keys/profil-keys";
+import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
 // ponytail: import modul langsung — verifySession server-only
@@ -124,7 +126,7 @@ export default function KartuIdentitasPage() {
 
 	// Session cache layout (queryKey sama → satu fetch) — nik gratis (P6)
 	const sessionQuery = useQuery({
-		queryKey: ["pegawai-session", pegawaiId],
+		queryKey: riwayatKeys.session(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
 			throwIfNotOk(res, "Gagal memuat data pegawai");
@@ -149,7 +151,7 @@ export default function KartuIdentitasPage() {
 	const hasActive = !!(jenisKartuId || nomorKartu);
 
 	const query = useQuery({
-		queryKey: ["profil-kartu-identitas", pegawaiId, page, size, jenisKartuId, nomorKartu, nik],
+		queryKey: profilKeys.kartuIdentitas.list(pegawaiId, { page, size, jenisKartuId, nomorKartu, nik }),
 		queryFn: async () => {
 			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
 			if (jenisKartuId) params.jenisKartuId = jenisKartuId;
@@ -208,7 +210,7 @@ export default function KartuIdentitasPage() {
 			}
 			if (!res.ok) throw new Error("Gagal menghapus");
 			toast.success("Kartu identitas berhasil dihapus");
-			qc.invalidateQueries({ queryKey: ["profil-kartu-identitas", pegawaiId] });
+			qc.invalidateQueries({ queryKey: profilKeys.kartuIdentitas.all() });
 			setDeleteId(null);
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");
