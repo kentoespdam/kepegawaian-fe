@@ -28,13 +28,18 @@ function mockFetch() {
 	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request, init?: RequestInit) => {
 		const s = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
 		if (s.includes("/auth/csrf-token")) return okJson("TOKEN-APPROVE");
+		if (s.includes("/cuti/approval") && s.includes("/99") && init?.method !== "POST") {
+			// riwayat approval untuk cutiId=99
+			return okJson({ content: [], totalElements: 0, totalPages: 0 });
+		}
 		if (s.includes("/cuti/approval") && init?.method === "POST") {
 			postInit = init;
 			return okJson({});
 		}
 		if (s.includes("/cuti/pengajuan/approval")) {
 			listUrl = s;
-			// satu WRITE + satu NONE (non-approver lihat tanpa tombol)
+			// riwayat view: include non-PENDING rows (filtered client-side)
+			const isRiwayat = !s.includes("approvalCutiStatus=PENDING");
 			return okJson({
 				content: [
 					{
@@ -44,11 +49,13 @@ function mockFetch() {
 						refCuti: {
 							id: 99,
 							nama: "Budi Santoso",
+							nipam: "890300426",
 							jenisCuti: { id: 1, nama: "Cuti Tahunan" },
 							tanggalMulai: "2026-08-01",
 							tanggalSelesai: "2026-08-03",
 							jumlahHariKerja: 2,
-							approvalCutiStatus: "PENDING",
+							approvalCutiStatus: isRiwayat ? "APPROVED" : "PENDING",
+							alasan: "Libur keluarga",
 						},
 					},
 					{
@@ -62,7 +69,7 @@ function mockFetch() {
 							tanggalMulai: "2026-07-01",
 							tanggalSelesai: "2026-07-02",
 							jumlahHariKerja: 1,
-							approvalCutiStatus: "PENDING",
+							approvalCutiStatus: isRiwayat ? "REJECTED" : "PENDING",
 						},
 					},
 				],
@@ -101,23 +108,32 @@ describe("PersetujuanPageClient", () => {
 		vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams("") as ReturnType<typeof useSearchParams>);
 	});
 
-	it("tombol Setujui/Tolak hanya untuk readWriteStatus WRITE; POST kirim body approval yang benar", async () => {
+	it("kolom Aksi tampilkan tombol Detail untuk semua baris; klik Detail buka modal; approve via inline expansion", async () => {
 		mockFetch();
 		renderClient();
 
-		// hanya row WRITE (Budi) yang punya tombol aksi — NONE (Siti) tanpa tombol
-		expect(await screen.findAllByRole("button", { name: /setujui/i }, { timeout: 2000 })).toHaveLength(1);
+		// CU-19: tombol Detail muncul untuk SEMUA baris (bukan hanya WRITE)
+		const detailButtons = await screen.findAllByRole("button", { name: /detail/i }, { timeout: 2000 });
+		expect(detailButtons).toHaveLength(2);
 
-		// CU-18/ADR-0041: list di-filter posisional by JABATAN — picSaatIniId = jabatanId approver
+		// CU-18/ADR-0041: list di-filter posisional by JABATAN
 		expect(listUrl).toContain("picSaatIniId=7");
 		expect(listUrl).toContain("approvalCutiStatus=PENDING");
 
-		await userEvent.click(screen.getByRole("button", { name: /setujui/i }));
+		// klik Detail baris pertama (Budi, WRITE)
+		await userEvent.click(detailButtons[0]);
 
-		// notes wajib — tombol konfirmasi disabled sampai diisi
-		const confirmButton = screen.getByRole("button", { name: /^setujui$/i });
+		// dialog detail terbuka
+		const dialog = await screen.findByRole("dialog", {}, { timeout: 2000 });
+		expect(within(dialog).getByText("Detail Pengajuan Cuti")).toBeTruthy();
+		expect(within(dialog).getByText("Budi Santoso")).toBeTruthy();
+
+		// klik tombol Setujui di footer dialog
+		await userEvent.click(within(dialog).getByRole("button", { name: /setujui/i }));
+
+		// inline expansion: notes wajib — tombol konfirmasi disabled sampai diisi
+		const confirmButton = within(dialog).getByRole("button", { name: /konfirmasi setujui/i });
 		expect(confirmButton).toBeDisabled();
-		const dialog = screen.getByRole("alertdialog");
 		await userEvent.type(within(dialog).getByRole("textbox"), "Disetujui, kuota tersedia");
 		await userEvent.click(confirmButton);
 
@@ -131,14 +147,19 @@ describe("PersetujuanPageClient", () => {
 		expect(body.notes).toBe("Disetujui, kuota tersedia");
 	});
 
-	it("view riwayat: tanpa tab, tanpa tombol aksi, dan query list tidak kirim approvalCutiStatus", async () => {
+	it("view riwayat: tombol Detail tetap muncul, query list tanpa approvalCutiStatus", async () => {
 		mockFetch();
 		renderClient("riwayat");
 
-		// data mock 2 baris PENDING → di-filter client → empty state riwayat
-		expect(await screen.findByText("Belum ada riwayat persetujuan", {}, { timeout: 2000 })).toBeTruthy();
+		// tombol Detail tetap ada di riwayat (non-PENDING rows)
+		const detailButtons = await screen.findAllByRole("button", { name: /detail/i }, { timeout: 2000 });
+		expect(detailButtons.length).toBeGreaterThan(0);
+
+		// tidak ada tombol Setujui/Tolak langsung di tabel
 		expect(screen.queryByRole("button", { name: /setujui/i })).toBeNull();
-		// Spike CU-10: riwayat tanpa filter status (backend 1 nilai) → non-PENDING di-filter client
+		expect(screen.queryByRole("button", { name: /tolak/i })).toBeNull();
+
+		// Spike CU-10: riwayat tanpa filter status
 		expect(listUrl).not.toContain("approvalCutiStatus");
 		expect(listUrl).toContain("picSaatIniId=7");
 	});

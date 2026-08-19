@@ -1,10 +1,9 @@
 "use client";
 
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Ban, CalendarDays, CircleCheck, CircleX, Clock, Undo2 } from "lucide-react";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { Ban, CalendarDays, CircleCheck, CircleX, Clock, Eye, Undo2 } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
@@ -13,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
 import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
+import { cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiApprovalChainResponse, PageResultPageCutiApprovalChainResponse } from "@/types/cuti/pengajuan";
-import { type ApprovalAction, ApprovalConfirmDialog } from "./approval-confirm-dialog";
+import { DetailApprovalDialog } from "./detail-approval-dialog";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
@@ -53,7 +52,6 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	const sp = useSearchParams();
 	const pathname = usePathname();
 	const router = useRouter();
-	const qc = useQueryClient();
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
@@ -61,9 +59,8 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
 	const hasActive = tahun !== CURRENT_YEAR;
 
-	// Satu dialog per halaman — action + row target
-	const [approval, setApproval] = useState<{ row: CutiApprovalChainResponse; action: ApprovalAction } | null>(null);
-	const [approvalError, setApprovalError] = useState<string | null>(null);
+	// Satu dialog per halaman — row target
+	const [detailRow, setDetailRow] = useState<CutiApprovalChainResponse | null>(null);
 
 	const nav = (updates: Record<string, string | undefined>) => {
 		const p = new URLSearchParams(sp.toString());
@@ -101,51 +98,6 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 		gcTime: 300_000,
-	});
-
-	const approveMutation = useMutation({
-		mutationFn: async ({
-			row,
-			action,
-			notes,
-		}: {
-			row: CutiApprovalChainResponse;
-			action: ApprovalAction;
-			notes: string;
-		}) => {
-			// csrfToken: pola yang sama dengan pengajuan (GET /auth/csrf-token saat submit)
-			const csrfRes = await fetch("/api/proxy/auth/csrf-token");
-			if (!csrfRes.ok) throw new Error("Gagal mendapatkan token keamanan");
-			const csrfBody = (await csrfRes.json()) as { data?: string };
-
-			// Spike CU-12: approvalLevel dari CutiApprovalChainResponse.approvalLevel
-			const body = {
-				csrfToken: csrfBody.data ?? "",
-				cutiId: row.refCuti?.id ?? 0,
-				approverId: pegawaiId,
-				approvalLevel: row.approvalLevel ?? 1,
-				approvalStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
-				notes,
-			};
-			const res = await fetch("/api/proxy/cuti/approval", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
-			});
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(b, "Gagal memproses persetujuan"));
-			}
-		},
-		onSuccess: () => {
-			toast.success(approval?.action === "APPROVE" ? "Pengajuan disetujui" : "Pengajuan ditolak");
-			setApproval(null);
-			setApprovalError(null);
-			qc.invalidateQueries({ queryKey: ["cuti-persetujuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
-		},
-		onError: (e: Error) => setApprovalError(e.message),
 	});
 
 	const pageView = fromPage(query.data);
@@ -188,42 +140,18 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 		{ id: "status", header: "Status", cell: (r) => <StatusBadge status={r.refCuti?.approvalCutiStatus} /> },
 	];
 
-	// Aksi (view menunggu): Setujui/Tolak — hanya readWriteStatus === "WRITE" (CU-11)
-	if (view === "menunggu") {
-		columns.push({
-			id: "aksi",
-			header: "Aksi",
-			align: "right",
-			cell: (row) =>
-				row.readWriteStatus === "WRITE" ? (
-					<div className="inline-flex items-center gap-1.5">
-						<Button
-							size="sm"
-							className="h-8 gap-1"
-							onClick={() => {
-								setApprovalError(null);
-								setApproval({ row, action: "APPROVE" });
-							}}
-						>
-							<CircleCheck className="size-3.5" />
-							Setujui
-						</Button>
-						<Button
-							size="sm"
-							variant="outline"
-							className="h-8 gap-1 text-destructive hover:text-destructive hover:border-destructive/50"
-							onClick={() => {
-								setApprovalError(null);
-								setApproval({ row, action: "REJECT" });
-							}}
-						>
-							<CircleX className="size-3.5" />
-							Tolak
-						</Button>
-					</div>
-				) : null,
-		});
-	}
+	// CU-19: kolom Aksi = tombol Detail (buka modal detail + riwayat + aksi)
+	columns.push({
+		id: "aksi",
+		header: "Aksi",
+		align: "right",
+		cell: (row) => (
+			<Button size="sm" variant="ghost" className="h-8 gap-1" onClick={() => setDetailRow(row)}>
+				<Eye className="size-3.5" />
+				Detail
+			</Button>
+		),
+	});
 
 	const columnsWithNo = columns.map((col) =>
 		col.id === "no"
@@ -288,16 +216,12 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 				}
 			/>
 
-			<ApprovalConfirmDialog
-				open={approval != null}
-				onOpenChange={(v) => !v && setApproval(null)}
-				action={approval?.action ?? "APPROVE"}
-				pegawaiNama={approval?.row.refCuti?.nama ?? ""}
-				onConfirm={(notes) => {
-					if (approval) approveMutation.mutate({ row: approval.row, action: approval.action, notes });
-				}}
-				isPending={approveMutation.isPending}
-				error={approvalError}
+			<DetailApprovalDialog
+				open={detailRow != null}
+				onOpenChange={(v) => !v && setDetailRow(null)}
+				row={detailRow}
+				pegawaiId={pegawaiId}
+				onActionComplete={() => setDetailRow(null)}
 			/>
 		</div>
 	);

@@ -153,9 +153,9 @@ interface DetailApprovalDialogProps {
 
 ## Quality Gates
 
-- [ ] `bun run test` — all green
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint
+- [x] `bun run test` — all green (182)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint
 
 ---
 

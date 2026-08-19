@@ -8,7 +8,6 @@ export default async function CutiPersetujuanPage() {
 	// CU-18/ADR-0041: halaman hanya utk approver (punya anak buah) — unmount, bukan hide.
 	if (!isCutiApprover) forbidden();
 	const { pegawai } = await getPegawaiSession();
-	// pegawai/jabatan null (gate lolos tapi sesi tak ter-resolve = inkonsistensi BE) → client render empty state (D5).
 	return (
 		<Suspense fallback={<div className="p-6 text-muted-foreground">Memuat...</div>}>
 			<PersetujuanPageClient view="menunggu" pegawaiId={pegawai?.id ?? null} jabatanId={pegawai?.jabatan?.id ?? null} />
