@@ -11,13 +11,13 @@ import { Label } from "@/components/ui/label";
 import { useLogin } from "@/hooks/useLogin";
 
 const schema = z.object({
-	email: z.string().min(1, "Email wajib diisi").email("Format email tidak valid"),
+	email: z.string().min(1, "Email wajib diisi"),
 	password: z.string().min(1, "Password wajib diisi"),
 });
 
 type Data = z.infer<typeof schema>;
 
-export function LoginForm() {
+export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 	const [showPassword, setShowPassword] = useState(false);
 	const login = useLogin();
 
@@ -36,15 +36,21 @@ export function LoginForm() {
 				<p className="text-xs text-muted-foreground">Masukkan email kedinasan dan password Anda untuk melanjutkan</p>
 			</div>
 
-			<form onSubmit={handleSubmit((data) => login.mutate(data))} className="space-y-5">
+			<form
+				onSubmit={handleSubmit((data) => {
+					const email = data.email.includes("@") ? data.email : `${data.email}@${defaultDomain}`;
+					login.mutate({ email, password: data.password });
+				})}
+				className="space-y-5"
+			>
 				<div className="space-y-1.5">
 					<Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 						Email
 					</Label>
 					<Input
 						id="email"
-						type="email"
-						placeholder="nama@perumdamts.com"
+						type="text"
+						placeholder="Masukkan email atau NIPAM"
 						className="h-11 text-sm bg-background/50 focus-visible:bg-background"
 						aria-invalid={!!errors.email}
 						{...register("email")}

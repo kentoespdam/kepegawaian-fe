@@ -1,9 +1,26 @@
-import { CheckCircle2, Droplets, ShieldCheck, Users } from "lucide-react";
+import { AlertTriangle, CheckCircle2, Droplets, ShieldCheck, Users } from "lucide-react";
 import Image from "next/image";
 import { Suspense } from "react";
 import { LoginForm } from "./login-form";
 
 export default function LoginPage() {
+	const defaultDomain = process.env.DEFAULT_EMAIL_DOMAIN;
+
+	if (!defaultDomain) {
+		return (
+			<div className="flex min-h-screen items-center justify-center bg-background p-6">
+				<div className="max-w-md text-center">
+					<AlertTriangle className="mx-auto mb-4 size-12 text-destructive" />
+					<h1 className="text-lg font-semibold text-foreground">Konfigurasi Belum Lengkap</h1>
+					<p className="mt-2 text-sm text-muted-foreground">
+						Default email domain belum diatur. Hubungi administrator untuk mengatur environment variable{" "}
+						<code className="rounded bg-muted px-1.5 py-0.5 text-xs">DEFAULT_EMAIL_DOMAIN</code>.
+					</p>
+				</div>
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex min-h-screen bg-background">
 			{/* Left Brand Panel (Desktop) */}
@@ -80,7 +97,7 @@ export default function LoginPage() {
 					{/* Form Box */}
 					<div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
 						<Suspense fallback={null}>
-							<LoginForm />
+							<LoginForm defaultDomain={defaultDomain} />
 						</Suspense>
 					</div>
 
