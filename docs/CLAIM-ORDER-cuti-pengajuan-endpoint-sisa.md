@@ -114,9 +114,9 @@ Tidak ada perubahan di call site — type inference akan handle.
 
 ### Step 5: Verify
 
-- [ ] `bun run build` — zero error
-- [ ] `bun run test` — all green
-- [ ] `bunx biome check` — zero lint error
+- [x] `bun run build` — zero error
+- [x] `bun run test` — all green
+- [x] `bunx biome check` — zero lint error
 - [ ] Manual check: buka `/cuti/pengajuan` → strip tampil 2 kartu (Sisa Ini + Sisa Lalu)
 - [ ] Manual check: ganti tahun → strip update
 - [ ] Manual check: cancel pengajuan → strip invalidate & update
