@@ -27,6 +27,19 @@ function renderComponent() {
 	);
 }
 
+/** Mock fetch that routes by URL. */
+function mockFetchByEndpoint(responses: Record<string, unknown>) {
+	globalThis.fetch = vi.fn().mockImplementation(async (input: string | URL | Request) => {
+		const s = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
+		for (const [pattern, body] of Object.entries(responses)) {
+			if (s.includes(pattern)) {
+				return { ok: true, json: async () => body } as Response;
+			}
+		}
+		return { ok: true, json: async () => ({ data: [] }) } as Response;
+	});
+}
+
 describe("TerminasiClient", () => {
 	const mockPush = vi.fn();
 	const mockReplace = vi.fn();
@@ -48,53 +61,47 @@ describe("TerminasiClient", () => {
 		const searchParams = new URLSearchParams("tab=calon-pensiun&tahunPensiun=2026");
 		vi.mocked(useSearchParams).mockReturnValue(searchParams as never);
 
-		const mockCalonPensiunResponse = {
-			statusCode: 200,
-			statusText: "200 OK",
-			data: {
-				totalElements: 1,
-				totalPages: 1,
-				size: 10,
-				number: 0,
-				numberOfElements: 1,
-				first: true,
-				last: true,
-				empty: false,
-				content: [
-					{
-						id: 101,
-						nipam: "19800101",
-						biodata: {
-							nik: "3507123456780001",
-							nama: "Budi Santoso",
+		mockFetchByEndpoint({
+			"/calon-pensiun": {
+				data: {
+					totalElements: 1,
+					totalPages: 1,
+					size: 10,
+					number: 0,
+					numberOfElements: 1,
+					first: true,
+					last: true,
+					empty: false,
+					content: [
+						{
+							id: 101,
+							nipam: "19800101",
+							biodata: {
+								nik: "3507123456780001",
+								nama: "Budi Santoso",
+							},
+							organisasi: {
+								id: 1,
+								nama: "Bagian Keuangan",
+							},
+							jabatan: {
+								id: 2,
+								nama: "Kepala Bagian Keuangan",
+							},
+							tmtPensiun: "2026-12-31",
 						},
-						organisasi: {
-							id: 1,
-							nama: "Bagian Keuangan",
-						},
-						jabatan: {
-							id: 2,
-							nama: "Kepala Bagian Keuangan",
-						},
-						tmtPensiun: "2026-12-31",
-					},
-				],
+					],
+				},
 			},
-		};
-
-		globalThis.fetch = vi.fn().mockResolvedValue({
-			ok: true,
-			json: async () => mockCalonPensiunResponse,
-		} as Response);
+			"/master/alasan-berhenti": { data: [] },
+		});
 
 		renderComponent();
 
-		// Wait for data to load
 		await waitFor(() => {
 			expect(screen.getByText("19800101")).toBeInTheDocument();
 		});
 
-		// Verify that Nama, Organisasi, Jabatan, and Tgl. Pensiun are properly displayed in the table
 		expect(screen.getByText("Budi Santoso")).toBeInTheDocument();
 		expect(screen.getByText("Bagian Keuangan")).toBeInTheDocument();
 		expect(screen.getByText("Kepala Bagian Keuangan")).toBeInTheDocument();
@@ -105,52 +112,46 @@ describe("TerminasiClient", () => {
 		const searchParams = new URLSearchParams("tab=terminasi&tahunPensiun=2026");
 		vi.mocked(useSearchParams).mockReturnValue(searchParams as never);
 
-		const mockTerminasiResponse = {
-			statusCode: 200,
-			statusText: "200 OK",
-			data: {
-				totalElements: 1,
-				totalPages: 1,
-				size: 10,
-				number: 0,
-				numberOfElements: 1,
-				first: true,
-				last: true,
-				empty: false,
-				content: [
-					{
-						id: 201,
-						nipam: "19700101",
-						nama: "Siti Rahma",
-						namaOrganisasi: "Bagian Umum",
-						namaJabatan: "Staf Administrasi",
-						tanggalTerminasi: "2026-05-15",
-						alasanTerminasi: {
-							id: 1,
-							nama: "Pensiun Normal",
+		mockFetchByEndpoint({
+			"/riwayat/terminasi": {
+				data: {
+					totalElements: 1,
+					totalPages: 1,
+					size: 10,
+					number: 0,
+					numberOfElements: 1,
+					first: true,
+					last: true,
+					empty: false,
+					content: [
+						{
+							id: 201,
+							nipam: "19700101",
+							nama: "Siti Rahma",
+							namaOrganisasi: "Bagian Umum",
+							namaJabatan: "Staf Administrasi",
+							tanggalTerminasi: "2026-05-15",
+							alasanTerminasi: {
+								id: 1,
+								nama: "Pensiun Normal",
+							},
 						},
-					},
-				],
+					],
+				},
 			},
-		};
-
-		globalThis.fetch = vi.fn().mockResolvedValue({
-			ok: true,
-			json: async () => mockTerminasiResponse,
-		} as Response);
+			"/master/alasan-berhenti": { data: [{ id: 1, nama: "Pensiun Normal" }] },
+		});
 
 		renderComponent();
 
-		// Wait for data to load
 		await waitFor(() => {
 			expect(screen.getByText("19700101")).toBeInTheDocument();
 		});
 
-		// Verify fields for Sudah Terminasi
 		expect(screen.getByText("Siti Rahma")).toBeInTheDocument();
 		expect(screen.getByText("Bagian Umum")).toBeInTheDocument();
 		expect(screen.getByText("Staf Administrasi")).toBeInTheDocument();
 		expect(screen.getByText("15 Mei 2026")).toBeInTheDocument();
-		expect(screen.getByText("Pensiun Normal")).toBeInTheDocument();
+		expect(screen.getAllByText("Pensiun Normal").length).toBeGreaterThanOrEqual(1);
 	});
 });

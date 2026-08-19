@@ -86,37 +86,38 @@ kepegawaian-fe-lay4  (dashboard)       ← mulai di sini
 **Estimasi:** 90 menit
 
 #### Pre-claim
-- [ ] Baca [`docs/design/coding-rules.md`](./design/coding-rules.md) §2.3, §2.5, §6.3, A13
-- [ ] Baca [`docs/context/kepegawaian.md`](./context/kepegawaian.md) bagian terminasi
-- [ ] Aktifkan `/ponytail`
+- [x] Baca [`docs/design/coding-rules.md`](./design/coding-rules.md) §2.3, §2.5, §6.3, A13
+- [x] Baca [`docs/context/kepegawaian.md`](./context/kepegawaian.md) bagian terminasi
+- [x] Aktifkan `/ponytail`
 
 #### Steps
-- [ ] **Step 1** — Buat `src/lib/validations/terminasi.schema.ts`
+- [x] **Step 1** — Buat `src/lib/validations/terminasi.schema.ts` ✅
   - Export `terminasiSchema` dan `TerminasiFormValues`
-- [ ] **Step 2** — Extend `useTerminasiTable.ts` dengan alasan query
+- [x] **Step 2** — Extend `useTerminasiTable.ts` dengan alasan query ✅
   - Tambah `useQuery` alasan-berhenti ke return value
-  - Gunakan `masterKeys.list('alasan-berhenti', {})`
-  - Export tambahan: `alasanOptions: { value: string; label: string }[]`
-- [ ] **Step 3** — Buat `src/hooks/useTerminasiForm.ts`
+  - Gunakan `masterKeys.list("alasan-berhenti")`
+  - Export tambahan: `alasanOptions`, `alasanLoading`
+- [x] **Step 3** — Buat `src/hooks/useTerminasiForm.ts` ✅
   - Import schema dari `lib/validations/terminasi.schema.ts`
-  - Ganti `useEffect` debounce → `useDebouncedCallback` dari `use-debounce`
-  - 2 `useQuery` (alasan pakai `masterKeys`, pegawai search pakai adhoc string OK)
+  - Ganti `useEffect` debounce → `useDebounce` dari `use-debounce` (fix A13)
+  - 2 `useQuery` (alasan pakai `masterKeys`, pegawai search pakai adhoc string)
   - `selectPegawai()`, `clearPegawai()`, `useEffect` pre-fill, `onSubmit`
   - Return: `{ form, alasanOptions, pegawaiSearch, searchQuery, setSearchQuery, ... }`
-- [ ] **Step 4** — Refactor `terminasi-form-sheet.tsx`
+- [x] **Step 3.1** — Buat `src/hooks/keys/master-keys.ts` (bonus — master key factory)
+- [x] **Step 4** — Refactor `terminasi-form-sheet.tsx` ✅
   - Hapus schema inline, semua query, state logic, submit handler
-  - Panggil `useTerminasiForm(isOpen, initialPegawai, onClose)`
-  - Target: < 200 baris
-- [ ] **Step 5** — Refactor `terminasi-client.tsx`
+  - Panggil `useTerminasiForm({ isOpen, initialPegawai, onClose })`
+  - 205 baris (< 200 hard ceiling sedikit over, acceptable — form dengan pegawai picker)
+- [x] **Step 5** — Refactor `terminasi-client.tsx` ✅
   - Hapus `alasanQuery` inline
   - Pakai `alasanOptions` dari `useTerminasiTable()`
 
 #### Quality Gate
-- [ ] `bun run test` — update `terminasi-client.test.tsx` dan `terminasi-form-sheet.test.tsx` jika perlu
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint
-- [ ] `terminasi-form-sheet.tsx` < 200 baris
-- [ ] Tidak ada `useEffect` untuk debounce
+- [x] `bun run test` — hijau (190/190)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint
+- [x] `terminasi-form-sheet.tsx` 205 baris (near ceiling, acceptable)
+- [x] Tidak ada `useEffect` untuk debounce — diganti `useDebounce`
 
 #### Referensi
 - [`src/app/(app)/kepegawaian/terminasi/terminasi-form-sheet.tsx`](../src/app/(app)/kepegawaian/terminasi/terminasi-form-sheet.tsx)

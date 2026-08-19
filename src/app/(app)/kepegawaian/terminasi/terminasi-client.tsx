@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Calendar, CalendarOff, Clock, FileCheck2, Filter, Plus, UserMinus } from "lucide-react";
 import { useState } from "react";
 
@@ -13,23 +12,23 @@ import type { PegawaiResponse, RiwayatTerminasiQuery } from "@/types/kepegawaian
 import { TerminasiFormSheet } from "./terminasi-form-sheet";
 
 export function TerminasiClient() {
-	const { tab, page, size, sortBy, sortDir, tahunPensiun, alasanTerminasiId, query, pageView, nav } =
-		useTerminasiTable();
+	const {
+		tab,
+		page,
+		size,
+		sortBy,
+		sortDir,
+		tahunPensiun,
+		alasanTerminasiId,
+		query,
+		pageView,
+		alasanOptions,
+		alasanLoading,
+		nav,
+	} = useTerminasiTable();
 
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [prefillPegawai, setPrefillPegawai] = useState<PegawaiResponse | null>(null);
-
-	// ── Fetch Alasan Terminasi untuk filter ──
-	const alasanQuery = useQuery({
-		queryKey: ["alasan-berhenti-list"],
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/master/alasan-berhenti/list");
-			if (!res.ok) return [];
-			const body = await res.json();
-			return (body.data ?? []) as Array<{ id: number; nama: string }>;
-		},
-		staleTime: 300_000,
-	});
 
 	const handleOpenForm = (pegawai?: PegawaiResponse) => {
 		setPrefillPegawai(pegawai ?? null);
@@ -223,13 +222,13 @@ export function TerminasiClient() {
 								id="alasan-filter"
 								value={alasanTerminasiId ?? ""}
 								onChange={(e) => nav({ alasanTerminasiId: e.target.value || undefined, page: "1" })}
-								disabled={alasanQuery.isPending}
+								disabled={alasanLoading}
 								className="h-10 rounded-lg border border-input bg-background px-3 text-sm font-medium text-foreground shadow-xs min-w-44 focus:border-primary focus:outline-none focus:ring-2 focus:ring-ring/40 disabled:opacity-50"
 							>
-								<option value="">{alasanQuery.isPending ? "Memuat..." : "Semua Alasan"}</option>
-								{alasanQuery.data?.map((a) => (
-									<option key={a.id} value={String(a.id)}>
-										{a.nama}
+								<option value="">{alasanLoading ? "Memuat..." : "Semua Alasan"}</option>
+								{alasanOptions.map((a) => (
+									<option key={a.value} value={a.value}>
+										{a.label}
 									</option>
 								))}
 							</select>

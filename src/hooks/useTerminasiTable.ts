@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
+import { masterKeys } from "@/hooks/keys/master-keys";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { throwIfNotOk } from "@/lib/utils";
 
@@ -65,6 +66,23 @@ export function useTerminasiTable() {
 		router.replace(`/kepegawaian/terminasi?${p.toString()}`);
 	};
 
+	// ponytail: alasan-berhenti list for filter dropdown — shared between table filter and form
+	const alasanQuery = useQuery({
+		queryKey: masterKeys.list("alasan-berhenti"),
+		queryFn: async () => {
+			const res = await fetch("/api/proxy/master/alasan-berhenti/list");
+			if (!res.ok) return [] as Array<{ id: number; nama: string }>;
+			const body = await res.json();
+			return (body.data ?? []) as Array<{ id: number; nama: string }>;
+		},
+		staleTime: 300_000,
+	});
+
+	const alasanOptions = (alasanQuery.data ?? []).map((i) => ({
+		value: String(i.id),
+		label: i.nama,
+	}));
+
 	return {
 		tab,
 		page,
@@ -75,6 +93,8 @@ export function useTerminasiTable() {
 		alasanTerminasiId,
 		query,
 		pageView,
+		alasanOptions,
+		alasanLoading: alasanQuery.isPending,
 		nav,
 	};
 }

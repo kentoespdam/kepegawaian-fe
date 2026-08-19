@@ -1,12 +1,6 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { z } from "zod";
 
 import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
@@ -15,28 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { apiErrorMessage } from "@/lib/utils";
+import { useTerminasiForm } from "@/hooks/useTerminasiForm";
 import type { PegawaiResponse } from "@/types/kepegawaian/riwayat";
-import type { ListResultPegawaiListResponse, PegawaiListResponse } from "@/types/pegawai/pegawai";
-
-// ponytail: guard klien — cegah round-trip boros ke BE. Pesan asli BE (RFC-7807) tetap tampil via apiErrorMessage.
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
-
-const schema = z.object({
-	pegawaiId: z.number().min(1, "Pegawai wajib dipilih"),
-	nipam: z.string().min(1, "NIPAM wajib"),
-	nama: z.string().min(1, "Nama wajib"),
-	organisasiId: z.number().min(1, "Organisasi wajib"),
-	jabatanId: z.number().min(1, "Jabatan wajib"),
-	golonganId: z.number().optional(),
-	alasanTerminasiId: z.string().min(1, "Alasan terminasi wajib"),
-	nomorSk: z.string().min(1, "Nomor SK wajib"),
-	tanggalSk: z.string().min(1, "Tanggal SK wajib"),
-	tmtBerlaku: z.string().min(1, "TMT Berlaku wajib"),
-	notes: z.string().optional(),
-});
-
-type FormValues = z.infer<typeof schema>;
 
 interface Props {
 	isOpen: boolean;
@@ -45,199 +19,25 @@ interface Props {
 }
 
 export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
-	const qc = useQueryClient();
-	const fileRef = useRef<HTMLInputElement>(null);
-	const [fileError, setFileError] = useState<string | null>(null);
-
 	const {
+		form: { watch, errors, isSubmitting, handleSubmit },
+		alasanOptions,
+		alasanLoading,
+		isPickerOpen,
+		setIsPickerOpen,
+		searchQuery,
+		setSearchQuery,
+		searchEnabled,
+		pegawaiSearch,
+		selectedPegawai,
+		selectPegawai,
+		clearPegawai,
+		fileRef,
+		fileError,
+		setFileError,
 		setValue,
-		watch,
-		handleSubmit: rhfSubmit,
-		reset,
-		formState: { errors, isSubmitting },
-		setError,
-	} = useForm<FormValues>({
-		resolver: zodResolver(schema),
-	});
-
-	// ── Alasan Terminasi Options ──
-	const alasanQuery = useQuery({
-		queryKey: ["alasan-berhenti-list"],
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/master/alasan-berhenti/list");
-			if (!res.ok) return [];
-			const body = await res.json();
-			return ((body.data ?? []) as Array<{ id: number; nama: string }>).map((i) => ({
-				value: String(i.id),
-				label: i.nama ?? "",
-			}));
-		},
-		staleTime: 300_000,
-	});
-
-	// ── Pegawai Picker ──
-	const [isPickerOpen, setIsPickerOpen] = useState(false);
-	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedPegawai, setSelectedPegawai] = useState<{
-		id?: number;
-		nipam?: string;
-		nama?: string;
-		organisasi?: string;
-		jabatan?: string;
-	} | null>(null);
-
-	const [debouncedSearch, setDebouncedSearch] = useState("");
-	useEffect(() => {
-		const t = setTimeout(() => setDebouncedSearch(searchQuery), 300);
-		return () => clearTimeout(t);
-	}, [searchQuery]);
-
-	const searchQuery_enabled = debouncedSearch.length >= 2;
-	const pegawaiSearch = useQuery({
-		queryKey: ["pegawai-search-aktif", debouncedSearch],
-		queryFn: async () => {
-			if (!searchQuery_enabled) return [];
-			const res = await fetch(
-				`/api/proxy/pegawai/list?search=${encodeURIComponent(debouncedSearch)}&statusKerja=KARYAWAN_AKTIF`,
-			);
-			if (!res.ok) throw new Error("Gagal mencari pegawai");
-			const body = (await res.json()) as ListResultPegawaiListResponse;
-			return (body.data ?? []) as PegawaiListResponse[];
-		},
-		enabled: searchQuery_enabled,
-		staleTime: 60_000,
-	});
-
-	const selectPegawai = (item: PegawaiListResponse) => {
-		if (!item.id || !item.organisasi?.id || !item.jabatan?.id) {
-			toast.error("Data pegawai terpilih tidak lengkap (id/organisasi/jabatan)");
-			return;
-		}
-		setValue("pegawaiId", item.id);
-		setValue("nipam", item.nipam ?? "");
-		setValue("nama", item.nama ?? "");
-		setValue("organisasiId", item.organisasi.id);
-		setValue("jabatanId", item.jabatan.id);
-		if (item.golongan?.id) setValue("golonganId", item.golongan.id);
-
-		setSelectedPegawai({
-			id: item.id,
-			nipam: item.nipam,
-			nama: item.nama,
-			organisasi: item.organisasi?.nama,
-			jabatan: item.jabatan?.nama,
-		});
-		setIsPickerOpen(false);
-		setSearchQuery("");
-	};
-
-	const clearPegawai = () => {
-		setValue("pegawaiId", 0);
-		setValue("nipam", "");
-		setValue("nama", "");
-		setValue("organisasiId", 0);
-		setValue("jabatanId", 0);
-		setValue("golonganId", undefined);
-		setSelectedPegawai(null);
-	};
-
-	// ── Pre-fill dari initialPegawai ──
-	useEffect(() => {
-		if (isOpen) {
-			if (initialPegawai?.id) {
-				const pId = initialPegawai.id;
-				const pNipam = String(initialPegawai.nipam ?? "");
-				const pNama = String(initialPegawai.biodata?.nama ?? "");
-				const orgId = initialPegawai.organisasi?.id ?? 0;
-				const jabId = initialPegawai.jabatan?.id ?? 0;
-				const golId = initialPegawai.golongan?.id;
-
-				reset({
-					pegawaiId: pId,
-					nipam: pNipam,
-					nama: pNama,
-					organisasiId: orgId,
-					jabatanId: jabId,
-					golonganId: golId,
-					nomorSk: "",
-					tanggalSk: "",
-					tmtBerlaku: initialPegawai.tmtPensiun ?? "",
-					alasanTerminasiId: "",
-					notes: "",
-				});
-
-				setSelectedPegawai({
-					id: pId,
-					nipam: pNipam,
-					nama: pNama,
-					organisasi: initialPegawai.organisasi?.nama,
-					jabatan: initialPegawai.jabatan?.nama,
-				});
-			} else {
-				reset({
-					pegawaiId: 0,
-					nipam: "",
-					nama: "",
-					organisasiId: 0,
-					jabatanId: 0,
-					nomorSk: "",
-					tanggalSk: "",
-					tmtBerlaku: "",
-					alasanTerminasiId: "",
-					notes: "",
-				});
-				setSelectedPegawai(null);
-			}
-		}
-	}, [isOpen, initialPegawai, reset]);
-
-	// ── Submit ──
-	const onSubmit = async (values: FormValues) => {
-		try {
-			const file = fileRef.current?.files?.[0];
-			if (file && file.size > MAX_FILE_SIZE_BYTES) {
-				setFileError("File terlalu besar — maksimal 5 MB");
-				return;
-			}
-			setFileError(null);
-
-			// ponytail: multipart/form-data (@ModelAttribute) — JSON → HTTP 415. JANGAN set Content-Type manual.
-			const fd = new FormData();
-			fd.append("pegawaiId", String(values.pegawaiId));
-			fd.append("nipam", values.nipam);
-			fd.append("nama", values.nama);
-			fd.append("organisasiId", String(values.organisasiId));
-			fd.append("jabatanId", String(values.jabatanId));
-			fd.append("alasanTerminasiId", values.alasanTerminasiId);
-			fd.append("nomorSk", values.nomorSk);
-			// ponytail: jenisSk terminasi selalu SK_PENSIUN — hardcode, tidak ditampilkan di form
-			fd.append("jenisSk", "SK_PENSIUN");
-			fd.append("tanggalSk", values.tanggalSk);
-			fd.append("tmtBerlaku", values.tmtBerlaku);
-			if (values.golonganId) fd.append("golonganId", String(values.golonganId));
-			if (values.notes) fd.append("notes", values.notes);
-			if (file) fd.append("fileName", file);
-
-			const res = await fetch("/api/proxy/kepegawaian/riwayat/terminasi", {
-				method: "POST",
-				body: fd,
-			});
-
-			if (!res.ok) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(body, "Gagal menyimpan terminasi"));
-			}
-
-			toast.success("Terminasi pegawai berhasil disimpan");
-			qc.invalidateQueries({ queryKey: ["/api/proxy/kepegawaian/riwayat/terminasi/calon-pensiun"] });
-			qc.invalidateQueries({ queryKey: ["/api/proxy/kepegawaian/riwayat/terminasi"] });
-			onClose();
-		} catch (e: unknown) {
-			const msg = e instanceof Error ? e.message : "Terjadi kesalahan";
-			toast.error(msg);
-			setError("root", { message: msg });
-		}
-	};
+		onSubmit,
+	} = useTerminasiForm({ isOpen, initialPegawai, onClose });
 
 	return (
 		<Sheet open={isOpen} onOpenChange={(v) => !v && onClose()}>
@@ -246,12 +46,15 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 					<SheetTitle>Tambah Terminasi Pegawai</SheetTitle>
 				</SheetHeader>
 				<Separator />
-				<form onSubmit={rhfSubmit(onSubmit)} className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0">
+				<form
+					onSubmit={handleSubmit(onSubmit)}
+					className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0"
+				>
 					{errors.root && (
 						<div className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">{errors.root.message}</div>
 					)}
 
-					{/* ── Pegawai ── */}
+					{/* Pegawai */}
 					<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Pegawai</p>
 					{selectedPegawai ? (
 						<div className="flex items-start justify-between gap-2 rounded-lg border bg-muted/30 px-3 py-2.5">
@@ -290,17 +93,17 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 
 					<Separator />
 
-					{/* ── SK & Terminasi ── */}
+					{/* SK & Terminasi */}
 					<p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
 						Data SK &amp; Terminasi
 					</p>
 					<FieldFk
 						label="Alasan Terminasi"
-						options={alasanQuery.data ?? []}
+						options={alasanOptions}
 						value={watch("alasanTerminasiId")}
 						onChange={(v) => setValue("alasanTerminasiId", v ?? "")}
 						required
-						loading={alasanQuery.isPending}
+						loading={alasanLoading}
 						error={errors.alasanTerminasiId?.message}
 					/>
 					<FieldText
@@ -326,7 +129,7 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 							error={errors.tmtBerlaku?.message}
 						/>
 					</div>
-					{/* ── File ── */}
+					{/* File */}
 					<div className="space-y-1.5">
 						<Label className="text-sm font-medium">File SK</Label>
 						<p className="text-xs text-muted-foreground mb-1">Maksimal 5 MB</p>
@@ -350,7 +153,7 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 					</div>
 				</form>
 
-				{/* ── Dialog Picker ── */}
+				{/* Dialog Picker */}
 				<Dialog open={isPickerOpen} onOpenChange={(v) => !v && setIsPickerOpen(false)}>
 					<DialogContent className="sm:max-w-lg">
 						<DialogHeader>
@@ -365,7 +168,7 @@ export function TerminasiFormSheet({ isOpen, onClose, initialPegawai }: Props) {
 							autoFocus
 						/>
 						<div className="max-h-64 overflow-y-auto -mx-4">
-							{!searchQuery_enabled ? (
+							{!searchEnabled ? (
 								<p className="px-4 py-6 text-center text-sm text-muted-foreground">Ketik minimal 2 karakter</p>
 							) : pegawaiSearch.isPending ? (
 								<p className="px-4 py-6 text-center text-sm text-muted-foreground">Mencari...</p>
