@@ -45,7 +45,7 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 			>
 				<div className="space-y-1.5">
 					<Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-						Email
+						Username
 					</Label>
 					<Input
 						id="email"

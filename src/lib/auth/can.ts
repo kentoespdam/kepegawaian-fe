@@ -8,6 +8,9 @@ import type { Permission } from "./permissions";
  */
 export function hasPermission(perms: string[], p: Permission, roles?: string[]): boolean {
 	if (roles?.some((r) => r.toUpperCase() === "ADMIN")) return true;
+	// Dual-mode: gate bisa berisi role names (e.g. ["ADMIN", "HRD"]) —
+	// cek apakah `p` match dengan salah satu role di roles array.
+	if (roles?.some((r) => r.toUpperCase() === p.toUpperCase())) return true;
 	return perms.includes(p);
 }
 

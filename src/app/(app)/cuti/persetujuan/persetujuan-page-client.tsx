@@ -66,7 +66,7 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
 	// CU-20: approvalCutiStatus wajib (BE 400 jika tidak dikirim), default PENDING
 	const statusParam = (sp.get("approvalStatus") as string | null) ?? "PENDING";
-	// CU-20: readWriteStatus — default tidak dikirim (semua), user pilih WRITE/READ
+	// CU-20: readWriteStatus — default WRITE, user pilih WRITE/READ
 	const rwParam = sp.get("readWriteStatus");
 	const readWriteStatus = rwParam === "WRITE" || rwParam === "READ" ? rwParam : "WRITE";
 	const hasActive = tahun !== CURRENT_YEAR || statusParam !== "PENDING" || !!readWriteStatus;

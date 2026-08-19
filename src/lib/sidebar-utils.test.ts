@@ -107,4 +107,19 @@ describe("filterVisibleEntities — RBAC gate umum", () => {
 		expect(filterVisibleEntities(entities, [PERMISSION.PEGAWAI_READ])).toHaveLength(1);
 		expect(filterVisibleEntities(entities, [])).toHaveLength(0);
 	});
+
+	it("gate role names [ADMIN, HRD] → role HRD bisa lihat menu", () => {
+		// Reproduksi bug: kepegawaian entities pakai gate role names
+		const kepegawaianEntities = [
+			{ id: "dashboard", label: "Dashboard", href: "/kepegawaian/dashboard", gate: null },
+			{ id: "pegawai", label: "Data Pegawai", href: "/kepegawaian/data", gate: ["ADMIN", "HRD"] },
+			{ id: "terminasi", label: "Terminasi", href: "/kepegawaian/terminasi", gate: ["ADMIN", "HRD"] },
+		];
+		// HRD tanpa permission apapun → harusnya lihat semua 3
+		expect(filterVisibleEntities(kepegawaianEntities, [], ["HRD"])).toHaveLength(3);
+		// Role biasa (bukan ADMIN/HRD) → hanya dashboard
+		expect(filterVisibleEntities(kepegawaianEntities, [], ["USER"])).toHaveLength(1);
+		// ADMIN tanpa permissions → semua 3
+		expect(filterVisibleEntities(kepegawaianEntities, [], ["ADMIN"])).toHaveLength(3);
+	});
 });
