@@ -235,16 +235,19 @@ sederhana dengan kalimat "Batalkan pengajuan cuti ini?" karena tidak ada input t
 > Detail keputusan di **CU-18**.
 
 Halaman Persetujuan Cuti dapat diakses oleh **approver** — pegawai yang berada dalam
-rantai approval (backend flag `isCutiApprover`, CU-18). **Satu halaman** dengan dropdown filter
-`readWriteStatus` (CU-20/ADR-0042). Route lama `/cuti/persetujuan/riwayat` di-redirect ke
+rantai approval (backend flag `isCutiApprover`, CU-18). **Satu halaman** dengan dua dropdown
+filter (CU-20/ADR-0042): `approvalCutiStatus` (wajib) + `readWriteStatus` (opsional).
+Route lama `/cuti/persetujuan/riwayat` di-redirect ke
 `/cuti/persetujuan?readWriteStatus=READ`.
 
-Konten bersumber dari `GET /cuti/pengajuan/approval` — param wajib:
+Konten bersumber dari `GET /cuti/pengajuan/approval` — param:
 - `picSaatIniId` = **`jabatanId` approver** dari session (`pegawai.jabatan.id`) — chain approval
   posisional by jabatan (`picSaatIni` = `JabatanMiniResponse`, ADR-0041), **bukan** `pegawaiId`
 - `tahun` = tahun terpilih
+- `approvalCutiStatus` — **wajib** (BE 400 jika tidak dikirim, meskipun spec bilang optional).
+  Default `PENDING`. 5 opsi di dropdown: Menunggu, Disetujui, Ditolak, Dikonfirmasi, Dibatalkan.
 - `readWriteStatus` — **opsional**. Default (tidak kirim) = semua. Filter: `WRITE` (belum diproses)
-  atau `READ` (sudah diproses). Dropdown di toolbar dengan placeholder "Semua", default `WRITE`.
+  atau `READ` (sudah diproses). Dropdown di toolbar dengan placeholder "Semua".
 
 Jika approver belum punya pengajuan yang menunggu → backend mengembalikan list kosong.
 Tampilkan empty state standar tanpa error. (Pegawai non-approver tidak sampai di sini —
