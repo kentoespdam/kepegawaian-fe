@@ -454,7 +454,7 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 | Batalkan pengajuan | `DELETE /cuti/pengajuan/{id}` | — |
 | Total hari kerja | `GET /cuti/pengajuan/{tglMulai}/{tglSelesai}/total-hari-kerja` | — |
 | List jenis cuti | `GET /cuti/jenis/list` | `?parentId&nama` → `ListResultCutiJenisMiniResponse` (`{id, nama, parentId}` riil; `null` = root) |
-| Kuota strip (self) | `GET /cuti/kuota?pegawaiId&tahun` | — |
+| Kuota strip (self) | `GET /cuti/kuota/{pegawaiId}/{tahun}/sisa` | → `SingleResult` (`sisaCutiTahunIni`, `sisaCutiTahunLalu`) — CU-21 |
 | List approval | `GET /cuti/pengajuan/approval` | `?tahun&picSaatIniId={jabatanId approver}&page&size` (`approvalCutiStatus` opsional, default `PENDING` — R3) |
 | Aksi approval | `POST /cuti/approval` | `CutiApprovalPostRequest` |
 | Riwayat approval | `GET /cuti/approval/{cutiId}` | `?page&size` → `PageResult` (`CutiApprovalMiniResponse`: approver, jabatan, approvalLevel, approvalStatus, notes, createdAt) |
@@ -516,6 +516,31 @@ Klik Setujui/Tolak → **area notes + tombol konfirmasi muncul inline** di dialo
   tambah state `detailRow` untuk modal; mounting `DetailApprovalDialog`.
 - `approval-confirm-dialog.tsx` → rename/refactor jadi `detail-approval-dialog.tsx`:
   Dialog dengan 2 tab + footer aksi + inline expansion notes.
+
+---
+
+## CU-21 — Pengajuan Kuota Strip: Ganti Endpoint ke `/sisa` (2026-08-19)
+
+Strip 3 kartu (Kuota Total, Diambil, Sisa) di halaman `/cuti/pengajuan` diganti
+menjadi **2 kartu** (Sisa Tahun Ini + Sisa Tahun Lalu) dengan dedicated endpoint
+`GET /cuti/kuota/{pegawaiId}/{tahun}/sisa`.
+
+**Mengapa:** list endpoint over-fetch untuk strip. Dedicated `/sisa` memberikan tepat
+apa yang dibutuhkan: `sisaCutiTahunIni` + `sisaCutiTahunLalu` (carry-over).
+
+**Kartu:**
+| Kartu | Sumber | Keterangan |
+|-------|--------|------------|
+| Sisa Tahun Ini | `sisaCutiTahunIni` | Sisa kuota tahun yang dipilih |
+| Sisa Tahun Lalu | `sisaCutiTahunLalu` | Carry-over dari tahun lalu (bukan gabungan) |
+
+**Error handling:** 404 → "—" + "Belum ada kuota tahun ini" (konsisten CU-13).
+
+**Query key:** tetap `["cuti-kuota", pegawaiId, tahun]` — invalidation cross-tab OK.
+
+**Backend:** real-time calculation (sisa = kuota + tambahan - terpakai).
+
+ADR: [ADR-0043](../adr/0043-pengajuan-kuota-strip-endpoint-sisa.md)
 
 ---
 
