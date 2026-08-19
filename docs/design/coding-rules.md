@@ -1,364 +1,732 @@
 # Coding Rules — Kepegawaian FE
 
-Aturan dasar yang **WAJIB** dipatuhi setiap agen/kontributor saat menulis kode di repo ini.
+Aturan dasar yang **WAJIB** dipatuhi setiap kontributor saat menulis kode di repo ini.
 Baca file ini **lebih dulu**, lalu muat modul desain relevan dari [DESIGN.md](../../DESIGN.md).
-Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default Anda, **aturan ini menang**.
+Aturan di sini bersifat mengikat — bila konflik dengan kebiasaan default, **aturan ini menang**.
+
+> **Cakupan dokumen ini:** aturan **kode**. Workflow agen (graphify, gitnexus, beads, session
+> close) ada di [`knowledge.md`](../../knowledge.md) dan [`AGENTS.md`](../../AGENTS.md).
 
 ---
 
 ## 0. Prinsip
 
-- **NO AI SLOP.** Kode & UI ringkas, jujur, minim bug. Jangan tambah statistik/count/widget/ilustrasi
-  karangan. Jangan over-engineer. Bila ragu → opsi paling sederhana yang lolos spec.
-- **KISS + DRY via shared primitives**, bukan engine config-driven raksasa (lihat architecture §18).
-- **Aksesibilitas = syarat fungsional**, bukan nice-to-have (±70% pengguna lansia). Gate di
-  visual-foundation §2 berlaku ke SETIAP komponen.
-- **Bahasa UI = Bahasa Indonesia.** Label bahasa manusia, bukan nama field mentah.
-- **Pahami sebelum edit — urutan eksplorasi WAJIB: `graphify` → `gitnexus` → `grep` (fallback).**
-  graphify untuk pemahaman arsitektur level-tinggi & relasi domain (output di `graphify-out/`).
-  gitnexus untuk pelacakan simbol, impact analysis, & query flow kode. **`grep` HANYA sebagai
-  fallback** — graphify/gitnexus dulu, baru grep. Larangan "grep buta" tetap berlaku.
-- `gitnexus impact` **WAJIB** bila target edit: (a) **fan-in ≥2** (di-import ≥2 modul), **atau**
-  (b) di **permukaan kritis**: `proxy.ts`, DAL/`verifySession`, RBAC/`hasPermission`, shared
-  primitive (`<DataTable>`/`<CrudForm>`/dst), `src/hooks/*`. Di situ, bangun pemahaman caller/callee &
-  blast radius dari **peta kode**, bukan tebakan. **Di bawah ambang** (edit 1-file lokal, config glue,
-  typo, rename lokal): baca file langsung + graphify/gitnexus tetap dianjurkan untuk orientasi
-  singkat, tapi boleh langsung ke kode bila perubahan sepele — ADR-0007 melindungi efisiensi agen.
-- **Plan dulu, baru implementasi.** Alur persiapan: `bd show <id>` → **pahami kode** (via `gitnexus`
-  bila edit memicu ambang blast-radius di atas & §11; selain itu baca file langsung) → baca modul
-  DESIGN relevan → **fetch docs terbaru via context7** (API/prop/best-practice, jangan andalkan
-  ingatan). **JANGAN** ngetik dari asumsi — asumsi basi = bug diam & rework. **Dua sumbu keputusan
-  yang TERPISAH**, jangan dicampur:
-  - **Rencana tertulis + konfirmasi user (sumbu: seberapa besar tugasnya).** Tugas **non-trivial** →
-    WAJIB rencana tertulis (masuk *plan mode* / `bd --design`/`--notes`) → **sampaikan & minta
-    konfirmasi pengguna** → baru eksekusi. Perubahan **sepele** (typo, satu baris, rename lokal) →
-    boleh langsung, tanpa plan tertulis.
-  - **Impact analysis (sumbu: seberapa jauh dampaknya — ADR-0009).** fan-in ≥2 atau permukaan kritis
-    → `gitnexus impact` WAJIB, terlepas dari besar tugas. Contoh: edit **1 baris di `proxy.ts`** =
-    sepele secara usaha (boleh skip plan tertulis) **tapi** blast-radius tinggi → impact **tetap wajib**.
+| # | Prinsip | Penjelasan |
+|---|---------|------------|
+| P1 | **NO AI SLOP** | Kode & UI ringkas, jujur, minim bug. Jangan tambah statistik/widget/ilustrasi karangan. Bila ragu → opsi paling sederhana yang lolos spec. |
+| P2 | **KISS + DRY** | Solusi paling sederhana yang memenuhi spec. Abstraksi muncul dari duplikasi nyata (rule of three), bukan diantisipasi. DRY via shared primitives, bukan engine config-driven raksasa (architecture §18). |
+| P3 | **Aksesibilitas = syarat fungsional** | ±70% pengguna lansia. Gate di visual-foundation §2 berlaku ke SETIAP komponen: touch target ≥44px, body ≥16px, WCAG AA kontras. |
+| P4 | **Bahasa UI = Indonesia** | Label bahasa manusia, bukan nama field mentah. |
+| P5 | **Plan dulu, baru implementasi** | Pahami kode → baca modul DESIGN relevan → fetch docs terbaru (`context7`) → baru koding. Asumsi basi = bug diam & rework. |
+| P6 | **Immutability of generated code** | File `src/components/ui/*` dan `src/types/` (DTO generated) = vendor code. JANGAN edit manual. |
 
 ---
 
-## 1. Struktur & kualitas kode
+## 1. Stack & Versi (baca sebelum menulis)
 
-- **Ukuran file = trigger tinjauan, BUKAN hard gate** (ADR-0007). Ambang di bawah adalah lampu kuning
-  *"berhenti & lihat"*, bukan perintah pecah. Bila file lewat ambang **tapi kohesif satu tanggung jawab**
-  (mis. form 27 field, shared primitive `<DataTable>`) → **biarkan**. Pecah HANYA bila ada **>1 alasan
-  untuk berubah** (SRP: fetch vs render vs tipe), lalu angkat sub-komponen / hook `src/hooks/` / tipe
-  `src/types/`. **Ambang per-kategori (berbasis data token-efficiency AI agent):**
-  - `components/ui/*` (generated) → **exempt total** (§3 larang edit manual)
-  - `src/types/*` (DTO generated) → **exempt** · `src/config/*` → **exempt** (soft ~200) — deklaratif
-  - **shared primitive** → **~250** (konsolidasi DRY sengaja besar, §18)
-  - **komponen** (`.tsx`) → optimal **150–250**, hard ceiling **300** — di atas 300 agent lakukan
-    *atomic rewrite* (2–3× lebih mahal dari surgical diff)
-  - **hook** (`use*.ts`) → optimal **75–150**, hard ceiling **150** — hook >150 baris = tanda ada
-    ≥2 perilaku yang harus dikomposisi; split jadi hook lebih kecil
-  - **lib/util** (`.ts`) → optimal **100–200**, hard ceiling **250** — domain-grouped, bukan monolith
-  - **types** hand-written (`.ts`) → optimal **50–150**, hard ceiling **200** — pisah per-domain
-    bila >150 (mis. `user.types.ts`, `api.types.ts`)
-- **Anti-fragmentasi (mengikat).** DILARANG pecah file hanya demi mengejar angka. Memotong satu unit
-  kohesif jadi 2+ file yang selalu diedit bareng **menaikkan biaya konteks AI agent** (lebih banyak
-  `Read`, import graph lebih dalam) tanpa gain keterbacaan. Fragmentasi = anti-pola, sama buruknya
-  dengan file raksasa yang campur tanggung jawab.
-- **DRY** — jangan duplikasi logika. Ekstrak pola berulang jadi shared primitive / helper / hook
-  (lihat architecture §18: `<DataTable>`, `<CrudForm>`, `<ConfirmDeleteDialog>`, `useResource`).
-  Duplikasi hanya boleh di glue tipis per-entitas, TAK PERNAH di logika
-  table/fetch/CRUD/auth.
-- **KISS** — pilih solusi paling sederhana yang memenuhi spec. Hindari abstraksi prematur; abstraksi
-  muncul dari duplikasi nyata (rule of three), bukan diantisipasi.
-- **Pisahkan logic dari komponen → `src/hooks/` (WAJIB, tanpa pengecualian).** Komponen fokus ke
-  presentasi/markup; semua logika (fetching, mutation, state turunan, event handler non-trivial,
-  kalkulasi) diangkat ke custom hook di `src/hooks/` sebagai **file terpisah**. Hook kecil yang
-  hanya dipakai satu komponen pun tetap harus di `src/hooks/` — bukan inline di file komponen.
-  **WAJIB periksa setiap file komponen sebelum commit:** bila ada `useQuery`/`useMutation`/`useState`
-  yang berisi business logic atau handler non-trivial → angkat ke hook dulu, baru lanjut.
+| Layer | Teknologi | Catatan Kritis |
+|-------|-----------|----------------|
+| Framework | **Next.js 16.2.10** App Router | **BUKAN** Next.js yang Anda hafal. WAJIB baca `node_modules/next/dist/docs/` untuk API/konvensi yang dipakai. Heed deprecation notices. |
+| Runtime | **React 19.2.4** + **React Compiler** (`babel-plugin-react-compiler`) | JANGAN micro-optimize manual — lihat §1.1 |
+| Styling | **Tailwind CSS v4** (CSS-first `@theme`, token OKLCH) | Tanpa `tailwind.config.js` — semua via `globals.css` |
+| UI Kit | **shadcn** di atas **Base UI** (`npx shadcn init -b base`) | **BUKAN Radix** — prop berbeda (§3) |
+| Form | **React Hook Form v7** + **Zod v4** (`@hookform/resolvers`) | `zodResolver(schema as never)` untuk Zod v4 |
+| Data | **TanStack Query v5** client-side via `/api/proxy/*` | Query key factory pattern (§5.1) |
+| Auth | **Appwrite** session httpOnly + JWT di-mint di `proxy.ts` | Defense-in-depth 3 lapis (§7) |
+| Notifikasi | **sonner** (satu `<Toaster>` bottom-right) | Mutation-only (§9) |
+| Ikon | **lucide-react** | Aksi ≥20px, area sentuh ≥40px |
+| Font | **Inter** self-hosted via `next/font` | Berat 400/500/600 saja (≤300 DILARANG) |
+| Linter | **BiomeJS 2.2.0** | `bunx biome check` — pengganti ESLint + Prettier |
+| Package | **Bun** | `bun install`, `bun run`, `bunx` |
+| Test | **Vitest** + **Testing Library** | `bun run test` |
 
-  ```tsx
-  // ❌ SALAH — logic fetch/mutation inline di komponen
-  export function GolonganPage() {
-    const { data } = useQuery({
-      queryKey: ["golongan"],
-      queryFn: () => fetch("/api/proxy/master/golongan").then(r => r.json()),
-    });
-    const mutation = useMutation({
-      mutationFn: (id: number) => fetch(`/api/proxy/master/golongan/${id}`, { method: "DELETE" }),
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["golongan"] }),
-    });
-    return <DataTable data={data} onDelete={mutation.mutate} />;
-  }
+### 1.1. React 19 + React Compiler — Aturan Khusus
 
-  // ✅ BENAR — logic di hook terpisah `src/hooks/useGolonganTable.ts`
-  // src/hooks/useGolonganTable.ts
-  export function useGolonganTable() {
-    const { data } = useQuery({
-      queryKey: ["golongan"],
-      queryFn: () => fetch("/api/proxy/master/golongan").then(r => r.json()),
-    });
-    const mutation = useMutation({
-      mutationFn: (id: number) => fetch(`/api/proxy/master/golongan/${id}`, { method: "DELETE" }),
-      onSuccess: () => queryClient.invalidateQueries({ queryKey: ["golongan"] }),
-    });
-    return { data, onDelete: mutation.mutate };
-  }
-  // src/app/(app)/master/golongan/page.tsx
-  export function GolonganPage() {
-    const { data, onDelete } = useGolonganTable(); // komponen tipis, hanya render
-    return <DataTable data={data} onDelete={onDelete} />;
-  }
-  ```
+React Compiler **otomatis memoize** ekspresi, JSX, dan identitas fungsi. Implikasinya:
 
-- **Pisahkan `type`/`interface` → `src/types/`.** Definisi tipe bersama (model entitas, DTO, response
-  API, props lintas-komponen) diletakkan di `src/types/` (mis. `src/types/golongan.ts`), lalu di-import
-  di tempat pakai. Komponen/hook fokus ke logika, bukan deklarasi tipe gemuk inline. Pengecualian:
-  tipe lokal sepele yang hanya dipakai di satu file (mis. props kecil satu komponen) boleh tetap inline.
-- Satu file = satu tanggung jawab jelas; file kecil & fokus lebih baik daripada file raksasa.
+```tsx
+// ❌ SALAH — micro-optimize manual yang compiler sudah tangani
+const columns = useMemo(() => buildColumns(entity), [entity]);
+const handleClick = useCallback(() => doSomething(id), [id]);
+const MemoizedTable = React.memo(DataTable);
+
+// ✅ BENAR — tulis biasa, compiler yang optimasi
+const columns = buildColumns(entity);
+const handleClick = () => doSomething(id);
+<DataTable columns={columns} onClick={handleClick} />
+```
+
+**Aturan wajib React 19:**
+
+- **JANGAN** `useMemo`/`useCallback`/`React.memo` defensif — hanya bila ada masalah performa **terukur** yang compiler tidak bisa tangani.
+- **JANGAN** `React.forwardRef` — di React 19, `ref` adalah prop biasa.
+- **JANGAN** mutasi state/props langsung (`array.push()`) — gunakan immutable (`[...array, item]`). Mutasi merusak dependency graph compiler.
+- **JANGAN** `useEffect` untuk kalkulasi derived state — hitung inline, compiler yang memoize.
+- **GUNAKAN** `use(Promise | Context)` untuk baca context/promise kondisional.
+- **GUNAKAN** `<Context value={v}>` langsung, bukan `<Context.Provider value={v}>`.
+
+### 1.2. Next.js 16 — Breaking Changes
+
+```tsx
+// ❌ SALAH — akses params/searchParams sinkron (Next.js <15 style)
+export default function Page({ params, searchParams }) {
+  const id = params.id;  // ⚠️ Error di Next.js 16
+}
+
+// ✅ BENAR — params & searchParams adalah Promise, WAJIB di-await
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ entity: string }>;
+  searchParams: Promise<{ page?: string; q?: string }>;
+}) {
+  const { entity } = await params;
+  const { page, q } = await searchParams;
+  return <EntityClient entity={entity} initialPage={page} query={q} />;
+}
+```
+
+- **`proxy.ts`** (bukan `middleware.ts`) — `export default function proxy()`, **Node runtime**.
+- **`cookies()`** dan **`headers()`** = async, WAJIB `await`.
+- **Streaming:** bungkus konten dinamis di `<Suspense fallback={<Skeleton />}>` untuk partial prerendering.
+- **Lazy load** library berat (PDF viewer, chart) via `next/dynamic` dengan `ssr: false`.
 
 ---
 
-## 2. Framework & versi (baca sebelum menulis)
+## 2. Struktur Kode & Organisasi File
 
-- **"This is NOT the Next.js you know."** Next.js **16.2.10** punya breaking changes. **WAJIB baca
-  `node_modules/next/dist/docs/`** untuk API/konvensi yang Anda pakai sebelum menulis kode Next.js.
-  Heed deprecation notices.
-- Middleware = **`proxy.ts`** (bukan `middleware.ts`), **Node runtime**, `export default function proxy()`.
-- React **19.2.4** dengan **React Compiler aktif** (`babel-plugin-react-compiler`) — JANGAN
-  micro-optimize manual (`useMemo`/`useCallback` defensif) yang sudah ditangani compiler.
-- **`gitnexus` & `graphify` untuk memahami struktur/aliran project DULU** (§0 & §11) —
-  sebelum menyentuh kode, bukan setelah kepentok.
-- **WAJIB `context7` sebelum pakai library apa pun** — ambil **source & best-practice terbaru** untuk
-  dokumentasi library/framework/API/CLI (React, Next, Tailwind, TanStack, Appwrite, RHF, Zod, dll).
-  Data internal/ingatan bisa **basi**; context7 > web search. Alur: `resolve-library-id` → `query-docs`
-  → **koding hanya berdasarkan docs yang di-fetch**, bukan asumsi. Ini bagian dari "plan dulu" (§0).
+### 2.1. Arsitektur Direktori
+
+```
+src/
+├── app/                    # Next.js App Router — page = server component by default
+│   ├── (app)/              # Route group: halaman terautentikasi (sidebar + top bar)
+│   │   ├── master/         # CRUD pages per entity
+│   │   ├── kepegawaian/    # Dashboard, Data, Terminasi
+│   │   └── page.tsx        # Landing/dashboard
+│   ├── (auth)/             # Route group: halaman publik
+│   │   └── login/page.tsx
+│   ├── api/proxy/          # API route handler
+│   ├── globals.css         # Tailwind v4 entrypoint + @theme tokens
+│   └── layout.tsx          # Root layout + Providers + Toaster
+├── components/
+│   ├── ui/                 # shadcn/Base UI generated (IMMUTABLE — §3)
+│   └── *.tsx               # Shared primitives (DataTable, CrudForm, ConfirmDeleteDialog)
+├── hooks/                  # SEMUA custom hooks — logic WAJIB di sini (§2.3)
+├── lib/                    # Utilities, auth, API client
+│   ├── auth/               # Appwrite session, JWT, permissions
+│   ├── api/                # Typed fetch client
+│   ├── validations/        # Zod schemas (per-domain)
+│   └── query-client.ts     # Global QueryClient defaults
+├── config/                 # Entity configs (typed, per-entity)
+├── types/                  # TypeScript types (per-domain)
+└── proxy.ts                # Next.js 16 network proxy (route guard + JWT)
+```
+
+### 2.2. Budget Ukuran File
+
+Ukuran file = **trigger tinjauan, BUKAN hard gate** (ADR-0007). Ambang di bawah adalah lampu kuning
+*"berhenti & lihat"*, bukan perintah pecah. Bila file lewat ambang **tapi kohesif satu tanggung jawab**
+(mis. form 27 field, shared primitive `<DataTable>`) → **biarkan**.
+
+| Kategori | Optimal | Hard Ceiling | Catatan |
+|----------|---------|-------------|---------|
+| `components/ui/*` | — | **Exempt total** | Generated, jangan edit (§3) |
+| `src/types/*` (DTO) | — | **Exempt** | Generated / deklaratif |
+| `src/config/*` | — | **Exempt** (soft ~200) | Deklaratif |
+| **Shared primitive** | ~200 | ~250 | Konsolidasi DRY sengaja besar |
+| **Komponen** (`.tsx`) | 150–250 | **300** | Di atas 300 = atomic rewrite (2–3× lebih mahal) |
+| **Hook** (`use*.ts`) | 75–150 | **150** | Hook >150 = ≥2 perilaku yang harus dikomposisi |
+| **Lib/util** (`.ts`) | 100–200 | **250** | Domain-grouped, bukan monolith |
+| **Types** hand-written | 50–150 | **200** | Pisah per-domain bila >150 |
+
+Pecah file **HANYA bila ada >1 alasan untuk berubah** (SRP: fetch vs render vs tipe). **DILARANG
+pecah file hanya demi mengejar angka** — memotong satu unit kohesif jadi 2+ file yang selalu diedit
+bareng **menaikkan biaya konteks** tanpa gain keterbacaan (anti-fragmentasi).
+
+### 2.3. Separasi Logic & Presentasi (WAJIB)
+
+**Komponen fokus presentasi/markup. SEMUA logic di `src/hooks/` sebagai file terpisah.**
+
+```tsx
+// ❌ SALAH — logic fetch/mutation inline di komponen
+export function GolonganPage() {
+  const { data } = useQuery({
+    queryKey: ["golongan"],
+    queryFn: () => fetch("/api/proxy/master/golongan").then(r => r.json()),
+  });
+  const mutation = useMutation({
+    mutationFn: (id: number) => fetch(`/api/proxy/master/golongan/${id}`, { method: "DELETE" }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["golongan"] }),
+  });
+  return <DataTable data={data} onDelete={mutation.mutate} />;
+}
+
+// ✅ BENAR — logic di hook terpisah
+// src/hooks/useGolonganTable.ts
+export function useGolonganTable() {
+  const { data } = useQuery({
+    queryKey: golonganKeys.list(filters),
+    queryFn: () => apiClient.get("/master/golongan", filters),
+  });
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => apiClient.delete(`/master/golongan/${id}`),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: golonganKeys.lists() }),
+  });
+  return { data, onDelete: deleteMutation.mutate, isDeleting: deleteMutation.isPending };
+}
+
+// src/app/(app)/master/golongan/page.tsx — komponen tipis, hanya render
+export function GolonganPage() {
+  const { data, onDelete, isDeleting } = useGolonganTable();
+  return <DataTable data={data} onDelete={onDelete} isDeleting={isDeleting} />;
+}
+```
+
+**Checklist sebelum commit:** bila ada `useQuery`/`useMutation`/`useState` yang berisi business logic
+atau handler non-trivial di komponen → **angkat ke hook dulu**.
+
+### 2.4. Organisasi Types
+
+Definisi tipe bersama (model entitas, DTO, response API, props lintas-komponen) di `src/types/`
+(per-domain: `src/types/master/golongan.ts`). Pengecualian: tipe lokal sepele yang hanya
+dipakai di satu file boleh tetap inline.
+
+### 2.5. Organisasi Zod Schemas
+
+```
+src/lib/validations/
+├── auth.schema.ts          # Login, change-password
+├── master.schema.ts        # Shared master schemas
+└── employee.schema.ts      # Employee-specific schemas
+```
+
+Schema = **single source of truth** untuk tipe form. Derive TypeScript type via `z.infer<typeof schema>`.
 
 ---
 
-## 3. UI kit — Base UI, BUKAN Radix
+## 3. UI Kit — shadcn + Base UI
+
+### 3.1. Aturan Inti
 
 - shadcn di-init dengan **Base UI** (`npx shadcn init -b base`). **WAJIB verifikasi setiap prop ke
-  docs Base UI**, bukan Radix. Nama prop berbeda (mis. **`keepMounted` default `false`** vs Radix
-  `forceMount`). Salah asumsi Radix = bug diam.
-- **Tambah komponen shadcn = WAJIB lewat CLI** (`npx shadcn add <komponen>`), **JANGAN** tulis file
-  komponen manual sendiri. CLI menarik versi resmi dari registry Base UI (prop/struktur benar,
-  konsisten).
-- **DILARANG edit manual file hasil generate di `src/components/ui/*`.** `npx shadcn add`/update akan
-  **menimpa** file itu → kustomisasi manual hilang senyap. File `ui/*` = zona regenerable, perlakukan
-  seperti vendor code. Butuh tampilan beda? **Override lewat `className` dari call-site** — komponen
-  shadcn sudah merge `cn(<default>, className)` (tailwind-merge), jadi kelas dari pemanggil menang
-  tanpa menyentuh file generate; elemen internal (mis. ikon `data-slot=...`) ditarget via arbitrary
-  variant `**:data-[slot=...]:<kelas>` di className yang sama. Bila override tersebar di banyak
-  call-site, angkat jadi **konstanta className** atau **wrapper tipis di `src/components/`** (di LUAR
-  `ui/`) — bukan mengedit `ui/*`. (Menggantikan aturan lama "kustomisasi di file generate"; sinkron
-  dengan §1: `components/ui/*` exempt total.)
-- Dialog/Sheet content **lazy by default** — manfaatkan (jangan paksa mount).
+  docs Base UI**, bukan Radix. Nama prop berbeda:
+
+  | Base UI | Radix (JANGAN pakai) |
+  |---------|---------------------|
+  | `keepMounted` (default `false`) | `forceMount` |
+  | `data-open` / `data-closed` | `data-state="open"` / `"closed"` |
+  | Lazy render by default | Needs `forceMount` to persist |
+
+- **Tambah komponen = WAJIB lewat CLI:** `npx shadcn add <komponen>`. JANGAN tulis file manual.
+- **DILARANG edit file di `src/components/ui/*`.** `npx shadcn add`/update **menimpa** file itu →
+  kustomisasi manual hilang. Perlakukan seperti vendor code.
+
+### 3.2. Kustomisasi yang Benar
+
+```tsx
+// ❌ SALAH — edit langsung src/components/ui/button.tsx
+// File ini akan ditimpa saat `npx shadcn add button`
+
+// ✅ BENAR — override via className dari call-site
+<Button className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+  Hapus
+</Button>
+
+// ✅ BENAR — target elemen internal via data-slot
+<Dialog className="**:data-[slot=overlay]:bg-black/60">
+  ...
+</Dialog>
+
+// ✅ BENAR — wrapper tipis di src/components/ (LUAR ui/) untuk pattern berulang
+// src/components/delete-button.tsx
+export function DeleteButton(props: ButtonProps) {
+  return (
+    <Button
+      variant="destructive"
+      size="sm"
+      className={cn("gap-1.5", props.className)}
+      {...props}
+    />
+  );
+}
+```
+
+### 3.3. Dialog/Sheet
+
+- Content **lazy by default** — manfaatkan (jangan paksa mount).
+- Mount form container **SEKALI** di level page, pass `editing` state — **JANGAN** N dialog untuk N baris.
 
 ---
 
-## 4. Styling & tema
+## 4. Styling & Design Token
 
-- **Semua warna = token** (`bg-background`, `text-foreground`, `text-muted-foreground`, dst).
-  **DILARANG** hex atau `oklch(...)` literal di dalam komponen.
-- Token & skeleton `globals.css` = visual-foundation §1. Ganti seluruh isi `globals.css` default
-  Next dengan skeleton `@theme` + token §1.1.
+### 4.1. Token System
+
+**Semua warna = token.** DILARANG hex atau `oklch(...)` literal di dalam komponen.
+
+```tsx
+// ❌ SALAH
+<div className="bg-[#1e293b] text-[oklch(0.98_0_0)]">
+
+// ✅ BENAR
+<div className="bg-background text-foreground">
+<div className="bg-primary text-primary-foreground">
+<div className="text-muted-foreground border-border">
+```
+
+### 4.2. CSS Architecture
+
+Token & skeleton di `globals.css` = visual-foundation §1. Gunakan `@theme` block Tailwind v4:
+
+```css
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-inter), -apple-system, BlinkMacSystemFont, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  /* ... semua token warna di sini */
+}
+
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --primary: oklch(0.35 0.12 250);
+  /* ... nilai OKLCH di sini */
+}
+```
+
+### 4.3. Aturan Aksesibilitas Visual
+
 - **Jangan** bergantung warna saja untuk status (WCAG SC 1.4.1) — selalu **ikon + teks**.
 - Dark mode = light-only rilis 1; `.dark {}` di-scaffold kosong. Jangan bangun toggle tema.
-- Tipografi: **Inter** self-hosted `next/font`, berat 400/500/600 saja (**dilarang ≤300**),
-  `tabular-nums` di kolom angka tabel.
+- Tipografi: **Inter** self-hosted, berat **400/500/600** saja (**dilarang ≤300**).
+- `tabular-nums` di kolom angka tabel.
+- Touch target ≥ **44px** untuk elemen interaktif.
 
 ---
 
-## 5. Data & state
+## 5. Data Fetching & State Management
 
-- Fetch data = **TanStack Query v5** via `/api/proxy/*` (data-fetching §5). Tabel = `useQuery`;
-  CRUD = `useMutation` + `invalidateQueries`. `queryKey` bawa searchParams. Logika query/mutation
-  diangkat ke hook di `src/hooks/` (§1), bukan inline di komponen.
-- **Memory guardrails (WAJIB):** `gcTime` default 5 menit; `staleTime` ~30s tabel / ~5min `/list`.
-  **DILARANG** `gcTime: Infinity`; **DILARANG** simpan array baris besar di `useState`/Context.
+### 5.1. Query Key Factory (WAJIB)
+
+Gunakan factory object untuk query keys — konsisten, type-safe, invalidasi granular:
+
+```ts
+// src/hooks/keys/master-keys.ts
+export const masterKeys = {
+  all: (entity: string) => [entity] as const,
+  lists: (entity: string) => [...masterKeys.all(entity), "list"] as const,
+  list: (entity: string, filters: Record<string, unknown>) =>
+    [...masterKeys.lists(entity), filters] as const,
+  details: (entity: string) => [...masterKeys.all(entity), "detail"] as const,
+  detail: (entity: string, id: number) =>
+    [...masterKeys.details(entity), id] as const,
+};
+```
+
+### 5.2. TanStack Query Conventions
+
+- Fetch data via `/api/proxy/*` (data-fetching §5). Tabel = `useQuery`; CRUD = `useMutation` +
+  `invalidateQueries`.
+- Logika query/mutation diangkat ke hook di `src/hooks/` (§2.3), BUKAN inline di komponen.
+- Gunakan `isPending` (bukan `isLoading` — deprecated di v5) untuk mutation loading state.
+- `placeholderData: keepPreviousData` untuk pagination agar tidak ada layout shift.
+
+### 5.3. Memory Guardrails (WAJIB)
+
+| Parameter | Nilai | Rationale |
+|-----------|-------|-----------|
+| `gcTime` | Default **5 menit** (300.000ms) | Cegah memory leak |
+| `staleTime` | ~**30s** (tabel) / ~**5 menit** (`/list` dropdown) | Fresh enough untuk data interaktif |
+| `gcTime: Infinity` | **DILARANG** | Memory leak — data tidak pernah di-GC |
+| `staleTime: Infinity` | **DILARANG** | Data tidak pernah refetch |
+
+```ts
+// ❌ SALAH — memory leak
+useQuery({
+  queryKey: ["employees"],
+  queryFn: fetchEmployees,
+  gcTime: Infinity,
+  staleTime: Infinity,
+});
+
+// ✅ BENAR
+useQuery({
+  queryKey: employeeKeys.list(filters),
+  queryFn: () => apiClient.get("/employees", filters),
+  staleTime: 30_000,
+  // gcTime: default 5 menit — biarkan default
+});
+```
+
+### 5.4. State Management Rules
+
 - **URL = sumber kebenaran state tabel** (page/size/sort/filter-id), bukan state komponen.
-- **Tanpa optimistic removal** pada delete — baris hilang hanya setelah 200.
+- **JANGAN** copy `data` dari TanStack Query ke `useState` — double state, stale sync bugs.
+- **JANGAN** simpan array baris besar di `useState`/Context.
+- **Tanpa optimistic removal** pada delete — baris hilang hanya setelah 200 OK.
+
+### 5.5. Loading & Error States
+
+```tsx
+// Pattern WAJIB untuk setiap query consumer
+if (isPending) return <Skeleton />;
+if (isPlaceholderData) return <DataTable className="opacity-60" />;
+if (isError) return <InlineRetry onRetry={refetch} />;
+return <DataTable data={data} />;
+```
 
 ---
 
-## 6. Auth & keamanan (paling ketat)
+## 6. Form & Validasi
 
-- **`proxy.ts` = single point of failure semua trafik API.** Review & test paling ketat. WAJIB:
-  `try/catch` fail-safe (redirect `/login`, **jangan** throw 500); pin **Node runtime**; **hapus
-  cookie `token` saat logout** (cegah replay); refresh buffer ~30s + mint `duration: 3600`.
-- **Defense in depth 3 lapis:** `proxy.ts` (gate data) → DAL `verifySession()` (gate render) → RBAC
-  `hasPermission()` server-side. **UI unmount = kenyamanan, BUKAN batas keamanan** — jangan
-  andalkan.
-- Kontrak status: **401** = sesi hilang → toast + `/login?next=`; **403** = forbidden page (JANGAN
-  bounce login); **409** = inline di dialog. Detail: auth-proxy §4.
-- JWT hidup di cookie httpOnly + secure + sameSite, short-lived.
+### 6.1. Default: `<CrudForm>` + `makeConfig`
+
+Semua form CRUD sederhana pakai **RHF v7 + Zod** (`zodResolver`) via satu primitive
+**`<CrudForm>`** (forms §10). Suplai skema Zod + daftar field — jangan bikin boilerplate RHF
+per-entitas.
+
+```ts
+// src/config/master/golongan.config.ts
+export const golonganConfig = makeConfig<GolonganQuery, GolonganPostRequest>({
+  entity: "golongan",
+  columns: [...],
+  fields: [
+    { name: "nama", label: "Nama Golongan", type: "text" },
+    { name: "kode", label: "Kode", type: "text" },
+  ],
+  schema: golonganSchema,
+});
+```
+
+### 6.2. Field Coverage Enforcement (ADR-0008)
+
+`makeConfig<TQuery, TReq>` mewajibkan coverage-set `{fields[].name} ∪ {fkSources[].field}`
+HARUS superset dari keys **required** `TReq`. Kurang satu required → `tsc` error.
+
+```ts
+// ❌ SALAH — 'kode' missing dari fields = tsc error
+makeConfig<SanksiQuery, SanksiPostRequest>({
+  fields: [{ name: "nama", ... }],  // 'kode' hilang!
+  // TypeScript error: Property 'kode' is missing
+});
+
+// ✅ BENAR — semua required field tercakup
+makeConfig<SanksiQuery, SanksiPostRequest>({
+  fields: [
+    { name: "nama", ... },
+    { name: "kode", ... },
+  ],
+});
+```
+
+### 6.3. Form Kompleks (Deviasi Sadar)
+
+Form dengan **conditional sections**, **FK cascade**, atau **`superRefine` kondisional** boleh
+pola custom — `<CrudForm>` berbasis `fields[]` flat tidak mendukungnya. Ikuti pola `profesi/form.tsx`
+(Field* renderer lokal + RHF langsung). Patuhi ambang komponen §2.2 & anti-fragmentasi.
+
+### 6.4. Zod Schema Rules
+
+```ts
+// Schema = single source of truth
+import { z } from "zod";
+
+export const employeeSchema = z.object({
+  nama: z.string().min(1, "Nama wajib diisi").max(100),
+  nip: z.string().min(8, "NIP minimal 8 digit"),
+  jabatanId: z.number({ required_error: "Jabatan wajib dipilih" }),
+  email: z.string().email("Format email tidak valid").optional().or(z.literal("")),
+});
+
+// Derive type — JANGAN tulis interface terpisah
+export type EmployeeFormValues = z.infer<typeof employeeSchema>;
+```
+
+- Skema Zod **selaras** dengan `required`/`minLength`/`minimum` OpenAPI Backend.
+- Resolver: `zodResolver(schema as never)` — cast diperlukan untuk Zod v4 + RHF compatibility.
+- **`defaultValues` WAJIB** lengkap — hindari warning uncontrolled→controlled.
+
+### 6.5. Error & UX Rules
+
+- Error validasi = **inline di form**, JANGAN toast.
+- Single-column label-on-top layout.
+- Input height ≥ **44px** (touch target aksesibilitas).
+- Gunakan `aria-invalid` dan `aria-describedby` untuk accessible error messages.
 
 ---
 
-## 7. RBAC
+## 7. Auth & Keamanan
+
+### 7.1. Defense-in-Depth (3 Lapis — WAJIB)
+
+```
+┌─────────────┐     ┌──────────────────┐     ┌───────────────────┐
+│  proxy.ts   │ →   │  DAL             │ →   │  RBAC             │
+│  Gate Data  │     │  verifySession() │     │  hasPermission()  │
+│  (Network)  │     │  Gate Render     │     │  Server-side      │
+└─────────────┘     └──────────────────┘     └───────────────────┘
+```
+
+**UI unmount = kenyamanan, BUKAN batas keamanan** — jangan andalkan.
+
+### 7.2. `proxy.ts` (Single Point of Failure)
+
+Review & test paling ketat. WAJIB:
+- `try/catch` fail-safe (redirect `/login`, **jangan** throw 500)
+- Pin **Node runtime**
+- **Hapus cookie `token` saat logout** (cegah replay)
+- Refresh buffer ~30s + mint `duration: 3600`
+
+### 7.3. Kontrak Status HTTP
+
+| Status | Aksi | Detail |
+|--------|------|--------|
+| **401** | Sesi hilang → toast + redirect `/login?next=` | BUKAN 403 |
+| **403** | Forbidden page — JANGAN bounce ke login | Tampilkan "Akses Ditolak" |
+| **409** | Conflict — inline di dialog | Jangan tutup dialog, tampilkan alasan |
+
+### 7.4. JWT & Session
+
+- JWT hidup di cookie `httpOnly` + `secure` + `sameSite`, short-lived.
+- Cookie sesi Appwrite: `a_session_<projectId>` (primary) + `_legacy` fallback.
+- Dibaca via `readSession()`. BUKAN `mail_session`.
+
+---
+
+## 8. RBAC
 
 - **TIDAK PERNAH** hardcode `role === 'admin'`. Selalu lewat
   `hasPermission(permissions, PERMISSION.X, roles?)`.
 - **Sumber kebenaran = `getAccountSession()`** (`GET /account/me`) → `{ roles, permissions }`.
-  Server component: `verifySession()` + `getAccountSession()`; client: `useAuth()` (disuntik
-  `AuthProvider` di AppShell). Detail: rbac §9 + FE-GUIDE-dual-mode-rbac.md §7.
-- Role `ADMIN` lolos otomatis (shortcut di `hasPermission` — dual-mode BE); `permissions` bisa
+  Server component: `verifySession()` + `getAccountSession()`; client: `useAuth()`.
+- Role `ADMIN` lolos otomatis (shortcut di `hasPermission` — dual-mode BE). `permissions` bisa
   kosong untuk ADMIN — jangan hardcode ekspektasi sebaliknya.
-- Akses ditolak di UI = **unmount (`return null`)**, **BUKAN** disable/CSS-hide. Aturan unmount
-  terkunci di rbac §9.
+- Akses ditolak di UI = **unmount (`return null`)**, **BUKAN** disable/CSS-hide.
 
----
+```tsx
+// ❌ SALAH — CSS hide
+<Button disabled={!canEdit} className={!canEdit ? "hidden" : ""}>Edit</Button>
 
-## 8. Form
-
-- **Default: `<CrudForm>`** — Semua form CRUD Master sederhana pakai **RHF v7 + Zod** (`zodResolver`)
-  via satu primitive **`<CrudForm>`** (forms §10). Suplai skema Zod + daftar field — jangan bikin
-  boilerplate RHF per-entitas.
-- **Deviasi: form kompleks boleh pola custom** bila punya **conditional sections**, **FK cascade**,
-  atau **`superRefine` kondisional** — `<CrudForm>` berbasis `fields[]` flat tidak mendukungnya.
-  Ikuti pola `profesi/form.tsx` / `tambah-form.tsx` (Field* renderer lokal + RHF langsung).
-  **Deviasi sadar** — patuhi ambang komponen §1 (~180, trigger tinjauan bukan gate; ADR-0007) &
-  anti-fragmentasi: form kohesif banyak-field TIDAK dipecah demi angka. Lihat `forms.md §10.5`.
-- Skema Zod **selaras** dengan `required`/`minLength`/`minimum` OpenAPI Backend.
-- **`fields[]` WAJIB mencerminkan `{Entity}PostRequest`/`PutRequest`.** Setiap property di
-  interface request (`src/types/master/{entity}.ts`) HARUS punya input — lewat entri `fields[]`,
-  **atau** entri `fkSources[]` untuk property `*Id` (dropdown FK = input-nya). Property yang hanya
-  muncul di `columns`/`searchFields` **TIDAK** dihitung tercakup — itu display/filter, bukan input.
-  Field yang kurang = data diam-diam hilang saat submit (mis. bug `jenis-sp`: `kode` ada di
-  `searchFields` tapi tak ada di `fields[]`, jadi form cuma kirim `nama`). `*PostRequest` hand-written
-  = sumber kebenaran field; jangan andalkan `simpleNameSchema`/`nameField` bila request > `nama`.
-  **Ditegakkan compiler, bukan audit manual (ADR-0008).** `makeConfig<TQuery, TReq>` mewajibkan
-  `TReq` (mis. `makeConfig<SanksiQuery, SanksiPostRequest>(...)`); coverage-set
-  `{fields[].name} ∪ {fkSources[].field}` HARUS superset dari keys **required** `TReq` — kurang satu
-  required → `tsc` error. Property **optional** `TReq` boleh tak punya input. Grep-statis tak andal
-  (`fields` = arg posisional `makeConfig`, bukan key), jadi enforcement pindah ke tipe.
-- Error validasi = **inline di form**, JANGAN toast. Single-column label-on-top; input ≥44px.
-
----
-
-## 9. Notifikasi
-
-- Toast (**sonner**, satu `<Toaster>` bottom-right) HANYA untuk **hasil mutation**. Muat-data gagal
-  = panel inline "Coba lagi", **bukan** toast. Detail: notifications §16.
-
----
-
-## 10. Issue tracking — beads (bd), BUKAN TodoWrite
-
-- Gunakan **`bd`** untuk SEMUA task tracking. **DILARANG** TodoWrite/TaskCreate/markdown TODO list.
-- Buat issue **sebelum** menulis kode; `bd update <id> --claim` saat mulai; `bd close` saat selesai.
-- Priority **0–4 / P0–P4** (0=kritis, 2=medium, 4=backlog) — BUKAN high/medium/low.
-- **JANGAN** `bd edit` (memblokir di $EDITOR). Update via `--title/--description/--notes/--design`.
-- Pengetahuan persisten = **`bd remember`**, BUKAN MEMORY.md. Cari via `bd memories <keyword>`.
-
----
-
-## 11. Pahami project DULU — Graphify → GitNexus → grep (fallback)
-
-**Urutan eksplorasi WAJIB: `graphify` → `gitnexus` → `grep` (fallback).**
-graphify untuk pemahaman arsitektur level-tinggi, relasi domain, & komunitas kode (lihat output
-di `graphify-out/graph.html`). gitnexus untuk pelacakan simbol, impact analysis, query flow,
-& context 360° simbol. **`grep` HANYA sebagai fallback** bila graphify & gitnexus tidak mencukupi
-(mis. cari literal string, file config tanpa simbol, atau pola regex ad-hoc).
-
-**Diskalakan berdasarkan blast-radius (ADR-0009):** bila edit memicu ambang WAJIB (fan-in ≥2
-atau permukaan kritis) → `gitnexus impact` (flow, caller/callee, blast radius) dulu. Selain itu →
-graphify/gitnexus tetap dianjurkan untuk orientasi singkat, lalu baca file langsung. `context7`
-tetap wajib sebelum pakai library apa pun (§2).
-
-### graphify — knowledge graph (untuk pemahaman berskala luas)
-
-Skill global `graphify` (trigger **`/graphify`**) mengubah **input apa pun** (spec OpenAPI, dokumen
-desain, kumpulan file) jadi knowledge graph — memetakan entitas & relasinya saat cakupan pemahaman
-lebih besar dari yang bisa dijawab `gitnexus_context` satu simbol. Pakai saat: onboarding modul/spec
-baru (mis. `docs/api/*/api.json`), memetakan keterhubungan lintas-domain, atau menyiapkan rencana
-refactor besar. Output di `graphify-out/`. **gitnexus = peta KODE yang sudah ada; graphify = peta dari
-INPUT/spec/dokumen.** Keduanya mendahului koding, saling melengkapi.
-
-**Update (`--update`):** Jalankan `/graphify . --update` setelah perubahan kode untuk re-ekstraksi
-inkremental (hanya file baru/berubah + update graph tanpa LLM untuk code-only). Atau gunakan
-`graphify hook install` untuk post-commit hook otomatis (AST-only, tanpa LLM).
-
-### GitNexus MCP tools (format panggilan, TIDAK pakai `--repo`)
-
-MCP tools `gitnexus_impact`, `gitnexus_detect_changes`, `gitnexus_query`, `gitnexus_context`,
-`gitnexus_rename` tersedia via **MCP server** (stdio). Tidak perlu argumen `--repo` — server
-sudah tahu repo aktif. Format:
-
-```
-gitnexus_impact({target: "symbolName", direction: "upstream"})
-gitnexus_detect_changes()
-gitnexus_query({query: "concept"})
-gitnexus_context({name: "symbolName"})
-gitnexus_rename({oldName: "x", newName: "y"})
+// ✅ BENAR — unmount total
+{hasPermission(permissions, PERMISSION.EDIT) && <Button>Edit</Button>}
 ```
 
-### CLI (fallback — WAJIB `-r kepegawaian-fe`)
+---
 
-Bila MCP tools tidak tersedia, pakai CLI. **Semua command butuh `-r kepegawaian-fe`**
-atau error "repo not found".
+## 9. Notifikasi & Error Handling
 
-| Tujuan | CLI |
-|--------|-----|
-| **Impact analysis** (sebelum edit) | `npx gitnexus impact <target> -d upstream -r kepegawaian-fe` |
-| **Detect changes** (sebelum commit) | `npx gitnexus detect-changes -s unstaged -r kepegawaian-fe` |
-| **Query** (cari flow) | `npx gitnexus query "<query>" -r kepegawaian-fe` |
-| **Context** (360° simbol) | `npx gitnexus context <name> -r kepegawaian-fe` |
-| **List repos** | `npx gitnexus list` |
-| **Re-index** | `npx gitnexus analyze` (tidak perlu `-r`, sudah auto-detect CWD) |
+### 9.1. Toast (sonner)
 
-> **`gitnexus rename`** tidak punya CLI equivalent — hanya lewat MCP.
-> Jangan pakai `--target`, `--query`, `--name` — itu opsi tidak dikenal di CLI.
+- Satu `<Toaster />` di root layout, `position="bottom-right"`, `richColors`, `closeButton`.
+- Toast **HANYA** untuk **hasil mutation** (create/update/delete).
 
-### Aturan
+```ts
+// ✅ Mutation success/error
+toast.success("Data berhasil disimpan");
+toast.error("Gagal menghapus data");
 
-- **Sebelum mengedit** fungsi/class/method yang **fan-in ≥2 atau di permukaan kritis** (ADR-0009):
-  impact analysis → laporkan blast radius. **Peringatkan** bila risk HIGH/CRITICAL sebelum lanjut.
-  Edit lokal di bawah ambang: tak wajib.
-- **Sebelum commit:** `detect-changes` untuk verifikasi scope perubahan.
-- **Eksplorasi:** `query`/`context` alih-alih grep buta.
-- **Rename simbol:** pakai `gitnexus_rename` (MCP), **JANGAN** find-and-replace.
-- **Index stale?** `npx gitnexus analyze` dulu.
+// ✅ toast.promise untuk lifecycle otomatis
+toast.promise(updateEmployee(data), {
+  loading: "Menyimpan data pegawai...",
+  success: "Data pegawai berhasil diperbarui",
+  error: (err) => err.message || "Gagal menyimpan data pegawai",
+});
+```
+
+### 9.2. Error Non-Toast
+
+| Skenario | Handling | Implementasi |
+|----------|----------|-------------|
+| Data load gagal | **Inline retry** | `<InlineRetry onRetry={refetch} />` di dalam tabel |
+| Form validasi gagal | **Inline per-field** | RHF `formState.errors` di bawah input |
+| 401 unauthorized | **Redirect** | `router.push("/login?next=...")` + toast |
+| 409 conflict (delete) | **Inline di dialog** | Dialog tetap terbuka, tampilkan alasan |
 
 ---
 
-## 12. Tooling
+## 10. Performance
 
-- Package manager = **Bun**. Linter/formatter = **BiomeJS 2.2.0** (`bunx biome check`).
-- Jalankan quality gate (lint/build/test) sebelum menutup issue bila kode berubah.
+### 10.1. Server vs Client Components
+
+```tsx
+// ✅ Page = Server Component tipis, data di-pass ke Client Component
+// src/app/(app)/master/golongan/page.tsx
+export default async function GolonganPage() {
+  return <GolonganClient />;  // Client component handles interactivity
+}
+```
+
+- **Server Component by default.** Tandai `'use client'` hanya bila butuh hooks/browser API/event handlers.
+- **JANGAN** `'use client'` di `page.tsx` atau `layout.tsx` — konversi seluruh subtree ke client bundle.
+
+### 10.2. Lazy Loading
+
+```tsx
+// Heavy components: PDF viewer, charts, dsb
+const PdfViewer = dynamic(() => import("@/components/pdf-viewer"), {
+  ssr: false,
+  loading: () => <Skeleton className="h-[600px]" />,
+});
+```
+
+### 10.3. Suspense Boundaries
+
+```tsx
+// Wrap dynamic content untuk streaming/PPR
+<Suspense fallback={<TableSkeleton />}>
+  <EmployeeTable />
+</Suspense>
+```
+
+### 10.4. Font Optimization
+
+```tsx
+// src/app/layout.tsx — self-hosted, no CLS
+import { Inter } from "next/font/google";
+
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  weight: ["400", "500", "600"],
+  variable: "--font-inter",
+});
+```
 
 ---
 
-## 13. Session close (MANDATORY — kerja belum selesai sampai `git push` sukses)
+## 11. Testing
 
-**Sebelum commit & push, update knowledge graph & index kode:**
-1. **Update graphify knowledge graph** — jalankan `/graphify . --update` (via skill graphify)
-   agar graph mencerminkan perubahan kode terbaru (inkremental, code-only = tanpa LLM).
-2. **Update GitNexus index** — `npx gitnexus analyze` agar perubahan simbol & flow tercermin
-   di index (auto-detect CWD, tidak perlu `-r`).
-3. **Detect changes GitNexus** — `gitnexus_detect_changes()` (MCP) atau CLI
-   `npx gitnexus detect-changes -s unstaged -r kepegawaian-fe` untuk verifikasi scope perubahan.
+### 11.1. Konvensi
 
-**Update checklist dokumentasi:**
-- **Update `docs/*.md`** — centang `[x]` issue/wave yang selesai, sinkron dengan
-  status `bd` (jangan biarkan tracker basi vs `bd ready`/`bd list`).
-- **Update checklist Definition of Done** issue terkait — pastikan semua item tercentang sebelum
-  `bd close`.
+- Test runner: **Vitest** + **Testing Library** (`@testing-library/react`, `@testing-library/user-event`).
+- File test: `*.test.ts` / `*.test.tsx` — collocated dengan file yang ditest, atau di `__tests__/`.
+- **Unit test WAJIB** untuk logic baru di hooks/lib.
+
+### 11.2. Pattern
+
+```ts
+// ✅ Test hook logic
+import { renderHook, waitFor } from "@testing-library/react";
+
+test("useGolonganTable returns data", async () => {
+  const { result } = renderHook(() => useGolonganTable(), { wrapper: QueryWrapper });
+  await waitFor(() => expect(result.current.data).toBeDefined());
+});
+
+// ✅ Test component rendering
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
+
+test("delete button triggers confirmation", async () => {
+  render(<DataTable data={mockData} />);
+  await userEvent.click(screen.getByRole("button", { name: /hapus/i }));
+  expect(screen.getByText("Ketik HAPUS")).toBeInTheDocument();
+});
+```
+
+### 11.3. Quality Gate
 
 ```bash
-# 1. Update graphify knowledge graph
-/graphify . --update
-# 2. Update GitNexus index & detect changes
-npx gitnexus analyze
-npx gitnexus detect-changes -s unstaged -r kepegawaian-fe
-# 3. Push
-cd /mnt/DATA/html/kepegawaian-fe
-git pull --rebase
-bd dolt push
-git push
-git status   # HARUS "up to date with origin"
+bun run test              # WAJIB hijau sebelum push
+bun run build             # WAJIB zero error
+bunx biome check          # WAJIB zero lint error
 ```
 
-- **JANGAN** berhenti sebelum push. **JANGAN** bilang "siap push kalau Anda mau" — YOU push.
-- File issue untuk sisa kerja, update status issue, bersihkan stash, lalu hand-off konteks.
+---
 
-> **Catatan:** `/graphify . --update` adalah perintah di skill graphify (bukan CLI shell).
-> Bila graphify CLI (`graphify`) terinstall via pip, bisa juga langsung:
-> `graphify --update .` atau pasang post-commit hook: `graphify hook install`.
+## 12. Tooling & Quality Gate
+
+### 12.1. BiomeJS 2.2
+
+- **Satu tool** pengganti ESLint + Prettier — linting + formatting + import sorting.
+- Config di `biome.json`: tab indent, width 120, `organizeImports: "on"`.
+- `src/components/ui/` excluded dari linting (generated code).
+
+```bash
+bunx biome check          # Lint seluruh project
+bunx biome check --write  # Auto-format + fix
+```
+
+### 12.2. Import Organization
+
+BiomeJS otomatis mengatur import. Urutan konvensi:
+
+```tsx
+// 1. React/Next.js
+import { useState } from "react";
+import Link from "next/link";
+
+// 2. Third-party libraries
+import { useQuery } from "@tanstack/react-query";
+import { z } from "zod";
+
+// 3. Internal — absolute imports via @/
+import { DataTable } from "@/components/data-table";
+import { useGolonganTable } from "@/hooks/useGolonganTable";
+import { cn } from "@/lib/utils";
+import type { GolonganQuery } from "@/types/master/golongan";
+```
+
+### 12.3. Pre-Ship Checklist
+
+- [ ] `bun run test` — all green
+- [ ] `bun run build` — clean build, zero error
+- [ ] `bunx biome check` — zero lint errors
+- [ ] No out-of-scope errors resolved ad-hoc (file new issue instead)
+
+---
+
+## 13. Git & Commit Convention
+
+### 13.1. Format
+
+```
+<type>: <deskripsi>
+```
+
+Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`, `perf`.
+
+### 13.2. Rules & Safety Guardrails
+
+- **Never amend.** Commit rusak → `fix:` commit baru.
+- **Batched `git add`** di akhir saja — JANGAN `git add` per-file di antara edit.
+- **Resolve out-of-scope errors** → file **new issue**, jangan fix ad-hoc inline.
+- **Git Stash & Safe Reset (WAJIB):**
+  - **DILARANG** `git restore .`, `git reset --hard`, atau `git clean -fd` tanpa melakukan **`git stash push -m "descriptive-label"`** terlebih dahulu.
+  - Sebelum `git pull --rebase` atau switch branch saat ada uncommitted changes: wajib `git stash` agar pekerjaan lokal/kontributor lain tidak hilang atau tertimpa.
+  - Untuk melihat riwayat simpanan: `git stash list`.
+  - Jika perlu memulihkan perubahan: `git stash pop` (atau `git stash apply`).
+  - Jangan jalankan `git stash drop` atau `git stash clear` kecuali yakin 100% stash tersebut tidak dibutuhkan lagi.
+
+---
+
+## Appendix A: Anti-Patterns (Larangan Lengkap)
+
+| # | Anti-Pattern | Mengapa Salah | Yang Benar |
+|---|-------------|---------------|------------|
+| A1 | Hardcode hex/`oklch(...)` di komponen | Tidak konsisten, sulit maintain | Token: `bg-primary`, `text-foreground` |
+| A2 | `Record<string, unknown>` untuk entity | Hilang type safety | `EntityConfig<TItem, TReq>` generics |
+| A3 | Pakai Radix API (`asChild`, `forceMount`) | Project pakai Base UI | Verifikasi ke docs Base UI |
+| A4 | Satu `<Dialog>` per baris tabel | N dialog = memory waste | Mount container sekali, pass `editing` state |
+| A5 | `gcTime: Infinity` / `staleTime: Infinity` | Memory leak | `gcTime: 5min`, `staleTime: 30s` |
+| A6 | Toast untuk data-load failure | Mengganggu, tidak actionable | Inline retry panel |
+| A7 | CSS-hide/disable untuk unauthorized | Bisa di-enable via inspect | Unmount (`return null`) |
+| A8 | Optimistic removal (hapus baris sebelum 200) | 409 bisa terjadi | Tunggu 200 OK |
+| A9 | `useMemo`/`useCallback` defensif | React Compiler sudah handle | Tulis biasa |
+| A10 | `React.forwardRef` | Obsolete di React 19 | `ref` sebagai prop biasa |
+| A11 | Copy query data ke `useState` | Double state, stale sync | Pakai `data` langsung dari `useQuery` |
+| A12 | Edit file `src/components/ui/*` | Akan ditimpa `npx shadcn add` | Override via `className` / wrapper |
+| A13 | `useEffect` untuk derived state | Unnecessary re-render | Hitung inline, compiler memoize |
+| A14 | Akses `params`/`searchParams` sinkron | Breaking di Next.js 16 | `await params`, `await searchParams` |
+| A15 | Tulis interface + Zod schema terpisah | Duplikasi, out-of-sync | `z.infer<typeof schema>` saja |
+| A16 | `'use client'` di page.tsx/layout.tsx | Konversi seluruh subtree ke client | Buat client component terpisah |
+| A17 | Amending broken commits | Riwayat hilang | `fix:` commit baru |
+| A18 | Resolve out-of-scope errors inline | Scope creep | File new issue |
+| A19 | `git add` per-file di antara edit | Defeats batch guarantee | Batched `git add` di akhir |
+| A20 | Font weight ≤300 | Sulit dibaca pengguna lansia | 400/500/600 saja |
+| A21 | `git restore .` / `git reset --hard` tanpa `git stash` | Menghapus perubahan lokal orang lain / diri sendiri yang belum di-commit secara permanen | `git stash push -m "label"` sebelum restore/reset |
