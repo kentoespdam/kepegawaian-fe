@@ -1,7 +1,7 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { Ban, CalendarDays, CircleCheck, CircleX, Clock, Eye, Undo2 } from "lucide-react";
+import { CalendarDays, CircleCheck, CircleX, Clock, Eye } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { type Column, DataTable } from "@/components/data-table";
@@ -19,12 +19,9 @@ import { DetailApprovalDialog } from "./detail-approval-dialog";
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 
-const STATUS_OPTIONS = [
-	{ value: "PENDING", label: "Menunggu" },
-	{ value: "APPROVED", label: "Disetujui" },
-	{ value: "REJECTED", label: "Ditolak" },
-	{ value: "CONFIRMED", label: "Dikonfirmasi" },
-	{ value: "CANCELED", label: "Dibatalkan" },
+const RW_OPTIONS = [
+	{ value: "WRITE", label: "Belum Diproses" },
+	{ value: "READ", label: "Sudah Diproses" },
 ];
 
 const STATUS_ICONS: Record<string, typeof Clock> = {
@@ -32,8 +29,6 @@ const STATUS_ICONS: Record<string, typeof Clock> = {
 	APPROVED: CircleCheck,
 	CONFIRMED: CircleCheck,
 	REJECTED: CircleX,
-	CANCELED: Ban,
-	RETURNED: Undo2,
 };
 
 function StatusBadge({ status }: { status?: string }) {
@@ -47,16 +42,12 @@ function StatusBadge({ status }: { status?: string }) {
 	);
 }
 
-type PersetujuanView = "menunggu" | "riwayat";
-
 interface PersetujuanPageClientProps {
 	pegawaiId: number | null;
 	jabatanId: number | null;
-	// Dedicated pages: /cuti/persetujuan = menunggu, /cuti/persetujuan/riwayat = riwayat.
-	view: PersetujuanView;
 }
 
-export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: PersetujuanPageClientProps) {
+export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageClientProps) {
 	const sp = useSearchParams();
 	const pathname = usePathname();
 	const router = useRouter();
@@ -65,10 +56,11 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	const size = Number(sp.get("size") ?? "10");
 	const tahunParam = sp.get("tahun");
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
-	const statusParam = sp.get("approvalStatus") ?? undefined;
-	const hasActive = tahun !== CURRENT_YEAR || !!statusParam;
+	// Default WRITE — tidak perlu kirim ke backend jika default
+	const rwParam = sp.get("readWriteStatus");
+	const readWriteStatus = rwParam === "READ" ? "READ" : undefined;
+	const hasActive = tahun !== CURRENT_YEAR || !!readWriteStatus;
 
-	// Satu dialog per halaman — row target
 	const [detailRow, setDetailRow] = useState<CutiApprovalChainResponse | null>(null);
 
 	const nav = (updates: Record<string, string | undefined>) => {
@@ -81,23 +73,19 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	};
 
 	const onYearChange = (y: number) => nav({ tahun: String(y), page: "1" });
-	const onStatusChange = (v: string) => nav({ approvalStatus: v || undefined, page: "1" });
+	const onRwChange = (v: string) => nav({ readWriteStatus: v === "WRITE" ? undefined : v, page: "1" });
 	const onReset = () => router.replace(pathname);
 
 	const query = useQuery({
-		// CU-14: queryKey bawa semua param. Spike CU-10: backend filter status = 1 nilai —
-		// view riwayat tanpa filter status, non-PENDING di-filter client.
-		// CU-18/ADR-0041: chain approval posisional by JABATAN — picSaatIni adalah
-		// JabatanMiniResponse (jabatan approver saat ini), jadi filter pakai jabatanId,
-		// bukan pegawaiId.
-		queryKey: ["cuti-persetujuan", view, jabatanId, tahun, page, size, statusParam],
+		// CU-20/ADR-0042: readWriteStatus filter — WRITE=default (belum diproses), READ=sudah diproses
+		queryKey: ["cuti-persetujuan", jabatanId, tahun, page, size, readWriteStatus],
 		queryFn: async () => {
 			const params: Record<string, string> = {
 				...toApiParams({ page, size }),
 				tahun: String(tahun),
 				picSaatIniId: String(jabatanId),
 			};
-			if (view === "menunggu") params.approvalCutiStatus = statusParam ?? "PENDING";
+			if (readWriteStatus) params.readWriteStatus = readWriteStatus;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/approval?${qs}`);
 			throwIfNotOk(res, "Gagal memuat data persetujuan");
@@ -111,14 +99,6 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	});
 
 	const pageView = fromPage(query.data);
-	// Spike CU-10: view riwayat = semua non-PENDING (filter client karena backend 1 nilai status)
-	const rows =
-		view === "riwayat"
-			? (pageView.rows ?? []).filter((r) => {
-				if (statusParam) return r.refCuti?.approvalCutiStatus === statusParam;
-				return r.refCuti?.approvalCutiStatus !== "PENDING";
-			})
-			: (pageView.rows ?? []);
 
 	const columns: Column<CutiApprovalChainResponse>[] = [
 		{ id: "no", header: "No" },
@@ -154,7 +134,6 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 		{ id: "picSaatIni", header: "PIC Saat Ini", cell: (r) => r.refCuti?.picSaatIni?.nama ?? "—" },
 	];
 
-	// CU-19: kolom Aksi = tombol Detail (buka modal detail + riwayat + aksi)
 	columns.push({
 		id: "aksi",
 		header: "Aksi",
@@ -173,7 +152,6 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 			: col,
 	);
 
-	// D5 defensif: pegawai tak ter-resolve ATAU jabatan kosong (inkonsistensi BE) → empty state.
 	if (pegawaiId == null || jabatanId == null) {
 		return (
 			<div className="flex flex-col items-center justify-center py-20 text-center">
@@ -203,12 +181,12 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 								))}
 							</SelectContent>
 						</Select>
-						<Select value={statusParam ?? ""} onValueChange={(v) => onStatusChange(v ?? "")}>
-							<SelectTrigger className="h-11 w-40" aria-label="Status">
-								<SelectValue placeholder="Semua Status" />
+						<Select value={readWriteStatus ?? "WRITE"} onValueChange={(v) => onRwChange(v ?? "WRITE")}>
+							<SelectTrigger className="h-11 w-44" aria-label="Status Proses">
+								<SelectValue placeholder="Semua" />
 							</SelectTrigger>
 							<SelectContent>
-								{STATUS_OPTIONS.map((s) => (
+								{RW_OPTIONS.map((s) => (
 									<SelectItem key={s.value} value={s.value}>
 										{s.label}
 									</SelectItem>
@@ -218,16 +196,14 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 					</DataTableToolbar>
 				}
 				columns={columnsWithNo}
-				data={rows}
+				data={pageView.rows ?? []}
 				isLoading={query.isPending}
 				isPlaceholder={query.isPlaceholderData}
 				isError={query.isError}
 				error={query.error}
 				onRetry={() => query.refetch()}
 				getRowId={(item) => String(item.id ?? "")}
-				emptyMessage={
-					view === "menunggu" ? "Tidak ada pengajuan yang menunggu persetujuan Anda" : "Belum ada riwayat persetujuan"
-				}
+				emptyMessage="Tidak ada pengajuan yang menunggu persetujuan Anda"
 				pagination={
 					<DataTablePagination
 						page={page}

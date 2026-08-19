@@ -235,25 +235,16 @@ sederhana dengan kalimat "Batalkan pengajuan cuti ini?" karena tidak ada input t
 > Detail keputusan di **CU-18**.
 
 Halaman Persetujuan Cuti dapat diakses oleh **approver** — pegawai yang berada dalam
-rantai approval (backend flag `isCutiApprover`, CU-18). **Dua route dedicated** (tab navigation
-dihapus):
-- `/cuti/persetujuan` — **Menunggu** (`view="menunggu"`): filter `approvalCutiStatus=PENDING`, kolom Aksi.
-- `/cuti/persetujuan/riwayat` — **Riwayat Persetujuan** (`view="riwayat"`): tanpa param
-  `approvalCutiStatus` (spike CU-10: backend filter = 1 nilai, non-PENDING di-filter client),
-  tanpa kolom Aksi. Guard approver sama dengan halaman menunggu.
+rantai approval (backend flag `isCutiApprover`, CU-18). **Satu halaman** dengan dropdown filter
+`readWriteStatus` (CU-20/ADR-0042). Route lama `/cuti/persetujuan/riwayat` di-redirect ke
+`/cuti/persetujuan?readWriteStatus=READ`.
 
 Konten bersumber dari `GET /cuti/pengajuan/approval` — param wajib:
 - `picSaatIniId` = **`jabatanId` approver** dari session (`pegawai.jabatan.id`) — chain approval
   posisional by jabatan (`picSaatIni` = `JabatanMiniResponse`, ADR-0041), **bukan** `pegawaiId`
 - `tahun` = tahun terpilih
-- `approvalCutiStatus` — **opsional**, default `PENDING` (kontrak R3,
-  `docs/BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md`). Halaman "Menunggu" mengirim
-  `PENDING` eksplisit; halaman "Riwayat" tidak mengirim.
-
-> ⚠️ Dengan default `PENDING` (R3), halaman Riwayat (tanpa param) hanya menerima baris
-> PENDING → filter client non-PENDING = **list kosong**. Keputusan FE belum ada: query
-> per-status (APPROVED/CONFIRMED/REJECTED/...) atau BE menerima multi-value — jangan ship
-> riwayat kosong diam-diam.
+- `readWriteStatus` — **opsional**. Default (tidak kirim) = semua. Filter: `WRITE` (belum diproses)
+  atau `READ` (sudah diproses). Dropdown di toolbar dengan placeholder "Semua", default `WRITE`.
 
 Jika approver belum punya pengajuan yang menunggu → backend mengembalikan list kosong.
 Tampilkan empty state standar tanpa error. (Pegawai non-approver tidak sampai di sini —

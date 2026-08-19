@@ -6,7 +6,7 @@ export default async function CutiPersetujuanPage() {
 	const { pegawai } = await getPegawaiSession();
 	return (
 		<Suspense fallback={<div className="p-6 text-muted-foreground">Memuat...</div>}>
-			<PersetujuanPageClient view="menunggu" pegawaiId={pegawai?.id ?? null} jabatanId={pegawai?.jabatan?.id ?? null} />
+			<PersetujuanPageClient pegawaiId={pegawai?.id ?? null} jabatanId={pegawai?.jabatan?.id ?? null} />
 		</Suspense>
 	);
 }
