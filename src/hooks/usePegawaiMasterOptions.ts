@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { pegawaiKeys } from "@/hooks/keys/pegawai-keys";
 
 export function usePajakOptions() {
 	const query = useQuery({
@@ -29,6 +30,23 @@ function useEnumOptions(url: string, queryKey: string) {
 		staleTime: 300_000,
 	});
 	return (query.data ?? []).map((i) => ({
+		value: String(i.id),
+		label: String(i.nama ?? ""),
+	}));
+}
+
+export function useGajiProfilOptions() {
+	const query = useQuery({
+		queryKey: pegawaiKeys.gajiProfilList(),
+		queryFn: async () => {
+			const res = await fetch("/api/proxy/penggajian/profil/list");
+			if (!res.ok) throw new Error("Gagal memuat profil gaji");
+			const body = await res.json();
+			return body.data as Record<string, unknown>[];
+		},
+		staleTime: 300_000,
+	});
+	return ((query.data ?? []) as Record<string, unknown>[]).map((i) => ({
 		value: String(i.id),
 		label: String(i.nama ?? ""),
 	}));
