@@ -128,14 +128,10 @@ describe("PersetujuanPageClient", () => {
 		expect(within(dialog).getByText("Detail Pengajuan Cuti")).toBeTruthy();
 		expect(within(dialog).getByText("Budi Santoso")).toBeTruthy();
 
-		// klik tombol Setujui di footer dialog
+		// catatan langsung terlihat di dialog — isi notes, lalu klik Setujui
+		const textarea = within(dialog).getByRole("textbox");
+		await userEvent.type(textarea, "Disetujui, kuota tersedia");
 		await userEvent.click(within(dialog).getByRole("button", { name: /setujui/i }));
-
-		// inline expansion: notes wajib — tombol konfirmasi disabled sampai diisi
-		const confirmButton = within(dialog).getByRole("button", { name: /konfirmasi setujui/i });
-		expect(confirmButton).toBeDisabled();
-		await userEvent.type(within(dialog).getByRole("textbox"), "Disetujui, kuota tersedia");
-		await userEvent.click(confirmButton);
 
 		await waitFor(() => expect(postInit).not.toBeNull());
 		const body = JSON.parse(String(postInit?.body));

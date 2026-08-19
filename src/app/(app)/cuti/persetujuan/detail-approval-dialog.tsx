@@ -176,7 +176,6 @@ export function DetailApprovalDialog({
 }: DetailApprovalDialogProps) {
 	const qc = useQueryClient();
 	const [activeTab, setActiveTab] = useState<"detail" | "riwayat">("detail");
-	const [approvalAction, setApprovalAction] = useState<ApprovalAction | null>(null);
 	const [notes, setNotes] = useState("");
 	const [error, setError] = useState<string | null>(null);
 
@@ -186,7 +185,6 @@ export function DetailApprovalDialog({
 
 	const resetState = () => {
 		setActiveTab("detail");
-		setApprovalAction(null);
 		setNotes("");
 		setError(null);
 	};
@@ -197,8 +195,8 @@ export function DetailApprovalDialog({
 	};
 
 	const mutate = useMutation({
-		mutationFn: async () => {
-			if (!row || !approvalAction) return;
+		mutationFn: async (action: ApprovalAction) => {
+			if (!row) return;
 			const csrfRes = await fetch("/api/proxy/auth/csrf-token");
 			if (!csrfRes.ok) throw new Error("Gagal mendapatkan token keamanan");
 			const csrfBody = (await csrfRes.json()) as { data?: string };
@@ -207,7 +205,7 @@ export function DetailApprovalDialog({
 				cutiId: row.refCuti?.id ?? 0,
 				approverId: pegawaiId,
 				approvalLevel: row.approvalLevel ?? 1,
-				approvalStatus: approvalAction === "APPROVE" ? "APPROVED" : "REJECTED",
+				approvalStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
 				notes: notes.trim(),
 			};
 			const res = await fetch("/api/proxy/cuti/approval", {
@@ -220,12 +218,14 @@ export function DetailApprovalDialog({
 				throw new Error(apiErrorMessage(b, "Gagal memproses persetujuan"));
 			}
 		},
-		onSuccess: () => {
-			toast.success(approvalAction === "APPROVE" ? "Pengajuan disetujui" : "Pengajuan ditolak");
+		onSuccess: async (_data, action) => {
+			toast.success(action === "APPROVE" ? "Pengajuan disetujui" : "Pengajuan ditolak");
 			resetState();
-			qc.invalidateQueries({ queryKey: ["cuti-persetujuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] });
-			qc.invalidateQueries({ queryKey: ["cuti-kuota"] });
+			await Promise.all([
+				qc.invalidateQueries({ queryKey: ["cuti-persetujuan"] }),
+				qc.invalidateQueries({ queryKey: ["cuti-pengajuan"] }),
+				qc.invalidateQueries({ queryKey: ["cuti-kuota"] }),
+			]);
 			onActionComplete();
 		},
 		onError: (e: Error) => setError(e.message),
@@ -237,7 +237,7 @@ export function DetailApprovalDialog({
 
 	return (
 		<Dialog open={open} onOpenChange={handleClose}>
-			<DialogContent className="sm:max-w-lg" showCloseButton>
+			<DialogContent className="min-w-2xl max-h-screen" showCloseButton>
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
 						<Eye className="size-4" />
@@ -282,67 +282,40 @@ export function DetailApprovalDialog({
 					{activeTab === "detail" ? <DetailTab row={row} /> : <RiwayatTab cutiId={cutiId} />}
 				</div>
 
-				{/* Inline expansion — notes + konfirmasi */}
-				{approvalAction && (
-					<div className="space-y-2 border-t pt-3">
-						<Label className="text-sm font-medium">
-							Catatan <span className="text-destructive">*</span>
-						</Label>
-						<Textarea
-							value={notes}
-							onChange={(e) => setNotes(e.target.value)}
-							className="min-h-20"
-							placeholder={approvalAction === "APPROVE" ? "Catatan persetujuan" : "Alasan penolakan"}
-							aria-invalid={!notes.trim()}
-						/>
-						{error && <p className="text-sm text-destructive">{error}</p>}
-						<div className="flex gap-2 justify-end">
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={() => {
-									setApprovalAction(null);
-									setNotes("");
-									setError(null);
-								}}
-								disabled={mutate.isPending}
-							>
-								Batal
-							</Button>
-							<Button
-								size="sm"
-								variant={approvalAction === "APPROVE" ? "default" : "destructive"}
-								disabled={!notes.trim() || mutate.isPending}
-								onClick={() => mutate.mutate()}
-							>
-								{mutate.isPending ? "Memproses..." : `Konfirmasi ${approvalAction === "APPROVE" ? "Setujui" : "Tolak"}`}
-							</Button>
-						</div>
-					</div>
-				)}
-
-				{/* Footer */}
-				{!approvalAction && (
-					<DialogFooter>
-						{canAct ? (
-							<>
+				{/* Footer: notes + action buttons */}
+				{canAct ? (
+					<DialogFooter className="block!">
+						<div className="space-y-2">
+							<Label className="text-sm font-medium">Catatan</Label>
+							<Textarea
+								value={notes}
+								onChange={(e) => setNotes(e.target.value)}
+								className="min-h-20"
+								placeholder="Catatan untuk pengaju..."
+								required
+							/>
+							{error && <p className="text-sm text-destructive">{error}</p>}
+							<div className="flex gap-2 justify-end">
 								<Button
 									variant="outline"
 									size="sm"
 									className="text-destructive hover:text-destructive hover:border-destructive/50"
-									onClick={() => setApprovalAction("REJECT")}
+									disabled={mutate.isPending}
+									onClick={() => mutate.mutate("REJECT")}
 								>
 									<CircleX className="size-3.5 mr-1" />
 									Tolak
 								</Button>
-								<Button size="sm" onClick={() => setApprovalAction("APPROVE")}>
+								<Button size="sm" disabled={mutate.isPending} onClick={() => mutate.mutate("APPROVE")}>
 									<CircleCheck className="size-3.5 mr-1" />
 									Setujui
 								</Button>
-							</>
-						) : (
-							<DialogClose render={<Button variant="outline" size="sm" />}>Tutup</DialogClose>
-						)}
+							</div>
+						</div>
+					</DialogFooter>
+				) : (
+					<DialogFooter>
+						<DialogClose render={<Button variant="outline" size="sm" />}>Tutup</DialogClose>
 					</DialogFooter>
 				)}
 			</DialogContent>

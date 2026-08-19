@@ -428,6 +428,8 @@ Full catalog: `.agents/skills/`. Key ones:
 - **"Saya tahu nama filenya"** → `view_file` langsung (OK)
 - **"Saya mau cari string literal/regex di seluruh codebase"** → `grep` (boleh, ini use-case valid)
 - **❌ JANGAN:** `grep useQuery src/ -r` untuk "pahami bagaimana data fetching bekerja" — itu tugas graphify/gitnexus
+- **"Ada runtime error di browser"** → `scripts/nextjs-mcp-call.sh get_errors` — langsung dapat source-mapped stack traces tanpa grep manual
+- **"Mau verifikasi route structure"** → `scripts/nextjs-mcp-call.sh get_routes` — lebih cepat dari `find src/app`
 
 ---
 
@@ -499,7 +501,50 @@ This project is indexed by GitNexus as **kepegawaian-fe** (3007 symbols, 5106 re
 
 ---
 
-## 15. Useful Links
+## 15. Next.js DevTools MCP
+
+Next.js 16.2.10 ship MCP endpoint di `http://localhost:3000/_next/mcp` (otomatis aktif saat dev server running). Untuk memanggil MCP tools dari session ini, gunakan wrapper script di `scripts/nextjs-mcp-call.sh`:
+
+### Quick Reference
+
+```bash
+# Dev server WAJIB running (port 3000)
+scripts/nextjs-mcp-call.sh get_project_metadata          # Info project
+scripts/nextjs-mcp-call.sh get_errors                     # Error diagnostics (build + runtime + source-mapped)
+scripts/nextjs-mcp-call.sh get_routes                     # Semua routes (appRouter + pagesRouter)
+scripts/nextjs-mcp-call.sh get_logs                       # Path ke log file
+scripts/nextjs-mcp-call.sh get_server_action_by_id '{"actionId":"xxx"}'  # Cari Server Action
+scripts/nextjs-mcp-call.sh get_page_metadata              # Metadata halaman dari browser session
+```
+
+### Kapan Pakai
+
+- **Debug runtime errors** → `get_errors` — source-mapped stack traces, browser console errors
+- **Cek routes** → `get_routes` — verifikasi route structure tanpa grep filesystem
+- **Investigasi halaman** → `get_page_metadata` — apa yang contribute ke render saat ini
+- **Server Actions** → `get_server_action_by_id` — trace action ID ke filename + export name
+
+### HTTP Direct (tanpa wrapper)
+
+```bash
+curl -s -H "Accept: application/json, text/event-stream" \
+     -H "Content-Type: application/json" \
+     -X POST \
+     -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"get_errors","arguments":{}}}' \
+     http://localhost:3000/_next/mcp
+```
+
+### Status
+
+| Komponen | Status |
+|----------|--------|
+| `next-devtools-mcp` (CLI MCP server) | ✅ Bisa dijalankan (v0.4.0, 4 tools) |
+| Next.js dev server MCP endpoint | ✅ Aktif di port 3000 |
+| Wrapper script | ✅ `scripts/nextjs-mcp-call.sh` |
+
+---
+
+## 16. Useful Links
 
 - [Next.js 16 Docs](https://nextjs.org/docs) (⚠️ read `node_modules/next/dist/docs/` first — breaking changes)
 - [Base UI React](https://base-ui.com/react) — component docs (bukan Radix!)

@@ -142,7 +142,6 @@ interface PengajuanPageClientProps {
 }
 
 export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: PengajuanPageClientProps) {
-	console.info("test", `/api/proxy/cuti/pengajuan/${pegawaiId}/pegawai`);
 	const sp = useSearchParams();
 	const router = useRouter();
 	const qc = useQueryClient();

@@ -10,7 +10,8 @@
 		"format": "biome check --write",
 		"test": "vitest run",
 		"test:watch": "vitest",
-		"spec:sync": "node docs/api/fetch-spec.js"
+		"spec:sync": "node docs/api/fetch-spec.js",
+		"postinstall": "bash scripts/patch-next-themes.sh"
 	},
 	"dependencies": {
 		"@base-ui/react": "^1.6.0",
@@ -47,6 +48,7 @@
 		"@types/react-dom": "^19",
 		"babel-plugin-react-compiler": "1.0.0",
 		"jsdom": "^30.0.0",
+		"patch-package": "^8.0.1",
 		"tailwindcss": "^4",
 		"typescript": "^5",
 		"vitest": "^4.1.10"

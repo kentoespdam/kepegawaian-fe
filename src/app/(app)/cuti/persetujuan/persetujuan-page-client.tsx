@@ -19,6 +19,14 @@ import { DetailApprovalDialog } from "./detail-approval-dialog";
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 
+const STATUS_OPTIONS = [
+	{ value: "PENDING", label: "Menunggu" },
+	{ value: "APPROVED", label: "Disetujui" },
+	{ value: "REJECTED", label: "Ditolak" },
+	{ value: "CONFIRMED", label: "Dikonfirmasi" },
+	{ value: "CANCELED", label: "Dibatalkan" },
+];
+
 const STATUS_ICONS: Record<string, typeof Clock> = {
 	PENDING: Clock,
 	APPROVED: CircleCheck,
@@ -57,7 +65,8 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	const size = Number(sp.get("size") ?? "10");
 	const tahunParam = sp.get("tahun");
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
-	const hasActive = tahun !== CURRENT_YEAR;
+	const statusParam = sp.get("approvalStatus") ?? undefined;
+	const hasActive = tahun !== CURRENT_YEAR || !!statusParam;
 
 	// Satu dialog per halaman — row target
 	const [detailRow, setDetailRow] = useState<CutiApprovalChainResponse | null>(null);
@@ -72,6 +81,7 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	};
 
 	const onYearChange = (y: number) => nav({ tahun: String(y), page: "1" });
+	const onStatusChange = (v: string) => nav({ approvalStatus: v || undefined, page: "1" });
 	const onReset = () => router.replace(pathname);
 
 	const query = useQuery({
@@ -80,14 +90,14 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 		// CU-18/ADR-0041: chain approval posisional by JABATAN — picSaatIni adalah
 		// JabatanMiniResponse (jabatan approver saat ini), jadi filter pakai jabatanId,
 		// bukan pegawaiId.
-		queryKey: ["cuti-persetujuan", view, jabatanId, tahun, page, size],
+		queryKey: ["cuti-persetujuan", view, jabatanId, tahun, page, size, statusParam],
 		queryFn: async () => {
 			const params: Record<string, string> = {
 				...toApiParams({ page, size }),
 				tahun: String(tahun),
 				picSaatIniId: String(jabatanId),
 			};
-			if (view === "menunggu") params.approvalCutiStatus = "PENDING";
+			if (view === "menunggu") params.approvalCutiStatus = statusParam ?? "PENDING";
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/approval?${qs}`);
 			throwIfNotOk(res, "Gagal memuat data persetujuan");
@@ -104,7 +114,10 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 	// Spike CU-10: view riwayat = semua non-PENDING (filter client karena backend 1 nilai status)
 	const rows =
 		view === "riwayat"
-			? (pageView.rows ?? []).filter((r) => r.refCuti?.approvalCutiStatus !== "PENDING")
+			? (pageView.rows ?? []).filter((r) => {
+				if (statusParam) return r.refCuti?.approvalCutiStatus === statusParam;
+				return r.refCuti?.approvalCutiStatus !== "PENDING";
+			})
 			: (pageView.rows ?? []);
 
 	const columns: Column<CutiApprovalChainResponse>[] = [
@@ -138,6 +151,7 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 			cell: (r) => r.refCuti?.jumlahHariKerja ?? "—",
 		},
 		{ id: "status", header: "Status", cell: (r) => <StatusBadge status={r.refCuti?.approvalCutiStatus} /> },
+		{ id: "picSaatIni", header: "PIC Saat Ini", cell: (r) => r.refCuti?.picSaatIni?.nama ?? "—" },
 	];
 
 	// CU-19: kolom Aksi = tombol Detail (buka modal detail + riwayat + aksi)
@@ -185,6 +199,18 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: Persetujua
 								{YEAR_OPTIONS.map((y) => (
 									<SelectItem key={y} value={String(y)}>
 										{y}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<Select value={statusParam ?? ""} onValueChange={(v) => onStatusChange(v ?? "")}>
+							<SelectTrigger className="h-11 w-40" aria-label="Status">
+								<SelectValue placeholder="Semua Status" />
+							</SelectTrigger>
+							<SelectContent>
+								{STATUS_OPTIONS.map((s) => (
+									<SelectItem key={s.value} value={s.value}>
+										{s.label}
 									</SelectItem>
 								))}
 							</SelectContent>

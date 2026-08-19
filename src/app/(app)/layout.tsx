@@ -4,7 +4,7 @@ import { getAccountSession, verifySession } from "@/lib/auth";
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
 	const [user, { roles, permissions }] = await Promise.all([
 		verifySession(),
-		getAccountSession().catch(() => ({ roles: [], permissions: [], isCutiApprover: false })),
+		getAccountSession().catch(() => ({ roles: [], permissions: [] })),
 	]);
 
 	const cookieStore = await cookies();
