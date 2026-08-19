@@ -3,17 +3,19 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { PersetujuanPageClient } from "./persetujuan-page-client";
 
 vi.mock("next/navigation", () => ({
 	useParams: vi.fn(),
+	usePathname: vi.fn(),
 	useRouter: vi.fn(),
 	useSearchParams: vi.fn(),
 }));
 
 let postInit: RequestInit | null = null;
+let listUrl: string | null = null;
 
 function okJson(data: unknown) {
 	return new Response(JSON.stringify({ data }), {
@@ -31,6 +33,7 @@ function mockFetch() {
 			return okJson({});
 		}
 		if (s.includes("/cuti/pengajuan/approval")) {
+			listUrl = s;
 			// satu WRITE + satu NONE (non-approver lihat tanpa tombol)
 			return okJson({
 				content: [
@@ -75,11 +78,11 @@ function mockFetch() {
 	});
 }
 
-function renderClient() {
+function renderClient(view: "menunggu" | "riwayat" = "menunggu") {
 	const qc = new QueryClient({ defaultOptions: { queries: { retry: false } } });
 	return render(
 		<QueryClientProvider client={qc}>
-			<PersetujuanPageClient pegawaiId={7} />
+			<PersetujuanPageClient view={view} pegawaiId={7} jabatanId={7} />
 		</QueryClientProvider>,
 	);
 }
@@ -88,8 +91,10 @@ describe("PersetujuanPageClient", () => {
 	beforeEach(() => {
 		cleanup();
 		postInit = null;
+		listUrl = null;
 		vi.clearAllMocks();
 		vi.spyOn(globalThis, "fetch");
+		vi.mocked(usePathname).mockReturnValue("/cuti/persetujuan");
 		vi.mocked(useRouter).mockReturnValue({ replace: vi.fn(), push: vi.fn() } as unknown as ReturnType<
 			typeof useRouter
 		>);
@@ -102,6 +107,10 @@ describe("PersetujuanPageClient", () => {
 
 		// hanya row WRITE (Budi) yang punya tombol aksi — NONE (Siti) tanpa tombol
 		expect(await screen.findAllByRole("button", { name: /setujui/i }, { timeout: 2000 })).toHaveLength(1);
+
+		// CU-18/ADR-0041: list di-filter posisional by JABATAN — picSaatIniId = jabatanId approver
+		expect(listUrl).toContain("picSaatIniId=7");
+		expect(listUrl).toContain("approvalCutiStatus=PENDING");
 
 		await userEvent.click(screen.getByRole("button", { name: /setujui/i }));
 
@@ -120,5 +129,17 @@ describe("PersetujuanPageClient", () => {
 		expect(body.approvalLevel).toBe(1);
 		expect(body.approvalStatus).toBe("APPROVED");
 		expect(body.notes).toBe("Disetujui, kuota tersedia");
+	});
+
+	it("view riwayat: tanpa tab, tanpa tombol aksi, dan query list tidak kirim approvalCutiStatus", async () => {
+		mockFetch();
+		renderClient("riwayat");
+
+		// data mock 2 baris PENDING → di-filter client → empty state riwayat
+		expect(await screen.findByText("Belum ada riwayat persetujuan", {}, { timeout: 2000 })).toBeTruthy();
+		expect(screen.queryByRole("button", { name: /setujui/i })).toBeNull();
+		// Spike CU-10: riwayat tanpa filter status (backend 1 nilai) → non-PENDING di-filter client
+		expect(listUrl).not.toContain("approvalCutiStatus");
+		expect(listUrl).toContain("picSaatIniId=7");
 	});
 });

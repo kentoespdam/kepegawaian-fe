@@ -71,6 +71,12 @@ non-Admin/HRD tidak melihat menu "Kuota Cuti" (CU-1).
 Semua operasi (CRUD + Import) hanya tersedia untuk Admin/HRD. Pegawai lain yang
 mencoba akses URL langsung mendapat halaman `forbidden`.
 
+> ⚠️ **Temuan live (2026-08-18):** akun role `USER` (Supervisor) masih melihat menu/halaman
+> Kuota Cuti — artinya mapping `pref_role_permission` di BE memberi `CUTI:WRITE` ke role `USER`
+> (seed matrix terdokumentasi: `USER` = 7 permission **tanpa** `CUTI:WRITE`;
+> `FE-CONTRACT-profil-update-approval-rbac.md` L184). Perbaikan di sisi BE, lihat
+> `BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md` **R4**.
+
 ---
 
 ## CU-3 — Kuota Cuti: Grid Carry-Over Dua Tahun (revisi 2026-08-18)
@@ -156,6 +162,12 @@ Halaman `/cuti/pengajuan` dapat diakses oleh **semua pegawai yang login**.
 Pegawai hanya melihat dan mengajukan cuti untuk **diri sendiri** (menggunakan `pegawaiId` dari
 session — `getPegawaiSession()`). Tidak ada picker pegawai lain.
 
+> ⚠️ **Blocker (2026-08-18):** untuk akun diprovisioning **by NIPAM** (`$id` ≠ `pegawaiId`),
+> `getPegawaiSession()` → `pegawai: null` → `/cuti/pengajuan` menampilkan "Akun ini tidak
+> terhubung ke data pegawai" (bug live — CU-18, root cause sama dengan Dashboard/Persetujuan).
+> Fix = **BE R1** (resolve `$id` → pegawai by principal, `docs/BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md`).
+> FE tidak berubah (D1, ADR-0041) — tidak ada seam FE (NIPAM principal hanya di backend).
+
 ---
 
 ## CU-7 — Pengajuan Cuti: Tabel
@@ -222,18 +234,26 @@ sederhana dengan kalimat "Batalkan pengajuan cuti ini?" karena tidak ada input t
 > (punya anak buah). Staf/non-approver tidak melihat menu; akses langsung → `forbidden()`.
 > Detail keputusan di **CU-18**.
 
-Halaman `/cuti/persetujuan` dapat diakses oleh **approver** — pegawai yang berada dalam
-rantai approval (backend flag `isCutiApprover`, CU-18).
+Halaman Persetujuan Cuti dapat diakses oleh **approver** — pegawai yang berada dalam
+rantai approval (backend flag `isCutiApprover`, CU-18). **Dua route dedicated** (tab navigation
+dihapus):
+- `/cuti/persetujuan` — **Menunggu** (`view="menunggu"`): filter `approvalCutiStatus=PENDING`, kolom Aksi.
+- `/cuti/persetujuan/riwayat` — **Riwayat Persetujuan** (`view="riwayat"`): tanpa param
+  `approvalCutiStatus` (spike CU-10: backend filter = 1 nilai, non-PENDING di-filter client),
+  tanpa kolom Aksi. Guard approver sama dengan halaman menunggu.
 
-Konten bersumber dari `GET /cuti/pengajuan/approval` yang wajib kirim:
-- `picSaatIniId` = `pegawaiId` dari session
+Konten bersumber dari `GET /cuti/pengajuan/approval` — param wajib:
+- `picSaatIniId` = **`jabatanId` approver** dari session (`pegawai.jabatan.id`) — chain approval
+  posisional by jabatan (`picSaatIni` = `JabatanMiniResponse`, ADR-0041), **bukan** `pegawaiId`
 - `tahun` = tahun terpilih
-- `approvalCutiStatus` = sesuai tab aktif
+- `approvalCutiStatus` — **opsional**, default `PENDING` (kontrak R3,
+  `docs/BE-REQUIREMENT-persetujuan-cuti-approver-dan-bridge.md`). Halaman "Menunggu" mengirim
+  `PENDING` eksplisit; halaman "Riwayat" tidak mengirim.
 
-**Dua tab:**
-- **"Menunggu"** — filter `approvalCutiStatus=PENDING`
-- **"Riwayat Persetujuan"** — filter `approvalCutiStatus=APPROVED,CONFIRMED,REJECTED,...`
-  (semua status non-PENDING; atau dipisah per-query jika perlu)
+> ⚠️ Dengan default `PENDING` (R3), halaman Riwayat (tanpa param) hanya menerima baris
+> PENDING → filter client non-PENDING = **list kosong**. Keputusan FE belum ada: query
+> per-status (APPROVED/CONFIRMED/REJECTED/...) atau BE menerima multi-value — jangan ship
+> riwayat kosong diam-diam.
 
 Jika approver belum punya pengajuan yang menunggu → backend mengembalikan list kosong.
 Tampilkan empty state standar tanpa error. (Pegawai non-approver tidak sampai di sini —
@@ -441,7 +461,7 @@ Semua fetch cuti menggunakan `fetch("/api/proxy/cuti/…")` langsung — **bukan
 | Total hari kerja | `GET /cuti/pengajuan/{tglMulai}/{tglSelesai}/total-hari-kerja` | — |
 | List jenis cuti | `GET /cuti/jenis/list` | `?parentId&nama` → `ListResultCutiJenisMiniResponse` (`{id, nama, parentId}` riil; `null` = root) |
 | Kuota strip (self) | `GET /cuti/kuota?pegawaiId&tahun` | — |
-| List approval | `GET /cuti/pengajuan/approval` | `?tahun&picSaatIniId&approvalCutiStatus&page&size` |
+| List approval | `GET /cuti/pengajuan/approval` | `?tahun&picSaatIniId={jabatanId approver}&page&size` (`approvalCutiStatus` opsional, default `PENDING` — R3) |
 | Aksi approval | `POST /cuti/approval` | `CutiApprovalPostRequest` |
 
 ---

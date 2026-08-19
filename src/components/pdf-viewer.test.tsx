@@ -283,7 +283,7 @@ describe("PdfViewer", () => {
 		await user.click(screen.getByTitle("Download PDF"));
 
 		expect(mockCreateObjectURL).toHaveBeenCalledOnce();
-		const blob = mockCreateObjectURL.mock.calls[0][0] as Blob;
+		const blob = (mockCreateObjectURL.mock.calls[0] as unknown[])[0] as Blob;
 		expect(blob).toBeInstanceOf(Blob);
 		expect(blob.type).toBe("application/pdf");
 	});

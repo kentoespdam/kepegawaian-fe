@@ -43,7 +43,9 @@ Lihat [ADR-0006](../adr/0006-pegawai-session-identity-bridge.md). Ringkas:
   **opt-in**: `verifySession()` tetap murni 1-fetch identitas Appwrite. Hanya page yang butuh data
   pegawai memanggil `getPegawaiSession()` → bayar fetch kedua **saat perlu saja**.
 - Toleransi non-pegawai: `GET /pegawai/{$id}` 404 → `pegawai: null` → **empty-state** ramah
-  ("Akun ini tidak terhubung ke data pegawai"), bukan error.
+  ("Akun ini tidak terhubung ke data pegawai"), bukan error. Empty state dirender di
+  **client** (server pass data nullable) — pola sama dengan `/cuti/pengajuan` (CU-6) sejak
+  2026-08-18.
 
 Fan-out `$id`/`nik` ke endpoint:
 

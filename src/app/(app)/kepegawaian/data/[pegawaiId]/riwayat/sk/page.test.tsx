@@ -83,8 +83,8 @@ function okJson(data: unknown) {
 // - master/*/list (golongan dll) → empty array
 // - lainnya → default (error test pakai mockRejectedValue override)
 function mockDefaultFetch() {
-	vi.mocked(globalThis.fetch).mockImplementation(async (url: string) => {
-		const s = typeof url === "string" ? url : url instanceof Request ? url.url : String(url);
+	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request) => {
+		const s = typeof input === "string" ? input : input instanceof Request ? input.url : input.toString();
 		if (s.includes("/kepegawaian/riwayat/sk/pegawai/")) {
 			return okJson(MOCK_PAGE);
 		}

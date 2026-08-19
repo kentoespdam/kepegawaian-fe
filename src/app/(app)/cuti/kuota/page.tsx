@@ -5,7 +5,7 @@ import { KuotaPageClient } from "./kuota-page-client";
 
 export default async function CutiKuotaPage() {
 	const [, { permissions }] = await Promise.all([verifySession(), getAccountSession()]);
-	// CU-2: Kuota Cuti = SDM only — CUTI:WRITE = "Kelola jenis/kuota cuti" (katalog BE)
+	// CU-2: Kuota Cuti = Admin/HRD only — CUTI:WRITE = "Kelola jenis/kuota cuti" (katalog BE)
 	if (!hasPermission(permissions, PERMISSION.CUTI_WRITE)) forbidden();
 	return (
 		<Suspense fallback={<div className="p-6 text-muted-foreground">Memuat...</div>}>

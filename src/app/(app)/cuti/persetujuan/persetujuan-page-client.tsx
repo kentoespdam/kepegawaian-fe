@@ -2,7 +2,7 @@
 
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ban, CalendarDays, CircleCheck, CircleX, Clock, Undo2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { type Column, DataTable } from "@/components/data-table";
@@ -19,12 +19,6 @@ import { type ApprovalAction, ApprovalConfirmDialog } from "./approval-confirm-d
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
-
-const TABS = [
-	{ id: "menunggu", label: "Menunggu" },
-	{ id: "riwayat", label: "Riwayat Persetujuan" },
-] as const;
-type TabId = (typeof TABS)[number]["id"];
 
 const STATUS_ICONS: Record<string, typeof Clock> = {
 	PENDING: Clock,
@@ -46,21 +40,26 @@ function StatusBadge({ status }: { status?: string }) {
 	);
 }
 
+type PersetujuanView = "menunggu" | "riwayat";
+
 interface PersetujuanPageClientProps {
 	pegawaiId: number | null;
+	jabatanId: number | null;
+	// Dedicated pages: /cuti/persetujuan = menunggu, /cuti/persetujuan/riwayat = riwayat.
+	view: PersetujuanView;
 }
 
-export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps) {
+export function PersetujuanPageClient({ pegawaiId, jabatanId, view }: PersetujuanPageClientProps) {
 	const sp = useSearchParams();
+	const pathname = usePathname();
 	const router = useRouter();
 	const qc = useQueryClient();
 
-	const tab: TabId = sp.get("tab") === "riwayat" ? "riwayat" : "menunggu";
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
 	const tahunParam = sp.get("tahun");
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
-	const hasActive = tahun !== CURRENT_YEAR || tab !== "menunggu";
+	const hasActive = tahun !== CURRENT_YEAR;
 
 	// Satu dialog per halaman — action + row target
 	const [approval, setApproval] = useState<{ row: CutiApprovalChainResponse; action: ApprovalAction } | null>(null);
@@ -72,31 +71,33 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 			if (v) p.set(k, v);
 			else p.delete(k);
 		}
-		router.replace(`/cuti/persetujuan?${p.toString()}`);
+		router.replace(`${pathname}?${p.toString()}`);
 	};
 
-	const setTab = (t: TabId) => nav({ tab: t === "menunggu" ? undefined : t, page: "1" });
 	const onYearChange = (y: number) => nav({ tahun: String(y), page: "1" });
-	const onReset = () => router.replace("/cuti/persetujuan");
+	const onReset = () => router.replace(pathname);
 
 	const query = useQuery({
 		// CU-14: queryKey bawa semua param. Spike CU-10: backend filter status = 1 nilai —
-		// tab riwayat tanpa filter status, non-PENDING di-filter client.
-		queryKey: ["cuti-persetujuan", pegawaiId, tab, tahun, page, size],
+		// view riwayat tanpa filter status, non-PENDING di-filter client.
+		// CU-18/ADR-0041: chain approval posisional by JABATAN — picSaatIni adalah
+		// JabatanMiniResponse (jabatan approver saat ini), jadi filter pakai jabatanId,
+		// bukan pegawaiId.
+		queryKey: ["cuti-persetujuan", view, jabatanId, tahun, page, size],
 		queryFn: async () => {
 			const params: Record<string, string> = {
 				...toApiParams({ page, size }),
 				tahun: String(tahun),
-				picSaatIniId: String(pegawaiId),
+				picSaatIniId: String(jabatanId),
 			};
-			if (tab === "menunggu") params.approvalCutiStatus = "PENDING";
+			if (view === "menunggu") params.approvalCutiStatus = "PENDING";
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/cuti/pengajuan/approval?${qs}`);
 			throwIfNotOk(res, "Gagal memuat data persetujuan");
 			const body = (await res.json()) as PageResultPageCutiApprovalChainResponse;
 			return body.data;
 		},
-		enabled: pegawaiId != null,
+		enabled: pegawaiId != null && jabatanId != null,
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 		gcTime: 300_000,
@@ -148,9 +149,9 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 	});
 
 	const pageView = fromPage(query.data);
-	// Spike CU-10: tab riwayat = semua non-PENDING (filter client karena backend 1 nilai status)
+	// Spike CU-10: view riwayat = semua non-PENDING (filter client karena backend 1 nilai status)
 	const rows =
-		tab === "riwayat"
+		view === "riwayat"
 			? (pageView.rows ?? []).filter((r) => r.refCuti?.approvalCutiStatus !== "PENDING")
 			: (pageView.rows ?? []);
 
@@ -187,8 +188,8 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 		{ id: "status", header: "Status", cell: (r) => <StatusBadge status={r.refCuti?.approvalCutiStatus} /> },
 	];
 
-	// Aksi (tab Menunggu): Setujui/Tolak — hanya readWriteStatus === "WRITE" (CU-11)
-	if (tab === "menunggu") {
+	// Aksi (view menunggu): Setujui/Tolak — hanya readWriteStatus === "WRITE" (CU-11)
+	if (view === "menunggu") {
 		columns.push({
 			id: "aksi",
 			header: "Aksi",
@@ -230,7 +231,8 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 			: col,
 	);
 
-	if (pegawaiId == null) {
+	// D5 defensif: pegawai tak ter-resolve ATAU jabatan kosong (inkonsistensi BE) → empty state.
+	if (pegawaiId == null || jabatanId == null) {
 		return (
 			<div className="flex flex-col items-center justify-center py-20 text-center">
 				<div className="flex size-16 items-center justify-center rounded-full bg-muted mb-4">
@@ -244,26 +246,6 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 
 	return (
 		<div className="space-y-4">
-			{/* Tab di URL (?tab=menunggu default, ?tab=riwayat) — CU-10 */}
-			<div className="flex gap-1 border-b border-border">
-				{TABS.map((t) => (
-					<button
-						key={t.id}
-						type="button"
-						onClick={() => setTab(t.id)}
-						className={cn(
-							"relative -mb-px px-4 py-2.5 text-sm font-medium transition-colors",
-							tab === t.id ? "text-foreground" : "text-muted-foreground hover:text-foreground",
-						)}
-						aria-selected={tab === t.id}
-						role="tab"
-					>
-						{t.label}
-						{tab === t.id && <span className="absolute inset-x-0 -bottom-px h-0.5 rounded-t bg-primary" />}
-					</button>
-				))}
-			</div>
-
 			<DataTable<CutiApprovalChainResponse>
 				toolbar={
 					<DataTableToolbar hasActive={hasActive} onReset={onReset}>
@@ -290,7 +272,7 @@ export function PersetujuanPageClient({ pegawaiId }: PersetujuanPageClientProps)
 				onRetry={() => query.refetch()}
 				getRowId={(item) => String(item.id ?? "")}
 				emptyMessage={
-					tab === "menunggu" ? "Tidak ada pengajuan yang menunggu persetujuan Anda" : "Belum ada riwayat persetujuan"
+					view === "menunggu" ? "Tidak ada pengajuan yang menunggu persetujuan Anda" : "Belum ada riwayat persetujuan"
 				}
 				pagination={
 					<DataTablePagination

@@ -62,7 +62,7 @@ const OPTIONS = [
 	{ value: "a", label: "Option A" },
 	{ value: "b", label: "Option B" },
 	{ value: "c", label: "Option C" },
-] as const;
+];
 
 // ─── FieldSelect ────────────────────────────────────────────────────────────
 

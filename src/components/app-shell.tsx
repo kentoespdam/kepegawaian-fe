@@ -29,6 +29,18 @@ import type { AppwriteUser } from "@/types/auth";
 
 const MODULES = [
 	{
+		id: "cuti",
+		label: "Cuti",
+		icon: CalendarRange,
+		entities: [
+			// ponytail: kuota di-gate CUTI:WRITE (hanya Admin/HRD) — page tetap di-guard forbidden() juga;
+			// pengajuan & persetujuan selalu tampil (CU-1/CU-2)
+			{ id: "kuota", label: "Kuota Cuti", href: "/cuti/kuota", gate: PERMISSION.CUTI_WRITE },
+			{ id: "pengajuan", label: "Pengajuan Cuti", href: "/cuti/pengajuan", gate: null },
+			{ id: "persetujuan", label: "Persetujuan Cuti", href: "/cuti/persetujuan", gate: null },
+		],
+	},
+	{
 		id: "master",
 		label: "Master",
 		icon: LayoutGrid,
@@ -62,18 +74,6 @@ const MODULES = [
 			},
 		],
 	},
-	{
-		id: "cuti",
-		label: "Cuti",
-		icon: CalendarRange,
-		entities: [
-			// ponytail: kuota di-gate CUTI:WRITE (hanya Admin/HRD) — page tetap di-guard forbidden() juga;
-			// pengajuan & persetujuan selalu tampil (CU-1/CU-2)
-			{ id: "kuota", label: "Kuota Cuti", href: "/cuti/kuota", gate: PERMISSION.CUTI_WRITE },
-			{ id: "pengajuan", label: "Pengajuan Cuti", href: "/cuti/pengajuan", gate: null },
-			{ id: "persetujuan", label: "Persetujuan Cuti", href: "/cuti/persetujuan", gate: null },
-		],
-	},
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
 	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
 	{
@@ -91,15 +91,12 @@ export function AppShell({
 	user,
 	roles,
 	permissions,
-	isCutiApprover,
 	children,
 	defaultOpen = true,
 }: {
 	user: AppwriteUser;
 	roles: string[];
 	permissions: string[];
-	// CU-18/ADR-0041: menu Persetujuan Cuti hanya utk approver (flag posisional dari /account/me)
-	isCutiApprover: boolean;
 	children: React.ReactNode;
 	defaultOpen?: boolean;
 }) {
@@ -112,9 +109,7 @@ export function AppShell({
 	const visibleModules = MODULES.map((mod) => ({
 		...mod,
 		// CU-18: item "persetujuan" (gate null) tampil hanya saat isCutiApprover — non-approver disembunyikan
-		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles).filter(
-			(e) => isCutiApprover || e.id !== "persetujuan",
-		),
+		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles),
 	})).filter((mod) => mod.visibleEntities.length > 0);
 
 	// All visible groups default to open (tidak di-persist)

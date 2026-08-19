@@ -27,6 +27,12 @@ mengembalikan **404** → FE menampilkan "Akun ini tidak terhubung ke data pegaw
 Repro: user login `890300426` (NIPAM, jabatan supervisor) → semua halaman self-service
 menampilkan empty state "Akun ini tidak terhubung ke data pegawai".
 
+> **Re-confirm live (2026-08-18):** dilaporkan ulang dari halaman `/cuti/pengajuan`
+> (CU-6: semua pegawai login seharusnya bisa melihat data cuti sendiri). Satu fungsi
+> `getPegawaiSession()` → tiga halaman (Dashboard, Pengajuan, Persetujuan) — fix di sini
+> memperbaiki ketiganya sekaligus. FE **tidak berubah** (D1, ADR-0041); tidak ada seam FE
+> yang bisa mengunci bug ini — NIPAM principal hanya diketahui backend (chicken-egg).
+
 Catatan: endpoint fallback `GET /pegawai/{nipam}/nipam` **sudah ada** di backend, tapi FE
 tidak bisa memakainya — saat lookup `$id` gagal, FE tidak punya nilai NIPAM (NIPAM hanya ada
 di record pegawai yang gagal di-fetch). Chicken-egg.
@@ -45,7 +51,10 @@ berdasarkan principal**, bukan sekadar primary-key lookup:
 ### Acceptance
 
 - [ ] User ber-NIPAM `890300426` (supervisor) memanggil `GET /pegawai/{$id}` → 200 + `PegawaiResponseDetail` miliknya (bukan 404).
-- [ ] Akun non-pegawai (admin murni) tetap 404.
+- [ ] Halaman `/cuti/pengajuan` user tsb menampilkan list pengajuan & strip kuota miliknya
+      (bukan empty state "Akun ini tidak terhubung ke data pegawai"); Dashboard &
+      Persetujuan ikut beres (satu fungsi).
+- [ ] Akun non-pegawai (admin murni) tetap 404 → empty state dipertahankan.
 - [ ] Tidak ada regresi untuk user yang `$id`-nya sudah = `pegawaiId`.
 
 ---
@@ -92,6 +101,61 @@ yang menyatakan status approver cuti principal.
 - [ ] `GET /account/me` mengembalikan `isCutiApprover: true` untuk supervisor/kepala yang punya bawahan (contoh: NIPAM `890300426`).
 - [ ] `isCutiApprover: false` untuk jabatan staf tanpa bawahan.
 - [ ] Nilai tidak berubah hanya karena tidak ada pengajuan PENDING di tahun berjalan.
+
+---
+
+## R3 — `approvalCutiStatus` di `GET /cuti/pengajuan/approval` opsional + default `PENDING`
+
+### Masalah
+
+Spec OpenAPI (`docs/api/cuti/api.json`) menandai query param `approvalCutiStatus` sebagai
+`required: true`, tetapi FE **sengaja tidak mengirim** di tab "Riwayat Persetujuan"
+(spike CU-10: backend filter status = **1 nilai**, sehingga riwayat = semua status
+non-PENDING di-filter client). Jika backend benar-benar mewajibkan param → tab Riwayat
+mendapat 400.
+
+### Permintaan
+
+Jadikan `approvalCutiStatus` **opsional dengan default `PENDING`**
+(`@RequestParam(required = false, defaultValue = "PENDING")`):
+
+- Tab "Menunggu" tetap mengirim `approvalCutiStatus=PENDING` eksplisit (tidak berubah).
+- Tanpa param → filter default `PENDING` (bukan 400).
+
+### Acceptance
+
+- [ ] `GET /cuti/pengajuan/approval?tahun&picSaatIniId` tanpa `approvalCutiStatus` → 200, hanya baris `PENDING`.
+- [ ] Dengan `approvalCutiStatus=PENDING` eksplisit → 200, perilaku identik dengan default.
+- [ ] Nilai `PENDING/APPROVED/...` lain tetap bekerja seperti sekarang.
+
+> ⚠️ Catatan: dengan default ini, tab "Riwayat Persetujuan" FE (yang tidak mengirim param)
+> hanya akan menerima baris `PENDING` → filter client non-PENDING menghasilkan list kosong.
+> Keputusan FE menyusul (query per-status / multi-value) — tercatat di `docs/context/cuti.md` CU-10.
+
+---
+
+## R4 — Role `USER` tidak memegang `CUTI:WRITE` (gate Kuota Cuti)
+
+### Masalah
+
+Gate FE halaman & menu **Kuota Cuti** = permission `CUTI:WRITE` ("Kelola jenis/kuota cuti" —
+katalog BE). Akun role `USER` (jabatan Supervisor) masih **melihat menu & halaman Kuota Cuti**,
+berarti mapping `pref_role_permission` di BE memberi `CUTI:WRITE` ke role `USER`.
+
+Seed matrix terdokumentasi (FE-CONTRACT-profil-update-approval-rbac.md L184, V31+V33+V34+V35):
+`USER` = 7 permission (`PEGAWAI:READ`, `PROFIL:READ/UPDATE`, `KEPEGAWAIAN:READ`, `CUTI:READ`,
+`PENGGAJIAN:READ`, `LAPORAN:READ`) — **tanpa** `CUTI:WRITE`; `HRD` = 14 termasuk `CUTI:WRITE`.
+
+### Permintaan
+
+- Hapus `CUTI:WRITE` dari mapping role `USER` di `pref_role_permission` (kembalikan sesuai seed matrix).
+- Pastikan `CUTI:WRITE` hanya dimiliki role `ADMIN` + `HRD`.
+
+### Acceptance
+
+- [ ] Akun role `USER` (supervisor) tidak melihat item menu "Kuota Cuti"; akses langsung `/cuti/kuota` → 404 (FE `forbidden()`).
+- [ ] Akun `HRD` & `ADMIN` tetap melihat menu & halaman Kuota Cuti (CRUD + Import jalan).
+- [ ] Tidak ada regresi pengajuan/persetujuan cuti (endpoint cuti lain terbuka sesuai rantai posisional).
 
 ---
 

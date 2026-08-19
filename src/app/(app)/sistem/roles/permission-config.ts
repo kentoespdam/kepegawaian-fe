@@ -158,8 +158,8 @@ export const PERMISSION_DEFINITIONS: Record<string, Omit<PermissionDefinition, "
 		moduleKey: "CUTI",
 	},
 	"CUTI:WRITE": {
-		name: "Pengajuan Cuti",
-		description: "Membuat permohonan cuti baru (tahunan, sakit, alasan penting)",
+		name: "Kelola Jenis & Kuota Cuti",
+		description: "Mengelola jenis cuti dan kuota cuti tahunan (HRD/Admin)",
 		actionType: "write",
 		moduleKey: "CUTI",
 	},

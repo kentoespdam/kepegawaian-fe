@@ -76,7 +76,7 @@ const MOCK_KUOTA_PAGE_CONTENT = {
 		empty: false,
 		content: [KUOTA_ROW],
 	},
-	kuotaTahunSebelumnya: [],
+	kuotaTahunSebelumnya: [] as typeof KUOTA_PREV_ROW[],
 };
 
 const MOCK_KUOTA_PREV_IGNORED = {
@@ -92,9 +92,9 @@ function okJson(data: unknown) {
 	});
 }
 
-function mockDefaultFetch(kuota = MOCK_KUOTA_PAGE_CONTENT) {
-	vi.mocked(globalThis.fetch).mockImplementation(async (url: string) => {
-		const s = typeof url === "string" ? url : url instanceof Request ? url.url : String(url);
+function mockDefaultFetch(kuota: typeof MOCK_KUOTA_PAGE_CONTENT = MOCK_KUOTA_PAGE_CONTENT) {
+	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request) => {
+		const s = typeof input === "string" ? input : input instanceof Request ? input.url : input.toString();
 		if (s.includes("/cuti/pengajuan/") && s.includes("/pegawai")) {
 			return okJson(MOCK_PAGE);
 		}
@@ -229,10 +229,10 @@ describe("Riwayat Cuti page", () => {
 	});
 
 	it("404 dari backend → 'Data tidak ditemukan', bukan 'Gagal memuat data'", async () => {
-		vi.mocked(globalThis.fetch).mockImplementation(async (url: string) => {
-			const s = typeof url === "string" ? url : url instanceof Request ? url.url : String(url);
-			if (s.includes("/cuti/pengajuan/") && s.includes("/pegawai")) {
-				return new Response("Not Found", { status: 404 });
+	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request) => {
+		const s = typeof input === "string" ? input : input instanceof Request ? input.url : input.toString();
+		if (s.includes("/cuti/pengajuan/") && s.includes("/pegawai")) {
+			return new Response("Not Found", { status: 404 });
 			}
 			if (s.includes("/cuti/kuota")) {
 				return okJson(MOCK_KUOTA_PAGE_CONTENT);

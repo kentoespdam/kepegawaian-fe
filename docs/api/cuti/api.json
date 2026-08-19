@@ -1048,10 +1048,11 @@
 					{
 						"name": "approvalCutiStatus",
 						"in": "query",
-						"required": true,
+						"required": false,
 						"schema": {
 							"type": "string",
-							"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"]
+							"enum": ["PENDING", "APPROVED", "CONFIRMED", "REJECTED", "CANCELED", "RETURNED"],
+							"default": "PENDING"
 						}
 					},
 					{
