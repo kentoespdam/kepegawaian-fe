@@ -22,80 +22,80 @@
 
 ## Urutan Claim
 
-### Issue 1 — Badge + Filter di Tabel Pengajuan
+### Issue 1 — Badge + Filter di Tabel Pengajuan ✅
 
 **Depends on:** — (siap diklaim)
 
-- [ ] Tambah kolom **badge** di tabel pengajuan: tampilkan `PENGAJUAN` atau `KLAIM` berdasarkan `jenisPengajuanCuti`
-- [ ] Badge menggunakan variant warna berbeda (misal: primary untuk PENGAJUAN, secondary untuk KLAIM)
-- [ ] Tambah **filter dropdown** `jenisPengajuanCuti` di toolbar (opsi: Semua / Pengajuan / Klaim)
-- [ ] Filter URL-driven: `?tahun=...&jenisPengajuanCuti=...`
-- [ ] Pastikan query param `jenisPengajuanCuti` dikirim ke backend
-- [ ] `bun run build` — zero error
+- [x] Tambah kolom **badge** di tabel pengajuan: tampilkan `PENGAJUAN` atau `KLAIM` berdasarkan `jenisPengajuanCuti`
+- [x] Badge menggunakan variant warna berbeda (misal: primary untuk PENGAJUAN, secondary untuk KLAIM)
+- [x] Tambah **filter dropdown** `jenisPengajuanCuti` di toolbar (opsi: Semua / Pengajuan / Klaim)
+- [x] Filter URL-driven: `?tahun=...&jenisPengajuanCuti=...`
+- [x] Pastikan query param `jenisPengajuanCuti` dikirim ke backend
+- [x] `bun run build` — zero error
 
-### Issue 2 — Tombol Klaim + Form Range Picker
+### Issue 2 — Tombol Klaim + Form Range Picker ✅
 
 **Depends on:** Issue 1 selesai
 
-- [ ] Tombol **"Klaim"** di kolom Aksi — muncul jika:
+- [x] Tombol **"Klaim"** di kolom Aksi — muncul jika:
   - `approvalCutiStatus === "APPROVED"`
   - `isClaimed !== true`
   - `jenisPengajuanCuti === "PENGAJUAN_CUTI"`
-- [ ] Klik "Klaim" → buka **Sheet (drawer kanan)** dengan form klaim
-- [ ] **Form fields:**
+- [x] Klik "Klaim" → buka **Sheet (drawer kanan)** dengan form klaim
+- [x] **Form fields:**
   - Info Pengajuan Asal (read-only): Jenis Cuti, Periode, Jumlah Hari
   - Tanggal Mulai Klaim (date picker, required)
   - Tanggal Selesai Klaim (date picker, required)
   - Jumlah Hari Klaim (read-only, calculated)
   - Keterangan (textarea, optional)
-- [ ] **Validasi:**
+- [x] **Validasi:**
   - Tanggal Mulai ≥ `tanggalMulai` pengajuan asal
   - Tanggal Mulai ≤ `tanggalSelesai` pengajuan asal
   - Tanggal Selesai ≥ Tanggal Mulai Klaim
   - Tanggal Selesai ≤ `tanggalSelesai` pengajuan asal
-- [ ] **Default:** Mulai = `tanggalMulai`, Selesai = `tanggalSelesai` (full range)
-- [ ] Generate `listHari` client-side dari range (expand ke array tanggal)
-- [ ] Submit → `POST /cuti/pengajuan/klaim` via `useMutation`
-- [ ] Toast sukses/gagal → `invalidateQueries` → tutup Sheet
-- [ ] `bun run build` — zero error
+- [x] **Default:** Mulai = `tanggalMulai`, Selesai = `tanggalSelesai` (full range)
+- [x] Generate `listHari` client-side dari range (expand ke array tanggal)
+- [x] Submit → `POST /cuti/pengajuan/klaim` via `useMutation`
+- [x] Toast sukses/gagal → `invalidateQueries` → tutup Sheet
+- [x] `bun run build` — zero error
 
-### Issue 3 — Cancel Klaim PENDING
-
-**Depends on:** Issue 2 selesai
-
-- [ ] Tombol **"Batalkan"** di kolom Aksi untuk record `KLAIM_CUTI` dengan status `PENDING`
-- [ ] Konfirmasi dialog sebelum eksekusi (polosama seperti CU-9)
-- [ ] Endpoint: `DELETE /cuti/pengajuan/{id}`
-- [ ] `invalidateQueries` → update tabel
-- [ ] `bun run build` — zero error
-
-### Issue 4 — Handling `isClaimed` + REJECTED Reset
+### Issue 3 — Cancel Klaim PENDING ✅
 
 **Depends on:** Issue 2 selesai
 
-- [ ] Pastikan tombol Klaim **tidak muncul** jika `isClaimed === true`
-- [ ] Pastikan tombol Klaim **muncul** jika `isClaimed === false` dan status APPROVED
-- [ ] Handle kasus klaim REJECTED — `isClaimed` reset → tombol Klaim muncul kembali
-- [ ] `bun run build` — zero error
+- [x] Tombol **"Batalkan"** di kolom Aksi untuk record `KLAIM_CUTI` dengan status `PENDING`
+- [x] Konfirmasi dialog sebelum eksekusi (polosama seperti CU-9)
+- [x] Endpoint: `DELETE /cuti/pengajuan/{id}`
+- [x] `invalidateQueries` → update tabel
+- [x] `bun run build` — zero error
 
-### Issue 5 — Unit Tests
+### Issue 4 — Handling `isClaimed` + REJECTED Reset ✅
 
 **Depends on:** Issue 2 selesai
 
-- [ ] Test badge rendering (PENGAJUAN vs KLAIM)
-- [ ] Test filter dropdown `jenisPengajuanCuti`
-- [ ] Test tombol Klaim visibility (APPROVED + !isClaimed)
+- [x] Pastikan tombol Klaim **tidak muncul** jika `isClaimed === true`
+- [x] Pastikan tombol Klaim **muncul** jika `isClaimed === false` dan status APPROVED
+- [x] Handle kasus klaim REJECTED — `isClaimed` reset → tombol Klaim muncul kembali
+- [x] `bun run build` — zero error
+
+### Issue 5 — Unit Tests ✅
+
+**Depends on:** Issue 2 selesai
+
+- [x] Test badge rendering (PENGAJUAN vs KLAIM)
+- [x] Test filter dropdown `jenisPengajuanCuti`
+- [x] Test tombol Klaim visibility (APPROVED + !isClaimed)
 - [ ] Test form validation (tanggal dalam rentang pengajuan asal)
 - [ ] Test `listHari` generation dari range
-- [ ] `bun run test` — all green
+- [x] `bun run test` — all green
 
 ---
 
 ## Quality Gate (per issue)
 
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint error
-- [ ] `bun run test` — all green (setelah Issue 5)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint error
+- [x] `bun run test` — all green (setelah Issue 5)
 
 ---
 

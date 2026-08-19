@@ -7,6 +7,7 @@ import {
 	CircleCheck,
 	CircleX,
 	Clock,
+	FileText,
 	Pencil,
 	Plus,
 	StickyNoteMinus,
@@ -37,6 +38,7 @@ import { fromPage, toApiParams } from "@/lib/paging";
 import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
 import type { CutiKuotaSisa } from "@/types/cuti/kuota";
 import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
+import { KlaimFormSheet } from "./klaim-form-sheet";
 import { PengajuanFormSheet } from "./pengajuan-form-sheet";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -59,6 +61,21 @@ function StatusBadge({ status }: { status?: string }) {
 		<Badge variant="outline" className={cn("gap-1", approvalStatusTone(status))}>
 			<Icon className="size-3" />
 			{labelApprovalStatus(status)}
+		</Badge>
+	);
+}
+
+// CU-29: Badge jenis pengajuan — PENGAJUAN atau KLAIM
+function JenisBadge({ jenis }: { jenis?: string }) {
+	if (!jenis) return null;
+	const isKlaim = jenis === "KLAIM_CUTI";
+	return (
+		<Badge
+			variant="secondary"
+			className={cn("gap-1", isKlaim ? "bg-blue-100 text-blue-700" : "bg-gray-100 text-gray-700")}
+		>
+			{isKlaim ? <FileText className="size-3" /> : <CalendarDays className="size-3" />}
+			{isKlaim ? "KLAIM" : "PENGAJUAN"}
 		</Badge>
 	);
 }
@@ -158,6 +175,9 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 	// Satu Sheet per halaman — editing: null = tambah, row = edit (CU-8, hanya PENDING)
 	const [sheetOpen, setSheetOpen] = useState(false);
 	const [editing, setEditing] = useState<CutiPengajuanResponse | null>(null);
+	// CU-24: Klaim form state
+	const [klaimOpen, setKlaimOpen] = useState(false);
+	const [klaimRow, setKlaimRow] = useState<CutiPengajuanResponse | null>(null);
 
 	const nav = (updates: Record<string, string | undefined>) => {
 		const p = new URLSearchParams(sp.toString());
@@ -169,16 +189,21 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 	};
 
 	const onYearChange = (y: number) => nav({ tahun: String(y), page: "1" });
+	const onJenisChange = (v: string | null) => nav({ jenisPengajuanCuti: !v || v === "ALL" ? undefined : v, page: "1" });
 	const onReset = () => router.replace("/cuti/pengajuan");
+
+	const jenisPengajuanParam = sp.get("jenisPengajuanCuti") ?? "ALL";
 
 	const listQuery = useQuery({
 		// CU-14: queryKey bawa semua param
-		queryKey: ["cuti-pengajuan", pegawaiId, tahun, page, size],
+		queryKey: ["cuti-pengajuan", pegawaiId, tahun, page, size, jenisPengajuanParam],
 		queryFn: async () => {
 			const qs = new URLSearchParams({
 				...toApiParams({ page, size, sortBy: "tanggalMulai", sortDir: "desc" }),
 				tahun: String(tahun),
-			}).toString();
+			});
+			// CU-31: filter jenisPengajuanCuti dikirim ke backend
+			if (jenisPengajuanParam !== "ALL") qs.set("jenisPengajuanCuti", jenisPengajuanParam);
 			const res = await fetch(`/api/proxy/cuti/pengajuan/${pegawaiId}/pegawai?${qs}`);
 			throwIfNotOk(res, "Gagal memuat pengajuan cuti");
 			const body = (await res.json()) as PageResultPageCutiPengajuanResponse;
@@ -245,41 +270,65 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 			),
 		},
 		{ id: "jumlahHariKerja", header: "Jumlah Hari Kerja", align: "right", cell: (row) => row.jumlahHariKerja ?? "—" },
+		{ id: "jenisBadge", header: "Jenis", cell: (row) => <JenisBadge jenis={row.jenisPengajuanCuti} /> },
 		{ id: "status", header: "Status", cell: (row) => <StatusBadge status={row.approvalCutiStatus} /> },
-		// Aksi: Edit + Batalkan hanya PENDING (CU-8/CU-9)
+		// Aksi: Edit + Batalkan (PENDING) + Klaim (CU-24: APPROVED + !isClaimed + PENGAJUAN_CUTI)
 		{
 			id: "aksi",
 			header: "Aksi",
 			align: "right",
-			cell: (row) =>
-				row.approvalCutiStatus === "PENDING" ? (
-					<div className="inline-flex items-center gap-1">
+			cell: (row) => {
+				const isPengajuan = row.jenisPengajuanCuti === "PENGAJUAN_CUTI";
+				const canKlaim = isPengajuan && row.approvalCutiStatus === "APPROVED" && row.isClaimed !== true;
+				if (row.approvalCutiStatus === "PENDING") {
+					return (
+						<div className="inline-flex items-center gap-1">
+							<Button
+								variant="ghost"
+								size="icon"
+								title="Edit"
+								onClick={() => {
+									setEditing(row);
+									setSheetOpen(true);
+								}}
+								aria-label="Edit pengajuan cuti"
+							>
+								<Pencil className="size-4" />
+							</Button>
+							<Button
+								variant="ghost"
+								size="icon"
+								title="Batalkan"
+								onClick={() => {
+									setCancelError(null);
+									setCancelRow(row);
+								}}
+								aria-label="Batalkan pengajuan cuti"
+							>
+								<Ban className="size-4 text-destructive" />
+							</Button>
+						</div>
+					);
+				}
+				if (canKlaim) {
+					return (
 						<Button
 							variant="ghost"
-							size="icon"
-							title="Edit"
+							size="sm"
+							className="gap-1 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
 							onClick={() => {
-								setEditing(row);
-								setSheetOpen(true);
+								setKlaimRow(row);
+								setKlaimOpen(true);
 							}}
-							aria-label="Edit pengajuan cuti"
+							aria-label="Klaim cuti"
 						>
-							<Pencil className="size-4" />
+							<CalendarDays className="size-4" />
+							Klaim
 						</Button>
-						<Button
-							variant="ghost"
-							size="icon"
-							title="Batalkan"
-							onClick={() => {
-								setCancelError(null);
-								setCancelRow(row);
-							}}
-							aria-label="Batalkan pengajuan cuti"
-						>
-							<Ban className="size-4 text-destructive" />
-						</Button>
-					</div>
-				) : null,
+					);
+				}
+				return null;
+			},
 		},
 	];
 
@@ -307,7 +356,7 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 
 			<DataTable<CutiPengajuanResponse>
 				toolbar={
-					<DataTableToolbar hasActive={hasActive} onReset={onReset}>
+					<DataTableToolbar hasActive={hasActive || jenisPengajuanParam !== "ALL"} onReset={onReset}>
 						<Select value={String(tahun)} onValueChange={(v) => onYearChange(Number(v))}>
 							<SelectTrigger className="h-11 w-36" aria-label="Tahun">
 								<SelectValue placeholder="Pilih Tahun" />
@@ -318,6 +367,16 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 										{y}
 									</SelectItem>
 								))}
+							</SelectContent>
+						</Select>
+						<Select value={jenisPengajuanParam} onValueChange={onJenisChange}>
+							<SelectTrigger className="h-11 w-36" aria-label="Jenis Pengajuan">
+								<SelectValue placeholder="Semua" />
+							</SelectTrigger>
+							<SelectContent>
+								<SelectItem value="ALL">Semua</SelectItem>
+								<SelectItem value="PENGAJUAN_CUTI">Pengajuan</SelectItem>
+								<SelectItem value="KLAIM_CUTI">Klaim</SelectItem>
 							</SelectContent>
 						</Select>
 						<Button
@@ -357,6 +416,11 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 			/>
 
 			{/* Dialog konfirmasi cancel — bukan ConfirmDeleteDialog (tanpa ketik HAPUS, CU-9) */}
+			{/* CU-24: Klaim Form Sheet */}
+			{klaimRow && (
+				<KlaimFormSheet open={klaimOpen} onOpenChange={setKlaimOpen} pegawaiId={pegawaiId} pengajuan={klaimRow} />
+			)}
+
 			{/* Satu Sheet per halaman — Tambah (editing=null) atau Edit (editing=row) */}
 			<PengajuanFormSheet
 				open={sheetOpen}
