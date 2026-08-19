@@ -19,6 +19,14 @@ import { DetailApprovalDialog } from "./detail-approval-dialog";
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 
+const STATUS_OPTIONS = [
+	{ value: "PENDING", label: "Menunggu" },
+	{ value: "APPROVED", label: "Disetujui" },
+	{ value: "REJECTED", label: "Ditolak" },
+	{ value: "CONFIRMED", label: "Dikonfirmasi" },
+	{ value: "CANCELED", label: "Dibatalkan" },
+];
+
 const RW_OPTIONS = [
 	{ value: "WRITE", label: "Belum Diproses" },
 	{ value: "READ", label: "Sudah Diproses" },
@@ -56,10 +64,12 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 	const size = Number(sp.get("size") ?? "10");
 	const tahunParam = sp.get("tahun");
 	const tahun = tahunParam && Number.isFinite(Number(tahunParam)) ? Number(tahunParam) : CURRENT_YEAR;
-	// Default WRITE — tidak perlu kirim ke backend jika default
+	// CU-20: approvalCutiStatus wajib (BE 400 jika tidak dikirim), default PENDING
+	const statusParam = (sp.get("approvalStatus") as string | null) ?? "PENDING";
+	// CU-20: readWriteStatus — default tidak dikirim (semua), user pilih WRITE/READ
 	const rwParam = sp.get("readWriteStatus");
-	const readWriteStatus = rwParam === "READ" ? "READ" : undefined;
-	const hasActive = tahun !== CURRENT_YEAR || !!readWriteStatus;
+	const readWriteStatus = rwParam === "WRITE" || rwParam === "READ" ? rwParam : undefined;
+	const hasActive = tahun !== CURRENT_YEAR || statusParam !== "PENDING" || !!readWriteStatus;
 
 	const [detailRow, setDetailRow] = useState<CutiApprovalChainResponse | null>(null);
 
@@ -73,17 +83,19 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 	};
 
 	const onYearChange = (y: number) => nav({ tahun: String(y), page: "1" });
-	const onRwChange = (v: string) => nav({ readWriteStatus: v === "WRITE" ? undefined : v, page: "1" });
+	const onStatusChange = (v: string) => nav({ approvalStatus: v === "PENDING" ? undefined : v, page: "1" });
+	const onRwChange = (v: string) => nav({ readWriteStatus: v || undefined, page: "1" });
 	const onReset = () => router.replace(pathname);
 
 	const query = useQuery({
-		// CU-20/ADR-0042: readWriteStatus filter — WRITE=default (belum diproses), READ=sudah diproses
-		queryKey: ["cuti-persetujuan", jabatanId, tahun, page, size, readWriteStatus],
+		// CU-20: approvalCutiStatus wajib (BE 400), readWriteStatus opsional
+		queryKey: ["cuti-persetujuan", jabatanId, tahun, page, size, statusParam, readWriteStatus],
 		queryFn: async () => {
 			const params: Record<string, string> = {
 				...toApiParams({ page, size }),
 				tahun: String(tahun),
 				picSaatIniId: String(jabatanId),
+				approvalCutiStatus: statusParam,
 			};
 			if (readWriteStatus) params.readWriteStatus = readWriteStatus;
 			const qs = new URLSearchParams(params).toString();
@@ -164,6 +176,10 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 		);
 	}
 
+	// Resolve labels for SelectValue display
+	const statusLabel = STATUS_OPTIONS.find((s) => s.value === statusParam)?.label ?? "Menunggu";
+	const rwLabel = readWriteStatus ? RW_OPTIONS.find((s) => s.value === readWriteStatus)?.label : undefined;
+
 	return (
 		<div className="space-y-4">
 			<DataTable<CutiApprovalChainResponse>
@@ -181,9 +197,21 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 								))}
 							</SelectContent>
 						</Select>
-						<Select value={readWriteStatus ?? "WRITE"} onValueChange={(v) => onRwChange(v ?? "WRITE")}>
+						<Select value={statusParam} onValueChange={(v) => onStatusChange(v ?? "PENDING")}>
+							<SelectTrigger className="h-11 w-40" aria-label="Status Approval">
+								<SelectValue>{statusLabel}</SelectValue>
+							</SelectTrigger>
+							<SelectContent>
+								{STATUS_OPTIONS.map((s) => (
+									<SelectItem key={s.value} value={s.value}>
+										{s.label}
+									</SelectItem>
+								))}
+							</SelectContent>
+						</Select>
+						<Select value={readWriteStatus ?? ""} onValueChange={(v) => onRwChange(v ?? "")}>
 							<SelectTrigger className="h-11 w-44" aria-label="Status Proses">
-								<SelectValue placeholder="Semua" />
+								<SelectValue>{rwLabel ?? "Semua"}</SelectValue>
 							</SelectTrigger>
 							<SelectContent>
 								{RW_OPTIONS.map((s) => (

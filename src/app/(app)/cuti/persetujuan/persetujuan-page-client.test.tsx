@@ -37,7 +37,6 @@ function mockFetch() {
 		}
 		if (s.includes("/cuti/pengajuan/approval")) {
 			listUrl = s;
-			// CU-20: READ = sudah diproses, default/tidak ada = belum diproses
 			const isRead = s.includes("readWriteStatus=READ");
 			return okJson({
 				content: [
@@ -57,22 +56,8 @@ function mockFetch() {
 							alasan: "Libur keluarga",
 						},
 					},
-					{
-						id: 2,
-						approvalLevel: 1,
-						readWriteStatus: "NONE",
-						refCuti: {
-							id: 100,
-							nama: "Siti Aminah",
-							jenisCuti: { id: 2, nama: "Cuti Sakit" },
-							tanggalMulai: "2026-07-01",
-							tanggalSelesai: "2026-07-02",
-							jumlahHariKerja: 1,
-							approvalCutiStatus: isRead ? "REJECTED" : "PENDING",
-						},
-					},
 				],
-				totalElements: 2,
+				totalElements: 1,
 				totalPages: 1,
 				size: 10,
 				number: 0,
@@ -110,16 +95,26 @@ describe("PersetujuanPageClient", () => {
 		vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams("") as ReturnType<typeof useSearchParams>);
 	});
 
-	it("default view: kirim readWriteStatus=WRITE (tidak kirim param jika default)", async () => {
+	it("default: kirim approvalCutiStatus=PENDING ke backend", async () => {
 		mockFetch();
 		renderClient();
 
 		const detailButtons = await screen.findAllByRole("button", { name: /detail/i }, { timeout: 2000 });
-		expect(detailButtons).toHaveLength(2);
+		expect(detailButtons).toHaveLength(1);
 
-		// CU-20: default = WRITE, backend menerima tanpa param readWriteStatus
+		// CU-20: approvalCutiStatus wajib (BE 400), default PENDING
+		expect(listUrl).toContain("approvalCutiStatus=PENDING");
 		expect(listUrl).toContain("picSaatIniId=7");
-		expect(listUrl).not.toContain("readWriteStatus");
+	});
+
+	it("approvalCutiStatus=APPROVED: kirim param ke backend", async () => {
+		mockFetch();
+		renderClient({ approvalStatus: "APPROVED" });
+
+		const detailButtons = await screen.findAllByRole("button", { name: /detail/i }, { timeout: 2000 });
+		expect(detailButtons.length).toBeGreaterThan(0);
+
+		expect(listUrl).toContain("approvalCutiStatus=APPROVED");
 	});
 
 	it("readWriteStatus=READ: kirim param ke backend", async () => {
@@ -130,7 +125,7 @@ describe("PersetujuanPageClient", () => {
 		expect(detailButtons.length).toBeGreaterThan(0);
 
 		expect(listUrl).toContain("readWriteStatus=READ");
-		expect(listUrl).toContain("picSaatIniId=7");
+		expect(listUrl).toContain("approvalCutiStatus=PENDING");
 	});
 
 	it("approve flow: klik Detail → dialog → setujui → POST", async () => {
