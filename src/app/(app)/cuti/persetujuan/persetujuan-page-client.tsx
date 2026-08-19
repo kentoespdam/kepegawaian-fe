@@ -68,7 +68,7 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 	const statusParam = (sp.get("approvalStatus") as string | null) ?? "PENDING";
 	// CU-20: readWriteStatus — default tidak dikirim (semua), user pilih WRITE/READ
 	const rwParam = sp.get("readWriteStatus");
-	const readWriteStatus = rwParam === "WRITE" || rwParam === "READ" ? rwParam : undefined;
+	const readWriteStatus = rwParam === "WRITE" || rwParam === "READ" ? rwParam : "WRITE";
 	const hasActive = tahun !== CURRENT_YEAR || statusParam !== "PENDING" || !!readWriteStatus;
 
 	const [detailRow, setDetailRow] = useState<CutiApprovalChainResponse | null>(null);
