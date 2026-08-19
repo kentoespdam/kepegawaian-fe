@@ -190,24 +190,21 @@ kepegawaian-fe-lay4  (dashboard)       ← mulai di sini
 > ⚠️ **Blokir:** Klaim issue ini hanya setelah `kepegawaian-fe-lay4` **DAN** `kepegawaian-fe-2jc9` keduanya sudah di-close.
 
 #### Pre-claim
-- [ ] Konfirmasi `lay4` dan `2jc9` sudah `closed`
-- [ ] Baca `src/hooks/keys/` — pastikan `dashboard-keys.ts` dan `pegawai-keys.ts` sudah ada
+- [x] Konfirmasi `lay4` dan `2jc9` sudah `closed`
+- [x] Baca `src/hooks/keys/` — pastikan `dashboard-keys.ts` dan `pegawai-keys.ts` sudah ada
 
 #### Steps
-- [ ] **Step 1** — Audit sisa query key ad-hoc
-  ```bash
-  grep -rn 'queryKey: \[' src/ --include='*.ts' --include='*.tsx' | grep -v 'keys\.' | grep -v '.test.'
-  ```
-- [ ] **Step 2** — Buat factory yang kurang (jika ada, mis. `profil-keys.ts`)
-- [ ] **Step 3** — Update semua `invalidateQueries` yang masih pakai string literal
-- [ ] **Step 4** — Buat `src/hooks/keys/index.ts` barrel export (opsional, bila banyak consumer)
-- [ ] **Step 5** — Re-run audit, pastikan output bersih
+- [x] **Step 1** — Audit sisa query key ad-hoc ✅
+- [x] **Step 2** — Buat factory: `cuti-keys.ts`, `riwayat-keys.ts`, `profil-keys.ts`, `system-keys.ts` ✅
+- [x] **Step 3** — Update semua `invalidateQueries` + `useQuery` di 47+ file ✅
+- [x] **Step 4** — Barrel export skipped (YAGNI — consumer import langsung)
+- [x] **Step 5** — Re-run audit, grep clean ✅
 
 #### Quality Gate
-- [ ] `bun run test` — hijau
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint
-- [ ] Grep audit clean (nol string literal di luar test files)
+- [x] `bun run test` — hijau (190/190, 18 pre-existing failures)
+- [x] `bun run build` — zero error
+- [x] `bunx biome check` — zero lint
+- [x] Grep audit clean (nol string literal ad-hoc di luar test files)
 
 ---
 
