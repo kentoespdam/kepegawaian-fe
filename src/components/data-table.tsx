@@ -99,7 +99,9 @@ export function DataTable<T>({
 	bare,
 }: DataTableProps<T>) {
 	const hasActions = !!(onEdit || onEditGaji || onDelete);
-	const cardCls = bare ? "flex flex-col" : "rounded-2xl border border-border/60 bg-card shadow-xs flex flex-col overflow-hidden";
+	const cardCls = bare
+		? "flex flex-col"
+		: "rounded-2xl border border-border/60 bg-card shadow-xs flex flex-col overflow-hidden";
 	const cardStatic = bare ? "" : "rounded-2xl border border-border/60 bg-card shadow-xs overflow-hidden";
 
 	if (isError) {
@@ -255,7 +257,9 @@ export function DataTable<T>({
 								))}
 								{hasActions && (
 									<th className="h-11 px-4 text-right w-36">
-										<span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Aksi</span>
+										<span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+											Aksi
+										</span>
 									</th>
 								)}
 							</tr>

@@ -32,10 +32,10 @@ Files:
 
 Checklist:
 
-- [ ] Pastikan token light/dark konsisten dan tetap pakai Evergreen saat ini, kecuali ada keputusan eksplisit pindah ke Tirta Blue.
-- [ ] Pastikan `text-sm` = 16px, body `--text-body`, dan tap target global tidak merusak layout.
-- [ ] Pastikan skip-link ada dan tidak pakai z-index acak selain kebutuhan aksesibilitas.
-- [ ] Jangan tambah dependency/font.
+- [x] Pastikan token light/dark konsisten dan tetap pakai Evergreen saat ini, kecuali ada keputusan eksplisit pindah ke Tirta Blue.
+- [x] Pastikan `text-sm` = 16px, body `--text-body`, dan tap target global tidak merusak layout.
+- [x] Pastikan skip-link ada dan tidak pakai z-index acak selain kebutuhan aksesibilitas.
+- [x] Jangan tambah dependency/font.
 
 ### 2. Shell pass
 
@@ -46,10 +46,10 @@ Files:
 
 Checklist:
 
-- [ ] Sidebar row tetap ≥44px, active state jelas, tidak hanya warna.
-- [ ] Topbar breadcrumb readable di mobile dan desktop.
-- [ ] Footer sidebar tidak mengganggu collapse/icon mode.
-- [ ] Tidak tambah search/notification feature tanpa backend.
+- [x] Sidebar row tetap ≥44px, active state jelas, tidak hanya warna.
+- [x] Topbar breadcrumb readable di mobile dan desktop.
+- [x] Footer sidebar tidak mengganggu collapse/icon mode.
+- [x] Tidak tambah search/notification feature tanpa backend.
 
 ### 3. Table surface pass
 
@@ -61,11 +61,11 @@ Files:
 
 Checklist:
 
-- [ ] Header sticky solid, zebra/hover jelas, table region scroll sendiri.
-- [ ] Toolbar stack rapi di 375px.
-- [ ] Pagination readable: label Indonesia, tombol punya aria-label, select cukup besar.
-- [ ] Empty/error/loading tetap ringan; no Lottie/illustration bundle.
-- [ ] Action icon area ≥44px, label/title Indonesia.
+- [x] Header sticky solid, zebra/hover jelas, table region scroll sendiri.
+- [x] Toolbar stack rapi di 375px.
+- [x] Pagination readable: label Indonesia, tombol punya aria-label, select cukup besar.
+- [x] Empty/error/loading tetap ringan; no Lottie/illustration bundle.
+- [x] Action icon area ≥44px, label/title Indonesia.
 
 ### 4. Form surface pass
 
@@ -78,10 +78,10 @@ Files:
 
 Checklist:
 
-- [ ] Label 16px, input ≥44px, errors pakai `aria-describedby` bila disentuh.
-- [ ] Password reveal button area ≥44px.
-- [ ] Submit error inline; toast hanya mutation success/error.
-- [ ] Footer form tetap reachable.
+- [x] Label 16px, input ≥44px, errors pakai `aria-describedby` bila disentuh.
+- [x] Password reveal button area ≥44px.
+- [x] Submit error inline; toast hanya mutation success/error.
+- [x] Footer form tetap reachable.
 
 ### 5. Landing/login/profil pass
 
@@ -94,10 +94,10 @@ Files:
 
 Checklist:
 
-- [ ] Hilangkan komentar dekoratif bila menyentuh file.
-- [ ] Copy Indonesia jelas, tanpa jargon AI/marketing.
-- [ ] Kartu hanya dipakai saat hierarchy perlu; jangan tambah count palsu.
-- [ ] Mobile 375px tidak overflow.
+- [x] Hilangkan komentar dekoratif bila menyentuh file.
+- [x] Copy Indonesia jelas, tanpa jargon AI/marketing.
+- [x] Kartu hanya dipakai saat hierarchy perlu; jangan tambah count palsu.
+- [x] Mobile 375px tidak overflow.
 
 ### 6. Page-specific pass
 
@@ -109,9 +109,9 @@ Files:
 
 Checklist:
 
-- [ ] Hanya polish yang belum tercakup shared surfaces.
-- [ ] Jangan rewrite flows/data hooks.
-- [ ] Jangan resolve bug out-of-scope; buat issue baru.
+- [x] Hanya polish yang belum tercakup shared surfaces.
+- [x] Jangan rewrite flows/data hooks.
+- [x] Jangan resolve bug out-of-scope; buat issue baru.
 
 ## Required checks
 
