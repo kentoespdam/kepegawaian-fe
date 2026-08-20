@@ -6,8 +6,18 @@ export const jabatanConfig: EntityConfig<JabatanQuery, JabatanPostRequest> = mak
 	JabatanQuery,
 	JabatanPostRequest
 >(
-	z.object({ kode: z.string().min(1, "Kode wajib diisi"), nama: namaWajib }),
-	[{ name: "kode", label: "Kode", required: true }, nameField],
+	z.object({
+		kode: z.string().min(1, "Kode wajib diisi"),
+		nama: namaWajib,
+		organisasiId: z.coerce.number().optional(),
+		levelId: z.coerce.number().optional(),
+	}),
+	[
+		{ name: "kode", label: "Kode", required: true },
+		nameField,
+		{ name: "organisasiId", label: "Organisasi", type: "select" as const },
+		{ name: "levelId", label: "Level", type: "select" as const },
+	],
 	[
 		{ id: "kode", header: "Kode", sortable: true, cell: (item) => item.kode ?? "" },
 		{ id: "nama", header: "Nama", sortable: true, primary: true, cell: (item) => item.nama ?? "" },
