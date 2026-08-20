@@ -99,8 +99,8 @@ export function DataTable<T>({
 	bare,
 }: DataTableProps<T>) {
 	const hasActions = !!(onEdit || onEditGaji || onDelete);
-	const cardCls = bare ? "flex flex-col" : "rounded-lg border bg-card shadow-md flex flex-col";
-	const cardStatic = bare ? "" : "rounded-lg border bg-card shadow-md";
+	const cardCls = bare ? "flex flex-col" : "rounded-2xl border border-border/60 bg-card shadow-xs flex flex-col overflow-hidden";
+	const cardStatic = bare ? "" : "rounded-2xl border border-border/60 bg-card shadow-xs overflow-hidden";
 
 	if (isError) {
 		// 404 = resource tidak ada (bukan kegagalan fetch) → pesan berbeda, tanpa retry
@@ -157,7 +157,7 @@ export function DataTable<T>({
 										</th>
 									))}
 									{hasActions && (
-										<th className="h-11 px-4 text-right w-28">
+										<th className="h-11 px-4 text-right w-36">
 											<span className="text-xs font-medium uppercase tracking-wider">Aksi</span>
 										</th>
 									)}
@@ -226,13 +226,13 @@ export function DataTable<T>({
 			<div className={cn(cardCls, "max-h-[75vh] relative p-1", bare && "")}>
 				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
-						<thead className="sticky top-0 z-5 bg-card border-b-2 border-border">
+						<thead className="sticky top-0 z-5 bg-muted/80 backdrop-blur-xs border-b border-border/80">
 							<tr>
 								{columns.map((col) => (
 									<th
 										key={col.id}
 										className={cn(
-											"h-11 px-4 text-left align-middle font-medium text-xs uppercase tracking-wider text-muted-foreground",
+											"h-11 px-4 text-left align-middle font-semibold text-[10px] uppercase tracking-[0.18em] text-muted-foreground",
 											col.sortable && "cursor-pointer select-none hover:text-foreground",
 										)}
 										onClick={() => col.sortable && onSort?.(col.id)}
@@ -242,9 +242,9 @@ export function DataTable<T>({
 											{col.sortable ? (
 												sortBy === col.id ? (
 													sortDirection === "asc" ? (
-														<ArrowUp className="size-3.5" />
+														<ArrowUp className="size-3.5 text-primary" />
 													) : (
-														<ArrowDown className="size-3.5" />
+														<ArrowDown className="size-3.5 text-primary" />
 													)
 												) : (
 													<ArrowUpDown className="size-3.5 opacity-30" />
@@ -254,8 +254,8 @@ export function DataTable<T>({
 									</th>
 								))}
 								{hasActions && (
-									<th className="h-11 px-4 text-right w-28">
-										<span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Aksi</span>
+									<th className="h-11 px-4 text-right w-36">
+										<span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">Aksi</span>
 									</th>
 								)}
 							</tr>
@@ -273,14 +273,14 @@ export function DataTable<T>({
 										selectedRowId !== undefined &&
 											getRowId &&
 											String(getRowId(item)) === String(selectedRowId) &&
-											"bg-row-selected",
+											"bg-row-selected font-medium",
 									)}
 								>
 									{columns.map((col) => (
 										<td
 											key={col.id}
 											className={cn(
-												"px-4 py-2 align-middle whitespace-nowrap tabular-nums",
+												"px-4 py-3 align-middle whitespace-nowrap tabular-nums",
 												col.primary ? "font-semibold text-foreground" : "text-muted-foreground",
 											)}
 											align={col.align}
@@ -290,20 +290,21 @@ export function DataTable<T>({
 										</td>
 									))}
 									{hasActions && (
-										<td className="px-4 py-2 align-middle text-right">
+										<td className="px-4 py-3 align-middle text-right">
 											<div className="inline-flex items-center gap-1">
 												{onEdit && (
 													<Button
 														variant="ghost"
 														size="icon"
 														title="Edit Profil"
+														className="hover:bg-primary/15 hover:text-primary transition-colors"
 														onClick={(e) => {
 															e.stopPropagation();
 															onEdit(item);
 														}}
 														aria-label="Edit Profil"
 													>
-														<Pencil className="size-5" />
+														<Pencil className="size-4.5" />
 													</Button>
 												)}
 												{onEditGaji && (
@@ -311,13 +312,14 @@ export function DataTable<T>({
 														variant="ghost"
 														size="icon"
 														title="Edit Gaji"
+														className="hover:bg-warning/20 hover:text-warning-foreground transition-colors"
 														onClick={(e) => {
 															e.stopPropagation();
 															onEditGaji(item);
 														}}
 														aria-label="Edit Gaji"
 													>
-														<Wallet className="size-5" />
+														<Wallet className="size-4.5" />
 													</Button>
 												)}
 												{onDelete && (
@@ -325,13 +327,14 @@ export function DataTable<T>({
 														variant="ghost"
 														size="icon"
 														title="Hapus"
+														className="hover:bg-destructive/15 hover:text-destructive transition-colors"
 														onClick={(e) => {
 															e.stopPropagation();
 															onDelete(item);
 														}}
 														aria-label="Hapus"
 													>
-														<Trash2 className="size-5 text-destructive" />
+														<Trash2 className="size-4.5 text-destructive" />
 													</Button>
 												)}
 											</div>

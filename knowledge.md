@@ -382,7 +382,7 @@ Types: `feat`, `fix`, `refactor`, `test`, `docs`, `chore`, `style`, `perf`.
 
 ## 11. Skills — Available Skills
 
-Full catalog: `.agents/skills/`. Key ones:
+Full catalog: `.claude/skills/` (skill GitNexus berada di `.claude/skills/gitnexus/`). Key ones:
 
 | Skill | Use Case |
 |-------|----------|

@@ -173,3 +173,48 @@
 		@apply font-sans;
 	}
 }
+
+@layer components {
+	/* Touch target accessibility & proportional button overrides (P3 & coding-rules §4.3) */
+	[data-slot="button"] {
+		min-height: 2.75rem; /* 44px touch target requirement */
+		padding-inline: 1rem;
+		border-radius: 0.75rem; /* proportional rounded-xl */
+		font-weight: 500;
+	}
+
+	[data-slot="button"].h-8,
+	[data-slot="button"].h-7,
+	[data-slot="button"].h-9 {
+		min-height: 2.75rem;
+		height: 2.75rem;
+	}
+
+	/* Icon buttons: 44px x 44px minimum touch target for accessibility */
+	[data-slot="button"].size-8,
+	[data-slot="button"].size-7,
+	[data-slot="button"].size-9,
+	[data-slot="button"][class*="size-"] {
+		min-width: 2.75rem;
+		min-height: 2.75rem;
+		padding: 0;
+	}
+
+	[data-slot="input"]:not(.h-9):not(.h-11):not(.h-10) {
+		height: 2.75rem;
+	}
+
+	/* Utilitas visual elevated design */
+	.glass-panel {
+		@apply bg-card/85 backdrop-blur-md border border-border/80 shadow-xs;
+	}
+
+	.shadow-card {
+		@apply shadow-xs hover:shadow-md transition-shadow duration-200;
+	}
+
+	/* Tactile feedback pada elemen interaktif */
+	[data-slot="button"]:active:not(:disabled) {
+		transform: scale(0.98);
+	}
+}

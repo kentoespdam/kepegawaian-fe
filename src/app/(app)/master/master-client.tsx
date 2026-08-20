@@ -119,7 +119,7 @@ export function MasterPageClient<TEntity extends MasterEntityName>({ entity }: {
 				onReset={resetAll}
 			>
 				{canWrite && (
-					<Button size="default" onClick={openCreate}>
+					<Button className="h-11 px-4 text-sm font-semibold" onClick={openCreate}>
 						+ Tambah
 					</Button>
 				)}

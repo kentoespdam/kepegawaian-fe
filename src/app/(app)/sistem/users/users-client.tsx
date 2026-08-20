@@ -347,10 +347,10 @@ export function UsersClient() {
 						})}
 					</div>
 					<div className="flex shrink-0 justify-end gap-2 border-t px-4 py-3">
-						<Button variant="outline" onClick={() => setEditingUser(null)}>
+						<Button variant="outline" size="lg" onClick={() => setEditingUser(null)}>
 							Batal
 						</Button>
-						<Button onClick={handleSaveRoles} disabled={assignRolesMutation.isPending}>
+						<Button size="lg" onClick={handleSaveRoles} disabled={assignRolesMutation.isPending}>
 							Simpan
 						</Button>
 					</div>
@@ -422,10 +422,11 @@ export function UsersClient() {
 						</div>
 						{createError && <p className="text-sm text-destructive">{createError}</p>}
 						<div className="flex justify-end gap-2">
-							<Button variant="outline" onClick={() => setCreateOpen(false)}>
+							<Button variant="outline" size="lg" onClick={() => setCreateOpen(false)}>
 								Batal
 							</Button>
 							<Button
+								size="lg"
 								onClick={() => {
 									const payload = createPayload();
 									if (payload) createUserMutation.mutate(payload);

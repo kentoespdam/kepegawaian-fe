@@ -180,8 +180,8 @@ export function AppShell({
 														render={<Link href={href} />}
 														isActive={isActive}
 														className={cn(
-															"min-h-11 border-l-2 border-transparent pl-2.5 transition-colors",
-															isActive && "border-l-primary font-medium",
+															"min-h-11 border-l-2 border-transparent pl-2.5 transition-all duration-150",
+															isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 														)}
 													>
 														{entity.label}
@@ -199,19 +199,21 @@ export function AppShell({
 					</SidebarFooter>{" "}
 				</Sidebar>{" "}
 				<SidebarInset className="min-w-0" id="main-content" tabIndex={-1}>
-					<header className="relative flex h-16 items-center justify-between border-b border-border bg-card px-4 shadow-sm shrink-0">
+					<header className="sticky top-0 z-40 relative flex h-16 items-center justify-between border-b border-border/80 bg-card/85 backdrop-blur-md px-4 shadow-xs shrink-0">
 						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
 						<div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
 							{activeEntity && activeModule ? (
-								<nav aria-label="breadcrumb" className="flex items-center gap-1.5 text-sm">
-									<span className="text-muted-foreground">{activeModule.label}</span>
-									<span className="text-muted-foreground">/</span>
-									<span className="text-foreground font-medium">{activeEntity.label}</span>
+								<nav aria-label="breadcrumb" className="flex items-center gap-2 text-sm">
+									<span className="text-[10px] uppercase font-semibold tracking-[0.18em] text-muted-foreground">{activeModule.label}</span>
+									<span className="text-xs text-muted-foreground/60">&rsaquo;</span>
+									<span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] uppercase font-semibold tracking-[0.18em] text-primary border border-primary/20 shadow-2xs">
+										{activeEntity.label}
+									</span>
 								</nav>
 							) : (
-								<h1 className="text-sm font-medium text-foreground">
+								<h1 className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] uppercase font-semibold tracking-[0.18em] text-primary border border-primary/20 shadow-2xs">
 									{pathname === "/" && "Beranda"}
 									{pathname === "/profil" && "Profil"}
 								</h1>

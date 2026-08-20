@@ -119,11 +119,11 @@ export function CrudForm<TValues extends Record<string, unknown> = Record<string
 
 			<div className="flex items-center justify-end gap-2 pt-2">
 				{onCancel && (
-					<Button type="button" variant="outline" onClick={onCancel} disabled={submitting}>
+					<Button type="button" variant="outline" size="lg" onClick={onCancel} disabled={submitting}>
 						Batal
 					</Button>
 				)}
-				<Button type="submit" disabled={submitting}>
+				<Button type="submit" size="lg" disabled={submitting}>
 					{submitting && <Loader2 className="mr-1.5 size-4 animate-spin" />}
 					{submitting ? "Menyimpan…" : submitLabel}
 				</Button>

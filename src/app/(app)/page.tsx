@@ -93,22 +93,21 @@ export default async function Home() {
 	return (
 		<div className="mx-auto max-w-6xl space-y-8 pb-8">
 			{/* Hero Welcome Card */}
-			<section className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+			<section className="relative overflow-hidden rounded-2xl border border-border/80 bg-card p-6 shadow-sm sm:p-8">
 				<div className="absolute top-0 left-0 right-0 h-1 bg-linear-to-r from-primary/30 via-primary to-primary/30" />
-				<div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+				<div className="absolute -right-16 -top-16 size-64 rounded-full bg-primary/5 blur-3xl pointer-events-none" />
+				<div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between relative z-10">
 					<div className="flex items-start gap-4">
-						<div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-sm ring-4 ring-primary/10">
+						<div className="flex size-14 shrink-0 items-center justify-center rounded-2xl bg-primary text-xl font-bold text-primary-foreground shadow-md ring-4 ring-primary/20">
 							{initial}
 						</div>
 						<div className="space-y-1">
 							<div className="flex flex-wrap items-center gap-2">
-								<span className="text-xs font-semibold uppercase tracking-wider text-primary">
-									Perumdam Tirta Satria
-								</span>
-								<span className="text-xs text-muted-foreground">&bull;</span>
-								<span className="text-xs text-muted-foreground">{formattedDate}</span>
+								<span className="text-xs font-bold uppercase tracking-wider text-primary">Perumdam Tirta Satria</span>
+								<span className="text-xs text-muted-foreground/60">&bull;</span>
+								<span className="text-xs text-muted-foreground font-medium">{formattedDate}</span>
 							</div>
-							<h1 className="text-xl font-semibold text-foreground sm:text-2xl">Selamat Datang, {user.name}</h1>
+							<h1 className="text-xl font-bold text-foreground sm:text-2xl">Selamat Datang, {user.name}</h1>
 							<p className="text-sm text-muted-foreground">
 								Sistem Informasi Manajemen Kepegawaian &middot; Akses layanan dan kelola data referensi perusahaan
 							</p>
@@ -120,9 +119,9 @@ export default async function Home() {
 							{roles.map((role) => (
 								<span
 									key={role}
-									className="inline-flex items-center gap-1 rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-xs font-medium text-primary"
+									className="inline-flex items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-3.5 py-1 text-xs font-semibold text-primary shadow-2xs"
 								>
-									<Sparkles className="size-3" />
+									<Sparkles className="size-3.5 text-primary" />
 									{role}
 								</span>
 							))}
@@ -134,85 +133,107 @@ export default async function Home() {
 			{/* Operational Shortcuts */}
 			<section className="space-y-3">
 				<div className="flex items-center justify-between">
-					<h2 className="text-base font-semibold text-foreground">Layanan & Operasional Kepegawaian</h2>
-					<span className="text-xs text-muted-foreground">Pintasan Utama</span>
+					<h2 className="text-base font-bold text-foreground">Layanan & Operasional Kepegawaian</h2>
+					<span className="text-xs font-medium text-muted-foreground bg-muted px-2.5 py-1 rounded-full">
+						Pintasan Utama
+					</span>
 				</div>
 				<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
 					<Link
 						href="/kepegawaian/dashboard"
-						className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+						className="group flex flex-col justify-between rounded-xl border border-border/80 bg-card p-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md"
 					>
-						<div className="space-y-2">
-							<div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+						<div className="space-y-3">
+							<div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 shadow-2xs">
 								<UserRound className="size-5" />
 							</div>
-							<h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-								Dashboard Pegawai
-							</h3>
-							<p className="text-xs text-muted-foreground leading-relaxed">
-								Akses profil mandiri, riwayat keluarga, pendidikan, sertifikasi, dan pengalaman kerja.
-							</p>
+							<div>
+								<h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+									Dashboard Pegawai
+								</h3>
+								<p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+									Akses profil mandiri, riwayat keluarga, pendidikan, sertifikasi, dan pengalaman kerja.
+								</p>
+							</div>
 						</div>
-						<div className="mt-4 flex items-center text-xs font-medium text-primary">Buka Dashboard &rarr;</div>
+						<div className="mt-5 flex items-center text-sm font-semibold text-primary">
+							<span>Buka Dashboard</span>
+							<span className="ml-1 transition-transform group-hover:translate-x-1.5 duration-200">&rarr;</span>
+						</div>
 					</Link>
 
 					{canReadPegawai && (
 						<Link
 							href="/kepegawaian/data"
-							className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+							className="group flex flex-col justify-between rounded-xl border border-border/80 bg-card p-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md"
 						>
-							<div className="space-y-2">
-								<div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+							<div className="space-y-3">
+								<div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 shadow-2xs">
 									<Users className="size-5" />
 								</div>
-								<h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-									Data Pegawai
-								</h3>
-								<p className="text-xs text-muted-foreground leading-relaxed">
-									Kelola database pegawai aktif, riwayat mutasi, SK kenaikan golongan, dan penetapan gaji.
-								</p>
+								<div>
+									<h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+										Data Pegawai
+									</h3>
+									<p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+										Kelola database pegawai aktif, riwayat mutasi, SK kenaikan golongan, dan penetapan gaji.
+									</p>
+								</div>
 							</div>
-							<div className="mt-4 flex items-center text-xs font-medium text-primary">Kelola Data Pegawai &rarr;</div>
+							<div className="mt-5 flex items-center text-sm font-semibold text-primary">
+								<span>Kelola Data Pegawai</span>
+								<span className="ml-1 transition-transform group-hover:translate-x-1.5 duration-200">&rarr;</span>
+							</div>
 						</Link>
 					)}
 
 					{canReadPegawai && (
 						<Link
 							href="/kepegawaian/terminasi"
-							className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+							className="group flex flex-col justify-between rounded-xl border border-border/80 bg-card p-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md"
 						>
-							<div className="space-y-2">
-								<div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+							<div className="space-y-3">
+								<div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 shadow-2xs">
 									<CalendarOff className="size-5" />
 								</div>
-								<h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-									Terminasi & Pensiun
-								</h3>
-								<p className="text-xs text-muted-foreground leading-relaxed">
-									Pantau masa persiapan pensiun (MPP), calon purna tugas, dan arsip data pemberhentian.
-								</p>
+								<div>
+									<h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+										Terminasi & Pensiun
+									</h3>
+									<p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+										Pantau masa persiapan pensiun (MPP), calon purna tugas, dan arsip data pemberhentian.
+									</p>
+								</div>
 							</div>
-							<div className="mt-4 flex items-center text-xs font-medium text-primary">Lihat Terminasi &rarr;</div>
+							<div className="mt-5 flex items-center text-sm font-semibold text-primary">
+								<span>Lihat Terminasi</span>
+								<span className="ml-1 transition-transform group-hover:translate-x-1.5 duration-200">&rarr;</span>
+							</div>
 						</Link>
 					)}
 
 					{canApproveProfil && (
 						<Link
 							href="/profil/approval"
-							className="group flex flex-col justify-between rounded-xl border border-border bg-card p-5 transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+							className="group flex flex-col justify-between rounded-xl border border-border/80 bg-card p-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-md"
 						>
-							<div className="space-y-2">
-								<div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary transition-colors group-hover:bg-primary group-hover:text-primary-foreground">
+							<div className="space-y-3">
+								<div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary transition-all duration-200 group-hover:bg-primary group-hover:text-primary-foreground group-hover:scale-105 shadow-2xs">
 									<UserCheck className="size-5" />
 								</div>
-								<h3 className="text-base font-semibold text-foreground group-hover:text-primary transition-colors">
-									Approval Profil
-								</h3>
-								<p className="text-xs text-muted-foreground leading-relaxed">
-									Verifikasi dan setujui pengajuan perubahan biodata dan data keluarga dari pegawai.
-								</p>
+								<div>
+									<h3 className="text-base font-bold text-foreground group-hover:text-primary transition-colors">
+										Approval Profil
+									</h3>
+									<p className="mt-1 text-xs text-muted-foreground leading-relaxed">
+										Verifikasi dan setujui pengajuan perubahan biodata dan data keluarga dari pegawai.
+									</p>
+								</div>
 							</div>
-							<div className="mt-4 flex items-center text-xs font-medium text-primary">Tinjau Pengajuan &rarr;</div>
+							<div className="mt-5 flex items-center text-sm font-semibold text-primary">
+								<span>Tinjau Pengajuan</span>
+								<span className="ml-1 transition-transform group-hover:translate-x-1.5 duration-200">&rarr;</span>
+							</div>
 						</Link>
 					)}
 				</div>
@@ -222,7 +243,7 @@ export default async function Home() {
 			<section className="space-y-4">
 				<div className="flex items-center justify-between">
 					<div>
-						<h2 className="text-base font-semibold text-foreground">Data Referensi (Master Data)</h2>
+						<h2 className="text-base font-bold text-foreground">Data Referensi (Master Data)</h2>
 						<p className="text-xs text-muted-foreground">Katalog konfigurasi dasar kepegawaian Perumdam</p>
 					</div>
 				</div>
@@ -233,14 +254,14 @@ export default async function Home() {
 						return (
 							<div
 								key={category.title}
-								className="flex flex-col rounded-2xl border border-border bg-card p-5 shadow-xs"
+								className="flex flex-col rounded-2xl border border-border/80 bg-card p-5 shadow-xs transition-shadow hover:shadow-md"
 							>
 								<div className="mb-4 flex items-center gap-3 border-b border-border/60 pb-3">
-									<div className="flex size-8 items-center justify-center rounded-lg bg-muted text-primary">
-										<CategoryIcon className="size-4" />
+									<div className="flex size-9 items-center justify-center rounded-xl bg-primary/10 text-primary">
+										<CategoryIcon className="size-4.5" />
 									</div>
 									<div>
-										<h3 className="text-sm font-semibold text-foreground">{category.title}</h3>
+										<h3 className="text-sm font-bold text-foreground">{category.title}</h3>
 										<p className="text-[0.75rem] text-muted-foreground">{category.description}</p>
 									</div>
 								</div>
@@ -252,20 +273,20 @@ export default async function Home() {
 											<Link
 												key={entity.id}
 												href={`/master/${entity.id}`}
-												className="group flex items-center justify-between rounded-xl border border-border/50 bg-background/60 p-3 text-sm transition-all duration-150 hover:border-primary/40 hover:bg-muted hover:shadow-xs"
+												className="group flex items-center justify-between rounded-xl border border-border/40 bg-background/50 p-3 text-sm transition-all duration-150 hover:border-primary/40 hover:bg-primary/5 hover:shadow-2xs"
 											>
 												<div className="flex items-center gap-3 min-w-0">
-													<div className="flex size-7 shrink-0 items-center justify-center rounded-md bg-card text-muted-foreground ring-1 ring-border/50 group-hover:text-primary">
+													<div className="flex size-7 shrink-0 items-center justify-center rounded-lg bg-card text-muted-foreground ring-1 ring-border/50 group-hover:text-primary group-hover:ring-primary/40 transition-all">
 														<Icon className="size-4" />
 													</div>
 													<div className="truncate">
-														<span className="font-medium text-foreground group-hover:text-primary transition-colors block truncate">
+														<span className="font-semibold text-foreground group-hover:text-primary transition-colors block truncate">
 															{entity.label}
 														</span>
 														<span className="text-[0.7rem] text-muted-foreground block truncate">{entity.desc}</span>
 													</div>
 												</div>
-												<span className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0">
+												<span className="text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity ml-2 shrink-0 font-bold">
 													&rsaquo;
 												</span>
 											</Link>

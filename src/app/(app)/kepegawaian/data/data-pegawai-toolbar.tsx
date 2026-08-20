@@ -266,13 +266,13 @@ export function DataPegawaiToolbar({
 					</div>
 					<div className="flex items-center gap-2 max-sm:justify-end">
 						{hasActive && (
-							<Button variant="outline" size="sm" onClick={onReset}>
+							<Button variant="outline" className="h-11 px-4" onClick={onReset}>
 								<FilterX className="mr-1.5 size-3.5" />
 								Reset
 							</Button>
 						)}
 						{onAddClick && (
-							<Button onClick={onAddClick}>
+							<Button className="h-11 px-4 font-semibold" onClick={onAddClick}>
 								<Plus />
 								Tambah
 							</Button>

@@ -50,3 +50,4 @@ next-env.d.ts
 .openclaude/
 .claude/settings.local.json
 .commandcode/
+.claude/skills/

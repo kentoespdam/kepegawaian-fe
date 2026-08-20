@@ -70,7 +70,7 @@ export function DataTableToolbar({
 				</div>
 				<div className="flex items-center gap-2 max-sm:justify-end max-sm:w-full max-sm:*:w-full">
 					{hasActive && onReset && (
-						<Button variant="outline" size="sm" onClick={onReset}>
+						<Button variant="outline" className="h-11 px-4 rounded-xl" onClick={onReset}>
 							<RotateCcw className="mr-1.5 size-3.5" />
 							Reset
 						</Button>

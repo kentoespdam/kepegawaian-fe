@@ -45,14 +45,14 @@ export function DataTablePagination({
 					<option value={50}>50</option>
 				</select>
 				<div className="flex items-center gap-1">
-					<Button variant="outline" size="icon-xs" disabled={first} onClick={() => onPageChange(page - 1)}>
-						<ChevronLeft className="size-3.5" />
+					<Button variant="outline" size="icon-lg" disabled={first} onClick={() => onPageChange(page - 1)}>
+						<ChevronLeft className="size-4" />
 					</Button>
-					<span className="min-w-[5ch] text-center tabular-nums">
+					<span className="min-w-[5ch] text-center tabular-nums font-medium">
 						{page} / {totalPages || 1}
 					</span>
-					<Button variant="outline" size="icon-xs" disabled={last} onClick={() => onPageChange(page + 1)}>
-						<ChevronRight className="size-3.5" />
+					<Button variant="outline" size="icon-lg" disabled={last} onClick={() => onPageChange(page + 1)}>
+						<ChevronRight className="size-4" />
 					</Button>
 				</div>
 			</div>

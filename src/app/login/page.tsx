@@ -95,7 +95,7 @@ export default function LoginPage() {
 					</div>
 
 					{/* Form Box */}
-					<div className="rounded-2xl border border-border bg-card p-6 shadow-sm sm:p-8">
+					<div className="rounded-2xl border border-border/80 bg-card p-6 shadow-md sm:p-8 hover:shadow-lg transition-shadow duration-300">
 						<Suspense fallback={null}>
 							<LoginForm defaultDomain={defaultDomain} />
 						</Suspense>
