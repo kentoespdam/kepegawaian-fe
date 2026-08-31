@@ -27,7 +27,7 @@ task touches**; this core is always in scope.
 | ↳ §Page 4 — Data Penggunaan Hak Cuti | [`docs/context/kepegawaian-riwayat-cuti.md`](docs/context/kepegawaian-riwayat-cuti.md) | Read-only: tabel penggunaan + strip kuota/sisa/diambil (K-C1–K-C7) | ✅ grilling 2026-07-31 |
 | ↳ §Page 5 — Data Pendukung | [`docs/context/kepegawaian-pendukung.md`](docs/context/kepegawaian-pendukung.md) | Konsol CRUD profil per-pegawai: Pendidikan, Pengalaman Kerja, Keahlian, Pelatihan, Kartu Identitas, Keluarga (P1–P8) | ✅ grilling 2026-08-12 |
 | Cuti | `docs/context/cuti.md` | Pengajuan & saldo cuti | ⏳ belum di-grill |
-| Penggajian | `docs/context/penggajian.md` | Payroll | ⏳ belum di-grill |
+| Penggajian | [`docs/context/penggajian.md`](docs/context/penggajian.md) | Payroll | ✅ grilling 2026-08-31 (belum di-implement) |
 | Laporan | `docs/context/laporan.md` | Pelaporan/rekap | ⏳ belum di-grill |
 | Sistem | `docs/context/sistem.md` | Manajemen role, pengaturan | ⏳ belum di-grill |
 
