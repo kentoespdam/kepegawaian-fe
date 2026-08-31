@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EntityFormModal } from "@/app/(app)/master/entity-form-modal";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
@@ -35,6 +35,13 @@ export function TunjanganClient() {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [error, setError] = useState<string | null>(null);
 	const isCreate = editing === null;
+
+	// Set default filter: jenisTunjangan = JABATAN when not specified
+	useEffect(() => {
+		if (!filters.jenisTunjangan) {
+			setFilter("jenisTunjangan", "JABATAN");
+		}
+	}, []);
 
 	const jenisTunjangan = filters.jenisTunjangan as string | undefined;
 	const { list, create, update, remove } = useTunjanganResource(
