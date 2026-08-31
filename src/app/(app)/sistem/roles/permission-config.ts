@@ -195,6 +195,31 @@ export const PERMISSION_DEFINITIONS: Record<string, Omit<PermissionDefinition, "
 		actionType: "delete",
 		moduleKey: "PENGGAJIAN",
 	},
+	"PENGGAJIAN:SETUP": {
+		name: "Setup Komponen Gaji",
+		description:
+			"Mengelola komponen gaji, pendapatan non pajak, tunjangan, parameter setting, dan referensi potongan TKK",
+		actionType: "write",
+		moduleKey: "PENGGAJIAN",
+	},
+	"PENGGAJIAN:VERIFY1": {
+		name: "Verifikasi Tahap 1",
+		description: "Verifikasi gapok, tunjangan, dan potongan oleh Manager SDM",
+		actionType: "approve",
+		moduleKey: "PENGGAJIAN",
+	},
+	"PENGGAJIAN:TAMBAHAN": {
+		name: "Tambahan Komponen Gaji",
+		description: "Menambah komponen gaji tambahan oleh Staf Keuangan",
+		actionType: "write",
+		moduleKey: "PENGGAJIAN",
+	},
+	"PENGGAJIAN:APPROVE": {
+		name: "Persetujuan Akhir Payroll",
+		description: "Verifikasi tahap 2 dan persetujuan akhir slip gaji oleh Manager Keuangan",
+		actionType: "approve",
+		moduleKey: "PENGGAJIAN",
+	},
 
 	// Master
 	"MASTER:WRITE": {

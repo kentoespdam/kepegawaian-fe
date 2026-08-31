@@ -80,7 +80,52 @@ const MODULES = [
 		],
 	},
 	{ id: "laporan", label: "Laporan", icon: FileText, entities: [] },
-	{ id: "penggajian", label: "Penggajian", icon: DollarSign, entities: [] },
+	{
+		id: "penggajian",
+		label: "Penggajian",
+		icon: DollarSign,
+		entities: [
+			// ponytail: Setup = CRUD master, Proses Batch = workflow — 2 sub-grup konseptual dalam 1 modul sidebar
+			// Setup group (gate: penggajian.setup)
+			{
+				id: "komponen-gaji",
+				label: "Komponen Gaji",
+				href: "/penggajian/setup/komponen",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "pendapatan-non-pajak",
+				label: "Pendapatan Non Pajak",
+				href: "/penggajian/setup/pendapatan-non-pajak",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{ id: "tunjangan", label: "Tunjangan", href: "/penggajian/setup/tunjangan", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{
+				id: "parameter-setting",
+				label: "Lain-lain",
+				href: "/penggajian/setup/lain-lain",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "potongan-tkk",
+				label: "Referensi Potongan TKK",
+				href: "/penggajian/setup/potongan-tkk",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			// Proses Batch group (visible jika punya minimal 1 permission fase)
+			{
+				id: "proses-gaji",
+				label: "Proses Gaji Bulanan",
+				href: "/penggajian/batch",
+				gate: [
+					PERMISSION.PENGGAJIAN_SETUP,
+					PERMISSION.PENGGAJIAN_VERIFY1,
+					PERMISSION.PENGGAJIAN_TAMBAHAN,
+					PERMISSION.PENGGAJIAN_APPROVE,
+				],
+			},
+		],
+	},
 	{
 		id: "sistem",
 		label: "Sistem",

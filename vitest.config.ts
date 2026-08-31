@@ -17,6 +17,7 @@ export default defineConfig({
 		setupFiles: ["src/lib/vitest.setup.ts"],
 		// Module captures these at import time — fix them so cookie names / base URL are deterministic.
 		env: {
+			NODE_ENV: "test",
 			APPWRITE_URL: "http://appwrite.test",
 			APPWRITE_PROJECT_ID: "proj123",
 		},

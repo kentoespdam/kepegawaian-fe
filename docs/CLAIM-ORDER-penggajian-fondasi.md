@@ -30,12 +30,12 @@ ADR-0016 dulu → permission map → sidebar group → hook/context → tests.
 
 ## Definition of Done
 
-- [ ] ADR-0016 merged
-- [ ] 4 permission baru ada di `permission-config.ts`
-- [ ] 2 grup sidebar terdaftar (visible hanya jika role punya minimal1 permission)
-- [ ] `useBatchInfo` + `BatchContext` tested
-- [ ] Build & test green
-- [ ] Commit: `chore(penggajian): fondasi ADR + RBAC + sidebar group`
+- [x] ADR-0016 merged — `docs/adr/0016-penggajian-sub-modul-rbac-workflow.md`
+- [x] 4 permission baru ada di `permission-config.ts` — SETUP, VERIFY1, TAMBAHAN, APPROVE
+- [x] 2 grup sidebar terdaftar — SETUP (5 item) + PROSES BATCH (1 item)
+- [x] `useBatchInfo` + `BatchContext` tested — `src/hooks/useBatchInfo.test.tsx`
+- [x] Build & test green (209 tests pass)
+- [x] Commit: `chore(penggajian): fondasi ADR + RBAC + sidebar group`
 
 ## Risiko & Mitigasi
 
