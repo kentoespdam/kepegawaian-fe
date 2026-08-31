@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -9,7 +9,6 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
-import { usePenggajianResource } from "@/hooks/penggajian/usePenggajianResource";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { penggajianApi } from "@/lib/api/penggajian-client";
@@ -17,11 +16,7 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type { GajiProfilResponse } from "@/types/_shared";
-import type {
-	GajiKomponenPostRequest,
-	GajiKomponenResponse,
-	PageResultPageGajiKomponenResponse,
-} from "@/types/penggajian/komponen";
+import type { GajiKomponenResponse, PageResultPageGajiKomponenResponse } from "@/types/penggajian/komponen";
 
 const ENTITY = "komponen";
 
@@ -71,6 +66,7 @@ const KOMPONEN_BASE = "/penggajian/setup/komponen";
 export function KomponenClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
+	const qc = useQueryClient();
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(
 		ENTITY,
 		KOMPONEN_BASE,
@@ -94,14 +90,31 @@ export function KomponenClient() {
 		staleTime: 5 * 60_000,
 	});
 
-	// Fetch komponen for selected profil
-	const komponenList = usePenggajianResource<PageResultPageGajiKomponenResponse, GajiKomponenPostRequest>(
+	// Fetch komponen for selected profil — direct useQuery (parent-child endpoint, not standard CRUD)
+	const komponenQueryKey = [
+		"penggajian",
 		`${ENTITY}/${selectedProfilId}/profil`,
 		selectedProfilId ? toApiParams({ page, size, sortBy, sortDir, filters }) : undefined,
-	);
+	];
+	const komponenList = useQuery<PageResultPageGajiKomponenResponse>({
+		queryKey: komponenQueryKey,
+		queryFn: () =>
+			penggajianApi.list<PageResultPageGajiKomponenResponse>(
+				`${ENTITY}/${selectedProfilId}/profil`,
+				toApiParams({ page, size, sortBy, sortDir, filters }),
+			),
+		enabled: !!selectedProfilId,
+		placeholderData: keepPreviousData,
+		staleTime: 30_000,
+		gcTime: 300_000,
+	});
+	const removeKomponen = useMutation({
+		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] }),
+	});
 
 	const profilData = profilList.data ?? [];
-	const komponenPageView = fromPage(komponenList.list.data?.data);
+	const komponenPageView = fromPage(komponenList.data?.data);
 
 	const handleProfilSelect = (profilId: number) => {
 		setSelectedProfilId(profilId);
@@ -125,7 +138,7 @@ export function KomponenClient() {
 		if (!deletingKomponen) return;
 		setDeleteError(null);
 		try {
-			await komponenList.remove.mutateAsync(String(deletingKomponen.id));
+			await removeKomponen.mutateAsync(String(deletingKomponen.id));
 			toast.success("Komponen berhasil dihapus");
 		} catch (e: unknown) {
 			setDeleteError(e instanceof Error ? e.message : "Gagal menghapus");
@@ -189,11 +202,11 @@ export function KomponenClient() {
 						<DataTable
 							columns={KOMPONEN_COLUMNS}
 							data={(komponenPageView.rows as GajiKomponenResponse[]) ?? []}
-							isLoading={komponenList.list.isPending}
-							isPlaceholder={komponenList.list.isPlaceholderData}
-							isError={komponenList.list.isError}
-							error={komponenList.list.error}
-							onRetry={() => komponenList.list.refetch()}
+							isLoading={komponenList.isPending}
+							isPlaceholder={komponenList.isPlaceholderData}
+							isError={komponenList.isError}
+							error={komponenList.error}
+							onRetry={() => komponenList.refetch()}
 							sortBy={sortBy}
 							sortDirection={sortDir}
 							onSort={(key) => {
