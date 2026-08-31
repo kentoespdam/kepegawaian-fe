@@ -97,12 +97,17 @@ prefix **`/penggajian`**:
 
 | Verb | Pattern | Kegunaan |
 |---|---|---|
-| GET | `/penggajian/{entity}` | list paginated |
-| GET | `/penggajian/{entity}/list` | unpaginated (untuk combobox FK) |
+| GET | `/penggajian/{entity}` | list paginated (untuk tabel admin) |
+| GET | `/penggajian/{entity}/list` | unpaginated (untuk combobox FK / picker parent) |
 | GET | `/penggajian/{entity}/{id}` | detail |
 | POST | `/penggajian/{entity}` | create |
 | PUT | `/penggajian/{entity}/{id}` | update |
 | DELETE | `/penggajian/{entity}/{id}` | delete |
+
+> **Contoh konkret `profil`**: `GET /penggajian/profil` = list paginated (untuk tabel admin jika
+> nanti ada halaman admin terpisah), `GET /penggajian/profil/list` = list unpaginated (untuk
+> panel kiri di `/setup/komponen` & combobox FK di form lain). Keduanya return shape berbeda
+> (`PageEnvelope` vs `Envelope<T[]>`) — lihat `src/types/_shared.ts`.
 
 **Special endpoints** (batch workflow):
 
@@ -129,9 +134,15 @@ prefix **`/penggajian`**:
 - **Panel kanan**: daftar Komponen Gaji Pegawai untuk profil yang dipilih (`Aksi`, `Urut`, `Kode`,
   `Nama`, `Jenis Gaji`, `Nilai`, `Formula`) — `<DataTable>` penuh + paging
 
+**Endpoint mapping**:
+- **Panel kiri** (`useProfilList`) → `GET /penggajian/profil/list` (unpaginated, sesuai pola
+  combobox-of-id FK di CONTEXT-MAP §DataTable filtering). Cache per-entity di query cache —
+  dipakai juga oleh FK combobox di form entitas lain.
+- **Panel kanan** (`useKomponenByProfil`) → `GET /penggajian/komponen/{profilId}/profil`
+
 **State**: `?profilId=N` di URL sebagai single source of truth. Klik baris kiri → set `profilId`
-di URL → panel kanan fetch `GET /penggajian/komponen/{profilId}/profil`. Konsisten dengan
-preseden Data Pegawai → Ringkasan Panel (CONTEXT-MAP §DataTable filtering).
+di URL → panel kanan fetch komponen untuk profil tsb. Konsisten dengan preseden Data Pegawai
+→ Ringkasan Panel (CONTEXT-MAP §DataTable filtering).
 
 ### 2. Halaman List Batch (`/penggajian/batch`)
 

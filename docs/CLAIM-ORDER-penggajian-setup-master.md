@@ -21,14 +21,15 @@ Implementasi **5 halaman setup master** di `/penggajian/setup/*`:
 
 | # | Aksi | File |
 |---|---|---|
-| 1a | Generated types sudah ada — verify | `src/types/penggajian/komponen.ts`, `profil.ts` |
+| 1a | Generated types sudah ada — verify | `src/types/penggajian/komponen.ts` |
 | 1b | Config `komponen.config.ts` (panel kanan) | `src/config/penggajian/komponen.config.ts` |
 | 1c | Config `profil.config.ts` (panel kiri, ringkas) | `src/config/penggajian/profil.config.ts` |
 | 1d | Halaman `/penggajian/setup/komponen/page.tsx` | server component tipis + `<KomponenMasterClient />` |
 | 1e | `KomponenMasterClient.tsx` — 2 panel | `src/app/(app)/penggajian/setup/komponen/komponen-client.tsx` |
-| 1f | Hook `useProfilList` + `useKomponenByProfil` | `src/hooks/penggajian/useProfilList.ts`, `useKomponenByProfil.ts` |
-| 1g | Toolbar + search by nama profil (opsional) | inline di client |
-| 1h | Tests untuk hooks | `src/hooks/penggajian/*.test.ts` |
+| 1f | Hook `useProfilList` (fetch `GET /penggajian/profil/list` — unpaginated) | `src/hooks/penggajian/useProfilList.ts` |
+| 1g | Hook `useKomponenByProfil(profilId)` (fetch `GET /penggajian/komponen/{profilId}/profil`) | `src/hooks/penggajian/useKomponenByProfil.ts` |
+| 1h | Toolbar + search by nama profil (opsional, client-side filter dari cache) | inline di client |
+| 1i | Tests untuk hooks | `src/hooks/penggajian/*.test.ts` |
 
 ### Step 2: Pendapatan Non-Pajak, Parameter Setting, Potongan TKK (flat CRUD)
 
