@@ -9,7 +9,7 @@ import { useRouter, useSearchParams } from "next/navigation";
  * `filters` = semua key URL kecuali page/size/sortBy/sortDirection —
  * langsung dari URL, belum divalidasi terhadap {Entity}SearchParams.
  */
-export function useMasterSearchParams(entity: string) {
+export function useMasterSearchParams(entity: string, basePath?: string) {
 	const sp = useSearchParams();
 	const router = useRouter();
 
@@ -38,7 +38,8 @@ export function useMasterSearchParams(entity: string) {
 			if (v) p.set(k, v);
 			else p.delete(k);
 		}
-		router.replace(`/master/${entity}?${p.toString()}`);
+		const base = basePath ?? `/master/${entity}`;
+		router.replace(`${base}?${p.toString()}`);
 	};
 
 	/** Set filter + reset page=1 dalam satu URL replace (cegah race setP berantai). */
@@ -47,12 +48,14 @@ export function useMasterSearchParams(entity: string) {
 		if (v) p.set(k, v);
 		else p.delete(k);
 		p.set("page", "1");
-		router.replace(`/master/${entity}?${p.toString()}`);
+		const base = basePath ?? `/master/${entity}`;
+		router.replace(`${base}?${p.toString()}`);
 	};
 
 	/** Reset semua filter & sort ke URL bersih (page=1, tanpa filter/sort). */
 	const resetAll = () => {
-		router.replace(`/master/${entity}`);
+		const base = basePath ?? `/master/${entity}`;
+		router.replace(base);
 	};
 
 	return { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll };
