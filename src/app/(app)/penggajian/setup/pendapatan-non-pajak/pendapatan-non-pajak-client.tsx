@@ -18,7 +18,7 @@ import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type {
 	GajiPendapatanNonPajakResponse,
-	PageResultPageGajiPendapatanNonPajakResponse,
+	PageGajiPendapatanNonPajakResponse,
 } from "@/types/penggajian/pendapatan-non-pajak";
 
 const ENTITY = "pendapatan-non-pajak";
@@ -40,11 +40,11 @@ export function PendapatanNonPajakClient() {
 	const isCreate = editing === null;
 
 	const { list, create, update, remove } = usePenggajianResource<
-		PageResultPageGajiPendapatanNonPajakResponse,
+		PageGajiPendapatanNonPajakResponse,
 		GajiPendapatanNonPajakResponse
 	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
 
-	const pageView = fromPage(list.data?.data);
+	const pageView = fromPage(list.data);
 
 	const { resolvedItems, formFields } = useMasterTable({
 		cfg,
