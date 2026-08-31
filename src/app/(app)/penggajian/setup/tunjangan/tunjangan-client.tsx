@@ -9,7 +9,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { tunjanganConfig } from "@/config/penggajian/tunjangan.config";
-import { usePenggajianResource } from "@/hooks/penggajian/usePenggajianResource";
+import { useTunjanganResource } from "@/hooks/penggajian/useTunjanganResource";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
@@ -36,10 +36,11 @@ export function TunjanganClient() {
 	const [error, setError] = useState<string | null>(null);
 	const isCreate = editing === null;
 
-	const { list, create, update, remove } = usePenggajianResource<
-		PageGajiTunjanganResponse,
-		GajiTunjanganResponse
-	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
+	const jenisTunjangan = filters.jenisTunjangan as string | undefined;
+	const { list, create, update, remove } = useTunjanganResource(
+		jenisTunjangan,
+		toApiParams({ page, size, sortBy, sortDir, filters }),
+	);
 
 	const pageView = fromPage(list.data);
 
@@ -93,10 +94,20 @@ export function TunjanganClient() {
 		}
 	};
 
+	const fkOptions = {
+		jenisTunjangan: [
+			{ value: "JABATAN", label: "Jabatan" },
+			{ value: "KINERJA", label: "Kinerja" },
+			{ value: "BERAS", label: "Beras" },
+			{ value: "AIR", label: "Air" },
+		],
+	};
+
 	return (
 		<div>
 			<DataTableToolbar
-				searchFields={cfg.searchFields}
+				fkSources={cfg.fkSources}
+				fkOptions={fkOptions}
 				values={filters}
 				onFilterChange={handleFilterChange}
 				hasActive={Object.keys(filters).length > 0 || !!sortBy}
