@@ -28,9 +28,9 @@ export function PendapatanNonPajakClient() {
 	const cfg = pendapatanNonPajakConfig;
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(ENTITY, BASE);
 
-	const { permissions } = useAuth();
-	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
-	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
+	const { roles, permissions } = useAuth();
+	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
+	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
 
 	const [editing, setEditing] = useState<GajiPendapatanNonPajakResponse | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);

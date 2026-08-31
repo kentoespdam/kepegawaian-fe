@@ -1,9 +1,10 @@
 // @vitest-environment jsdom
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { render, screen, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import { useRouter, useSearchParams } from "next/navigation";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/hooks/useAuth";
 import { KomponenClient } from "./komponen-client";
 
@@ -12,18 +13,13 @@ vi.mock("next/navigation", () => ({
 	useSearchParams: vi.fn(),
 }));
 
-const queryClient = new QueryClient({
-	defaultOptions: {
-		queries: {
-			retry: false,
-		},
-	},
-});
-
 function renderWithProviders() {
+	const qc = new QueryClient({
+		defaultOptions: { queries: { retry: false } },
+	});
 	return render(
-		<AuthProvider roles={["admin"]} permissions={["penggajian.setup"]}>
-			<QueryClientProvider client={queryClient}>
+		<AuthProvider roles={["admin"]} permissions={["PENGGAJIAN:SETUP"]}>
+			<QueryClientProvider client={qc}>
 				<KomponenClient />
 			</QueryClientProvider>
 		</AuthProvider>,
@@ -41,14 +37,13 @@ function mockFetchByEndpoint(responses: Record<string, unknown>) {
 		}
 		return { ok: true, json: async () => ({ data: [] }) } as Response;
 	});
-}
-
-describe("KomponenClient", () => {
+}	describe("KomponenClient", () => {
 	const mockReplace = vi.fn();
+
+	afterEach(() => cleanup());
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		queryClient.clear();
 		vi.mocked(useRouter).mockReturnValue({
 			push: vi.fn(),
 			replace: mockReplace,
@@ -107,6 +102,74 @@ describe("KomponenClient", () => {
 
 		expect(screen.getByText("GP")).toBeInTheDocument();
 		expect(screen.getByText("PEMASUKAN")).toBeInTheDocument();
+	});
+
+	it("shows + Tambah button and opens dialog on click", async () => {
+		vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams() as never);
+
+		mockFetchByEndpoint({
+			"/penggajian/profil/list": {
+				data: [],
+			},
+		});
+
+		renderWithProviders();
+
+		await waitFor(() => {
+			expect(screen.getByRole("heading", { name: "Profil Gaji" })).toBeInTheDocument();
+		});
+
+		const tambahBtn = screen.getByRole("button", { name: /\+ tambah/i });
+		expect(tambahBtn).toBeInTheDocument();
+
+		await userEvent.setup().click(tambahBtn);
+
+		expect(screen.getByRole("dialog")).toBeInTheDocument();
+		expect(screen.getByText("Tambah Profil Gaji")).toBeInTheDocument();
+		expect(screen.getByPlaceholderText("Nama profil gaji")).toBeInTheDocument();
+	});
+
+	it("sends POST to /penggajian/profil on form submit", async () => {
+		vi.mocked(useSearchParams).mockReturnValue(new URLSearchParams() as never);
+
+		const fetchSpy = vi.fn().mockImplementation(async (input: string | URL | Request) => {
+			const s = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
+			if (s.includes("/penggajian/profil/list")) {
+				return { ok: true, json: async () => ({ data: [] }) } as Response;
+			}
+			if (s === "/api/proxy/penggajian/profil" && !s.includes("/list")) {
+				return {
+					ok: true,
+					json: async () => ({ data: { id: 99, nama: "Profil Baru" } }),
+				} as Response;
+			}
+			return { ok: true, json: async () => ({ data: { content: [] } }) } as Response;
+		});
+		globalThis.fetch = fetchSpy;
+
+		renderWithProviders();
+
+		await waitFor(() => {
+			expect(screen.getByRole("heading", { name: "Profil Gaji" })).toBeInTheDocument();
+		});
+
+		const user = userEvent.setup();
+		await user.click(screen.getByRole("button", { name: /\+ tambah/i }));
+
+		await user.type(screen.getByPlaceholderText("Nama profil gaji"), "Profil Baru");
+		await user.click(screen.getByRole("button", { name: /simpan/i }));
+
+		await waitFor(() => {
+			const postCall = fetchSpy.mock.calls.find((args) => {
+				const url = String(args[0]);
+				return url === "/api/proxy/penggajian/profil";
+			});
+			expect(postCall).toBeDefined();
+			const init = postCall?.[1] as RequestInit;
+			expect(init.method).toBe("POST");
+			expect(init.headers).toMatchObject({ "Content-Type": "application/json" });
+			expect(JSON.parse(String(init.body))).toEqual({ nama: "Profil Baru" });
+		});
 	});
 
 	it("does not send profilId as a redundant query param", async () => {

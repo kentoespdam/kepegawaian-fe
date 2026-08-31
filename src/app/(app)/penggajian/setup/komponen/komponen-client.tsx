@@ -9,6 +9,9 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { penggajianApi } from "@/lib/api/penggajian-client";
@@ -72,9 +75,9 @@ export function KomponenClient() {
 		KOMPONEN_BASE,
 	);
 
-	const { permissions } = useAuth();
-	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
-	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
+	const { roles, permissions } = useAuth();
+	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
+	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
 
 	const [selectedProfilId, setSelectedProfilId] = useState<number | null>(() => {
 		const urlProfilId = sp.get("profilId");
@@ -82,6 +85,9 @@ export function KomponenClient() {
 	});
 	const [deletingKomponen, setDeletingKomponen] = useState<Record<string, unknown> | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [namaProfil, setNamaProfil] = useState("");
+	const [createError, setCreateError] = useState<string | null>(null);
 
 	// ponytail: listAll → GET /penggajian/profil/list (unpaginated, sesuai issue kepegawaian-fe-wty1)
 	const profilList = useQuery<GajiProfilResponse[]>({
@@ -115,6 +121,18 @@ export function KomponenClient() {
 	const removeKomponen = useMutation({
 		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] }),
+	});
+
+	const createProfil = useMutation({
+		mutationFn: (data: { nama: string }) => penggajianApi.create<GajiProfilResponse>("profil", data),
+		onSuccess: (created) => {
+			qc.invalidateQueries({ queryKey: ["penggajian", "profil", "list"] });
+			if (created?.id) handleProfilSelect(created.id);
+			setDialogOpen(false);
+			setNamaProfil("");
+			toast.success("Profil gaji berhasil ditambah");
+		},
+		onError: (e: Error) => setCreateError(e.message ?? "Gagal menambah profil"),
 	});
 
 	const profilData = profilList.data ?? [];
@@ -156,6 +174,21 @@ export function KomponenClient() {
 			<div className="w-full lg:w-64 shrink-0 rounded-lg border bg-card shadow-sm p-4">
 				<div className="flex items-center justify-between mb-3 pb-3 border-b border-border">
 					<h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Profil Gaji</h2>
+					{canWrite && (
+						<Button
+							type="button"
+							variant="ghost"
+							size="sm"
+							className="h-7 px-2 text-xs"
+							onClick={() => {
+								setCreateError(null);
+								setNamaProfil("");
+								setDialogOpen(true);
+							}}
+						>
+							+ Tambah
+						</Button>
+					)}
 				</div>
 				<div className="space-y-1">
 					{profilList.isPending ? (
@@ -184,7 +217,6 @@ export function KomponenClient() {
 					)}
 				</div>
 			</div>
-
 			{/* Panel kanan: Daftar Komponen */}
 			<div className="flex-1 min-w-0">
 				{selectedProfilId ? (
@@ -241,8 +273,7 @@ export function KomponenClient() {
 						Pilih profil gaji di panel kiri
 					</div>
 				)}
-			</div>
-
+			</div>{" "}
 			<ConfirmDeleteDialog
 				open={!!deletingKomponen}
 				onOpenChange={(v) => {
@@ -255,6 +286,50 @@ export function KomponenClient() {
 				onConfirm={handleDelete}
 				error={deleteError}
 			/>
+			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+				<DialogContent>
+					<DialogHeader>
+						<DialogTitle>Tambah Profil Gaji</DialogTitle>
+					</DialogHeader>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							if (!namaProfil.trim()) return;
+							setCreateError(null);
+							createProfil.mutate({ nama: namaProfil.trim() });
+						}}
+						className="space-y-4"
+					>
+						<div className="space-y-1.5">
+							<Label htmlFor="namaProfil" className="text-sm font-medium">
+								Nama<span className="ml-0.5 text-destructive">*</span>
+							</Label>{" "}
+							<Textarea
+								id="namaProfil"
+								value={namaProfil}
+								onChange={(e) => setNamaProfil(e.target.value)}
+								placeholder="Nama profil gaji"
+								className="min-h-20"
+							/>
+						</div>
+						{createError && <p className="text-sm text-destructive">{createError}</p>}
+						<div className="flex items-center justify-end gap-2 pt-2">
+							<Button
+								type="button"
+								variant="outline"
+								size="lg"
+								onClick={() => setDialogOpen(false)}
+								disabled={createProfil.isPending}
+							>
+								Batal
+							</Button>
+							<Button type="submit" size="lg" disabled={createProfil.isPending || !namaProfil.trim()}>
+								{createProfil.isPending ? "Menyimpan…" : "Simpan"}
+							</Button>
+						</div>
+					</form>
+				</DialogContent>
+			</Dialog>
 		</div>
 	);
 }

@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { EntityFormModal } from "@/app/(app)/master/entity-form-modal";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
@@ -17,7 +17,7 @@ import { useMasterTable } from "@/hooks/useMasterTable";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiTunjanganResponse, PageGajiTunjanganResponse } from "@/types/penggajian/tunjangan";
+import type { GajiTunjanganResponse } from "@/types/penggajian/tunjangan";
 
 const ENTITY = "tunjangan";
 const BASE = "/penggajian/setup/tunjangan";
@@ -26,9 +26,9 @@ export function TunjanganClient() {
 	const cfg = tunjanganConfig;
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(ENTITY, BASE);
 
-	const { permissions } = useAuth();
-	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
-	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP);
+	const { roles, permissions } = useAuth();
+	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
+	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
 
 	const [editing, setEditing] = useState<GajiTunjanganResponse | null>(null);
 	const [deleting, setDeleting] = useState<Record<string, unknown> | null>(null);
