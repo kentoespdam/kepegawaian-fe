@@ -18,7 +18,7 @@ import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import type {
 	GajiParameterSettingResponse,
-	PageResultPageGajiParameterSettingResponse,
+	PageGajiParameterSettingResponse,
 } from "@/types/penggajian/parameter-setting";
 
 const ENTITY = "parameter-setting";
@@ -40,11 +40,11 @@ export function ParameterSettingClient() {
 	const isCreate = editing === null;
 
 	const { list, create, update, remove } = usePenggajianResource<
-		PageResultPageGajiParameterSettingResponse,
+		PageGajiParameterSettingResponse,
 		GajiParameterSettingResponse
 	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
 
-	const pageView = fromPage(list.data?.data);
+	const pageView = fromPage(list.data);
 
 	const { resolvedItems, formFields } = useMasterTable({
 		cfg,

@@ -16,7 +16,7 @@ import { useMasterTable } from "@/hooks/useMasterTable";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiTunjanganResponse, PageResultPageGajiTunjanganResponse } from "@/types/penggajian/tunjangan";
+import type { GajiTunjanganResponse, PageGajiTunjanganResponse } from "@/types/penggajian/tunjangan";
 
 const ENTITY = "tunjangan";
 const BASE = "/penggajian/setup/tunjangan";
@@ -37,11 +37,11 @@ export function TunjanganClient() {
 	const isCreate = editing === null;
 
 	const { list, create, update, remove } = usePenggajianResource<
-		PageResultPageGajiTunjanganResponse,
+		PageGajiTunjanganResponse,
 		GajiTunjanganResponse
 	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
 
-	const pageView = fromPage(list.data?.data);
+	const pageView = fromPage(list.data);
 
 	const { resolvedItems, formFields } = useMasterTable({
 		cfg,

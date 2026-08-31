@@ -16,7 +16,7 @@ import { useMasterTable } from "@/hooks/useMasterTable";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiPotonganTkkResponse, PageResultPageGajiPotonganTkkResponse } from "@/types/penggajian/potongan-tkk";
+import type { GajiPotonganTkkResponse, PageGajiPotonganTkkResponse } from "@/types/penggajian/potongan-tkk";
 
 const ENTITY = "potongan-tkk";
 const BASE = "/penggajian/setup/potongan-tkk";
@@ -37,11 +37,11 @@ export function PotonganTkkClient() {
 	const isCreate = editing === null;
 
 	const { list, create, update, remove } = usePenggajianResource<
-		PageResultPageGajiPotonganTkkResponse,
+		PageGajiPotonganTkkResponse,
 		GajiPotonganTkkResponse
 	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
 
-	const pageView = fromPage(list.data?.data);
+	const pageView = fromPage(list.data);
 
 	const { resolvedItems, formFields } = useMasterTable({
 		cfg,
