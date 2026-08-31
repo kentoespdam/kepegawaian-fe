@@ -56,6 +56,8 @@ Step 1 (Komponen) → Step 2a → Step 2b → Step 2c → Step 3.
 ## Definition of Done
 
 - [ ] 5 halaman setup reachable via sidebar (visible jika role punya `penggajian.setup`)
+- [ ] **Komponen: panel kiri fetch `GET /penggajian/profil/list` (unpaginated)**, bukan `/profil`
+      (paginated). Cache per-entity. Lihat issue `kepegawaian-fe-wty1`.
 - [ ] Komponen: panel kiri-kanan berfungsi, `?profilId=` di URL sync
 - [ ] Tunjangan: filter by `jenis` berfungsi
 - [ ] CRUD full (create/read/update/delete) untuk semua entitas
@@ -63,6 +65,12 @@ Step 1 (Komponen) → Step 2a → Step 2b → Step 2c → Step 3.
 - [ ] Tests: hook untuk semua entitas
 - [ ] Build & test green
 - [ ] Commit per entitas: `feat(penggajian/setup): {entity} page + config`
+
+> **Issue terkait**: `kepegawaian-fe-wty1` — fix endpoint profilList untuk panel kiri setup/komponen.
+> Hook `useProfilList` harus pakai `penggajianApi.listAll('profil')` (→ `GET /penggajian/profil/list`),
+> bukan `penggajianApi.list('profil', {page,size})` (→ `GET /penggajian/profil`).
+> Generic helper `usePenggajianResource(entity)` (sudah dibuat di M1) **bisa digunakan** dengan
+> pilih field `.listAll` (sudah built-in — lihat `src/hooks/penggajian/usePenggajianResource.ts`).
 
 ## Risiko & Mitigasi
 
