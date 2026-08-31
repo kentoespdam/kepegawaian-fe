@@ -12,44 +12,42 @@ export function SectionRightPanel({ pegawaiId, nik }: { pegawaiId: number; nik: 
 		useDashboardSections({ pegawaiId, nik });
 
 	return (
-		<div className="rounded-2xl border border-border/60 bg-muted/20 p-1.5 shadow-xs">
-			<div className="rounded-[calc(1rem-0.25rem)] border border-border/40 bg-card p-1 shadow-2xs overflow-hidden">
-				<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
-					{SECTIONS.map((conf) => {
-						const q = queries[conf.id];
-						const hasPending = (q.data?.rows ?? []).some((r) => Boolean(r.changedStatus));
-						return (
-							<AccordionItem key={conf.id} value={conf.id}>
-								<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>
-									<span className="inline-flex items-center gap-2">
-										{conf.label}
-										{conf.crudConfig && hasPending && (
-											<Badge variant="outline" className="gap-1 text-warning border-warning/30 bg-warning/5">
-												<Clock className="size-3" />
-												Menunggu
-											</Badge>
-										)}
-									</span>
-								</AccordionTrigger>
-								<AccordionContent>
-									{openValues.includes(conf.id) && (
-										<SectionCrudSlot
-											conf={conf}
-											q={q}
-											crud={crudMap[conf.id]}
-											fkOptions={fkOptions}
-											nik={nik}
-											size={sizeMap[conf.id] ?? 5}
-											onPageChange={(np) => onPageChange(conf.id, np)}
-											onSizeChange={(ns) => onSizeChange(conf.id, ns)}
-										/>
+		<div className="rounded-[0.75rem] border bg-card p-1 shadow-2xl overflow-hidden">
+			<Accordion className="px-5 py-1" value={openValues} onValueChange={setOpenValues} multiple>
+				{SECTIONS.map((conf) => {
+					const q = queries[conf.id];
+					const hasPending = (q.data?.rows ?? []).some((r) => Boolean(r.changedStatus));
+					return (
+						<AccordionItem key={conf.id} value={conf.id}>
+							<AccordionTrigger className={ACCORDION_TRIGGER_AFF}>
+								<span className="inline-flex items-center gap-2">
+									{conf.label}
+									{conf.crudConfig && hasPending && (
+										<Badge variant="outline" className="gap-1 text-warning border-warning/30 bg-warning/5">
+											<Clock className="size-3" />
+											Menunggu
+										</Badge>
 									)}
-								</AccordionContent>
-							</AccordionItem>
-						);
-					})}
-				</Accordion>
-			</div>
+								</span>
+							</AccordionTrigger>
+							<AccordionContent>
+								{openValues.includes(conf.id) && (
+									<SectionCrudSlot
+										conf={conf}
+										q={q}
+										crud={crudMap[conf.id]}
+										fkOptions={fkOptions}
+										nik={nik}
+										size={sizeMap[conf.id] ?? 5}
+										onPageChange={(np) => onPageChange(conf.id, np)}
+										onSizeChange={(ns) => onSizeChange(conf.id, ns)}
+									/>
+								)}
+							</AccordionContent>
+						</AccordionItem>
+					);
+				})}
+			</Accordion>
 		</div>
 	);
 }

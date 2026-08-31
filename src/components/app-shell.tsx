@@ -199,14 +199,16 @@ export function AppShell({
 					</SidebarFooter>{" "}
 				</Sidebar>{" "}
 				<SidebarInset className="min-w-0" id="main-content" tabIndex={-1}>
-					<header className="sticky top-0 z-40 relative flex h-16 items-center justify-between border-b border-border/80 bg-card/85 backdrop-blur-md px-4 shadow-xs shrink-0">
+					<header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/80 bg-card/85 backdrop-blur-md px-4 shadow-xs shrink-0">
 						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
 						<div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
 							{activeEntity && activeModule ? (
 								<nav aria-label="breadcrumb" className="flex items-center gap-2 text-sm">
-									<span className="text-[10px] uppercase font-semibold tracking-[0.18em] text-muted-foreground">{activeModule.label}</span>
+									<span className="text-[10px] uppercase font-semibold tracking-[0.18em] text-muted-foreground">
+										{activeModule.label}
+									</span>
 									<span className="text-xs text-muted-foreground/60">&rsaquo;</span>
 									<span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] uppercase font-semibold tracking-[0.18em] text-primary border border-primary/20 shadow-2xs">
 										{activeEntity.label}

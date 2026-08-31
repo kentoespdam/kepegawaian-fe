@@ -72,8 +72,8 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 	const fotoProfil = pegawai.biodata?.fotoProfil;
 
 	return (
-		<div className="rounded-2xl border border-border/60 bg-muted/20 p-1.5 shadow-xs">
-			<div className="rounded-[calc(1rem-0.25rem)] border border-border/40 bg-card shadow-2xs overflow-hidden">
+		<>
+			<div className="rounded-[0.75rem] border bg-card shadow-2xl overflow-hidden">
 				{/* Header identitas — always visible */}
 				<div className="flex items-center gap-4 px-5 py-4 border-b border-border/60 bg-muted/10">
 					<div className="relative flex size-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-primary/10 text-primary ring-2 ring-primary/20">
@@ -238,7 +238,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 					</div>
 				</DialogContent>
 			</Dialog>
-		</div>
+		</>
 	);
 }
 
