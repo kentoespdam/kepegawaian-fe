@@ -15,8 +15,8 @@ import { penggajianApi } from "@/lib/api/penggajian-client";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiProfilResponse } from "@/types/_shared";
-import type { GajiKomponenResponse, PageResultPageGajiKomponenResponse } from "@/types/penggajian/komponen";
+import type { GajiProfilResponse, Page } from "@/types/_shared";
+import type { GajiKomponenResponse } from "@/types/penggajian/komponen";
 
 const ENTITY = "komponen";
 
@@ -90,18 +90,22 @@ export function KomponenClient() {
 		staleTime: 5 * 60_000,
 	});
 
+	// profilId adalah path-param, bukan filter — hapus dari filters agar tidak ikut
+	// terkirim sebagai query string atau muncul sebagai chip filter di toolbar.
+	const { profilId: _profilId, ...tableFilters } = filters;
+
 	// Fetch komponen for selected profil — direct useQuery (parent-child endpoint, not standard CRUD)
 	const komponenQueryKey = [
 		"penggajian",
 		`${ENTITY}/${selectedProfilId}/profil`,
-		selectedProfilId ? toApiParams({ page, size, sortBy, sortDir, filters }) : undefined,
+		selectedProfilId ? toApiParams({ page, size, sortBy, sortDir, filters: tableFilters }) : undefined,
 	];
-	const komponenList = useQuery<PageResultPageGajiKomponenResponse>({
+	const komponenList = useQuery<Page<GajiKomponenResponse>>({
 		queryKey: komponenQueryKey,
 		queryFn: () =>
-			penggajianApi.list<PageResultPageGajiKomponenResponse>(
+			penggajianApi.list<Page<GajiKomponenResponse>>(
 				`${ENTITY}/${selectedProfilId}/profil`,
-				toApiParams({ page, size, sortBy, sortDir, filters }),
+				toApiParams({ page, size, sortBy, sortDir, filters: tableFilters }),
 			),
 		enabled: !!selectedProfilId,
 		placeholderData: keepPreviousData,
@@ -114,7 +118,7 @@ export function KomponenClient() {
 	});
 
 	const profilData = profilList.data ?? [];
-	const komponenPageView = fromPage(komponenList.data?.data);
+	const komponenPageView = fromPage(komponenList.data);
 
 	const handleProfilSelect = (profilId: number) => {
 		setSelectedProfilId(profilId);
@@ -187,9 +191,9 @@ export function KomponenClient() {
 					<>
 						<DataTableToolbar
 							searchFields={[]}
-							values={filters}
+							values={tableFilters}
 							onFilterChange={handleFilterChange}
-							hasActive={Object.keys(filters).length > 0 || !!sortBy}
+							hasActive={Object.keys(tableFilters).length > 0 || !!sortBy}
 							onReset={resetAll}
 						>
 							{canWrite && (
