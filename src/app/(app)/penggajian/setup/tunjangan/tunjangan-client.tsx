@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { EntityFormModal } from "@/app/(app)/master/entity-form-modal";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
@@ -101,6 +102,18 @@ export function TunjanganClient() {
 		}
 	};
 
+	// Fetch level options for FK filter
+	const levelQuery = useQuery<Record<string, unknown>[]>({
+		queryKey: ["level", "list"],
+		queryFn: async () => {
+			const res = await fetch("/api/proxy/master/level/list");
+			if (!res.ok) throw new Error("Gagal memuat data level");
+			const body = await res.json();
+			return body.data as Record<string, unknown>[];
+		},
+		staleTime: 300_000,
+	});
+
 	const fkOptions = {
 		jenisTunjangan: [
 			{ value: "JABATAN", label: "Jabatan" },
@@ -108,6 +121,10 @@ export function TunjanganClient() {
 			{ value: "BERAS", label: "Beras" },
 			{ value: "AIR", label: "Air" },
 		],
+		levelId: (levelQuery.data ?? []).map((lvl) => ({
+			value: String(lvl.id ?? ""),
+			label: String(lvl.nama ?? ""),
+		})),
 	};
 
 	return (
