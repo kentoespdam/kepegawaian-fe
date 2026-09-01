@@ -8,7 +8,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
-import { throwIfNotOk } from "@/lib/utils";
+import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
 
 interface PegawaiRow {
@@ -24,10 +24,6 @@ interface PegawaiRow {
 }
 
 const ORG_HEADER_CLASS = "bg-primary/10 text-primary font-semibold text-xs uppercase tracking-wide px-3 py-2";
-
-function fmtRupiah(v: number | undefined): string {
-	return `Rp ${Number(v ?? 0).toLocaleString("id-ID")}`;
-}
 
 export function PersetujuanClient() {
 	const params = useParams<{ id: string }>();

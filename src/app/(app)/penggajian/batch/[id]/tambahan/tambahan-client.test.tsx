@@ -12,18 +12,7 @@ vi.mock("next/navigation", () => ({
 	useSearchParams: () => new URLSearchParams(),
 }));
 
-vi.mock("@/hooks/penggajian/useCreateBatchMasterProses", () => ({
-	useCreateBatchMasterProses: () => ({
-		mutateAsync: vi.fn().mockResolvedValue(undefined),
-		isPending: false,
-	}),
-}));
 
-vi.mock("@/hooks/penggajian/useDeleteBatchMasterProses", () => ({
-	useDeleteBatchMasterProses: () => ({
-		mutateAsync: vi.fn().mockResolvedValue(undefined),
-	}),
-}));
 
 const MOCK_MASTER = [
 	{

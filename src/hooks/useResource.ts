@@ -1,13 +1,23 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { api } from "@/lib/api/client";
+import { api, type createApiClient } from "@/lib/api/client";
 
-export function useResource<TQuery, TReq = TQuery>(entity: string, params?: Record<string, string>) {
+/**
+ * Generic CRUD resource hook.
+ * @param apiClient — API client instance (default: master `api`). Pass `penggajianApi` for penggajian domain.
+ * @param keyPrefix — prepended to query keys (default: []). Use `["penggajian"]` for penggajian domain.
+ */
+export function useResource<TQuery, TReq = TQuery>(
+	entity: string,
+	params?: Record<string, string>,
+	apiClient: ReturnType<typeof createApiClient> = api,
+	keyPrefix: string[] = [],
+) {
 	const qc = useQueryClient();
-	const base = [entity];
+	const base = [...keyPrefix, entity];
 
 	const list = useQuery<TQuery>({
 		queryKey: [...base, params],
-		queryFn: () => api.list<TQuery>(entity, params),
+		queryFn: () => apiClient.list<TQuery>(entity, params),
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 		gcTime: 300_000,
@@ -16,23 +26,23 @@ export function useResource<TQuery, TReq = TQuery>(entity: string, params?: Reco
 
 	const listAll = useQuery<TQuery>({
 		queryKey: [...base, "list"],
-		queryFn: () => api.listAll<TQuery>(entity),
+		queryFn: () => apiClient.listAll<TQuery>(entity),
 		staleTime: 300_000,
 		gcTime: 300_000,
 	});
 
 	const create = useMutation({
-		mutationFn: (data: TReq) => api.create<TQuery>(entity, data),
+		mutationFn: (data: TReq) => apiClient.create<TQuery>(entity, data),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 
 	const update = useMutation({
-		mutationFn: ({ id, data }: { id: string; data: TReq }) => api.update<TQuery>(entity, id, data),
+		mutationFn: ({ id, data }: { id: string; data: TReq }) => apiClient.update<TQuery>(entity, id, data),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 
 	const remove = useMutation({
-		mutationFn: (id: string) => api.remove(entity, id),
+		mutationFn: (id: string) => apiClient.remove(entity, id),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 

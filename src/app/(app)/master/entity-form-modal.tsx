@@ -22,6 +22,50 @@ interface EntityFormModalProps {
 	onSubmit: (data: Record<string, unknown>) => Promise<void>;
 }
 
+/**
+ * Container-aware render helper — Sheet or Dialog based on cfg.container.
+ * Entity-specific forms (sanksi, profesi) keep their custom form components.
+ */
+function FormContainer({
+	cfg,
+	isCreate,
+	container,
+	children,
+	onClose,
+}: {
+	cfg: EntityConfig;
+	isCreate: boolean;
+	container: "dialog" | "sheet";
+	children: React.ReactNode;
+	onClose: () => void;
+}) {
+	const title = isCreate ? `Tambah ${cfg.label}` : `Edit ${cfg.label}`;
+
+	if (container === "sheet") {
+		return (
+			<Sheet open onOpenChange={(v) => !v && onClose()}>
+				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
+					<SheetHeader className="shrink-0">
+						<SheetTitle>{title}</SheetTitle>
+					</SheetHeader>
+					{children}
+				</SheetContent>
+			</Sheet>
+		);
+	}
+
+	return (
+		<Dialog open onOpenChange={(v) => !v && onClose()}>
+			<DialogContent>
+				<DialogHeader>
+					<DialogTitle>{title}</DialogTitle>
+				</DialogHeader>
+				{children}
+			</DialogContent>
+		</Dialog>
+	);
+}
+
 export function EntityFormModal({
 	entity,
 	cfg,
@@ -35,10 +79,6 @@ export function EntityFormModal({
 	isSubmitting,
 	onSubmit,
 }: EntityFormModalProps) {
-	const handleClose = (v: boolean) => {
-		if (!v) setDialogOpen(false);
-	};
-
 	const formDefaults = (() => {
 		if (!editing) return undefined;
 		const combos = new Set<string>();
@@ -54,62 +94,52 @@ export function EntityFormModal({
 		return defs;
 	})();
 
+	if (!dialogOpen) return null;
+
+	const container = cfg.container ?? "dialog";
+
+	// Entity-specific forms keep their custom form components
 	if (entity === "sanksi") {
 		return (
-			<Sheet open={dialogOpen} onOpenChange={handleClose}>
-				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
-					<SheetHeader className="shrink-0">
-						<SheetTitle>{isCreate ? "Tambah Sanksi" : "Edit Sanksi"}</SheetTitle>
-					</SheetHeader>
-					<SanksiForm
-						editing={editing}
-						onCancel={() => setDialogOpen(false)}
-						error={error}
-						setError={setError}
-						isSubmitting={isSubmitting}
-						submit={onSubmit}
-					/>
-				</SheetContent>
-			</Sheet>
+			<FormContainer cfg={cfg} isCreate={isCreate} container={container} onClose={() => setDialogOpen(false)}>
+				<SanksiForm
+					editing={editing}
+					onCancel={() => setDialogOpen(false)}
+					error={error}
+					setError={setError}
+					isSubmitting={isSubmitting}
+					submit={onSubmit}
+				/>
+			</FormContainer>
 		);
 	}
 
 	if (entity === "profesi") {
 		return (
-			<Sheet open={dialogOpen} onOpenChange={handleClose}>
-				<SheetContent className="sm:max-w-120 flex flex-col gap-0 p-0">
-					<SheetHeader className="shrink-0">
-						<SheetTitle>{isCreate ? "Tambah Profesi" : "Edit Profesi"}</SheetTitle>
-					</SheetHeader>
-					<ProfesiForm
-						editing={editing}
-						onCancel={() => setDialogOpen(false)}
-						error={error}
-						setError={setError}
-						isSubmitting={isSubmitting}
-						submit={onSubmit}
-					/>
-				</SheetContent>
-			</Sheet>
+			<FormContainer cfg={cfg} isCreate={isCreate} container={container} onClose={() => setDialogOpen(false)}>
+				<ProfesiForm
+					editing={editing}
+					onCancel={() => setDialogOpen(false)}
+					error={error}
+					setError={setError}
+					isSubmitting={isSubmitting}
+					submit={onSubmit}
+				/>
+			</FormContainer>
 		);
 	}
 
 	return (
-		<Dialog open={dialogOpen} onOpenChange={handleClose}>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>{isCreate ? `Tambah ${cfg.label}` : `Edit ${cfg.label}`}</DialogTitle>
-				</DialogHeader>
-				<CrudForm
-					schema={cfg.schema as never /* ponytail: Zod4 unknown vs hookform FieldValues — cast aman */}
-					fields={formFields}
-					defaultValues={formDefaults}
-					onSubmit={onSubmit}
-					onCancel={() => setDialogOpen(false)}
-					isSubmitting={isSubmitting}
-					error={error}
-				/>
-			</DialogContent>
-		</Dialog>
+		<FormContainer cfg={cfg} isCreate={isCreate} container={container} onClose={() => setDialogOpen(false)}>
+			<CrudForm
+				schema={cfg.schema as never /* ponytail: Zod4 unknown vs hookform FieldValues — cast aman */}
+				fields={formFields}
+				defaultValues={formDefaults}
+				onSubmit={onSubmit}
+				onCancel={() => setDialogOpen(false)}
+				isSubmitting={isSubmitting}
+				error={error}
+			/>
+		</FormContainer>
 	);
 }

@@ -9,10 +9,11 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { parameterSettingConfig } from "@/config/penggajian/parameter-setting.config";
-import { usePenggajianResource } from "@/hooks/penggajian/usePenggajianResource";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
+import { useResource } from "@/hooks/useResource";
+import { penggajianApi } from "@/lib/api/penggajian-client";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
@@ -39,10 +40,12 @@ export function ParameterSettingClient() {
 	const [error, setError] = useState<string | null>(null);
 	const isCreate = editing === null;
 
-	const { list, create, update, remove } = usePenggajianResource<
-		PageGajiParameterSettingResponse,
-		GajiParameterSettingResponse
-	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }));
+	const { list, create, update, remove } = useResource<PageGajiParameterSettingResponse, GajiParameterSettingResponse>(
+		ENTITY,
+		toApiParams({ page, size, sortBy, sortDir, filters }),
+		penggajianApi,
+		["penggajian"],
+	);
 
 	const pageView = fromPage(list.data);
 

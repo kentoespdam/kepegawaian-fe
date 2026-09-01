@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus, Trash2 } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -8,9 +8,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchMasterProses } from "@/hooks/penggajian/useBatchMasterProses";
-import { useCreateBatchMasterProses } from "@/hooks/penggajian/useCreateBatchMasterProses";
-import { useDeleteBatchMasterProses } from "@/hooks/penggajian/useDeleteBatchMasterProses";
-import { throwIfNotOk } from "@/lib/utils";
+import { penggajianApi } from "@/lib/api/penggajian-client";
+import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
 import { TambahanDialog } from "./_components/tambah-komponen-dialog";
 
@@ -22,8 +21,16 @@ export function TambahanClient() {
 	const sp = useSearchParams();
 	const selectedPegawaiId = sp.get("pegawaiId");
 
-	const createProses = useCreateBatchMasterProses();
-	const deleteProses = useDeleteBatchMasterProses();
+	const qc = useQueryClient();
+	const createProses = useMutation({
+		mutationFn: (data: { batchMasterId: number; nama: string; jenisGaji: string; nilai: number }) =>
+			penggajianApi.create("batch/master/proses", data),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian"] }),
+	});
+	const deleteProses = useMutation({
+		mutationFn: (id: number) => penggajianApi.remove(`batch/master/proses`, String(id)),
+		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian"] }),
+	});
 
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
@@ -265,8 +272,4 @@ function PegawaiTambahanPanel({
 			</div>{" "}
 		</div>
 	);
-}
-
-function fmtRupiah(v: number | undefined): string {
-	return `Rp ${Number(v ?? 0).toLocaleString("id-ID")}`;
 }

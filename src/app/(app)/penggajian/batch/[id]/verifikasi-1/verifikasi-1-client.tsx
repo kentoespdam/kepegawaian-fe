@@ -7,8 +7,8 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchContext } from "@/hooks/BatchContext";
-import { useVerify1 } from "@/hooks/penggajian/useVerify1";
-import { throwIfNotOk } from "@/lib/utils";
+import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
+import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
 
 interface PegawaiRow {
@@ -29,7 +29,7 @@ export function Verifikasi1Client() {
 	const selectedPegawaiId = sp.get("pegawaiId");
 
 	const { data: batch } = useBatchContext();
-	const verify1 = useVerify1(params.id);
+	const verify1 = useBatchAction(params.id, `${params.id}/verify1`);
 
 	const { data: pegawaiList, isPending } = useQuery<GajiBatchMasterResponse[]>({
 		queryKey: ["penggajian", "batch", params.id, "master"],
@@ -218,8 +218,4 @@ function PegawaiDetailPanel({ pegawaiId }: { pegawaiId: string }) {
 			</div>
 		</div>
 	);
-}
-
-function fmtRupiah(v: number | undefined): string {
-	return `Rp ${Number(v ?? 0).toLocaleString("id-ID")}`;
 }

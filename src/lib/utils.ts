@@ -31,6 +31,14 @@ export function rupiah(value: number | null | undefined, cents?: boolean): strin
 }
 
 /**
+ * Format Rupiah — default 0 untuk undefined (cocok untuk payroll di mana
+ * nilai kosong = Rp 0, bukan "-").
+ */
+export function fmtRupiah(v: number | undefined): string {
+	return rupiah(v ?? 0);
+}
+
+/**
  * Format tanggal ISO (yyyy-mm-dd) ke format Indonesia (DD Bulan YYYY).
  *
  * Menangani format `date` (yyyy-mm-dd) maupun `date-time` (yyyy-mm-ddTHH:mm:ss).

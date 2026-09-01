@@ -5,9 +5,6 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useBatchInfo } from "../useBatchInfo";
 import { useBatchAction } from "./useBatchAction";
-import { useCreateBatchMasterProses } from "./useCreateBatchMasterProses";
-import { useDeleteBatchMasterProses } from "./useDeleteBatchMasterProses";
-import { useVerify1 } from "./useVerify1";
 
 function wrapper({ children }: { children: ReactNode }) {
 	return <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>;
@@ -46,28 +43,6 @@ describe("useBatchInfo", () => {
 		global.fetch = mockFetch();
 		renderHook(() => useBatchInfo(null), { wrapper });
 		expect(global.fetch).not.toHaveBeenCalled();
-	});
-});
-
-describe("useVerify1", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends PATCH to /penggajian/batch/{id}/verify1", async () => {
-		global.fetch = mockFetch();
-		const { result } = renderHook(() => useVerify1("batch-1"), { wrapper });
-
-		await result.current.mutateAsync();
-
-		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/verify1", {
-			method: "PATCH",
-		});
-	});
-
-	it("throws on error response", async () => {
-		global.fetch = mockFetchError(400, "Bad request");
-		const { result } = renderHook(() => useVerify1("batch-1"), { wrapper });
-
-		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
 	});
 });
 
@@ -123,48 +98,5 @@ describe("useBatchAction", () => {
 		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
 
 		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
-	});
-});
-
-describe("useCreateBatchMasterProses", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends POST with JSON body to /penggajian/batch/master/proses", async () => {
-		global.fetch = mockFetch();
-		const { result } = renderHook(() => useCreateBatchMasterProses(), { wrapper });
-
-		await result.current.mutateAsync({
-			batchMasterId: 42,
-			nama: "Tunjangan Lembur",
-			jenisGaji: "PEMASUKAN",
-			nilai: 500000,
-		});
-
-		const fetchMock = global.fetch as ReturnType<typeof vi.fn>;
-		const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-		expect(url).toBe("/api/proxy/penggajian/batch/master/proses");
-		expect(init.method).toBe("POST");
-		expect(init.headers).toMatchObject({ "Content-Type": "application/json" });
-		expect(JSON.parse(String(init.body))).toEqual({
-			batchMasterId: 42,
-			nama: "Tunjangan Lembur",
-			jenisGaji: "PEMASUKAN",
-			nilai: 500000,
-		});
-	});
-});
-
-describe("useDeleteBatchMasterProses", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends DELETE to /penggajian/batch/master/proses/{id}", async () => {
-		global.fetch = mockFetch();
-		const { result } = renderHook(() => useDeleteBatchMasterProses(), { wrapper });
-
-		await result.current.mutateAsync(99);
-
-		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master/proses/99", {
-			method: "DELETE",
-		});
 	});
 });
