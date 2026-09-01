@@ -1,6 +1,6 @@
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { penggajianApi } from "@/lib/api/penggajian-client";
-import type { PageGajiBatchRootResponse } from "@/types/penggajian/batch";
+import type { GajiBatchRootResponse } from "@/types/penggajian/batch";
 
 export const batchKeys = {
 	all: ["penggajian", "batch"] as const,
@@ -8,9 +8,9 @@ export const batchKeys = {
 };
 
 export function useBatchList(params?: Record<string, string>) {
-	return useQuery<PageGajiBatchRootResponse>({
+	return useQuery<GajiBatchRootResponse[]>({
 		queryKey: batchKeys.list(params ?? {}),
-		queryFn: () => penggajianApi.list<PageGajiBatchRootResponse>("batch", params),
+		queryFn: () => penggajianApi.list<GajiBatchRootResponse[]>("batch", params),
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 		gcTime: 300_000,

@@ -27,7 +27,7 @@ export function BatchListClient({ userName, jabatanNama }: BatchListClientProps)
 	const [createOpen, setCreateOpen] = useState(false);
 
 	const list = useBatchList(toApiParams({ page, size, sortBy, sortDir, filters }));
-	const rows = list.data?.content ?? [];
+	const rows = list.data ?? [];
 
 	const handleFilterChange = (name: string, value: string | undefined) => {
 		setFilter(name, value);
