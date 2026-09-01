@@ -12,8 +12,6 @@ vi.mock("next/navigation", () => ({
 	useSearchParams: () => new URLSearchParams(),
 }));
 
-
-
 const MOCK_MASTER = [
 	{
 		id: 1,

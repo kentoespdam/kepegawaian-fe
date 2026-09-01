@@ -9,6 +9,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { pendapatanNonPajakConfig } from "@/config/penggajian/pendapatan-non-pajak.config";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
@@ -43,7 +44,7 @@ export function PendapatanNonPajakClient() {
 	const { list, create, update, remove } = useResource<
 		PageGajiPendapatanNonPajakResponse,
 		GajiPendapatanNonPajakResponse
-	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }), penggajianApi, ["penggajian"]);
+	>(ENTITY, toApiParams({ page, size, sortBy, sortDir, filters }), penggajianApi, [...penggajianKeys.all]);
 
 	const pageView = fromPage(list.data);
 

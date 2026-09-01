@@ -9,6 +9,7 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { potonganTkkConfig } from "@/config/penggajian/potongan-tkk.config";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { useMasterTable } from "@/hooks/useMasterTable";
@@ -41,7 +42,7 @@ export function PotonganTkkClient() {
 		ENTITY,
 		toApiParams({ page, size, sortBy, sortDir, filters }),
 		penggajianApi,
-		["penggajian"],
+		[...penggajianKeys.all],
 	);
 
 	const pageView = fromPage(list.data);

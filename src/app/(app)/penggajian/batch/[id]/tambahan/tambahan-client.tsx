@@ -7,6 +7,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchMasterProses } from "@/hooks/penggajian/useBatchMasterProses";
 import { penggajianApi } from "@/lib/api/penggajian-client";
 import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
@@ -25,11 +26,11 @@ export function TambahanClient() {
 	const createProses = useMutation({
 		mutationFn: (data: { batchMasterId: number; nama: string; jenisGaji: string; nilai: number }) =>
 			penggajianApi.create("batch/master/proses", data),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian"] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.all }),
 	});
 	const deleteProses = useMutation({
 		mutationFn: (id: number) => penggajianApi.remove(`batch/master/proses`, String(id)),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian"] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.all }),
 	});
 
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -40,7 +41,7 @@ export function TambahanClient() {
 		isPending,
 		refetch: refetchList,
 	} = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: ["penggajian", "batch", params.id, "master"],
+		queryKey: penggajianKeys.batch.master(params.id),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master?gajiBatchRootId=${params.id}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
@@ -173,7 +174,7 @@ function PegawaiTambahanPanel({
 	onDelete: (id: number) => void;
 }) {
 	const { data: komponen, isPending } = useQuery({
-		queryKey: ["penggajian", "batch", "pegawai", pegawaiId, "proses"],
+		queryKey: penggajianKeys.batch.pegawaiProses(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master/pegawai/${pegawaiId}`);
 			throwIfNotOk(res, "Gagal memuat data");

@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchContext } from "@/hooks/BatchContext";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
 
@@ -28,7 +29,7 @@ export function SettingClient() {
 
 	// Fetch list pegawai dalam batch
 	const { data: pegawaiList, isPending } = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: ["penggajian", "batch", params.id, "master"],
+		queryKey: penggajianKeys.batch.master(params.id),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master?gajiBatchRootId=${params.id}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
@@ -121,7 +122,7 @@ export function SettingClient() {
 
 function PegawaiKomponenPanel({ batchId, pegawaiId }: { batchId: string; pegawaiId: string }) {
 	const { data: komponen, isPending } = useQuery({
-		queryKey: ["penggajian", "batch", batchId, "pegawai", pegawaiId],
+		queryKey: penggajianKeys.batch.pegawai(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master/pegawai/${pegawaiId}`);
 			throwIfNotOk(res, "Gagal memuat komponen gaji");

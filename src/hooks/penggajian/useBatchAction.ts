@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { batchKeys } from "./useBatchList";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 
 /**
  * Generic factory for batch PATCH mutations.
@@ -18,6 +18,6 @@ export function useBatchAction(batchId: string, urlSuffix: string) {
 				throw new Error(body.message ?? `HTTP ${res.status}`);
 			}
 		},
-		onSuccess: () => qc.invalidateQueries({ queryKey: batchKeys.all }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() }),
 	});
 }

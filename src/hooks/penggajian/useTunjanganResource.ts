@@ -1,4 +1,5 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { penggajianApi } from "@/lib/api/penggajian-client";
 import type { GajiTunjanganResponse, PageGajiTunjanganResponse } from "@/types/penggajian/tunjangan";
 
@@ -15,11 +16,11 @@ import type { GajiTunjanganResponse, PageGajiTunjanganResponse } from "@/types/p
  */
 export function useTunjanganResource(jenis?: string, params?: Record<string, string>) {
 	const qc = useQueryClient();
-	const base = ["penggajian", "tunjangan"];
+	const base = penggajianKeys.tunjangan.all();
 	const entity = jenis ? `tunjangan/${jenis}` : undefined;
 
 	const list = useQuery<PageGajiTunjanganResponse>({
-		queryKey: [...base, jenis, params],
+		queryKey: penggajianKeys.tunjangan.list(jenis!, params),
 		queryFn: () => penggajianApi.list<PageGajiTunjanganResponse>(entity!, params),
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
@@ -28,7 +29,7 @@ export function useTunjanganResource(jenis?: string, params?: Record<string, str
 	});
 
 	const listAll = useQuery({
-		queryKey: [...base, "list"],
+		queryKey: penggajianKeys.tunjangan.listAll(jenis!),
 		queryFn: () => penggajianApi.listAll<Record<string, unknown>[]>(entity!),
 		staleTime: 300_000,
 		gcTime: 300_000,
@@ -36,8 +37,7 @@ export function useTunjanganResource(jenis?: string, params?: Record<string, str
 	});
 
 	const create = useMutation({
-		mutationFn: (data: GajiTunjanganResponse) =>
-			penggajianApi.create<PageGajiTunjanganResponse>(entity!, data),
+		mutationFn: (data: GajiTunjanganResponse) => penggajianApi.create<PageGajiTunjanganResponse>(entity!, data),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 

@@ -15,6 +15,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useKomponenForm } from "@/hooks/penggajian/useKomponenForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
@@ -99,7 +100,7 @@ export function KomponenClient() {
 
 	// ponytail: listAll → GET /penggajian/profil/list (unpaginated, sesuai issue kepegawaian-fe-wty1)
 	const profilList = useQuery<GajiProfilResponse[]>({
-		queryKey: ["penggajian", "profil", "list"],
+		queryKey: penggajianKeys.profil.list(),
 		queryFn: () => penggajianApi.listAll<GajiProfilResponse[]>("profil"),
 		staleTime: 5 * 60_000,
 	});
@@ -110,10 +111,10 @@ export function KomponenClient() {
 
 	// Fetch komponen for selected profil — direct useQuery (parent-child endpoint, not standard CRUD)
 	const komponenQueryKey = [
-		"penggajian",
+		...penggajianKeys.all,
 		`${ENTITY}/${selectedProfilId}/profil`,
 		selectedProfilId ? toApiParams({ page, size, sortBy, sortDir, filters: tableFilters }) : undefined,
-	];
+	] as const;
 	const komponenList = useQuery<Page<GajiKomponenResponse>>({
 		queryKey: komponenQueryKey,
 		queryFn: () =>
@@ -128,15 +129,15 @@ export function KomponenClient() {
 	});
 	const removeKomponen = useMutation({
 		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
-		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] }),
+		onSuccess: () => qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] }),
 	});
 
 	const createKomponen = useMutation({
 		mutationFn: (data: Record<string, unknown>) => penggajianApi.create<GajiKomponenResponse>(ENTITY, data),
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] });
+			qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] });
 			setKomponenDialogOpen(false);
-			qc.invalidateQueries({ queryKey: ["penggajian", "komponen", selectedProfilId, "kode"] });
+			qc.invalidateQueries({ queryKey: penggajianKeys.komponen.kode(selectedProfilId) });
 			setEditing(null);
 			toast.success("Komponen berhasil ditambah");
 		},
@@ -147,8 +148,8 @@ export function KomponenClient() {
 		mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
 			penggajianApi.update<GajiKomponenResponse>(ENTITY, id, data),
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] });
-			qc.invalidateQueries({ queryKey: ["penggajian", "komponen", selectedProfilId, "kode"] });
+			qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] });
+			qc.invalidateQueries({ queryKey: penggajianKeys.komponen.kode(selectedProfilId) });
 			setKomponenDialogOpen(false);
 			setEditing(null);
 			toast.success("Komponen berhasil diperbarui");
@@ -164,7 +165,7 @@ export function KomponenClient() {
 	const createProfil = useMutation({
 		mutationFn: (data: { nama: string }) => penggajianApi.create<GajiProfilResponse>("profil", data),
 		onSuccess: (created) => {
-			qc.invalidateQueries({ queryKey: ["penggajian", "profil", "list"] });
+			qc.invalidateQueries({ queryKey: penggajianKeys.profil.list() });
 			if (created?.id) handleProfilSelect(created.id);
 			setDialogOpen(false);
 			setNamaProfil("");

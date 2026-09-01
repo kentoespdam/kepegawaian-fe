@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchContext } from "@/hooks/BatchContext";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
@@ -32,7 +33,7 @@ export function Verifikasi1Client() {
 	const verify1 = useBatchAction(params.id, `${params.id}/verify1`);
 
 	const { data: pegawaiList, isPending } = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: ["penggajian", "batch", params.id, "master"],
+		queryKey: penggajianKeys.batch.master(params.id),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master?gajiBatchRootId=${params.id}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
@@ -152,7 +153,7 @@ export function Verifikasi1Client() {
 
 function PegawaiDetailPanel({ pegawaiId }: { pegawaiId: string }) {
 	const { data: komponen, isPending } = useQuery({
-		queryKey: ["penggajian", "batch", "pegawai", pegawaiId],
+		queryKey: penggajianKeys.batch.pegawai(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master/pegawai/${pegawaiId}`);
 			throwIfNotOk(res, "Gagal memuat data");

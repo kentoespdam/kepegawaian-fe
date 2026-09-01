@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { penggajianApi } from "@/lib/api/penggajian-client";
 import type { TipeKomponen } from "@/types/_shared";
 import type { GajiKomponenMiniProjection, GajiKomponenResponse } from "@/types/penggajian/komponen";
@@ -46,7 +47,7 @@ export function formatFormula(formula: string): string {
 
 export function useKomponenForm(profilId: number | null, editing?: GajiKomponenResponse | null) {
 	const kodeQuery = useQuery<KodeItem[]>({
-		queryKey: ["penggajian", "komponen", profilId, "kode"],
+		queryKey: penggajianKeys.komponen.kode(profilId),
 		queryFn: () => penggajianApi.listKode<KodeItem[]>(profilId as number),
 		enabled: !!profilId,
 		staleTime: 0,
@@ -54,7 +55,7 @@ export function useKomponenForm(profilId: number | null, editing?: GajiKomponenR
 	});
 
 	const urutQuery = useQuery<number>({
-		queryKey: ["penggajian", "komponen", profilId, "urut"],
+		queryKey: penggajianKeys.komponen.urut(profilId),
 		queryFn: () => penggajianApi.getUrut<number>(profilId as number),
 		enabled: !!profilId,
 		staleTime: 0,

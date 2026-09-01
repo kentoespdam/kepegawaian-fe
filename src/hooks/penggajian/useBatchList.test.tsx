@@ -26,10 +26,7 @@ describe("useBatchList", () => {
 			json: () => Promise.resolve({ status: 200, data: mockBatches }),
 		});
 
-		const { result } = renderHook(
-			() => useBatchList({ page: "0", size: "10" }),
-			{ wrapper },
-		);
+		const { result } = renderHook(() => useBatchList({ page: "0", size: "10" }), { wrapper });
 
 		await waitFor(() => expect(result.current.isSuccess).toBe(true));
 

@@ -7,6 +7,7 @@ import { Fragment } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { fmtRupiah, throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
@@ -37,7 +38,7 @@ export function PersetujuanClient() {
 	const kirimSlip = useBatchAction(params.id, `master/upload/${params.id}`);
 
 	const { data: batch } = useQuery({
-		queryKey: ["penggajian", "batch", "detail", params.id],
+		queryKey: penggajianKeys.batch.detail(params.id),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/${params.id}`);
 			throwIfNotOk(res, "Gagal memuat batch");
@@ -56,7 +57,7 @@ export function PersetujuanClient() {
 		isPending,
 		refetch,
 	} = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: ["penggajian", "batch", params.id, "master"],
+		queryKey: penggajianKeys.batch.master(params.id),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master?gajiBatchRootId=${params.id}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
@@ -271,7 +272,7 @@ export function PersetujuanClient() {
 
 function PegawaiDetailPanel({ pegawaiId }: { pegawaiId: string }) {
 	const { data: komponen, isPending } = useQuery({
-		queryKey: ["penggajian", "batch", "pegawai", pegawaiId],
+		queryKey: penggajianKeys.batch.pegawai(pegawaiId),
 		queryFn: async () => {
 			const res = await fetch(`/api/proxy/penggajian/batch/master/pegawai/${pegawaiId}`);
 			throwIfNotOk(res, "Gagal memuat data");

@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import type { GajiBatchRootResponse } from "@/types/penggajian/batch";
-import { batchKeys } from "./useBatchList";
 
 export function useCreateBatch() {
 	const qc = useQueryClient();
@@ -36,7 +36,7 @@ export function useCreateBatch() {
 			return body.data;
 		},
 		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: batchKeys.all });
+			qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() });
 		},
 	});
 }
