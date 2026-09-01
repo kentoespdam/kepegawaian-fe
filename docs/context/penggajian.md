@@ -139,6 +139,13 @@ prefix **`/penggajian`**:
   combobox-of-id FK di CONTEXT-MAP §DataTable filtering). Cache per-entity di query cache —
   dipakai juga oleh FK combobox di form entitas lain.
 - **Panel kanan** (`useKomponenByProfil`) → `GET /penggajian/komponen/{profilId}/profil`
+- **Formula shortcuts** → `GET /penggajian/komponen/{profilId}/kode` (available kode)
+- **Urut auto-fill** → `GET /penggajian/komponen/{profilId}/profil/urut` (next urutan)
+
+**Formula Editor**: dialog Tambah/Edit Komponen dilengkapi `<FormulaEditor>` — textarea auto-grow
++ shortcut buttons (operator `+-*/()` + available kode chips by jenis). Hook `useKomponenForm`
+mengelola state, fetch kode/urut, auto-fill urut (create mode), exclude kode sendiri (edit mode),
+dan `appendKode`/`formatFormula` pure functions (testable).
 
 **State**: `?profilId=N` di URL sebagai single source of truth. Klik baris kiri → set `profilId`
 di URL → panel kanan fetch komponen untuk profil tsb. Konsisten dengan preseden Data Pegawai
@@ -245,5 +252,6 @@ Semua tipe sudah di-generate di `src/types/penggajian/` (jangan diedit manual):
 | M5 Fase 02 Verifikasi | `docs/CLAIM-ORDER-penggajian-fase-02.md` | ✅ Done |
 | M6 Fase 03 Tambahan | `docs/CLAIM-ORDER-penggajian-fase-03.md` | ✅ Done |
 | M7 Fase 04 Persetujuan | `docs/CLAIM-ORDER-penggajian-fase-04.md` | ✅ Done |
+| M8 Formula Editor | `docs/CLAIM-ORDER-penggajian-formula-editor.md` | ✅ Done |
 
 > ADR-0016 sudah dibuat di `docs/adr/0016-penggajian-sub-modul-rbac-workflow.md`.

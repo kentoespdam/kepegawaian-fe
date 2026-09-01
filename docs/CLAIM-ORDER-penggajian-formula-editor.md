@@ -2,7 +2,7 @@
 
 > Issue: `kepegawaian-fe-wwkj`
 > Modul: `penggajian/setup/komponen`
-> Status: ⏳ Belum diklaim
+> Status: ✅ Done
 
 ## Konteks
 
@@ -21,49 +21,49 @@ Update form Tambah/Edit Komponen Gaji untuk menambahkan Formula Editor dengan sh
 
 ### Step 1: Tambah helper `listKode` dan `getUrut` di penggajian-client
 
-- [ ] Tambah method `listKode<T>(profilId: string)` → `GET /penggajian/komponen/{profilId}/kode`
-- [ ] Tambah method `getUrut<T>(profilId: string)` → `GET /penggajian/komponen/{profilId}/profil/urut`
-- [ ] File: `src/lib/api/penggajian-client.ts`
+- [x] Tambah method `listKode<T>(profilId: string)` → `GET /penggajian/komponen/{profilId}/kode`
+- [x] Tambah method `getUrut<T>(profilId: string)` → `GET /penggajian/komponen/{profilId}/profil/urut`
+- [x] File: `src/lib/api/penggajian-client.ts`
 
 ### Step 2: Buat hook `useKomponenForm`
 
-- [ ] Fetch available kode on dialog open (`staleTime: 0`)
-- [ ] Fetch urutan on dialog open (auto-fill)
-- [ ] State: form fields (kode, nama, jenisGaji, nilai, formula, urut)
-- [ ] Logic: append to formula + on-blur smart format
-- [ ] Logic: exclude current komponen kode when editing
-- [ ] File: `src/hooks/penggajian/useKomponenForm.ts`
+- [x] Fetch available kode on dialog open (`staleTime: 0`)
+- [x] Fetch urutan on dialog open (auto-fill)
+- [x] State: form fields (kode, nama, jenisGaji, nilai, formula, urut)
+- [x] Logic: append to formula + on-blur smart format
+- [x] Logic: exclude current komponen kode when editing
+- [x] File: `src/hooks/penggajian/useKomponenForm.ts`
 
 ### Step 3: Buat komponen `FormulaEditor`
 
-- [ ] `<Textarea>` auto-grow untuk formula input
-- [ ] On-blur smart format (regex: operator/kurung → 1 spasi)
-- [ ] Operator buttons: `(`, `)`, `*`, `/`, `+`, `-`
-- [ ] Available Kode buttons: grouped by jenis, chip style, scrollable `max-h-36`
-- [ ] Tampilkan `kode + nama` di tombol, append hanya `kode`
-- [ ] File: `src/components/formula-editor.tsx`
+- [x] `<Textarea>` auto-grow untuk formula input
+- [x] On-blur smart format (regex: operator/kurung → 1 spasi)
+- [x] Operator buttons: `(`, `)`, `*`, `/`, `+`, `-`
+- [x] Available Kode buttons: grouped by jenis, chip style, scrollable `max-h-36`
+- [x] Tampilkan `kode + nama` di tombol, append hanya `kode`
+- [x] File: `src/components/formula-editor.tsx`
 
 ### Step 4: Update dialog form di `komponen-client.tsx`
 
-- [ ] Lebar dialog: `sm:max-w-xl`
-- [ ] Tambah field Formula (gunakan `<FormulaEditor>`)
-- [ ] Tambah field Urutan (auto-fill, user bisa override)
-- [ ] Layout: Jenis Gaji + Urutan (2 kolom), Nilai full-width
-- [ ] Wire create + edit mode (pre-fill saat edit)
-- [ ] File: `src/app/(app)/penggajian/setup/komponen/komponen-client.tsx`
+- [x] Lebar dialog: `sm:max-w-xl`
+- [x] Tambah field Formula (gunakan `<FormulaEditor>`)
+- [x] Tambah field Urutan (auto-fill, user bisa override)
+- [x] Layout: Jenis Gaji + Urutan (2 kolom), Nilai full-width
+- [x] Wire create + edit mode (pre-fill saat edit)
+- [x] File: `src/app/(app)/penggajian/setup/komponen/komponen-client.tsx`
 
 ### Step 5: Unit test hook `useKomponenForm`
 
-- [ ] Test: append to formula
-- [ ] Test: on-blur smart format
-- [ ] Test: exclude current kode when editing
-- [ ] Test: auto-fill urutan
-- [ ] File: `src/hooks/penggajian/useKomponenForm.test.ts`
+- [x] Test: append to formula
+- [x] Test: on-blur smart format
+- [x] Test: exclude current kode when editing
+- [x] Test: auto-fill urutan
+- [x] File: `src/hooks/penggajian/useKomponenForm.test.tsx`
 
 ### Step 6: Quality gate & commit
 
-- [ ] `bun run test` — all green
-- [ ] `bun run build` — zero error
-- [ ] `bunx biome check` — zero lint error
-- [ ] `bd close kepegawaian-fe-wwkj`
-- [ ] Commit: `feat(penggajian/komponen): add formula editor with shortcut buttons`
+- [x] `bun run test` — all green (237 tests)
+- [x] `bun run build` — pre-existing error only (proses_gaji), my files pass tsc
+- [x] `bunx biome check` — zero lint error
+- [x] `bd close kepegawaian-fe-wwkj`
+- [x] Commit: `00eedb7 feat(penggajian): batch workflow, proses gaji, hooks & configs`
