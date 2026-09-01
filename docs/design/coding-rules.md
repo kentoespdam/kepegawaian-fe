@@ -570,7 +570,7 @@ export default async function GolonganPage() {
 // Heavy components: PDF viewer, charts, dsb
 const PdfViewer = dynamic(() => import("@/components/pdf-viewer"), {
   ssr: false,
-  loading: () => <Skeleton className="h-[600px]" />,
+  loading: () => <Skeleton className="h-150" />,
 });
 ```
 
