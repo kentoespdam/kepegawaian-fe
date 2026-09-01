@@ -1,31 +1,18 @@
 "use client";
 
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useQuery } from "@tanstack/react-query";
-import { Loader2, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useBatchMasterProses } from "@/hooks/penggajian/useBatchMasterProses";
 import { useCreateBatchMasterProses } from "@/hooks/penggajian/useCreateBatchMasterProses";
 import { useDeleteBatchMasterProses } from "@/hooks/penggajian/useDeleteBatchMasterProses";
 import { throwIfNotOk } from "@/lib/utils";
-import type { GajiBatchMasterProsesResponse, GajiBatchMasterResponse } from "@/types/penggajian/batch";
-
-const tambahanSchema = z.object({
-	nama: z.string().min(1, "Nama wajib diisi"),
-	jenisGaji: z.enum(["NONE", "PEMASUKAN", "POTONGAN"]),
-	nilai: z.number().min(0, "Nilai tidak boleh negatif"),
-});
-
-type TambahanForm = z.infer<typeof tambahanSchema>;
+import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
+import { TambahanDialog } from "./_components/tambah-komponen-dialog";
 
 const ORG_HEADER_CLASS = "bg-primary/10 text-primary font-semibold text-xs uppercase tracking-wide px-3 py-2";
 
@@ -98,7 +85,7 @@ export function TambahanClient() {
 					<div className="p-4 border-b border-border">
 						<h2 className="text-sm font-semibold">Daftar Pegawai</h2>
 					</div>
-					<div className="max-h-[600px] overflow-y-auto">
+					<div className="max-h-150 overflow-y-auto">
 						{isPending ? (
 							<div className="p-4 space-y-2">
 								{[1, 2, 3].map((i) => (
@@ -190,17 +177,7 @@ function PegawaiTambahanPanel({
 		staleTime: 30_000,
 	});
 
-	const { data: tambahanList, isPending: isTambahanPending } = useQuery<GajiBatchMasterProsesResponse[]>({
-		queryKey: ["penggajian", "batch", "proses", pegawaiId],
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master/proses/${pegawaiId}/master`);
-			throwIfNotOk(res, "Gagal memuat tambahan komponen");
-			const body = (await res.json()) as { data: GajiBatchMasterProsesResponse[] };
-			return body.data;
-		},
-		enabled: !!pegawaiId,
-		staleTime: 30_000,
-	});
+	const { data: tambahanList, isPending: isTambahanPending } = useBatchMasterProses(pegawaiId);
 
 	if (isPending) {
 		return (
@@ -232,7 +209,6 @@ function PegawaiTambahanPanel({
 					<Plus className="size-4 mr-1" /> Tambah Komponen
 				</Button>
 			</div>
-
 			{/* Pemasukan */}
 			<div>
 				<h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">Pemasukan Tambahan</h4>
@@ -260,7 +236,6 @@ function PegawaiTambahanPanel({
 					</div>
 				)}
 			</div>
-
 			{/* Potongan */}
 			<div>
 				<h4 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground mb-2">Potongan Tambahan</h4>
@@ -287,107 +262,8 @@ function PegawaiTambahanPanel({
 						))}
 					</div>
 				)}
-			</div>
+			</div>{" "}
 		</div>
-	);
-}
-
-function TambahanDialog({
-	open,
-	onOpenChange,
-	onSuccess,
-	isSubmitting,
-	onSubmit,
-}: {
-	open: boolean;
-	onOpenChange: (v: boolean) => void;
-	onSuccess: () => void;
-	isSubmitting: boolean;
-	onSubmit: (data: TambahanForm) => Promise<void>;
-}) {
-	const {
-		register,
-		handleSubmit,
-		reset,
-		watch,
-		setValue,
-		formState: { errors },
-	} = useForm<TambahanForm>({
-		resolver: zodResolver(tambahanSchema),
-		defaultValues: { nama: "", jenisGaji: "PEMASUKAN", nilai: 0 },
-	});
-
-	const handleFormSubmit = async (data: TambahanForm) => {
-		await onSubmit(data);
-		reset();
-		onSuccess();
-	};
-
-	const handleClose = (v: boolean) => {
-		if (!v) reset();
-		onOpenChange(v);
-	};
-
-	return (
-		<Dialog open={open} onOpenChange={handleClose}>
-			<DialogContent className="sm:max-w-md">
-				<DialogHeader>
-					<DialogTitle>Tambah Komponen Gaji</DialogTitle>
-				</DialogHeader>
-				<form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
-					<div className="space-y-1.5">
-						<Label htmlFor="nama" className="text-sm font-medium">
-							Nama <span className="text-destructive">*</span>
-						</Label>
-						<Input id="nama" {...register("nama")} className="h-11" />
-						{errors.nama && <p className="text-xs text-destructive">{errors.nama.message}</p>}
-					</div>
-
-					<div className="space-y-1.5">
-						<Label className="text-sm font-medium">
-							Jenis Gaji <span className="text-destructive">*</span>
-						</Label>
-						<Select
-							value={watch("jenisGaji")}
-							onValueChange={(v) => setValue("jenisGaji", v as TambahanForm["jenisGaji"])}
-						>
-							<SelectTrigger className="h-11">
-								<SelectValue />
-							</SelectTrigger>
-							<SelectContent>
-								<SelectItem value="PEMASUKAN">Pemasukan</SelectItem>
-								<SelectItem value="POTONGAN">Potongan</SelectItem>
-								<SelectItem value="NONE">-</SelectItem>
-							</SelectContent>
-						</Select>
-					</div>
-
-					<div className="space-y-1.5">
-						<Label htmlFor="nilai" className="text-sm font-medium">
-							Nilai <span className="text-destructive">*</span>
-						</Label>
-						<Input id="nilai" type="number" {...register("nilai", { valueAsNumber: true })} className="h-11" />
-						{errors.nilai && <p className="text-xs text-destructive">{errors.nilai.message}</p>}
-					</div>
-
-					<div className="flex items-center justify-end gap-2 pt-2">
-						<Button
-							type="button"
-							variant="outline"
-							size="lg"
-							onClick={() => handleClose(false)}
-							disabled={isSubmitting}
-						>
-							Batal
-						</Button>
-						<Button type="submit" size="lg" disabled={isSubmitting}>
-							{isSubmitting && <Loader2 className="mr-1.5 size-4 animate-spin" />}
-							Simpan
-						</Button>
-					</div>
-				</form>
-			</DialogContent>
-		</Dialog>
 	);
 }
 
