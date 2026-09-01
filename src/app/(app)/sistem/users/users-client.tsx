@@ -24,9 +24,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { systemKeys } from "@/hooks/keys/system-keys";
+import { useAllRoles } from "@/hooks/useSystemRoles";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { throwIfNotOk } from "@/lib/utils";
-import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
+import type { PrefRole } from "@/types/system/roles";
 import type {
 	AuthPostRequest,
 	PageResultPageUserResponse,
@@ -34,19 +35,6 @@ import type {
 	UserPatchStatusRequest,
 	UserResponse,
 } from "@/types/system/users";
-
-function useAllRoles() {
-	return useQuery({
-		queryKey: systemKeys.roles.list(),
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/system/roles/list");
-			throwIfNotOk(res, "Gagal memuat role");
-			const body = (await res.json()) as ListResultPrefRole;
-			return body.data ?? [];
-		},
-		staleTime: 5 * 60_000,
-	});
-}
 
 function makeColumns(onToggle: (r: UserResponse) => void): Column<UserResponse>[] {
 	return [

@@ -363,20 +363,21 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 
 ## Claim Order (Step-by-Step)
 
-### Phase 1: Konsolidasi Hooks Duplikat ✅→○
+### Phase 1: Konsolidasi Hooks Duplikat ✅
 
 > **Target:** Hapus duplikasi useAllRoles + useAllPermissions.
 > **Issue:** `kepegawaian-fe-nj1q` (open)
 > **Estimasi:** ~30 menit
+> **Selesai:** 2026-09-01
 
-- [ ] **Step 1.1:** Baca `src/app/(app)/sistem/roles/roles-client.tsx` (line 103-130) dan `src/app/(app)/sistem/users/users-client.tsx` (line 38-50)
-- [ ] **Step 1.2:** Buat `src/hooks/useSystemRoles.ts` — return `useQuery({ queryKey: systemKeys.roles.all(), ... })`
-- [ ] **Step 1.3:** Buat `src/hooks/useSystemPermissions.ts` — return `useQuery({ queryKey: systemKeys.permissions(), ... })`
-- [ ] **Step 1.4:** Update `roles-client.tsx` — hapus `useAllRoles()` + `useAllPermissions()`, import dari hooks
-- [ ] **Step 1.5:** Update `users-client.tsx` — hapus `useAllRoles()`, import dari hooks. Konsolidasi queryKey ke `systemKeys.roles.all()` (satu fetch, satu cache)
-- [ ] **Step 1.6:** `bun run build` — zero error ✅
-- [ ] **Step 1.7:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 1.8:** `bd close kepegawaian-fe-nj1q` ✅
+- [x] **Step 1.1:** Baca `src/app/(app)/sistem/roles/roles-client.tsx` (line 103-130) dan `src/app/(app)/sistem/users/users-client.tsx` (line 38-50)
+- [x] **Step 1.2:** Buat `src/hooks/useSystemRoles.ts` — return `useQuery({ queryKey: systemKeys.roles.all(), ... })`
+- [x] **Step 1.3:** Buat `src/hooks/useSystemPermissions.ts` — return `useQuery({ queryKey: systemKeys.permissions(), ... })`
+- [x] **Step 1.4:** Update `roles-client.tsx` — hapus `useAllRoles()` + `useAllPermissions()`, import dari hooks
+- [x] **Step 1.5:** Update `users-client.tsx` — hapus `useAllRoles()`, import dari hooks. Konsolidasi queryKey ke `systemKeys.roles.all()` (satu fetch, satu cache)
+- [x] **Step 1.6:** `bun run build` — zero error ✅
+- [x] **Step 1.7:** `bun run lint` — zero new lint error ✅
+- [x] **Step 1.8:** `bd close kepegawaian-fe-nj1q` ⏳ (manual)
 
 **Files berubah:**
 | File | Action |
@@ -388,29 +389,30 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 
 ---
 
-### Phase 2: Lengkapi Penggajian Query Key Factory ✅→○
+### Phase 2: Lengkapi Penggajian Query Key Factory ✅
 
 > **Target:** Ganti 18+ hardcoded `["penggajian", ...]` arrays dengan factory.
 > **Issue:** `kepegawaian-fe-sv2r` (open)
 > **Estimasi:** ~45 menit
+> **Selesai:** 2026-09-01
 
-- [ ] **Step 2.1:** Baca `src/hooks/keys/penggajian-keys.ts` — hanya 2 keys (batch.all, batch.detail)
-- [ ] **Step 2.2:** Lengkapi factory dengan keys: `batch.master`, `batch.pegawai`, `batch.pegawaiProses`, `batch.detailById`, `setup.all`, `setup.profil`, `setup.profilList`, `setup.komponen`, `level.list`
-- [ ] **Step 2.3:** Ganti 7 hardcoded arrays di `komponen-client.tsx`
-- [ ] **Step 2.4:** Ganti 4 hardcoded arrays di `tambahan-client.tsx`
-- [ ] **Step 2.5:** Ganti 2 hardcoded arrays di `verifikasi-1-client.tsx`
-- [ ] **Step 2.6:** Ganti 2 hardcoded arrays di `setting-client.tsx`
-- [ ] **Step 2.7:** Ganti 3 hardcoded arrays di `persetujuan-client.tsx`
-- [ ] **Step 2.8:** Ganti 1 hardcoded array di `tunjangan-client.tsx`
-- [ ] **Step 2.9:** `bun run build` — zero error ✅
-- [ ] **Step 2.10:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 2.11:** `bd close kepegawaian-fe-sv2r` ✅
+- [x] **Step 2.1:** Baca `src/hooks/keys/penggajian-keys.ts` — hanya 2 keys (batch.all, batch.detail)
+- [x] **Step 2.2:** Lengkapi factory dengan keys: `batch.master`, `batch.pegawai`, `batch.pegawaiProses`, `batch.list`, `profil.list`, `komponen.kode`, `komponen.urut`, `tunjangan.list`, `tunjangan.listAll`
+- [x] **Step 2.3:** Ganti 7 hardcoded arrays di `komponen-client.tsx`
+- [x] **Step 2.4:** Ganti 4 hardcoded arrays di `tambahan-client.tsx`
+- [x] **Step 2.5:** Ganti 2 hardcoded arrays di `verifikasi-1-client.tsx`
+- [x] **Step 2.6:** Ganti 3 hardcoded arrays di `setting-client.tsx`
+- [x] **Step 2.7:** Ganti 3 hardcoded arrays di `persetujuan-client.tsx`
+- [x] **Step 2.8:** Ganti 3 hardcoded arrays di setup clients (potongan-tkk, pendapatan, parameter)
+- [x] **Step 2.9:** `bun run build` — zero error ✅
+- [x] **Step 2.10:** `bun run lint` — zero new lint error ✅
+- [x] **Step 2.11:** `bd close kepegawaian-fe-sv2r` ⏳ (manual)
 
 **Files berubah:**
 | File | Action |
 |------|--------|
-| `src/hooks/keys/penggajian-keys.ts` | Tambah 9+ key methods |
-| 6 penggajian component files | Ganti inline arrays → factory |
+| `src/hooks/keys/penggajian-keys.ts` | Tambah 9 key methods |
+| 15 files | Ganti inline arrays → factory |
 
 ---
 

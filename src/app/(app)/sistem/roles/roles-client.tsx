@@ -11,9 +11,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { systemKeys } from "@/hooks/keys/system-keys";
+import { useAllPermissions } from "@/hooks/useSystemPermissions";
+import { useAllRoles } from "@/hooks/useSystemRoles";
 import { cn } from "@/lib/utils";
-import type { ListResultPrefPermission } from "@/types/system/permissions";
-import type { ListResultPrefRole, PrefRole } from "@/types/system/roles";
+import type { PrefRole } from "@/types/system/roles";
 import { RolePermissionDialog } from "./role-permission-dialog";
 
 /** Dialog buat/edit role — POST saat create, PUT saat edit. */
@@ -97,34 +98,6 @@ function RoleFormDialog({
 			</DialogContent>
 		</Dialog>
 	);
-}
-
-/** Ambil SEMUA permission yang tersedia di sistem (read-only, katalog). */
-function useAllPermissions() {
-	return useQuery({
-		queryKey: systemKeys.permissions(),
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/system/permissions");
-			if (!res.ok) throw new Error("Gagal memuat katalog permission");
-			const body = (await res.json()) as ListResultPrefPermission;
-			return body.data ?? [];
-		},
-		staleTime: 5 * 60_000,
-	});
-}
-
-/** Ambil semua role + permission yang dimilikinya (list endpoint, tanpa paging). */
-function useAllRoles() {
-	return useQuery({
-		queryKey: systemKeys.roles.all(),
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/system/roles/list");
-			if (!res.ok) throw new Error("Gagal memuat daftar role");
-			const body = (await res.json()) as ListResultPrefRole;
-			return body.data ?? [];
-		},
-		staleTime: 30_000,
-	});
 }
 
 export function RolesClient() {
