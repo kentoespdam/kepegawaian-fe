@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DataTable } from "@/components/data-table";
-import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -16,21 +15,19 @@ import { CreateBatchDialog } from "./create-batch-dialog";
 const ENTITY = "batch";
 const BATCH_BASE = "/penggajian/batch";
 
-export function BatchListClient() {
+interface BatchListClientProps {
+	userName?: string;
+	jabatanNama?: string;
+}
+
+export function BatchListClient({ userName, jabatanNama }: BatchListClientProps) {
 	const router = useRouter();
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(ENTITY, BATCH_BASE);
 
 	const [createOpen, setCreateOpen] = useState(false);
 
 	const list = useBatchList(toApiParams({ page, size, sortBy, sortDir, filters }));
-	const pageView = {
-		rows: list.data?.data ?? [],
-		total: list.data?.data?.length ?? 0,
-		totalPages: 1,
-		page: 1,
-		first: true,
-		last: true,
-	};
+	const rows = list.data?.content ?? [];
 
 	const handleFilterChange = (name: string, value: string | undefined) => {
 		setFilter(name, value);
@@ -92,7 +89,7 @@ export function BatchListClient() {
 
 			<DataTable
 				columns={BATCH_COLUMNS}
-				data={(pageView.rows as Record<string, unknown>[]) ?? []}
+				data={(rows as Record<string, unknown>[]) ?? []}
 				isLoading={list.isPending}
 				isPlaceholder={list.isPlaceholderData}
 				isError={list.isError}
@@ -109,24 +106,15 @@ export function BatchListClient() {
 					if (id) router.push(`/penggajian/batch/${id}/setup`);
 				}}
 				getRowId={(i) => String((i as Record<string, unknown>).id ?? "")}
-				pagination={
-					<DataTablePagination
-						page={page}
-						size={size}
-						total={pageView.total}
-						totalPages={pageView.totalPages}
-						first={pageView.first}
-						last={pageView.last}
-						onPageChange={(p) => setP("page", String(p))}
-						onSizeChange={(s) => {
-							setP("size", String(s));
-							setP("page", "1");
-						}}
-					/>
-				}
 			/>
 
-			<CreateBatchDialog open={createOpen} onOpenChange={setCreateOpen} onSuccess={handleCreateSuccess} />
+			<CreateBatchDialog
+				open={createOpen}
+				onOpenChange={setCreateOpen}
+				onSuccess={handleCreateSuccess}
+				userName={userName}
+				jabatanNama={jabatanNama}
+			/>
 		</div>
 	);
 }

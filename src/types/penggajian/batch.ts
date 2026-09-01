@@ -76,6 +76,8 @@ export interface GajiBatchRootResponse {
 }
 
 export type ListResultGajiBatchRootResponse = Envelope<GajiBatchRootResponse[]>;
+export type PageGajiBatchRootResponse = Page<GajiBatchRootResponse>;
+export type PageResultPageGajiBatchRootResponse = PageEnvelope<GajiBatchRootResponse>;
 
 export interface GajiBatchRootPostRequest {
 	tahun?: string;
