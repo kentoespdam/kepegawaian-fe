@@ -10,7 +10,9 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
@@ -18,7 +20,7 @@ import { penggajianApi } from "@/lib/api/penggajian-client";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiProfilResponse, Page } from "@/types/_shared";
+import type { GajiProfilResponse, Page, TipeKomponen } from "@/types/_shared";
 import type { GajiKomponenResponse } from "@/types/penggajian/komponen";
 
 const ENTITY = "komponen";
@@ -88,6 +90,14 @@ export function KomponenClient() {
 	const [dialogOpen, setDialogOpen] = useState(false);
 	const [namaProfil, setNamaProfil] = useState("");
 	const [createError, setCreateError] = useState<string | null>(null);
+	const [komponenDialogOpen, setKomponenDialogOpen] = useState(false);
+	const [komponenForm, setKomponenForm] = useState({
+		kode: "",
+		nama: "",
+		jenisGaji: "" as TipeKomponen | "",
+		nilai: "",
+	});
+	const [komponenError, setKomponenError] = useState<string | null>(null);
 
 	// ponytail: listAll → GET /penggajian/profil/list (unpaginated, sesuai issue kepegawaian-fe-wty1)
 	const profilList = useQuery<GajiProfilResponse[]>({
@@ -121,6 +131,17 @@ export function KomponenClient() {
 	const removeKomponen = useMutation({
 		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
 		onSuccess: () => qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] }),
+	});
+
+	const createKomponen = useMutation({
+		mutationFn: (data: Record<string, unknown>) => penggajianApi.create<GajiKomponenResponse>(ENTITY, data),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] });
+			setKomponenDialogOpen(false);
+			setKomponenForm({ kode: "", nama: "", jenisGaji: "", nilai: "" });
+			toast.success("Komponen berhasil ditambah");
+		},
+		onError: (e: Error) => setKomponenError(e.message ?? "Gagal menambah komponen"),
 	});
 
 	const createProfil = useMutation({
@@ -222,14 +243,21 @@ export function KomponenClient() {
 				{selectedProfilId ? (
 					<>
 						<DataTableToolbar
-							searchFields={[]}
+							searchFields={[{ name: "search", label: "Komponen" }]}
 							values={tableFilters}
 							onFilterChange={handleFilterChange}
 							hasActive={Object.keys(tableFilters).length > 0 || !!sortBy}
 							onReset={resetAll}
 						>
 							{canWrite && (
-								<Button className="h-11 px-4 text-sm font-semibold" disabled>
+								<Button
+									className="h-11 px-4 text-sm font-semibold"
+									onClick={() => {
+										setKomponenError(null);
+										setKomponenForm({ kode: "", nama: "", jenisGaji: "", nilai: "" });
+										setKomponenDialogOpen(true);
+									}}
+								>
 									+ Tambah Komponen
 								</Button>
 							)}
@@ -285,7 +313,103 @@ export function KomponenClient() {
 				itemLabel="Komponen Gaji"
 				onConfirm={handleDelete}
 				error={deleteError}
-			/>
+			/>{" "}
+			<Dialog open={komponenDialogOpen} onOpenChange={setKomponenDialogOpen}>
+				<DialogContent className="sm:max-w-lg">
+					<DialogHeader>
+						<DialogTitle>Tambah Komponen Gaji</DialogTitle>
+					</DialogHeader>
+					<form
+						onSubmit={(e) => {
+							e.preventDefault();
+							if (!komponenForm.kode.trim() || !komponenForm.nama.trim() || !selectedProfilId) return;
+							setKomponenError(null);
+							createKomponen.mutate({
+								profilGajiId: selectedProfilId,
+								kode: komponenForm.kode.trim(),
+								nama: komponenForm.nama.trim(),
+								...(komponenForm.jenisGaji ? { jenisGaji: komponenForm.jenisGaji } : {}),
+								...(komponenForm.nilai ? { nilai: Number(komponenForm.nilai) } : {}),
+							});
+						}}
+						className="space-y-4"
+					>
+						<div className="space-y-1.5">
+							<Label htmlFor="kode" className="text-sm font-medium">
+								Kode<span className="ml-0.5 text-destructive">*</span>
+							</Label>
+							<Input
+								id="kode"
+								value={komponenForm.kode}
+								onChange={(e) => setKomponenForm((f) => ({ ...f, kode: e.target.value }))}
+								placeholder="Kode komponen"
+								className="h-11"
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label htmlFor="nama-komponen" className="text-sm font-medium">
+								Nama<span className="ml-0.5 text-destructive">*</span>
+							</Label>
+							<Input
+								id="nama-komponen"
+								value={komponenForm.nama}
+								onChange={(e) => setKomponenForm((f) => ({ ...f, nama: e.target.value }))}
+								placeholder="Nama komponen gaji"
+								className="h-11"
+							/>
+						</div>
+						<div className="grid grid-cols-2 gap-4">
+							<div className="space-y-1.5">
+								<Label className="text-sm font-medium">Jenis Gaji</Label>
+								<Select
+									value={komponenForm.jenisGaji}
+									onValueChange={(v) => setKomponenForm((f) => ({ ...f, jenisGaji: v as TipeKomponen }))}
+								>
+									<SelectTrigger className="h-11">
+										<SelectValue placeholder="Pilih jenis" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="PEMASUKAN">Pemasukan</SelectItem>
+										<SelectItem value="POTONGAN">Potongan</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+							<div className="space-y-1.5">
+								<Label htmlFor="nilai" className="text-sm font-medium">
+									Nilai
+								</Label>
+								<Input
+									id="nilai"
+									type="number"
+									value={komponenForm.nilai}
+									onChange={(e) => setKomponenForm((f) => ({ ...f, nilai: e.target.value }))}
+									placeholder="0"
+									className="h-11"
+								/>
+							</div>
+						</div>
+						{komponenError && <p className="text-sm text-destructive">{komponenError}</p>}
+						<div className="flex items-center justify-end gap-2 pt-2">
+							<Button
+								type="button"
+								variant="outline"
+								size="lg"
+								onClick={() => setKomponenDialogOpen(false)}
+								disabled={createKomponen.isPending}
+							>
+								Batal
+							</Button>
+							<Button
+								type="submit"
+								size="lg"
+								disabled={createKomponen.isPending || !komponenForm.kode.trim() || !komponenForm.nama.trim()}
+							>
+								{createKomponen.isPending ? "Menyimpan…" : "Simpan"}
+							</Button>
+						</div>
+					</form>
+				</DialogContent>
+			</Dialog>
 			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
 				<DialogContent>
 					<DialogHeader>

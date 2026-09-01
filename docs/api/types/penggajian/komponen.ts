@@ -11,7 +11,7 @@
 import type { Envelope, GajiProfilResponse, Page, PageEnvelope, PageQuery, TipeKomponen } from "../_shared";
 
 export interface KomponenSearchParams extends PageQuery {
-	kode?: string;
+	search?: string;
 }
 
 export interface GajiKomponenPutRequest {
