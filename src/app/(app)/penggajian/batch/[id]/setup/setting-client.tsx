@@ -71,7 +71,7 @@ export function SettingClient() {
 					<h2 className="text-sm font-semibold">Daftar Pegawai</h2>
 					<p className="text-xs text-muted-foreground">{batch?.totalPegawai ?? 0} pegawai</p>
 				</div>
-				<div className="max-h-[600px] overflow-y-auto">
+				<div className="max-h-150 overflow-y-auto">
 					{isPending ? (
 						<div className="p-4 space-y-2">
 							{[1, 2, 3].map((i) => (

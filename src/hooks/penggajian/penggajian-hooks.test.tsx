@@ -4,13 +4,10 @@ import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useBatchInfo } from "../useBatchInfo";
-import { useAcceptBatch } from "./useAcceptBatch";
+import { useBatchAction } from "./useBatchAction";
 import { useCreateBatchMasterProses } from "./useCreateBatchMasterProses";
 import { useDeleteBatchMasterProses } from "./useDeleteBatchMasterProses";
-import { useKirimSlipGaji } from "./useKirimSlipGaji";
-import { useReprocessBatch } from "./useReprocessBatch";
 import { useVerify1 } from "./useVerify1";
-import { useVerify2 } from "./useVerify2";
 
 function wrapper({ children }: { children: ReactNode }) {
 	return <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>;
@@ -74,12 +71,12 @@ describe("useVerify1", () => {
 	});
 });
 
-describe("useVerify2", () => {
+describe("useBatchAction", () => {
 	beforeEach(() => vi.restoreAllMocks());
 
-	it("sends PATCH to /penggajian/batch/{id}/verify2", async () => {
+	it("sends PATCH to the correct URL for verify2", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useVerify2("batch-1"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -87,14 +84,10 @@ describe("useVerify2", () => {
 			method: "PATCH",
 		});
 	});
-});
 
-describe("useAcceptBatch", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends PATCH to /penggajian/batch/{id}/accept", async () => {
+	it("sends PATCH to the correct URL for accept", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useAcceptBatch("batch-1"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/accept"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -102,14 +95,10 @@ describe("useAcceptBatch", () => {
 			method: "PATCH",
 		});
 	});
-});
 
-describe("useReprocessBatch", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends PATCH to /penggajian/batch/{id}/reprocess", async () => {
+	it("sends PATCH to the correct URL for reprocess", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useReprocessBatch("batch-1"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/reprocess"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -117,20 +106,23 @@ describe("useReprocessBatch", () => {
 			method: "PATCH",
 		});
 	});
-});
 
-describe("useKirimSlipGaji", () => {
-	beforeEach(() => vi.restoreAllMocks());
-
-	it("sends PATCH to /penggajian/batch/master/upload/{rootBatchId}", async () => {
+	it("sends PATCH to the correct URL for kirimSlipGaji", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useKirimSlipGaji("batch-1"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1", "master/upload/batch-1"), { wrapper });
 
 		await result.current.mutateAsync();
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master/upload/batch-1", {
 			method: "PATCH",
 		});
+	});
+
+	it("throws on error response", async () => {
+		global.fetch = mockFetchError(400, "Bad request");
+		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
+
+		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
 	});
 });
 

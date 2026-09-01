@@ -7,10 +7,7 @@ import { Fragment } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useAcceptBatch } from "@/hooks/penggajian/useAcceptBatch";
-import { useKirimSlipGaji } from "@/hooks/penggajian/useKirimSlipGaji";
-import { useReprocessBatch } from "@/hooks/penggajian/useReprocessBatch";
-import { useVerify2 } from "@/hooks/penggajian/useVerify2";
+import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { throwIfNotOk } from "@/lib/utils";
 import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
 
@@ -38,10 +35,10 @@ export function PersetujuanClient() {
 	const sp = useSearchParams();
 	const selectedPegawaiId = sp.get("pegawaiId");
 
-	const verify2 = useVerify2(params.id);
-	const accept = useAcceptBatch(params.id);
-	const reprocess = useReprocessBatch(params.id);
-	const kirimSlip = useKirimSlipGaji(params.id);
+	const verify2 = useBatchAction(params.id, `${params.id}/verify2`);
+	const accept = useBatchAction(params.id, `${params.id}/accept`);
+	const reprocess = useBatchAction(params.id, `${params.id}/reprocess`);
+	const kirimSlip = useBatchAction(params.id, `master/upload/${params.id}`);
 
 	const { data: batch } = useQuery({
 		queryKey: ["penggajian", "batch", "detail", params.id],

@@ -1,23 +1,14 @@
+import { Badge } from "@/components/ui/badge";
 import type { StatusBatch } from "@/types/penggajian/batch";
 
 const STATUS_LABELS: Record<StatusBatch, string> = {
-	PENDING: "Menunggu",
-	PROSES: "Proses",
-	WAIT_VERIFICATION_PHASE_1: "Verifikasi 1",
-	WAIT_VERIFICATION_PHASE_2: "Verifikasi 2",
+	PENDING: "Pending",
+	PROSES: "Sedang diproses",
+	WAIT_VERIFICATION_PHASE_1: "Verifikasi Tahap 1",
+	WAIT_VERIFICATION_PHASE_2: "Verifikasi Tahap 2",
 	WAIT_APPROVAL: "Menunggu Persetujuan",
 	FINISHED: "Selesai",
 	FAILED: "Gagal",
-};
-
-const STATUS_BADGE: Record<StatusBatch, string> = {
-	PENDING: "bg-yellow-100 text-yellow-800",
-	PROSES: "bg-blue-100 text-blue-800",
-	WAIT_VERIFICATION_PHASE_1: "bg-purple-100 text-purple-800",
-	WAIT_VERIFICATION_PHASE_2: "bg-purple-100 text-purple-800",
-	WAIT_APPROVAL: "bg-orange-100 text-orange-800",
-	FINISHED: "bg-green-100 text-green-800",
-	FAILED: "bg-red-100 text-red-800",
 };
 
 export const BATCH_COLUMNS = [
@@ -25,11 +16,12 @@ export const BATCH_COLUMNS = [
 		id: "periode",
 		header: "Periode",
 		sortable: true,
+	},
+	{
+		id: "id",
+		header: "Batch ID",
+		sortable: true,
 		primary: true,
-		cell: (item: Record<string, unknown>) => {
-			const periode = item.periode as string | undefined;
-			return periode ?? "-";
-		},
 	},
 	{
 		id: "status",
@@ -38,12 +30,12 @@ export const BATCH_COLUMNS = [
 		cell: (item: Record<string, unknown>) => {
 			const status = item.status as StatusBatch | undefined;
 			if (!status) return "-";
-			return (
-				<span className={`px-2 py-1 rounded-full text-xs font-medium ${STATUS_BADGE[status] ?? ""}`}>
-					{STATUS_LABELS[status] ?? status}
-				</span>
-			);
+			return <Badge>{STATUS_LABELS[status] ?? status}</Badge>;
 		},
+	},
+	{
+		id: "notes",
+		header: "Notes",
 	},
 	{
 		id: "totalPegawai",
@@ -53,20 +45,10 @@ export const BATCH_COLUMNS = [
 	{
 		id: "diProsesOleh",
 		header: "Di Proses Oleh",
-		cell: (item: Record<string, unknown>) => String(item.diProsesOleh ?? "-"),
 	},
 	{
 		id: "tanggalProses",
 		header: "Tanggal Proses",
-		cell: (item: Record<string, unknown>) => {
-			const t = item.tanggalProses as string | undefined;
-			if (!t) return "-";
-			try {
-				return new Date(t).toLocaleDateString("id-ID", { day: "2-digit", month: "short", year: "numeric" });
-			} catch {
-				return t;
-			}
-		},
 	},
 ];
 
