@@ -46,13 +46,13 @@ Hooks → Page/Client → Toolbar 4 tombol → Tombol Setujui → Tests.
 
 ## Definition of Done
 
-- [ ] Halaman reachable hanya untuk role `manager-keuangan` / `admin`
-- [ ] Step rail: fase ini enabled hanya jika status = `WAIT_VERIFICATION_PHASE_2`
-- [ ] Tabel eksekutif: kolom Penghasilan/Potongan/Pembulatan/Jumlah Bersih, subtotal per group
-- [ ] 4 tombol toolbar berfungsi (Verifikasi/Proses Ulang/Kirim Slip/Download)
-- [ ] Tombol **Setujui** → PATCH `/accept` → sukses → status `FINISHED` → semua tombol disabled (read-only)
-- [ ] Tests green
-- [ ] Commit: `feat(penggajian/batch/fase-04): persetujuan akhir`
+- [x] Halaman reachable hanya untuk role `manager-keuangan` / `admin`
+- [x] Step rail: fase ini enabled hanya jika status = `WAIT_APPROVAL`
+- [x] Tabel eksekutif: kolom Penghasilan/Potongan/Pembulatan/Jumlah Bersih, subtotal per group
+- [x] 4 tombol toolbar berfungsi (Verifikasi/Proses Ulang/Kirim Slip/Download)
+- [x] Tombol **Setujui** → PATCH `/accept` → sukses → status `FINISHED` → semua tombol disabled (read-only)
+- [x] Tests green
+- [x] Commit: `feat(penggajian/batch/fase-04): persetujuan akhir`
 
 ## Risiko & Mitigasi
 
@@ -66,7 +66,7 @@ Hooks → Page/Client → Toolbar 4 tombol → Tombol Setujui → Tests.
 ## Penutup Modul
 
 Setelah M7 selesai:
-- [ ] Update `docs/context/penggajian.md` — tandai semua milestone ✅
-- [ ] Update `CONTEXT-MAP.md` — tandai Penggajian ✅
-- [ ] Commit final: `docs(penggajian): semua milestone selesai`
-- [ ] `bd dolt push` + `git push`
+- [x] Update `docs/context/penggajian.md` — tandai semua milestone ✅
+- [x] Update `CONTEXT-MAP.md` — tandai Penggajian ✅
+- [ ] Commit final: `docs(penggajian): semua milestone selesai` — **todo**
+- [ ] `bd dolt push` + `git push` — **todo**

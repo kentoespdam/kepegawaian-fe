@@ -24,9 +24,13 @@ const BE_PERMISSION_CATALOG: string[] = [
 	"PEGAWAI:DELETE",
 	"PEGAWAI:READ",
 	"PEGAWAI:WRITE",
+	"PENGGAJIAN:APPROVE",
 	"PENGGAJIAN:DELETE",
 	"PENGGAJIAN:PROCESS",
 	"PENGGAJIAN:READ",
+	"PENGGAJIAN:SETUP",
+	"PENGGAJIAN:TAMBAHAN",
+	"PENGGAJIAN:VERIFY1",
 	"PENGGAJIAN:WRITE",
 	"PROFIL:APPROVE",
 	"PROFIL:READ",
@@ -50,7 +54,7 @@ describe("PERMISSION — selaras dengan katalog BE /system/permissions", () => {
 		expect(missing).toEqual([]);
 	});
 
-	it("jumlah sama persis (21) dan tidak ada duplikat", () => {
+	it("jumlah sama persis (25) dan tidak ada duplikat", () => {
 		expect(feValues.length).toBe(BE_PERMISSION_CATALOG.length);
 		expect(new Set(feValues).size).toBe(feValues.length);
 	});

@@ -1,8 +1,8 @@
-import { verifySession } from "@/lib/auth";
+import { getPegawaiSession } from "@/lib/auth";
 import { BatchListClient } from "./batch-list-client";
 
 export default async function BatchPage() {
-	await verifySession();
+	const { user, pegawai } = await getPegawaiSession();
 
-	return <BatchListClient />;
+	return <BatchListClient userName={user.name} jabatanNama={pegawai?.jabatan?.nama} />;
 }

@@ -37,7 +37,8 @@ function mockFetchByEndpoint(responses: Record<string, unknown>) {
 		}
 		return { ok: true, json: async () => ({ data: [] }) } as Response;
 	});
-}	describe("KomponenClient", () => {
+}
+describe("KomponenClient", () => {
 	const mockReplace = vi.fn();
 
 	afterEach(() => cleanup());
@@ -143,7 +144,8 @@ function mockFetchByEndpoint(responses: Record<string, unknown>) {
 					json: async () => ({ data: { id: 99, nama: "Profil Baru" } }),
 				} as Response;
 			}
-			return { ok: true, json: async () => ({ data: { content: [] } }) } as Response;
+			// ponytail: generic fallback — returns empty array for /kode, /profil/urut, etc.
+			return { ok: true, json: async () => ({ data: [] }) } as Response;
 		});
 		globalThis.fetch = fetchSpy;
 
@@ -186,22 +188,26 @@ function mockFetchByEndpoint(responses: Record<string, unknown>) {
 					json: async () => ({ data: [{ id: 3, nama: "Profil Capeg Tetap" }] }),
 				} as Response;
 			}
-			return {
-				ok: true,
-				json: async () => ({
-					data: {
-						totalElements: 0,
-						totalPages: 0,
-						size: 10,
-						number: 0,
-						numberOfElements: 0,
-						first: true,
-						last: true,
-						empty: true,
-						content: [],
-					},
-				}),
-			} as Response;
+			if (s.includes("/penggajian/komponen/") && s.includes("/profil")) {
+				return {
+					ok: true,
+					json: async () => ({
+						data: {
+							totalElements: 0,
+							totalPages: 0,
+							size: 10,
+							number: 0,
+							numberOfElements: 0,
+							first: true,
+							last: true,
+							empty: true,
+							content: [],
+						},
+					}),
+				} as Response;
+			}
+			// ponytail: generic fallback for /kode, /profil/urut, etc.
+			return { ok: true, json: async () => ({ data: [] }) } as Response;
 		});
 		globalThis.fetch = fetchSpy;
 

@@ -1,5 +1,4 @@
 import { CheckCircle2, KeyRound, Mail, ShieldCheck, User } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { getAccountSession, verifySession } from "@/lib/auth";
 import { ChangePasswordForm } from "./change-password-form";
 
@@ -11,7 +10,7 @@ export default async function ProfilPage() {
 		<div className="mx-auto max-w-2xl space-y-6">
 			{/* Profile Header Card */}
 			<div className="rounded-2xl border border-border/60 bg-muted/20 p-1.5 shadow-xs">
-				<div className="rounded-[calc(1rem-0.25rem)] border border-border/40 bg-card shadow-2xs overflow-hidden">
+				<div className="rounded-[0.75rem] border border-border/40 bg-card shadow-2xs overflow-hidden">
 					<div className="h-24 bg-linear-to-r from-primary-dark via-primary to-primary/80" />
 					<div className="relative p-6 pt-0">
 						<div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between -mt-12 mb-4">
@@ -80,7 +79,7 @@ export default async function ProfilPage() {
 
 			{/* Change Password Card */}
 			<div className="rounded-2xl border border-border/60 bg-muted/20 p-1.5 shadow-xs">
-				<div className="rounded-[calc(1rem-0.25rem)] border border-border/40 bg-card p-6 shadow-2xs">
+				<div className="rounded-[0.75rem] border border-border/40 bg-card p-6 shadow-2xs">
 					<div className="space-y-1.5 mb-6">
 						<div className="flex items-center gap-2">
 							<KeyRound className="size-5 text-primary" />

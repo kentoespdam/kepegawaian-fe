@@ -35,12 +35,12 @@ Hook → Page/Client → Toolbar tombol Verifikasi → Tests.
 
 ## Definition of Done
 
-- [ ] Halaman `/penggajian/batch/[id]/verifikasi-1` reachable hanya untuk role `manager-sdm` / `admin`
-- [ ] Step rail: fase ini enabled hanya jika status batch = `WAIT_VERIFICATION_PHASE_1`
-- [ ] Tombol Verifikasi → PATCH → sukses → redirect ke fase 03 (`/tambahan`)
-- [ ] Tidak ada tombol tambah/edit/hapus di tabel
-- [ ] Tests green
-- [ ] Commit: `feat(penggajian/batch/fase-02): verifikasi tahap 1`
+- [x] Halaman `/penggajian/batch/[id]/verifikasi-1` reachable hanya untuk role `manager-sdm` / `admin`
+- [x] Step rail: fase ini enabled hanya jika status batch = `WAIT_VERIFICATION_PHASE_1`
+- [x] Tombol Verifikasi → PATCH → sukses → redirect ke fase 03 (`/tambahan`)
+- [x] Tidak ada tombol tambah/edit/hapus di tabel
+- [x] Tests green
+- [x] Commit: `feat(penggajian/batch/fase-02): verifikasi tahap 1`
 
 ## Risiko & Mitigasi
 

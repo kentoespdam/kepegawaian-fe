@@ -44,12 +44,12 @@ Hooks → Page/Client → Dialog → Tests.
 
 ## Definition of Done
 
-- [ ] Halaman reachable hanya untuk role `staf-keuangan` / `admin`
-- [ ] Step rail: fase ini enabled hanya jika status batch = `WAIT_VERIFICATION_PHASE_1` (setelah verify1) ATAU `PROSES` (kasus tertentu)
-- [ ] Tombol "+ Tambah Komponen" → Dialog → submit → success → rincian refresh
-- [ ] Icon trash di kanan hapus komponen (optimistic? tidak — tunggu 200, sesuai CONTEXT-MAP)
-- [ ] Tests green
-- [ ] Commit: `feat(penggajian/batch/fase-03): tambahan komponen`
+- [x] Halaman reachable hanya untuk role `staf-keuangan` / `admin`
+- [x] Step rail: fase ini enabled hanya jika status batch = `WAIT_VERIFICATION_PHASE_1` ATAU `PROSES`
+- [x] Tombol "+ Tambah Komponen" → Dialog → submit → success → rincian refresh
+- [x] Icon trash di kanan hapus komponen (tunggu 200, sesuai CONTEXT-MAP)
+- [x] Tests green
+- [x] Commit: `feat(penggajian/batch/fase-03): tambahan komponen`
 
 ## Risiko & Mitigasi
 

@@ -49,13 +49,13 @@ Hooks → Config → Page/Client → Dialog → Tests.
 
 ## Definition of Done
 
-- [ ] Halaman `/penggajian/batch` reachable dari sidebar (visible jika role punya salah satu permission `penggajian.*`)
-- [ ] Tabel list menampilkan batch dengan filter periode + status
-- [ ] Tombol "+ Buat Proses Gaji Baru" buka Dialog form
-- [ ] Submit create → redirect ke `/batch/{id}/setup`
-- [ ] File upload bekerja (multipart FormData)
-- [ ] Build & test green
-- [ ] Commit: `feat(penggajian/batch): list + create dialog`
+- [x] Halaman `/penggajian/batch` reachable dari sidebar (visible jika role punya salah satu permission `penggajian.*`)
+- [x] Tabel list menampilkan batch dengan filter periode + status
+- [x] Tombol "+ Buat Proses Gaji Baru" buka Dialog form
+- [x] Submit create → redirect ke `/batch/{id}/setup`
+- [x] File upload bekerja (multipart FormData) — `useCreateBatch` hook
+- [x] Build & test green
+- [x] Commit: `feat(penggajian/batch): list + create dialog`
 
 ## Risiko & Mitigasi
 

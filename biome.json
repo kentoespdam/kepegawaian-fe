@@ -22,7 +22,8 @@
 			"!src/components/ui",
 			"!public",
 			"!*.test.js",
-			"!.openclaude-profile.json"
+			"!.openclaude-profile.json",
+			"!skills-lock.json"
 		]
 	},
 	"formatter": {

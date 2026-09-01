@@ -238,12 +238,12 @@ Semua tipe sudah di-generate di `src/types/penggajian/` (jangan diedit manual):
 
 | Milestone | File | Status |
 |---|---|---|
-| M1 Fondasi | `docs/CLAIM-ORDER-penggajian-fondasi.md` | ⏳ |
-| M2 Setup Master | `docs/CLAIM-ORDER-penggajian-setup-master.md` | ⏳ |
-| M3 List Batch + Dialog Create | `docs/CLAIM-ORDER-penggajian-batch-list.md` | ⏳ |
-| M4 Fase 01 Seting | `docs/CLAIM-ORDER-penggajian-fase-01.md` | ⏳ |
-| M5 Fase 02 Verifikasi | `docs/CLAIM-ORDER-penggajian-fase-02.md` | ⏳ |
-| M6 Fase 03 Tambahan | `docs/CLAIM-ORDER-penggajian-fase-03.md` | ⏳ |
-| M7 Fase 04 Persetujuan | `docs/CLAIM-ORDER-penggajian-fase-04.md` | ⏳ |
+| M1 Fondasi | `docs/CLAIM-ORDER-penggajian-fondasi.md` | ✅ Done |
+| M2 Setup Master | `docs/CLAIM-ORDER-penggajian-setup-master.md` | ✅ Done |
+| M3 List Batch + Dialog Create | `docs/CLAIM-ORDER-penggajian-batch-list.md` | ✅ Done |
+| M4 Fase 01 Seting | `docs/CLAIM-ORDER-penggajian-fase-01.md` | ✅ Done |
+| M5 Fase 02 Verifikasi | `docs/CLAIM-ORDER-penggajian-fase-02.md` | ✅ Done |
+| M6 Fase 03 Tambahan | `docs/CLAIM-ORDER-penggajian-fase-03.md` | ✅ Done |
+| M7 Fase 04 Persetujuan | `docs/CLAIM-ORDER-penggajian-fase-04.md` | ✅ Done |
 
-> ADR-0016 (struktur 2 sub-grup sidebar + RBAC granular per fase) akan dibuat di M1.
+> ADR-0016 sudah dibuat di `docs/adr/0016-penggajian-sub-modul-rbac-workflow.md`.

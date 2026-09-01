@@ -8,12 +8,14 @@ import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
+import { FormulaEditor } from "@/components/formula-editor";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { useKomponenForm } from "@/hooks/penggajian/useKomponenForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { penggajianApi } from "@/lib/api/penggajian-client";
@@ -91,12 +93,8 @@ export function KomponenClient() {
 	const [namaProfil, setNamaProfil] = useState("");
 	const [createError, setCreateError] = useState<string | null>(null);
 	const [komponenDialogOpen, setKomponenDialogOpen] = useState(false);
-	const [komponenForm, setKomponenForm] = useState({
-		kode: "",
-		nama: "",
-		jenisGaji: "" as TipeKomponen | "",
-		nilai: "",
-	});
+	const [editing, setEditing] = useState<GajiKomponenResponse | null>(null);
+	const komponenForm = useKomponenForm(selectedProfilId, editing);
 	const [komponenError, setKomponenError] = useState<string | null>(null);
 
 	// ponytail: listAll → GET /penggajian/profil/list (unpaginated, sesuai issue kepegawaian-fe-wty1)
@@ -138,11 +136,30 @@ export function KomponenClient() {
 		onSuccess: () => {
 			qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] });
 			setKomponenDialogOpen(false);
-			setKomponenForm({ kode: "", nama: "", jenisGaji: "", nilai: "" });
+			qc.invalidateQueries({ queryKey: ["penggajian", "komponen", selectedProfilId, "kode"] });
+			setEditing(null);
 			toast.success("Komponen berhasil ditambah");
 		},
 		onError: (e: Error) => setKomponenError(e.message ?? "Gagal menambah komponen"),
 	});
+
+	const updateKomponen = useMutation({
+		mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
+			penggajianApi.update<GajiKomponenResponse>(ENTITY, id, data),
+		onSuccess: () => {
+			qc.invalidateQueries({ queryKey: ["penggajian", ENTITY] });
+			qc.invalidateQueries({ queryKey: ["penggajian", "komponen", selectedProfilId, "kode"] });
+			setKomponenDialogOpen(false);
+			setEditing(null);
+			toast.success("Komponen berhasil diperbarui");
+		},
+		onError: (e: Error) => setKomponenError(e.message ?? "Gagal memperbarui komponen"),
+	});
+
+	const openEdit = (item: GajiKomponenResponse) => {
+		setEditing(item);
+		setKomponenError(null);
+	};
 
 	const createProfil = useMutation({
 		mutationFn: (data: { nama: string }) => penggajianApi.create<GajiProfilResponse>("profil", data),
@@ -253,8 +270,8 @@ export function KomponenClient() {
 								<Button
 									className="h-11 px-4 text-sm font-semibold"
 									onClick={() => {
+										setEditing(null);
 										setKomponenError(null);
-										setKomponenForm({ kode: "", nama: "", jenisGaji: "", nilai: "" });
 										setKomponenDialogOpen(true);
 									}}
 								>
@@ -277,6 +294,7 @@ export function KomponenClient() {
 								if (sortBy === key) setP("sortDirection", sortDir === "asc" ? "desc" : "asc");
 								else setP({ sortBy: key, sortDirection: "asc" });
 							}}
+							onEdit={canWrite ? openEdit : undefined}
 							onDelete={canDelete ? openDelete : undefined}
 							getRowId={(i) => String((i as Record<string, unknown>).id ?? "")}
 							pagination={
@@ -314,23 +332,39 @@ export function KomponenClient() {
 				onConfirm={handleDelete}
 				error={deleteError}
 			/>{" "}
-			<Dialog open={komponenDialogOpen} onOpenChange={setKomponenDialogOpen}>
-				<DialogContent className="sm:max-w-lg">
+			<Dialog
+				open={komponenDialogOpen}
+				onOpenChange={(v) => {
+					if (!v) {
+						setEditing(null);
+					}
+					setKomponenDialogOpen(v);
+				}}
+			>
+				<DialogContent className="sm:max-w-xl">
 					<DialogHeader>
-						<DialogTitle>Tambah Komponen Gaji</DialogTitle>
+						<DialogTitle>{editing ? "Edit Komponen Gaji" : "Tambah Komponen Gaji"}</DialogTitle>
 					</DialogHeader>
 					<form
 						onSubmit={(e) => {
 							e.preventDefault();
-							if (!komponenForm.kode.trim() || !komponenForm.nama.trim() || !selectedProfilId) return;
+							const f = komponenForm.form;
+							if (!f.kode.trim() || !f.nama.trim() || !selectedProfilId) return;
 							setKomponenError(null);
-							createKomponen.mutate({
+							const payload = {
 								profilGajiId: selectedProfilId,
-								kode: komponenForm.kode.trim(),
-								nama: komponenForm.nama.trim(),
-								...(komponenForm.jenisGaji ? { jenisGaji: komponenForm.jenisGaji } : {}),
-								...(komponenForm.nilai ? { nilai: Number(komponenForm.nilai) } : {}),
-							});
+								kode: f.kode.trim(),
+								nama: f.nama.trim(),
+								...(f.jenisGaji ? { jenisGaji: f.jenisGaji } : {}),
+								...(f.nilai ? { nilai: Number(f.nilai) } : {}),
+								...(f.formula ? { formula: f.formula } : {}),
+								...(f.urut ? { urut: Number(f.urut) } : {}),
+							};
+							if (editing) {
+								updateKomponen.mutate({ id: String(editing.id), data: payload });
+							} else {
+								createKomponen.mutate(payload);
+							}
 						}}
 						className="space-y-4"
 					>
@@ -340,8 +374,8 @@ export function KomponenClient() {
 							</Label>
 							<Input
 								id="kode"
-								value={komponenForm.kode}
-								onChange={(e) => setKomponenForm((f) => ({ ...f, kode: e.target.value }))}
+								value={komponenForm.form.kode}
+								onChange={(e) => komponenForm.setField("kode", e.target.value)}
 								placeholder="Kode komponen"
 								className="h-11"
 							/>
@@ -352,8 +386,8 @@ export function KomponenClient() {
 							</Label>
 							<Input
 								id="nama-komponen"
-								value={komponenForm.nama}
-								onChange={(e) => setKomponenForm((f) => ({ ...f, nama: e.target.value }))}
+								value={komponenForm.form.nama}
+								onChange={(e) => komponenForm.setField("nama", e.target.value)}
 								placeholder="Nama komponen gaji"
 								className="h-11"
 							/>
@@ -362,8 +396,8 @@ export function KomponenClient() {
 							<div className="space-y-1.5">
 								<Label className="text-sm font-medium">Jenis Gaji</Label>
 								<Select
-									value={komponenForm.jenisGaji}
-									onValueChange={(v) => setKomponenForm((f) => ({ ...f, jenisGaji: v as TipeKomponen }))}
+									value={komponenForm.form.jenisGaji}
+									onValueChange={(v) => komponenForm.setField("jenisGaji", v as TipeKomponen)}
 								>
 									<SelectTrigger className="h-11">
 										<SelectValue placeholder="Pilih jenis" />
@@ -375,18 +409,40 @@ export function KomponenClient() {
 								</Select>
 							</div>
 							<div className="space-y-1.5">
-								<Label htmlFor="nilai" className="text-sm font-medium">
-									Nilai
+								<Label htmlFor="urut" className="text-sm font-medium">
+									Urut
 								</Label>
 								<Input
-									id="nilai"
+									id="urut"
 									type="number"
-									value={komponenForm.nilai}
-									onChange={(e) => setKomponenForm((f) => ({ ...f, nilai: e.target.value }))}
-									placeholder="0"
+									value={komponenForm.form.urut}
+									onChange={(e) => komponenForm.setField("urut", e.target.value)}
+									placeholder={komponenForm.urutAuto != null ? String(komponenForm.urutAuto) : "Auto"}
 									className="h-11"
 								/>
 							</div>
+						</div>
+						<div className="space-y-1.5">
+							<Label htmlFor="nilai" className="text-sm font-medium">
+								Nilai
+							</Label>
+							<Input
+								id="nilai"
+								type="number"
+								value={komponenForm.form.nilai}
+								onChange={(e) => komponenForm.setField("nilai", e.target.value)}
+								placeholder="0"
+								className="h-11"
+							/>
+						</div>
+						<div className="space-y-1.5">
+							<Label className="text-sm font-medium">Formula</Label>
+							<FormulaEditor
+								value={komponenForm.form.formula}
+								onFormulaChange={komponenForm.setFormula}
+								onAppendKode={komponenForm.appendKodeToFormula}
+								kodeList={komponenForm.availableKode}
+							/>
 						</div>
 						{komponenError && <p className="text-sm text-destructive">{komponenError}</p>}
 						<div className="flex items-center justify-end gap-2 pt-2">
@@ -394,17 +450,25 @@ export function KomponenClient() {
 								type="button"
 								variant="outline"
 								size="lg"
-								onClick={() => setKomponenDialogOpen(false)}
-								disabled={createKomponen.isPending}
+								onClick={() => {
+									setKomponenDialogOpen(false);
+									setEditing(null);
+								}}
+								disabled={createKomponen.isPending || updateKomponen.isPending}
 							>
 								Batal
 							</Button>
 							<Button
 								type="submit"
 								size="lg"
-								disabled={createKomponen.isPending || !komponenForm.kode.trim() || !komponenForm.nama.trim()}
+								disabled={
+									createKomponen.isPending ||
+									updateKomponen.isPending ||
+									!komponenForm.form.kode.trim() ||
+									!komponenForm.form.nama.trim()
+								}
 							>
-								{createKomponen.isPending ? "Menyimpan…" : "Simpan"}
+								{createKomponen.isPending || updateKomponen.isPending ? "Menyimpan…" : "Simpan"}
 							</Button>
 						</div>
 					</form>

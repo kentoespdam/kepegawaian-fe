@@ -25,9 +25,11 @@ interface CreateBatchDialogProps {
 	open: boolean;
 	onOpenChange: (v: boolean) => void;
 	onSuccess: (id: string) => void;
+	userName?: string;
+	jabatanNama?: string;
 }
 
-export function CreateBatchDialog({ open, onOpenChange, onSuccess }: CreateBatchDialogProps) {
+export function CreateBatchDialog({ open, onOpenChange, onSuccess, userName, jabatanNama }: CreateBatchDialogProps) {
 	const createBatch = useCreateBatch();
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [file, setFile] = useState<File | null>(null);
@@ -39,6 +41,10 @@ export function CreateBatchDialog({ open, onOpenChange, onSuccess }: CreateBatch
 		formState: { errors },
 	} = useForm<FormValues>({
 		resolver: zodResolver(schema),
+		defaultValues: {
+			diProsesOleh: userName ?? "",
+			jabatanPemroses: jabatanNama ?? "",
+		},
 	});
 
 	const onSubmit = async (data: FormValues) => {
@@ -78,33 +84,29 @@ export function CreateBatchDialog({ open, onOpenChange, onSuccess }: CreateBatch
 							Tahun <span className="text-destructive">*</span>
 						</Label>
 						<Input id="tahun" {...register("tahun")} placeholder="2026" className="h-11" />
-						{errors.tahun && <p className="text-xs text-destructive">{errors.tahun.message}</p>}
+						{errors.tahun && <p className="text-xs text-destructive">{errors.tahun.message}</p>}{" "}
 					</div>
-
 					<div className="space-y-1.5">
 						<Label htmlFor="bulan" className="text-sm font-medium">
 							Bulan <span className="text-destructive">*</span>
 						</Label>
 						<Input id="bulan" {...register("bulan")} placeholder="08" className="h-11" />
 						{errors.bulan && <p className="text-xs text-destructive">{errors.bulan.message}</p>}
-					</div>
-
+					</div>{" "}
 					<div className="space-y-1.5">
 						<Label htmlFor="diProsesOleh" className="text-sm font-medium">
 							Di Proses Oleh <span className="text-destructive">*</span>
 						</Label>
-						<Input id="diProsesOleh" {...register("diProsesOleh")} className="h-11" />
+						<Input id="diProsesOleh" {...register("diProsesOleh")} readOnly className="h-11 bg-muted" />
 						{errors.diProsesOleh && <p className="text-xs text-destructive">{errors.diProsesOleh.message}</p>}
 					</div>
-
 					<div className="space-y-1.5">
 						<Label htmlFor="jabatanPemroses" className="text-sm font-medium">
 							Jabatan Pemroses <span className="text-destructive">*</span>
 						</Label>
-						<Input id="jabatanPemroses" {...register("jabatanPemroses")} className="h-11" />
+						<Input id="jabatanPemroses" {...register("jabatanPemroses")} readOnly className="h-11 bg-muted" />
 						{errors.jabatanPemroses && <p className="text-xs text-destructive">{errors.jabatanPemroses.message}</p>}
 					</div>
-
 					<div className="space-y-1.5">
 						<Label htmlFor="file" className="text-sm font-medium">
 							Lampiran Potongan TKK
@@ -117,7 +119,6 @@ export function CreateBatchDialog({ open, onOpenChange, onSuccess }: CreateBatch
 							className="h-11"
 						/>
 					</div>
-
 					<div className="flex items-center justify-end gap-2 pt-2">
 						<Button
 							type="button"
