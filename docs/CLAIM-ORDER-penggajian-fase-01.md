@@ -13,10 +13,10 @@ Implementasi **layout bersama batch** + **fase 01 Seting komponen Gaji** dalam b
 
 | # | Aksi | File |
 |---|---|---|
-| 1a | Server component tipis + `getPegawaiSession()` + permission check | `src/app/(app)/penggajian/batch/[id]/layout.tsx` |
-| 1b | `BatchContext` provider (wrap children) | pakai hook dari M1 |
-| 1c | Header: badge periode + status + total pegawai + tanggal proses | inline di layout |
-| 1d | Rail stepper vertikal (4 langkah) dengan step locking | `src/app/(app)/penggajian/batch/[id]/_components/stepper-rail.tsx` |
+| 1a | Server component tipis + `verifySession()` | `src/app/(app)/penggajian/batch/[id]/layout.tsx` |
+| 1b | `BatchContext` provider (wrap children) + header + rail | `src/app/(app)/penggajian/batch/[id]/batch-layout-client.tsx` |
+| 1c | `getStepState` pure logic + `STEPS` + `STATUS_ORDER` | `src/app/(app)/penggajian/batch/[id]/_lib/step-state.ts` |
+| 1d | Rail stepper vertikal (4 langkah) dengan step locking | inline di `batch-layout-client.tsx` |
 
 **Step locking logic**:
 - Step enabled jika (status backend sesuai fase) AND (user punya permission fase tsb)
@@ -34,7 +34,7 @@ Implementasi **layout bersama batch** + **fase 01 Seting komponen Gaji** dalam b
 | 2e | Tabel kiri: daftar pegawai dalam batch grouped-by-organisasi | inline di client |
 | 2f | Panel kanan: rincian komponen per-pegawai | inline di client |
 | 2g | Sheet/Modal edit komponen per-baris | `src/app/(app)/penggajian/batch/[id]/setup/edit-komponen-sheet.tsx` |
-| 2h | Tests | `*.test.ts` |
+| 2h | Tests: `getStepState` unit tests (9 cases) | `src/app/(app)/penggajian/batch/[id]/_lib/step-state.test.ts` |
 
 > **State**: `?pegawaiId=N` di URL untuk sync selected employee.
 
@@ -51,13 +51,13 @@ Layout bersama → Stepper rail → Fase01 page → Sheet edit → Tests.
 
 ## Definition of Done
 
-- [ ] Layout bersama render header info batch + rail stepper
-- [ ] Step locking: step aktif = enabled, step lain = disabled sesuai status + permission
-- [ ] Fase 01: klik baris pegawai → panel kanan update rincian
-- [ ] Sheet edit komponen berfungsi (create/update/delete)
-- [ ] Tests: hook + stepper rail logic
-- [ ] Build & test green
-- [ ] Commit: `feat(penggajian/batch/fase-01): layout + seting komponen`
+- [x] Layout bersama render header info batch + rail stepper
+- [x] Step locking: step aktif = enabled, step lain = disabled sesuai status + permission
+- [x] Fase 01: klik baris pegawai → panel kanan update rincian
+- [ ] Sheet edit komponen berfungsi (create/update/delete) — **skipped (view-only phase)**
+- [x] Tests: `getStepState` pure logic — 9 test cases covering all state transitions
+- [x] Build & test green
+- [x] Commit: `feat(penggajian/batch/fase-01): layout + seting komponen`
 
 ## Risiko & Mitigasi
 
