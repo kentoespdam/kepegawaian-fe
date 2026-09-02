@@ -78,6 +78,11 @@ Freebuff beroperasi dalam **2 mode**. Mode ditentukan oleh prompt pertama user:
 
 1. Analisis domain/modul yang diminta — baca CONTEXT-MAP, ADR, docs terkait
 2. Grilling → sharpen plan bareng user (tanya-jawab)
+   - **Pola pertanyaan Claude Code:** Ajukan pertanyaan **satu per satu** (bukan sekaligus)
+   - Berikan **1-3 rekomendasi** dengan penjelasan singkat
+   - Tandai **1 saran terbaik** dengan label "(Recommended)"
+   - Format: tabel opsi + rekomendasi di akhir
+   - Tunggu konfirmasi user sebelum lanjut ke pertanyaan berikutnya
 3. Buat **beads issue** (`bd create`) berisi:
    - Judul: `{modul}: {deskripsi singkat}`
    - Body: implementasi plan langkah per langkah
