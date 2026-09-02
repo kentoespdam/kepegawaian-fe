@@ -508,7 +508,7 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 - [x] **Step 6.8:** `bun run build` — zero error ✅
 - [x] **Step 6.9:** `bunx biome check src/types/_shared/` — zero lint error ✅
 - [x] **Step 6.10:** `bun run test` — 256/256 pass ✅
-- [ ] **Step 6.11:** `bd close kepegawaian-fe-rlx2` ⏳ (manual)
+- [x] **Step 6.11:** `bd close kepegawaian-fe-rlx2` ✅ (Phase 6 complete)
 
 **Files berubah:**
 | File | Action |

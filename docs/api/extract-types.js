@@ -622,11 +622,7 @@ function renderSharedFiles(shared, schemas) {
 			const needsEnums = shared.aliasDecls.some((d) => /HttpStatusText/.test(d));
 			if (needsEnums) importLine = `import type { HttpStatusText } from "./enums";\n\n`;
 			const genericBlock = `${GENERIC_FAMILY}\n\n`;
-			body = names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas)).join("\n");
-			files.push({
-				filename: `${cat.filename}.ts`,
-				contents: normalizeTrailing(`${header}\n${importLine}${genericBlock}${body}`),
-			});
+			body = `${genericBlock}${names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas)).join("\n")}`;
 		} else {
 			// Other files: import enums if needed, render body
 			const bodyText = names
@@ -1094,7 +1090,7 @@ function syncToSrc(files) {
 	// Format dengan Biome
 	console.log(`\n🎨 Memformat src/types/ dengan Biome ...`);
 	try {
-		execSync(`npx @biomejs/biome format --write "${SRC_TYPES_DIR}"`, { stdio: "inherit" });
+		execSync(`npx @biomejs/biome check --write "${SRC_TYPES_DIR}"`, { stdio: "inherit" });
 		console.log(`   Format selesai.`);
 	} catch (e) {
 		console.warn(`   ⚠️  Gagal format src/types/ dengan Biome: ${e.message}`);
@@ -1205,7 +1201,7 @@ function main() {
 		// Format output dengan Biome
 		console.log(`\n🎨 Memformat output dengan Biome ...`);
 		try {
-			execSync(`npx @biomejs/biome format --write "${OUTPUT_DIR}"`, { stdio: "inherit" });
+			execSync(`npx @biomejs/biome check --write "${OUTPUT_DIR}"`, { stdio: "inherit" });
 			console.log(`   Format selesai.`);
 		} catch (e) {
 			console.warn(`   ⚠️  Gagal format dengan Biome: ${e.message}`);

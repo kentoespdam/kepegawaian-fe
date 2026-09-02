@@ -95,7 +95,8 @@ Freebuff beroperasi dalam **2 mode**. Mode ditentukan oleh prompt pertama user:
    - `git add docs/ .beads/issues.jsonl`
    - `git commit -m "docs: {modul}: {deskripsi singkat}"`
    - `git pull --rebase`
-   - `bd dolt push`
+   - ~~`bd dolt push`~~ 
+      > tidak menggunakan dolt
    - `git push`
    - `git status` — pastikan "up to date with origin"
    Jika tidak ada file yang dibuat (hanya analisis/tanya-jawab) → Done, tidak perlu push.
