@@ -4,6 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useDebounce } from "use-debounce";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
@@ -66,11 +67,7 @@ export function KuotaFormSheet({ open, onOpenChange, editing }: KuotaFormSheetPr
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedPegawai, setSelectedPegawai] = useState<PegawaiListResponse | null>(null);
 
-	const [debouncedSearch, setDebouncedSearch] = useState("");
-	useEffect(() => {
-		const t = setTimeout(() => setDebouncedSearch(searchQuery), 300);
-		return () => clearTimeout(t);
-	}, [searchQuery]);
+	const [debouncedSearch] = useDebounce(searchQuery, 300);
 
 	const searchEnabled = debouncedSearch.length >= 2;
 	const pegawaiSearch = useQuery({

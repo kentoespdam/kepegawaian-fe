@@ -4,7 +4,7 @@
 **Audit:** 2026-09-01 (ponytail-audit)
 **Tujuan:** Perbaiki violation coding-rules §2.3 (separasi logic/presentasi), §2.2 (ukuran file), §5.1 (query key factory), dan hapus dead code.
 
-**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅
+**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅
 
 **Phase 3 Status:** Sub-phase 3A ✅ (pendukung), 3B ✅ (riwayat), 3C partially ✅ (build+lint pass, tests pending)
 
@@ -475,19 +475,19 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 
 ---
 
-### Phase 5: Cleanup + Derived State ✅→○
+### Phase 5: Cleanup + Derived State ✅
 
 > **Target:** Hapus use-mobile.ts + fix useEffect derived state.
 > **Issue:** `kepegawaian-fe-6xc0` (open)
 > **Estimasi:** ~30 menit
 
-- [ ] **Step 5.1:** Grep consumers `use-mobile.ts` — hapus file + import
-- [ ] **Step 5.2:** Fix `kuota-form-sheet.tsx` — ganti useEffect derived state → inline
-- [ ] **Step 5.3:** Fix `data-pegawai-toolbar.tsx` — ganti useEffect derived state → inline
-- [ ] **Step 5.4:** Fix `sp-form-sheet.tsx` — ganti useEffect derived state → inline
-- [ ] **Step 5.5:** `bun run build` — zero error ✅
-- [ ] **Step 5.6:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 5.7:** `bd close kepegawaian-fe-6xc0` ✅
+- [x] **Step 5.1:** Hapus `use-mobile.ts`, inline `useIsMobile()` ke `sidebar.tsx` (sole consumer)
+- [x] **Step 5.2:** Fix `kuota-form-sheet.tsx` — ganti debounce useEffect + useState → `useDebounce()` dari `use-debounce`
+- [x] **Step 5.3:** `data-pegawai-toolbar.tsx` — sync useEffects legitimate (debounce + URL source-of-truth), skip
+- [x] **Step 5.4:** `sp-form-sheet.tsx` — signer useEffect legitimate (async data → mutable state sync), skip
+- [x] **Step 5.5:** `bun run build` — zero error ✅
+- [x] **Step 5.6:** `bunx biome check` — zero new lint error ✅ (4 pre-existing in unrelated files)
+- [x] **Step 5.7:** `bd close kepegawaian-fe-6xc0` ✅ (manual)
 
 ---
 
@@ -550,9 +550,9 @@ Phase 1, 2, 3, 5, 6 bisa jalan **paralel**. Phase 4 depends on Phase 1 (untuk us
 | 2 | 0 | 7 files (keys + 6 consumers) | 0 |
 | 3 | 11 hooks | 11 page.tsx files | 0 |
 | 4 | 8 extracted components + 1 hook | 5 oversized files | 0 |
-| 5 | 0 | 4 files | 1 (use-mobile.ts) |
+| 5 | 0 | 2 files (sidebar.tsx, kuota-form-sheet.tsx) | 1 (use-mobile.ts) |
 | 6 | 4 type files | 1 barrel + N consumers | 0 |
-| **Total** | **~25 new** | **~29 modified** | **1 deleted** |
+| **Total** | **~25 new** | **~27 modified** | **1 deleted** |
 
 ---
 
