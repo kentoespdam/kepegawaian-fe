@@ -302,6 +302,122 @@ const GENERIC_FAMILY = [
 	"}",
 ].join("\n");
 
+// ── Shared type categorization ───────────────────────────────────────
+
+/**
+ * Kategori shared types → sub-file di _shared/.
+ * Setiap kategori punya: filename (tanpa .ts), komentar header, daftar nama type.
+ * Schema yang tak masuk daftar manapun masuk ke "other".
+ */
+const SHARED_CATEGORIES = [
+	{
+		filename: "enums",
+		comment: "enum & union types lintas-domain",
+		names: [
+			"HttpStatusText",
+			"JenisSk",
+			"JenisKelamin",
+			"Agama",
+			"StatusKepegawaian",
+			"StatusKawin",
+			"GolonganDarah",
+			"JenisProfilUpdate",
+			"TipeKomponen",
+			"StatusApproval",
+			"StatusBerhenti",
+			"TingkatKemampuan",
+			"HubunganKeluarga",
+			"StatusPendidikanKeluarga",
+		],
+	},
+	{
+		filename: "api",
+		comment: "API envelope, pagination, sorting types",
+		names: [
+			"SortObject",
+			"PageableObject",
+			"PageQuery",
+			"SavedResultLong",
+			"DeletedResult",
+			"SingleResultInteger",
+			"SavedResultString",
+			"SavedResultListLong",
+		],
+	},
+	{
+		filename: "master",
+		comment: "master entity base types",
+		names: [
+			"OrganisasiMiniResponse",
+			"LevelResponse",
+			"JabatanMiniResponse",
+			"CutiJenisMiniResponse",
+			"PegawaiMiniResponse",
+			"Biodata",
+			"Organisasi",
+			"Jabatan",
+			"Profesi",
+			"Golongan",
+			"Grade",
+			"KodePajak",
+			"PegawaiResponse",
+			"GolonganResponse",
+			"LampiranSkQuery",
+			"SanksiMiniResponse",
+			"JenisSpMiniResponse",
+			"ProfesiMiniResponse",
+			"JenjangPendidikanResponse",
+			"EnumOption",
+			"ListResultEnumOption",
+			"GajiPendapatanNonPajakResponse",
+			"GajiProfilResponse",
+			"LampiranRow",
+		],
+	},
+	{
+		filename: "profile",
+		comment: "profile request & query types",
+		names: [
+			"LampiranProfilQuery",
+			"ListResultLampiranProfilQuery",
+			"SingleResultLampiranProfilQuery",
+			"PendidikanQuery",
+			"PendidikanPutRequest",
+			"PendidikanPostRequest",
+			"PendidikanLampiranPostRequest",
+			"PelatihanPutRequest",
+			"PelatihanPostRequest",
+			"PelatihanLampiranPostRequest",
+			"ProfilKeluargaPutRequest",
+			"ProfilKeluargaPostRequest",
+			"ProfilKeluargaLampiranPostRequest",
+			"KeahlianPutRequest",
+			"KeahlianPostRequest",
+			"KeahlianLampiranPostRequest",
+			"KartuIdentitasPutRequest",
+			"KartuIdentitasPostRequest",
+			"KartuIdentitasLampiranPostRequest",
+			"KartuIdentitasQuery",
+			"PengalamanKerjaPutRequest",
+			"PengalamanKerjaPostRequest",
+			"PengalamanLampiranPostRequest",
+		],
+	},
+	{
+		filename: "auth",
+		comment: "authentication & authorization types",
+		names: ["PrefPermission", "PrefRole"],
+	},
+];
+
+/** Categorize a shared type name → category filename, atau "other". */
+function categorizeShared(name) {
+	for (const cat of SHARED_CATEGORIES) {
+		if (cat.names.includes(name)) return cat.filename;
+	}
+	return "other";
+}
+
 // ── Utility: graf schema & domain ────────────────────────────────────
 
 /** Kumpulkan seluruh $ref schema yang muncul di sebuah node (rekursif). */
@@ -467,22 +583,113 @@ function normalizeTrailing(content) {
 }
 
 /**
- * Render _shared.ts dari keputusan Plan.shared:
- *   { names: [...topoSorted], aliasDecls: [dekl string], enumAlias }.
+ * Render _shared/ domain files dari keputusan Plan.shared.
+ * Mengembalikan array { filename, contents } — satu per kategori + barrel.
+ *
+ * Domain file import enum dari ./enums (internal dependency).
+ * Generic family (Envelope/Page/PageEnvelope) masuk ke file api.ts.
+ * Alias enum (HttpStatusText, dll) masuk ke file enums.ts.
  */
-function renderSharedFile(shared, schemas) {
-	const header = fileHeader("shared — tipe lintas-domain (dipakai >= 2 module)");
+function renderSharedFiles(shared, schemas) {
+	// Group shared names by category
+	const byCategory = {};
+	for (const name of shared.names) {
+		const cat = categorizeShared(name);
+		byCategory[cat] ??= [];
+		byCategory[cat].push(name);
+	}
 
-	const aliasBlock = shared.aliasDecls.length ? `${shared.aliasDecls.join("\n")}\n\n` : "";
-	// Keluarga generic (Envelope/Page/PageEnvelope) ditulis SEKALI di sini; tipe
-	// TS di-hoist jadi urutan relatif thd PageableObject/SortObject/HttpStatusText
-	// tak masalah. Ditaruh sebelum body agar mudah ditemukan pembaca.
-	const genericBlock = `${GENERIC_FAMILY}\n\n`;
-	const body = shared.names
-		.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas))
-		.join("\n");
+	const files = [];
 
-	return normalizeTrailing(`${header}\n${aliasBlock}${genericBlock}${body}`);
+	// Render each category file
+	for (const cat of SHARED_CATEGORIES) {
+		const names = byCategory[cat.filename] || [];
+		if (names.length === 0 && cat.filename !== "enums" && cat.filename !== "api") continue;
+
+		const header = fileHeader(`shared/${cat.filename} — ${cat.comment}`);
+
+		let importLine = "";
+		let body = "";
+		let aliasBlock = "";
+
+		if (cat.filename === "enums") {
+			// Enums file: alias declarations (HttpStatusText, JenisSk, etc.)
+			aliasBlock = shared.aliasDecls.length ? `${shared.aliasDecls.join("\n")}\n\n` : "";
+			body = names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas)).join("\n");
+		} else if (cat.filename === "api") {
+			// API file: generic family + schema-based types
+			// Import enums for HttpStatusText reference in Envelope
+			const needsEnums = shared.aliasDecls.some((d) => /HttpStatusText/.test(d));
+			if (needsEnums) importLine = `import type { HttpStatusText } from "./enums";\n\n`;
+			const genericBlock = `${GENERIC_FAMILY}\n\n`;
+			body = names.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas)).join("\n");
+			files.push({
+				filename: `${cat.filename}.ts`,
+				contents: normalizeTrailing(`${header}\n${importLine}${genericBlock}${body}`),
+			});
+		} else {
+			// Other files: import enums if needed, render body
+			const bodyText = names
+				.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas))
+				.join("\n");
+			// Detect which enum names are referenced in the body
+			const enumNames = shared.aliasDecls
+				.map((d) => {
+					const m = d.match(/export type (\w+) =/);
+					return m ? m[1] : null;
+				})
+				.filter(Boolean);
+			const usedEnums = enumNames.filter((e) => referencedIn(bodyText, e));
+			if (usedEnums.length) importLine = `import type { ${usedEnums.join(", ")} } from "./enums";\n\n`;
+
+			// Detect cross-file dependencies (e.g. master types referencing api types)
+			const apiTypeNames = (byCategory["api"] || []).concat(GENERIC_NAMES);
+			const usedApiTypes = apiTypeNames.filter((t) => referencedIn(bodyText, t));
+			if (usedApiTypes.length) {
+				const apiImport = `import type { ${usedApiTypes.join(", ")} } from "./api";\n`;
+				importLine = importLine ? `${importLine}${apiImport}\n` : `${apiImport}\n`;
+			}
+
+			// Detect master type dependencies from profile
+			if (cat.filename === "profile") {
+				const masterNames = byCategory["master"] || [];
+				const usedMasterTypes = masterNames.filter((t) => referencedIn(bodyText, t));
+				if (usedMasterTypes.length) {
+					const masterImport = `import type { ${usedMasterTypes.join(", ")} } from "./master";\n`;
+					importLine = importLine ? `${importLine}${masterImport}\n` : `${masterImport}\n`;
+				}
+			}
+
+			body = bodyText;
+		}
+
+		files.push({
+			filename: `${cat.filename}.ts`,
+			contents: normalizeTrailing(`${header}\n${importLine}${aliasBlock}${body}`),
+		});
+	}
+
+	// Render "other" category (uncategorized types)
+	const otherNames = byCategory["other"] || [];
+	if (otherNames.length) {
+		const header = fileHeader("shared/other — uncategorized shared types");
+		const body = otherNames
+			.map((name) => schemaToDeclaration(name, schemas[name], shared.enumAlias, schemas))
+			.join("\n");
+		files.push({
+			filename: "other.ts",
+			contents: normalizeTrailing(`${header}\n${body}`),
+		});
+	}
+
+	return files;
+}
+
+/** Render barrel index.ts for _shared/ — re-exports all sub-modules. */
+function renderSharedBarrel() {
+	const header = fileHeader("shared/index — barrel re-export");
+	const reExports = SHARED_CATEGORIES.map((cat) => `export * from "./${cat.filename}";`).join("\n");
+	return normalizeTrailing(`${header}${reExports}\n`);
 }
 
 // ── Plan: keputusan murni (tanpa I/O) ────────────────────────────────
@@ -805,14 +1012,28 @@ function planEnumAliases(schemas, domainSchemas) {
 // ── Render: Plan → daftar file (string) ──────────────────────────────
 
 /**
- * Ubah Plan menjadi daftar file { domain, filename, module, contents } — string saja,
- * tanpa I/O. Entri _shared punya domain: null, module: null.
+ * Ubah Plan menjadi daftar file { domain, filename, module, contents, sharedDir } — string saja,
+ * tanpa I/O. Entri _shared punya domain: null, module: null, sharedDir: true.
  * File domain ditulis ke subfolder per module (mirror struktur docs/api/).
  */
 function render(p) {
-	const files = [
-		{ domain: null, filename: `${SHARED_MODULE}.ts`, module: null, contents: renderSharedFile(p.shared, p.schemas) },
-	];
+	const files = [];
+
+	// Shared files → _shared/ directory
+	const sharedFiles = renderSharedFiles(p.shared, p.schemas);
+	for (const sf of sharedFiles) {
+		files.push({ domain: null, filename: sf.filename, module: null, contents: sf.contents, sharedDir: true });
+	}
+	// Barrel index
+	files.push({
+		domain: null,
+		filename: "index.ts",
+		module: null,
+		contents: renderSharedBarrel(),
+		sharedDir: true,
+	});
+
+	// Domain files
 	for (const d of p.domains) {
 		files.push({
 			domain: d.domain,
@@ -833,19 +1054,41 @@ function render(p) {
  */
 function syncToSrc(files) {
 	console.log(`\n📋 Sync ke src/types/ ...`);
+
+	// Hapus _shared.ts lama (flat) bila masih ada — digantikan oleh _shared/ barrel
+	const oldShared = path.join(SRC_TYPES_DIR, `${SHARED_MODULE}.ts`);
+	if (fs.existsSync(oldShared)) {
+		fs.unlinkSync(oldShared);
+		console.log(`   🗑️  Menghapus _shared.ts lama (flat)`);
+	}
+
 	for (const f of files) {
-		const sourcePath = f.module ? path.join(OUTPUT_DIR, f.module, f.filename) : path.join(OUTPUT_DIR, f.filename);
-		const targetDir = f.module ? path.join(SRC_TYPES_DIR, f.module) : SRC_TYPES_DIR;
+		let sourcePath;
+		let targetDir;
+
+		if (f.sharedDir) {
+			// _shared/ directory files
+			sourcePath = path.join(OUTPUT_DIR, SHARED_MODULE, f.filename);
+			targetDir = path.join(SRC_TYPES_DIR, SHARED_MODULE);
+		} else if (f.module) {
+			sourcePath = path.join(OUTPUT_DIR, f.module, f.filename);
+			targetDir = path.join(SRC_TYPES_DIR, f.module);
+		} else {
+			sourcePath = path.join(OUTPUT_DIR, f.filename);
+			targetDir = SRC_TYPES_DIR;
+		}
+
 		const targetPath = path.join(targetDir, f.filename);
 
 		if (!fs.existsSync(targetDir)) {
 			fs.mkdirSync(targetDir, { recursive: true });
-			const label = f.module ? `${f.module}/` : path.basename(SRC_TYPES_DIR);
+			const label = f.sharedDir ? `${SHARED_MODULE}/` : f.module ? `${f.module}/` : path.basename(SRC_TYPES_DIR);
 			console.log(`   📁 Membuat folder ${label}`);
 		}
 
 		fs.copyFileSync(sourcePath, targetPath);
-		console.log(`   📄 ${f.module ? `${f.module}/` : ""}${f.filename}`);
+		const prefix = f.sharedDir ? `${SHARED_MODULE}/` : f.module ? `${f.module}/` : "";
+		console.log(`   📄 ${prefix}${f.filename}`);
 	}
 
 	// Format dengan Biome
@@ -930,15 +1173,23 @@ function main() {
 			console.log(`📁 Membuat folder ${OUTPUT_DIR}`);
 		}
 
+		const sharedCount = files.filter((f) => f.sharedDir && f.filename !== "index.ts").length;
 		const domainCount = files.filter((f) => f.domain !== null).length;
 		console.log(
-			`\n🧩 ${SHARED_MODULE}.ts`.padEnd(24) +
-				`(${p.stats.sharedCount} schema lintas-domain${p.stats.hasHttpStatus ? " + HttpStatusText" : ""})`,
+			`\n🧩 ${SHARED_MODULE}/`.padEnd(24) +
+				`(${p.stats.sharedCount} schema lintas-domain${p.stats.hasHttpStatus ? " + HttpStatusText" : ""} → ${sharedCount} files)`,
 		);
 		console.log(`\n🧬 Meng-generate ${domainCount} module domain ...\n`);
 
 		for (const f of files) {
-			const dir = f.module ? path.join(OUTPUT_DIR, f.module) : OUTPUT_DIR;
+			let dir;
+			if (f.sharedDir) {
+				dir = path.join(OUTPUT_DIR, SHARED_MODULE);
+			} else if (f.module) {
+				dir = path.join(OUTPUT_DIR, f.module);
+			} else {
+				dir = OUTPUT_DIR;
+			}
 			if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
 			fs.writeFileSync(path.join(dir, f.filename), f.contents, "utf-8");
 			if (f.domain !== null) {
@@ -946,6 +1197,8 @@ function main() {
 				console.log(
 					`  ✅ ${(f.module ? `${f.module}/` : "") + f.filename.padEnd(28)} ${d.local.length} lokal, ${d.reExports.length} shared`,
 				);
+			} else if (f.sharedDir && f.filename !== "index.ts") {
+				console.log(`  📦 ${SHARED_MODULE}/${f.filename.padEnd(20)} shared types`);
 			}
 		}
 

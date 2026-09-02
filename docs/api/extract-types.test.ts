@@ -266,10 +266,12 @@ describe("render — Plan → File[] (#1, hanya string)", () => {
 		},
 	);
 
-	it("mengembalikan satu file per domain + _shared.ts, dgn {domain, filename, contents}", () => {
+	it("mengembalikan _shared/ directory + satu file per domain, dgn {domain, filename, contents, sharedDir}", () => {
 		const files = render(plan(spec));
-		const names = files.map((f: { filename: string }) => f.filename).sort();
-		expect(names).toEqual(["_shared.ts", "a.ts", "b.ts"]);
+		const sharedFiles = files.filter((f: { sharedDir?: boolean }) => f.sharedDir);
+		const domainFiles = files.filter((f: { domain: string | null }) => f.domain !== null);
+		expect(sharedFiles.length).toBeGreaterThan(0); // _shared/ files + barrel
+		expect(domainFiles.map((f: { filename: string }) => f.filename).sort()).toEqual(["a.ts", "b.ts"]);
 		for (const f of files) {
 			expect(typeof f.contents).toBe("string");
 			expect(f.contents.endsWith("\n")).toBe(true); // normalizeTrailing: tepat satu newline akhir
@@ -361,18 +363,18 @@ describe("collapse wrapper BY-STRUCTURE → generic Envelope/PageEnvelope/Page",
 		expect(aFile).toContain("export type PageResultPageFoo = PageEnvelope<Foo>;");
 	});
 
-	it("_shared.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {
+	it("_shared/api.ts selalu memuat keluarga generic (union + never, errors string|string[])", () => {
 		const spec = makeSpec({ "/master/a": "AResp" }, { AResp: { type: "object", properties: {} } });
-		const shared = pick(
+		const apiFile = pick(
 			render(plan(spec)),
-			(f: { filename: string }) => f.filename === "_shared.ts",
-			"_shared.ts",
+			(f: { filename: string }) => f.filename === "api.ts",
+			"_shared/api.ts",
 		).contents;
-		expect(shared).toContain("export type Envelope<T> =");
-		expect(shared).toContain("errors?: never");
-		expect(shared).toContain("errors: string | string[]");
-		expect(shared).toContain("export interface Page<T> {");
-		expect(shared).toContain("export interface PageEnvelope<T> {");
+		expect(apiFile).toContain("export type Envelope<T> =");
+		expect(apiFile).toContain("errors?: never");
+		expect(apiFile).toContain("errors: string | string[]");
+		expect(apiFile).toContain("export interface Page<T> {");
+		expect(apiFile).toContain("export interface PageEnvelope<T> {");
 	});
 });
 
@@ -435,14 +437,14 @@ describe("query params GET → {Entity}SearchParams extends PageQuery (#Candidat
 		expect(g.searchParams).toBeNull();
 	});
 
-	it('PageQuery ada di _shared dengan sortDirection dinarrow ke "asc" | "desc"', () => {
-		const shared = pick(
+	it('PageQuery ada di _shared/api.ts dengan sortDirection dinarrow ke "asc" | "desc"', () => {
+		const apiFile = pick(
 			render(plan(specWithParams("/master/golongan", []))),
-			(f: { filename: string }) => f.filename === "_shared.ts",
-			"_shared.ts",
+			(f: { filename: string }) => f.filename === "api.ts",
+			"_shared/api.ts",
 		).contents;
-		expect(shared).toContain("export interface PageQuery {");
-		expect(shared).toContain('sortDirection?: "asc" | "desc";');
+		expect(apiFile).toContain("export interface PageQuery {");
+		expect(apiFile).toContain('sortDirection?: "asc" | "desc";');
 	});
 
 	it("file domain meng-import PageQuery dari ./_shared saat ada SearchParams", () => {
@@ -611,12 +613,20 @@ describe("smoke: master/api.json nyata → output stabil & konsisten", () => {
 		expect(p.warnings).toHaveLength(0);
 	});
 
-	it("render() menghasilkan 21 file, setiap tipe shared yang di-import benar-benar ada di _shared", () => {
+	it("render() menghasilkan _shared/ files + 20 domain files, shared types ada di _shared/ sub-modules", () => {
 		const files = render(plan(spec, { master: "collection" }));
-		expect(files).toHaveLength(21);
-		const shared = pick(files, (f: { filename: string }) => f.filename === "_shared.ts", "_shared.ts").contents;
-		expect(shared).toContain("export type HttpStatusText =");
-		expect(shared).toContain("export type Envelope<T> =");
+		const domainFiles = files.filter((f: { domain: string | null }) => f.domain !== null);
+		const sharedFiles = files.filter((f: { sharedDir?: boolean }) => f.sharedDir);
+		expect(domainFiles).toHaveLength(20);
+		expect(sharedFiles.length).toBeGreaterThan(0);
+		const enumsFile = pick(
+			sharedFiles,
+			(f: { filename: string }) => f.filename === "enums.ts",
+			"_shared/enums.ts",
+		).contents;
+		expect(enumsFile).toContain("export type HttpStatusText =");
+		const apiFile = pick(sharedFiles, (f: { filename: string }) => f.filename === "api.ts", "_shared/api.ts").contents;
+		expect(apiFile).toContain("export type Envelope<T> =");
 	});
 
 	it("collapse nyata: tak ada interface wrapper/Page* tersisa di output mana pun", () => {
