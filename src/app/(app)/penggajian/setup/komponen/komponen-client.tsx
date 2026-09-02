@@ -8,58 +8,29 @@ import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
-import { FormulaEditor } from "@/components/formula-editor";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
-import { useKomponenForm } from "@/hooks/penggajian/useKomponenForm";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
 import { penggajianApi } from "@/lib/api/penggajian-client";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiProfilResponse, Page, TipeKomponen } from "@/types/_shared";
+import type { GajiProfilResponse, Page } from "@/types/_shared";
 import type { GajiKomponenResponse } from "@/types/penggajian/komponen";
+import { KomponenDialog } from "./komponen-dialog";
+import { ProfilDialog } from "./profil-dialog";
 
 const ENTITY = "komponen";
+const KOMPONEN_BASE = "/penggajian/setup/komponen";
 
 const KOMPONEN_COLUMNS = [
-	{
-		id: "urut",
-		header: "Urut",
-		cell: (item: GajiKomponenResponse) => String(item.urut ?? ""),
-	},
-	{
-		id: "kode",
-		header: "Kode",
-		cell: (item: GajiKomponenResponse) => String(item.kode ?? ""),
-	},
-	{
-		id: "nama",
-		header: "Nama",
-		primary: true,
-		cell: (item: GajiKomponenResponse) => String(item.nama ?? ""),
-	},
-	{
-		id: "jenisGaji",
-		header: "Jenis Gaji",
-		cell: (item: GajiKomponenResponse) => String(item.jenisGaji ?? ""),
-	},
-	{
-		id: "nilai",
-		header: "Nilai",
-		cell: (item: GajiKomponenResponse) => String(item.nilai ?? 0),
-	},
-	{
-		id: "isReference",
-		header: "Reference",
-		cell: (item: GajiKomponenResponse) => (item.isReference ? "Ya" : "Tidak"),
-	},
+	{ id: "urut", header: "Urut", cell: (item: GajiKomponenResponse) => String(item.urut ?? "") },
+	{ id: "kode", header: "Kode", cell: (item: GajiKomponenResponse) => String(item.kode ?? "") },
+	{ id: "nama", header: "Nama", primary: true, cell: (item: GajiKomponenResponse) => String(item.nama ?? "") },
+	{ id: "jenisGaji", header: "Jenis Gaji", cell: (item: GajiKomponenResponse) => String(item.jenisGaji ?? "") },
+	{ id: "nilai", header: "Nilai", cell: (item: GajiKomponenResponse) => String(item.nilai ?? 0) },
+	{ id: "isReference", header: "Reference", cell: (item: GajiKomponenResponse) => (item.isReference ? "Ya" : "Tidak") },
 	{
 		id: "formula",
 		header: "Formula",
@@ -69,8 +40,6 @@ const KOMPONEN_COLUMNS = [
 	},
 ];
 
-const KOMPONEN_BASE = "/penggajian/setup/komponen";
-
 export function KomponenClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
@@ -79,7 +48,6 @@ export function KomponenClient() {
 		ENTITY,
 		KOMPONEN_BASE,
 	);
-
 	const { roles, permissions } = useAuth();
 	const canWrite = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
 	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_SETUP, roles);
@@ -90,26 +58,19 @@ export function KomponenClient() {
 	});
 	const [deletingKomponen, setDeletingKomponen] = useState<Record<string, unknown> | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
-	const [dialogOpen, setDialogOpen] = useState(false);
-	const [namaProfil, setNamaProfil] = useState("");
-	const [createError, setCreateError] = useState<string | null>(null);
+	const [profilDialogOpen, setProfilDialogOpen] = useState(false);
 	const [komponenDialogOpen, setKomponenDialogOpen] = useState(false);
 	const [editing, setEditing] = useState<GajiKomponenResponse | null>(null);
-	const komponenForm = useKomponenForm(selectedProfilId, editing);
-	const [komponenError, setKomponenError] = useState<string | null>(null);
+	const [_komponenError, setKomponenError] = useState<string | null>(null);
 
-	// ponytail: listAll → GET /penggajian/profil/list (unpaginated, sesuai issue kepegawaian-fe-wty1)
 	const profilList = useQuery<GajiProfilResponse[]>({
 		queryKey: penggajianKeys.profil.list(),
 		queryFn: () => penggajianApi.listAll<GajiProfilResponse[]>("profil"),
 		staleTime: 5 * 60_000,
 	});
 
-	// profilId adalah path-param, bukan filter — hapus dari filters agar tidak ikut
-	// terkirim sebagai query string atau muncul sebagai chip filter di toolbar.
 	const { profilId: _profilId, ...tableFilters } = filters;
 
-	// Fetch komponen for selected profil — direct useQuery (parent-child endpoint, not standard CRUD)
 	const komponenQueryKey = [
 		...penggajianKeys.all,
 		`${ENTITY}/${selectedProfilId}/profil`,
@@ -127,11 +88,11 @@ export function KomponenClient() {
 		staleTime: 30_000,
 		gcTime: 300_000,
 	});
+
 	const removeKomponen = useMutation({
 		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
 		onSuccess: () => qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] }),
 	});
-
 	const createKomponen = useMutation({
 		mutationFn: (data: Record<string, unknown>) => penggajianApi.create<GajiKomponenResponse>(ENTITY, data),
 		onSuccess: () => {
@@ -143,7 +104,6 @@ export function KomponenClient() {
 		},
 		onError: (e: Error) => setKomponenError(e.message ?? "Gagal menambah komponen"),
 	});
-
 	const updateKomponen = useMutation({
 		mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
 			penggajianApi.update<GajiKomponenResponse>(ENTITY, id, data),
@@ -156,22 +116,15 @@ export function KomponenClient() {
 		},
 		onError: (e: Error) => setKomponenError(e.message ?? "Gagal memperbarui komponen"),
 	});
-
-	const openEdit = (item: GajiKomponenResponse) => {
-		setEditing(item);
-		setKomponenError(null);
-	};
-
 	const createProfil = useMutation({
 		mutationFn: (data: { nama: string }) => penggajianApi.create<GajiProfilResponse>("profil", data),
 		onSuccess: (created) => {
 			qc.invalidateQueries({ queryKey: penggajianKeys.profil.list() });
 			if (created?.id) handleProfilSelect(created.id);
-			setDialogOpen(false);
-			setNamaProfil("");
+			setProfilDialogOpen(false);
 			toast.success("Profil gaji berhasil ditambah");
 		},
-		onError: (e: Error) => setCreateError(e.message ?? "Gagal menambah profil"),
+		onError: (e: Error) => toast.error(e.message ?? "Gagal menambah profil"),
 	});
 
 	const profilData = profilList.data ?? [];
@@ -179,20 +132,10 @@ export function KomponenClient() {
 
 	const handleProfilSelect = (profilId: number) => {
 		setSelectedProfilId(profilId);
-		// Sync profilId ke URL sebagai single source of truth
 		const p = new URLSearchParams(sp.toString());
 		p.set("profilId", String(profilId));
 		p.set("page", "1");
 		router.replace(`${KOMPONEN_BASE}?${p.toString()}`);
-	};
-
-	const handleFilterChange = (name: string, value: string | undefined) => {
-		setFilter(name, value);
-	};
-
-	const openDelete = (item: GajiKomponenResponse) => {
-		setDeletingKomponen(item as Record<string, unknown>);
-		setDeleteError(null);
 	};
 
 	const handleDelete = async () => {
@@ -219,11 +162,7 @@ export function KomponenClient() {
 							variant="ghost"
 							size="sm"
 							className="h-7 px-2 text-xs"
-							onClick={() => {
-								setCreateError(null);
-								setNamaProfil("");
-								setDialogOpen(true);
-							}}
+							onClick={() => setProfilDialogOpen(true)}
 						>
 							+ Tambah
 						</Button>
@@ -244,11 +183,7 @@ export function KomponenClient() {
 								onClick={() => {
 									if (profil.id) handleProfilSelect(profil.id);
 								}}
-								className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${
-									selectedProfilId === profil.id
-										? "bg-primary/10 text-primary font-medium"
-										: "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-								}`}
+								className={`w-full text-left px-3 py-2 rounded-md text-sm transition-colors ${selectedProfilId === profil.id ? "bg-primary/10 text-primary font-medium" : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"}`}
 							>
 								{profil.nama ?? `Profil ${profil.id}`}
 							</button>
@@ -256,6 +191,7 @@ export function KomponenClient() {
 					)}
 				</div>
 			</div>
+
 			{/* Panel kanan: Daftar Komponen */}
 			<div className="flex-1 min-w-0">
 				{selectedProfilId ? (
@@ -263,7 +199,7 @@ export function KomponenClient() {
 						<DataTableToolbar
 							searchFields={[{ name: "search", label: "Komponen" }]}
 							values={tableFilters}
-							onFilterChange={handleFilterChange}
+							onFilterChange={(name, val) => setFilter(name, val)}
 							hasActive={Object.keys(tableFilters).length > 0 || !!sortBy}
 							onReset={resetAll}
 						>
@@ -280,7 +216,6 @@ export function KomponenClient() {
 								</Button>
 							)}
 						</DataTableToolbar>
-
 						<DataTable
 							columns={KOMPONEN_COLUMNS}
 							data={(komponenPageView.rows as GajiKomponenResponse[]) ?? []}
@@ -295,8 +230,23 @@ export function KomponenClient() {
 								if (sortBy === key) setP("sortDirection", sortDir === "asc" ? "desc" : "asc");
 								else setP({ sortBy: key, sortDirection: "asc" });
 							}}
-							onEdit={canWrite ? openEdit : undefined}
-							onDelete={canDelete ? openDelete : undefined}
+							onEdit={
+								canWrite
+									? (item) => {
+											setEditing(item);
+											setKomponenError(null);
+											setKomponenDialogOpen(true);
+										}
+									: undefined
+							}
+							onDelete={
+								canDelete
+									? (item) => {
+											setDeletingKomponen(item as Record<string, unknown>);
+											setDeleteError(null);
+										}
+									: undefined
+							}
 							getRowId={(i) => String((i as Record<string, unknown>).id ?? "")}
 							pagination={
 								<DataTablePagination
@@ -320,7 +270,8 @@ export function KomponenClient() {
 						Pilih profil gaji di panel kiri
 					</div>
 				)}
-			</div>{" "}
+			</div>
+
 			<ConfirmDeleteDialog
 				open={!!deletingKomponen}
 				onOpenChange={(v) => {
@@ -332,193 +283,24 @@ export function KomponenClient() {
 				itemLabel="Komponen Gaji"
 				onConfirm={handleDelete}
 				error={deleteError}
-			/>{" "}
-			<Dialog
+			/>
+			<KomponenDialog
 				open={komponenDialogOpen}
-				onOpenChange={(v) => {
-					if (!v) {
-						setEditing(null);
-					}
-					setKomponenDialogOpen(v);
+				onOpenChange={setKomponenDialogOpen}
+				editing={editing}
+				profilId={selectedProfilId}
+				onSubmit={(data) => {
+					setKomponenError(null);
+					editing ? updateKomponen.mutate({ id: String(editing.id), data }) : createKomponen.mutate(data);
 				}}
-			>
-				<DialogContent className="sm:max-w-xl">
-					<DialogHeader>
-						<DialogTitle>{editing ? "Edit Komponen Gaji" : "Tambah Komponen Gaji"}</DialogTitle>
-					</DialogHeader>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							const f = komponenForm.form;
-							if (!f.kode.trim() || !f.nama.trim() || !selectedProfilId) return;
-							setKomponenError(null);
-							const payload = {
-								profilGajiId: selectedProfilId,
-								kode: f.kode.trim(),
-								nama: f.nama.trim(),
-								...(f.jenisGaji ? { jenisGaji: f.jenisGaji } : {}),
-								...(f.nilai ? { nilai: Number(f.nilai) } : {}),
-								...(f.formula ? { formula: f.formula } : {}),
-								...(f.urut ? { urut: Number(f.urut) } : {}),
-							};
-							if (editing) {
-								updateKomponen.mutate({ id: String(editing.id), data: payload });
-							} else {
-								createKomponen.mutate(payload);
-							}
-						}}
-						className="space-y-4"
-					>
-						<div className="space-y-1.5">
-							<Label htmlFor="kode" className="text-sm font-medium">
-								Kode<span className="ml-0.5 text-destructive">*</span>
-							</Label>
-							<Input
-								id="kode"
-								value={komponenForm.form.kode}
-								onChange={(e) => komponenForm.setField("kode", e.target.value)}
-								placeholder="Kode komponen"
-								className="h-11"
-							/>
-						</div>
-						<div className="space-y-1.5">
-							<Label htmlFor="nama-komponen" className="text-sm font-medium">
-								Nama<span className="ml-0.5 text-destructive">*</span>
-							</Label>
-							<Input
-								id="nama-komponen"
-								value={komponenForm.form.nama}
-								onChange={(e) => komponenForm.setField("nama", e.target.value)}
-								placeholder="Nama komponen gaji"
-								className="h-11"
-							/>
-						</div>
-						<div className="grid grid-cols-2 gap-4">
-							<div className="space-y-1.5">
-								<Label className="text-sm font-medium">Jenis Gaji</Label>
-								<Select
-									value={komponenForm.form.jenisGaji}
-									onValueChange={(v) => komponenForm.setField("jenisGaji", v as TipeKomponen)}
-								>
-									<SelectTrigger className="h-11">
-										<SelectValue placeholder="Pilih jenis" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectItem value="PEMASUKAN">Pemasukan</SelectItem>
-										<SelectItem value="POTONGAN">Potongan</SelectItem>
-									</SelectContent>
-								</Select>
-							</div>
-							<div className="space-y-1.5">
-								<Label htmlFor="urut" className="text-sm font-medium">
-									Urut
-								</Label>
-								<Input
-									id="urut"
-									type="number"
-									value={komponenForm.form.urut}
-									onChange={(e) => komponenForm.setField("urut", e.target.value)}
-									placeholder={komponenForm.urutAuto != null ? String(komponenForm.urutAuto) : "Auto"}
-									className="h-11"
-								/>
-							</div>
-						</div>
-						<div className="space-y-1.5">
-							<Label htmlFor="nilai" className="text-sm font-medium">
-								Nilai
-							</Label>
-							<Input
-								id="nilai"
-								type="number"
-								value={komponenForm.form.nilai}
-								onChange={(e) => komponenForm.setField("nilai", e.target.value)}
-								placeholder="0"
-								className="h-11"
-							/>
-						</div>
-						<div className="space-y-1.5">
-							<Label className="text-sm font-medium">Formula</Label>
-							<FormulaEditor
-								value={komponenForm.form.formula}
-								onFormulaChange={komponenForm.setFormula}
-								onAppendKode={komponenForm.appendKodeToFormula}
-								kodeList={komponenForm.availableKode}
-							/>
-						</div>
-						{komponenError && <p className="text-sm text-destructive">{komponenError}</p>}
-						<div className="flex items-center justify-end gap-2 pt-2">
-							<Button
-								type="button"
-								variant="outline"
-								size="lg"
-								onClick={() => {
-									setKomponenDialogOpen(false);
-									setEditing(null);
-								}}
-								disabled={createKomponen.isPending || updateKomponen.isPending}
-							>
-								Batal
-							</Button>
-							<Button
-								type="submit"
-								size="lg"
-								disabled={
-									createKomponen.isPending ||
-									updateKomponen.isPending ||
-									!komponenForm.form.kode.trim() ||
-									!komponenForm.form.nama.trim()
-								}
-							>
-								{createKomponen.isPending || updateKomponen.isPending ? "Menyimpan…" : "Simpan"}
-							</Button>
-						</div>
-					</form>
-				</DialogContent>
-			</Dialog>
-			<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-				<DialogContent>
-					<DialogHeader>
-						<DialogTitle>Tambah Profil Gaji</DialogTitle>
-					</DialogHeader>
-					<form
-						onSubmit={(e) => {
-							e.preventDefault();
-							if (!namaProfil.trim()) return;
-							setCreateError(null);
-							createProfil.mutate({ nama: namaProfil.trim() });
-						}}
-						className="space-y-4"
-					>
-						<div className="space-y-1.5">
-							<Label htmlFor="namaProfil" className="text-sm font-medium">
-								Nama<span className="ml-0.5 text-destructive">*</span>
-							</Label>{" "}
-							<Textarea
-								id="namaProfil"
-								value={namaProfil}
-								onChange={(e) => setNamaProfil(e.target.value)}
-								placeholder="Nama profil gaji"
-								className="min-h-20"
-							/>
-						</div>
-						{createError && <p className="text-sm text-destructive">{createError}</p>}
-						<div className="flex items-center justify-end gap-2 pt-2">
-							<Button
-								type="button"
-								variant="outline"
-								size="lg"
-								onClick={() => setDialogOpen(false)}
-								disabled={createProfil.isPending}
-							>
-								Batal
-							</Button>
-							<Button type="submit" size="lg" disabled={createProfil.isPending || !namaProfil.trim()}>
-								{createProfil.isPending ? "Menyimpan…" : "Simpan"}
-							</Button>
-						</div>
-					</form>
-				</DialogContent>
-			</Dialog>
+				isPending={createKomponen.isPending || updateKomponen.isPending}
+			/>
+			<ProfilDialog
+				open={profilDialogOpen}
+				onOpenChange={setProfilDialogOpen}
+				onSubmit={(nama) => createProfil.mutate({ nama })}
+				isPending={createProfil.isPending}
+			/>
 		</div>
 	);
 }

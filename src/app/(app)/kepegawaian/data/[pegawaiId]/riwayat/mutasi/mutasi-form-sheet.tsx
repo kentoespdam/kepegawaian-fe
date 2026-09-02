@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2, Search } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,17 +11,13 @@ import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/com
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { masterKeys } from "@/hooks/keys/master-keys";
 import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
-import { useFkOptions } from "@/hooks/useFkOptions";
-import { api } from "@/lib/api/client";
+import { normalizeFk, useJabatanProfesiCascade, useMutasiFormQueries } from "@/hooks/useMutasiFormQueries";
 import { JENIS_MUTASI_OPTIONS } from "@/lib/riwayat-constants";
 import { apiErrorMessage, cn } from "@/lib/utils";
-import type { RiwayatMutasiQuery, SingleResultRiwayatMutasiQuery } from "@/types/kepegawaian/riwayat";
-import type { SingleResultPegawaiResponseMutasiContext } from "@/types/pegawai/pegawai";
 import type { SingleResultDetailDasarGajiNominal } from "@/types/penggajian/detail-dasar-gaji";
 
-// ponytail: jenisSk derived from jenisMutasi — no UI select, no validasi. BE can override if needed.
+// ponytail: jenisSk derived from jenisMutasi
 const JENIS_SK_BY_MUTASI: Record<string, string> = {
 	PENGANGKATAN_PERTAMA: "SK_CAPEG",
 	MUTASI_LOKER: "SK_MUTASI",
@@ -31,8 +27,6 @@ const JENIS_SK_BY_MUTASI: Record<string, string> = {
 	MUTASI_GAJI_BERKALA: "SK_KENAIKAN_GAJI_BERKALA",
 	TERMINASI: "SK_PENSIUN",
 };
-
-// ── Schema ──
 
 const schema = z.object({
 	nomorSk: z.string().min(1, "Nomor SK wajib"),
@@ -60,36 +54,9 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-// ── FK normalizer ──
-
-function normalizeFk(d: RiwayatMutasiQuery | undefined): Record<string, unknown> {
-	if (!d) return {};
-	return {
-		nomorSk: d.skMutasi?.nomorSk ?? "",
-		tanggalSk: d.skMutasi?.tanggalSk ?? "",
-		tmtBerlaku: d.skMutasi?.tmtBerlaku ?? "",
-		gajiPokok: String(d.skMutasi?.gajiPokok ?? "") || undefined,
-		mkgTahun: String(d.skMutasi?.mkgTahun ?? "") || undefined,
-		mkgBulan: String(d.skMutasi?.mkgBulan ?? "") || undefined,
-		kenaikanBerikutnya: d.skMutasi?.kenaikanBerikutnya ?? "",
-		mkgbTahun: String(d.skMutasi?.mkgbTahun ?? "") || undefined,
-		mkgbBulan: String(d.skMutasi?.mkgbBulan ?? "") || undefined,
-		updateMaster: d.skMutasi?.updateMaster ?? false,
-		notes: d.notes ?? "",
-		jenisMutasi: d.jenisMutasi ?? "",
-		tanggalBerakhir: d.tanggalBerakhir ?? "",
-		golonganId: String(d.golongan?.id ?? "") || undefined,
-		organisasiId: String(d.organisasi?.id ?? "") || undefined,
-		jabatanId: String(d.jabatan?.id ?? "") || undefined,
-		profesiId: String(d.profesi?.id ?? "") || undefined,
-		golonganLamaId: String(d.golonganLama?.id ?? "") || undefined,
-		organisasiLamaId: String(d.organisasiLama?.id ?? "") || undefined,
-		jabatanLamaId: String(d.jabatanLama?.id ?? "") || undefined,
-		profesiLamaId: String(d.profesiLama?.id ?? "") || undefined,
-	};
+function SectionLabel({ children }: { children: React.ReactNode }) {
+	return <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>;
 }
-
-// ── Component ──
 
 interface Props {
 	pegawaiId: string;
@@ -98,43 +65,11 @@ interface Props {
 	onClose: () => void;
 }
 
-// ── Section label ──
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-	return <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{children}</p>;
-}
-
 export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
+	const { detailQuery, mutasiCtxQuery, golonganOpts, orgOpts } = useMutasiFormQueries(pegawaiId, editingId);
 
-	// ── Queries ──
-
-	const detailQuery = useQuery({
-		queryKey: riwayatKeys.mutasi.detail(editingId),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/kepegawaian/riwayat/mutasi/${editingId}`);
-			if (!res.ok) throw new Error("Gagal memuat data mutasi");
-			const body = (await res.json()) as SingleResultRiwayatMutasiQuery;
-			return body.data;
-		},
-		enabled: !!editingId,
-		staleTime: 60_000,
-	});
-
-	const mutasiCtxQuery = useQuery({
-		queryKey: riwayatKeys.mutasiContext(pegawaiId),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/mutasi-context`);
-			if (!res.ok) throw new Error("Gagal memuat data pegawai");
-			const body = (await res.json()) as SingleResultPegawaiResponseMutasiContext;
-			return body.data;
-		},
-		staleTime: 5 * 60_000,
-	});
-
-	// ── Form defaults ──
-	// ponytail: create mode populates *LamaId from mutasi-context; edit mode from record
-
+	// Form defaults
 	const defaults = (() => {
 		if (editingId) return normalizeFk(detailQuery.data);
 		const ctx = mutasiCtxQuery.data;
@@ -161,55 +96,24 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 
 	const jenisMutasi = watch("jenisMutasi");
 	const organisasiId = watch("organisasiId");
+	const jabatanId = watch("jabatanId");
 	const golonganId = watch("golonganId");
 	const mkgTahun = watch("mkgTahun");
 
-	// ── Cascade queries ──
+	const { jabQuery, jabOpts, profesiQuery, profesiOpts } = useJabatanProfesiCascade(organisasiId, jabatanId);
 
-	const golonganOpts = useFkOptions("golongan", (i) => `${String(i.golongan ?? "")} - ${String(i.pangkat ?? "")}`);
-
-	const orgOpts = useFkOptions("organisasi");
-
-	const jabQuery = useQuery({
-		queryKey: masterKeys.list("jabatan", { organisasiId }),
-		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(organisasiId)),
-		enabled: !!organisasiId,
-		staleTime: 300_000,
-	});
-	const jabOpts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-		value: String(i.id),
-		label: String(i.nama ?? ""),
-	}));
-
-	const jabatanId = watch("jabatanId");
-	const profesiQuery = useQuery({
-		queryKey: masterKeys.list("profesi", { jabatanId }),
-		queryFn: () => api.listBy<Record<string, unknown>>("profesi", "jabatan", String(jabatanId)),
-		enabled: !!jabatanId,
-		staleTime: 300_000,
-	});
-	const profesiOpts = ((profesiQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
-		value: String(i.id),
-		label: String(i.nama ?? ""),
-	}));
-
-	// ── Gaji lookup ──
-
+	// Gaji lookup
 	const [isSearchingGaji, setIsSearchingGaji] = useState(false);
-	// ponytail: lookup feedback inline, bukan toast — aturan "toast = hasil mutasi only"
-	const [gajiLookup, setGajiLookup] = useState<{
-		tone: "success" | "warning" | "destructive";
-		text: string;
-	} | null>(null);
+	const [gajiLookup, setGajiLookup] = useState<{ tone: "success" | "warning" | "destructive"; text: string } | null>(
+		null,
+	);
 
 	const handleCariGaji = async () => {
 		if (!golonganId || !mkgTahun) return;
 		setIsSearchingGaji(true);
 		setGajiLookup(null);
 		try {
-			// ponytail: assume masaKerja = mkgTahun (tahun saja). BE confirmed this interpretation.
 			const res = await fetch(`/api/proxy/penggajian/detail-dasar-gaji/${golonganId}/${mkgTahun}`);
-			// ponytail: throw agar catch menangani keduanya — satu literal pesan, bukan duplikat
 			if (!res.ok) throw new Error("Gagal mencari gaji pokok, isi manual");
 			const body = (await res.json()) as SingleResultDetailDasarGajiNominal;
 			if (body.data?.nominal != null) {
@@ -219,31 +123,29 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 				setGajiLookup({ tone: "warning", text: "Gaji pokok tidak ditemukan, isi manual" });
 			}
 		} catch {
-			// 404/error → field dikosongkan, HR isi manual
 			setGajiLookup({ tone: "destructive", text: "Gagal mencari gaji pokok, isi manual" });
 		} finally {
 			setIsSearchingGaji(false);
 		}
 	};
 
-	// ── Reset semantics (Keputusan 7b) ──
-	// ponytail: setValue(field, undefined) for hidden fields when jenisMutasi changes
-
 	const onJenisMutasiChange = (v: string) => {
 		setValue("jenisMutasi", v);
 		setGajiLookup(null);
-		// ponytail: always clear all conditional fields — setValue(undefined) is cheap
-		// and avoids tracking which section was visible before the change
-		setValue("golonganId", undefined);
-		setValue("mkgTahun", undefined);
-		setValue("mkgBulan", undefined);
-		setValue("kenaikanBerikutnya", undefined);
-		setValue("mkgbTahun", undefined);
-		setValue("mkgbBulan", undefined);
-		setValue("gajiPokok", undefined);
-		setValue("organisasiId", undefined);
-		setValue("jabatanId", undefined);
-		setValue("profesiId", undefined);
+		for (const f of [
+			"golonganId",
+			"mkgTahun",
+			"mkgBulan",
+			"kenaikanBerikutnya",
+			"mkgbTahun",
+			"mkgbBulan",
+			"gajiPokok",
+			"organisasiId",
+			"jabatanId",
+			"profesiId",
+		] as const) {
+			setValue(f, undefined);
+		}
 	};
 
 	const isCascadeType = jenisMutasi === "MUTASI_LOKER" || jenisMutasi === "MUTASI_JABATAN";
@@ -251,8 +153,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 		jenisMutasi === "MUTASI_GOLONGAN" || jenisMutasi === "MUTASI_GAJI" || jenisMutasi === "MUTASI_GAJI_BERKALA";
 	const isGajiType = jenisMutasi === "MUTASI_GAJI" || jenisMutasi === "MUTASI_GAJI_BERKALA";
 
-	// ── Submit ──
-
+	// Submit
 	const onSubmit = async (values: FormValues) => {
 		try {
 			const payload: Record<string, unknown> = {
@@ -284,14 +185,11 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 			] as const) {
 				if (values[fk]) payload[fk] = Number(values[fk]);
 			}
-
 			const url = editingId
 				? `/api/proxy/kepegawaian/riwayat/mutasi/${editingId}`
 				: "/api/proxy/kepegawaian/riwayat/mutasi";
-			const method = editingId ? "PUT" : "POST";
-
 			const res = await fetch(url, {
-				method,
+				method: editingId ? "PUT" : "POST",
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify(payload),
 			});
@@ -310,11 +208,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 	};
 
 	const e = (name: keyof FormValues) => (errors[name] ? String(errors[name]?.message ?? "") : undefined);
-
-	function val(s: unknown): string {
-		if (s == null || s === "") return "—";
-		return String(s);
-	}
+	const val = (s: unknown) => (s == null || s === "" ? "—" : String(s));
 
 	return (
 		<Sheet
@@ -327,9 +221,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 				<SheetHeader className="shrink-0">
 					<SheetTitle>{editingId ? "Edit Mutasi" : "Tambah Mutasi"}</SheetTitle>
 				</SheetHeader>
-
 				<Separator />
-
 				<div className="flex-1 overflow-y-auto px-4 sm:px-6 pb-4">
 					{editingId && detailQuery.isPending ? (
 						<div className="flex items-center justify-center py-12">
@@ -337,7 +229,6 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 						</div>
 					) : (
 						<form id="mutasi-form" onSubmit={rhfSubmit(onSubmit)} className="space-y-3.5 pt-4">
-							{/* Data Pegawai (read-only) */}
 							<SectionLabel>Data Pegawai</SectionLabel>
 							{mutasiCtxQuery.isPending ? (
 								<div className="flex items-center justify-center py-4">
@@ -353,36 +244,24 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 								</button>
 							) : (
 								<div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2 rounded-lg border bg-muted/30 px-4 py-3 text-sm">
-									<div>
-										<span className="text-muted-foreground text-xs">NIPAM</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.nipam)}</p>
-									</div>
-									<div>
-										<span className="text-muted-foreground text-xs">Nama</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.nama)}</p>
-									</div>
-									<div>
-										<span className="text-muted-foreground text-xs">Golongan</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.golongan?.nama)}</p>
-									</div>
-									<div>
-										<span className="text-muted-foreground text-xs">Unit Kerja</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.organisasi?.nama)}</p>
-									</div>
-									<div>
-										<span className="text-muted-foreground text-xs">Jabatan</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.jabatan?.nama)}</p>
-									</div>
-									<div>
-										<span className="text-muted-foreground text-xs">Profesi</span>
-										<p className="font-medium">{val(mutasiCtxQuery.data?.profesi?.nama)}</p>
-									</div>{" "}
+									{(
+										[
+											["NIPAM", val(mutasiCtxQuery.data?.nipam)],
+											["Nama", val(mutasiCtxQuery.data?.nama)],
+											["Golongan", val(mutasiCtxQuery.data?.golongan?.nama)],
+											["Unit Kerja", val(mutasiCtxQuery.data?.organisasi?.nama)],
+											["Jabatan", val(mutasiCtxQuery.data?.jabatan?.nama)],
+											["Profesi", val(mutasiCtxQuery.data?.profesi?.nama)],
+										] as const
+									).map(([k, v]) => (
+										<div key={k}>
+											<span className="text-muted-foreground text-xs">{k}</span>
+											<p className="font-medium">{v}</p>
+										</div>
+									))}
 								</div>
 							)}
-
 							<Separator />
-
-							{/* Grup Surat Keputusan */}
 							<SectionLabel>Surat Keputusan</SectionLabel>
 							<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 								<FieldText
@@ -405,12 +284,9 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									onChange={(v) => setValue("tmtBerlaku", v)}
 									error={e("tmtBerlaku")}
 									required
-								/>{" "}
+								/>
 							</div>
-
 							<Separator />
-
-							{/* Grup Data Mutasi */}
 							<SectionLabel>Data Mutasi</SectionLabel>
 							<FieldSelect
 								label="Jenis Mutasi"
@@ -420,11 +296,9 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 								error={e("jenisMutasi")}
 								required
 							/>
-
-							{/* Conditional: cascade organisasi → jabatan → profesi */}
 							{isCascadeType && (
 								<div className="space-y-4 pl-2 border-l-2 border-primary/20">
-									<p className="text-xs font-medium text-muted-foreground">Penempatan Baru</p>{" "}
+									<p className="text-xs font-medium text-muted-foreground">Penempatan Baru</p>
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
 										<FieldFk
 											label="Unit Kerja"
@@ -465,13 +339,10 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									</div>
 								</div>
 							)}
-
-							{/* Conditional: golongan + MKG fields */}
 							{isGolonganType && (
 								<div className="space-y-4 pl-2 border-l-2 border-primary/20">
-									<p className="text-xs font-medium text-muted-foreground">Data Golongan</p>{" "}
+									<p className="text-xs font-medium text-muted-foreground">Data Golongan</p>
 									<div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-										{" "}
 										<FieldFk
 											label="Golongan (Baru)"
 											options={golonganOpts}
@@ -482,7 +353,7 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 											}}
 											error={e("golonganId")}
 											required
-										/>{" "}
+										/>
 										<FieldText
 											label="MKG (Tahun)"
 											type="number"
@@ -521,7 +392,6 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 											error={e("mkgbBulan")}
 										/>
 									</div>
-									{/* Gaji Pokok (only for MUTASI_GAJI / MUTASI_GAJI_BERKALA) */}
 									{isGajiType && (
 										<div className="space-y-2">
 											<p className="text-xs font-medium text-muted-foreground">Gaji Pokok</p>
@@ -573,7 +443,6 @@ export function MutasiFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props
 									)}
 								</div>
 							)}
-
 							<label className="flex items-center gap-2 cursor-pointer">
 								<input
 									type="checkbox"
