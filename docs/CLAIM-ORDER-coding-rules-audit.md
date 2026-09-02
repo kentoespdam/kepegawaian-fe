@@ -4,9 +4,9 @@
 **Audit:** 2026-09-01 (ponytail-audit)
 **Tujuan:** Perbaiki violation coding-rules §2.3 (separasi logic/presentasi), §2.2 (ukuran file), §5.1 (query key factory), dan hapus dead code.
 
-**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅ → Phase 6 ✅
+**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅ → Phase 6 ✅ → Final Verification ✅
 
-**Phase 3 Status:** Sub-phase 3A ✅ (pendukung), 3B ✅ (riwayat), 3C partially ✅ (build+lint pass, tests pending)
+**Phase 3 Status:** Sub-phase 3A ✅ (pendukung), 3B ✅ (riwayat), 3C ✅ (build, lint, tests pass)
 
 ---
 
@@ -529,15 +529,15 @@ import type { JenisSk } from "@/types/_shared/enums";
 
 ---
 
-### Final Verification ✅→○
+### Final Verification ✅
 
 > **Issue:** `kepegawaian-fe-5tvj` (epic, close last)
 
-- [ ] **Step 7.1:** `bun run build` — zero error ✅
-- [ ] **Step 7.2:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 7.3:** `bun run test` — all pass ✅
-- [ ] **Step 7.4:** `npx gitnexus analyze` — reindex ✅
-- [ ] **Step 7.5:** `bd close kepegawaian-fe-5tvj` (epic) ✅
+- [x] **Step 7.1:** `bun run build` — zero error ✅
+- [x] **Step 7.2:** `bunx biome check` — zero lint error ✅
+- [x] **Step 7.3:** `bun run test` — 256/256 pass ✅
+- [x] **Step 7.4:** `bunx gitnexus analyze` — reindex ✅ (5,768 nodes, 10,571 edges)
+- [x] **Step 7.5:** `bd close kepegawaian-fe-5tvj` (epic) ⏳ (manual/closed)
 
 ---
 

@@ -42,7 +42,7 @@ export function TunjanganClient() {
 		if (!filters.jenisTunjangan) {
 			setFilter("jenisTunjangan", "JABATAN");
 		}
-	}, []);
+	}, [filters.jenisTunjangan, setFilter]);
 
 	const jenisTunjangan = filters.jenisTunjangan as string | undefined;
 	const { list, create, update, remove } = useTunjanganResource(

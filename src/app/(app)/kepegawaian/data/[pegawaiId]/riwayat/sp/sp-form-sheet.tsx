@@ -265,22 +265,22 @@ export function SpFormSheet({ pegawaiId, editingId, isOpen, onClose }: Props) {
 					<SectionLabel>Penandatangan</SectionLabel>
 					<input type="hidden" value={watch("organisasiId") ?? ""} />
 					<input type="hidden" value={watch("jabatanId") ?? ""} />
-				<SignerPicker
-					selectedSigner={selectedSigner}
-					onSelect={(item) => {
-						setValue("organisasiId", String(item.organisasi?.id ?? ""));
-						setValue("jabatanId", String(item.jabatan?.id ?? ""));
-						setValue("penandaTangan", item.nama ?? "");
-						setValue("jabatanPenandaTangan", item.jabatan?.nama ?? "");
-						setSelectedSigner(item);
-					}}
-					onClear={() => {
-						setValue("organisasiId", "");
-						setValue("jabatanId", "");
-						setValue("penandaTangan", "");
-						setValue("jabatanPenandaTangan", "");
-						setSelectedSigner(null);
-					}}
+					<SignerPicker
+						selectedSigner={selectedSigner}
+						onSelect={(item) => {
+							setValue("organisasiId", String(item.organisasi?.id ?? ""));
+							setValue("jabatanId", String(item.jabatan?.id ?? ""));
+							setValue("penandaTangan", item.nama ?? "");
+							setValue("jabatanPenandaTangan", item.jabatan?.nama ?? "");
+							setSelectedSigner(item);
+						}}
+						onClear={() => {
+							setValue("organisasiId", "");
+							setValue("jabatanId", "");
+							setValue("penandaTangan", "");
+							setValue("jabatanPenandaTangan", "");
+							setSelectedSigner(null);
+						}}
 						showError={!!errors.organisasiId?.message}
 					/>
 					<Separator />
