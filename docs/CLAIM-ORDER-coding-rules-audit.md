@@ -451,8 +451,8 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 - [x] **Step 3C.2:** Semua hook files <150 lines (`useRiwayatTable` 110, `usePendukungTable` 110, `usePegawaiSession` 23)
 - [x] **Step 3C.3:** `bun run build` — zero error ✅
 - [x] **Step 3C.4:** `bunx biome check` — zero new lint error ✅
-- [ ] **Step 3C.5:** `bun run test` — all pass ✅ (manual verify needed)
-- [ ] **Step 3C.6:** `bd close kepegawaian-fe-02sj` ✅
+- [x] **Step 3C.5:** `bun run test` — 256/256 pass ✅
+- [x] **Step 3C.6:** `bd close kepegawaian-fe-02sj` ✅
 
 ---
 
