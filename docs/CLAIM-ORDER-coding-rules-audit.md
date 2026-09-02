@@ -4,7 +4,7 @@
 **Audit:** 2026-09-01 (ponytail-audit)
 **Tujuan:** Perbaiki violation coding-rules §2.3 (separasi logic/presentasi), §2.2 (ukuran file), §5.1 (query key factory), dan hapus dead code.
 
-**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅
+**Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ✅ → Phase 5 ✅ → Phase 6 ✅
 
 **Phase 3 Status:** Sub-phase 3A ✅ (pendukung), 3B ✅ (riwayat), 3C partially ✅ (build+lint pass, tests pending)
 
@@ -491,22 +491,41 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 
 ---
 
-### Phase 6: Split _shared.ts ✅→○
+### Phase 6: Split _shared.ts ✅
 
 > **Target:** Split monolithic types file (633 lines) per-domain.
 > **Issue:** `kepegawaian-fe-rlx2` (open)
 > **Estimasi:** ~1 jam
+> **Selesai:** 2026-09-02
 
-- [ ] **Step 6.1:** Grep semua import dari `_shared.ts` di src/
-- [ ] **Step 6.2:** Buat `_shared/auth.ts` — authentication types
-- [ ] **Step 6.3:** Buat `_shared/master.ts` — master entity base types
-- [ ] **Step 6.4:** Buat `_shared/enums.ts` — enum types
-- [ ] **Step 6.5:** Buat `_shared/api.ts` — API envelope types
-- [ ] **Step 6.6:** Update semua imports ke sub-path baru
-- [ ] **Step 6.7:** _shared.ts jadi re-export barrel (gradual cleanup)
-- [ ] **Step 6.8:** `bun run build` — zero error ✅
-- [ ] **Step 6.9:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 6.10:** `bd close kepegawaian-fe-rlx2` ✅
+- [x] **Step 6.1:** Grep semua import dari `_shared.ts` di src/ — 8 files import `@/types/_shared`, ~40 files import `../_shared` (within `src/types/`)
+- [x] **Step 6.2:** Buat `_shared/enums.ts` (116 lines) — all enum/union types (HttpStatusText, JenisSk, JenisKelamin, Agama, StatusKepegawaian, StatusKawin, GolonganDarah, JenisProfilUpdate, TipeKomponen, StatusApproval, StatusBerhenti, TingkatKemampuan, HubunganKeluarga, StatusPendidikanKeluarga)
+- [x] **Step 6.3:** Buat `_shared/api.ts` (66 lines) — Envelope, Page, PageEnvelope, PageQuery, SortObject, PageableObject, SavedResult*, DeletedResult, SingleResult*
+- [x] **Step 6.4:** Buat `_shared/master.ts` (167 lines) — master entity types (mini responses, PegawaiResponse, GolonganResponse, LampiranSkQuery, EnumOption, GajiProfilResponse, LampiranRow, etc.)
+- [x] **Step 6.5:** Buat `_shared/profile.ts` (244 lines) — profile request/query types (PutRequest, PostRequest, LampiranPostRequest, Query types)
+- [x] **Step 6.6:** Buat `_shared/auth.ts` (14 lines) — PrefRole, PrefPermission
+- [x] **Step 6.7:** Hapus `_shared.ts`, buat `_shared/index.ts` barrel re-export — semua import lama (`@/types/_shared`, `../_shared`) tetap jalan tanpa perubahan
+- [x] **Step 6.8:** `bun run build` — zero error ✅
+- [x] **Step 6.9:** `bunx biome check src/types/_shared/` — zero lint error ✅
+- [x] **Step 6.10:** `bun run test` — 256/256 pass ✅
+- [ ] **Step 6.11:** `bd close kepegawaian-fe-rlx2` ⏳ (manual)
+
+**Files berubah:**
+| File | Action |
+|------|--------|
+| `src/types/_shared/enums.ts` | **BARU** (116 lines) — 14 enum types |
+| `src/types/_shared/api.ts` | **BARU** (66 lines) — API wrapper types |
+| `src/types/_shared/master.ts` | **BARU** (167 lines) — master entity types |
+| `src/types/_shared/profile.ts` | **BARU** (244 lines) — profile request/query types |
+| `src/types/_shared/auth.ts` | **BARU** (14 lines) — auth types |
+| `src/types/_shared/index.ts` | **BARU** (22 lines) — barrel re-export |
+| `src/types/_shared.ts` | **DIHAPUS** — replaced by barrel |
+
+**Note:** 0 import changes needed — barrel re-exports everything. New code can import from specific sub-modules:
+```ts
+import type { Envelope } from "@/types/_shared/api";
+import type { JenisSk } from "@/types/_shared/enums";
+```
 
 ---
 
@@ -565,7 +584,7 @@ Phase 1, 2, 3, 5, 6 bisa jalan **paralel**. Phase 4 depends on Phase 1 (untuk us
 | Files >300 lines | 5 files (620, 608, 523, 484, 477) | 0 (all extracted to sub-components) | **-5** |
 | Duplicate hooks | 2 (useAllRoles) | 0 | **-2** |
 | Hardcoded query key arrays | 18+ | 0 | **-18+** |
-| Monolithic _shared.ts | 633 lines | <200 lines | **-433 lines** |
+| Monolithic _shared.ts | 633 lines (1 file) | 6 domain files + barrel (629 lines total, <250 each) | **split into 6 focused files** |
 | use-mobile.ts | 1 (dead) | 0 | **-1 file** |
 | useEffect for derived state | 6 occurrences | 0 | **-6** |
 | **Net** | | | **~-2,800 lines, -1 file, -8 deps** |
