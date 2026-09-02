@@ -14,14 +14,17 @@ Modul **Penggajian** = grup sidebar dengan **2 sub-grup**: **Setup** (5 master C
 **Proses Batch** (workflow 4 fase). Bukan module flat seperti Master (17 entitas homogen),
 melainkan **2 domain yang dibedakan secara tegas**: konfigurasi vs eksekusi.
 
-| Sub-grup | Item Sidebar | Audiens | Gate RBAC |
-|---|---|---|---|
-| **Setup** | `Komponen Gaji` | Staf SDM | `penggajian.setup` |
-| | `Pendapatan Non Pajak` | Staf SDM | `penggajian.setup` |
-| | `Tunjangan` | Staf SDM | `penggajian.setup` |
-| | `Lain-lain` (parameter setting) | Staf SDM | `penggajian.setup` |
-| | `Referensi Potongan TKK` | Staf SDM | `penggajian.setup` |
-| **Proses Batch** | `Proses Gaji Bulanan` | semua role (konten adaptif) | per-fase (lihat bawah) |
+| Sub-grup | Item Sidebar | Ikon | Audiens | Gate RBAC |
+|---|---|---|---|---|
+| **Setting** | `Setting Komponen Gaji` | ⚙️ | Staf SDM | `penggajian.setup` |
+| | `Setting Pendapatan Non Pajak` | ⚙️ | Staf SDM | `penggajian.setup` |
+| | `Setting Tunjangan` | ⚙️ | Staf SDM | `penggajian.setup` |
+| | `Setting Lain-lain` | ⚙️ | Staf SDM | `penggajian.setup` |
+| | `Setting Ref Potongan TKK` | ⚙️ | Staf SDM | `penggajian.setup` |
+| **Proses Batch** | `01. Proses Gaji Bulanan` | ≡ | semua role (konten adaptif) | per-fase (lihat bawah) |
+| | `02. Verifikasi Gapok, Tunjangan & Potongan` | ≡ | Manager SDM | `verify1` |
+| | `03. Tambah Komponen Gaji` | ≡ | Spv/Staf Keuangan | `tambahan` |
+| | `04. Persetujuan Akhir` | ≡ | Manager Keuangan | `approve` |
 
 > **Resolusi open-question struktur**: proses payroll dipisah jadi **2 sub-grup** (bukan flat
 > 8-item atau 1 grup besar) karena perbedaan domain — setup adalah CRUD master (jarang disentuh),
@@ -64,15 +67,15 @@ app/(app)/penggajian/
 │   ├── parameter-setting/page.tsx        # flat CRUD (label UI: "Lain-lain")
 │   └── potongan-tkk/page.tsx             # flat CRUD
 │
-└── batch/                                # SUB-GRUP: Proses Batch
-    ├── page.tsx                          # list batch + Dialog "Buat Proses Gaji Baru"
-    └── [id]/
-        ├── layout.tsx                    # header info batch + rail stepper
-        ├── setup/page.tsx                # fase 01
-        ├── verifikasi-1/page.tsx         # fase 02
-        ├── tambahan/page.tsx             # fase 03
-        └── persetujuan/page.tsx          # fase 04
+├── proses-gaji/page.tsx                  # 01. Proses Gaji Bulanan (filter: text period + status)
+├── verifikasi/page.tsx                   # 02. Verifikasi Gapok, Tunjangan & Potongan (filter: year + month + search)
+├── tambahan/page.tsx                     # 03. Tambah Komponen Gaji (filter: year + month + search)
+└── persetujuan/page.tsx                  # 04. Persetujuan Akhir (filter: year + month + search)
 ```
+
+> **Resolusi arsitektur (2026-09-02):** Halaman fase batch diubah dari nested `[id]` menjadi
+> standalone dengan filter periode (tahun+bulan). Batch lookup by period, bukan by ID.
+> Lihat ADR-0017 (akan dibuat) untuk konteks lengkap.
 
 ## RBAC Granular per Fase (4 permission)
 
