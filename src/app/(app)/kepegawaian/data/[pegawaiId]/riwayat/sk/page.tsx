@@ -1,11 +1,8 @@
 "use client";
 
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { forbidden, useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-
+import { forbidden, useParams, useSearchParams } from "next/navigation";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
@@ -14,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
+import { useRiwayatTable } from "@/hooks/useRiwayatTable";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
@@ -22,8 +20,6 @@ import { formatDate, rupiah, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatSkQuery } from "@/types/kepegawaian/riwayat";
 import { SkLampiranCard } from "./lampiran-card";
 import { SkFormSheet } from "./sk-form-sheet";
-
-// ── Formatter helpers ──
 
 function val(s: unknown): string {
 	if (s == null || s === "") return "—";
@@ -34,72 +30,26 @@ function rp(n: unknown): string {
 	if (n == null || n === "") return "—";
 	const v = Number(n);
 	if (!Number.isFinite(v)) return val(n);
-	const f = rupiah(v);
-	return f ?? "—";
+	return rupiah(v) ?? "—";
 }
 
 function mkgStr(t: unknown, b: unknown): string {
 	return `${t ?? ""} Thn – ${b ?? ""} Bln`;
 }
 
-// ── Column definitions ──
-
 const SK_COLUMNS: Column<RiwayatSkQuery>[] = [
 	{ id: "no", header: "No" },
-	{
-		id: "nomorSk",
-		header: "Nomor SK",
-		primary: true,
-		cell: (row) => val(row.nomorSk),
-	},
-	{
-		id: "jenisSk",
-		header: "Jenis SK",
-		cell: (row) => labelJenisSk(row.jenisSk),
-	},
-	{
-		id: "tanggalSk",
-		header: "Tgl. SK",
-		cell: (row) => formatDate(row.tanggalSk) ?? "—",
-	},
-	{
-		id: "tmtBerlaku",
-		header: "Tgl. Berlaku",
-		cell: (row) => formatDate(row.tmtBerlaku) ?? "—",
-	},
-	{
-		id: "golongan",
-		header: "Golongan",
-		cell: (row) => row.golongan?.golongan ?? "—",
-	},
-	{
-		id: "gajiPokok",
-		header: "Gaji Pokok",
-		cell: (row) => rp(row.gajiPokok),
-	},
-	{
-		id: "mkg",
-		header: "MKG",
-		cell: (row) => mkgStr(row.mkgTahun, row.mkgBulan),
-	},
-	{
-		id: "kenaikanBerikutnya",
-		header: "Kenaikan Berikutnya",
-		cell: (row) => formatDate(row.kenaikanBerikutnya) ?? "—",
-	},
-	{
-		id: "mkgb",
-		header: "MKGB",
-		cell: (row) => mkgStr(row.mkgbTahun, row.mkgbBulan),
-	},
-	{
-		id: "notes",
-		header: "Notes",
-		cell: (row) => val(row.notes),
-	},
+	{ id: "nomorSk", header: "Nomor SK", primary: true, cell: (row) => val(row.nomorSk) },
+	{ id: "jenisSk", header: "Jenis SK", cell: (row) => labelJenisSk(row.jenisSk) },
+	{ id: "tanggalSk", header: "Tgl. SK", cell: (row) => formatDate(row.tanggalSk) ?? "—" },
+	{ id: "tmtBerlaku", header: "Tgl. Berlaku", cell: (row) => formatDate(row.tmtBerlaku) ?? "—" },
+	{ id: "golongan", header: "Golongan", cell: (row) => row.golongan?.golongan ?? "—" },
+	{ id: "gajiPokok", header: "Gaji Pokok", cell: (row) => rp(row.gajiPokok) },
+	{ id: "mkg", header: "MKG", cell: (row) => mkgStr(row.mkgTahun, row.mkgBulan) },
+	{ id: "kenaikanBerikutnya", header: "Kenaikan Berikutnya", cell: (row) => formatDate(row.kenaikanBerikutnya) ?? "—" },
+	{ id: "mkgb", header: "MKGB", cell: (row) => mkgStr(row.mkgbTahun, row.mkgbBulan) },
+	{ id: "notes", header: "Notes", cell: (row) => val(row.notes) },
 ];
-
-// ── Toolbar ──
 
 function SkToolbar({
 	nomorSk,
@@ -150,8 +100,6 @@ function SkToolbar({
 	);
 }
 
-// ── Page ──
-
 export default function SkPage() {
 	const { permissions } = useAuth();
 	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
@@ -160,27 +108,24 @@ export default function SkPage() {
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
-	const router = useRouter();
-	const qc = useQueryClient();
 	const pegawaiId = params.pegawaiId;
 
-	const page = Number(sp.get("page") ?? "1");
-	const size = Number(sp.get("size") ?? "10");
 	const nomorSk = sp.get("nomorSk") ?? "";
 	const jenisSkFilter = sp.get("jenisSk") ?? "";
-	const selectedRowId = sp.get("sel") ?? undefined;
 
-	const [editingId, setEditingId] = useState<string | null>(null);
-	const [isFormOpen, setIsFormOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState<string | null>(null);
-	const [deleteError, setDeleteError] = useState<string | null>(null);
+	const table = useRiwayatTable<RiwayatSkQuery>({
+		pegawaiId,
+		entityPath: "sk",
+		entityLabel: "SK",
+		queryKeyPrefix: riwayatKeys.sk.all(),
+	});
 
 	const hasActive = !!(nomorSk || jenisSkFilter);
 
 	const query = useQuery({
-		queryKey: riwayatKeys.sk.list(pegawaiId, { page, size, nomorSk, jenisSkFilter }),
+		queryKey: riwayatKeys.sk.list(pegawaiId, { page: table.page, size: table.size, nomorSk, jenisSkFilter }),
 		queryFn: async () => {
-			const params: Record<string, string> = { ...toApiParams({ page, size }) };
+			const params: Record<string, string> = { ...toApiParams({ page: table.page, size: table.size }) };
 			if (nomorSk) params.nomorSk = nomorSk;
 			if (jenisSkFilter) params.jenisSk = jenisSkFilter;
 			const qs = new URLSearchParams(params).toString();
@@ -194,56 +139,8 @@ export default function SkPage() {
 	});
 
 	const pageView = fromPage(query.data);
-
-	const selectedRow = selectedRowId
-		? ((pageView.rows as RiwayatSkQuery[]).find((r) => String(r.id) === selectedRowId) ?? null)
-		: null;
-
-	const nav = (updates: Record<string, string | undefined>) => {
-		const p = new URLSearchParams(sp.toString());
-		for (const [k, v] of Object.entries(updates)) {
-			if (v) p.set(k, v);
-			else p.delete(k);
-		}
-		router.replace(`/kepegawaian/data/${pegawaiId}/riwayat/sk?${p.toString()}`);
-	};
-
-	const onFilterChange = (key: string, val: string | undefined) => {
-		nav({ [key]: val, page: "1" });
-	};
-
-	const onReset = () => {
-		router.replace(`/kepegawaian/data/${pegawaiId}/riwayat/sk`);
-	};
-
-	const columns = SK_COLUMNS.map((col) => {
-		if (col.id === "no") {
-			return {
-				...col,
-				cell: (_item: RiwayatSkQuery, i: number) => String((page - 1) * size + i + 1),
-			};
-		}
-		return col;
-	});
-
-	const handleDelete = async () => {
-		if (!deleteId) return;
-		setDeleteError(null);
-		try {
-			const res = await fetch(`/api/proxy/kepegawaian/riwayat/sk/${deleteId}`, { method: "DELETE" });
-			if (res.status === 409) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
-			}
-			if (!res.ok) throw new Error("Gagal menghapus");
-			toast.success("SK berhasil dihapus");
-			qc.invalidateQueries({ queryKey: riwayatKeys.sk.all() });
-			setDeleteId(null);
-		} catch (e: unknown) {
-			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");
-			throw e;
-		}
-	};
+	const selectedRow = table.findSelectedRow(pageView.rows as RiwayatSkQuery[]);
+	const columns = table.resolveColumns(SK_COLUMNS);
 
 	return (
 		<>
@@ -253,16 +150,9 @@ export default function SkPage() {
 						nomorSk={nomorSk}
 						jenisSk={jenisSkFilter}
 						hasActive={hasActive}
-						onFilterChange={onFilterChange}
-						onReset={onReset}
-						onTambah={
-							canWrite
-								? () => {
-										setEditingId(null);
-										setIsFormOpen(true);
-									}
-								: undefined
-						}
+						onFilterChange={table.onFilterChange}
+						onReset={table.onReset}
+						onTambah={canWrite ? table.handleOpenForm : undefined}
 					/>
 				}
 				columns={columns}
@@ -272,46 +162,46 @@ export default function SkPage() {
 				isError={query.isError}
 				error={query.error}
 				onRetry={() => query.refetch()}
-				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
-				selectedRowId={selectedRowId}
+				onRowClick={(item) => table.nav({ sel: String(item.id ?? "") })}
+				selectedRowId={table.selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={canWrite ? (item) => setEditingId(String(item.id ?? "")) : undefined}
-				onDelete={canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
+				onEdit={canWrite ? (item) => table.setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={canDelete ? (item) => table.setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data SK"
 				pagination={
 					<DataTablePagination
-						page={page}
-						size={size}
+						page={table.page}
+						size={table.size}
 						total={pageView.total}
 						totalPages={pageView.totalPages}
 						first={pageView.first}
 						last={pageView.last}
-						onPageChange={(p) => nav({ page: String(p) })}
-						onSizeChange={(s) => nav({ size: String(s), page: "1" })}
+						onPageChange={(p) => table.nav({ page: String(p) })}
+						onSizeChange={(s) => table.nav({ size: String(s), page: "1" })}
 					/>
 				}
 			/>
 			<SkFormSheet
 				pegawaiId={pegawaiId}
-				editingId={editingId}
-				isOpen={isFormOpen || editingId !== null}
+				editingId={table.editingId}
+				isOpen={table.isFormOpen || table.editingId !== null}
 				onClose={() => {
-					setEditingId(null);
-					setIsFormOpen(false);
+					table.setEditingId(null);
+					table.setIsFormOpen(false);
 				}}
 			/>
 			<SkLampiranCard selectedRow={selectedRow} hideUpload={!canWrite} hideDelete={!canDelete} />
 			<ConfirmDeleteDialog
-				open={deleteId !== null}
+				open={table.deleteId !== null}
 				onOpenChange={(v) => {
 					if (!v) {
-						setDeleteId(null);
-						setDeleteError(null);
+						table.setDeleteId(null);
+						table.setDeleteError(null);
 					}
 				}}
 				itemLabel="SK"
-				onConfirm={handleDelete}
-				error={deleteError}
+				onConfirm={() => table.handleDelete(`/api/proxy/kepegawaian/riwayat/sk/${table.deleteId}`)}
+				error={table.deleteError}
 			/>
 		</>
 	);

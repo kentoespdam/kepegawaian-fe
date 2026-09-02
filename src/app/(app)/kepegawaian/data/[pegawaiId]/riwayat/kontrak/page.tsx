@@ -1,11 +1,8 @@
 "use client";
 
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { forbidden, useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-
+import { forbidden, useParams, useSearchParams } from "next/navigation";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
@@ -13,60 +10,30 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
+import { usePegawaiSession } from "@/hooks/usePegawaiSession";
+import { useRiwayatTable } from "@/hooks/useRiwayatTable";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { labelAksiKontrak } from "@/lib/riwayat-constants";
 import { formatDate, throwIfNotOk } from "@/lib/utils";
 import type { RiwayatKontrakQuery } from "@/types/kepegawaian/riwayat";
-import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import { KontrakFormSheet } from "./kontrak-form-sheet";
-
-// ── Formatter helpers (panen dari sk/page.tsx) ──
 
 function val(s: unknown): string {
 	if (s == null || s === "") return "—";
 	return String(s);
 }
 
-// ── Column definitions ──
-
 const KONTRAK_COLUMNS: Column<RiwayatKontrakQuery>[] = [
 	{ id: "no", header: "No" },
-	{
-		id: "nomorKontrak",
-		header: "Nomor Kontrak",
-		primary: true,
-		cell: (row) => val(row.nomorKontrak),
-	},
-	{
-		id: "jenisKontrak",
-		header: "Jenis Aksi",
-		cell: (row) => labelAksiKontrak(row.jenisKontrak),
-	},
-	{
-		id: "tanggalSk",
-		header: "Tgl. SK",
-		cell: (row) => formatDate(row.tanggalSk) ?? "—",
-	},
-	{
-		id: "tanggalMulai",
-		header: "Mulai",
-		cell: (row) => formatDate(row.tanggalMulai) ?? "—",
-	},
-	{
-		id: "tanggalSelesai",
-		header: "Selesai",
-		cell: (row) => formatDate(row.tanggalSelesai) ?? "—",
-	},
-	{
-		id: "notes",
-		header: "Notes",
-		cell: (row) => val(row.notes),
-	},
+	{ id: "nomorKontrak", header: "Nomor Kontrak", primary: true, cell: (row) => val(row.nomorKontrak) },
+	{ id: "jenisKontrak", header: "Jenis Aksi", cell: (row) => labelAksiKontrak(row.jenisKontrak) },
+	{ id: "tanggalSk", header: "Tgl. SK", cell: (row) => formatDate(row.tanggalSk) ?? "—" },
+	{ id: "tanggalMulai", header: "Mulai", cell: (row) => formatDate(row.tanggalMulai) ?? "—" },
+	{ id: "tanggalSelesai", header: "Selesai", cell: (row) => formatDate(row.tanggalSelesai) ?? "—" },
+	{ id: "notes", header: "Notes", cell: (row) => val(row.notes) },
 ];
-
-// ── Toolbar ──
 
 function KontrakToolbar({
 	nomorKontrak,
@@ -91,7 +58,6 @@ function KontrakToolbar({
 			hasActive={hasActive}
 			onReset={onReset}
 		>
-			{/* ponytail: gate statusPegawai — hanya KONTRAK bisa tambah/edit/hapus */}
 			{canEdit && onTambah && (
 				<Button onClick={onTambah}>
 					<Plus />
@@ -102,8 +68,6 @@ function KontrakToolbar({
 	);
 }
 
-// ── Page ──
-
 export default function KontrakPage() {
 	const { permissions } = useAuth();
 	if (!hasPermission(permissions, PERMISSION.PEGAWAI_READ)) forbidden();
@@ -112,39 +76,26 @@ export default function KontrakPage() {
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
-	const router = useRouter();
-	const qc = useQueryClient();
 	const pegawaiId = params.pegawaiId;
 
-	const page = Number(sp.get("page") ?? "1");
-	const size = Number(sp.get("size") ?? "10");
 	const nomorKontrak = sp.get("nomorKontrak") ?? "";
-	const selectedRowId = sp.get("sel") ?? undefined;
 
-	const [editingId, setEditingId] = useState<string | null>(null);
-	const [isFormOpen, setIsFormOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState<string | null>(null);
-	const [deleteError, setDeleteError] = useState<string | null>(null);
-
-	// ponytail: dedupe dengan layout — queryKey sama, cache hit, zero extra network
-	const sessionQuery = useQuery({
-		queryKey: riwayatKeys.session(pegawaiId),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			throwIfNotOk(res, "Gagal memuat data pegawai");
-			const body = (await res.json()) as SingleResultPegawaiResponseSession;
-			return body.data;
-		},
-		staleTime: 5 * 60_000,
+	const table = useRiwayatTable<RiwayatKontrakQuery>({
+		pegawaiId,
+		entityPath: "kontrak",
+		entityLabel: "Kontrak",
+		queryKeyPrefix: riwayatKeys.kontrak.all(),
 	});
+
+	const sessionQuery = usePegawaiSession(pegawaiId);
 	const isKontrak = sessionQuery.data?.statusPegawai === "KONTRAK";
 
 	const hasActive = !!nomorKontrak;
 
 	const query = useQuery({
-		queryKey: riwayatKeys.kontrak.list(pegawaiId, { page, size, nomorKontrak }),
+		queryKey: riwayatKeys.kontrak.list(pegawaiId, { page: table.page, size: table.size, nomorKontrak }),
 		queryFn: async () => {
-			const params: Record<string, string> = { ...toApiParams({ page, size }) };
+			const params: Record<string, string> = { ...toApiParams({ page: table.page, size: table.size }) };
 			if (nomorKontrak) params.nomorKontrak = nomorKontrak;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/kepegawaian/riwayat/kontrak/pegawai/${pegawaiId}?${qs}`);
@@ -157,52 +108,7 @@ export default function KontrakPage() {
 	});
 
 	const pageView = fromPage(query.data);
-
-	const nav = (updates: Record<string, string | undefined>) => {
-		const p = new URLSearchParams(sp.toString());
-		for (const [k, v] of Object.entries(updates)) {
-			if (v) p.set(k, v);
-			else p.delete(k);
-		}
-		router.replace(`/kepegawaian/data/${pegawaiId}/riwayat/kontrak?${p.toString()}`);
-	};
-
-	const onFilterChange = (key: string, val: string | undefined) => {
-		nav({ [key]: val, page: "1" });
-	};
-
-	const onReset = () => {
-		router.replace(`/kepegawaian/data/${pegawaiId}/riwayat/kontrak`);
-	};
-
-	const columns = KONTRAK_COLUMNS.map((col) => {
-		if (col.id === "no") {
-			return {
-				...col,
-				cell: (_item: RiwayatKontrakQuery, i: number) => String((page - 1) * size + i + 1),
-			};
-		}
-		return col;
-	});
-
-	const handleDelete = async () => {
-		if (!deleteId) return;
-		setDeleteError(null);
-		try {
-			const res = await fetch(`/api/proxy/kepegawaian/riwayat/kontrak/${deleteId}`, { method: "DELETE" });
-			if (res.status === 409) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
-			}
-			if (!res.ok) throw new Error("Gagal menghapus");
-			toast.success("Kontrak berhasil dihapus");
-			qc.invalidateQueries({ queryKey: riwayatKeys.kontrak.all() });
-			setDeleteId(null);
-		} catch (e: unknown) {
-			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");
-			throw e;
-		}
-	};
+	const columns = table.resolveColumns(KONTRAK_COLUMNS);
 
 	return (
 		<>
@@ -212,16 +118,9 @@ export default function KontrakPage() {
 						nomorKontrak={nomorKontrak}
 						canEdit={isKontrak}
 						hasActive={hasActive}
-						onFilterChange={onFilterChange}
-						onReset={onReset}
-						onTambah={
-							canWrite
-								? () => {
-										setEditingId(null);
-										setIsFormOpen(true);
-									}
-								: undefined
-						}
+						onFilterChange={table.onFilterChange}
+						onReset={table.onReset}
+						onTambah={canWrite ? table.handleOpenForm : undefined}
 					/>
 				}
 				columns={columns}
@@ -231,46 +130,45 @@ export default function KontrakPage() {
 				isError={query.isError}
 				error={query.error}
 				onRetry={() => query.refetch()}
-				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
-				selectedRowId={selectedRowId}
+				onRowClick={(item) => table.nav({ sel: String(item.id ?? "") })}
+				selectedRowId={table.selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				// ponytail: gate — null callback = no action buttons rendered
-				onEdit={isKontrak && canWrite ? (item) => setEditingId(String(item.id ?? "")) : undefined}
-				onDelete={isKontrak && canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
+				onEdit={isKontrak && canWrite ? (item) => table.setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={isKontrak && canDelete ? (item) => table.setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data kontrak"
 				pagination={
 					<DataTablePagination
-						page={page}
-						size={size}
+						page={table.page}
+						size={table.size}
 						total={pageView.total}
 						totalPages={pageView.totalPages}
 						first={pageView.first}
 						last={pageView.last}
-						onPageChange={(p) => nav({ page: String(p) })}
-						onSizeChange={(s) => nav({ size: String(s), page: "1" })}
+						onPageChange={(p) => table.nav({ page: String(p) })}
+						onSizeChange={(s) => table.nav({ size: String(s), page: "1" })}
 					/>
 				}
 			/>
 			<KontrakFormSheet
 				pegawaiId={pegawaiId}
-				editingId={editingId}
-				isOpen={isFormOpen || editingId !== null}
+				editingId={table.editingId}
+				isOpen={table.isFormOpen || table.editingId !== null}
 				onClose={() => {
-					setEditingId(null);
-					setIsFormOpen(false);
+					table.setEditingId(null);
+					table.setIsFormOpen(false);
 				}}
 			/>
 			<ConfirmDeleteDialog
-				open={deleteId !== null}
+				open={table.deleteId !== null}
 				onOpenChange={(v) => {
 					if (!v) {
-						setDeleteId(null);
-						setDeleteError(null);
+						table.setDeleteId(null);
+						table.setDeleteError(null);
 					}
 				}}
 				itemLabel="Kontrak"
-				onConfirm={handleDelete}
-				error={deleteError}
+				onConfirm={() => table.handleDelete(`/api/proxy/kepegawaian/riwayat/kontrak/${table.deleteId}`)}
+				error={table.deleteError}
 			/>
 		</>
 	);

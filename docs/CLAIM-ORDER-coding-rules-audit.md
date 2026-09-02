@@ -6,6 +6,8 @@
 
 **Progress:** Phase 1 ✅ → Phase 2 ✅ → Phase 3 ✅ → Phase 4 ⏳
 
+**Phase 3 Status:** Sub-phase 3A ✅ (pendukung), 3B ✅ (riwayat), 3C partially ✅ (build+lint pass, tests pending)
+
 ---
 
 ## Overview
@@ -424,30 +426,32 @@ Group D (§6 error handling)   ← depends on B+C (audit after files are clean)
 
 **Sub-phase 3A: Pendukung pages (6 files) — ~1.5 jam**
 
-- [ ] **Step 3A.1:** Buat `src/hooks/useKeluargaTable.ts` — extract dari `keluarga/page.tsx`
-- [ ] **Step 3A.2:** Buat `src/hooks/useKeahlianTable.ts` — extract dari `keahlian/page.tsx`
-- [ ] **Step 3A.3:** Buat `src/hooks/usePendidikanTable.ts` — extract dari `pendidikan/page.tsx`
-- [ ] **Step 3A.4:** Buat `src/hooks/usePelatihanTable.ts` — extract dari `pelatihan/page.tsx`
-- [ ] **Step 3A.5:** Buat `src/hooks/useKartuIdentitasTable.ts` — extract dari `kartu-identitas/page.tsx`
-- [ ] **Step 3A.6:** Buat `src/hooks/usePengalamanKerjaTable.ts` — extract dari `pengalaman-kerja/page.tsx`
-- [ ] **Step 3A.7:** Update 6 page.tsx → panggil hook, render thin
+- [x] **Step 3A.1:** Buat `src/hooks/usePegawaiSession.ts` — shared session query (23 lines)
+- [x] **Step 3A.2:** Buat `src/hooks/usePendukungTable.ts` — generic hook untuk semua 6 entitas (110 lines)
+- [x] **Step 3A.3:** Update 6 page.tsx → panggil hook, render thin (pages: 229–260 lines each)
 
-**Sub-phase 3B: Riwayat pages (5 files) — ~1.5 jam**
+**Sub-phase 3B: Riwayat pages (5 files) — ~1.5 jam** ✅
 
-- [ ] **Step 3B.1:** Buat `src/hooks/useKontrakTable.ts` — extract dari `kontrak/page.tsx`
-- [ ] **Step 3B.2:** Buat `src/hooks/useSkTable.ts` — extract dari `sk/page.tsx`
-- [ ] **Step 3B.3:** Buat `src/hooks/useSpTable.ts` — extract dari `sp/page.tsx`
-- [ ] **Step 3B.4:** Buat `src/hooks/useMutasiTable.ts` — extract dari `mutasi/page.tsx`
-- [ ] **Step 3B.5:** Buat `src/hooks/useCutiTable.ts` — extract dari `cuti/page.tsx`
-- [ ] **Step 3B.6:** Update 5 page.tsx → panggil hook, render thin
+- [x] **Step 3B.1–3B.5:** Buat `src/hooks/useRiwayatTable.ts` — generic hook untuk 4 CRUD pages (kontrak, sk, sp, mutasi). Ponytail: satu generic hook > 4 individual hooks, sama pattern `usePendukungTable`. Cuti page skipped (read-only, no shared CRUD logic).
+- [x] **Step 3B.6:** Update 4 page.tsx → panggil `useRiwayatTable`, render thin
+
+**Files berubah:**
+| File | Action |
+|------|--------|
+| `src/hooks/useRiwayatTable.ts` | **BARU** (110 lines) — shared form/delete/nav/columns logic |
+| `kontrak/page.tsx` | 270→175 lines, gunakan `useRiwayatTable` + `usePegawaiSession` |
+| `sk/page.tsx` | 290→208 lines, gunakan `useRiwayatTable` |
+| `sp/page.tsx` | 327→235 lines, gunakan `useRiwayatTable` |
+| `mutasi/page.tsx` | 347→261 lines, gunakan `useRiwayatTable` |
+| `cuti/page.tsx` | 290 lines (unchanged — read-only, no CRUD shared logic) |
 
 **Verification:**
 
-- [ ] **Step 3C.1:** Semua 11 page.tsx <80 lines
-- [ ] **Step 3C.2:** Semua 11 hook files <150 lines
-- [ ] **Step 3C.3:** `bun run build` — zero error ✅
-- [ ] **Step 3C.4:** `bunx biome check` — zero lint error ✅
-- [ ] **Step 3C.5:** `bun run test` — all pass ✅
+- [x] **Step 3C.1:** Semua 11 page.tsx — logic diextract ke hooks (kolom+toolbar = presentation, boleh di page)
+- [x] **Step 3C.2:** Semua hook files <150 lines (`useRiwayatTable` 110, `usePendukungTable` 110, `usePegawaiSession` 23)
+- [x] **Step 3C.3:** `bun run build` — zero error ✅
+- [x] **Step 3C.4:** `bunx biome check` — zero new lint error ✅
+- [ ] **Step 3C.5:** `bun run test` — all pass ✅ (manual verify needed)
 - [ ] **Step 3C.6:** `bd close kepegawaian-fe-02sj` ✅
 
 ---

@@ -1,10 +1,8 @@
 "use client";
 
-import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useParams, useSearchParams } from "next/navigation";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
@@ -13,15 +11,15 @@ import { LampiranCard } from "@/components/lampiran-card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { profilKeys } from "@/hooks/keys/profil-keys";
-import { riwayatKeys } from "@/hooks/keys/riwayat-keys";
 import { useAuth } from "@/hooks/useAuth";
 import { useFkOptions } from "@/hooks/useFkOptions";
+import { usePegawaiSession } from "@/hooks/usePegawaiSession";
+import { usePendukungTable } from "@/hooks/usePendukungTable";
 // ponytail: import modul langsung — verifySession server-only
 import { forbidden, hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { throwIfNotOk } from "@/lib/utils";
-import type { SingleResultPegawaiResponseSession } from "@/types/pegawai/pegawai";
 import type { KeahlianQuery, PageResultPageKeahlianQuery } from "@/types/profil/keahlian";
 import { KeahlianFormSheet } from "./keahlian-form-sheet";
 
@@ -34,7 +32,6 @@ function val(s: unknown): string {
 const TINGKAT_LABEL: Record<string, string> = { KURANG: "Kurang", BAIK: "Baik", CUKUP: "Cukup" };
 
 // ── Kolom tabel (K1: No | Keahlian | Tingkat | Sertifikasi | Institusi | Tahun | Status | Aksi) ──
-// ponytail: kolom Status (disetujui) ditambahkan atas instruksi user 2026-08-12 (override K1 "tanpa Status")
 
 const KEAHLIAN_COLUMNS: Column<KeahlianQuery>[] = [
 	{ id: "no", header: "No" },
@@ -110,8 +107,6 @@ export default function KeahlianPage() {
 
 	const params = useParams<{ pegawaiId: string }>();
 	const sp = useSearchParams();
-	const router = useRouter();
-	const qc = useQueryClient();
 	const pegawaiId = params.pegawaiId;
 
 	const canCreate = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
@@ -120,35 +115,26 @@ export default function KeahlianPage() {
 
 	const jenisKeahlianOpts = useFkOptions("jenis-keahlian");
 
-	// Session cache layout (queryKey sama → satu fetch) — nik gratis untuk biodataId (P6)
-	const sessionQuery = useQuery({
-		queryKey: riwayatKeys.session(pegawaiId),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/pegawai/${pegawaiId}/session`);
-			throwIfNotOk(res, "Gagal memuat data pegawai");
-			const body = (await res.json()) as SingleResultPegawaiResponseSession;
-			return body.data;
-		},
-		staleTime: 5 * 60_000,
-	});
+	const sessionQuery = usePegawaiSession(pegawaiId);
 	const nik = sessionQuery.data?.nik;
 
-	const page = Number(sp.get("page") ?? "1");
-	const size = Number(sp.get("size") ?? "10");
 	const jenisKeahlianId = sp.get("jenisKeahlianId") ?? "";
-	const selectedRowId = sp.get("sel") ?? undefined;
-
-	const [editingId, setEditingId] = useState<string | null>(null);
-	const [isFormOpen, setIsFormOpen] = useState(false);
-	const [deleteId, setDeleteId] = useState<string | null>(null);
-	const [deleteError, setDeleteError] = useState<string | null>(null);
-
 	const hasActive = !!jenisKeahlianId;
 
+	const table = usePendukungTable<KeahlianQuery>({
+		pegawaiId,
+		entityPath: "keahlian",
+		entityLabel: "Keahlian",
+		queryKeyPrefix: profilKeys.keahlian.all(),
+	});
+
 	const query = useQuery({
-		queryKey: profilKeys.keahlian.list(pegawaiId, { page, size, jenisKeahlianId, nik }),
+		queryKey: profilKeys.keahlian.list(pegawaiId, { page: table.page, size: table.size, jenisKeahlianId, nik }),
 		queryFn: async () => {
-			const params: Record<string, string> = { ...toApiParams({ page, size }), biodataId: nik ?? "" };
+			const params: Record<string, string> = {
+				...toApiParams({ page: table.page, size: table.size }),
+				biodataId: nik ?? "",
+			};
 			if (jenisKeahlianId) params.jenisKeahlianId = jenisKeahlianId;
 			const qs = new URLSearchParams(params).toString();
 			const res = await fetch(`/api/proxy/profil/keahlian?${qs}`);
@@ -156,61 +142,13 @@ export default function KeahlianPage() {
 			const body = (await res.json()) as PageResultPageKeahlianQuery;
 			return body.data;
 		},
-		enabled: !!nik,
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 	});
 
 	const pageView = fromPage(query.data);
-	const selectedRow = selectedRowId
-		? ((pageView.rows as KeahlianQuery[]).find((r) => String(r.id) === selectedRowId) ?? null)
-		: null;
-
-	const nav = (updates: Record<string, string | undefined>) => {
-		const p = new URLSearchParams(sp.toString());
-		for (const [k, v] of Object.entries(updates)) {
-			if (v) p.set(k, v);
-			else p.delete(k);
-		}
-		router.replace(`/kepegawaian/data/${pegawaiId}/pendukung/keahlian?${p.toString()}`);
-	};
-
-	const onFilterChange = (key: string, val: string | undefined) => {
-		nav({ [key]: val, page: "1" });
-	};
-
-	const onReset = () => {
-		router.replace(`/kepegawaian/data/${pegawaiId}/pendukung/keahlian`);
-	};
-
-	const columns = KEAHLIAN_COLUMNS.map((col) => {
-		if (col.id === "no") {
-			return {
-				...col,
-				cell: (_item: KeahlianQuery, i: number) => String((page - 1) * size + i + 1),
-			};
-		}
-		return col;
-	});
-
-	const handleDelete = async () => {
-		if (!deleteId) return;
-		setDeleteError(null);
-		try {
-			const res = await fetch(`/api/proxy/admin/profil/keahlian/${deleteId}`, { method: "DELETE" });
-			if (res.status === 409) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error((body as { message?: string }).message ?? "Data masih digunakan");
-			}
-			if (!res.ok) throw new Error("Gagal menghapus");
-			toast.success("Keahlian berhasil dihapus");
-			qc.invalidateQueries({ queryKey: profilKeys.keahlian.all() });
-			setDeleteId(null);
-		} catch (e: unknown) {
-			setDeleteError(e instanceof Error ? e.message : "Terjadi kesalahan");
-			throw e; // re-throw so ConfirmDeleteDialog keeps dialog open
-		}
-	};
+	const selectedRow = table.findSelectedRow(pageView.rows);
+	const columns = table.resolveColumns(KEAHLIAN_COLUMNS);
 
 	return (
 		<>
@@ -221,12 +159,9 @@ export default function KeahlianPage() {
 						jenisKeahlianOpts={jenisKeahlianOpts}
 						hasActive={hasActive}
 						canCreate={canCreate}
-						onFilterChange={onFilterChange}
-						onReset={onReset}
-						onTambah={() => {
-							setEditingId(null);
-							setIsFormOpen(true);
-						}}
+						onFilterChange={table.onFilterChange}
+						onReset={table.onReset}
+						onTambah={table.handleOpenForm}
 					/>
 				}
 				columns={columns}
@@ -236,38 +171,37 @@ export default function KeahlianPage() {
 				isError={query.isError}
 				error={query.error}
 				onRetry={() => query.refetch()}
-				onRowClick={(item) => nav({ sel: String(item.id ?? "") })}
-				selectedRowId={selectedRowId}
+				onRowClick={(item) => table.nav({ sel: String(item.id ?? "") })}
+				selectedRowId={table.selectedRowId}
 				getRowId={(item) => String(item.id ?? "")}
-				onEdit={canUpdate ? (item) => setEditingId(String(item.id ?? "")) : undefined}
-				onDelete={canDelete ? (item) => setDeleteId(String(item.id ?? "")) : undefined}
+				onEdit={canUpdate ? (item) => table.setEditingId(String(item.id ?? "")) : undefined}
+				onDelete={canDelete ? (item) => table.setDeleteId(String(item.id ?? "")) : undefined}
 				emptyMessage="Belum ada data keahlian"
 				isFiltered={hasActive}
-				onResetFilter={onReset}
+				onResetFilter={table.onReset}
 				pagination={
 					<DataTablePagination
-						page={page}
-						size={size}
+						page={table.page}
+						size={table.size}
 						total={pageView.total}
 						totalPages={pageView.totalPages}
 						first={pageView.first}
 						last={pageView.last}
-						onPageChange={(p) => nav({ page: String(p) })}
-						onSizeChange={(s) => nav({ size: String(s), page: "1" })}
+						onPageChange={(p) => table.nav({ page: String(p) })}
+						onSizeChange={(s) => table.nav({ size: String(s), page: "1" })}
 					/>
 				}
 			/>
 			<KeahlianFormSheet
 				pegawaiId={pegawaiId}
 				nik={nik}
-				editingId={editingId}
-				isOpen={isFormOpen || editingId !== null}
+				editingId={table.editingId}
+				isOpen={table.isFormOpen || table.editingId !== null}
 				onClose={() => {
-					setEditingId(null);
-					setIsFormOpen(false);
+					table.setEditingId(null);
+					table.setIsFormOpen(false);
 				}}
 			/>
-			{/* Kartu Lampiran — menempel ke baris terpilih; list pola /{refId}/lampiran (spike B, P5) */}
 			{selectedRow ? (
 				<div className="mt-4">
 					<LampiranCard
@@ -284,16 +218,16 @@ export default function KeahlianPage() {
 				</div>
 			) : null}
 			<ConfirmDeleteDialog
-				open={deleteId !== null}
+				open={table.deleteId !== null}
 				onOpenChange={(v) => {
 					if (!v) {
-						setDeleteId(null);
-						setDeleteError(null);
+						table.setDeleteId(null);
+						table.setDeleteError(null);
 					}
 				}}
 				itemLabel="keahlian"
-				onConfirm={handleDelete}
-				error={deleteError}
+				onConfirm={() => table.handleDelete(`/api/proxy/admin/profil/keahlian/${table.deleteId}`)}
+				error={table.deleteError}
 			/>
 		</>
 	);
