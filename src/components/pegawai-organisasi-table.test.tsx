@@ -125,4 +125,35 @@ describe("PegawaiOrganisasiTable", () => {
 		expect(screen.getByText("Ahmad Dahlan")).toBeInTheDocument();
 		expect(screen.queryByText("Siti Rahma")).not.toBeInTheDocument();
 	});
+
+	it("groups by orgGroup when available", () => {
+		const pegawaiWithOrgGroup = [
+			{
+				...MOCK_PEGAWAI[0],
+				orgGroup: "DIVISI OPERASIONAL",
+				namaOrganisasi: "Bagian SDM",
+			},
+			{
+				...MOCK_PEGAWAI[1],
+				orgGroup: "DIVISI KEUANGAN",
+				namaOrganisasi: "Bagian Keuangan",
+			},
+		];
+
+		render(
+			<PegawaiOrganisasiTable
+				pegawaiList={pegawaiWithOrgGroup as never}
+				isPending={false}
+				periodeLabel="September 2026"
+				selectedBatchMasterId={null}
+				onSelectRow={() => {}}
+				variant="verifikasi"
+			/>,
+		);
+
+		expect(screen.getByText("DIVISI OPERASIONAL")).toBeInTheDocument();
+		expect(screen.getByText("DIVISI KEUANGAN")).toBeInTheDocument();
+		expect(screen.queryByText("Bagian SDM")).not.toBeInTheDocument();
+		expect(screen.queryByText("Bagian Keuangan")).not.toBeInTheDocument();
+	});
 });

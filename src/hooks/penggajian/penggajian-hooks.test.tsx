@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useBatchInfo } from "../useBatchInfo";
 import { useBatchAction, useDeleteBatch, useReprocessBatch } from "./useBatchAction";
+import { useBatchMasterList } from "./useBatchMasterList";
 
 function wrapper({ children }: { children: ReactNode }) {
 	return <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>;
@@ -128,5 +129,33 @@ describe("useReprocessBatch", () => {
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-123/reprocess", {
 			method: "PATCH",
 		});
+	});
+});
+
+describe("useBatchMasterList", () => {
+	beforeEach(() => vi.restoreAllMocks());
+
+	it("fetches batch master with periode only", async () => {
+		const mockPegawai = [{ id: 1, nama: "Budi" }];
+		global.fetch = mockFetch(mockPegawai);
+
+		const { result } = renderHook(() => useBatchMasterList("202608"), { wrapper });
+		await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+		expect(result.current.data).toEqual(mockPegawai);
+		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master?periode=202608");
+	});
+
+	it("fetches batch master with periode and status", async () => {
+		const mockPegawai = [{ id: 1, nama: "Budi" }];
+		global.fetch = mockFetch(mockPegawai);
+
+		const { result } = renderHook(() => useBatchMasterList("202608", "WAIT_VERIFICATION_PHASE_1"), { wrapper });
+		await waitFor(() => expect(result.current.isSuccess).toBe(true));
+
+		expect(result.current.data).toEqual(mockPegawai);
+		expect(global.fetch).toHaveBeenCalledWith(
+			"/api/proxy/penggajian/batch/master?periode=202608&status=WAIT_VERIFICATION_PHASE_1",
+		);
 	});
 });

@@ -6,7 +6,8 @@ export const penggajianKeys = {
 		all: () => [...penggajianKeys.all, "batch"] as const,
 		list: (params?: Record<string, string>) => [...penggajianKeys.batch.all(), "list", params] as const,
 		detail: (id: string) => [...penggajianKeys.batch.all(), "detail", id] as const,
-		master: (id: string) => [...penggajianKeys.batch.all(), id, "master"] as const,
+		master: (id: string, status?: string) =>
+			[...penggajianKeys.batch.all(), id, "master", ...(status ? [status] : [])] as const,
 		pegawai: (id: string) => [...penggajianKeys.batch.all(), "pegawai", id] as const,
 		pegawaiProses: (id: string) => [...penggajianKeys.batch.all(), "pegawai", id, "proses"] as const,
 	},

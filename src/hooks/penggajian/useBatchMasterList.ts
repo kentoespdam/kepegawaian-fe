@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { throwIfNotOk } from "@/lib/utils";
-import type { GajiBatchMasterResponse } from "@/types/penggajian/batch";
+import type { GajiBatchMasterResponse, StatusBatch } from "@/types/penggajian/batch";
 
-export function useBatchMasterList(periode: string) {
+export function useBatchMasterList(periode: string, status?: StatusBatch) {
 	return useQuery<GajiBatchMasterResponse[]>({
-		queryKey: penggajianKeys.batch.master(periode),
+		queryKey: penggajianKeys.batch.master(periode, status),
 		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}`);
+			const query = new URLSearchParams({ periode });
+			if (status) query.set("status", status);
+			const res = await fetch(`/api/proxy/penggajian/batch/master?${query.toString()}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
 			const body = (await res.json()) as {
 				data?: GajiBatchMasterResponse[] | { content?: GajiBatchMasterResponse[] };

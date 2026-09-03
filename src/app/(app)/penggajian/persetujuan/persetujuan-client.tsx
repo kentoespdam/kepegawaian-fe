@@ -56,9 +56,9 @@ export function PersetujuanClient() {
 		isPending: isMasterPending,
 		refetch: refetchMaster,
 	} = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: penggajianKeys.batch.master(batchId),
+		queryKey: penggajianKeys.batch.master(periode, "WAIT_APPROVAL"),
 		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}`);
+			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}&status=WAIT_APPROVAL`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
 			const body = (await res.json()) as { data: GajiBatchMasterResponse[] };
 			return body.data;
@@ -76,13 +76,15 @@ export function PersetujuanClient() {
 					(p) =>
 						p.nama?.toLowerCase().includes(q) ||
 						p.nipam?.toLowerCase().includes(q) ||
-						p.namaJabatan?.toLowerCase().includes(q),
+						p.namaJabatan?.toLowerCase().includes(q) ||
+						p.namaOrganisasi?.toLowerCase().includes(q) ||
+						p.orgGroup?.toLowerCase().includes(q),
 				)
 			: pegawaiList;
 
 		const map = new Map<string, PegawaiRow[]>();
 		for (const p of filtered) {
-			const org = p.namaOrganisasi ?? "Tanpa Organisasi";
+			const org = p.orgGroup?.trim() || p.namaOrganisasi || "Tanpa Organisasi";
 			if (!map.has(org)) map.set(org, []);
 			map.get(org)?.push({
 				id: p.id ?? 0,
@@ -278,7 +280,9 @@ export function PersetujuanClient() {
 														<td className="px-3 py-2 text-right">{fmtRupiah(row.penghasilanKotor)}</td>
 														<td className="px-3 py-2 text-right">{fmtRupiah(row.totalPotongan)}</td>
 														<td className="px-3 py-2 text-right">{fmtRupiah(row.pembulatan)}</td>
-														<td className="px-3 py-2 text-right font-medium">{fmtRupiah(row.penghasilanBersihFinal)}</td>
+														<td className="px-3 py-2 text-right font-medium">
+															{fmtRupiah(row.penghasilanBersihFinal)}
+														</td>
 													</tr>
 												))}
 												<tr className="border-b bg-muted/30 font-semibold text-xs">

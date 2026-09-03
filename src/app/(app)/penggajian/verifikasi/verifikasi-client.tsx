@@ -48,7 +48,11 @@ export function VerifikasiClient() {
 	const verify1 = useBatchAction(batchId, `${batchId}/verify1`);
 	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
 
-	const { data: pegawaiList, isPending: isMasterPending, refetch: refetchMaster } = useBatchMasterList(periode);
+	const {
+		data: pegawaiList,
+		isPending: isMasterPending,
+		refetch: refetchMaster,
+	} = useBatchMasterList(periode, "WAIT_VERIFICATION_PHASE_1");
 
 	const selectedPegawai = pegawaiList
 		? (pegawaiList.find((p) => p.id === selectedBatchMasterId) ?? pegawaiList[0] ?? null)

@@ -1457,6 +1457,23 @@
 					{ "name": "periode", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
 					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } },
 					{
+						"name": "status",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PENDING",
+								"PROSES",
+								"WAIT_VERIFICATION_PHASE_1",
+								"WAIT_VERIFICATION_PHASE_2",
+								"WAIT_APPROVAL",
+								"FINISHED",
+								"FAILED"
+							]
+						}
+					},
+					{
 						"name": "page",
 						"in": "query",
 						"required": false,
@@ -1551,6 +1568,23 @@
 					{ "name": "pegawaiId", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } },
 					{ "name": "periode", "in": "query", "required": true, "schema": { "type": "string", "minLength": 1 } },
 					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "status",
+						"in": "query",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"enum": [
+								"PENDING",
+								"PROSES",
+								"WAIT_VERIFICATION_PHASE_1",
+								"WAIT_VERIFICATION_PHASE_2",
+								"WAIT_APPROVAL",
+								"FINISHED",
+								"FAILED"
+							]
+						}
+					},
 					{
 						"name": "page",
 						"in": "query",
@@ -2207,8 +2241,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiTunjanganResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -2295,10 +2329,10 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"unpaged": { "type": "boolean" }
 				}
 			},
@@ -2306,8 +2340,8 @@
 				"type": "object",
 				"properties": {
 					"empty": { "type": "boolean" },
-					"unsorted": { "type": "boolean" },
-					"sorted": { "type": "boolean" }
+					"sorted": { "type": "boolean" },
+					"unsorted": { "type": "boolean" }
 				}
 			},
 			"SingleResultGajiTunjanganResponse": {
@@ -2402,8 +2436,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiProfilResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -2666,8 +2700,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPotonganTkkResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -2847,8 +2881,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPhdpResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -3107,8 +3141,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiPendapatanNonPajakResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -3366,8 +3400,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiParameterSettingResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -3631,8 +3665,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiKomponenResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -3979,8 +4013,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/DetailDasarGajiResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -4323,8 +4357,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/DasarGajiResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -4627,8 +4661,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchRootResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -4727,6 +4761,7 @@
 					"organisasiId": { "type": "integer", "format": "int64" },
 					"organisasiKode": { "type": "string" },
 					"namaOrganisasi": { "type": "string" },
+					"orgGroup": { "type": "string" },
 					"jabatanId": { "type": "integer", "format": "int64" },
 					"namaJabatan": { "type": "string" },
 					"levelId": { "type": "integer", "format": "int64" },
@@ -4937,8 +4972,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterProsesResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }
@@ -5188,8 +5223,8 @@
 					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterResponse" } },
 					"number": { "type": "integer", "format": "int32" },
 					"numberOfElements": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
 					"first": { "type": "boolean" },
 					"last": { "type": "boolean" },
 					"empty": { "type": "boolean" }

@@ -125,18 +125,63 @@ describe("filterVisibleEntities — RBAC gate umum", () => {
 
 	it("Penggajian setting and proses batch sub-groups gate filtering", () => {
 		const settingEntities = [
-			{ id: "komponen-gaji", label: "Setting Komponen Gaji", href: "/penggajian/setup/komponen", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{ id: "pendapatan-non-pajak", label: "Setting Pendapatan Non Pajak", href: "/penggajian/setup/pendapatan-non-pajak", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{ id: "tunjangan", label: "Setting Tunjangan", href: "/penggajian/setup/tunjangan", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{ id: "parameter-setting", label: "Setting Lain-lain", href: "/penggajian/setup/lain-lain", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{ id: "potongan-tkk", label: "Setting Ref Potongan TKK", href: "/penggajian/setup/potongan-tkk", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{
+				id: "komponen-gaji",
+				label: "Setting Komponen Gaji",
+				href: "/penggajian/setup/komponen",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "pendapatan-non-pajak",
+				label: "Setting Pendapatan Non Pajak",
+				href: "/penggajian/setup/pendapatan-non-pajak",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "tunjangan",
+				label: "Setting Tunjangan",
+				href: "/penggajian/setup/tunjangan",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "parameter-setting",
+				label: "Setting Lain-lain",
+				href: "/penggajian/setup/lain-lain",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "potongan-tkk",
+				label: "Setting Ref Potongan TKK",
+				href: "/penggajian/setup/potongan-tkk",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
 		];
 
 		const prosesBatchEntities = [
-			{ id: "proses-gaji", label: "01. Proses Gaji Bulanan", href: "/penggajian/proses-gaji", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{ id: "verifikasi", label: "02. Verifikasi Gapok, Tunjangan & Potongan", href: "/penggajian/verifikasi", gate: PERMISSION.PENGGAJIAN_VERIFY1 },
-			{ id: "tambahan", label: "03. Tambah Komponen Gaji", href: "/penggajian/tambahan", gate: PERMISSION.PENGGAJIAN_TAMBAHAN },
-			{ id: "persetujuan", label: "04. Persetujuan Akhir", href: "/penggajian/persetujuan", gate: PERMISSION.PENGGAJIAN_APPROVE },
+			{
+				id: "proses-gaji",
+				label: "01. Proses Gaji Bulanan",
+				href: "/penggajian/proses-gaji",
+				gate: PERMISSION.PENGGAJIAN_SETUP,
+			},
+			{
+				id: "verifikasi",
+				label: "02. Verifikasi Gapok, Tunjangan & Potongan",
+				href: "/penggajian/verifikasi",
+				gate: PERMISSION.PENGGAJIAN_VERIFY1,
+			},
+			{
+				id: "tambahan",
+				label: "03. Tambah Komponen Gaji",
+				href: "/penggajian/tambahan",
+				gate: PERMISSION.PENGGAJIAN_TAMBAHAN,
+			},
+			{
+				id: "persetujuan",
+				label: "04. Persetujuan Akhir",
+				href: "/penggajian/persetujuan",
+				gate: PERMISSION.PENGGAJIAN_APPROVE,
+			},
 		];
 
 		// Staf SDM (PENGGAJIAN_SETUP): sees all 5 setting items + proses-gaji (01)

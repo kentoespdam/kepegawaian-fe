@@ -49,4 +49,3 @@ export function useReprocessBatch() {
 		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() }),
 	});
 }
-

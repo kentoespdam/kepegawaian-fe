@@ -131,6 +131,7 @@ export interface GajiBatchMasterResponse {
 	organisasiId?: number; // int64
 	organisasiKode?: string;
 	namaOrganisasi?: string;
+	orgGroup?: string;
 	jabatanId?: number; // int64
 	namaJabatan?: string;
 	levelId?: number; // int64

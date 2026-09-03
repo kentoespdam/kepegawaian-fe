@@ -119,15 +119,16 @@ export function PegawaiOrganisasiTable({
 						p.nama?.toLowerCase().includes(q) ||
 						p.nipam?.toLowerCase().includes(q) ||
 						p.namaJabatan?.toLowerCase().includes(q) ||
-						p.namaOrganisasi?.toLowerCase().includes(q),
+						p.namaOrganisasi?.toLowerCase().includes(q) ||
+						p.orgGroup?.toLowerCase().includes(q),
 				)
 			: pegawaiList
 		: [];
 
-	// Group by organisasi (Map merges same-name units into one group)
+	// Group by organisasi / orgGroup (Map merges same-group units into one group)
 	const map = new Map<string, GajiBatchMasterResponse[]>();
 	for (const p of filtered) {
-		const org = p.namaOrganisasi ?? "Tanpa Organisasi";
+		const org = p.orgGroup?.trim() || p.namaOrganisasi || "Tanpa Organisasi";
 		if (!map.has(org)) map.set(org, []);
 		map.get(org)?.push(p);
 	}

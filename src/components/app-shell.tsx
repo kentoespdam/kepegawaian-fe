@@ -1,6 +1,16 @@
 "use client";
 
-import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, List, Settings, UserRound, Users } from "lucide-react";
+import {
+	CalendarRange,
+	ChevronDown,
+	DollarSign,
+	FileText,
+	LayoutGrid,
+	List,
+	Settings,
+	UserRound,
+	Users,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -330,9 +340,7 @@ export function AppShell({
 																<SubIcon className="size-3.5 shrink-0" />
 																<span>{sub.label}</span>
 															</div>
-															<ChevronDown
-																className={cn("size-3.5 transition-transform", isOpen && "rotate-180")}
-															/>
+															<ChevronDown className={cn("size-3.5 transition-transform", isOpen && "rotate-180")} />
 														</button>
 														{isOpen && (
 															<div className="space-y-0.5 pl-1.5 pt-0.5">
@@ -346,8 +354,7 @@ export function AppShell({
 																			isActive={isActive}
 																			className={cn(
 																				"min-h-10 border-l-2 border-transparent pl-2.5 text-xs transition-all duration-150",
-																				isActive &&
-																					"border-l-primary font-semibold bg-primary/10 text-primary",
+																				isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 																			)}
 																		>
 																			{entity.label}
