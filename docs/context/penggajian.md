@@ -76,6 +76,24 @@ app/(app)/penggajian/
 > **Resolusi arsitektur (2026-09-02):** Halaman fase batch diubah dari nested `[id]` menjadi
 > standalone dengan filter periode (tahun+bulan). Batch lookup by period, bukan by ID.
 > Lihat ADR-0017 (akan dibuat) untuk konteks lengkap.
+>
+> **Standarisasi Filter Periode (2026-09-03):**
+> Filter periode pada fase `02. Verifikasi` dan `03. Tambahan` menggunakan shared global hook
+> `usePeriodeFilter` (`src/hooks/usePeriodeFilter.ts`) dan shared component `PeriodeSelect` (`src/components/periode-filter.tsx`).
+> Filter periode disinkronkan ke URL query parameter `?year=YYYY&month=MM` (misal: `?year=2026&month=09`)
+> sebagai single source of truth saat halaman di-reload, dengan fallback otomatis ke periode berjalan.
+> Tampilan dropdown bulan menyajikan nama bulan murni dalam bahasa Indonesia (Januari–Desember) pada trigger maupun menu,
+> dengan pengiriman filter tetap berupa nilai dua digit (`01`–`12`).
+>
+> **Standarisasi Shared Panel Penggajian (2026-09-03):**
+> Panel kiri (tabel pegawai per organisasi) dan panel kanan (rincian gaji komponen pemasukan & potongan)
+> telah distandarisasi menjadi shared global components:
+> 1. `PegawaiOrganisasiTable` (`src/components/pegawai-organisasi-table.tsx`): Menangani wrapper tabel,
+>    pencarian terintegrasi, grouping organisasi, header sticky, baris subheader unit, dan highlighting pegawai terpilih.
+>    Mendukung `variant="verifikasi"` dan `variant="tambahan"`.
+> 2. `RincianGajiPanel` (`src/components/rincian-gaji-panel.tsx`): Menampilkan rincian komponen gaji (Pemasukan & Potongan),
+>    subtotal kalkulasi Rupiah, dan dialog tambah/hapus komponen interaktif yang dapat diaktifkan via prop `canEdit`.
+
 
 ## RBAC Granular per Fase (4 permission)
 

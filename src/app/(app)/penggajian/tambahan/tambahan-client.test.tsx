@@ -6,6 +6,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/hooks/useAuth";
 import { TambahanClient } from "./tambahan-client";
 
+const mockSearchParams = vi.fn(() => new URLSearchParams());
+
+vi.mock("next/navigation", () => ({
+	useRouter: () => ({
+		push: vi.fn(),
+		replace: vi.fn(),
+	}),
+	useSearchParams: () => mockSearchParams(),
+	usePathname: () => "/penggajian/tambahan",
+}));
+
 const CURRENT_YEAR = new Date().getFullYear();
 const CURRENT_MONTH = String(new Date().getMonth() + 1).padStart(2, "0");
 const CURRENT_PERIODE = `${CURRENT_YEAR}${CURRENT_MONTH}`;
@@ -256,11 +267,12 @@ describe("TambahanClient", () => {
 			expect(screen.getAllByText("Budi Santoso").length).toBeGreaterThanOrEqual(1);
 		});
 
-		const nikInput = screen.getByPlaceholderText(/Cari NIK/i);
-		fireEvent.change(nikInput, { target: { value: "99999" } });
+		expect(screen.queryByPlaceholderText(/Cari NIK/i)).not.toBeInTheDocument();
+		const searchInput = screen.getByPlaceholderText(/Cari Nama Pegawai/i);
+		fireEvent.change(searchInput, { target: { value: "99999" } });
 
 		await waitFor(() => {
-			expect(screen.getByText("Tidak ada pegawai yang cocok dengan pencarian")).toBeInTheDocument();
+			expect(screen.getByText("Tidak ada pegawai yang cocok dengan kata kunci pencarian")).toBeInTheDocument();
 		});
 
 		const resetBtn = screen.getByTitle("Reset Pencarian");
@@ -269,5 +281,33 @@ describe("TambahanClient", () => {
 		await waitFor(() => {
 			expect(screen.getAllByText("Budi Santoso").length).toBeGreaterThanOrEqual(1);
 		});
+	});
+
+	it("initializes from URL query params and displays Indonesian month label in dropdown", async () => {
+		mockSearchParams.mockReturnValue(new URLSearchParams("year=2025&month=11"));
+
+		mockFetch({
+			"/penggajian/batch?": asPage([
+				{
+					id: "b-202511",
+					periode: "202511",
+					status: "WAIT_VERIFICATION_PHASE_1",
+					totalPegawai: 1,
+				},
+			]),
+			"/penggajian/batch/master?": asPage(MOCK_MASTER),
+			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
+		});
+
+		render(<TambahanClient />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			// Trigger displays human month label "November"
+			expect(screen.getByRole("combobox", { name: /Pilih Bulan/i })).toHaveTextContent("November");
+			// Trigger displays year "2025"
+			expect(screen.getByRole("combobox", { name: /Pilih Tahun/i })).toHaveTextContent("2025");
+		});
+
+		expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("/api/proxy/penggajian/batch?periode=202511"));
 	});
 });

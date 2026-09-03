@@ -6,6 +6,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/hooks/useAuth";
 import { VerifikasiClient } from "./verifikasi-client";
 
+const mockSearchParams = vi.fn(() => new URLSearchParams());
+
+vi.mock("next/navigation", () => ({
+	useRouter: () => ({
+		push: vi.fn(),
+		replace: vi.fn(),
+	}),
+	useSearchParams: () => mockSearchParams(),
+	usePathname: () => "/penggajian/verifikasi",
+}));
+
 const CURRENT_YEAR = new Date().getFullYear();
 const CURRENT_MONTH = String(new Date().getMonth() + 1).padStart(2, "0");
 const CURRENT_PERIODE = `${CURRENT_YEAR}${CURRENT_MONTH}`;
@@ -324,5 +335,33 @@ describe("VerifikasiClient", () => {
 		);
 
 		openSpy.mockRestore();
+	});
+
+	it("initializes from URL query params and displays Indonesian month label in dropdown", async () => {
+		mockSearchParams.mockReturnValue(new URLSearchParams("year=2025&month=05"));
+
+		mockFetch({
+			"/penggajian/batch?": asPage([
+				{
+					id: "b-202505",
+					periode: "202505",
+					status: "WAIT_VERIFICATION_PHASE_1",
+					totalPegawai: 1,
+				},
+			]),
+			"/penggajian/batch/master?": asPage(MOCK_MASTER),
+		});
+
+		render(<VerifikasiClient />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			// Trigger displays human month label "Mei"
+			expect(screen.getByRole("combobox", { name: /Pilih Bulan/i })).toHaveTextContent("Mei");
+			// Trigger displays year "2025"
+			expect(screen.getByRole("combobox", { name: /Pilih Tahun/i })).toHaveTextContent("2025");
+		});
+
+		// Check API was called with periode=202505
+		expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("/api/proxy/penggajian/batch?periode=202505"));
 	});
 });
