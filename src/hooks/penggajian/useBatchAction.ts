@@ -21,3 +21,32 @@ export function useBatchAction(batchId: string, urlSuffix: string) {
 		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() }),
 	});
 }
+
+export function useDeleteBatch() {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: async (id: string) => {
+			const res = await fetch(`/api/proxy/penggajian/batch/${id}`, { method: "DELETE" });
+			if (!res.ok) {
+				const body = await res.json().catch(() => ({}));
+				throw new Error(body.message ?? `HTTP ${res.status}`);
+			}
+		},
+		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() }),
+	});
+}
+
+export function useReprocessBatch() {
+	const qc = useQueryClient();
+	return useMutation({
+		mutationFn: async (id: string) => {
+			const res = await fetch(`/api/proxy/penggajian/batch/${id}/reprocess`, { method: "PATCH" });
+			if (!res.ok) {
+				const body = await res.json().catch(() => ({}));
+				throw new Error(body.message ?? `HTTP ${res.status}`);
+			}
+		},
+		onSuccess: () => qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() }),
+	});
+}
+

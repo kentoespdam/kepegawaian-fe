@@ -8,7 +8,7 @@ import { CrudForm } from "./crud-form";
 const schema = z.object({
 	tanggal: z.string().min(1, "Tanggal wajib diisi"),
 	jenisLibur: z.enum(["LIBUR_NASIONAL", "CUTI_BERSAMA"], {
-		required_error: "Jenis libur wajib diisi",
+		message: "Jenis libur wajib diisi",
 	}),
 	notes: z.string().optional(),
 });

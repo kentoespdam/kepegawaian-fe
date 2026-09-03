@@ -154,10 +154,22 @@ dan `appendKode`/`formatFormula` pure functions (testable).
 di URL → panel kanan fetch komponen untuk profil tsb. Konsisten dengan preseden Data Pegawai
 → Ringkasan Panel (CONTEXT-MAP §DataTable filtering).
 
-### 2. Halaman List Batch (`/penggajian/batch`)
+### 2. Halaman List Batch (`/penggajian/proses-gaji`)
 
 Tabel daftar batch dengan filter default by `periode` (combobox tahun+bulan) dan `status` (combobox
-status backend). Toolbar: tombol **"+ Buat Proses Gaji Baru"** → Dialog form dengan field:
+status backend).
+
+**Aksi Tabel (`<DataTable>` Kolom Aksi)**:
+- **Proses Ulang (`PATCH /penggajian/batch/{id}/reprocess`)**:
+  - Syarat Status: Hanya aktif untuk batch berstatus **`PENDING`** atau **`FAILED`**.
+  - Syarat RBAC: Membutuhkan permission `PENGGAJIAN:PROCESS`, `PENGGAJIAN:WRITE`, atau `PENGGAJIAN:SETUP` (atau role `ADMIN`).
+  - UX: Menggunakan modal konfirmasi ringan (`<AlertDialog>`) sebelum mengeksekusi request.
+- **Hapus (`DELETE /penggajian/batch/{id}`)**:
+  - Syarat Status: Boleh untuk semua status **selain `FINISHED`** (dan bukan saat `PROSES`).
+  - Syarat RBAC: Membutuhkan permission `PENGGAJIAN:DELETE` (atau role `ADMIN`).
+  - UX: Menggunakan `<ConfirmDeleteDialog>` standar (pengguna wajib mengetik `"HAPUS"`).
+
+Toolbar: tombol **"+ Buat Proses Gaji Baru"** → Dialog form dengan field:
 
 - `Tahun` (number, required)
 - `Bulan` (number 01-12, required)

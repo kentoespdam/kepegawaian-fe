@@ -1,6 +1,6 @@
 "use client";
 
-import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, Settings, UserRound, Users } from "lucide-react";
+import { CalendarRange, ChevronDown, DollarSign, FileText, LayoutGrid, List, Settings, UserRound, Users } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -23,11 +23,26 @@ import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PERMISSION } from "@/lib/auth/permissions";
-import { entityHref, filterVisibleEntities, MASTER_GATE } from "@/lib/sidebar-utils";
+import { entityHref, filterVisibleEntities, MASTER_GATE, type SidebarEntity } from "@/lib/sidebar-utils";
 import { cn } from "@/lib/utils";
 import type { AppwriteUser } from "@/types/auth";
 
-const MODULES = [
+export interface SidebarSubGroup {
+	id: string;
+	label: string;
+	icon: React.ComponentType<{ className?: string }>;
+	entities: SidebarEntity[];
+}
+
+export interface SidebarModule {
+	id: string;
+	label: string;
+	icon: React.ComponentType<{ className?: string }>;
+	entities?: SidebarEntity[];
+	subGroups?: SidebarSubGroup[];
+}
+
+const MODULES: SidebarModule[] = [
 	{
 		id: "cuti",
 		label: "Cuti",
@@ -84,44 +99,73 @@ const MODULES = [
 		id: "penggajian",
 		label: "Penggajian",
 		icon: DollarSign,
-		entities: [
-			// ponytail: Setup = CRUD master, Proses Batch = workflow — 2 sub-grup konseptual dalam 1 modul sidebar
-			// Setup group (gate: penggajian.setup)
+		subGroups: [
 			{
-				id: "komponen-gaji",
-				label: "Komponen Gaji",
-				href: "/penggajian/setup/komponen",
-				gate: PERMISSION.PENGGAJIAN_SETUP,
+				id: "setting",
+				label: "Setting",
+				icon: Settings,
+				entities: [
+					{
+						id: "komponen-gaji",
+						label: "Setting Komponen Gaji",
+						href: "/penggajian/setup/komponen",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "pendapatan-non-pajak",
+						label: "Setting Pendapatan Non Pajak",
+						href: "/penggajian/setup/pendapatan-non-pajak",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "tunjangan",
+						label: "Setting Tunjangan",
+						href: "/penggajian/setup/tunjangan",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "parameter-setting",
+						label: "Setting Lain-lain",
+						href: "/penggajian/setup/lain-lain",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "potongan-tkk",
+						label: "Setting Ref Potongan TKK",
+						href: "/penggajian/setup/potongan-tkk",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+				],
 			},
 			{
-				id: "pendapatan-non-pajak",
-				label: "Pendapatan Non Pajak",
-				href: "/penggajian/setup/pendapatan-non-pajak",
-				gate: PERMISSION.PENGGAJIAN_SETUP,
-			},
-			{ id: "tunjangan", label: "Tunjangan", href: "/penggajian/setup/tunjangan", gate: PERMISSION.PENGGAJIAN_SETUP },
-			{
-				id: "parameter-setting",
-				label: "Lain-lain",
-				href: "/penggajian/setup/lain-lain",
-				gate: PERMISSION.PENGGAJIAN_SETUP,
-			},
-			{
-				id: "potongan-tkk",
-				label: "Referensi Potongan TKK",
-				href: "/penggajian/setup/potongan-tkk",
-				gate: PERMISSION.PENGGAJIAN_SETUP,
-			},
-			// Proses Batch group (visible jika punya minimal 1 permission fase)
-			{
-				id: "proses-gaji",
-				label: "Proses Gaji Bulanan",
-				href: "/penggajian/batch",
-				gate: [
-					PERMISSION.PENGGAJIAN_SETUP,
-					PERMISSION.PENGGAJIAN_VERIFY1,
-					PERMISSION.PENGGAJIAN_TAMBAHAN,
-					PERMISSION.PENGGAJIAN_APPROVE,
+				id: "proses-batch",
+				label: "Proses Batch",
+				icon: List,
+				entities: [
+					{
+						id: "proses-gaji",
+						label: "01. Proses Gaji Bulanan",
+						href: "/penggajian/proses-gaji",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "verifikasi",
+						label: "02. Verifikasi Gapok, Tunjangan & Potongan",
+						href: "/penggajian/verifikasi",
+						gate: PERMISSION.PENGGAJIAN_VERIFY1,
+					},
+					{
+						id: "tambahan",
+						label: "03. Tambah Komponen Gaji",
+						href: "/penggajian/tambahan",
+						gate: PERMISSION.PENGGAJIAN_TAMBAHAN,
+					},
+					{
+						id: "persetujuan",
+						label: "04. Persetujuan Akhir",
+						href: "/penggajian/persetujuan",
+						gate: PERMISSION.PENGGAJIAN_APPROVE,
+					},
 				],
 			},
 		],
@@ -136,7 +180,15 @@ const MODULES = [
 		],
 	},
 ];
-export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => m.entities.map((e) => ({ ...e, moduleId: m.id })));
+
+export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => {
+	const direct = (m.entities ?? []).map((e) => ({ ...e, moduleId: m.id }));
+	const fromSubs = (m.subGroups ?? []).flatMap((sg) =>
+		sg.entities.map((e) => ({ ...e, moduleId: m.id, subGroupId: sg.id })),
+	);
+	return [...direct, ...fromSubs];
+});
+
 export function AppShell({
 	user,
 	roles,
@@ -153,23 +205,52 @@ export function AppShell({
 	const pathname = usePathname();
 
 	const activeEntity = MODULE_ENTITY_MAP.find((e) => pathname === entityHref(e));
-	const activeModule = MODULES.find((m) => m.entities.some((e) => pathname.startsWith(entityHref(e))));
+	const activeModule = MODULES.find(
+		(m) =>
+			(m.entities ?? []).some((e) => pathname.startsWith(entityHref(e))) ||
+			(m.subGroups ?? []).some((sg) => sg.entities.some((e) => pathname.startsWith(entityHref(e)))),
+	);
 
 	// Filter modules by RBAC — only show groups with at least one viewable entity
-	const visibleModules = MODULES.map((mod) => ({
-		...mod,
-		// CU-18: item "persetujuan" (gate null) tampil hanya saat isCutiApprover — non-approver disembunyikan
-		visibleEntities: filterVisibleEntities(mod.entities, permissions, roles),
-	})).filter((mod) => mod.visibleEntities.length > 0);
+	const visibleModules = MODULES.map((mod) => {
+		const visibleEntities = mod.entities ? filterVisibleEntities(mod.entities, permissions, roles) : [];
+		const visibleSubGroups = mod.subGroups
+			? mod.subGroups
+					.map((sg) => ({
+						...sg,
+						visibleEntities: filterVisibleEntities(sg.entities, permissions, roles),
+					}))
+					.filter((sg) => sg.visibleEntities.length > 0)
+			: undefined;
+
+		return {
+			...mod,
+			visibleEntities,
+			visibleSubGroups,
+		};
+	}).filter((mod) => mod.visibleEntities.length > 0 || (mod.visibleSubGroups && mod.visibleSubGroups.length > 0));
 
 	// All visible groups default to open (tidak di-persist)
 	const [openGroups, setOpenGroups] = useState<Set<string>>(() => new Set(visibleModules.map((m) => m.id)));
+
+	// Sub-groups default to open
+	const allSubGroupKeys = visibleModules.flatMap((m) => m.visibleSubGroups?.map((sg) => `${m.id}:${sg.id}`) ?? []);
+	const [openSubGroups, setOpenSubGroups] = useState<Set<string>>(() => new Set(allSubGroupKeys));
 
 	const toggleGroup = (id: string) => {
 		setOpenGroups((prev) => {
 			const next = new Set(prev);
 			if (next.has(id)) next.delete(id);
 			else next.add(id);
+			return next;
+		});
+	};
+
+	const toggleSubGroup = (key: string) => {
+		setOpenSubGroups((prev) => {
+			const next = new Set(prev);
+			if (next.has(key)) next.delete(key);
+			else next.add(key);
 			return next;
 		});
 	};
@@ -231,6 +312,51 @@ export function AppShell({
 													>
 														{entity.label}
 													</SidebarMenuSubButton>
+												);
+											})}
+
+											{mod.visibleSubGroups?.map((sub) => {
+												const subKey = `${mod.id}:${sub.id}`;
+												const isOpen = openSubGroups.has(subKey);
+												const SubIcon = sub.icon;
+												return (
+													<div key={sub.id} className="py-1">
+														<button
+															type="button"
+															onClick={() => toggleSubGroup(subKey)}
+															className="flex w-full items-center justify-between px-2 py-1.5 text-[11px] font-semibold tracking-wider text-sidebar-foreground/70 uppercase hover:text-sidebar-foreground transition-colors cursor-pointer rounded-sm"
+														>
+															<div className="flex items-center gap-1.5">
+																<SubIcon className="size-3.5 shrink-0" />
+																<span>{sub.label}</span>
+															</div>
+															<ChevronDown
+																className={cn("size-3.5 transition-transform", isOpen && "rotate-180")}
+															/>
+														</button>
+														{isOpen && (
+															<div className="space-y-0.5 pl-1.5 pt-0.5">
+																{sub.visibleEntities.map((entity) => {
+																	const href = entityHref(entity);
+																	const isActive = pathname === href;
+																	return (
+																		<SidebarMenuSubButton
+																			key={entity.id}
+																			render={<Link href={href} />}
+																			isActive={isActive}
+																			className={cn(
+																				"min-h-10 border-l-2 border-transparent pl-2.5 text-xs transition-all duration-150",
+																				isActive &&
+																					"border-l-primary font-semibold bg-primary/10 text-primary",
+																			)}
+																		>
+																			{entity.label}
+																		</SidebarMenuSubButton>
+																	);
+																})}
+															</div>
+														)}
+													</div>
 												);
 											})}
 										</SidebarMenuSub>

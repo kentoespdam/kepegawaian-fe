@@ -4,7 +4,7 @@ import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { useBatchInfo } from "../useBatchInfo";
-import { useBatchAction } from "./useBatchAction";
+import { useBatchAction, useDeleteBatch, useReprocessBatch } from "./useBatchAction";
 
 function wrapper({ children }: { children: ReactNode }) {
 	return <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>;
@@ -98,5 +98,35 @@ describe("useBatchAction", () => {
 		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
 
 		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
+	});
+});
+
+describe("useDeleteBatch", () => {
+	beforeEach(() => vi.restoreAllMocks());
+
+	it("sends DELETE to /penggajian/batch/{id}", async () => {
+		global.fetch = mockFetch();
+		const { result } = renderHook(() => useDeleteBatch(), { wrapper });
+
+		await result.current.mutateAsync("batch-123");
+
+		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-123", {
+			method: "DELETE",
+		});
+	});
+});
+
+describe("useReprocessBatch", () => {
+	beforeEach(() => vi.restoreAllMocks());
+
+	it("sends PATCH to /penggajian/batch/{id}/reprocess", async () => {
+		global.fetch = mockFetch();
+		const { result } = renderHook(() => useReprocessBatch(), { wrapper });
+
+		await result.current.mutateAsync("batch-123");
+
+		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-123/reprocess", {
+			method: "PATCH",
+		});
 	});
 });

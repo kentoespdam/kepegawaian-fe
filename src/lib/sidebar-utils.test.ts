@@ -122,4 +122,39 @@ describe("filterVisibleEntities — RBAC gate umum", () => {
 		// ADMIN tanpa permissions → semua 3
 		expect(filterVisibleEntities(kepegawaianEntities, [], ["ADMIN"])).toHaveLength(3);
 	});
+
+	it("Penggajian setting and proses batch sub-groups gate filtering", () => {
+		const settingEntities = [
+			{ id: "komponen-gaji", label: "Setting Komponen Gaji", href: "/penggajian/setup/komponen", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{ id: "pendapatan-non-pajak", label: "Setting Pendapatan Non Pajak", href: "/penggajian/setup/pendapatan-non-pajak", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{ id: "tunjangan", label: "Setting Tunjangan", href: "/penggajian/setup/tunjangan", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{ id: "parameter-setting", label: "Setting Lain-lain", href: "/penggajian/setup/lain-lain", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{ id: "potongan-tkk", label: "Setting Ref Potongan TKK", href: "/penggajian/setup/potongan-tkk", gate: PERMISSION.PENGGAJIAN_SETUP },
+		];
+
+		const prosesBatchEntities = [
+			{ id: "proses-gaji", label: "01. Proses Gaji Bulanan", href: "/penggajian/proses-gaji", gate: PERMISSION.PENGGAJIAN_SETUP },
+			{ id: "verifikasi", label: "02. Verifikasi Gapok, Tunjangan & Potongan", href: "/penggajian/verifikasi", gate: PERMISSION.PENGGAJIAN_VERIFY1 },
+			{ id: "tambahan", label: "03. Tambah Komponen Gaji", href: "/penggajian/tambahan", gate: PERMISSION.PENGGAJIAN_TAMBAHAN },
+			{ id: "persetujuan", label: "04. Persetujuan Akhir", href: "/penggajian/persetujuan", gate: PERMISSION.PENGGAJIAN_APPROVE },
+		];
+
+		// Staf SDM (PENGGAJIAN_SETUP): sees all 5 setting items + proses-gaji (01)
+		expect(filterVisibleEntities(settingEntities, [PERMISSION.PENGGAJIAN_SETUP])).toHaveLength(5);
+		expect(filterVisibleEntities(prosesBatchEntities, [PERMISSION.PENGGAJIAN_SETUP])).toHaveLength(1);
+
+		// Manager SDM (PENGGAJIAN_VERIFY1): sees verifikasi (02)
+		expect(filterVisibleEntities(settingEntities, [PERMISSION.PENGGAJIAN_VERIFY1])).toHaveLength(0);
+		expect(filterVisibleEntities(prosesBatchEntities, [PERMISSION.PENGGAJIAN_VERIFY1])).toHaveLength(1);
+
+		// Staf Keuangan (PENGGAJIAN_TAMBAHAN): sees tambahan (03)
+		expect(filterVisibleEntities(prosesBatchEntities, [PERMISSION.PENGGAJIAN_TAMBAHAN])).toHaveLength(1);
+
+		// Manager Keuangan (PENGGAJIAN_APPROVE): sees persetujuan (04)
+		expect(filterVisibleEntities(prosesBatchEntities, [PERMISSION.PENGGAJIAN_APPROVE])).toHaveLength(1);
+
+		// Admin sees all
+		expect(filterVisibleEntities(settingEntities, [], ["ADMIN"])).toHaveLength(5);
+		expect(filterVisibleEntities(prosesBatchEntities, [], ["ADMIN"])).toHaveLength(4);
+	});
 });

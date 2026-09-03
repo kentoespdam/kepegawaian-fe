@@ -35,8 +35,7 @@ export interface BatchSearchParams extends PageQuery {
 	batchMasterId?: number; // int64
 	jenisGaji?: "NONE" | "PEMASUKAN" | "POTONGAN";
 	kode?: string;
-	gajiBatchRootId?: string;
-	pegawaiId?: number; // int64
+	search?: string;
 }
 
 export interface GajiBatchRootErrorLogsResponse {
@@ -75,7 +74,9 @@ export interface GajiBatchRootResponse {
 	lampiran?: GajiBatchRootLampiranMiniResponse[];
 }
 
-export type ListResultGajiBatchRootResponse = Envelope<GajiBatchRootResponse[]>;
+export type PageGajiBatchRootResponse = Page<GajiBatchRootResponse>;
+
+export type PageResultPageGajiBatchRootResponse = PageEnvelope<GajiBatchRootResponse>;
 
 export interface GajiBatchRootPostRequest {
 	tahun?: string;

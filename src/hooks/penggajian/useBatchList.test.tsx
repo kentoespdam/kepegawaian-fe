@@ -12,27 +12,35 @@ function wrapper({ children }: { children: ReactNode }) {
 describe("useBatchList", () => {
 	beforeEach(() => vi.restoreAllMocks());
 
-	it("extracts rows from Envelope (backend response shape)", async () => {
-		// Backend GET /penggajian/batch returns ListResultGajiBatchRootResponse = Envelope<GajiBatchRootResponse[]>
-		// HTTP body: { status: 200, data: [...batches...] }
-		// API client handle<T> strips outer { status, data } → useQuery.data = GajiBatchRootResponse[]
+	it("extracts rows from PageEnvelope (paginated response shape)", async () => {
 		const mockBatches = [
 			{ id: "b1", periode: "2026-08", status: "PENDING", totalPegawai: 50 },
 			{ id: "b2", periode: "2026-07", status: "FINISHED", totalPegawai: 48 },
 		];
 
+		const mockPage = {
+			content: mockBatches,
+			totalElements: 2,
+			totalPages: 1,
+			number: 0,
+			size: 10,
+			first: true,
+			last: true,
+		};
+
 		global.fetch = vi.fn().mockResolvedValue({
 			ok: true,
-			json: () => Promise.resolve({ status: 200, data: mockBatches }),
+			json: () => Promise.resolve({ status: 200, data: mockPage }),
 		});
 
 		const { result } = renderHook(() => useBatchList({ page: "0", size: "10" }), { wrapper });
 
 		await waitFor(() => expect(result.current.isSuccess).toBe(true));
 
-		// list.data IS the array (handle() already stripped the Envelope)
-		const rows = result.current.data ?? [];
-		expect(rows).toHaveLength(2);
-		expect(rows[0].periode).toBe("2026-08");
+		const page = result.current.data;
+		expect(page?.content).toHaveLength(2);
+		expect(page?.content?.[0]?.periode).toBe("2026-08");
+		expect(page?.totalElements).toBe(2);
+		expect(page?.totalPages).toBe(1);
 	});
 });

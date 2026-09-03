@@ -15,7 +15,7 @@ const BATCH_ID = "abc-123";
 const MOCK_BATCH = {
 	id: BATCH_ID,
 	periode: "2026-08",
-	status: "PENDING",
+	status: "PENDING" as const,
 	totalPegawai: 42,
 };
 
