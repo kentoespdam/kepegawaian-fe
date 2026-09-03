@@ -1,50 +1,26 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Download, Loader2, RefreshCw, RotateCcw, Search, ShieldCheck } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
-import { cn, fmtRupiah, throwIfNotOk } from "@/lib/utils";
-import type {
-	GajiBatchMasterProsesResponse,
-	GajiBatchMasterResponse,
-	GajiBatchRootResponse,
-} from "@/types/penggajian/batch";
-import { getYearOptions, MONTH_OPTIONS } from "../_components/periode-filter";
-
-interface PegawaiRow {
-	id: number;
-	nipam?: string;
-	nama?: string;
-	namaOrganisasi?: string;
-	namaJabatan?: string;
-	golongan?: string;
-	jmlJiwa?: number;
-	kodePajak?: string;
-	penghasilanKotor?: number;
-	totalPotongan?: number;
-	pembulatan?: number;
-	penghasilanBersihFinal?: number;
-}
+import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
+import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
+import type { GajiBatchMasterResponse, GajiBatchRootResponse } from "@/types/penggajian/batch";
+import { MONTH_OPTIONS } from "../_components/periode-filter";
+import { PegawaiDetailKomponenPanel } from "./_components/detail-panel";
+import { OrganisasiTableGroup } from "./_components/organisasi-table-group";
 
 export function VerifikasiClient() {
-	const now = new Date();
-	const [year, setYear] = useState(String(now.getFullYear()));
-	const [month, setMonth] = useState(String(now.getMonth() + 1).padStart(2, "0"));
+	const { year, setYear, month, setMonth, periode, years } = useVerifikasiFilters();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
 
-	const periode = `${year}${month}`;
-	const years = useMemo(() => getYearOptions(), []);
-
-	// Fetch batch for period
 	const { data: batches, isPending: isBatchPending, refetch: refetchBatch } = useBatchList({ periode });
 	const batchList = Array.isArray(batches) ? batches : (batches?.content ?? []);
 	const batch: GajiBatchRootResponse | undefined = batchList[0];
@@ -53,33 +29,11 @@ export function VerifikasiClient() {
 	const verify1 = useBatchAction(batchId, `${batchId}/verify1`);
 	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
 
-	// Fetch pegawai list in batch
-	const {
-		data: pegawaiList,
-		isPending: isMasterPending,
-		refetch: refetchMaster,
-	} = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: penggajianKeys.batch.master(periode),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}`);
-			throwIfNotOk(res, "Gagal memuat daftar pegawai");
-			const body = (await res.json()) as {
-				data?: GajiBatchMasterResponse[] | { content?: GajiBatchMasterResponse[] };
-				content?: GajiBatchMasterResponse[];
-			};
-			const raw = body.data ?? body;
-			const items = Array.isArray(raw) ? raw : (raw?.content ?? []);
-			return items as GajiBatchMasterResponse[];
-		},
-		enabled: !!periode,
-		staleTime: 30_000,
-	});
+	const { data: pegawaiList, isPending: isMasterPending, refetch: refetchMaster } = useBatchMasterList(periode);
 
-	// Filter pegawai by search query and group by organisasi
-	const grouped = useMemo(() => {
-		if (!pegawaiList) return [];
-		const q = searchQuery.toLowerCase().trim();
-		const filtered = q
+	const q = searchQuery.toLowerCase().trim();
+	const filtered = pegawaiList
+		? q
 			? pegawaiList.filter(
 					(p) =>
 						p.nama?.toLowerCase().includes(q) ||
@@ -87,39 +41,32 @@ export function VerifikasiClient() {
 						p.namaJabatan?.toLowerCase().includes(q) ||
 						p.namaOrganisasi?.toLowerCase().includes(q),
 				)
-			: pegawaiList;
+			: pegawaiList
+		: [];
 
-		const map = new Map<string, PegawaiRow[]>();
-		for (const p of filtered) {
-			const org = p.namaOrganisasi ?? "Tanpa Organisasi";
-			if (!map.has(org)) map.set(org, []);
-			map.get(org)?.push({
-				id: p.id ?? 0,
-				nipam: p.nipam,
-				nama: p.nama,
-				namaOrganisasi: p.namaOrganisasi,
-				namaJabatan: p.namaJabatan,
-				golongan: p.golongan,
-				jmlJiwa: p.jmlJiwa,
-				kodePajak: p.kodePajak,
-				penghasilanKotor: p.penghasilanKotor,
-				totalPotongan: p.totalPotongan,
-				pembulatan: p.pembulatan,
-				penghasilanBersihFinal: p.penghasilanBersihFinal,
-			});
+	const grouped: [string, GajiBatchMasterResponse[]][] = [];
+	for (const p of filtered) {
+		const org = p.namaOrganisasi ?? "Tanpa Organisasi";
+		const last = grouped.at(-1);
+		if (last && last[0] === org) {
+			last[1].push(p);
+		} else {
+			grouped.push([org, [p]]);
 		}
-		return Array.from(map.entries());
-	}, [pegawaiList, searchQuery]);
+	}
 
-	// Auto select first pegawai if none selected or selection not found
-	const selectedPegawai = useMemo(() => {
-		if (!pegawaiList || pegawaiList.length === 0) return null;
-		if (selectedBatchMasterId) {
-			const found = pegawaiList.find((p) => p.id === selectedBatchMasterId);
-			if (found) return found;
+	const groupStarts: number[] = [];
+	{
+		let acc = 0;
+		for (const [, rows] of grouped) {
+			groupStarts.push(acc + 1);
+			acc += rows.length;
 		}
-		return pegawaiList[0];
-	}, [pegawaiList, selectedBatchMasterId]);
+	}
+
+	const selectedPegawai = pegawaiList
+		? (pegawaiList.find((p) => p.id === selectedBatchMasterId) ?? pegawaiList[0] ?? null)
+		: null;
 
 	const handleVerify = async () => {
 		if (!batchId) return;
@@ -152,16 +99,10 @@ export function VerifikasiClient() {
 
 	const canVerify = batch?.status === "WAIT_VERIFICATION_PHASE_1";
 
-	const currentMonthLabel = useMemo(() => {
-		const found = MONTH_OPTIONS.find((m) => m.value === month);
-		return found ? found.label.split(" - ")[1] : month;
-	}, [month]);
-
-	let rowCounter = 0;
+	const currentMonthLabel = MONTH_OPTIONS.find((m) => m.value === month)?.label.split(" - ")[1] ?? month;
 
 	return (
 		<div className="flex flex-col gap-4">
-			{/* Header Title */}
 			<div>
 				<h1 className="text-xl font-bold tracking-tight text-foreground">
 					02. Verifikasi Gapok, Tunjangan &amp; Potongan
@@ -171,7 +112,6 @@ export function VerifikasiClient() {
 
 			{/* Filter & Action Toolbar */}
 			<div className="rounded-lg border bg-card p-3 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
-				{/* Left side: Periode Filter */}
 				<div className="flex flex-wrap items-center gap-2">
 					<span className="text-xs font-semibold text-foreground mr-1">
 						Periode Gaji:<span className="text-destructive ml-0.5">*</span>
@@ -219,7 +159,6 @@ export function VerifikasiClient() {
 					</Select>
 				</div>
 
-				{/* Right side: Actions */}
 				<div className="flex flex-wrap items-center gap-2 justify-end">
 					<Button
 						variant="outline"
@@ -267,9 +206,8 @@ export function VerifikasiClient() {
 				</div>
 			) : (
 				<div className="flex flex-col lg:flex-row gap-4 items-start">
-					{/* Panel Kiri: Tabel Utama Pegawai (Master) */}
+					{/* Tabel Utama Pegawai */}
 					<div className="flex-1 min-w-0 w-full rounded-lg border bg-card shadow-xs flex flex-col p-2">
-						{/* Table Header Controls */}
 						<div className="p-3 border-b flex flex-wrap items-center justify-between gap-2 bg-muted/20">
 							<div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
 								<span>Gaji [Periode</span>
@@ -303,7 +241,6 @@ export function VerifikasiClient() {
 							</div>
 						</div>
 
-						{/* Scrollable Data Table */}
 						<div className="max-h-160 overflow-auto border-b">
 							{isMasterPending ? (
 								<div className="p-4 space-y-2">
@@ -333,18 +270,14 @@ export function VerifikasiClient() {
 										</tr>
 									</thead>
 									<tbody className="divide-y divide-border">
-										{grouped.map(([org, rows]) => (
+										{grouped.map(([org, rows], groupIdx) => (
 											<OrganisasiTableGroup
 												key={org}
 												orgName={org}
 												rows={rows}
+												startNum={groupStarts[groupIdx]}
 												selectedBatchMasterId={selectedBatchMasterId ?? selectedPegawai?.id ?? null}
 												onSelectRow={(id) => setSelectedBatchMasterId(id)}
-												getStartNumber={() => {
-													const start = rowCounter + 1;
-													rowCounter += rows.length;
-													return start;
-												}}
 											/>
 										))}
 									</tbody>
@@ -353,7 +286,7 @@ export function VerifikasiClient() {
 						</div>
 					</div>
 
-					{/* Panel Kanan: Rincian Gaji (Detail Komponen) */}
+					{/* Panel Rincian Gaji */}
 					<div className="w-full lg:w-96 shrink-0 rounded-lg border bg-card shadow-xs overflow-hidden sticky top-4">
 						<div className="p-3 border-b bg-muted/20 flex items-center justify-between">
 							<h2 className="text-xs font-bold uppercase tracking-wider text-foreground">Rincian Gaji</h2>
@@ -374,187 +307,6 @@ export function VerifikasiClient() {
 					</div>
 				</div>
 			)}
-		</div>
-	);
-}
-
-interface OrganisasiTableGroupProps {
-	orgName: string;
-	rows: PegawaiRow[];
-	selectedBatchMasterId: number | null;
-	onSelectRow: (id: number) => void;
-	getStartNumber: () => number;
-}
-
-function OrganisasiTableGroup({
-	orgName,
-	rows,
-	selectedBatchMasterId,
-	onSelectRow,
-	getStartNumber,
-}: OrganisasiTableGroupProps) {
-	let currentNum = getStartNumber();
-
-	return (
-		<>
-			<tr className="bg-primary/10 text-primary font-bold text-xs uppercase tracking-wide">
-				<td colSpan={11} className="py-2 px-3 border-y border-primary/20">
-					{orgName}
-				</td>
-			</tr>
-			{rows.map((row) => {
-				const num = currentNum++;
-				const isSelected = selectedBatchMasterId === row.id;
-				return (
-					<tr
-						key={row.id}
-						onClick={() => onSelectRow(row.id)}
-						className={cn(
-							"cursor-pointer transition-colors text-xs border-b border-border/60",
-							isSelected
-								? "bg-primary/15 font-medium text-foreground"
-								: "hover:bg-accent/40 text-foreground/90 odd:bg-card even:bg-muted/20",
-						)}
-					>
-						<td className="py-2 px-2 text-center text-muted-foreground font-mono">{num}</td>
-						<td className="py-2 px-2.5 font-mono text-[11px]">{row.nipam ?? "-"}</td>
-						<td className="py-2 px-2.5 font-medium">{row.nama ?? "-"}</td>
-						<td className="py-2 px-2 text-center">{row.golongan ?? "-"}</td>
-						<td className="py-2 px-2.5 text-muted-foreground">{row.namaJabatan ?? "-"}</td>
-						<td className="py-2 px-2 text-center tabular-nums">{row.jmlJiwa ?? 0}</td>
-						<td className="py-2 px-2 text-center text-muted-foreground">{row.kodePajak ?? "-"}</td>
-						<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(row.penghasilanKotor)}</td>
-						<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(row.totalPotongan)}</td>
-						<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(row.pembulatan)}</td>
-						<td className="py-2 px-2.5 text-right tabular-nums font-semibold text-primary">
-							{fmtRupiah(row.penghasilanBersihFinal)}
-						</td>
-					</tr>
-				);
-			})}
-		</>
-	);
-}
-
-function PegawaiDetailKomponenPanel({ batchMasterId }: { batchMasterId: number }) {
-	const { data: prosesList, isPending } = useQuery<GajiBatchMasterProsesResponse[]>({
-		queryKey: penggajianKeys.batch.pegawaiProses(String(batchMasterId)),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master/proses/${batchMasterId}/master`);
-			throwIfNotOk(res, "Gagal memuat rincian komponen gaji");
-			const body = (await res.json()) as { data: GajiBatchMasterProsesResponse[] };
-			return body.data;
-		},
-		enabled: !!batchMasterId,
-		staleTime: 30_000,
-	});
-
-	if (isPending) {
-		return (
-			<div className="p-4 space-y-3">
-				<Skeleton className="h-6 w-32" />
-				<Skeleton className="h-24 w-full" />
-				<Skeleton className="h-6 w-32" />
-				<Skeleton className="h-24 w-full" />
-			</div>
-		);
-	}
-
-	const penghasilanList = (prosesList ?? []).filter((k) => k.jenisGaji === "PEMASUKAN");
-	const potonganList = (prosesList ?? []).filter((k) => k.jenisGaji === "POTONGAN");
-
-	const totalPenghasilan = penghasilanList.reduce((acc, curr) => acc + (curr.nilai ?? 0), 0);
-	const totalPotongan = potonganList.reduce((acc, curr) => acc + (curr.nilai ?? 0), 0);
-
-	return (
-		<div className="p-3 space-y-4 max-h-[600px] overflow-y-auto">
-			{/* Seksi 1: Penghasilan */}
-			<div className="space-y-1.5">
-				<div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
-					Jenis: Penghasilan
-				</div>
-				<div className="border rounded-md overflow-hidden bg-card text-xs">
-					<table className="w-full border-collapse">
-						<thead className="bg-primary text-primary-foreground font-semibold">
-							<tr>
-								<th className="py-1.5 px-2 text-center w-8 border-r border-primary-foreground/20">No</th>
-								<th className="py-1.5 px-2 border-r border-primary-foreground/20 text-left">Komponen Gaji</th>
-								<th className="py-1.5 px-2 text-right">Jumlah</th>
-							</tr>
-						</thead>
-						<tbody className="divide-y divide-border">
-							{penghasilanList.length === 0 ? (
-								<tr>
-									<td colSpan={3} className="py-3 text-center text-muted-foreground italic">
-										Tidak ada komponen penghasilan
-									</td>
-								</tr>
-							) : (
-								penghasilanList.map((item, idx) => (
-									<tr key={item.id ?? idx} className="hover:bg-accent/30 odd:bg-card even:bg-muted/15">
-										<td className="py-1.5 px-2 text-center text-muted-foreground">{idx + 1}</td>
-										<td className="py-1.5 px-2 font-medium text-foreground">{item.nama ?? "-"}</td>
-										<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(item.nilai)}</td>
-									</tr>
-								))
-							)}
-						</tbody>
-						{penghasilanList.length > 0 && (
-							<tfoot className="border-t-2 border-border font-bold bg-primary/10 text-primary">
-								<tr>
-									<td colSpan={2} className="py-1.5 px-2 text-right">
-										Total
-									</td>
-									<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(totalPenghasilan)}</td>
-								</tr>
-							</tfoot>
-						)}
-					</table>
-				</div>
-			</div>
-
-			{/* Seksi 2: Potongan */}
-			<div className="space-y-1.5">
-				<div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">Jenis: Potongan</div>
-				<div className="border rounded-md overflow-hidden bg-card text-xs">
-					<table className="w-full border-collapse">
-						<thead className="bg-primary text-primary-foreground font-semibold">
-							<tr>
-								<th className="py-1.5 px-2 text-center w-8 border-r border-primary-foreground/20">No</th>
-								<th className="py-1.5 px-2 border-r border-primary-foreground/20 text-left">Komponen Gaji</th>
-								<th className="py-1.5 px-2 text-right">Jumlah</th>
-							</tr>
-						</thead>
-						<tbody className="divide-y divide-border">
-							{potonganList.length === 0 ? (
-								<tr>
-									<td colSpan={3} className="py-3 text-center text-muted-foreground italic">
-										Tidak ada komponen potongan
-									</td>
-								</tr>
-							) : (
-								potonganList.map((item, idx) => (
-									<tr key={item.id ?? idx} className="hover:bg-accent/30 odd:bg-card even:bg-muted/15">
-										<td className="py-1.5 px-2 text-center text-muted-foreground">{idx + 1}</td>
-										<td className="py-1.5 px-2 font-medium text-foreground">{item.nama ?? "-"}</td>
-										<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(item.nilai)}</td>
-									</tr>
-								))
-							)}
-						</tbody>
-						{potonganList.length > 0 && (
-							<tfoot className="border-t-2 border-border font-bold bg-primary/10 text-primary">
-								<tr>
-									<td colSpan={2} className="py-1.5 px-2 text-right">
-										Total
-									</td>
-									<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(totalPotongan)}</td>
-								</tr>
-							</tfoot>
-						)}
-					</table>
-				</div>
-			</div>
 		</div>
 	);
 }
