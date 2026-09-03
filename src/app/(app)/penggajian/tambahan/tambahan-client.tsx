@@ -1,8 +1,8 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ChevronDown, Download, Loader2, RefreshCw, RotateCcw, ShieldCheck, Upload } from "lucide-react";
-import { Fragment, useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ChevronDown, Download, Loader2, RefreshCw, RotateCcw, Search, ShieldCheck, Upload } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 import {
 	AlertDialog,
@@ -28,32 +28,17 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
-import { cn, fmtRupiah, throwIfNotOk } from "@/lib/utils";
+import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
+import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
+import { cn } from "@/lib/utils";
 import type { GajiBatchMasterResponse, GajiBatchRootResponse } from "@/types/penggajian/batch";
-import { getYearOptions, MONTH_OPTIONS } from "../_components/periode-filter";
+import { MONTH_OPTIONS } from "../_components/periode-filter";
+import { OrganisasiTableGroup } from "./_components/organisasi-table-group";
 import { RincianGajiPanel } from "./_components/rincian-gaji-panel";
 import { UploadPotonganDialog } from "./_components/upload-potongan-dialog";
 
-interface PegawaiRow {
-	id: number;
-	nipam?: string;
-	nama?: string;
-	namaOrganisasi?: string;
-	namaJabatan?: string;
-	golongan?: string;
-	penghasilanKotor?: number;
-	totalPotongan?: number;
-	pembulatan?: number;
-	penghasilanBersih?: number;
-	totalAddTambahan?: number;
-	totalAddPotongan?: number;
-	penghasilanBersihFinal?: number;
-}
-
 export function TambahanClient() {
-	const now = new Date();
-	const [year, setYear] = useState(String(now.getFullYear()));
-	const [month, setMonth] = useState(String(now.getMonth() + 1).padStart(2, "0"));
+	const { year, setYear, month, setMonth, periode, years } = useVerifikasiFilters();
 	const [searchNik, setSearchNik] = useState("");
 	const [searchNama, setSearchNama] = useState("");
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
@@ -61,8 +46,6 @@ export function TambahanClient() {
 	const [rollbackDialogOpen, setRollbackDialogOpen] = useState(false);
 
 	const qc = useQueryClient();
-	const periode = `${year}${month}`;
-	const years = getYearOptions();
 
 	// Fetch batch for period
 	const { data: batches, isPending: isBatchPending, refetch: refetchBatch } = useBatchList({ periode });
@@ -75,27 +58,8 @@ export function TambahanClient() {
 	const verify1 = useBatchAction(batchId, `${batchId}/verify1`);
 	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
 
-	// Fetch pegawai list in batch
-	const {
-		data: pegawaiList,
-		isPending: isMasterPending,
-		refetch: refetchMaster,
-	} = useQuery<GajiBatchMasterResponse[]>({
-		queryKey: penggajianKeys.batch.master(periode),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}`);
-			throwIfNotOk(res, "Gagal memuat daftar pegawai");
-			const body = (await res.json()) as {
-				data?: GajiBatchMasterResponse[] | { content?: GajiBatchMasterResponse[] };
-				content?: GajiBatchMasterResponse[];
-			};
-			const raw = body.data ?? body;
-			const items = Array.isArray(raw) ? raw : (raw?.content ?? []);
-			return items as GajiBatchMasterResponse[];
-		},
-		enabled: !!periode,
-		staleTime: 30_000,
-	});
+	// Fetch pegawai list in batch via shared hook
+	const { data: pegawaiList, isPending: isMasterPending, refetch: refetchMaster } = useBatchMasterList(periode);
 
 	const rollbackMutation = useMutation({
 		mutationFn: async () => {
@@ -148,63 +112,51 @@ export function TambahanClient() {
 		window.open(`/api/proxy/penggajian/batch/master/download/potongan-gaji/${batchId}`, "_blank");
 	};
 
-	// Filter pegawai
+	// Filter pegawai by NIK and Nama
 	const qNik = searchNik.toLowerCase().trim();
 	const qNama = searchNama.toLowerCase().trim();
-	const filtered = (pegawaiList ?? []).filter((p) => {
-		const matchNik = !qNik || (p.nipam?.toLowerCase().includes(qNik) ?? false);
-		const matchNama = !qNama || (p.nama?.toLowerCase().includes(qNama) ?? false);
-		return matchNik && matchNama;
-	});
+	const filtered = pegawaiList
+		? pegawaiList.filter((p) => {
+				const matchNik = !qNik || (p.nipam?.toLowerCase().includes(qNik) ?? false);
+				const matchNama = !qNama || (p.nama?.toLowerCase().includes(qNama) ?? false);
+				return matchNik && matchNama;
+			})
+		: [];
 
 	// Group by organisasi
-	const orgMap = new Map<string, PegawaiRow[]>();
+	const map = new Map<string, GajiBatchMasterResponse[]>();
 	for (const p of filtered) {
 		const org = p.namaOrganisasi ?? "Tanpa Organisasi";
-		if (!orgMap.has(org)) orgMap.set(org, []);
-		orgMap.get(org)?.push({
-			id: p.id ?? 0,
-			nipam: p.nipam,
-			nama: p.nama,
-			namaOrganisasi: p.namaOrganisasi,
-			namaJabatan: p.namaJabatan,
-			golongan: p.golongan,
-			penghasilanKotor: p.penghasilanKotor,
-			totalPotongan: p.totalPotongan,
-			pembulatan: p.pembulatan,
-			penghasilanBersih: p.penghasilanBersih,
-			totalAddTambahan: p.totalAddTambahan,
-			totalAddPotongan: p.totalAddPotongan,
-			penghasilanBersihFinal: p.penghasilanBersihFinal,
-		});
+		if (!map.has(org)) map.set(org, []);
+		map.get(org)?.push(p);
 	}
-	const grouped = Array.from(orgMap.entries());
+	const grouped = Array.from(map.entries());
 
-	const selectedPegawai = (() => {
-		if (!pegawaiList || pegawaiList.length === 0) return null;
-		if (selectedBatchMasterId) {
-			const found = pegawaiList.find((p) => p.id === selectedBatchMasterId);
-			if (found) return found;
+	const groupStarts: number[] = [];
+	{
+		let acc = 0;
+		for (const [, rows] of grouped) {
+			groupStarts.push(acc + 1);
+			acc += rows.length;
 		}
-		return pegawaiList[0];
-	})();
+	}
 
-	const currentMonthLabel = (() => {
-		const found = MONTH_OPTIONS.find((m) => m.value === month);
-		return found ? found.label.split(" - ")[1] : month;
-	})();
+	const selectedPegawai = pegawaiList
+		? (pegawaiList.find((p) => p.id === selectedBatchMasterId) ?? pegawaiList[0] ?? null)
+		: null;
 
-	let rowCounter = 0;
+	const currentMonthLabel = MONTH_OPTIONS.find((m) => m.value === month)?.label.split(" - ")[1] ?? month;
 
 	return (
 		<div className="flex flex-col gap-4">
-			{/* Page Header & Toolbar */}
-			<div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-				<div>
-					<h1 className="text-xl font-bold tracking-tight text-foreground">Tambah Komponen Gaji</h1>
-					<p className="text-sm text-muted-foreground">Kelola penambahan dan potongan komponen gaji per pegawai</p>
-				</div>
+			{/* Title Header */}
+			<div>
+				<h1 className="text-xl font-bold tracking-tight text-foreground">03. Tambah Komponen Gaji</h1>
+				<p className="text-sm text-muted-foreground">Kelola penambahan dan pemotongan komponen gaji per pegawai</p>
+			</div>
 
+			{/* Filter & Action Toolbar (mirip verifikasi) */}
+			<div className="rounded-lg border bg-card p-3 shadow-xs flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
 				<div className="flex flex-wrap items-center gap-2">
 					<span className="text-xs font-semibold text-foreground mr-1">
 						Periode Gaji:<span className="text-destructive ml-0.5">*</span>
@@ -250,7 +202,9 @@ export function TambahanClient() {
 							))}
 						</SelectContent>
 					</Select>
+				</div>
 
+				<div className="flex flex-wrap items-center gap-2 justify-end">
 					{batch && (
 						<>
 							<DropdownMenu>
@@ -288,7 +242,7 @@ export function TambahanClient() {
 								size="sm"
 								onClick={handleVerify}
 								disabled={!canEdit || verify1.isPending}
-								className="gap-1.5 h-9 text-xs bg-emerald-600 hover:bg-emerald-700 text-white font-semibold"
+								className="gap-1.5 h-9 text-xs bg-primary text-primary-foreground hover:bg-primary/90"
 							>
 								{verify1.isPending ? (
 									<Loader2 className="size-3.5 animate-spin" />
@@ -303,7 +257,7 @@ export function TambahanClient() {
 								size="sm"
 								onClick={handleReprocess}
 								disabled={!canEdit || reprocess.isPending}
-								className="gap-1.5 h-9 text-xs bg-red-400/90 hover:bg-red-500 text-white font-semibold"
+								className="gap-1.5 h-9 text-xs"
 							>
 								{reprocess.isPending ? (
 									<Loader2 className="size-3.5 animate-spin" />
@@ -335,7 +289,7 @@ export function TambahanClient() {
 					<div className="flex-1 min-w-0 w-full rounded-lg border bg-card shadow-xs flex flex-col p-2">
 						{/* Table Header Controls */}
 						<div className="p-3 border-b flex flex-wrap items-center justify-between gap-2 bg-muted/20">
-							<div className="flex items-center gap-1.5 text-xs font-semibold text-foreground">
+							<div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
 								<span>Tambah Komponen Gaji [Periode</span>
 								<span className="text-primary font-bold">
 									{currentMonthLabel} {year}
@@ -344,18 +298,24 @@ export function TambahanClient() {
 							</div>
 
 							<div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
-								<Input
-									value={searchNik}
-									onChange={(e) => setSearchNik(e.target.value)}
-									placeholder="Cari NIK"
-									className="w-28 sm:w-32 h-8 text-xs"
-								/>
-								<Input
-									value={searchNama}
-									onChange={(e) => setSearchNama(e.target.value)}
-									placeholder="Cari Nama Pegawai"
-									className="w-36 sm:w-44 h-8 text-xs"
-								/>
+								<div className="relative">
+									<Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+									<Input
+										value={searchNik}
+										onChange={(e) => setSearchNik(e.target.value)}
+										placeholder="Cari NIK..."
+										className="pl-8 h-8 text-xs w-28 sm:w-32"
+									/>
+								</div>
+								<div className="relative">
+									<Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground pointer-events-none" />
+									<Input
+										value={searchNama}
+										onChange={(e) => setSearchNama(e.target.value)}
+										placeholder="Cari Nama Pegawai..."
+										className="pl-8 h-8 text-xs w-36 sm:w-48"
+									/>
+								</div>
 								{(searchNik || searchNama) && (
 									<Button
 										variant="ghost"
@@ -364,7 +324,7 @@ export function TambahanClient() {
 											setSearchNik("");
 											setSearchNama("");
 										}}
-										className="size-8 text-destructive hover:bg-destructive/10"
+										className="size-8 text-muted-foreground hover:text-foreground"
 										title="Reset Pencarian"
 									>
 										<RotateCcw className="size-3.5" />
@@ -374,7 +334,7 @@ export function TambahanClient() {
 						</div>
 
 						{/* Scrollable Data Table */}
-						<div className="max-h-165 overflow-auto border-b">
+						<div className="max-h-160 overflow-auto border-b">
 							{isMasterPending ? (
 								<div className="p-4 space-y-2">
 									{[1, 2, 3, 4, 5].map((i) => (
@@ -387,75 +347,32 @@ export function TambahanClient() {
 								</div>
 							) : (
 								<table className="w-full text-xs text-left border-collapse">
-									<thead className="sticky top-0 z-10 bg-emerald-700 text-white font-semibold shadow-xs">
+									<thead className="sticky top-0 z-10 bg-primary text-primary-foreground font-semibold shadow-xs">
 										<tr>
-											<th className="py-2.5 px-2 text-center w-10 border-r border-white/20">No</th>
-											<th className="py-2.5 px-2.5 border-r border-white/20">NIK</th>
-											<th className="py-2.5 px-2.5 border-r border-white/20">Nama Pegawai</th>
-											<th className="py-2.5 px-2.5 border-r border-white/20">Jabatan</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Penghasilan</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Potongan</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Pembulatan</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Jml. Gaji</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Peng. Tambahan</th>
-											<th className="py-2.5 px-2.5 text-right border-r border-white/20">Pot. Tambahan</th>
+											<th className="py-2.5 px-2 text-center w-10 border-r border-primary-foreground/20">No</th>
+											<th className="py-2.5 px-2.5 border-r border-primary-foreground/20">NIK</th>
+											<th className="py-2.5 px-2.5 border-r border-primary-foreground/20">Nama Pegawai</th>
+											<th className="py-2.5 px-2.5 border-r border-primary-foreground/20">Jabatan</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Penghasilan</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Potongan</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Pembulatan</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Jml. Gaji</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Peng. Tambahan</th>
+											<th className="py-2.5 px-2.5 text-right border-r border-primary-foreground/20">Pot. Tambahan</th>
 											<th className="py-2.5 px-2.5 text-right">Jml. Gaji Final</th>
 										</tr>
 									</thead>
 									<tbody className="divide-y divide-border">
-										{grouped.map(([org, rows]) => {
-											const groupStartNum = rowCounter + 1;
-											rowCounter += rows.length;
-											let itemNum = groupStartNum;
-
-											return (
-												<Fragment key={org}>
-													<tr className="bg-emerald-600 text-white font-bold text-xs uppercase tracking-wide">
-														<td colSpan={11} className="py-2 px-3">
-															{org}
-														</td>
-													</tr>
-													{rows.map((row) => {
-														const num = itemNum++;
-														const isSelected = (selectedBatchMasterId ?? selectedPegawai?.id) === row.id;
-														return (
-															<tr
-																key={row.id}
-																onClick={() => setSelectedBatchMasterId(row.id)}
-																className={cn(
-																	"cursor-pointer transition-colors text-xs border-b border-border/60",
-																	isSelected
-																		? "bg-emerald-100 dark:bg-emerald-950/40 font-medium text-foreground"
-																		: "hover:bg-accent/40 text-foreground/90 odd:bg-card even:bg-muted/20",
-																)}
-															>
-																<td className="py-2 px-2 text-center text-muted-foreground font-mono">{num}</td>
-																<td className="py-2 px-2.5 font-mono text-[11px]">{row.nipam ?? "-"}</td>
-																<td className="py-2 px-2.5 font-medium">{row.nama ?? "-"}</td>
-																<td className="py-2 px-2.5 text-muted-foreground">{row.namaJabatan ?? "-"}</td>
-																<td className="py-2 px-2.5 text-right tabular-nums">
-																	{fmtRupiah(row.penghasilanKotor)}
-																</td>
-																<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(row.totalPotongan)}</td>
-																<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(row.pembulatan)}</td>
-																<td className="py-2 px-2.5 text-right tabular-nums">
-																	{fmtRupiah(row.penghasilanBersih)}
-																</td>
-																<td className="py-2 px-2.5 text-right tabular-nums text-emerald-700 dark:text-emerald-400 font-medium">
-																	{fmtRupiah(row.totalAddTambahan)}
-																</td>
-																<td className="py-2 px-2.5 text-right tabular-nums text-sky-600 dark:text-sky-400 font-medium">
-																	{fmtRupiah(row.totalAddPotongan)}
-																</td>
-																<td className="py-2 px-2.5 text-right tabular-nums font-semibold text-primary">
-																	{fmtRupiah(row.penghasilanBersihFinal)}
-																</td>
-															</tr>
-														);
-													})}
-												</Fragment>
-											);
-										})}
+										{grouped.map(([org, rows], groupIdx) => (
+											<OrganisasiTableGroup
+												key={org}
+												orgName={org}
+												rows={rows}
+												startNum={groupStarts[groupIdx]}
+												selectedBatchMasterId={selectedBatchMasterId ?? selectedPegawai?.id ?? null}
+												onSelectRow={(id) => setSelectedBatchMasterId(id)}
+											/>
+										))}
 									</tbody>
 								</table>
 							)}

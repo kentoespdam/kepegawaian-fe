@@ -170,7 +170,7 @@ describe("TambahanClient", () => {
 		render(<TambahanClient />, { wrapper: createWrapper() });
 
 		await waitFor(() => {
-			expect(screen.getAllByText("Tambah Komponen Gaji")[0]).toBeInTheDocument();
+			expect(screen.getByText("03. Tambah Komponen Gaji")).toBeInTheDocument();
 			expect(screen.getByText("01. DIREKSI")).toBeInTheDocument();
 			expect(screen.getAllByText("Budi Santoso").length).toBeGreaterThanOrEqual(1);
 			expect(screen.getByText("12345")).toBeInTheDocument();
@@ -256,7 +256,7 @@ describe("TambahanClient", () => {
 			expect(screen.getAllByText("Budi Santoso").length).toBeGreaterThanOrEqual(1);
 		});
 
-		const nikInput = screen.getByPlaceholderText("Cari NIK");
+		const nikInput = screen.getByPlaceholderText(/Cari NIK/i);
 		fireEvent.change(nikInput, { target: { value: "99999" } });
 
 		await waitFor(() => {
