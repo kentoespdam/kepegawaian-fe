@@ -85,8 +85,8 @@
 - [x] Test badge rendering (PENGAJUAN vs KLAIM)
 - [x] Test filter dropdown `jenisPengajuanCuti`
 - [x] Test tombol Klaim visibility (APPROVED + !isClaimed)
-- [ ] Test form validation (tanggal dalam rentang pengajuan asal)
-- [ ] Test `listHari` generation dari range
+- [x] Test form validation (tanggal dalam rentang pengajuan asal) — `klaim-form-schema.test.ts`
+- [x] Test `listHari` generation dari range — `klaim-form-schema.test.ts`
 - [x] `bun run test` — all green
 
 ---

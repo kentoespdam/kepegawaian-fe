@@ -1,5 +1,10 @@
 # CLAIM-ORDER — Penggajian M5: Fase 02 Verifikasi Tahap 1
 
+> ⚠️ **SUPERSEDED (2026-09-03)** — Milestone ini (dan M1–M7) ditulis untuk arsitektur
+> `batch/[id]` lama. Arsitektur diganti oleh **ADR-0045** (standalone phase pages dengan
+> filter periode). Klaim order arsitektur baru: `CLAIM-ORDER-penggajian-sidebar-restructure.md`
+> (bead `kepegawaian-fe-2k2y`). Issue `kepegawaian-fe-5y8s` ditutup sebagai superseded.
+
 > **Milestone 5 dari 7** untuk modul Penggajian. Tergantung M4 (layout + stepper rail).
 > Baca [`docs/context/penggajian.md`](context/penggajian.md) dulu.
 

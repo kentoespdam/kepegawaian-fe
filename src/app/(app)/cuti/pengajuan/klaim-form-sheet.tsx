@@ -3,10 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 import { FieldDate, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -14,50 +13,8 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sh
 import { cutiKeys } from "@/hooks/keys/cuti-keys";
 import { formatDate } from "@/lib/utils";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
-
-// CU-25/26: Zod schema untuk form klaim
-const schema = z
-	.object({
-		tanggalMulai: z.string().min(1, "Tanggal mulai wajib"),
-		tanggalSelesai: z.string().min(1, "Tanggal selesai wajib"),
-		keterangan: z.string().optional(),
-	})
-	.superRefine((v, ctx) => {
-		// CU-25: tanggalSelesai >= tanggalMulai
-		if (v.tanggalMulai && v.tanggalSelesai && v.tanggalSelesai < v.tanggalMulai) {
-			ctx.addIssue({
-				code: "custom",
-				path: ["tanggalSelesai"],
-				message: "Tanggal selesai tidak boleh sebelum tanggal mulai",
-			});
-		}
-	});
-type FormValues = z.infer<typeof schema>;
-
-// CU-25: Hitung jumlah hari (inklusi kedua ujung)
-function hitungHari(mulai: string | undefined, selesai: string | undefined): number | null {
-	if (!mulai || !selesai) return null;
-	const a = new Date(`${mulai}T00:00:00`);
-	const b = new Date(`${selesai}T00:00:00`);
-	if (Number.isNaN(a.getTime()) || Number.isNaN(b.getTime())) return null;
-	const diff = Math.round((b.getTime() - a.getTime()) / 86_400_000) + 1;
-	return diff >= 1 ? diff : null;
-}
-
-// CU-25: Generate listHari dari range (YYYY-MM-DD array)
-function generateListHari(mulai: string, selesai: string): string[] {
-	const days: string[] = [];
-	const current = new Date(`${mulai}T00:00:00`);
-	const end = new Date(`${selesai}T00:00:00`);
-	while (current <= end) {
-		const y = current.getFullYear();
-		const m = String(current.getMonth() + 1).padStart(2, "0");
-		const d = String(current.getDate()).padStart(2, "0");
-		days.push(`${y}-${m}-${d}`);
-		current.setDate(current.getDate() + 1);
-	}
-	return days;
-}
+import type { KlaimFormValues as FormValues } from "./klaim-form-schema";
+import { generateListHari, hitungHari, klaimFormSchema } from "./klaim-form-schema";
 
 interface KlaimFormSheetProps {
 	open: boolean;
@@ -68,6 +25,9 @@ interface KlaimFormSheetProps {
 
 export function KlaimFormSheet({ open, onOpenChange, pegawaiId, pengajuan }: KlaimFormSheetProps) {
 	const qc = useQueryClient();
+
+	// CU-25/26: schema divalidasi terhadap rentang pengajuan asal
+	const schema = useMemo(() => klaimFormSchema(pengajuan), [pengajuan]);
 
 	const {
 		setValue,
