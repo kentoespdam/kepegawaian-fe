@@ -99,7 +99,7 @@ export function PersetujuanClient() {
 				penghasilanBersihFinal: p.penghasilanBersihFinal,
 			});
 		}
-		return Array.from(map.entries());
+		return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
 	})();
 
 	const withLoading = async (fn: () => Promise<void>, label: string) => {

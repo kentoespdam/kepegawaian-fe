@@ -132,7 +132,7 @@ export function PegawaiOrganisasiTable({
 		if (!map.has(org)) map.set(org, []);
 		map.get(org)?.push(p);
 	}
-	const grouped = Array.from(map.entries());
+	const grouped = Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }));
 
 	const groupStarts: number[] = [];
 	{

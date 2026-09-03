@@ -155,5 +155,9 @@ describe("PegawaiOrganisasiTable", () => {
 		expect(screen.getByText("DIVISI KEUANGAN")).toBeInTheDocument();
 		expect(screen.queryByText("Bagian SDM")).not.toBeInTheDocument();
 		expect(screen.queryByText("Bagian Keuangan")).not.toBeInTheDocument();
+
+		const groupHeaders = screen.getAllByText(/DIVISI/i);
+		expect(groupHeaders[0]).toHaveTextContent("DIVISI KEUANGAN");
+		expect(groupHeaders[1]).toHaveTextContent("DIVISI OPERASIONAL");
 	});
 });
