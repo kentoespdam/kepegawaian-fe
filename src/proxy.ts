@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import { readSession, resolveToken, TOKEN_COOKIE, tokenCookieOptions } from "@/lib/auth/appwriteSession";
+import { fetchAccount, readSession, resolveToken, TOKEN_COOKIE, tokenCookieOptions } from "@/lib/auth/appwriteSession";
 
 const APPWRITE_URL = process.env.APPWRITE_URL ?? "";
 const APPWRITE_PROJECT = process.env.APPWRITE_PROJECT_ID ?? "";
@@ -17,7 +17,16 @@ export default async function proxy(request: NextRequest) {
 	// Route guard — page navigations
 	if (!pathname.startsWith("/api/proxy")) {
 		if (pathname === "/login") {
-			return session ? NextResponse.redirect(new URL("/", request.url)) : NextResponse.next();
+			if (!session) return NextResponse.next();
+			// Cookie presence alone can be a stale session. Bouncing straight to "/" here
+			// while the app layout redirects an invalid session back to /login used to loop
+			// /login ↔ / into ERR_TOO_MANY_REDIRECTS — verify the session before bouncing.
+			try {
+				await fetchAccount(session);
+				return NextResponse.redirect(new URL("/", request.url));
+			} catch {
+				return NextResponse.next();
+			}
 		}
 		return session ? NextResponse.next() : NextResponse.redirect(new URL("/login", request.url));
 	}

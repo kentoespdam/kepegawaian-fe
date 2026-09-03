@@ -115,6 +115,43 @@ const MOCK_MASTER = [
 	},
 ];
 
+// Org names interleave (A, B, A, B) so consecutive-only grouping produces
+// duplicate group names -> duplicate React keys unless keys are unique.
+const MOCK_MASTER_INTERLEAVED = [
+	{
+		id: 1,
+		nama: "Pegawai A1",
+		nipam: "0001",
+		namaOrganisasi: "SUB BAG A",
+		namaJabatan: "Staf",
+		golongan: "III/a",
+	},
+	{
+		id: 2,
+		nama: "Pegawai B1",
+		nipam: "0002",
+		namaOrganisasi: "SUB BAG B",
+		namaJabatan: "Staf",
+		golongan: "III/a",
+	},
+	{
+		id: 3,
+		nama: "Pegawai A2",
+		nipam: "0003",
+		namaOrganisasi: "SUB BAG A",
+		namaJabatan: "Staf",
+		golongan: "III/a",
+	},
+	{
+		id: 4,
+		nama: "Pegawai B2",
+		nipam: "0004",
+		namaOrganisasi: "SUB BAG B",
+		namaJabatan: "Staf",
+		golongan: "III/a",
+	},
+];
+
 const MOCK_PROSES = [
 	{
 		id: 101,
@@ -233,6 +270,35 @@ describe("VerifikasiClient", () => {
 			expect(screen.getAllByText("Siti Aminah").length).toBeGreaterThanOrEqual(1);
 			expect(screen.getByText("54321")).toBeInTheDocument();
 		});
+	});
+
+	it("does not emit duplicate-key warnings when same org appears in non-consecutive rows", async () => {
+		const consoleError = vi.spyOn(console, "error").mockImplementation(() => {});
+
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER_INTERLEAVED,
+			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
+		});
+
+		render(<VerifikasiClient />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getAllByText("SUB BAG A").length).toBeGreaterThanOrEqual(1);
+		});
+
+		// Same-name orgs merge into a single group (one header, both members)
+		expect(screen.getAllByText("SUB BAG A").length).toBe(1);
+		expect(screen.getAllByText("SUB BAG B").length).toBe(1);
+		expect(screen.getAllByText("Pegawai A1").length).toBeGreaterThanOrEqual(1);
+		expect(screen.getAllByText("Pegawai A2").length).toBeGreaterThanOrEqual(1);
+
+		const sameKeyCalls = consoleError.mock.calls.filter((call: unknown[]) =>
+			call.some((a: unknown) => typeof a === "string" && a.includes("same key")),
+		);
+		expect(sameKeyCalls).toHaveLength(0);
+
+		consoleError.mockRestore();
 	});
 
 	it("handles download button click", async () => {

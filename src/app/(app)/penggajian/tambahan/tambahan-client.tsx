@@ -380,7 +380,7 @@ export function TambahanClient() {
 					</div>
 
 					{/* Panel Kanan: Rincian Gaji */}
-					<div className="w-full lg:w-96 shrink-0 rounded-lg border bg-card shadow-xs overflow-hidden sticky top-4">
+					<div className="w-full lg:w-96 shrink-0 rounded-lg border bg-card shadow-xs sticky top-4">
 						<div className="p-3 border-b bg-muted/20 flex items-center justify-between">
 							<h2 className="text-xs font-bold uppercase tracking-wider text-foreground">Rincian Gaji</h2>
 							{selectedPegawai && (

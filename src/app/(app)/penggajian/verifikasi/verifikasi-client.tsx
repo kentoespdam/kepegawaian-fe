@@ -44,16 +44,14 @@ export function VerifikasiClient() {
 			: pegawaiList
 		: [];
 
-	const grouped: [string, GajiBatchMasterResponse[]][] = [];
+	// Group by organisasi (Map merges same-name units into one group)
+	const map = new Map<string, GajiBatchMasterResponse[]>();
 	for (const p of filtered) {
 		const org = p.namaOrganisasi ?? "Tanpa Organisasi";
-		const last = grouped.at(-1);
-		if (last && last[0] === org) {
-			last[1].push(p);
-		} else {
-			grouped.push([org, [p]]);
-		}
+		if (!map.has(org)) map.set(org, []);
+		map.get(org)?.push(p);
 	}
+	const grouped = Array.from(map.entries());
 
 	const groupStarts: number[] = [];
 	{

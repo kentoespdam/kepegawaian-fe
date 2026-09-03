@@ -177,7 +177,7 @@ export function RincianGajiPanel({ batchMasterId, canEdit, onDataChange }: Rinci
 	const potonganList = items.filter((k) => k.jenisGaji === "POTONGAN");
 
 	return (
-		<div className="p-3 space-y-4 max-h-165 overflow-y-auto">
+		<div className="p-3 space-y-4 min-h-165">
 			{/* Seksi 1: Penghasilan */}
 			<div className="space-y-2">
 				<div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">

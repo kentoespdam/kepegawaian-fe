@@ -71,7 +71,7 @@ export function PegawaiDetailKomponenPanel({ batchMasterId }: { batchMasterId: n
 	const potonganList = items.filter((k) => k.jenisGaji === "POTONGAN");
 
 	return (
-		<div className="p-3 space-y-4 max-h-150 overflow-y-auto">
+		<div className="p-3 space-y-4 min-h-150">
 			<div className="space-y-1.5">
 				<div className="text-[11px] font-semibold text-muted-foreground uppercase tracking-wide">
 					Jenis: Penghasilan

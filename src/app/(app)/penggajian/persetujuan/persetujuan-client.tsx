@@ -58,7 +58,7 @@ export function PersetujuanClient() {
 	} = useQuery<GajiBatchMasterResponse[]>({
 		queryKey: penggajianKeys.batch.master(batchId),
 		queryFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master?gajiBatchRootId=${batchId}`);
+			const res = await fetch(`/api/proxy/penggajian/batch/master?periode=${periode}`);
 			throwIfNotOk(res, "Gagal memuat daftar pegawai");
 			const body = (await res.json()) as { data: GajiBatchMasterResponse[] };
 			return body.data;
