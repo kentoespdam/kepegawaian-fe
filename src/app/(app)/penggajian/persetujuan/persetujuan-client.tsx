@@ -86,12 +86,10 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 
 	const handleReprocess = async () => {
 		try {
-			const targetPhase = getReprocessPhase(batch?.status);
 			await reprocess.mutateAsync({
 				id: batchId,
 				nama: userName,
 				jabatan: jabatanName ?? "Direktur Utama",
-				phase: targetPhase,
 			});
 			toast.success("Batch berhasil diproses ulang");
 			setReprocessDialogOpen(false);

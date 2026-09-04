@@ -100,12 +100,10 @@ export function VerifikasiClient({ userName, jabatanName }: VerifikasiClientProp
 
 	const handleReprocess = async () => {
 		try {
-			const targetPhase = getReprocessPhase(batch?.status);
 			await reprocess.mutateAsync({
 				id: batchId,
 				nama: userName,
 				jabatan: jabatanName ?? "Manager SDM",
-				phase: targetPhase,
 			});
 			toast.success("Batch berhasil diproses ulang");
 			setReprocessDialogOpen(false);

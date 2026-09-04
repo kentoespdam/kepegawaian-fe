@@ -2109,23 +2109,7 @@
 			},
 			"GajiBatchRootProcessRequest": {
 				"type": "object",
-				"properties": {
-					"id": { "type": "string" },
-					"nama": { "type": "string" },
-					"jabatan": { "type": "string" },
-					"phase": {
-						"type": "string",
-						"enum": [
-							"PENDING",
-							"PROSES",
-							"WAIT_VERIFICATION_PHASE_1",
-							"WAIT_VERIFICATION_PHASE_2",
-							"WAIT_APPROVAL",
-							"FINISHED",
-							"FAILED"
-						]
-					}
-				}
+				"properties": { "id": { "type": "string" }, "nama": { "type": "string" }, "jabatan": { "type": "string" } }
 			},
 			"GajiBatchMasterPostRequest": {
 				"type": "object",
