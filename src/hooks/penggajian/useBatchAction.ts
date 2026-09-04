@@ -10,8 +10,8 @@ import type { GajiBatchRootProcessRequest } from "@/types/penggajian/batch";
  */
 export function useBatchAction<TData = GajiBatchRootProcessRequest>(urlSuffix: string) {
 	const qc = useQueryClient();
-	return useMutation<void, Error, TData | undefined>({
-		mutationFn: async (data?: TData) => {
+	return useMutation<void, Error, TData | void>({
+		mutationFn: async (data?: TData | void) => {
 			const res = await fetch(`/api/proxy/penggajian/batch/${urlSuffix}`, {
 				method: "PATCH",
 				headers: data ? { "Content-Type": "application/json" } : undefined,
@@ -45,11 +45,11 @@ export function useReprocessBatch() {
 	return useMutation({
 		mutationFn: async (input: string | { id: string; data?: GajiBatchRootProcessRequest }) => {
 			const id = typeof input === "string" ? input : input.id;
-			const data = typeof input === "string" ? undefined : input.data;
+			const data = typeof input === "string" ? { id } : (input.data ?? { id });
 			const res = await fetch(`/api/proxy/penggajian/batch/${id}/reprocess`, {
 				method: "PATCH",
-				headers: data !== undefined ? { "Content-Type": "application/json" } : undefined,
-				body: data !== undefined ? JSON.stringify(data) : undefined,
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify(data),
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));

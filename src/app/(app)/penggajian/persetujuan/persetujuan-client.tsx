@@ -4,6 +4,7 @@ import { CheckCircle, Download, Loader2, RefreshCw, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PegawaiOrganisasiTable } from "@/components/pegawai-organisasi-table";
+import { ReprocessButton, VerifyButton } from "@/components/penggajian";
 import { MONTH_OPTIONS, PeriodeSelect } from "@/components/periode-filter";
 import { RincianGajiPanel } from "@/components/rincian-gaji-panel";
 import {
@@ -23,7 +24,6 @@ import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
 import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
 import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
-import { getReprocessPhase } from "@/lib/utils/penggajian-reprocess";
 import type { GajiBatchRootResponse, StatusBatch } from "@/types/penggajian/batch";
 
 interface PersetujuanClientProps {
@@ -34,9 +34,6 @@ interface PersetujuanClientProps {
 export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientProps) {
 	const { year, setYear, month, setMonth, periode } = useVerifikasiFilters();
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
-
-	const [approveDialogOpen, setApproveDialogOpen] = useState(false);
-	const [reprocessDialogOpen, setReprocessDialogOpen] = useState(false);
 	const [kirimSlipDialogOpen, setKirimSlipDialogOpen] = useState(false);
 
 	// Fetch batch for period
@@ -45,8 +42,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 	const batch: GajiBatchRootResponse | undefined = batchList[0];
 
 	const batchId = batch?.id ?? "";
-	const accept = useBatchAction(`${batchId}/accept`);
-	const reprocess = useBatchAction(`${batchId}/reprocess`);
 	const kirimSlip = useBatchAction(`master/upload/${batchId}`);
 
 	const canAct = batch?.status === "WAIT_APPROVAL";
@@ -67,46 +62,12 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 		refetchMaster();
 	};
 
-	const handleAccept = async () => {
-		try {
-			await accept.mutateAsync({
-				id: batchId,
-				nama: userName,
-				jabatan: jabatanName ?? "Direktur Utama",
-				phase: "WAIT_APPROVAL",
-			});
-			toast.success("Persetujuan akhir berhasil");
-			setApproveDialogOpen(false);
-			refetchBatch();
-			refetchMaster();
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : "Gagal menyetujui batch");
-		}
-	};
-
-	const handleReprocess = async () => {
-		try {
-			await reprocess.mutateAsync({
-				id: batchId,
-				nama: userName,
-				jabatan: jabatanName ?? "Direktur Utama",
-			});
-			toast.success("Batch berhasil diproses ulang");
-			setReprocessDialogOpen(false);
-			refetchBatch();
-			refetchMaster();
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : "Gagal memproses ulang batch");
-		}
-	};
-
 	const handleKirimSlip = async () => {
 		try {
 			await kirimSlip.mutateAsync({
 				id: batchId,
 				nama: userName,
 				jabatan: jabatanName ?? "Direktur Utama",
-				phase: batch?.status,
 			});
 			toast.success("Slip gaji berhasil dikirim");
 			setKirimSlipDialogOpen(false);
@@ -186,16 +147,21 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 						Table Gaji
 					</Button>
 
-					<Button
-						variant="destructive"
-						size="sm"
-						disabled={!canAct || reprocess.isPending}
-						onClick={() => setReprocessDialogOpen(true)}
-						className="h-8 text-xs font-semibold gap-1.5"
-					>
-						{reprocess.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-						Proses Ulang
-					</Button>
+					<ReprocessButton
+						batchId={batchId}
+						disabled={!canAct}
+						onSuccess={handleRefresh}
+						confirmDescription={
+							<>
+								Apakah Anda yakin ingin memproses ulang batch penggajian periode{" "}
+								<strong>
+									{currentMonthLabel} {year}
+								</strong>
+								? Tindakan ini akan mengembalikan status batch ke tahap 03 (Tambah Komponen Gaji) untuk verifikasi
+								ulang.
+							</>
+						}
+					/>
 
 					<Button
 						variant="outline"
@@ -208,15 +174,26 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 						Kirim Slip Gaji
 					</Button>
 
-					<Button
-						size="sm"
-						disabled={!canAct || accept.isPending}
-						onClick={() => setApproveDialogOpen(true)}
-						className="h-8 text-xs font-semibold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
-					>
-						{accept.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <CheckCircle className="size-3.5" />}
-						Setujui
-					</Button>
+					<VerifyButton
+						batchId={batchId}
+						nama={userName}
+						jabatan={jabatanName ?? "Direktur Utama"}
+						label="Setujui"
+						confirmTitle="Persetujuan Akhir Batch Gaji"
+						confirmDescription={
+							<>
+								Apakah Anda yakin ingin menyetujui batch penggajian periode{" "}
+								<strong>
+									{currentMonthLabel} {year}
+								</strong>
+								? Setelah disetujui, status batch akan menjadi <strong>FINISHED</strong> dan seluruh data terkunci
+								permanen.
+							</>
+						}
+						icon={CheckCircle}
+						disabled={!canAct}
+						onSuccess={handleRefresh}
+					/>
 				</div>
 			</div>
 
@@ -248,61 +225,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 					<RincianGajiPanel selectedPegawai={selectedPegawai} canEdit={false} showAddButton={false} />
 				</div>
 			)}
-
-			{/* Dialog Konfirmasi Persetujuan Akhir */}
-			<AlertDialog open={approveDialogOpen} onOpenChange={setApproveDialogOpen}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Persetujuan Akhir Batch Gaji</AlertDialogTitle>
-						<AlertDialogDescription>
-							Apakah Anda yakin ingin menyetujui batch penggajian periode{" "}
-							<strong>
-								{currentMonthLabel} {year}
-							</strong>
-							? Setelah disetujui, status batch akan menjadi <strong>FINISHED</strong> dan seluruh data terkunci
-							permanen.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel disabled={accept.isPending}>Batal</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={handleAccept}
-							disabled={accept.isPending}
-							className="bg-primary hover:bg-primary/90 text-primary-foreground"
-						>
-							{accept.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
-							Ya, Setujui
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-
-			{/* Dialog Konfirmasi Proses Ulang */}
-			<AlertDialog open={reprocessDialogOpen} onOpenChange={setReprocessDialogOpen}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Proses Ulang Batch</AlertDialogTitle>
-						<AlertDialogDescription>
-							Apakah Anda yakin ingin memproses ulang batch penggajian periode{" "}
-							<strong>
-								{currentMonthLabel} {year}
-							</strong>
-							? Tindakan ini akan mengembalikan status batch ke tahap 03 (Tambah Komponen Gaji) untuk verifikasi ulang.
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel disabled={reprocess.isPending}>Batal</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={handleReprocess}
-							disabled={reprocess.isPending}
-							className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
-						>
-							{reprocess.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
-							Ya, Proses Ulang
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
 
 			{/* Dialog Konfirmasi Kirim Slip Gaji */}
 			<AlertDialog open={kirimSlipDialogOpen} onOpenChange={setKirimSlipDialogOpen}>

@@ -1117,31 +1117,11 @@
 				}
 			}
 		},
-		"/penggajian/batch/{id}/verify2": {
+		"/penggajian/batch/{id}/verify": {
 			"patch": {
 				"tags": ["Penggajian — Gaji Batch Root"],
-				"summary": "verify2",
-				"operationId": "verify2",
-				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-				"requestBody": {
-					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/GajiBatchRootProcessRequest" } }
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
-					}
-				}
-			}
-		},
-		"/penggajian/batch/{id}/verify1": {
-			"patch": {
-				"tags": ["Penggajian — Gaji Batch Root"],
-				"summary": "verify1",
-				"operationId": "verify1",
+				"summary": "verify (verifikasi tahap 1/2 atau approval, mengikuti status batch)",
+				"operationId": "verify",
 				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"requestBody": {
 					"content": {
@@ -1162,26 +1142,6 @@
 				"tags": ["Penggajian — Gaji Batch Root"],
 				"summary": "reprocess",
 				"operationId": "reprocess",
-				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
-				"requestBody": {
-					"content": {
-						"application/json": { "schema": { "$ref": "#/components/schemas/GajiBatchRootProcessRequest" } }
-					},
-					"required": true
-				},
-				"responses": {
-					"200": {
-						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SavedResultString" } } }
-					}
-				}
-			}
-		},
-		"/penggajian/batch/{id}/accept": {
-			"patch": {
-				"tags": ["Penggajian — Gaji Batch Root"],
-				"summary": "accept",
-				"operationId": "accept",
 				"parameters": [{ "name": "id", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"requestBody": {
 					"content": {

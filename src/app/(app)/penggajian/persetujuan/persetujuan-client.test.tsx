@@ -146,7 +146,7 @@ describe("PersetujuanClient", () => {
 		mockFetch({
 			"/penggajian/batch?": asPage(MOCK_BATCH),
 			"/penggajian/batch/master?": MOCK_MASTER,
-			"/penggajian/batch/b1/accept": { status: 200, data: {} },
+			"/penggajian/batch/b1/verify": { status: 200, data: {} },
 		});
 
 		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
@@ -170,7 +170,7 @@ describe("PersetujuanClient", () => {
 
 		await waitFor(() => {
 			expect(global.fetch).toHaveBeenCalledWith(
-				expect.stringContaining("/penggajian/batch/b1/accept"),
+				expect.stringContaining("/penggajian/batch/b1/verify"),
 				expect.objectContaining({
 					method: "PATCH",
 					headers: { "Content-Type": "application/json" },
@@ -178,14 +178,13 @@ describe("PersetujuanClient", () => {
 						id: "b1",
 						nama: "Budi",
 						jabatan: "Manager Keuangan",
-						phase: "WAIT_APPROVAL",
 					}),
 				}),
 			);
 		});
 	});
 
-	it("executes reprocess flow with confirmation dialog and target phase WAIT_VERIFICATION_PHASE_2", async () => {
+	it("executes reprocess flow with confirmation dialog and target phase", async () => {
 		mockFetch({
 			"/penggajian/batch?": asPage(MOCK_BATCH),
 			"/penggajian/batch/master?": MOCK_MASTER,
@@ -214,9 +213,6 @@ describe("PersetujuanClient", () => {
 					headers: { "Content-Type": "application/json" },
 					body: JSON.stringify({
 						id: "b1",
-						nama: "Budi",
-						jabatan: "Manager Keuangan",
-						phase: "WAIT_VERIFICATION_PHASE_2",
 					}),
 				}),
 			);
@@ -273,7 +269,6 @@ describe("PersetujuanClient", () => {
 						id: "b1",
 						nama: "Budi",
 						jabatan: "Manager Keuangan",
-						phase: "WAIT_APPROVAL",
 					}),
 				}),
 			);

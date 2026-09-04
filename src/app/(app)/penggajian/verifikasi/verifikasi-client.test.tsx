@@ -225,7 +225,7 @@ describe("VerifikasiClient", () => {
 			"/penggajian/batch?": asPage(MOCK_BATCH),
 			"/penggajian/batch/master?": MOCK_MASTER,
 			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
-			"/penggajian/batch/b1/verify1": { status: 200, data: {} },
+			"/penggajian/batch/b1/verify": { status: 200, data: {} },
 		});
 
 		render(<VerifikasiClient userName="Budi" jabatanName="Manager SDM" />, { wrapper: createWrapper() });
@@ -264,7 +264,7 @@ describe("VerifikasiClient", () => {
 
 		await waitFor(() => {
 			expect(global.fetch).toHaveBeenCalledWith(
-				expect.stringContaining("/penggajian/batch/b1/verify1"),
+				expect.stringContaining("/penggajian/batch/b1/verify"),
 				expect.objectContaining({
 					method: "PATCH",
 					headers: { "Content-Type": "application/json" },
@@ -272,7 +272,6 @@ describe("VerifikasiClient", () => {
 						id: "b1",
 						nama: "Budi",
 						jabatan: "Manager SDM",
-						phase: "WAIT_VERIFICATION_PHASE_1",
 					}),
 				}),
 			);

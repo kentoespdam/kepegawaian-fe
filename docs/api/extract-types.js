@@ -970,7 +970,9 @@ function planEnumAliases(schemas, domainSchemas) {
 	let autoCounter = 0;
 
 	// Deterministik: yang paling sering dulu (stabil terhadap urutan objek spec).
-	const repeated = [...enums.values()].filter((e) => e.count >= ENUM_DEDUP_THRESHOLD).sort((a, b) => b.count - a.count);
+	const repeated = [...enums.values()]
+		.filter((e) => e.count >= ENUM_DEDUP_THRESHOLD || KNOWN_ENUMS.some((k) => k.detect(e.values)))
+		.sort((a, b) => b.count - a.count);
 
 	for (const e of repeated) {
 		const known = KNOWN_ENUMS.find((k) => k.detect(e.values));

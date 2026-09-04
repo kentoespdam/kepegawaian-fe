@@ -1,27 +1,18 @@
 "use client";
 
-import { ArrowUpRight, Loader2, Plus, RefreshCw, RotateCcw, Trash2, Users } from "lucide-react";
+import { ArrowUpRight, Plus, RefreshCw, RotateCcw, Trash2, Users } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import { ReprocessButton } from "@/components/penggajian";
 import { PeriodeSelect } from "@/components/periode-filter";
-import {
-	AlertDialog,
-	AlertDialogAction,
-	AlertDialogCancel,
-	AlertDialogContent,
-	AlertDialogDescription,
-	AlertDialogFooter,
-	AlertDialogHeader,
-	AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { STATUS_BADGE, STATUS_LABELS, STATUS_OPTIONS } from "@/config/penggajian/batch-list.config";
-import { useDeleteBatch, useReprocessBatch } from "@/hooks/penggajian/useBatchAction";
+import { useDeleteBatch } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
@@ -29,7 +20,6 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { cn } from "@/lib/utils";
-import { getReprocessPhase } from "@/lib/utils/penggajian-reprocess";
 import type { GajiBatchRootResponse, StatusBatch } from "@/types/penggajian/batch";
 import { CreateBatchDialog } from "../_components/create-batch-dialog";
 
@@ -197,7 +187,7 @@ interface ProsesGajiClientProps {
 	jabatanName?: string;
 }
 
-export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProps) {
+export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 	const { permissions, roles } = useAuth();
 	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_DELETE, roles);
 	const canProcess =
@@ -210,14 +200,12 @@ export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProp
 
 	const [deletingBatch, setDeletingBatch] = useState<GajiBatchRootResponse | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
-	const [reprocessingBatch, setReprocessingBatch] = useState<GajiBatchRootResponse | null>(null);
 
 	const list = useBatchList(toApiParams({ page, size, sortBy, sortDir, filters }));
 	const pageView = fromPage(list.data);
 	const rows = pageView.rows as GajiBatchRootResponse[];
 
 	const deleteMutation = useDeleteBatch();
-	const reprocessMutation = useReprocessBatch();
 
 	const handleFilterChange = (name: string, value: string | undefined) => {
 		setFilter(name, value);
@@ -258,27 +246,6 @@ export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProp
 			const msg = err instanceof Error ? err.message : "Gagal menghapus batch";
 			setDeleteError(msg);
 			throw err;
-		}
-	};
-
-	const handleConfirmReprocess = async () => {
-		if (!reprocessingBatch?.id) return;
-		try {
-			const targetPhase = getReprocessPhase(reprocessingBatch.status);
-			await reprocessMutation.mutateAsync({
-				id: reprocessingBatch.id,
-				data: {
-					id: reprocessingBatch.id,
-					nama: userName,
-					jabatan: jabatanName ?? "Staf SDM",
-					phase: targetPhase,
-				},
-			});
-			toast.success(`Proses ulang batch periode ${reprocessingBatch.periode ?? reprocessingBatch.id} berhasil`);
-			setReprocessingBatch(null);
-		} catch (err: unknown) {
-			const msg = err instanceof Error ? err.message : "Gagal memproses ulang batch";
-			toast.error(msg);
 		}
 	};
 
@@ -336,19 +303,21 @@ export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProp
 								</Link>
 							)}
 							{isReprocessEligible && (
-								<Button
+								<ReprocessButton
+									batchId={b.id ?? ""}
 									variant="ghost"
 									size="icon"
 									title="Proses Ulang"
-									onClick={(e) => {
-										e.stopPropagation();
-										setReprocessingBatch(b);
-									}}
-									aria-label="Proses Ulang"
+									confirmActionLabel="Proses Ulang"
+									onSuccess={() => list.refetch()}
+									confirmDescription={
+										<>
+											Apakah Anda yakin ingin memproses ulang batch payroll periode <strong>{b.periode ?? b.id}</strong>
+											?
+										</>
+									}
 									className="size-8 hover:bg-primary/15 hover:text-primary transition-colors"
-								>
-									<RefreshCw className="size-4" />
-								</Button>
+								/>
 							)}
 							{isDeleteEligible && (
 								<Button
@@ -371,7 +340,7 @@ export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProp
 				},
 			},
 		];
-	}, [canProcess, canDelete, permissions, roles]);
+	}, [canProcess, canDelete, permissions, roles, list]);
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -555,31 +524,6 @@ export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProp
 				onConfirm={handleConfirmDelete}
 				error={deleteError}
 			/>
-
-			<AlertDialog open={!!reprocessingBatch} onOpenChange={(open) => !open && setReprocessingBatch(null)}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Proses Ulang Batch</AlertDialogTitle>
-						<AlertDialogDescription>
-							Apakah Anda yakin ingin memproses ulang batch payroll periode{" "}
-							<strong>{reprocessingBatch?.periode ?? reprocessingBatch?.id}</strong>?
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel disabled={reprocessMutation.isPending}>Batal</AlertDialogCancel>
-						<AlertDialogAction
-							disabled={reprocessMutation.isPending}
-							onClick={(e) => {
-								e.preventDefault();
-								handleConfirmReprocess();
-							}}
-						>
-							{reprocessMutation.isPending && <Loader2 className="mr-1.5 size-4 animate-spin" />}
-							{reprocessMutation.isPending ? "Memproses…" : "Proses Ulang"}
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
 		</div>
 	);
 }
