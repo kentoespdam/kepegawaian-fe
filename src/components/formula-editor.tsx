@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { formatFormula, type KodeItem } from "@/hooks/penggajian/useKomponenForm";
+import { formatFormula, sanitizeFormula, type KodeItem } from "@/hooks/penggajian/useKomponenForm";
 
 const OPERATORS = ["(", ")", "*", "/", "+", "-"] as const;
 
@@ -54,7 +54,7 @@ export function FormulaEditor({ value, onFormulaChange, onAppendKode, kodeList }
 				ref={textareaRef}
 				value={value}
 				onChange={(e) => {
-					onFormulaChange(e.target.value);
+					onFormulaChange(sanitizeFormula(e.target.value));
 					autoGrow.current();
 				}}
 				onBlur={() => onFormulaChange(formatFormula(value))}

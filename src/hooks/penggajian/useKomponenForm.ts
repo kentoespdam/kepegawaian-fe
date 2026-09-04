@@ -45,6 +45,11 @@ export function formatFormula(formula: string): string {
 		.trim();
 }
 
+/** Block anything that isn't kode letters/digits, arithmetic operators, dot, or space. Commas are rejected — decimals use ".". */
+export function sanitizeFormula(input: string): string {
+	return input.replace(/[^A-Za-z0-9+\-*/(). ]/g, "");
+}
+
 export function useKomponenForm(profilId: number | null, editing?: GajiKomponenResponse | null) {
 	const kodeQuery = useQuery<KodeItem[]>({
 		queryKey: penggajianKeys.komponen.kode(profilId),

@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { appendKode, formatFormula, useKomponenForm } from "./useKomponenForm";
+import { appendKode, formatFormula, sanitizeFormula, useKomponenForm } from "./useKomponenForm";
 
 function wrapper({ children }: { children: ReactNode }) {
 	return <QueryClientProvider client={new QueryClient()}>{children}</QueryClientProvider>;
@@ -60,6 +60,21 @@ describe("formatFormula", () => {
 
 	it("returns empty string for empty input", () => {
 		expect(formatFormula("")).toBe("");
+	});
+});
+
+describe("sanitizeFormula", () => {
+	it("rejects comma (decimals must use dot)", () => {
+		expect(sanitizeFormula("GAJI,PJK")).toBe("GAJIPJK");
+		expect(sanitizeFormula("1000,5")).toBe("10005");
+	});
+
+	it("keeps letters, digits, operators, dot and space", () => {
+		expect(sanitizeFormula("(GAJI*1.5)/2 + 100")).toBe("(GAJI*1.5)/2 + 100");
+	});
+
+	it("strips other symbols", () => {
+		expect(sanitizeFormula("GAJI%100;@#")).toBe("GAJI100");
 	});
 });
 
