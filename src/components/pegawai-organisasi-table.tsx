@@ -14,7 +14,7 @@ export interface OrganisasiTableGroupProps {
 	startNum: number;
 	selectedBatchMasterId: number | null;
 	onSelectRow: (id: number) => void;
-	variant?: "verifikasi" | "tambahan";
+	variant?: "verifikasi" | "tambahan" | "persetujuan";
 }
 
 export function OrganisasiTableGroup({
@@ -25,6 +25,30 @@ export function OrganisasiTableGroup({
 	onSelectRow,
 	variant = "verifikasi",
 }: OrganisasiTableGroupProps) {
+	const subtotal =
+		variant === "persetujuan"
+			? rows.reduce(
+					(acc, r) => ({
+						penghasilanKotor: acc.penghasilanKotor + Number(r.penghasilanKotor ?? 0),
+						totalPotongan: acc.totalPotongan + Number(r.totalPotongan ?? 0),
+						pembulatan: acc.pembulatan + Number(r.pembulatan ?? 0),
+						penghasilanBersih: acc.penghasilanBersih + Number(r.penghasilanBersih ?? 0),
+						totalAddTambahan: acc.totalAddTambahan + Number(r.totalAddTambahan ?? 0),
+						totalAddPotongan: acc.totalAddPotongan + Number(r.totalAddPotongan ?? 0),
+						penghasilanBersihFinal: acc.penghasilanBersihFinal + Number(r.penghasilanBersihFinal ?? 0),
+					}),
+					{
+						penghasilanKotor: 0,
+						totalPotongan: 0,
+						pembulatan: 0,
+						penghasilanBersih: 0,
+						totalAddTambahan: 0,
+						totalAddPotongan: 0,
+						penghasilanBersihFinal: 0,
+					},
+				)
+			: null;
+
 	return (
 		<>
 			<tr className={cn("font-bold text-xs uppercase tracking-wide bg-primary/10 text-primary")}>
@@ -83,6 +107,24 @@ export function OrganisasiTableGroup({
 					</tr>
 				);
 			})}
+			{variant === "persetujuan" && subtotal && (
+				<tr className="border-b bg-muted/40 font-bold text-xs">
+					<td colSpan={4} className="py-2 px-2.5 text-right">
+						Total : {rows.length} Pegawai
+					</td>
+					<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(subtotal.penghasilanKotor)}</td>
+					<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(subtotal.totalPotongan)}</td>
+					<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(subtotal.pembulatan)}</td>
+					<td className="py-2 px-2.5 text-right tabular-nums">{fmtRupiah(subtotal.penghasilanBersih)}</td>
+					<td className="py-2 px-2.5 text-right tabular-nums text-primary">{fmtRupiah(subtotal.totalAddTambahan)}</td>
+					<td className="py-2 px-2.5 text-right tabular-nums text-sky-600 dark:text-sky-400">
+						{fmtRupiah(subtotal.totalAddPotongan)}
+					</td>
+					<td className="py-2 px-2.5 text-right tabular-nums text-primary">
+						{fmtRupiah(subtotal.penghasilanBersihFinal)}
+					</td>
+				</tr>
+			)}
 		</>
 	);
 }
@@ -93,7 +135,7 @@ export interface PegawaiOrganisasiTableProps {
 	periodeLabel: string;
 	selectedBatchMasterId: number | null;
 	onSelectRow: (id: number) => void;
-	variant?: "verifikasi" | "tambahan";
+	variant?: "verifikasi" | "tambahan" | "persetujuan";
 	titlePrefix?: string;
 	className?: string;
 }
@@ -143,12 +185,19 @@ export function PegawaiOrganisasiTable({
 		}
 	}
 
+	const defaultTitlePrefix =
+		variant === "tambahan"
+			? "Tambah Komponen Gaji [Periode"
+			: variant === "persetujuan"
+				? "Persetujuan Gaji [Periode"
+				: "Gaji [Periode";
+
 	return (
 		<div className={cn("rounded-lg border bg-card shadow-xs overflow-hidden flex-1", className)}>
 			{/* Header with Title and Search Toolbar */}
 			<div className="p-3 border-b bg-muted/20 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2">
 				<div className="flex items-center gap-1.5 text-xs font-medium text-foreground">
-					<span>{titlePrefix ?? (variant === "tambahan" ? "Tambah Komponen Gaji [Periode" : "Gaji [Periode")}</span>
+					<span>{titlePrefix ?? defaultTitlePrefix}</span>
 					<span className="text-primary font-bold">{periodeLabel}</span>
 					<span>]</span>
 				</div>
@@ -179,7 +228,7 @@ export function PegawaiOrganisasiTable({
 			</div>
 
 			{/* Scrollable Data Table */}
-			<div className="max-h-160 overflow-auto border-b">
+			<div className="max-h-160 overflow-auto border-b px-0.5">
 				{isPending ? (
 					<div className="p-4 space-y-2">
 						{[1, 2, 3, 4, 5].map((i) => (

@@ -2,7 +2,7 @@ import { forbidden, getAccountSession, getPegawaiSession, hasPermission, PERMISS
 import { ProsesGajiClient } from "./proses-gaji-client";
 
 export default async function ProsesGajiPage() {
-	const [{ user }, { roles, permissions }] = await Promise.all([
+	const [{ user, pegawai }, { roles, permissions }] = await Promise.all([
 		getPegawaiSession(),
 		getAccountSession(),
 		verifySession(),
@@ -12,5 +12,5 @@ export default async function ProsesGajiPage() {
 		forbidden();
 	}
 
-	return <ProsesGajiClient userName={user.name} />;
+	return <ProsesGajiClient userName={user.name} jabatanName={pegawai?.namaJabatan ?? undefined} />;
 }

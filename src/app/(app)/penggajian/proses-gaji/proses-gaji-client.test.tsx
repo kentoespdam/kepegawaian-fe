@@ -7,12 +7,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/hooks/useAuth";
 import { ProsesGajiClient } from "./proses-gaji-client";
 
+let mockSearchParams = new URLSearchParams();
+
 vi.mock("next/navigation", () => ({
 	useRouter: () => ({
 		push: vi.fn(),
 		replace: vi.fn(),
 	}),
-	useSearchParams: () => new URLSearchParams(),
+	useSearchParams: () => mockSearchParams,
 }));
 
 function mockFetch(handlers: Record<string, unknown>) {
@@ -80,6 +82,7 @@ const MOCK_BATCH = [
 describe("ProsesGajiClient", () => {
 	beforeEach(() => {
 		vi.restoreAllMocks();
+		mockSearchParams = new URLSearchParams();
 	});
 
 	afterEach(() => {
@@ -215,6 +218,70 @@ describe("ProsesGajiClient", () => {
 			expect(screen.getByText("Filter & Pencarian Batch")).toBeInTheDocument();
 			expect(screen.getByText("Periode Batch")).toBeInTheDocument();
 			expect(screen.getByText("Status Payroll")).toBeInTheDocument();
+		});
+	});
+
+	it("renders phase shortcut links with period query parameters (year & month)", async () => {
+		const batches = [
+			{ id: "b1", periode: "2026-03", status: "WAIT_VERIFICATION_PHASE_1" },
+			{ id: "b2", periode: "2026-04", status: "WAIT_VERIFICATION_PHASE_2" },
+			{ id: "b3", periode: "2026-05", status: "WAIT_APPROVAL" },
+		];
+
+		mockFetch({
+			"/penggajian/batch": asPage(batches),
+		});
+
+		render(<ProsesGajiClient userName="Budi" />, {
+			wrapper: createWrapper(["admin"], ["PENGGAJIAN:VERIFY1", "PENGGAJIAN:TAMBAHAN", "PENGGAJIAN:APPROVE"]),
+		});
+
+		await waitFor(() => {
+			const linkVerif = screen.getByRole("link", { name: /Verifikasi 1/i });
+			expect(linkVerif).toHaveAttribute("href", "/penggajian/verifikasi?year=2026&month=03");
+
+			const linkTambahan = screen.getByRole("link", { name: /Tambah Komponen/i });
+			expect(linkTambahan).toHaveAttribute("href", "/penggajian/tambahan?year=2026&month=04");
+
+			const linkPersetujuan = screen.getByRole("link", { name: /Persetujuan/i });
+			expect(linkPersetujuan).toHaveAttribute("href", "/penggajian/persetujuan?year=2026&month=05");
+		});
+	});
+
+	it("hides phase shortcut links when user lacks RBAC permission for that phase", async () => {
+		const batches = [{ id: "b1", periode: "2026-03", status: "WAIT_VERIFICATION_PHASE_1" }];
+
+		mockFetch({
+			"/penggajian/batch": asPage(batches),
+		});
+
+		// User without admin role and without PENGGAJIAN:VERIFY1
+		render(<ProsesGajiClient userName="Budi" />, {
+			wrapper: createWrapper(["user"], ["PENGGAJIAN:SETUP"]),
+		});
+
+		await waitFor(() => {
+			expect(screen.getByText("2026-03")).toBeInTheDocument();
+		});
+
+		expect(screen.queryByRole("link", { name: /Verifikasi 1/i })).not.toBeInTheDocument();
+	});
+
+	it("displays human-readable status label instead of raw enum value when status filter is active", async () => {
+		mockSearchParams = new URLSearchParams("status=WAIT_VERIFICATION_PHASE_1");
+
+		mockFetch({
+			"/penggajian/batch": asPage(MOCK_BATCH),
+		});
+
+		render(<ProsesGajiClient userName="Budi" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			const trigger = screen.getByLabelText("Filter Status");
+			// Should display the human-readable label "Verifikasi Tahap 1" in the select trigger
+			expect(trigger).toHaveTextContent("Verifikasi Tahap 1");
+			// Should NOT display raw enum value in the trigger
+			expect(trigger).not.toHaveTextContent("WAIT_VERIFICATION_PHASE_1");
 		});
 	});
 });

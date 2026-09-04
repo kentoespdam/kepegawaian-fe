@@ -20,14 +20,30 @@ export function usePeriodeFilter(options?: UsePeriodeFilterOptions) {
 
 	const rawYear = sp ? sp.get("year") : null;
 	const rawMonth = sp ? sp.get("month") : null;
+	const rawPeriode = sp ? sp.get("periode") : null;
+
+	let fallbackYear = defaultYear;
+	let fallbackMonth = defaultMonth;
+
+	if (rawPeriode) {
+		const clean = rawPeriode.trim();
+		if (/^\d{4}-\d{2}$/.test(clean)) {
+			const [y, m] = clean.split("-");
+			fallbackYear = y;
+			fallbackMonth = m;
+		} else if (/^\d{6}$/.test(clean)) {
+			fallbackYear = clean.slice(0, 4);
+			fallbackMonth = clean.slice(4, 6);
+		}
+	}
 
 	// Validate year: must be 4 digits
 	const isValidYear = rawYear && /^\d{4}$/.test(rawYear);
-	const year = isValidYear ? rawYear : defaultYear;
+	const year = isValidYear ? rawYear : fallbackYear;
 
 	// Validate month: must be 01 to 12
 	const isValidMonth = rawMonth && MONTH_OPTIONS.some((m) => m.value === rawMonth);
-	const month = isValidMonth ? rawMonth : defaultMonth;
+	const month = isValidMonth ? rawMonth : fallbackMonth;
 
 	const periode = `${year}${month}`;
 	const years = useMemo(() => getYearOptions(), []);

@@ -34,19 +34,28 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { STATUS_BADGE, STATUS_LABELS } from "@/config/penggajian/batch-list.config";
 import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
 import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
 import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
-import type { GajiBatchRootResponse } from "@/types/penggajian/batch";
+import { getReprocessPhase } from "@/lib/utils/penggajian-reprocess";
+import type { GajiBatchRootResponse, StatusBatch } from "@/types/penggajian/batch";
 import { UploadPotonganDialog } from "./_components/upload-potongan-dialog";
 
-export function TambahanClient() {
+interface TambahanClientProps {
+	userName?: string;
+	jabatanName?: string;
+}
+
+export function TambahanClient({ userName, jabatanName }: TambahanClientProps) {
 	const { year, setYear, month, setMonth, periode } = useVerifikasiFilters();
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
 	const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 	const [rollbackDialogOpen, setRollbackDialogOpen] = useState(false);
+	const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
+	const [reprocessDialogOpen, setReprocessDialogOpen] = useState(false);
 
 	const qc = useQueryClient();
 
@@ -56,9 +65,9 @@ export function TambahanClient() {
 	const batch: GajiBatchRootResponse | undefined = batchList[0];
 
 	const batchId = batch?.id ?? "";
-	const canEdit = batch?.status === "WAIT_VERIFICATION_PHASE_1";
+	const canEdit = batch?.status === "WAIT_VERIFICATION_PHASE_2";
 
-	const verify1 = useBatchAction(batchId, `${batchId}/verify1`);
+	const verify2 = useBatchAction(batchId, `${batchId}/verify2`);
 	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
 
 	const {
@@ -98,24 +107,38 @@ export function TambahanClient() {
 		refetchMaster();
 	};
 
-	const handleVerify1 = async () => {
+	const handleVerify2 = async () => {
 		try {
-			await verify1.mutateAsync();
-			toast.success("Batch berhasil diverifikasi (Tahap 1)");
+			await verify2.mutateAsync({
+				id: batchId,
+				nama: userName,
+				jabatan: jabatanName ?? "Spv/Staf Keuangan",
+				phase: "WAIT_VERIFICATION_PHASE_2",
+			});
+			toast.success("Batch berhasil diverifikasi (Tahap 2)");
+			setVerifyDialogOpen(false);
 			refetchBatch();
-		} catch {
-			toast.error("Gagal memverifikasi batch");
+			refetchMaster();
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : "Gagal memverifikasi batch");
 		}
 	};
 
 	const handleReprocess = async () => {
 		try {
-			await reprocess.mutateAsync();
+			const targetPhase = getReprocessPhase(batch?.status);
+			await reprocess.mutateAsync({
+				id: batchId,
+				nama: userName,
+				jabatan: jabatanName ?? "Spv/Staf Keuangan",
+				phase: targetPhase,
+			});
 			toast.success("Batch berhasil diproses ulang");
+			setReprocessDialogOpen(false);
 			refetchBatch();
 			refetchMaster();
-		} catch {
-			toast.error("Gagal memproses ulang batch");
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : "Gagal memproses ulang batch");
 		}
 	};
 
@@ -181,12 +204,10 @@ export function TambahanClient() {
 						<div className="flex items-center gap-2 mr-2">
 							<span
 								className={`inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold border ${
-									batch.status === "WAIT_VERIFICATION_PHASE_1"
-										? "bg-purple-100 text-purple-800 border-purple-300 dark:bg-purple-950/50 dark:text-purple-300"
-										: "bg-muted text-muted-foreground"
+									(batch.status && STATUS_BADGE[batch.status as StatusBatch]) ?? "bg-muted text-muted-foreground"
 								}`}
 							>
-								{batch.status === "WAIT_VERIFICATION_PHASE_1" ? "Verifikasi Tahap 1" : batch.status}
+								{(batch.status && STATUS_LABELS[batch.status as StatusBatch]) ?? batch.status}
 							</span>
 							<span className="text-xs text-muted-foreground font-mono">
 								{batch.totalPegawai ?? pegawaiList?.length ?? 0} Pegawai
@@ -239,7 +260,7 @@ export function TambahanClient() {
 					<Button
 						variant="destructive"
 						size="sm"
-						onClick={handleReprocess}
+						onClick={() => setReprocessDialogOpen(true)}
 						disabled={!canEdit || reprocess.isPending}
 						className="h-8 text-xs font-semibold gap-1.5"
 					>
@@ -247,15 +268,15 @@ export function TambahanClient() {
 						Proses Ulang
 					</Button>
 
-					{/* Tombol Verifikasi Tahap 1 */}
+					{/* Tombol Verifikasi Tahap 2 */}
 					<Button
 						size="sm"
-						onClick={handleVerify1}
-						disabled={!canEdit || verify1.isPending}
+						onClick={() => setVerifyDialogOpen(true)}
+						disabled={!canEdit || verify2.isPending}
 						className="h-8 text-xs font-semibold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
 					>
-						{verify1.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <ShieldCheck className="size-3.5" />}
-						Verifikasi Tahap 1
+						{verify2.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <ShieldCheck className="size-3.5" />}
+						Verifikasi Tahap 2
 					</Button>
 				</div>
 			</div>
@@ -329,6 +350,60 @@ export function TambahanClient() {
 						>
 							{rollbackMutation.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
 							Ya, Batalkan Semua Perubahan
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+
+			{/* Dialog Konfirmasi Verifikasi Tahap 2 */}
+			<AlertDialog open={verifyDialogOpen} onOpenChange={setVerifyDialogOpen}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Verifikasi Batch (Tahap 2)</AlertDialogTitle>
+						<AlertDialogDescription>
+							Apakah Anda yakin ingin memverifikasi komponen tambahan pada batch penggajian periode{" "}
+							<strong>
+								{currentMonthLabel} {year}
+							</strong>
+							? Setelah diverifikasi, batch akan beralih ke tahap 04 (Persetujuan Akhir).
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={verify2.isPending}>Batal</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={handleVerify2}
+							disabled={verify2.isPending}
+							className="bg-primary hover:bg-primary/90 text-primary-foreground"
+						>
+							{verify2.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
+							Ya, Verifikasi
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+
+			{/* Dialog Konfirmasi Proses Ulang */}
+			<AlertDialog open={reprocessDialogOpen} onOpenChange={setReprocessDialogOpen}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Proses Ulang Batch</AlertDialogTitle>
+						<AlertDialogDescription>
+							Apakah Anda yakin ingin memproses ulang batch penggajian periode{" "}
+							<strong>
+								{currentMonthLabel} {year}
+							</strong>
+							? Tindakan ini akan mengembalikan status batch ke tahap 02 (Verifikasi Tahap 1) untuk pemrosesan ulang.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={reprocess.isPending}>Batal</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={handleReprocess}
+							disabled={reprocess.isPending}
+							className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+						>
+							{reprocess.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
+							Ya, Proses Ulang
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

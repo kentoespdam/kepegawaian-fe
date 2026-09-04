@@ -32,23 +32,23 @@ function KomponenTable({
 	highlightAddStyle = "text-sky-600 dark:text-sky-400 font-semibold",
 }: KomponenTableProps) {
 	const total = items.reduce((acc, curr) => acc + (curr.nilai ?? 0), 0);
+	const colSpan = canEdit ? 4 : 3;
 
 	return (
-		<div className="border rounded-md overflow-hidden bg-card text-xs">
+		<div className="border rounded-md overflow-hidden bg-card text-xs shadow-2xs">
 			<table className="w-full border-collapse">
 				<thead className="bg-primary text-primary-foreground font-semibold">
 					<tr>
-						<th className="py-1.5 px-2 text-center w-12 border-r border-primary-foreground/20">
-							{canEdit ? "Aksi" : "No"}
-						</th>
+						<th className="py-1.5 px-2 text-center w-10 border-r border-primary-foreground/20">No</th>
 						<th className="py-1.5 px-2 border-r border-primary-foreground/20 text-left">Komponen Gaji</th>
-						<th className="py-1.5 px-2 text-right">Jumlah</th>
+						<th className="py-1.5 px-2.5 text-right whitespace-nowrap">Jumlah</th>
+						{canEdit && <th className="py-1.5 px-1 text-center w-9 border-l border-primary-foreground/20">Aksi</th>}
 					</tr>
 				</thead>
 				<tbody className="divide-y divide-border">
 					{items.length === 0 ? (
 						<tr>
-							<td colSpan={3} className="py-3 text-center text-muted-foreground italic">
+							<td colSpan={colSpan} className="py-3 text-center text-muted-foreground italic">
 								{emptyLabel}
 							</td>
 						</tr>
@@ -57,25 +57,37 @@ function KomponenTable({
 							const isAdd = item.kode?.startsWith("ADD_");
 							const isRowDeleting = deletingId === item.id;
 							return (
-								<tr key={item.id ?? idx} className="hover:bg-accent/30 odd:bg-card even:bg-muted/15">
-									<td className="py-1 px-1 text-center">
-										{canEdit && isAdd && item.id ? (
-											<Button
-												variant="ghost"
-												size="icon"
-												onClick={() => item.id && onDelete?.(item.id)}
-												disabled={isDeletePending}
-												className="size-6 text-destructive hover:bg-destructive/10"
-												title="Hapus Komponen"
-											>
-												{isRowDeleting ? <Loader2 className="size-3 animate-spin" /> : <Trash2 className="size-3" />}
-											</Button>
-										) : (
-											<span className="text-muted-foreground text-[11px]">{idx + 1}</span>
-										)}
+								<tr key={item.id ?? idx} className="hover:bg-accent/30 odd:bg-card even:bg-muted/15 transition-colors">
+									<td className="py-1 px-1 text-center text-muted-foreground font-mono text-[11px] w-10">{idx + 1}</td>
+									<td className={`py-1.5 px-2 ${isAdd ? highlightAddStyle : "text-foreground font-medium"}`}>
+										{item.nama ?? "-"}
 									</td>
-									<td className={`py-1.5 px-2 ${isAdd ? highlightAddStyle : "text-foreground"}`}>{item.nama ?? "-"}</td>
-									<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(item.nilai)}</td>
+									<td className="py-1.5 px-2.5 text-right tabular-nums whitespace-nowrap font-medium text-foreground">
+										{fmtRupiah(item.nilai)}
+									</td>
+									{canEdit && (
+										<td className="py-0.5 px-1 text-center w-9">
+											{isAdd && item.id ? (
+												<Button
+													variant="ghost"
+													size="icon-xs"
+													onClick={() => item.id && onDelete?.(item.id)}
+													disabled={isDeletePending}
+													className="size-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer mx-auto"
+													title="Hapus Komponen"
+													aria-label={`Hapus ${item.nama ?? "komponen"}`}
+												>
+													{isRowDeleting ? (
+														<Loader2 className="size-3.5 animate-spin" />
+													) : (
+														<Trash2 className="size-3.5" />
+													)}
+												</Button>
+											) : (
+												<span className="text-muted-foreground/40 select-none text-[11px]">-</span>
+											)}
+										</td>
+									)}
 								</tr>
 							);
 						})
@@ -84,10 +96,11 @@ function KomponenTable({
 				{items.length > 0 && (
 					<tfoot className="border-t-2 border-border font-bold bg-primary/10 text-primary">
 						<tr>
-							<td colSpan={2} className="py-1.5 px-2 text-right">
+							<td colSpan={2} className="py-2 px-2 text-right">
 								Total
 							</td>
-							<td className="py-1.5 px-2 text-right tabular-nums">{fmtRupiah(total)}</td>
+							<td className="py-2 px-2.5 text-right tabular-nums whitespace-nowrap">{fmtRupiah(total)}</td>
+							{canEdit && <td className="py-2 px-1 text-center w-9" />}
 						</tr>
 					</tfoot>
 				)}

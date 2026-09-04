@@ -37,7 +37,7 @@ const MOCK_BATCH = [
 	{
 		id: "b1",
 		periode: CURRENT_PERIODE,
-		status: "WAIT_VERIFICATION_PHASE_1",
+		status: "WAIT_VERIFICATION_PHASE_2",
 		totalPegawai: 2,
 		tanggalProses: "2026-08-01",
 		diProsesOleh: "Budi",
@@ -206,6 +206,84 @@ describe("TambahanClient", () => {
 		expect(screen.getByRole("button", { name: /Proses Ulang/i })).toBeEnabled();
 	});
 
+	it("executes verification flow with confirmation dialog and correct payload", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
+			"/penggajian/batch/b1/verify2": { status: 200, data: {} },
+		});
+
+		render(<TambahanClient userName="Budi" jabatanName="Spv/Staf Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Verifikasi Tahap 2/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Verifikasi Tahap 2/i }));
+
+		await waitFor(() => {
+			expect(screen.getByText("Verifikasi Batch (Tahap 2)")).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Verifikasi/i }));
+
+		await waitFor(() => {
+			expect(global.fetch).toHaveBeenCalledWith(
+				expect.stringContaining("/penggajian/batch/b1/verify2"),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Spv/Staf Keuangan",
+						phase: "WAIT_VERIFICATION_PHASE_2",
+					}),
+				}),
+			);
+		});
+	});
+
+	it("executes reprocess flow with confirmation dialog and target phase WAIT_VERIFICATION_PHASE_1", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
+			"/penggajian/batch/b1/reprocess": { status: 200, data: {} },
+		});
+
+		render(<TambahanClient userName="Budi" jabatanName="Spv/Staf Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Proses Ulang/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Proses Ulang/i }));
+
+		await waitFor(() => {
+			expect(screen.getByText("Proses Ulang Batch")).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Proses Ulang/i }));
+
+		await waitFor(() => {
+			expect(global.fetch).toHaveBeenCalledWith(
+				expect.stringContaining("/penggajian/batch/b1/reprocess"),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Spv/Staf Keuangan",
+						phase: "WAIT_VERIFICATION_PHASE_1",
+					}),
+				}),
+			);
+		});
+	});
+
 	it("renders delete button only for ADD_ components when canEdit is true", async () => {
 		mockFetch({
 			"/penggajian/batch?": asPage(MOCK_BATCH),
@@ -224,11 +302,11 @@ describe("TambahanClient", () => {
 		expect(deleteBtns.length).toBe(2); // Bonus Kinerja (ADD_BONUS) & Simpanan Koperasi (ADD_POTONGAN)
 	});
 
-	it("disables edit actions when status is not WAIT_VERIFICATION_PHASE_1", async () => {
+	it("disables edit actions when status is not WAIT_VERIFICATION_PHASE_2", async () => {
 		const nonEditableBatch = [
 			{
 				...MOCK_BATCH[0],
-				status: "WAIT_VERIFICATION_PHASE_2",
+				status: "WAIT_APPROVAL",
 			},
 		];
 
@@ -291,7 +369,7 @@ describe("TambahanClient", () => {
 				{
 					id: "b-202511",
 					periode: "202511",
-					status: "WAIT_VERIFICATION_PHASE_1",
+					status: "WAIT_VERIFICATION_PHASE_2",
 					totalPegawai: 1,
 				},
 			]),
@@ -309,5 +387,27 @@ describe("TambahanClient", () => {
 		});
 
 		expect(global.fetch).toHaveBeenCalledWith(expect.stringContaining("/api/proxy/penggajian/batch?periode=202511"));
+	});
+
+	it("renders human-readable status badge label instead of raw value for non-phase-2 statuses", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage([
+				{
+					id: "b-202608",
+					periode: CURRENT_PERIODE,
+					status: "WAIT_APPROVAL",
+					totalPegawai: 5,
+				},
+			]),
+			"/penggajian/batch/master?": asPage(MOCK_MASTER),
+			"/penggajian/batch/master/proses/1/master": MOCK_PROSES,
+		});
+
+		render(<TambahanClient />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByText("Menunggu Persetujuan")).toBeInTheDocument();
+			expect(screen.queryByText("WAIT_APPROVAL")).not.toBeInTheDocument();
+		});
 	});
 });

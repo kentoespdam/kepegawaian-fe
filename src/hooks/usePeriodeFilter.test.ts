@@ -53,6 +53,26 @@ describe("usePeriodeFilter", () => {
 		expect(result.current.periode).toBe("202503");
 	});
 
+	it("extracts year and month when periode param is provided", () => {
+		vi.mocked(useSearchParams).mockReturnValue(asSp("periode=2026-08"));
+
+		const { result } = renderHook(() => usePeriodeFilter());
+
+		expect(result.current.year).toBe("2026");
+		expect(result.current.month).toBe("08");
+		expect(result.current.periode).toBe("202608");
+	});
+
+	it("extracts year and month when 6-digit periode param is provided", () => {
+		vi.mocked(useSearchParams).mockReturnValue(asSp("periode=202608"));
+
+		const { result } = renderHook(() => usePeriodeFilter());
+
+		expect(result.current.year).toBe("2026");
+		expect(result.current.month).toBe("08");
+		expect(result.current.periode).toBe("202608");
+	});
+
 	it("falls back to default if year or month in searchParams is invalid", () => {
 		vi.mocked(useSearchParams).mockReturnValue(asSp("year=not-a-year&month=99"));
 		const now = new Date();

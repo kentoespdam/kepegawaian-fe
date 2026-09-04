@@ -6,38 +6,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PersetujuanClient } from "./persetujuan-client";
 
-function mockFetch(handlers: Record<string, unknown>) {
-	const entries = Object.entries(handlers).sort((a, b) => b[0].length - a[0].length);
-	global.fetch = vi.fn().mockImplementation((url: string) => {
-		for (const [pattern, data] of entries) {
-			if (url.includes(pattern)) {
-				return Promise.resolve({
-					ok: true,
-					json: () => Promise.resolve({ status: 200, data }),
-				});
-			}
-		}
-		return Promise.resolve({
-			ok: true,
-			json: () => Promise.resolve({ status: 200, data: [] }),
-		});
-	});
-}
+const mockSearchParams = vi.fn(() => new URLSearchParams());
 
-function wrapper({ children }: { children: ReactNode }) {
-	const qc = new QueryClient({
-		defaultOptions: { queries: { retry: false } },
-	});
-	return (
-		<QueryClientProvider client={qc}>
-			<AuthProvider roles={["admin"]} permissions={["PENGGAJIAN:APPROVE"]}>
-				{children}
-			</AuthProvider>
-		</QueryClientProvider>
-	);
-}
+vi.mock("next/navigation", () => ({
+	useRouter: () => ({
+		push: vi.fn(),
+		replace: vi.fn(),
+	}),
+	useSearchParams: () => mockSearchParams(),
+	usePathname: () => "/penggajian/persetujuan",
+}));
 
-/** Wrap an array in the Page shape that the paginated batch API now returns. */
+const CURRENT_YEAR = new Date().getFullYear();
+const CURRENT_MONTH = String(new Date().getMonth() + 1).padStart(2, "0");
+const CURRENT_PERIODE = `${CURRENT_YEAR}${CURRENT_MONTH}`;
+
 function asPage<T>(items: T[]) {
 	return {
 		content: items,
@@ -53,7 +36,7 @@ function asPage<T>(items: T[]) {
 const MOCK_BATCH = [
 	{
 		id: "b1",
-		periode: `${new Date().getFullYear()}${String(new Date().getMonth() + 1).padStart(2, "0")}`,
+		periode: CURRENT_PERIODE,
 		status: "WAIT_APPROVAL",
 		totalPegawai: 1,
 		tanggalProses: "2026-08-01",
@@ -77,9 +60,69 @@ const MOCK_MASTER = [
 	},
 ];
 
+function mockFetch(handlers: Record<string, unknown>) {
+	const entries = Object.entries(handlers).sort((a, b) => b[0].length - a[0].length);
+	global.fetch = vi.fn().mockImplementation((url: string) => {
+		for (const [pattern, data] of entries) {
+			if (url.includes(pattern)) {
+				return Promise.resolve({
+					ok: true,
+					status: 200,
+					json: () => Promise.resolve({ status: 200, data }),
+				});
+			}
+		}
+
+		if (url.includes("/penggajian/batch/master/proses/")) {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				json: () => Promise.resolve({ status: 200, data: [] }),
+			});
+		}
+
+		if (url.includes("/penggajian/batch/master?")) {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				json: () => Promise.resolve({ status: 200, data: MOCK_MASTER }),
+			});
+		}
+
+		if (url.includes("/penggajian/batch?")) {
+			return Promise.resolve({
+				ok: true,
+				status: 200,
+				json: () => Promise.resolve({ status: 200, data: asPage(MOCK_BATCH) }),
+			});
+		}
+
+		return Promise.resolve({
+			ok: true,
+			status: 200,
+			json: () => Promise.resolve({ status: 200, data: [] }),
+		});
+	});
+}
+
+function createWrapper() {
+	const qc = new QueryClient({
+		defaultOptions: { queries: { retry: false, gcTime: 0 } },
+	});
+	return function Wrapper({ children }: { children: ReactNode }) {
+		return (
+			<QueryClientProvider client={qc}>
+				<AuthProvider roles={["admin"]} permissions={["PENGGAJIAN:APPROVE"]}>
+					{children}
+				</AuthProvider>
+			</QueryClientProvider>
+		);
+	};
+}
+
 describe("PersetujuanClient", () => {
 	beforeEach(() => {
-		vi.restoreAllMocks();
+		vi.clearAllMocks();
 	});
 
 	afterEach(() => {
@@ -89,9 +132,10 @@ describe("PersetujuanClient", () => {
 	it("renders empty state when no batch exists for period", async () => {
 		mockFetch({
 			"/penggajian/batch?": asPage([]),
+			"/penggajian/batch": asPage([]),
 		});
 
-		render(<PersetujuanClient />, { wrapper });
+		render(<PersetujuanClient />, { wrapper: createWrapper() });
 
 		await waitFor(() => {
 			expect(screen.getByText("Belum ada proses gaji untuk periode ini")).toBeInTheDocument();
@@ -105,12 +149,12 @@ describe("PersetujuanClient", () => {
 			"/penggajian/batch/b1/accept": { status: 200, data: {} },
 		});
 
-		render(<PersetujuanClient />, { wrapper });
+		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
 
 		await waitFor(() => {
 			expect(screen.getByText("04. Persetujuan Akhir")).toBeInTheDocument();
-			expect(screen.getByText("Ahmad Yani")).toBeInTheDocument();
-			expect(screen.getByText("Subtotal 1 Pegawai")).toBeInTheDocument();
+			expect(screen.getAllByText("Ahmad Yani").length).toBeGreaterThanOrEqual(1);
+			expect(screen.getByText("Total : 1 Pegawai")).toBeInTheDocument();
 		});
 
 		const approveBtn = screen.getByRole("button", { name: /Setujui/i });
@@ -119,9 +163,157 @@ describe("PersetujuanClient", () => {
 		fireEvent.click(approveBtn);
 
 		await waitFor(() => {
+			expect(screen.getByText("Persetujuan Akhir Batch Gaji")).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Setujui/i }));
+
+		await waitFor(() => {
 			expect(global.fetch).toHaveBeenCalledWith(
 				expect.stringContaining("/penggajian/batch/b1/accept"),
-				expect.objectContaining({ method: "PATCH" }),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Manager Keuangan",
+						phase: "WAIT_APPROVAL",
+					}),
+				}),
+			);
+		});
+	});
+
+	it("executes reprocess flow with confirmation dialog and target phase WAIT_VERIFICATION_PHASE_2", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+			"/penggajian/batch/b1/reprocess": { status: 200, data: {} },
+		});
+
+		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Proses Ulang/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Proses Ulang/i }));
+
+		await waitFor(() => {
+			expect(screen.getByText("Proses Ulang Batch")).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Proses Ulang/i }));
+
+		await waitFor(() => {
+			expect(global.fetch).toHaveBeenCalledWith(
+				expect.stringContaining("/penggajian/batch/b1/reprocess"),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Manager Keuangan",
+						phase: "WAIT_VERIFICATION_PHASE_2",
+					}),
+				}),
+			);
+		});
+	});
+
+	it("downloads table gaji when Table Gaji button is clicked", async () => {
+		const openSpy = vi.spyOn(window, "open").mockImplementation(() => null);
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+		});
+
+		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Table Gaji/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Table Gaji/i }));
+
+		expect(openSpy).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master/download/table-gaji/b1", "_blank");
+		openSpy.mockRestore();
+	});
+
+	it("executes verify2 flow with confirmation dialog", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+			"/penggajian/batch/b1/verify2": { status: 200, data: {} },
+		});
+
+		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Verifikasi/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Verifikasi/i }));
+
+		await waitFor(() => {
+			expect(screen.getByText("Verifikasi Batch (Tahap 2)")).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Verifikasi/i }));
+
+		await waitFor(() => {
+			expect(global.fetch).toHaveBeenCalledWith(
+				expect.stringContaining("/penggajian/batch/b1/verify2"),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Manager Keuangan",
+						phase: "WAIT_VERIFICATION_PHASE_2",
+					}),
+				}),
+			);
+		});
+	});
+
+	it("executes kirim slip gaji flow with confirmation dialog", async () => {
+		mockFetch({
+			"/penggajian/batch?": asPage(MOCK_BATCH),
+			"/penggajian/batch/master?": MOCK_MASTER,
+			"/penggajian/batch/master/upload/b1": { status: 200, data: {} },
+		});
+
+		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
+
+		await waitFor(() => {
+			expect(screen.getByRole("button", { name: /Kirim Slip Gaji/i })).toBeEnabled();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Kirim Slip Gaji/i }));
+
+		await waitFor(() => {
+			expect(screen.getByRole("heading", { name: "Kirim Slip Gaji" })).toBeInTheDocument();
+		});
+
+		fireEvent.click(screen.getByRole("button", { name: /Ya, Kirim Slip/i }));
+
+		await waitFor(() => {
+			expect(global.fetch).toHaveBeenCalledWith(
+				expect.stringContaining("/penggajian/batch/master/upload/b1"),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Manager Keuangan",
+						phase: "WAIT_APPROVAL",
+					}),
+				}),
 			);
 		});
 	});

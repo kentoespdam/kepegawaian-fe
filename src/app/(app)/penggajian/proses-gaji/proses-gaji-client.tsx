@@ -1,25 +1,13 @@
 "use client";
 
-import {
-	ArrowUpRight,
-	Calendar,
-	Filter,
-	Loader2,
-	Plus,
-	RefreshCw,
-	RotateCcw,
-	Search,
-	SlidersHorizontal,
-	Trash2,
-	Users,
-	X,
-} from "lucide-react";
+import { ArrowUpRight, Loader2, Plus, RefreshCw, RotateCcw, Trash2, Users } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import { PeriodeSelect } from "@/components/periode-filter";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -31,8 +19,6 @@ import {
 	AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { STATUS_BADGE, STATUS_LABELS, STATUS_OPTIONS } from "@/config/penggajian/batch-list.config";
 import { useDeleteBatch, useReprocessBatch } from "@/hooks/penggajian/useBatchAction";
@@ -43,6 +29,7 @@ import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
 import { fromPage, toApiParams } from "@/lib/paging";
 import { cn } from "@/lib/utils";
+import { getReprocessPhase } from "@/lib/utils/penggajian-reprocess";
 import type { GajiBatchRootResponse, StatusBatch } from "@/types/penggajian/batch";
 import { CreateBatchDialog } from "../_components/create-batch-dialog";
 
@@ -59,10 +46,23 @@ function formatDate(v: unknown): string {
 	}
 }
 
+function parseYearMonth(periodeStr?: string): { year: string; month: string } | null {
+	if (!periodeStr) return null;
+	const clean = periodeStr.trim();
+	if (/^\d{4}-\d{2}$/.test(clean)) {
+		const [year, month] = clean.split("-");
+		return { year, month };
+	}
+	if (/^\d{6}$/.test(clean)) {
+		return { year: clean.slice(0, 4), month: clean.slice(4, 6) };
+	}
+	return null;
+}
+
 function formatPeriodeIndo(periodeStr?: string): string | null {
-	if (!periodeStr || !/^\d{4}-\d{2}$/.test(periodeStr)) return null;
-	const [y, m] = periodeStr.split("-");
-	const monthIndex = parseInt(m, 10) - 1;
+	const parsed = parseYearMonth(periodeStr);
+	if (!parsed) return null;
+	const monthIndex = parseInt(parsed.month, 10) - 1;
 	const months = [
 		"Januari",
 		"Februari",
@@ -78,10 +78,20 @@ function formatPeriodeIndo(periodeStr?: string): string | null {
 		"Desember",
 	];
 	if (monthIndex >= 0 && monthIndex < 12) {
-		return `${months[monthIndex]} ${y}`;
+		return `${months[monthIndex]} ${parsed.year}`;
 	}
 	return null;
 }
+
+const STATUS_DOT: Record<StatusBatch, string> = {
+	PENDING: "bg-amber-500",
+	PROSES: "bg-blue-500",
+	WAIT_VERIFICATION_PHASE_1: "bg-purple-500",
+	WAIT_VERIFICATION_PHASE_2: "bg-violet-500",
+	WAIT_APPROVAL: "bg-orange-500",
+	FINISHED: "bg-emerald-500",
+	FAILED: "bg-rose-500",
+};
 
 const BASE_COLUMNS = [
 	{
@@ -184,9 +194,10 @@ const BASE_COLUMNS = [
 
 interface ProsesGajiClientProps {
 	userName?: string;
+	jabatanName?: string;
 }
 
-export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
+export function ProsesGajiClient({ userName, jabatanName }: ProsesGajiClientProps) {
 	const { permissions, roles } = useAuth();
 	const canDelete = hasPermission(permissions, PERMISSION.PENGGAJIAN_DELETE, roles);
 	const canProcess =
@@ -212,6 +223,30 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 		setFilter(name, value);
 	};
 
+	const parsedFilter = parseYearMonth(filters.periode as string | undefined);
+	const filterYear = parsedFilter?.year ?? (filters.periode ? "" : "ALL");
+	const filterMonth = parsedFilter?.month ?? (filters.periode ? "" : "ALL");
+
+	const currentStatus = (filters.status as StatusBatch | "ALL" | undefined) ?? "ALL";
+	const selectedStatusLabel =
+		currentStatus === "ALL" || !currentStatus
+			? "Semua Status"
+			: (STATUS_LABELS[currentStatus as StatusBatch] ?? currentStatus);
+
+	const handlePeriodeChange = (newYear: string, newMonth: string) => {
+		if ((!newYear || newYear === "ALL") && (!newMonth || newMonth === "ALL")) {
+			setFilter("periode", undefined);
+			return;
+		}
+		const y = !newYear || newYear === "ALL" ? String(new Date().getFullYear()) : newYear;
+		const m = !newMonth || newMonth === "ALL" ? undefined : newMonth;
+		if (m) {
+			setFilter("periode", `${y}-${m}`);
+		} else {
+			setFilter("periode", y);
+		}
+	};
+
 	const handleConfirmDelete = async () => {
 		if (!deletingBatch?.id) return;
 		setDeleteError(null);
@@ -229,7 +264,16 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 	const handleConfirmReprocess = async () => {
 		if (!reprocessingBatch?.id) return;
 		try {
-			await reprocessMutation.mutateAsync(reprocessingBatch.id);
+			const targetPhase = getReprocessPhase(reprocessingBatch.status);
+			await reprocessMutation.mutateAsync({
+				id: reprocessingBatch.id,
+				data: {
+					id: reprocessingBatch.id,
+					nama: userName,
+					jabatan: jabatanName ?? "Staf SDM",
+					phase: targetPhase,
+				},
+			});
 			toast.success(`Proses ulang batch periode ${reprocessingBatch.periode ?? reprocessingBatch.id} berhasil`);
 			setReprocessingBatch(null);
 		} catch (err: unknown) {
@@ -252,16 +296,23 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 					const isReprocessEligible = canProcess && (b.status === "PENDING" || b.status === "FAILED");
 					const isDeleteEligible = canDelete && b.status !== "FINISHED" && b.status !== "PROSES";
 
-					// Next step navigation target
+					const canVerify1 = hasPermission(permissions, PERMISSION.PENGGAJIAN_VERIFY1, roles);
+					const canTambahan = hasPermission(permissions, PERMISSION.PENGGAJIAN_TAMBAHAN, roles);
+					const canApprove = hasPermission(permissions, PERMISSION.PENGGAJIAN_APPROVE, roles);
+
+					// Next step navigation target with period query parameters
 					const nextStep = (() => {
-						if (b.status === "WAIT_VERIFICATION_PHASE_1") {
-							return { label: "Verifikasi 1", href: "/penggajian/verifikasi" };
+						const parsed = parseYearMonth(b.periode);
+						const qs = parsed ? `?year=${parsed.year}&month=${parsed.month}` : "";
+
+						if (b.status === "WAIT_VERIFICATION_PHASE_1" && canVerify1) {
+							return { label: "Verifikasi 1", href: `/penggajian/verifikasi${qs}` };
 						}
-						if (b.status === "WAIT_VERIFICATION_PHASE_2") {
-							return { label: "Tambah Komponen", href: "/penggajian/tambahan" };
+						if (b.status === "WAIT_VERIFICATION_PHASE_2" && canTambahan) {
+							return { label: "Tambah Komponen", href: `/penggajian/tambahan${qs}` };
 						}
-						if (b.status === "WAIT_APPROVAL") {
-							return { label: "Persetujuan", href: "/penggajian/persetujuan" };
+						if (b.status === "WAIT_APPROVAL" && canApprove) {
+							return { label: "Persetujuan", href: `/penggajian/persetujuan${qs}` };
 						}
 						return null;
 					})();
@@ -277,11 +328,11 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 									href={nextStep.href}
 									className={cn(
 										buttonVariants({ variant: "outline", size: "sm" }),
-										"h-7 text-xs px-2 gap-1 text-primary hover:bg-primary/10 hover:text-primary",
+										"h-8 text-xs font-semibold px-2.5 gap-1.5 text-primary border-primary/30 bg-primary/5 hover:bg-primary/15 hover:text-primary transition-colors shadow-2xs",
 									)}
 								>
 									{nextStep.label}
-									<ArrowUpRight className="size-3" />
+									<ArrowUpRight className="size-3.5" />
 								</Link>
 							)}
 							{isReprocessEligible && (
@@ -320,7 +371,7 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 				},
 			},
 		];
-	}, [canProcess, canDelete]);
+	}, [canProcess, canDelete, permissions, roles]);
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -337,138 +388,122 @@ export function ProsesGajiClient({ userName }: ProsesGajiClientProps) {
 						Inisiasi, pantau, dan kelola proses batch payroll bulanan Perumdam Tirta Satria
 					</p>
 				</div>
-				<div className="flex items-center gap-2.5">
-					<Button variant="outline" size="sm" onClick={() => list.refetch()} className="gap-1.5 h-9">
-						<RefreshCw className="size-4" />
-						Muat Ulang
-					</Button>
-					<Button size="sm" onClick={() => setCreateOpen(true)} className="gap-1.5 h-9 shadow-sm">
-						<Plus className="size-4" />
-						Buat Proses Gaji Baru
-					</Button>
-				</div>
+				<Button size="sm" onClick={() => setCreateOpen(true)} className="gap-1.5 h-9 shadow-sm">
+					<Plus className="size-4" />
+					Buat Proses Gaji Baru
+				</Button>
 			</div>
 
-			{/* Filter Section */}
-			<div className="rounded-xl border border-border/80 bg-card/90 backdrop-blur-sm p-4 shadow-xs space-y-3.5">
-				{/* Top Header of Filter Container */}
-				<div className="flex items-center justify-between border-b border-border/50 pb-2.5">
-					<div className="flex items-center gap-2">
-						<div className="flex size-6 items-center justify-center rounded-md bg-primary/10 text-primary">
-							<SlidersHorizontal className="size-3.5" />
-						</div>
-						<span className="text-xs font-semibold text-foreground uppercase tracking-wider">
-							Filter & Pencarian Batch
-						</span>
-						{hasActiveFilter && (
-							<span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-medium bg-primary/15 text-primary border border-primary/20">
-								<span className="size-1.5 rounded-full bg-primary" />
-								Filter Aktif
-							</span>
-						)}
-					</div>{" "}
-					<div className="text-xs text-muted-foreground">
-						Menampilkan <span className="font-semibold text-foreground">{rows.length}</span> dari{" "}
-						<span className="font-semibold text-foreground">{pageView.total}</span> batch
-					</div>
-				</div>
+			{/* Top Action & Filter Toolbar */}
+			<div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 bg-card p-3 rounded-lg border shadow-xs">
+				<div className="flex flex-wrap items-center gap-2.5">
+					<span className="text-xs font-semibold text-foreground mr-1 hidden sm:inline">
+						Filter &amp; Pencarian Batch:
+					</span>
+					<span className="sr-only">Filter &amp; Pencarian Batch</span>
 
-				{/* Controls Row */}
-				<div className="flex flex-wrap items-end gap-3">
-					<div className="flex flex-col gap-1.5">
-						<Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-							<Calendar className="size-3.5 text-primary/80" />
-							Periode Batch
-						</Label>
-						<div className="relative w-64">
-							<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
-							<Input
-								value={(filters.periode as string) ?? ""}
-								onChange={(e) => handleFilterChange("periode", e.target.value.trim() || undefined)}
-								placeholder="Filter Periode (YYYY-MM)…"
-								className="pl-9 h-10 text-sm bg-background border-input shadow-2xs hover:border-input focus-visible:border-primary transition-colors"
-							/>
-						</div>
-					</div>
+					<PeriodeSelect
+						label="Periode Batch"
+						month={filterMonth}
+						year={filterYear}
+						onMonthChange={(m) =>
+							handlePeriodeChange(filterYear === "ALL" ? String(new Date().getFullYear()) : filterYear, m)
+						}
+						onYearChange={(y) => handlePeriodeChange(y, filterMonth === "ALL" ? "" : filterMonth)}
+						allowAll
+						size="sm"
+					/>
 
-					<div className="flex flex-col gap-1.5">
-						<Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-							<Filter className="size-3.5 text-primary/80" />
-							Status Payroll
-						</Label>
+					<div className="flex items-center gap-1.5">
+						<span className="text-xs font-semibold text-foreground mr-1">Status Payroll:</span>
+						<span className="sr-only">Status Payroll</span>
 						<Select
-							value={(filters.status as string) ?? "ALL"}
+							value={currentStatus}
 							onValueChange={(v) => handleFilterChange("status", !v || v === "ALL" ? undefined : v)}
 						>
 							<SelectTrigger
-								className="w-56 h-10 text-sm bg-background border-input shadow-2xs hover:border-input focus-visible:border-primary transition-colors"
+								className={cn(
+									"w-56 h-9 text-xs bg-background transition-colors",
+									currentStatus !== "ALL" && currentStatus
+										? "border-primary/50 text-foreground font-medium bg-primary/5 ring-1 ring-primary/20"
+										: "border-input text-foreground hover:border-border",
+								)}
 								aria-label="Filter Status"
 							>
-								<SelectValue placeholder="Semua Status" />
+								<SelectValue placeholder="Semua Status">
+									{currentStatus && currentStatus !== "ALL" ? (
+										<span className="flex items-center gap-1.5 truncate">
+											<span
+												className={cn(
+													"size-2 rounded-full shrink-0",
+													STATUS_DOT[currentStatus as StatusBatch] ?? "bg-primary",
+												)}
+											/>
+											<span className="truncate">{selectedStatusLabel}</span>
+										</span>
+									) : (
+										<span className="flex items-center gap-1.5 text-foreground">
+											<span className="size-2 rounded-full bg-muted-foreground/60 shrink-0" />
+											<span>Semua Status</span>
+										</span>
+									)}
+								</SelectValue>
 							</SelectTrigger>
 							<SelectContent>
-								<SelectItem value="ALL">Semua Status</SelectItem>
+								<SelectItem value="ALL" className="text-xs">
+									<span className="flex items-center gap-2">
+										<span className="size-2 rounded-full bg-muted-foreground/60 shrink-0" />
+										<span>Semua Status</span>
+									</span>
+								</SelectItem>
 								{STATUS_OPTIONS.map((o) => (
-									<SelectItem key={o.value} value={o.value}>
-										{o.label}
+									<SelectItem key={o.value} value={o.value} className="text-xs">
+										<span className="flex items-center gap-2">
+											<span
+												className={cn(
+													"size-2 rounded-full shrink-0",
+													STATUS_DOT[o.value as StatusBatch] ?? "bg-primary",
+												)}
+											/>
+											<span>{o.label}</span>
+										</span>
 									</SelectItem>
 								))}
 							</SelectContent>
 						</Select>
 					</div>
 
+					<Button
+						variant="outline"
+						size="sm"
+						onClick={() => list.refetch()}
+						disabled={list.isPending}
+						className="h-9 text-xs font-semibold gap-1.5"
+						title="Segarkan Data"
+					>
+						<RefreshCw className={`size-3.5 ${list.isPending ? "animate-spin" : ""}`} />
+						Refresh
+					</Button>
+
 					{hasActiveFilter && (
 						<Button
-							variant="outline"
+							variant="ghost"
 							size="sm"
 							onClick={resetAll}
-							className="h-10 text-xs px-3 border-dashed hover:bg-destructive/10 hover:text-destructive hover:border-destructive/30 transition-colors gap-1.5"
+							className="h-9 text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors gap-1 px-2"
+							title="Reset Filter"
 						>
-							<RotateCcw className="size-3.5" />
-							Reset Filter
+							<RotateCcw className="size-3" />
+							Reset
 						</Button>
 					)}
 				</div>
 
-				{/* Active Filter Chips */}
-				{hasActiveFilter && (
-					<div className="flex flex-wrap items-center gap-1.5 pt-1 border-t border-border/40">
-						<span className="text-[11px] text-muted-foreground mr-1">Filter diterapkan:</span>
-						{filters.periode && (
-							<span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-medium bg-muted border border-border text-foreground">
-								<span>
-									Periode: <strong className="font-semibold">{filters.periode}</strong>
-								</span>
-								<button
-									type="button"
-									onClick={() => handleFilterChange("periode", undefined)}
-									className="hover:text-destructive transition-colors ml-0.5 cursor-pointer"
-									aria-label="Hapus filter periode"
-								>
-									<X className="size-3" />
-								</button>
-							</span>
-						)}
-						{filters.status && filters.status !== "ALL" && (
-							<span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md text-xs font-medium bg-muted border border-border text-foreground">
-								<span>
-									Status:{" "}
-									<strong className="font-semibold">
-										{STATUS_LABELS[filters.status as StatusBatch] ?? filters.status}
-									</strong>
-								</span>
-								<button
-									type="button"
-									onClick={() => handleFilterChange("status", undefined)}
-									className="hover:text-destructive transition-colors ml-0.5 cursor-pointer"
-									aria-label="Hapus filter status"
-								>
-									<X className="size-3" />
-								</button>
-							</span>
-						)}
-					</div>
-				)}
+				<div className="flex items-center gap-2">
+					<span className="text-xs text-muted-foreground font-mono bg-muted/60 px-2.5 py-1 rounded border border-border/50">
+						{pageView.total} Batch
+					</span>
+				</div>
 			</div>
 
 			<DataTable

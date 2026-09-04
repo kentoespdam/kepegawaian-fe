@@ -36,6 +36,7 @@ export interface PeriodeSelectProps {
 	onMonthChange: (month: string) => void;
 	label?: string;
 	required?: boolean;
+	allowAll?: boolean;
 	size?: "sm" | "default";
 	className?: string;
 }
@@ -47,11 +48,14 @@ export function PeriodeSelect({
 	onMonthChange,
 	label,
 	required = false,
+	allowAll = false,
 	size = "default",
 	className,
 }: PeriodeSelectProps) {
 	const years = getYearOptions();
-	const selectedMonthLabel = MONTH_OPTIONS.find((m) => m.value === month)?.label ?? month;
+	const selectedMonthLabel =
+		month === "ALL" ? "Semua Bulan" : (MONTH_OPTIONS.find((m) => m.value === month)?.label ?? month);
+	const selectedYearLabel = year === "ALL" ? "Semua Tahun" : year;
 
 	const isSm = size === "sm";
 
@@ -59,15 +63,23 @@ export function PeriodeSelect({
 		<div className={cn("flex flex-wrap items-center gap-2", className)}>
 			{label && (
 				<span className={cn("font-semibold text-foreground mr-1", isSm ? "text-xs" : "text-sm")}>
-					{label}:{required && <span className="text-destructive ml-0.5">*</span>}
+					{label}
+					{required && <span className="text-destructive ml-0.5">*</span>}
 				</span>
 			)}
 
 			<Select value={month} onValueChange={(v) => v && onMonthChange(v)}>
-				<SelectTrigger className={cn(isSm ? "w-36 h-9 text-xs" : "w-44 h-10 text-sm")} aria-label="Pilih Bulan">
-					<SelectValue placeholder="Pilih Bulan">{month ? selectedMonthLabel : undefined}</SelectValue>
+				<SelectTrigger className={cn(isSm ? "w-40 h-9 text-xs" : "w-48 h-10 text-sm")} aria-label="Pilih Bulan">
+					<SelectValue placeholder={allowAll ? "Semua Bulan" : "Pilih Bulan"}>
+						{month ? selectedMonthLabel : undefined}
+					</SelectValue>
 				</SelectTrigger>
 				<SelectContent>
+					{allowAll && (
+						<SelectItem value="ALL" className={cn(isSm && "text-xs")}>
+							Semua Bulan
+						</SelectItem>
+					)}
 					{MONTH_OPTIONS.map((m) => (
 						<SelectItem key={m.value} value={m.value} className={cn(isSm && "text-xs")}>
 							{m.label}
@@ -77,10 +89,20 @@ export function PeriodeSelect({
 			</Select>
 
 			<Select value={year} onValueChange={(v) => v && onYearChange(v)}>
-				<SelectTrigger className={cn(isSm ? "w-24 h-9 text-xs" : "w-32 h-10 text-sm")} aria-label="Pilih Tahun">
-					<SelectValue placeholder="Pilih Tahun">{year ? year : undefined}</SelectValue>
+				<SelectTrigger
+					className={cn(isSm ? (allowAll ? "w-36 h-9 text-xs" : "w-32 h-9 text-xs") : "w-40 h-10 text-sm")}
+					aria-label="Pilih Tahun"
+				>
+					<SelectValue placeholder={allowAll ? "Semua Tahun" : "Pilih Tahun"}>
+						{year ? selectedYearLabel : undefined}
+					</SelectValue>
 				</SelectTrigger>
 				<SelectContent>
+					{allowAll && (
+						<SelectItem value="ALL" className={cn(isSm && "text-xs")}>
+							Semua Tahun
+						</SelectItem>
+					)}
 					{years.map((y) => (
 						<SelectItem key={y} value={y} className={cn(isSm && "text-xs")}>
 							{y}

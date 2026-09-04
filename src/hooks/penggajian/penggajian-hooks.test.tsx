@@ -50,7 +50,7 @@ describe("useBatchInfo", () => {
 describe("useBatchAction", () => {
 	beforeEach(() => vi.restoreAllMocks());
 
-	it("sends PATCH to the correct URL for verify2", async () => {
+	it("sends PATCH to the correct URL for verify2 without body if not provided", async () => {
 		global.fetch = mockFetch();
 		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
 
@@ -58,6 +58,27 @@ describe("useBatchAction", () => {
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/verify2", {
 			method: "PATCH",
+			headers: undefined,
+			body: undefined,
+		});
+	});
+
+	it("sends PATCH with JSON body and Content-Type header when payload is provided", async () => {
+		global.fetch = mockFetch();
+		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
+
+		const payload = {
+			id: "batch-1",
+			nama: "Budi",
+			jabatan: "Manager Keuangan",
+			phase: "WAIT_VERIFICATION_PHASE_2" as const,
+		};
+		await result.current.mutateAsync(payload);
+
+		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/verify2", {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
 		});
 	});
 
@@ -69,6 +90,8 @@ describe("useBatchAction", () => {
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/accept", {
 			method: "PATCH",
+			headers: undefined,
+			body: undefined,
 		});
 	});
 
@@ -80,6 +103,8 @@ describe("useBatchAction", () => {
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/reprocess", {
 			method: "PATCH",
+			headers: undefined,
+			body: undefined,
 		});
 	});
 
@@ -91,6 +116,8 @@ describe("useBatchAction", () => {
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master/upload/batch-1", {
 			method: "PATCH",
+			headers: undefined,
+			body: undefined,
 		});
 	});
 
@@ -120,7 +147,7 @@ describe("useDeleteBatch", () => {
 describe("useReprocessBatch", () => {
 	beforeEach(() => vi.restoreAllMocks());
 
-	it("sends PATCH to /penggajian/batch/{id}/reprocess", async () => {
+	it("sends PATCH to /penggajian/batch/{id}/reprocess with string id", async () => {
 		global.fetch = mockFetch();
 		const { result } = renderHook(() => useReprocessBatch(), { wrapper });
 
@@ -128,6 +155,27 @@ describe("useReprocessBatch", () => {
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-123/reprocess", {
 			method: "PATCH",
+			headers: undefined,
+			body: undefined,
+		});
+	});
+
+	it("sends PATCH to /penggajian/batch/{id}/reprocess with data payload and headers", async () => {
+		global.fetch = mockFetch();
+		const { result } = renderHook(() => useReprocessBatch(), { wrapper });
+
+		const payload = {
+			id: "batch-123",
+			nama: "Budi",
+			jabatan: "Staf SDM",
+			phase: "PENDING" as const,
+		};
+		await result.current.mutateAsync({ id: "batch-123", data: payload });
+
+		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-123/reprocess", {
+			method: "PATCH",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(payload),
 		});
 	});
 });

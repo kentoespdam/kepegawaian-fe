@@ -228,7 +228,7 @@ describe("VerifikasiClient", () => {
 			"/penggajian/batch/b1/verify1": { status: 200, data: {} },
 		});
 
-		render(<VerifikasiClient />, { wrapper: createWrapper() });
+		render(<VerifikasiClient userName="Budi" jabatanName="Manager SDM" />, { wrapper: createWrapper() });
 
 		await waitFor(() => {
 			expect(screen.getByText("02. Verifikasi Gapok, Tunjangan & Potongan")).toBeInTheDocument();
@@ -249,15 +249,32 @@ describe("VerifikasiClient", () => {
 			expect(screen.queryByText("Komponen None")).not.toBeInTheDocument();
 		});
 
-		const verifyBtn = screen.getByRole("button", { name: /Verifikasi/i });
+		const verifyBtn = screen.getByRole("button", { name: /Verifikasi Tahap 1/i });
 		expect(verifyBtn).toBeEnabled();
 
 		fireEvent.click(verifyBtn);
 
+		// Confirmation dialog should appear
+		await waitFor(() => {
+			expect(screen.getByText("Verifikasi Batch (Tahap 1)")).toBeInTheDocument();
+		});
+
+		const confirmBtn = screen.getByRole("button", { name: /Ya, Verifikasi/i });
+		fireEvent.click(confirmBtn);
+
 		await waitFor(() => {
 			expect(global.fetch).toHaveBeenCalledWith(
 				expect.stringContaining("/penggajian/batch/b1/verify1"),
-				expect.objectContaining({ method: "PATCH" }),
+				expect.objectContaining({
+					method: "PATCH",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify({
+						id: "b1",
+						nama: "Budi",
+						jabatan: "Manager SDM",
+						phase: "WAIT_VERIFICATION_PHASE_1",
+					}),
+				}),
 			);
 		});
 

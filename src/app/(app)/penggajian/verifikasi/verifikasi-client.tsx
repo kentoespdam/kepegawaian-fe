@@ -6,12 +6,23 @@ import { toast } from "sonner";
 import { PegawaiOrganisasiTable } from "@/components/pegawai-organisasi-table";
 import { MONTH_OPTIONS, PeriodeSelect } from "@/components/periode-filter";
 import { RincianGajiPanel } from "@/components/rincian-gaji-panel";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBatchAction } from "@/hooks/penggajian/useBatchAction";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
 import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
 import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
+import { getReprocessPhase } from "@/lib/utils/penggajian-reprocess";
 import type { GajiBatchRootResponse } from "@/types/penggajian/batch";
 
 const STATUS_BADGE: Record<string, string> = {
@@ -36,9 +47,16 @@ const STATUS_LABEL: Record<string, string> = {
 	FAILED: "Gagal",
 };
 
-export function VerifikasiClient() {
+interface VerifikasiClientProps {
+	userName?: string;
+	jabatanName?: string;
+}
+
+export function VerifikasiClient({ userName, jabatanName }: VerifikasiClientProps) {
 	const { year, setYear, month, setMonth, periode } = useVerifikasiFilters();
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
+	const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
+	const [reprocessDialogOpen, setReprocessDialogOpen] = useState(false);
 
 	const { data: batches, isPending: isBatchPending, refetch: refetchBatch } = useBatchList({ periode });
 	const batchList = Array.isArray(batches) ? batches : (batches?.content ?? []);
@@ -65,22 +83,36 @@ export function VerifikasiClient() {
 
 	const handleVerify1 = async () => {
 		try {
-			await verify1.mutateAsync();
+			await verify1.mutateAsync({
+				id: batchId,
+				nama: userName,
+				jabatan: jabatanName ?? "Manager SDM",
+				phase: "WAIT_VERIFICATION_PHASE_1",
+			});
 			toast.success("Batch berhasil diverifikasi (Tahap 1)");
+			setVerifyDialogOpen(false);
 			refetchBatch();
-		} catch {
-			toast.error("Gagal memverifikasi batch");
+			refetchMaster();
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : "Gagal memverifikasi batch");
 		}
 	};
 
 	const handleReprocess = async () => {
 		try {
-			await reprocess.mutateAsync();
+			const targetPhase = getReprocessPhase(batch?.status);
+			await reprocess.mutateAsync({
+				id: batchId,
+				nama: userName,
+				jabatan: jabatanName ?? "Manager SDM",
+				phase: targetPhase,
+			});
 			toast.success("Batch berhasil diproses ulang");
+			setReprocessDialogOpen(false);
 			refetchBatch();
 			refetchMaster();
-		} catch {
-			toast.error("Gagal memproses ulang batch");
+		} catch (e: unknown) {
+			toast.error(e instanceof Error ? e.message : "Gagal memproses ulang batch");
 		}
 	};
 
@@ -161,7 +193,7 @@ export function VerifikasiClient() {
 						<Button
 							variant="outline"
 							size="sm"
-							onClick={handleReprocess}
+							onClick={() => setReprocessDialogOpen(true)}
 							disabled={reprocess.isPending}
 							className="h-8 text-xs font-semibold gap-1.5 text-destructive border-destructive/30 hover:bg-destructive/10"
 						>
@@ -172,7 +204,7 @@ export function VerifikasiClient() {
 
 					<Button
 						size="sm"
-						onClick={handleVerify1}
+						onClick={() => setVerifyDialogOpen(true)}
 						disabled={!canVerify1 || verify1.isPending}
 						className="h-8 text-xs font-semibold gap-1.5 bg-primary hover:bg-primary/90 text-primary-foreground shadow-xs"
 					>
@@ -210,6 +242,60 @@ export function VerifikasiClient() {
 					<RincianGajiPanel selectedPegawai={selectedPegawai} canEdit={false} />
 				</div>
 			)}
+
+			{/* Dialog Konfirmasi Verifikasi Tahap 1 */}
+			<AlertDialog open={verifyDialogOpen} onOpenChange={setVerifyDialogOpen}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Verifikasi Batch (Tahap 1)</AlertDialogTitle>
+						<AlertDialogDescription>
+							Apakah Anda yakin ingin memverifikasi batch penggajian periode{" "}
+							<strong>
+								{currentMonthLabel} {year}
+							</strong>
+							? Setelah diverifikasi, batch akan beralih ke tahap 03 (Tambah Komponen Gaji).
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={verify1.isPending}>Batal</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={handleVerify1}
+							disabled={verify1.isPending}
+							className="bg-primary hover:bg-primary/90 text-primary-foreground"
+						>
+							{verify1.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
+							Ya, Verifikasi
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
+
+			{/* Dialog Konfirmasi Proses Ulang */}
+			<AlertDialog open={reprocessDialogOpen} onOpenChange={setReprocessDialogOpen}>
+				<AlertDialogContent>
+					<AlertDialogHeader>
+						<AlertDialogTitle>Proses Ulang Batch</AlertDialogTitle>
+						<AlertDialogDescription>
+							Apakah Anda yakin ingin memproses ulang batch penggajian periode{" "}
+							<strong>
+								{currentMonthLabel} {year}
+							</strong>
+							? Tindakan ini akan mengembalikan status batch ke tahap sebelumnya untuk pemrosesan ulang.
+						</AlertDialogDescription>
+					</AlertDialogHeader>
+					<AlertDialogFooter>
+						<AlertDialogCancel disabled={reprocess.isPending}>Batal</AlertDialogCancel>
+						<AlertDialogAction
+							onClick={handleReprocess}
+							disabled={reprocess.isPending}
+							className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
+						>
+							{reprocess.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
+							Ya, Proses Ulang
+						</AlertDialogAction>
+					</AlertDialogFooter>
+				</AlertDialogContent>
+			</AlertDialog>
 		</div>
 	);
 }

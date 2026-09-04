@@ -30,7 +30,7 @@ describe("PeriodeSelect", () => {
 		);
 
 		// Label with asterisk
-		expect(screen.getByText(/Periode Gaji:/)).toBeInTheDocument();
+		expect(screen.getByText(/Periode Gaji/)).toBeInTheDocument();
 		expect(screen.getByText("*")).toBeInTheDocument();
 
 		// Trigger should display "Agustus" (not "08")

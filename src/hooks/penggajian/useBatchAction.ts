@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
+import type { GajiBatchRootProcessRequest } from "@/types/penggajian/batch";
 
 /**
  * Generic factory for batch PATCH mutations.
@@ -8,11 +9,15 @@ import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
  * @param batchId  — the batch root ID
  * @param urlSuffix — path after `/penggajian/batch/`, e.g. `"abc/verify2"` or `"master/upload/abc"`
  */
-export function useBatchAction(batchId: string, urlSuffix: string) {
+export function useBatchAction<TData = GajiBatchRootProcessRequest>(batchId: string, urlSuffix: string) {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/${urlSuffix}`, { method: "PATCH" });
+		mutationFn: async (data?: TData) => {
+			const res = await fetch(`/api/proxy/penggajian/batch/${urlSuffix}`, {
+				method: "PATCH",
+				headers: data !== undefined ? { "Content-Type": "application/json" } : undefined,
+				body: data !== undefined ? JSON.stringify(data) : undefined,
+			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error(body.message ?? `HTTP ${res.status}`);
@@ -39,8 +44,14 @@ export function useDeleteBatch() {
 export function useReprocessBatch() {
 	const qc = useQueryClient();
 	return useMutation({
-		mutationFn: async (id: string) => {
-			const res = await fetch(`/api/proxy/penggajian/batch/${id}/reprocess`, { method: "PATCH" });
+		mutationFn: async (input: string | { id: string; data?: GajiBatchRootProcessRequest }) => {
+			const id = typeof input === "string" ? input : input.id;
+			const data = typeof input === "string" ? undefined : input.data;
+			const res = await fetch(`/api/proxy/penggajian/batch/${id}/reprocess`, {
+				method: "PATCH",
+				headers: data !== undefined ? { "Content-Type": "application/json" } : undefined,
+				body: data !== undefined ? JSON.stringify(data) : undefined,
+			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
 				throw new Error(body.message ?? `HTTP ${res.status}`);
