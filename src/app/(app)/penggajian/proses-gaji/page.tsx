@@ -12,5 +12,5 @@ export default async function ProsesGajiPage() {
 		forbidden();
 	}
 
-	return <ProsesGajiClient userName={user.name} jabatanName={pegawai?.namaJabatan ?? undefined} />;
+	return <ProsesGajiClient userName={user.name} jabatanName={pegawai?.jabatan?.nama ?? undefined} />;
 }

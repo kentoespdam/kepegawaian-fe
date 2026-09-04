@@ -12,5 +12,5 @@ export default async function VerifikasiPage() {
 		forbidden();
 	}
 
-	return <VerifikasiClient userName={user.name} jabatanName={pegawai?.namaJabatan ?? undefined} />;
+	return <VerifikasiClient userName={user.name} jabatanName={pegawai?.jabatan?.nama ?? undefined} />;
 }

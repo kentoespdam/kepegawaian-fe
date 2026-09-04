@@ -63,8 +63,8 @@ export function VerifikasiClient({ userName, jabatanName }: VerifikasiClientProp
 	const batch: GajiBatchRootResponse | undefined = batchList[0];
 
 	const batchId = batch?.id ?? "";
-	const verify1 = useBatchAction(batchId, `${batchId}/verify1`);
-	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
+	const verify1 = useBatchAction(`${batchId}/verify1`);
+	const reprocess = useBatchAction(`${batchId}/reprocess`);
 
 	const {
 		data: pegawaiList,

@@ -12,5 +12,5 @@ export default async function PersetujuanPage() {
 		forbidden();
 	}
 
-	return <PersetujuanClient userName={user.name} jabatanName={pegawai?.namaJabatan ?? undefined} />;
+	return <PersetujuanClient userName={user.name} jabatanName={pegawai?.jabatan?.nama ?? undefined} />;
 }

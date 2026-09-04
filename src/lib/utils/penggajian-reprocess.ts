@@ -10,10 +10,6 @@ export function getReprocessPhase(currentStatus: StatusBatch | undefined): Statu
 			return "WAIT_VERIFICATION_PHASE_2";
 		case "WAIT_VERIFICATION_PHASE_2":
 			return "WAIT_VERIFICATION_PHASE_1";
-		case "WAIT_VERIFICATION_PHASE_1":
-		case "PROSES":
-		case "PENDING":
-		case "FAILED":
 		default:
 			return "PENDING";
 	}

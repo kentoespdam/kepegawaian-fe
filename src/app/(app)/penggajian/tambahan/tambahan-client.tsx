@@ -67,8 +67,8 @@ export function TambahanClient({ userName, jabatanName }: TambahanClientProps) {
 	const batchId = batch?.id ?? "";
 	const canEdit = batch?.status === "WAIT_VERIFICATION_PHASE_2";
 
-	const verify2 = useBatchAction(batchId, `${batchId}/verify2`);
-	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
+	const verify2 = useBatchAction(`${batchId}/verify2`);
+	const reprocess = useBatchAction(`${batchId}/reprocess`);
 
 	const {
 		data: pegawaiList,

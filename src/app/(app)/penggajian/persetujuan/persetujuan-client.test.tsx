@@ -242,44 +242,6 @@ describe("PersetujuanClient", () => {
 		openSpy.mockRestore();
 	});
 
-	it("executes verify2 flow with confirmation dialog", async () => {
-		mockFetch({
-			"/penggajian/batch?": asPage(MOCK_BATCH),
-			"/penggajian/batch/master?": MOCK_MASTER,
-			"/penggajian/batch/b1/verify2": { status: 200, data: {} },
-		});
-
-		render(<PersetujuanClient userName="Budi" jabatanName="Manager Keuangan" />, { wrapper: createWrapper() });
-
-		await waitFor(() => {
-			expect(screen.getByRole("button", { name: /Verifikasi/i })).toBeEnabled();
-		});
-
-		fireEvent.click(screen.getByRole("button", { name: /Verifikasi/i }));
-
-		await waitFor(() => {
-			expect(screen.getByText("Verifikasi Batch (Tahap 2)")).toBeInTheDocument();
-		});
-
-		fireEvent.click(screen.getByRole("button", { name: /Ya, Verifikasi/i }));
-
-		await waitFor(() => {
-			expect(global.fetch).toHaveBeenCalledWith(
-				expect.stringContaining("/penggajian/batch/b1/verify2"),
-				expect.objectContaining({
-					method: "PATCH",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({
-						id: "b1",
-						nama: "Budi",
-						jabatan: "Manager Keuangan",
-						phase: "WAIT_VERIFICATION_PHASE_2",
-					}),
-				}),
-			);
-		});
-	});
-
 	it("executes kirim slip gaji flow with confirmation dialog", async () => {
 		mockFetch({
 			"/penggajian/batch?": asPage(MOCK_BATCH),

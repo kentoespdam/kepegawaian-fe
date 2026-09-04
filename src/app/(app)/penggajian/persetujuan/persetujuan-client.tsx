@@ -1,6 +1,6 @@
 "use client";
 
-import { CheckCircle, Download, Loader2, RefreshCw, Send, ShieldCheck } from "lucide-react";
+import { CheckCircle, Download, Loader2, RefreshCw, Send } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { PegawaiOrganisasiTable } from "@/components/pegawai-organisasi-table";
@@ -36,7 +36,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 	const [selectedBatchMasterId, setSelectedBatchMasterId] = useState<number | null>(null);
 
 	const [approveDialogOpen, setApproveDialogOpen] = useState(false);
-	const [verifyDialogOpen, setVerifyDialogOpen] = useState(false);
 	const [reprocessDialogOpen, setReprocessDialogOpen] = useState(false);
 	const [kirimSlipDialogOpen, setKirimSlipDialogOpen] = useState(false);
 
@@ -46,10 +45,9 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 	const batch: GajiBatchRootResponse | undefined = batchList[0];
 
 	const batchId = batch?.id ?? "";
-	const verify2 = useBatchAction(batchId, `${batchId}/verify2`);
-	const accept = useBatchAction(batchId, `${batchId}/accept`);
-	const reprocess = useBatchAction(batchId, `${batchId}/reprocess`);
-	const kirimSlip = useBatchAction(batchId, `master/upload/${batchId}`);
+	const accept = useBatchAction(`${batchId}/accept`);
+	const reprocess = useBatchAction(`${batchId}/reprocess`);
+	const kirimSlip = useBatchAction(`master/upload/${batchId}`);
 
 	const canAct = batch?.status === "WAIT_APPROVAL";
 
@@ -83,23 +81,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 			refetchMaster();
 		} catch (e: unknown) {
 			toast.error(e instanceof Error ? e.message : "Gagal menyetujui batch");
-		}
-	};
-
-	const handleVerify2 = async () => {
-		try {
-			await verify2.mutateAsync({
-				id: batchId,
-				nama: userName,
-				jabatan: jabatanName ?? "Direktur Utama",
-				phase: "WAIT_VERIFICATION_PHASE_2",
-			});
-			toast.success("Verifikasi tahap 2 berhasil");
-			setVerifyDialogOpen(false);
-			refetchBatch();
-			refetchMaster();
-		} catch (e: unknown) {
-			toast.error(e instanceof Error ? e.message : "Gagal memverifikasi batch");
 		}
 	};
 
@@ -205,17 +186,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 					>
 						<Download className="size-3.5" />
 						Table Gaji
-					</Button>
-
-					<Button
-						variant="outline"
-						size="sm"
-						disabled={!canAct || verify2.isPending}
-						onClick={() => setVerifyDialogOpen(true)}
-						className="h-8 text-xs font-semibold gap-1.5"
-					>
-						{verify2.isPending ? <Loader2 className="size-3.5 animate-spin" /> : <ShieldCheck className="size-3.5" />}
-						Verifikasi
 					</Button>
 
 					<Button
@@ -331,32 +301,6 @@ export function PersetujuanClient({ userName, jabatanName }: PersetujuanClientPr
 						>
 							{reprocess.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
 							Ya, Proses Ulang
-						</AlertDialogAction>
-					</AlertDialogFooter>
-				</AlertDialogContent>
-			</AlertDialog>
-			{/* Dialog Konfirmasi Verifikasi Tahap 2 */}
-			<AlertDialog open={verifyDialogOpen} onOpenChange={setVerifyDialogOpen}>
-				<AlertDialogContent>
-					<AlertDialogHeader>
-						<AlertDialogTitle>Verifikasi Batch (Tahap 2)</AlertDialogTitle>
-						<AlertDialogDescription>
-							Apakah Anda yakin ingin memverifikasi batch penggajian periode{" "}
-							<strong>
-								{currentMonthLabel} {year}
-							</strong>
-							?
-						</AlertDialogDescription>
-					</AlertDialogHeader>
-					<AlertDialogFooter>
-						<AlertDialogCancel disabled={verify2.isPending}>Batal</AlertDialogCancel>
-						<AlertDialogAction
-							onClick={handleVerify2}
-							disabled={verify2.isPending}
-							className="bg-primary hover:bg-primary/90 text-primary-foreground"
-						>
-							{verify2.isPending ? <Loader2 className="size-4 animate-spin mr-1.5" /> : null}
-							Ya, Verifikasi
 						</AlertDialogAction>
 					</AlertDialogFooter>
 				</AlertDialogContent>

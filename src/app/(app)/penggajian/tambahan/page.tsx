@@ -12,5 +12,5 @@ export default async function TambahanPage() {
 		forbidden();
 	}
 
-	return <TambahanClient userName={user.name} jabatanName={pegawai?.namaJabatan ?? undefined} />;
+	return <TambahanClient userName={user.name} jabatanName={pegawai?.jabatan?.nama ?? undefined} />;
 }

@@ -52,7 +52,7 @@ describe("useBatchAction", () => {
 
 	it("sends PATCH to the correct URL for verify2 without body if not provided", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1/verify2"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -65,7 +65,7 @@ describe("useBatchAction", () => {
 
 	it("sends PATCH with JSON body and Content-Type header when payload is provided", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1/verify2"), { wrapper });
 
 		const payload = {
 			id: "batch-1",
@@ -84,7 +84,7 @@ describe("useBatchAction", () => {
 
 	it("sends PATCH to the correct URL for accept", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/accept"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1/accept"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -97,7 +97,7 @@ describe("useBatchAction", () => {
 
 	it("sends PATCH to the correct URL for reprocess", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/reprocess"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1/reprocess"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -110,7 +110,7 @@ describe("useBatchAction", () => {
 
 	it("sends PATCH to the correct URL for kirimSlipGaji", async () => {
 		global.fetch = mockFetch();
-		const { result } = renderHook(() => useBatchAction("batch-1", "master/upload/batch-1"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("master/upload/batch-1"), { wrapper });
 
 		await result.current.mutateAsync();
 
@@ -123,7 +123,7 @@ describe("useBatchAction", () => {
 
 	it("throws on error response", async () => {
 		global.fetch = mockFetchError(400, "Bad request");
-		const { result } = renderHook(() => useBatchAction("batch-1", "batch-1/verify2"), { wrapper });
+		const { result } = renderHook(() => useBatchAction("batch-1/verify2"), { wrapper });
 
 		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
 	});

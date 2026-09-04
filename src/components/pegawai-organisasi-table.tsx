@@ -29,13 +29,13 @@ export function OrganisasiTableGroup({
 		variant === "persetujuan"
 			? rows.reduce(
 					(acc, r) => ({
-						penghasilanKotor: acc.penghasilanKotor + Number(r.penghasilanKotor ?? 0),
-						totalPotongan: acc.totalPotongan + Number(r.totalPotongan ?? 0),
-						pembulatan: acc.pembulatan + Number(r.pembulatan ?? 0),
-						penghasilanBersih: acc.penghasilanBersih + Number(r.penghasilanBersih ?? 0),
-						totalAddTambahan: acc.totalAddTambahan + Number(r.totalAddTambahan ?? 0),
-						totalAddPotongan: acc.totalAddPotongan + Number(r.totalAddPotongan ?? 0),
-						penghasilanBersihFinal: acc.penghasilanBersihFinal + Number(r.penghasilanBersihFinal ?? 0),
+						penghasilanKotor: Number(acc.penghasilanKotor ?? 0) + Number(r.penghasilanKotor ?? 0),
+						totalPotongan: Number(acc.totalPotongan ?? 0) + Number(r.totalPotongan ?? 0),
+						pembulatan: Number(acc.pembulatan ?? 0) + Number(r.pembulatan ?? 0),
+						penghasilanBersih: Number(acc.penghasilanBersih ?? 0) + Number(r.penghasilanBersih ?? 0),
+						totalAddTambahan: Number(acc.totalAddTambahan ?? 0) + Number(r.totalAddTambahan ?? 0),
+						totalAddPotongan: Number(acc.totalAddPotongan ?? 0) + Number(r.totalAddPotongan ?? 0),
+						penghasilanBersihFinal: Number(acc.penghasilanBersihFinal ?? 0) + Number(r.penghasilanBersihFinal ?? 0),
 					}),
 					{
 						penghasilanKotor: 0,

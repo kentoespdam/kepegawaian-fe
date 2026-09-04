@@ -43,10 +43,10 @@ PENDING → PROSES → WAIT_VERIFICATION_PHASE_1 → WAIT_VERIFICATION_PHASE_2 �
 
 | Fase | Route | Aksi Backend | Peran |
 |---|---|---|---|
-| **01 Seting komponen Gaji** | `/penggajian/batch/[id]/setup` | `POST/PUT /penggajian/komponen` | Staf SDM |
-| **02 Verifikasi Tahap 1** | `/penggajian/batch/[id]/verifikasi-1` | `PATCH /penggajian/batch/{id}/verify1` | Manager SDM |
-| **03 Tambahan Komponen** | `/penggajian/batch/[id]/tambahan` | `POST /penggajian/batch/master/proses` | Spv/Staf Keuangan |
-| **04 Verifikasi Tahap 2 & Persetujuan** | `/penggajian/batch/[id]/persetujuan` | `PATCH /batch/{id}/verify2` + `PATCH /batch/{id}/accept` | Manager Keuangan |
+| **01 Seting & Proses Gaji** | `/penggajian/proses-gaji` | `POST /penggajian/batch`, `PATCH /penggajian/batch/{id}/reprocess` | Staf SDM |
+| **02 Verifikasi Tahap 1** | `/penggajian/verifikasi` | `PATCH /penggajian/batch/{id}/verify1` | Manager SDM |
+| **03 Tambahan Komponen** | `/penggajian/tambahan` | `POST /penggajian/batch/master/proses`, `PATCH /penggajian/batch/{id}/verify2`, `DELETE /penggajian/batch/master/proses/{id}/rollback` | Spv/Staf Keuangan |
+| **04 Persetujuan Akhir** | `/penggajian/persetujuan` | `PATCH /penggajian/batch/{id}/accept`, `PATCH /penggajian/batch/master/upload/{id}` | Direktur Utama / Manager Keuangan |
 
 > **Catatan krusial**: Urutan fase **harus sama dengan urutan user**, karena setiap fase
 > membaca output fase sebelumnya. Step `03 Tambahan` **tidak menampilkan data** sampai
@@ -132,18 +132,34 @@ prefix **`/penggajian`**:
 
 **Special endpoints** (batch workflow):
 
-| Verb | Pattern | Kegunaan |
-|---|---|---|
-| POST | `/penggajian/batch` | create batch + upload lampiran TKK (binary `fileName`) |
-| GET | `/penggajian/batch/{id}` | detail batch (status, info pemroses/verifikator/penyetju) |
-| PATCH | `/penggajian/batch/{id}/verify1` | Manager SDM verifikasi tahap 1 |
-| PATCH | `/penggajian/batch/{id}/verify2` | Manager Keuangan verifikasi tahap 2 |
-| PATCH | `/penggajian/batch/{id}/accept` | Manager Keuangan approve final |
-| PATCH | `/penggajian/batch/{id}/reprocess` | re-proses setelah koreksi |
-| PATCH | `/penggajian/batch/master/upload/{rootBatchId}` | upload lampiran tambahan |
-| GET | `/penggajian/batch/master/download/table-gaji/{rootBatchId}` | download table gaji (CSV) |
-| GET | `/penggajian/batch/master/download/potongan-gaji/{rootBatchId}` | download potongan gaji |
-| DELETE | `/penggajian/batch/master/proses/{rootBatchId}/rollback` | rollback batch |
+Semua endpoint PATCH batch mewajibkan header `Content-Type: application/json` dan payload `requestBody` berformat JSON (`GajiBatchRootProcessRequest`):
+```json
+{
+  "id": "string (batchRootId)",
+  "nama": "string (nama user pemroses/verifikator/approver)",
+  "jabatan": "string (jabatan user pemroses/verifikator/approver)",
+  "phase": "StatusBatch (target phase atau status saat ini)"
+}
+```
+
+> **Aturan Kalkulasi Parameter `phase` pada Reprocess (`/reprocess`):**
+> Nilai `phase = status sekarang - 1`. Khusus saat status batch sekarang = `WAIT_VERIFICATION_PHASE_1`, nilai target `phase = "PENDING"`.
+> - `WAIT_APPROVAL` → target `phase: "WAIT_VERIFICATION_PHASE_2"`
+> - `WAIT_VERIFICATION_PHASE_2` → target `phase: "WAIT_VERIFICATION_PHASE_1"`
+> - `WAIT_VERIFICATION_PHASE_1`, `PROSES`, `PENDING`, `FAILED` → target `phase: "PENDING"`
+
+| Verb | Pattern | Payload / Form | Kegunaan |
+|---|---|---|---|
+| POST | `/penggajian/batch` | FormData (`fileName` potongan TKK + field `tahun`, `bulan`, `diProsesOleh`, `jabatanPemroses`) | create batch baru |
+| GET | `/penggajian/batch/{id}` | - | detail batch (status, info pemroses/verifikator/penyetuju) |
+| PATCH | `/penggajian/batch/{id}/verify1` | `GajiBatchRootProcessRequest` (`phase: WAIT_VERIFICATION_PHASE_1`) | Manager SDM verifikasi tahap 1 (transisi ke `WAIT_VERIFICATION_PHASE_2`) |
+| PATCH | `/penggajian/batch/{id}/verify2` | `GajiBatchRootProcessRequest` (`phase: WAIT_VERIFICATION_PHASE_2`) | Spv/Staf Keuangan verifikasi tahap 2 (transisi ke `WAIT_APPROVAL`) |
+| PATCH | `/penggajian/batch/{id}/accept` | `GajiBatchRootProcessRequest` (`phase: WAIT_APPROVAL`) | Direktur Utama / Manager Keuangan approve final (transisi ke `FINISHED`) |
+| PATCH | `/penggajian/batch/{id}/reprocess` | `GajiBatchRootProcessRequest` (`phase: targetPhase`) | Proses ulang batch mundur 1 tahap |
+| PATCH | `/penggajian/batch/master/upload/{rootBatchId}` | `GajiBatchRootProcessRequest` | Kirim & upload slip gaji pegawai |
+| GET | `/penggajian/batch/master/download/table-gaji/{rootBatchId}` | - | download table gaji |
+| GET | `/penggajian/batch/master/download/potongan-gaji/{rootBatchId}` | - | download potongan gaji |
+| DELETE | `/penggajian/batch/master/proses/{rootBatchId}/rollback` | - | rollback semua potongan & tambahan ke status awal |
 
 ## Entity & Pattern Khas
 
@@ -199,49 +215,39 @@ Toolbar: tombol **"+ Buat Proses Gaji Baru"** → Dialog form dengan field:
 > padahal backend menerima file **Potongan TKK** (lihat `GajiBatchRootPostRequest.fileName`).
 > Revisi: label form = **"Lampiran Potongan TKK"**.
 
-### 3. Layout Detail Batch (`/penggajian/batch/[id]/layout.tsx`)
+### 3. Fase 01: Proses Gaji Bulanan (`/penggajian/proses-gaji`)
 
-Komposisi bersama untuk fase 01–04:
+Halaman standalone untuk manajemen batch penggajian:
+- Tabel batch dengan filter `periode` dan `status`.
+- Tombol **"+ Buat Proses Gaji Baru"** (Form dialog upload file potongan TKK + info session pemroses).
+- Aksi baris: **Proses Ulang** (`PATCH /penggajian/batch/{id}/reprocess` dengan payload `GajiBatchRootProcessRequest`) dan **Hapus** (`DELETE /penggajian/batch/{id}`).
+- Shortcut link fase (02, 03, 04) dengan query params `?year=YYYY&month=MM`.
 
-- **Header**: periode, status (badge), total pegawai, tanggal proses
-- **Rail stepper vertikal** (kiri atau kanan): 4 fase sebagai `<Link>` nyata. Step enabled/disabled
-  mengikuti state backend + permission user
-- **Konten**: `{children}` (halaman fase yang aktif)
+### 4. Fase 02: Verifikasi Tahap 1 (`/penggajian/verifikasi`)
 
-Step locking: fetch info batch via `GET /penggajian/batch/{id}` sekali di layout, share via
-React Context (`BatchContext`) ke 4 halaman fase. **Tidak perlu refetch per fase** — pattern
-sama dengan `riwayat/layout.tsx`.
+Halaman standalone read-only breakdown:
+- UI **2 kolom**: kiri = `<PegawaiOrganisasiTable>` (grouped by organisasi), kanan = `<RincianGajiPanel>` (komponen gaji pemasukan & potongan per pegawai).
+- Toolbar atas: filter periode (`PeriodeSelect`), tombol **Download Table Gaji**, tombol **Proses Ulang** (mundur ke `PENDING`), dan tombol **Verifikasi Tahap 1**.
+- Eksekusi Verifikasi: `PATCH /penggajian/batch/{id}/verify1` dengan body `GajiBatchRootProcessRequest` (`phase: "WAIT_VERIFICATION_PHASE_1"`) via modal konfirmasi `<AlertDialog>`. Status berubah ke `WAIT_VERIFICATION_PHASE_2`.
 
-### 4. Fase 02 Verifikasi Tahap 1 (read-only breakdown)
+### 5. Fase 03: Tambahan Komponen Gaji (`/penggajian/tambahan`)
 
-UI: **2 kolom** — kiri = tabel pegawai grouped-by-organisasi (sub-header hijau "01. DIREKSI"
-dll), kanan = rincian gaji grouped-by-jenis ("Penghasilan" + "Potongan") per-pegawai yang
-dipilih. **Tanpa tombol tambah** (read-only). Tombol **Verifikasi** ada di toolbar header
-(batch-level, bukan per-baris). Backend: `PATCH /batch/{id}/verify1`.
+Halaman standalone read + write:
+- UI **2 kolom**: tabel pegawai + panel rincian dengan kemampuan tambah/hapus komponen tambahan per pegawai.
+- Tambah komponen: `POST /penggajian/batch/master/proses`.
+- Upload potongan: `POST /penggajian/batch/master/proses/upload/{rootBatchId}`.
+- Rollback: `DELETE /penggajian/batch/master/proses/{rootBatchId}/rollback` (via modal konfirmasi).
+- Toolbar atas: tombol **Proses Ulang** (`PATCH /penggajian/batch/{id}/reprocess` dengan `phase: "WAIT_VERIFICATION_PHASE_1"`) dan tombol **Verifikasi Tahap 2** (`PATCH /penggajian/batch/{id}/verify2` dengan body `GajiBatchRootProcessRequest`, `phase: "WAIT_VERIFICATION_PHASE_2"`) via modal konfirmasi `<AlertDialog>`. Status berubah ke `WAIT_APPROVAL`.
 
-### 5. Fase 03 Tambahan Komponen Gaji (read + write)
+### 6. Fase 04: Persetujuan Akhir (`/penggajian/persetujuan`)
 
-UI sama persis dengan fase 02, **+ tombol "+ Tambah Komponen"** di panel kanan (per group
-jenis). Klik tombol → Dialog form dengan field:
-
-- `Nama` (text, required)
-- `Jenis Gaji` (radio: `-` / `Pemasukan` / `Potongan`)
-- `Nilai` (number, default 0)
-
-Backend: `POST /penggajian/batch/master/proses`.
-
-### 6. Fase 04 Persetujuan Akhir (read + approve)
-
-UI **lebih kaya dari fase 02/03** — tabel eksekutif kiri dengan kolom tambahan:
-
-- `NIK`, `Nama Pegawai`, `Jabatan`, `Penghasilan` (total), `Potongan` (total), `Pembulatan`,
-  `Jumlah Bersih` (take-home pay)
-
-Grouped by organisasi dengan **subtotal per group** di bawahnya. Toolbar atas: tombol **Verifikasi**,
-**Proses Ulang**, **Kirim Slip Gaji** (oranye — distribusi slip via WA/email).
-
-Tombol **Setujui** ada di header (batch-level) — `PATCH /batch/{id}/accept`. Setelah klik →
-status `FINISHED`, semua tombol disabled (read-only).
+Halaman standalone rekapitulasi eksekutif & approval:
+- UI **2 kolom**: kiri = `<PegawaiOrganisasiTable variant="persetujuan">` (dengan kolom take-home pay, total potongan, pembulatan, subtotal per unit kerja), kanan = `<RincianGajiPanel>` (read-only).
+- Toolbar atas:
+  - **Download Table Gaji**: `GET /penggajian/batch/master/download/table-gaji/{id}`.
+  - **Proses Ulang**: `PATCH /penggajian/batch/{id}/reprocess` dengan `phase: "WAIT_VERIFICATION_PHASE_2"` via modal konfirmasi `<AlertDialog>`.
+  - **Kirim Slip Gaji**: `PATCH /penggajian/batch/master/upload/{id}` via modal konfirmasi `<AlertDialog>`.
+  - **Setujui**: `PATCH /penggajian/batch/{id}/accept` dengan body `GajiBatchRootProcessRequest` (`phase: "WAIT_APPROVAL"`) via modal konfirmasi `<AlertDialog>`. Setelah disetujui, status menjadi `FINISHED` dan terkunci.
 
 ## Tipe Generated
 

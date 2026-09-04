@@ -6,17 +6,16 @@ import type { GajiBatchRootProcessRequest } from "@/types/penggajian/batch";
  * Generic factory for batch PATCH mutations.
  * Replaces useVerify2, useAcceptBatch, useReprocessBatch, useKirimSlipGaji.
  *
- * @param batchId  — the batch root ID
- * @param urlSuffix — path after `/penggajian/batch/`, e.g. `"abc/verify2"` or `"master/upload/abc"`
+ * @param urlSuffix — path after `/penggajian/batch/`, including the batch root ID, e.g. `"abc/verify2"` or `"master/upload/abc"`
  */
-export function useBatchAction<TData = GajiBatchRootProcessRequest>(batchId: string, urlSuffix: string) {
+export function useBatchAction<TData = GajiBatchRootProcessRequest>(urlSuffix: string) {
 	const qc = useQueryClient();
-	return useMutation({
+	return useMutation<void, Error, TData | undefined>({
 		mutationFn: async (data?: TData) => {
 			const res = await fetch(`/api/proxy/penggajian/batch/${urlSuffix}`, {
 				method: "PATCH",
-				headers: data !== undefined ? { "Content-Type": "application/json" } : undefined,
-				body: data !== undefined ? JSON.stringify(data) : undefined,
+				headers: data ? { "Content-Type": "application/json" } : undefined,
+				body: data ? JSON.stringify(data) : undefined,
 			});
 			if (!res.ok) {
 				const body = await res.json().catch(() => ({}));
