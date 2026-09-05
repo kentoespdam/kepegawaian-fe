@@ -270,7 +270,7 @@ export function AppShell({
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<Sidebar collapsible="icon">
 					<SidebarHeader>
-						<SidebarMenuButton size="lg" className="gap-3 py-3">
+						<SidebarMenuButton size="lg" render={<Link href="/" />} className="gap-3 py-3">
 							<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-border/40">
 								<Image
 									src="/logo_pdam.svg"
@@ -281,12 +281,12 @@ export function AppShell({
 								/>
 							</div>
 							<div className="flex flex-col leading-tight">
-								<span className="text-xs font-bold tracking-wide text-sidebar-foreground">TIRTA SATRIA</span>
-								<span className="text-[0.65rem] text-muted-foreground">Sistem Kepegawaian</span>
+								<span className="text-sm font-bold tracking-wide text-sidebar-foreground">TIRTA SATRIA</span>
+								<span className="text-xs text-muted-foreground">Sistem Kepegawaian</span>
 							</div>
 						</SidebarMenuButton>
-					</SidebarHeader>
-					<SidebarContent>
+					</SidebarHeader>{" "}
+					<SidebarContent className="gap-1.5 px-2 py-2">
 						{visibleModules.map((mod) => (
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
@@ -294,6 +294,8 @@ export function AppShell({
 										onClick={() => toggleGroup(mod.id)}
 										tooltip={mod.label}
 										size="lg"
+										isActive={activeModule?.id === mod.id}
+										aria-expanded={openGroups.has(mod.id)}
 										className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto"
 									>
 										<mod.icon className="size-5" />
@@ -315,8 +317,9 @@ export function AppShell({
 														key={entity.id}
 														render={<Link href={href} />}
 														isActive={isActive}
+														title={entity.label}
 														className={cn(
-															"min-h-11 border-l-2 border-transparent pl-2.5 transition-all duration-150",
+															"min-h-11 border-l-2 border-transparent pl-2.5 text-sm transition-colors",
 															isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 														)}
 													>
@@ -334,16 +337,19 @@ export function AppShell({
 														<button
 															type="button"
 															onClick={() => toggleSubGroup(subKey)}
-															className="flex w-full items-center justify-between px-2 py-1.5 text-[11px] font-semibold tracking-wider text-sidebar-foreground/70 uppercase hover:text-sidebar-foreground transition-colors cursor-pointer rounded-sm"
+															aria-expanded={isOpen}
+															className="flex min-h-11 w-full cursor-pointer items-center justify-between rounded-md px-2 text-xs font-semibold text-sidebar-foreground transition-colors hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
 														>
-															<div className="flex items-center gap-1.5">
-																<SubIcon className="size-3.5 shrink-0" />
+															<div className="flex items-center gap-2">
+																<SubIcon className="size-4 shrink-0" />
 																<span>{sub.label}</span>
 															</div>
-															<ChevronDown className={cn("size-3.5 transition-transform", isOpen && "rotate-180")} />
+															<ChevronDown
+																className={cn("size-4 shrink-0 transition-transform", isOpen && "rotate-180")}
+															/>
 														</button>
 														{isOpen && (
-															<div className="space-y-0.5 pl-1.5 pt-0.5">
+															<div className="flex flex-col gap-1 pl-1.5 pt-0.5">
 																{sub.visibleEntities.map((entity) => {
 																	const href = entityHref(entity);
 																	const isActive = pathname === href;
@@ -352,8 +358,9 @@ export function AppShell({
 																			key={entity.id}
 																			render={<Link href={href} />}
 																			isActive={isActive}
+																			title={entity.label}
 																			className={cn(
-																				"min-h-10 border-l-2 border-transparent pl-2.5 text-xs transition-all duration-150",
+																				"min-h-11 border-l-2 border-transparent pl-2.5 text-sm transition-colors",
 																				isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 																			)}
 																		>
@@ -371,11 +378,13 @@ export function AppShell({
 								</SidebarMenuItem>
 							</SidebarMenu>
 						))}
-					</SidebarContent>
+					</SidebarContent>{" "}
 					<SidebarFooter>
-						<p className="px-2 py-1 text-[0.65rem] text-sidebar-foreground/40">© 2026 Perumdam Tirta Satria</p>
-					</SidebarFooter>{" "}
-				</Sidebar>{" "}
+						<p className="group-data-[collapsible=icon]:hidden px-2 py-1 text-xs text-muted-foreground">
+							© 2026 Perumdam Tirta Satria
+						</p>
+					</SidebarFooter>
+				</Sidebar>
 				<SidebarInset className="min-w-0" id="main-content" tabIndex={-1}>
 					<header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/80 bg-card/85 backdrop-blur-md px-4 shadow-xs shrink-0">
 						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
