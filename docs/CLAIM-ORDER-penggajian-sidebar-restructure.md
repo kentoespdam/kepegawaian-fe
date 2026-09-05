@@ -29,52 +29,67 @@ Restructure the Penggajian sidebar menu to have two collapsible sub-groups (Sett
 
 ## Implementation Steps
 
+> **Status:** ✅ SELESAI 2026-09-06. Semua step dikerjakan di sesi sebelumnya (komit
+> penggajian sidebar restructure) dan diverifikasi pada sesi ini.
+
 ### Step 1: Update Sidebar Menu Structure
-- [ ] Modify `src/components/app-shell.tsx`
-- [ ] Add collapsible sub-headers for "Setting" and "Proses Batch"
-- [ ] Update menu items with new labels and icons
-- [ ] Set both groups to default open
+- [x] Modify `src/components/app-shell.tsx`
+- [x] Add collapsible sub-headers for "Setting" and "Proses Batch"
+- [x] Update menu items with new labels and icons
+- [x] Set both groups to default open
 
 ### Step 2: Remove Existing Batch Pages
-- [ ] Delete `src/app/(app)/penggajian/batch/page.tsx`
-- [ ] Delete `src/app/(app)/penggajian/batch/[id]/layout.tsx`
-- [ ] Delete `src/app/(app)/penggajian/batch/[id]/` directory
+- [x] Delete `src/app/(app)/penggajian/batch/page.tsx`
+- [x] Delete `src/app/(app)/penggajian/batch/[id]/layout.tsx`
+- [x] Delete `src/app/(app)/penggajian/batch/[id]/` directory
 
 ### Step 3: Create New Phase Pages
-- [ ] Create `/penggajian/proses-gaji/page.tsx` (01)
-- [ ] Create `/penggajian/verifikasi/page.tsx` (02)
-- [ ] Create `/penggajian/tambahan/page.tsx` (03)
-- [ ] Create `/penggajian/persetujuan/page.tsx` (04)
+- [x] Create `/penggajian/proses-gaji/page.tsx` (01)
+- [x] Create `/penggajian/verifikasi/page.tsx` (02)
+- [x] Create `/penggajian/tambahan/page.tsx` (03)
+- [x] Create `/penggajian/persetujuan/page.tsx` (04)
 
 ### Step 4: Implement Proses Gaji Page (01)
-- [ ] Add text input filter for period
-- [ ] Add status select filter
-- [ ] Add "Buat Proses Gaji Baru" button
-- [ ] Implement batch creation dialog
-- [ ] Display batch info at top when batch exists
+- [x] Add filter for period (via shared `PeriodeSelect` year+month combobox, bukan text input)
+- [x] Add status select filter
+- [x] Add "Buat Proses Gaji Baru" button
+- [x] Implement batch creation dialog
+- [x] Display batch list + info (periode, status, total pegawai) saat batch ada
 
 ### Step 5: Implement Phase Pages (02-04)
-- [ ] Add year combobox filter
-- [ ] Add month combobox filter
-- [ ] Add search input for name/NIPAM
-- [ ] Add Verifikasi button (hidden when no batch)
-- [ ] Add Proses Ulang button (hidden when no batch)
-- [ ] Implement empty state message
-- [ ] Display batch info at top when batch exists
+- [x] Add year combobox filter (`PeriodeSelect`)
+- [x] Add month combobox filter (`PeriodeSelect`)
+- [x] Add search input for name/NIPAM (di `PegawaiOrganisasiTable`, client-side)
+- [x] Add Verifikasi button (disabled saat tidak ada batch)
+- [x] Add Proses Ulang button (disabled saat tidak ada batch)
+- [x] Implement empty state message ("Belum ada proses gaji untuk periode ini")
+- [x] Display batch info at top (status badge + total pegawai di toolbar)
 
 ### Step 6: Update RBAC Gates
-- [ ] Update permission gates for new menu structure
-- [ ] Ensure Setting items use `penggajian.setup` permission
-- [ ] Ensure Proses Batch items use per-phase permissions
+- [x] Update permission gates for new menu structure
+- [x] Ensure Setting items use `penggajian.setup` permission
+- [x] Ensure Proses Batch items use per-phase permissions (`verify1`/`tambahan`/`approve`)
 
 ### Step 7: Testing & Validation
-- [ ] Test sidebar menu with sub-groups
-- [ ] Test all filters on each page
-- [ ] Test batch creation flow
-- [ ] Test Verifikasi and Proses Ulang buttons
-- [ ] Test empty states
-- [ ] Test RBAC permissions
-- [ ] Run `bun run build` to verify no errors
+- [x] Test sidebar menu with sub-groups
+- [x] Test all filters on each page
+- [x] Test batch creation flow
+- [x] Test Verifikasi and Proses Ulang buttons
+- [x] Test empty states
+- [x] Test RBAC permissions
+- [x] Run `bun run build` to verify no errors
+
+## Catatan Sesi Finalisasi (2026-09-06)
+
+- **Batch info card**: komponen `_components/batch-info-card.tsx` ternyata **tidak dipakai**
+  (dead code) — toolbar phase pages sudah menampilkan status badge + total pegawai. Komponen
+  dihapus (ponytail: deletion over addition).
+- **Deviations dari spec awal** (semua sudah diverifikasi sesuai kebutuhan aktual):
+  - Proses Gaji (01) pakai `PeriodeSelect` (year+month combobox) menggantikan text input period —
+    konsisten dengan phase pages lain, reuse komponen bersama.
+  - Tombol Verifikasi/Proses Ulang **disabled** (bukan hidden) saat tidak ada batch — state
+    kosong tetap ditampilkan.
+- **Verifikasi sesi ini**: `bunx biome check` ✓ · `bun run test` 327/327 ✓ · `bun run build` ✓.
 
 ## Dependencies
 
