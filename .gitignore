@@ -51,3 +51,4 @@ next-env.d.ts
 .claude/settings.local.json
 .commandcode/
 .claude/skills/
+graphify-out/verify-*.png
