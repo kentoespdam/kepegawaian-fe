@@ -96,7 +96,9 @@ const MEASURE_JS = `
     const b = r.getBoundingClientRect();
     const label = (r.textContent || '').trim().replace(/\\s+/g,' ').slice(0, 40);
     const c = contrast(r);
-    return { label, h: Math.round(b.height), w: Math.round(b.width), contrast: c === null ? null : Math.round(c*100)/100 };
+    // content-clip detection: scrollHeight > clientHeight → text taller than visible box → clipped by overflow-hidden
+    const clipped = r.scrollHeight > r.clientHeight + 1 || r.scrollWidth > r.clientWidth + 1;
+    return { label, h: Math.round(b.height), w: Math.round(b.width), contrast: c === null ? null : Math.round(c*100)/100, clipped };
   });
 
   // 3) horizontal overflow anywhere?
@@ -235,8 +237,8 @@ async function main() {
 	await shot("375-light-drawer");
 
 	// failures so far (light)
-	const badRows = drawerOpen.rows.filter(r => r.h < 44 || (r.contrast !== null && r.contrast < 4.5));
-	console.log(badRows.length ? `  ✗ FAIL: ${badRows.length} rows violate 44px/contrast: ${JSON.stringify(badRows)}` : "  ✓ all visible rows ≥44px & AA contrast");
+	const badRows = drawerOpen.rows.filter(r => r.h < 44 || r.clipped || (r.contrast !== null && r.contrast < 4.5));
+	console.log(badRows.length ? `  ✗ FAIL: ${badRows.length} rows violate 44px/contrast/clip: ${JSON.stringify(badRows)}` : "  ✓ all visible rows ≥44px & AA contrast & no clipping");
 
 	// ===== MOBILE 375px — dark =====
 	console.log("\n=== MOBILE 375px — DARK ===");
@@ -244,28 +246,28 @@ async function main() {
 	await sleep(400);
 	await shot("375-dark-drawer");
 	const dark = await cdp.eval(MEASURE_JS);
-	const badDark = dark.rows.filter(r => r.h < 44 || (r.contrast !== null && r.contrast < 4.5));
+	const badDark = dark.rows.filter(r => r.h < 44 || r.clipped || (r.contrast !== null && r.contrast < 4.5));
 	console.log(dark.footer ? `  footer: "${dark.footer.text}" contrast=${dark.footer.contrast} fontSize=${dark.footer.fontSize}` : "  footer hidden");
 	console.log(badDark.length ? `  ✗ FAIL dark: ${JSON.stringify(badDark)}` : "  ✓ dark rows ≥44px & AA contrast");
 	// doc overflow
 	const overflow = drawerOpen.docScrollW > drawerOpen.docClientW + 1;
 	console.log(overflow ? `  ✗ horizontal overflow: scrollW=${drawerOpen.docScrollW} clientW=${drawerOpen.docClientW}` : `  ✓ no horizontal overflow (scrollW=${drawerOpen.docScrollW})`);
 
-	// ===== DESKTOP 1440px =====
-	console.log("\n=== DESKTOP 1440px — light ===");
+	// ===== DESKTOP 1920px (matches user's actual screen) =====
+	console.log("\n=== DESKTOP 1920px — light ===");
 	await cdp.eval(`localStorage.setItem('theme','light'); document.documentElement.classList.remove('dark');`);
-	await cdp.send("Emulation.setDeviceMetricsOverride", { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
+	await cdp.send("Emulation.setDeviceMetricsOverride", { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
 	await sleep(900);
-	await shot("1440-light");
+	await shot("1920-light");
 	const desk = await cdp.eval(MEASURE_JS);
 	console.log(JSON.stringify({ viewport: desk.viewport, navSingleLine: desk.navSingleLine, brand: desk.brand, footer: desk.footer, collapsed: desk.collapsed }, null, 2));
-	const badDesk = desk.rows.filter(r => r.h < 44 || (r.contrast !== null && r.contrast < 4.5));
+	const badDesk = desk.rows.filter(r => r.h < 44 || r.clipped || (r.contrast !== null && r.contrast < 4.5));
 	console.log(badDesk.length ? `  ✗ FAIL desktop: ${JSON.stringify(badDesk)}` : "  ✓ desktop rows ≥44px & AA contrast");
 
 	// dark desktop sanity
 	await cdp.eval(`localStorage.setItem('theme','dark'); document.documentElement.classList.add('dark');`);
 	await sleep(400);
-	await shot("1440-dark");
+	await shot("1920-dark");
 	console.log("\n✅ verification run complete");
 	process.exit(0);
 }

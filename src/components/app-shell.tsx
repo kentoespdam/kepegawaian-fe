@@ -270,7 +270,9 @@ export function AppShell({
 			<SidebarProvider defaultOpen={defaultOpen}>
 				<Sidebar collapsible="icon">
 					<SidebarHeader>
-						<SidebarMenuButton size="lg" render={<Link href="/" />} className="gap-3 py-3">
+						{/* h-auto: h-12 primitif adalah FLOOR (min-h-12), bukan langit-langit — konten brand 2 baris
+						    (39px + p-2 = 55px) sebelumnya ter-clip ~3.5px atas/bawah oleh overflow-hidden */}
+						<SidebarMenuButton size="lg" render={<Link href="/" />} className="h-auto min-h-12 gap-3">
 							<div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white p-1 shadow-sm ring-1 ring-border/40">
 								<Image
 									src="/logo_pdam.svg"
@@ -319,7 +321,9 @@ export function AppShell({
 														isActive={isActive}
 														title={entity.label}
 														className={cn(
-															"min-h-11 border-l-2 border-transparent pl-2.5 text-sm transition-colors",
+															// h-auto: override primitif h-7 — min-h-11 harus jadi FLOOR, bukan tinggi tetap,
+															// agar label multi-baris (mis. "02. Verifikasi Gapok, Tunjangan & Potongan") tidak ter-clip
+															"h-auto min-h-11 border-l-2 border-transparent pl-2.5 py-2 text-sm leading-snug transition-colors",
 															isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 														)}
 													>
@@ -360,7 +364,8 @@ export function AppShell({
 																			isActive={isActive}
 																			title={entity.label}
 																			className={cn(
-																				"min-h-11 border-l-2 border-transparent pl-2.5 text-sm transition-colors",
+																				// h-auto: sama seperti di atas — label multi-baris tidak boleh ter-clip
+																				"h-auto min-h-11 border-l-2 border-transparent pl-2.5 py-2 text-sm leading-snug transition-colors",
 																				isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
 																			)}
 																		>
