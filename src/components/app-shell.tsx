@@ -111,6 +111,37 @@ const MODULES: SidebarModule[] = [
 		icon: DollarSign,
 		subGroups: [
 			{
+				id: "proses-batch",
+				label: "Proses Batch",
+				icon: List,
+				entities: [
+					{
+						id: "proses-gaji",
+						label: "01. Proses Gaji Bulanan",
+						href: "/penggajian/proses-gaji",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
+						id: "verifikasi",
+						label: "02. Verifikasi Gapok, Tunjangan & Potongan",
+						href: "/penggajian/verifikasi",
+						gate: PERMISSION.PENGGAJIAN_VERIFY1,
+					},
+					{
+						id: "tambahan",
+						label: "03. Tambah Komponen Gaji",
+						href: "/penggajian/tambahan",
+						gate: PERMISSION.PENGGAJIAN_TAMBAHAN,
+					},
+					{
+						id: "persetujuan",
+						label: "04. Persetujuan Akhir",
+						href: "/penggajian/persetujuan",
+						gate: PERMISSION.PENGGAJIAN_APPROVE,
+					},
+				],
+			},
+			{
 				id: "setting",
 				label: "Setting",
 				icon: Settings,
@@ -144,37 +175,6 @@ const MODULES: SidebarModule[] = [
 						label: "Setting Ref Potongan TKK",
 						href: "/penggajian/setup/potongan-tkk",
 						gate: PERMISSION.PENGGAJIAN_SETUP,
-					},
-				],
-			},
-			{
-				id: "proses-batch",
-				label: "Proses Batch",
-				icon: List,
-				entities: [
-					{
-						id: "proses-gaji",
-						label: "01. Proses Gaji Bulanan",
-						href: "/penggajian/proses-gaji",
-						gate: PERMISSION.PENGGAJIAN_SETUP,
-					},
-					{
-						id: "verifikasi",
-						label: "02. Verifikasi Gapok, Tunjangan & Potongan",
-						href: "/penggajian/verifikasi",
-						gate: PERMISSION.PENGGAJIAN_VERIFY1,
-					},
-					{
-						id: "tambahan",
-						label: "03. Tambah Komponen Gaji",
-						href: "/penggajian/tambahan",
-						gate: PERMISSION.PENGGAJIAN_TAMBAHAN,
-					},
-					{
-						id: "persetujuan",
-						label: "04. Persetujuan Akhir",
-						href: "/penggajian/persetujuan",
-						gate: PERMISSION.PENGGAJIAN_APPROVE,
 					},
 				],
 			},

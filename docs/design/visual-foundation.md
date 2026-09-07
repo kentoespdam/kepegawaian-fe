@@ -2,7 +2,7 @@
 
 > **Muat modul ini untuk:** SETIAP pekerjaan UI (komponen, halaman, styling). Ini fondasi
 > yang dipakai hampir semua task. Berisi §1 (palet/token), §2 (checklist aksesibilitas), §3 (tipografi).
-> **Sumber:** CONTEXT §Theming/§Palette/§Accessibility/§Typography + `docs/color-rationale.md` §3–§4.
+> **Sumber:** CONTEXT §Theming/§Palette/§Accessibility/§Typography + `docs/design/color-rationale.md` §3–§4.
 > Nilai OKLCH = **baseline**, boleh di-fine-tune saat implementasi **ASAL lolos gate kontras (§2)**.
 
 ---

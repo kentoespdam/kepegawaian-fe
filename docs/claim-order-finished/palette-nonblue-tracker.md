@@ -6,7 +6,7 @@
 
 ## Reconciliation (WAJIB DIBACA DULU)
 
-- `docs/color-rationale.md` yang mempertahankan **Tirta Blue** = **usulan LAMA yang DITOLAK atasan** → biru sebagai aksen brand **gugur**, boleh diganti non-biru. (Konfirmasi user 2026-07-16.)
+- `docs/design/color-rationale.md` yang mempertahankan **Tirta Blue** = **usulan LAMA yang DITOLAK atasan** → biru sebagai aksen brand **gugur**, boleh diganti non-biru. (Konfirmasi user 2026-07-16.)
 - Sisa `docs/design/visual-foundation.md` **TETAP BERLAKU** dan jadi fondasi:
   - Struktur **60:30:10 "A-refined"**, base **off-white hangat** (bukan biru — biru memang sudah cuma aksen 10%).
   - **Gate aksesibilitas §2** dipakai penuh (audiens lansia di docs = superset kebutuhan 35+).
