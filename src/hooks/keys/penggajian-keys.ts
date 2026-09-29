@@ -29,4 +29,10 @@ export const penggajianKeys = {
 			[...penggajianKeys.tunjangan.all(), jenis, params] as const,
 		listAll: (jenis: string) => [...penggajianKeys.tunjangan.all(), jenis, "list"] as const,
 	},
+
+	kpi: {
+		all: () => [...penggajianKeys.all, "kpi"] as const,
+		list: (params?: unknown) => [...penggajianKeys.kpi.all(), "list", params] as const,
+		detail: (id: number) => [...penggajianKeys.kpi.all(), "detail", id] as const,
+	},
 } as const;

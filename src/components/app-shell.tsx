@@ -116,6 +116,12 @@ const MODULES: SidebarModule[] = [
 				icon: List,
 				entities: [
 					{
+						id: "kpi",
+						label: "00. Input Data KPI",
+						href: "/penggajian/kpi",
+						gate: PERMISSION.PENGGAJIAN_SETUP,
+					},
+					{
 						id: "proses-gaji",
 						label: "01. Proses Gaji Bulanan",
 						href: "/penggajian/proses-gaji",

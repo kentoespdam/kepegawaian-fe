@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { formatFormula, sanitizeFormula, type KodeItem } from "@/hooks/penggajian/useKomponenForm";
+import { formatFormula, type KodeItem, sanitizeFormula } from "@/hooks/penggajian/useKomponenForm";
 
 const OPERATORS = ["(", ")", "*", "/", "+", "-"] as const;
 
