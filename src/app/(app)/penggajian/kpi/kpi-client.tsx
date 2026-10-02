@@ -5,20 +5,38 @@ import { useState } from "react";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
+import { FKCombobox } from "@/components/fk-combobox";
 import { PeriodeSelect } from "@/components/periode-filter";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { KPI_COLUMNS } from "@/config/penggajian/kpi.config";
 import { useKpiList } from "@/hooks/penggajian/useKpiList";
 import { useDeleteKpi } from "@/hooks/penggajian/useKpiMutations";
+import { useFkOptions } from "@/hooks/useFkOptions";
 import { penggajianApi } from "@/lib/api/penggajian-client";
 import type { GajiKpiResponse } from "@/types/penggajian/kpi";
 import { KpiFormDialog } from "./_components/kpi-form-dialog";
 import { UploadKpiDialog } from "./_components/upload-kpi-dialog";
 
 export function KpiClient() {
-	const { year, month, periode, setYear, setMonth, page, size, nipam, sortBy, sortDirection, nav, query, pageView } =
-		useKpiList();
+	const {
+		year,
+		month,
+		periode,
+		setYear,
+		setMonth,
+		page,
+		size,
+		search,
+		organisasiId,
+		sortBy,
+		sortDirection,
+		nav,
+		query,
+		pageView,
+	} = useKpiList();
+
+	const organisasiOpts = useFkOptions("organisasi");
 
 	const [formOpen, setFormOpen] = useState(false);
 	const [editingItem, setEditingItem] = useState<GajiKpiResponse | null>(null);
@@ -62,10 +80,18 @@ export function KpiClient() {
 					<div className="relative w-44">
 						<Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
 						<Input
-							placeholder="Filter NIPAM…"
-							value={nipam}
-							onChange={(e) => nav({ nipam: e.target.value || undefined, page: "1" })}
+							placeholder="Cari nama/NIPAM…"
+							value={search}
+							onChange={(e) => nav({ search: e.target.value || undefined, page: "1" })}
 							className="h-9 pl-8 text-xs"
+						/>
+					</div>
+					<div className="w-52">
+						<FKCombobox
+							options={organisasiOpts}
+							value={organisasiId}
+							onChange={(v) => nav({ organisasiId: v ?? undefined, page: "1" })}
+							placeholder="Semua Unit Kerja"
 						/>
 					</div>
 				</div>

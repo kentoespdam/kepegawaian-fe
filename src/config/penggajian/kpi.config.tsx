@@ -12,6 +12,26 @@ export const KPI_COLUMNS: Column<GajiKpiResponse>[] = [
 		cell: (item) => <span className="font-semibold tabular-nums">{item.nipam ?? "-"}</span>,
 	},
 	{
+		id: "nama",
+		header: "Nama Pegawai",
+		cell: (item) => item.nama ?? "-",
+	},
+	{
+		id: "namaOrganisasi",
+		header: "Unit Kerja",
+		cell: (item) => item.namaOrganisasi ?? "-",
+	},
+	{
+		id: "namaJabatan",
+		header: "Jabatan",
+		cell: (item) => item.namaJabatan ?? "-",
+	},
+	{
+		id: "statusPegawai",
+		header: "Status",
+		cell: (item) => item.statusPegawai ?? "-",
+	},
+	{
 		id: "periode",
 		header: "Periode",
 		sortable: true,
@@ -38,9 +58,7 @@ export const kpiSchema = z.object({
 	periode: z.string().min(6, "Periode wajib diisi"),
 	tunkin: z.preprocess(
 		(v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),
-		z
-			.number({ required_error: "Tunjangan kinerja wajib diisi" })
-			.positive("Tunjangan kinerja harus lebih besar dari 0"),
+		z.number("Tunjangan kinerja wajib diisi").positive("Tunjangan kinerja harus lebih besar dari 0"),
 	),
 	pph21Ter: z.preprocess(
 		(v) => (v === "" || v === undefined || v === null ? undefined : Number(v)),

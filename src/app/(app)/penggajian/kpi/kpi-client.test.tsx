@@ -24,6 +24,10 @@ vi.mock("sonner", () => ({
 	},
 }));
 
+vi.mock("@/hooks/useFkOptions", () => ({
+	useFkOptions: () => [],
+}));
+
 function createWrapper() {
 	const qc = new QueryClient({
 		defaultOptions: { queries: { retry: false } },

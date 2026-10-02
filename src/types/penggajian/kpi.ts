@@ -11,8 +11,9 @@
 import type { Envelope, Page, PageEnvelope, PageQuery } from "../_shared";
 
 export interface KpiSearchParams extends PageQuery {
-	nipam?: string;
+	search?: string;
 	periode?: string;
+	organisasiId?: number; // int64
 }
 
 export interface GajiKpiResponse {
@@ -21,6 +22,10 @@ export interface GajiKpiResponse {
 	periode?: string;
 	tunkin?: number; // double
 	pph21Ter?: number; // double
+	nama?: string;
+	namaJabatan?: string;
+	namaOrganisasi?: string;
+	statusPegawai?: string;
 }
 
 export type SingleResultGajiKpiResponse = Envelope<GajiKpiResponse>;

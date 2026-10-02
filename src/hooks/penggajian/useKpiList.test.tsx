@@ -75,9 +75,9 @@ describe("useKpiList", () => {
 		const { result } = renderHook(() => useKpiList(), { wrapper });
 
 		act(() => {
-			result.current.nav({ nipam: "12345", page: "1" });
+			result.current.nav({ search: "12345", page: "1" });
 		});
 
-		expect(mockReplace).toHaveBeenCalledWith("?periode=202609&page=1&size=10&nipam=12345");
+		expect(mockReplace).toHaveBeenCalledWith("?periode=202609&page=1&size=10&search=12345");
 	});
 });

@@ -17,7 +17,8 @@ export function useKpiList() {
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
-	const nipam = sp.get("nipam") ?? "";
+	const search = sp.get("search") ?? "";
+	const organisasiId = sp.get("organisasiId") ?? undefined;
 	const sortBy = sp.get("sortBy") ?? undefined;
 	const sortDirection = (sp.get("sortDirection") as "asc" | "desc") ?? undefined;
 
@@ -33,7 +34,8 @@ export function useKpiList() {
 	const params: Record<string, string> = {
 		...toApiParams({ page, size, sortBy, sortDir: sortDirection }),
 		periode,
-		...(nipam ? { nipam } : {}),
+		...(search ? { search } : {}),
+		...(organisasiId ? { organisasiId } : {}),
 	};
 
 	const query = useQuery({
@@ -56,7 +58,8 @@ export function useKpiList() {
 		setPeriode,
 		page,
 		size,
-		nipam,
+		search,
+		organisasiId,
 		sortBy,
 		sortDirection,
 		nav,
