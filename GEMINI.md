@@ -33,6 +33,8 @@
 
 **Mandatory Pre-Coding Gates**:
 - **Ponytail**: MUST load the `/ponytail` skill before modifying code. 
+- **Coding Session**: MUST follow the protocol in `.agents/rules/coding-session.md`.
+- **Grilling Session**: For Q&A sessions (`/grill-me` or `grilling`), MUST follow the protocol in `.agents/rules/grilling-session.md`.
 - **Issue Tracking (Beads/bd)**: Claim tasks (`bd update <id> --claim`), close tasks (`bd close <id>`). Creating manual to-do lists is PROHIBITED. 
 - **GitNexus First**: MUST use `gitnexus_impact` & `gitnexus_query` before exploration or modification. When executing `npx gitnexus` commands, always use the repo `kepegawaian-fe` (e.g., `npx gitnexus query "<symbol>" --repo kepegawaian-fe`) except `npx gitnexus analyze`. 
 - **Sandbox Policy**: MUST use `BypassSandbox: true` for all `git` and `bd` commands.

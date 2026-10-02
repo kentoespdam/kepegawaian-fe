@@ -853,8 +853,14 @@
 				"summary": "List data dengan paginasi",
 				"operationId": "index_6",
 				"parameters": [
-					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } },
 					{ "name": "periode", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "organisasiId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					},
 					{
 						"name": "page",
 						"in": "query",
@@ -1388,8 +1394,14 @@
 				"summary": "Daftar semua data",
 				"operationId": "list_4",
 				"parameters": [
-					{ "name": "nipam", "in": "query", "required": false, "schema": { "type": "string" } },
-					{ "name": "periode", "in": "query", "required": false, "schema": { "type": "string" } }
+					{ "name": "search", "in": "query", "required": false, "schema": { "type": "string" } },
+					{ "name": "periode", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "organisasiId",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int64" }
+					}
 				],
 				"responses": {
 					"200": {
@@ -1635,6 +1647,17 @@
 						"description": "OK",
 						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultGajiBatchMasterResponse" } } }
 					}
+				}
+			}
+		},
+		"/penggajian/batch/master/template/download/{rootBatchId}": {
+			"get": {
+				"tags": ["Penggajian — Gaji Batch Master"],
+				"summary": "download template potongan tambahan per batch",
+				"operationId": "downloadTemplatePotonganTambahan",
+				"parameters": [{ "name": "rootBatchId", "in": "path", "required": true, "schema": { "type": "string" } }],
+				"responses": {
+					"200": { "description": "OK", "content": { "*/*": { "schema": { "type": "string", "format": "binary" } } } }
 				}
 			}
 		},
@@ -2542,11 +2565,11 @@
 				"type": "object",
 				"properties": {
 					"offset": { "type": "integer", "format": "int64" },
-					"unpaged": { "type": "boolean" },
 					"paged": { "type": "boolean" },
 					"pageNumber": { "type": "integer", "format": "int32" },
 					"pageSize": { "type": "integer", "format": "int32" },
-					"sort": { "$ref": "#/components/schemas/SortObject" }
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"unpaged": { "type": "boolean" }
 				}
 			},
 			"SortObject": {
@@ -3862,7 +3885,11 @@
 					"nipam": { "type": "string" },
 					"periode": { "type": "string" },
 					"tunkin": { "type": "number", "format": "double" },
-					"pph21Ter": { "type": "number", "format": "double" }
+					"pph21Ter": { "type": "number", "format": "double" },
+					"nama": { "type": "string" },
+					"namaJabatan": { "type": "string" },
+					"namaOrganisasi": { "type": "string" },
+					"statusPegawai": { "type": "string" }
 				}
 			},
 			"PageGajiKpiResponse": {
