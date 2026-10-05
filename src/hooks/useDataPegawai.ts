@@ -15,9 +15,7 @@ export const TABS = [
 ] as const;
 
 export const FILTER_PARAMS = [
-	"nama",
-	"nipam",
-	"nik",
+	"search",
 	"statusPegawai",
 	"jabatanId",
 	"organisasiId",

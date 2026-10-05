@@ -76,6 +76,12 @@ Tabel banyak-pegawai untuk HR. Tab beralih sumber:
 | **Non-aktif** | `/pegawai` | `statusKerja=BERHENTI_OR_KELUAR` (+`DIRUMAHKAN` bila perlu) |
 | **Non-pegawai** | `/profil/biodata` | `isPegawai=false` |
 
+### Toolbar & Filter Behavior
+- **Unified Search Input (`search`)**: Replaces legacy separate inputs; searches concurrently across name (`nama`), NIPAM, and NIK.
+- **Status Filter**: Dropdown filter for employee status (`statusPegawai`).
+- **Popover Filters**: Advanced filter popovers for organizational unit (`organisasiId`), position (`jabatanId`), profession (`profesiId`), rank/golongan (`golonganId`), grade (`gradeId`), work status (`statusKerja`), and gender (`jenisKelamin`).
+- **Active Filter Chips**: Displays current active filter tags with quick dismissal options to clear individual filters or reset all.
+
 > **Pensiun BUKAN tab di sini.** `/pegawai` tak punya filter `tmtPensiun≤today`; semua urusan pensiun
 > dipusatkan di page Terminasi. Menaruhnya di dua tempat = duplikasi + istilah kabur.
 
@@ -110,6 +116,7 @@ kunci identitas, cuti Fase 2). Papan pantau implementasi:
 - ✅ **Epic tutup** — `kepegawaian-fe-a2e` closed.
 - ✅ **Sync tipe** — `PegawaiTableResponse` (table flat) & `PegawaiResponseSession` (session ringan) tersedia di `src/types/pegawai/pegawai.ts`.
 - ✅ **Modul baru** — `laporanKepegawaian` terdaftar di generator, tipe di `src/types/laporan/kepegawaian.ts`.
+- ✅ **Unified Search Migration** — Migrasi parameter pencarian tabel pegawai ke single `search` query parameter (menggantikan legacy `nama`, `nipam`, `nik`), lengkap dengan integrasi toolbar filter dan active chips.
 - ✅ **changedStatus** — endpoint dashboard migrasi ke `GET /profil/biodata/{nik}/dashboard`, badge "Menunggu" + tooltip di title "Data Pribadi". Tipe di-generate via `extract-types.js`.
   - ⏳ Alur approval penuh dari admin (review + approve/reject) masih menyusul.
 - ✅ **Tooltip fix** — `TooltipTrigger` Base UI render sbg `<button>` secara default, bentrok dengan `AccordionTrigger` (juga `<button>`). Fix: `render={<span />}` agar valid HTML. Lihat `section-left-panel.tsx`.

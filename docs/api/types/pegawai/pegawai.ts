@@ -32,9 +32,7 @@ import type {
 } from "../_shared";
 
 export interface PegawaiSearchParams extends PageQuery {
-	nipam?: string;
-	nik?: string;
-	nama?: string;
+	search?: string;
 	statusPegawai?: "KONTRAK" | "CAPEG" | "PEGAWAI" | "CALON_HONORER" | "HONORER" | "NON_PEGAWAI";
 	jabatanId?: number; // int64
 	organisasiId?: number; // int64
@@ -51,7 +49,6 @@ export interface PegawaiSearchParams extends PageQuery {
 		| "DIREKOMENDASIKAN"
 		| "DITOLAK";
 	jenisKelamin?: "LAKI_LAKI" | "PEREMPUAN";
-	search?: string;
 }
 
 export interface JenisKitasResponse {

@@ -1,6 +1,6 @@
 "use client";
 
-import { FilterX, Plus, X } from "lucide-react";
+import { FilterX, Plus, Search, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import { FKComboboxFilter } from "@/components/fk-combobox-filter";
@@ -167,34 +167,23 @@ export function DataPegawaiToolbar({
 		statusKerja: labelMap(statusKerjaOpts),
 	};
 
-	const [namaLocal, setNamaLocal] = useState(values.nama ?? "");
-	const [nipamLocal, setNipamLocal] = useState(values.nipam ?? "");
-	const debouncedNama = useDebouncedCallback((v: string) => onFilterChange("nama", v || undefined), 400);
-	const debouncedNipam = useDebouncedCallback((v: string) => onFilterChange("nipam", v || undefined), 400);
+	const [searchLocal, setSearchLocal] = useState(values.search ?? "");
+	const debouncedSearch = useDebouncedCallback((v: string) => onFilterChange("search", v || undefined), 400);
 	const [popoverOpen, setPopoverOpen] = useState(false);
 
-	// Sync search inputs when URL changes (e.g. on reset)
+	// Sync search input when URL changes (e.g. on reset)
 	useEffect(() => {
-		setNamaLocal(values.nama ?? "");
-	}, [values.nama]);
-	useEffect(() => {
-		setNipamLocal(values.nipam ?? "");
-	}, [values.nipam]);
+		setSearchLocal(values.search ?? "");
+	}, [values.search]);
 
 	const activeChips = Object.entries(values)
-		.filter(([, v]) => v && v !== values.nama && v !== values.nipam)
+		.filter(([k, v]) => v && k !== "search")
 		.map(([k, v]) => {
 			if (chipMaps[k]) {
 				const name = chipMaps[k][v];
 				if (name) return { key: k, label: k === "statusPegawai" ? `Status: ${name}` : name };
 			}
 			switch (k) {
-				case "nama":
-					return { key: k, label: `Nama: ${v}` };
-				case "nipam":
-					return { key: k, label: `NIPAM: ${v}` };
-				case "nik":
-					return { key: k, label: `NIK: ${v}` };
 				case "jenisKelamin":
 					return { key: k, label: v === "LAKI_LAKI" ? "Laki-laki" : "Perempuan" };
 				default:
@@ -207,26 +196,19 @@ export function DataPegawaiToolbar({
 			<div className="rounded-lg border bg-card shadow-sm">
 				<div className="flex items-center justify-between gap-4 px-4 py-3 max-sm:flex-col max-sm:items-stretch">
 					<div className="flex flex-1 flex-wrap items-center gap-2 max-sm:flex-col">
-						<Input
-							placeholder="Cari NIPAM..."
-							value={nipamLocal}
-							onChange={(e) => {
-								const val = e.target.value;
-								setNipamLocal(val);
-								debouncedNipam(val);
-							}}
-							className="h-11 w-48"
-						/>
-						<Input
-							placeholder="Cari Nama..."
-							value={namaLocal}
-							onChange={(e) => {
-								const val = e.target.value;
-								setNamaLocal(val);
-								debouncedNama(val);
-							}}
-							className="h-11 w-48"
-						/>
+						<div className="relative w-64 max-sm:w-full">
+							<Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground pointer-events-none" />
+							<Input
+								placeholder="Cari nama, NIPAM, NIK..."
+								value={searchLocal}
+								onChange={(e) => {
+									const val = e.target.value;
+									setSearchLocal(val);
+									debouncedSearch(val);
+								}}
+								className="h-11 pl-9 pr-4 w-full"
+							/>
+						</div>
 						<Select
 							value={values.statusPegawai ?? ""}
 							onValueChange={(val) =>

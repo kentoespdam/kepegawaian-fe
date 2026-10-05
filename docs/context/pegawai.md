@@ -33,6 +33,18 @@ non-param, bentuk **tak bisa dibedakan sintaksis** → dideklarasikan via `modul
 | `/pegawai/{id}/ringkasan` | GET | ringkasan pegawai | `Envelope<PegawaiResponseRingkasan>` |
 | `/pegawai/{id}/session` | GET | data sesi ringkas (identity bridge) | `Envelope<PegawaiResponseSession>` |
 
+### Query Parameters `GET /pegawai`
+- `search`: Unified search query string (replaces legacy `nipam`, `nik`, `nama`). Matches across name, NIPAM, and NIK.
+- `statusPegawai`: Filter by employee status enum.
+- `jabatanId`: Filter by position ID.
+- `organisasiId`: Filter by organization ID.
+- `profesiId`: Filter by profession ID.
+- `golonganId`: Filter by rank/golongan ID.
+- `gradeId`: Filter by grade ID.
+- `statusKerja`: Filter by work status (e.g. `KARYAWAN_AKTIF`, `BERHENTI_OR_KELUAR`).
+- `jenisKelamin`: Filter by gender.
+- `PageQuery`: Standard pagination & sorting parameters (`page`, `size`, `sort`).
+
 > PATCH parsial (`/profil`, `/gaji`) & lookup by key non-id (`nipam`) — bentuk yang **tidak ada** di
 > master. Tak mengubah strategi tipe (semua tetap domain `pegawai`), tapi dicatat agar layer service
 > nanti tahu ada partial-update.
@@ -65,6 +77,7 @@ Sejak update spec, endpoint `GET /pegawai` (paged table) mengembalikan **`Pegawa
 - ✅ `getPegawaiSession()` memanggil `GET /pegawai/{$id}` untuk identity bridge.
 - ✅ Endpoint baru `/pegawai/{id}/session` — tipe `PegawaiResponseSession` siap untuk identity bridge ringan.
 - ✅ Data Pegawai page (3 tab) mengonsumsi `/pegawai` (Aktif/Non-aktif) & `/profil/biodata` (Non-pegawai).
+- ✅ Migrasi parameter pencarian ke unified `search` parameter, disertai update pada `useDataPegawai` dan komponen `data-pegawai-toolbar`.
 - ⏳ Tabel Data Pegawai masih menge-type kolom sebagai `PegawaiListResponse` & baca `golongan.golongan` (field mati di response baru) → kolom Golongan kosong senyap. Fix di **`kepegawaian-fe-p9g`**: swap ke `PegawaiTableResponse`, kolom Golongan/Pangkat = `pangkatGolongan` (string **sudah diformat BE**, FE tak merekonstruksi). Lihat [CLAIM-ORDER-data-pegawai-table.md](../CLAIM-ORDER-data-pegawai-table.md).
 - ✅ Dashboard memakai data dari `PegawaiResponseDetail` (via `getPegawaiSession()`).
 - ⏳ Master-detail Data Pegawai: tabel kiri + panel **Ringkasan Data Karyawan** kanan saat baris di-select. Klik baris → `useQuery` ke `GET /pegawai/{id}/ringkasan` (`PegawaiResponseRingkasan`, flat, 3 section: Umum/Akademik/Kepegawaian). `DataTable` dapat prop baru `onRowClick`+`selectedRowId`. Hanya tab Aktif/Non-aktif (Non-pegawai full-width, tak punya endpoint ringkasan). `selectedId`=state lokal (reset saat ganti tab/page), bukan URL. Lihat [CLAIM-ORDER-data-pegawai-ringkasan.md](../CLAIM-ORDER-data-pegawai-ringkasan.md).

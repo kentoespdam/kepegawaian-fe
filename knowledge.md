@@ -200,6 +200,7 @@ src/
 | Identity | `session.$id` = `pegawaiId` → `getPegawaiSession()` (opt-in, ADR-0006) |
 | Tree entities | Flat table + "Parent" column + parent picker disables subtree |
 | Filter | Combobox-of-id via `/list` endpoint, URL searchParams as source of truth |
+| Search (`pegawai`) | Unified `search` query parameter replacing legacy separate `nama`, `nipam`, `nik` filters |
 | State handling | `isPending` → skeleton; `isPlaceholderData` → dim; `isError` → inline retry |
 
 ### Domain Context (Lazy Read)
