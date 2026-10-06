@@ -1,27 +1,20 @@
 "use client";
 
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { profilKeys } from "@/hooks/keys/profil-keys";
+import { useProfilApproval } from "@/hooks/profil/useProfilApproval";
 import { useAuth } from "@/hooks/useAuth";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
-import { fromPage, toApiParams } from "@/lib/paging";
-import { cn, throwIfNotOk } from "@/lib/utils";
-import type {
-	PageResultPageProfileUpdateQuery,
-	ProfileUpdateQuery,
-	SingleResultProfilUpdateDetailObject,
-	StatusUpdateProfil,
-} from "@/types/profil/profil-update";
+import { fromPage } from "@/lib/paging";
+import { cn } from "@/lib/utils";
+import type { ProfileUpdateQuery, StatusUpdateProfil } from "@/types/profil/profil-update";
 
 const STATUS_LABEL: Record<StatusUpdateProfil, string> = {
 	PENDING: "Menunggu",
@@ -162,7 +155,6 @@ const COLUMNS: Column<ProfileUpdateQuery>[] = [
 export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 	const sp = useSearchParams();
 	const router = useRouter();
-	const qc = useQueryClient();
 	const { permissions } = useAuth();
 	const canApprove = hasPermission(permissions, PERMISSION.PROFIL_APPROVE);
 
@@ -184,55 +176,18 @@ export function ApprovalClient({ pegawaiId }: { pegawaiId: number | null }) {
 		router.replace(`/profil/approval?${p.toString()}`);
 	};
 
-	const query = useQuery({
-		queryKey: profilKeys.update.list({ page, size, nama, nipam, status }),
-		queryFn: async () => {
-			const params: Record<string, string> = { ...toApiParams({ page, size }), approvalStatus: status };
-			if (nama) params.nama = nama;
-			if (nipam) params.nipam = nipam;
-			const qs = new URLSearchParams(params).toString();
-			const res = await fetch(`/api/proxy/profil/profil-update?${qs}`);
-			throwIfNotOk(res, "Gagal memuat antrian approval");
-			const body = (await res.json()) as PageResultPageProfileUpdateQuery;
-			return body.data;
-		},
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-	});
+	const { query, detailQuery, approvalMutation } = useProfilApproval(
+		page,
+		size,
+		nama,
+		nipam,
+		status,
+		selectedId,
+		pegawaiId,
+		() => setSelectedId(null),
+	);
 
 	const pageView = fromPage(query.data);
-
-	const detailQuery = useQuery({
-		queryKey: profilKeys.update.detail(selectedId),
-		queryFn: async () => {
-			if (selectedId == null) return null;
-			const res = await fetch(`/api/proxy/profil/profil-update/${selectedId}`);
-			throwIfNotOk(res, "Gagal memuat detail");
-			const body = (await res.json()) as SingleResultProfilUpdateDetailObject;
-			return body.data;
-		},
-		enabled: selectedId != null,
-	});
-
-	const approvalMutation = useMutation({
-		mutationFn: async ({ id, approval }: { id: number; approval: StatusUpdateProfil }) => {
-			const res = await fetch(`/api/proxy/profil/profil-update/${id}`, {
-				method: "PUT",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ approval, pegawaiId }),
-			});
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal memproses approval");
-			}
-		},
-		onSuccess: (_d, { approval }) => {
-			toast.success(approval === "APPROVED" ? "Perubahan disetujui" : "Perubahan ditolak");
-			setSelectedId(null);
-			qc.invalidateQueries({ queryKey: profilKeys.update.all() });
-		},
-		onError: (e: Error) => setActionError(e.message),
-	});
 
 	const detail = detailQuery.data;
 	const fields = FIELD_MAP[detail?.profileUpdate?.tableName ?? ""] ?? [];

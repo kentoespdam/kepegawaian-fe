@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { FKCombobox } from "@/components/fk-combobox";
@@ -9,9 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { masterKeys } from "@/hooks/keys/master-keys";
+import { useProfesiForm } from "@/hooks/master/useProfesiForm";
 import { useFkOptions } from "@/hooks/useFkOptions";
-import { api } from "@/lib/api/client";
 import { type ProfesiFormValues, profesiDefaults, profesiSchema } from "./schema";
 
 // — Props (compatible with EntityFormModal) —
@@ -41,13 +39,7 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 
 	const orgId = watch("organisasiId");
 
-	// Cascade jabatan by organisasi — enabled hanya jika org terpilih
-	const jabQuery = useQuery({
-		queryKey: masterKeys.list("jabatan", { organisasiId: orgId }),
-		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(orgId)),
-		enabled: !!orgId,
-		staleTime: 300_000,
-	});
+	const { jabQuery, gradeQuery } = useProfesiForm(orgId);
 
 	// Preserve existing jabatan label during edit (3c: data-loss dilarang)
 	const preservedJabatan = editing?.jabatan
@@ -64,13 +56,6 @@ export function ProfesiForm({ editing, onCancel, error, setError, isSubmitting, 
 	if (preservedJabatan && !jabOpts.find((o) => o.value === preservedJabatan.value)) {
 		jabOpts.unshift(preservedJabatan);
 	}
-
-	// Cascade grade by jabatan's levelId
-	const gradeQuery = useQuery({
-		queryKey: masterKeys.list("grade"),
-		queryFn: () => api.listAll<Record<string, unknown>>("grade"),
-		staleTime: 300_000,
-	});
 
 	// Lookup jabatan id → full item (to extract levelId)
 	const jabatanLookup: Record<string, Record<string, unknown>> = {};

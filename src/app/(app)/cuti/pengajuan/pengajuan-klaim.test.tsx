@@ -56,7 +56,7 @@ const MOCK_APPROVED_CLAIMED = {
 function mockFetch() {
 	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request) => {
 		const s = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
-		if (s.includes("/cuti/pengajuan/9/pegawai")) {
+		if (s.includes("/api/proxy/cuti/pengajuan")) {
 			const all = [MOCK_PENGAJUAN, MOCK_KLAIM, MOCK_APPROVED_CLAIMED];
 			return okJson({
 				content: all,

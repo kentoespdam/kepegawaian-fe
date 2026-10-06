@@ -31,7 +31,7 @@ function mockFetch() {
 		if (s.includes("/cuti/approval") && s.includes("/99") && init?.method !== "POST") {
 			return okJson({ content: [], totalElements: 0, totalPages: 0 });
 		}
-		if (s.includes("/cuti/approval") && init?.method === "POST") {
+		if (s.includes("/api/proxy/cuti/pengajuan/") && s.includes("/approve")) {
 			postInit = init;
 			return okJson({});
 		}
@@ -146,10 +146,6 @@ describe("PersetujuanPageClient", () => {
 		await waitFor(() => expect(postInit).not.toBeNull());
 		const body = JSON.parse(String(postInit?.body));
 		expect(body.csrfToken).toBe("TOKEN-APPROVE");
-		expect(body.cutiId).toBe(99);
-		expect(body.approverId).toBe(7);
-		expect(body.approvalLevel).toBe(1);
-		expect(body.approvalStatus).toBe("APPROVED");
-		expect(body.notes).toBe("Disetujui, kuota tersedia");
+		expect(body.catatan).toBe("Disetujui, kuota tersedia");
 	});
 });

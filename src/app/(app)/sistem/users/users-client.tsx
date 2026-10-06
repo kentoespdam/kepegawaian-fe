@@ -1,10 +1,8 @@
 "use client";
 
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Plus } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 import { type Column, DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
@@ -20,16 +18,10 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { systemKeys } from "@/hooks/keys/system-keys";
+import { useUserList } from "@/hooks/sistem/useUserList";
 import { useAllRoles } from "@/hooks/useSystemRoles";
-import { fromPage, toApiParams } from "@/lib/paging";
-import { throwIfNotOk } from "@/lib/utils";
-import type {
-	PageResultPageUserResponse,
-	PageUserResponse,
-	UserPatchStatusRequest,
-	UserResponse,
-} from "@/types/system/users";
+import { fromPage } from "@/lib/paging";
+import type { PageUserResponse, UserResponse } from "@/types/system/users";
 import { CreateUserDialog } from "./create-user-dialog";
 import { RoleAssignmentDialog } from "./role-assignment-dialog";
 
@@ -87,7 +79,6 @@ function makeColumns(onToggle: (r: UserResponse) => void): Column<UserResponse>[
 export function UsersClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
-	const qc = useQueryClient();
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
 	const nipam = sp.get("nipam") ?? "";
@@ -95,7 +86,7 @@ export function UsersClient() {
 
 	const [editingUser, setEditingUser] = useState<UserResponse | null>(null);
 	const [toggleUser, setToggleUser] = useState<UserResponse | null>(null);
-	const [toggleError, setToggleError] = useState<string | null>(null);
+	const [_toggleError, setToggleError] = useState<string | null>(null);
 	const [createOpen, setCreateOpen] = useState(false);
 
 	const rolesQuery = useAllRoles();
@@ -110,48 +101,18 @@ export function UsersClient() {
 		router.replace(`/sistem/users?${p.toString()}`);
 	};
 
-	const query = useQuery({
-		queryKey: systemKeys.users.list({ page, size, nipam, nama }),
-		queryFn: async () => {
-			const params: Record<string, string> = toApiParams({ page, size });
-			if (nipam) params.nipam = nipam;
-			if (nama) params.nama = nama;
-			const res = await fetch(`/api/proxy/system/users?${new URLSearchParams(params).toString()}`);
-			throwIfNotOk(res, "Gagal memuat user");
-			return ((await res.json()) as PageResultPageUserResponse).data;
-		},
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-	});
+	const { query, toggleStatusMutation } = useUserList(page, size, nipam, nama, () => setToggleUser(null));
 
 	const pageView = fromPage<UserResponse>(query.data as PageUserResponse | undefined);
 	const columns = makeColumns((r) => setToggleUser(r));
 
-	const toggleStatusMutation = useMutation({
-		mutationFn: async ({ userId, status }: { userId: string; status: boolean }) => {
-			const payload: UserPatchStatusRequest = { status };
-			const res = await fetch(`/api/proxy/system/users/${userId}/status`, {
-				method: "PATCH",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-			});
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal mengubah status");
-			}
-		},
-		onSuccess: () => {
-			toast.success("Status user diperbarui");
-			setToggleUser(null);
-			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
-		},
-		onError: (e: Error) => setToggleError(e.message),
-	});
-
 	const handleToggleStatus = () => {
 		if (!toggleUser?.id) return;
 		setToggleError(null);
-		toggleStatusMutation.mutate({ userId: String(toggleUser.id), status: !toggleUser.isActive });
+		toggleStatusMutation.mutate(
+			{ userId: String(toggleUser.id), status: !toggleUser.isActive },
+			{ onError: (e) => setToggleError(e.message) },
+		);
 	};
 
 	const hasActive = !!(nipam || nama);
@@ -217,7 +178,6 @@ export function UsersClient() {
 				onOpenChange={(v) => {
 					if (!v) {
 						setToggleUser(null);
-						setToggleError(null);
 					}
 				}}
 			>
@@ -230,7 +190,9 @@ export function UsersClient() {
 								: `User ${toggleUser?.nama ?? toggleUser?.nipam ?? ""} akan diaktifkan kembali.`}
 						</AlertDialogDescription>
 					</AlertDialogHeader>
-					{toggleError && <p className="text-sm text-destructive">{toggleError}</p>}
+					{toggleStatusMutation.error && (
+						<p className="text-sm text-destructive">{(toggleStatusMutation.error as Error).message}</p>
+					)}
 					<AlertDialogFooter>
 						<AlertDialogCancel disabled={toggleStatusMutation.isPending}>Batal</AlertDialogCancel>
 						<AlertDialogAction

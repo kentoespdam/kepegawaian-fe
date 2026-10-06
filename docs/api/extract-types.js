@@ -639,7 +639,7 @@ function renderSharedFiles(shared, schemas) {
 			if (usedEnums.length) importLine = `import type { ${usedEnums.join(", ")} } from "./enums";\n\n`;
 
 			// Detect cross-file dependencies (e.g. master types referencing api types)
-			const apiTypeNames = (byCategory["api"] || []).concat(GENERIC_NAMES);
+			const apiTypeNames = (byCategory.api || []).concat(GENERIC_NAMES);
 			const usedApiTypes = apiTypeNames.filter((t) => referencedIn(bodyText, t));
 			if (usedApiTypes.length) {
 				const apiImport = `import type { ${usedApiTypes.join(", ")} } from "./api";\n`;
@@ -648,7 +648,7 @@ function renderSharedFiles(shared, schemas) {
 
 			// Detect master type dependencies from profile
 			if (cat.filename === "profile") {
-				const masterNames = byCategory["master"] || [];
+				const masterNames = byCategory.master || [];
 				const usedMasterTypes = masterNames.filter((t) => referencedIn(bodyText, t));
 				if (usedMasterTypes.length) {
 					const masterImport = `import type { ${usedMasterTypes.join(", ")} } from "./master";\n`;
@@ -666,7 +666,7 @@ function renderSharedFiles(shared, schemas) {
 	}
 
 	// Render "other" category (uncategorized types)
-	const otherNames = byCategory["other"] || [];
+	const otherNames = byCategory.other || [];
 	if (otherNames.length) {
 		const header = fileHeader("shared/other — uncategorized shared types");
 		const body = otherNames

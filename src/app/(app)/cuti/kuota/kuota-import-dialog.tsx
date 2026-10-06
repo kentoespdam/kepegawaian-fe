@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Download, FileSpreadsheet, Loader2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
@@ -9,8 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
-import { apiErrorMessage } from "@/lib/utils";
+import { useImportKuotaMutation } from "@/hooks/cuti/useCutiKuota";
 
 const CURRENT_YEAR = new Date().getFullYear();
 const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
@@ -21,7 +20,7 @@ interface KuotaImportDialogProps {
 }
 
 export function KuotaImportDialog({ open, onOpenChange }: KuotaImportDialogProps) {
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 	const fileRef = useRef<HTMLInputElement>(null);
 	const [tahun, setTahun] = useState(CURRENT_YEAR);
 	// ponytail: summary + error ditampilkan DALAM dialog (user perlu baca detail — CU-5)
@@ -49,35 +48,30 @@ export function KuotaImportDialog({ open, onOpenChange }: KuotaImportDialogProps
 		}
 	};
 
-	const importMutation = useMutation({
-		mutationFn: async () => {
-			const file = fileRef.current?.files?.[0];
-			if (!file) throw new Error("Pilih file Excel/CSV terlebih dahulu");
-			const fd = new FormData();
-			fd.append("tahun", String(tahun));
-			fd.append("file", file);
-			const res = await fetch("/api/proxy/cuti/kuota/import", { method: "POST", body: fd });
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(b, "Gagal import kuota"));
-			}
-			const body = (await res.json()) as { data?: string };
-			return body.data ?? "Import selesai";
-		},
-		onSuccess: (summary) => {
-			setResult(summary);
-			toast.success("Kuota berhasil diimport");
-			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
-		},
-		onError: (e: Error) => setError(e.message),
-	});
+	const importMutation = useImportKuotaMutation();
 
 	const submit = (e: React.FormEvent) => {
 		e.preventDefault();
 		setError(null);
 		setResult(null);
-		importMutation.mutate();
+		const file = fileRef.current?.files?.[0];
+		if (!file) {
+			setError("Pilih file Excel/CSV terlebih dahulu");
+			return;
+		}
+		importMutation.mutate(
+			{ tahun, file },
+			{
+				onSuccess: (res) => {
+					const d = res?.data;
+					const msg = typeof d === "string" ? d : (d?.pesan ?? "Berhasil mengimpor kuota cuti");
+					setResult(msg);
+				},
+				onError: (e: Error) => {
+					setError(e.message);
+				},
+			},
+		);
 	};
 
 	return (

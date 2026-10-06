@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { CalendarDays, Loader2, UserRound } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -11,9 +11,7 @@ import { FieldDate, FieldFk, FieldText, FieldTextarea } from "@/components/field
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
-import { apiErrorMessage } from "@/lib/utils";
-import type { ListResultCutiJenisMiniResponse } from "@/types/cuti/jenis";
+import { useHariKerjaQuery, useJenisCutiList, useSaveCutiMutation } from "@/hooks/cuti/useCutiPengajuan";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 
 // ── Zod (CU-8) ──
@@ -79,7 +77,7 @@ export function PengajuanFormSheet({
 	jabatan,
 	editing,
 }: PengajuanFormSheetProps) {
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 	const [jenisCutiId, setJenisCutiId] = useState<number | undefined>(undefined);
 
 	const {
@@ -126,16 +124,7 @@ export function PengajuanFormSheet({
 	}, [open, editing, reset]);
 
 	// ── Jenis & Sub-Jenis — satu fetch flat list; filter parentId client-side (CU-16) ──
-	const jenisQuery = useQuery({
-		queryKey: cutiKeys.jenisList(),
-		queryFn: async () => {
-			const res = await fetch("/api/proxy/cuti/jenis/list");
-			if (!res.ok) throw new Error("Gagal memuat jenis cuti");
-			const body = (await res.json()) as ListResultCutiJenisMiniResponse;
-			return body.data ?? [];
-		},
-		staleTime: 300_000,
-	});
+	const jenisQuery = useJenisCutiList();
 
 	// CU-16: combo Jenis = root saja (parentId null); combo Sub-Jenis = turunan jenis terpilih.
 	// ponytail: sub-jenis kosong → field tidak ditampilkan (bukan tampil + disabled) — CU-8
@@ -147,17 +136,7 @@ export function PengajuanFormSheet({
 		.map((i) => ({ value: String(i.id), label: i.nama ?? "" }));
 
 	// ── Jumlah Hari Kerja (fetched saat kedua tanggal terisi) ──
-	const hariKerjaQuery = useQuery({
-		queryKey: cutiKeys.totalHariKerja(tanggalMulai, tanggalSelesai),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/cuti/pengajuan/${tanggalMulai}/${tanggalSelesai}/total-hari-kerja`);
-			if (!res.ok) throw new Error("Gagal menghitung hari kerja");
-			const body = (await res.json()) as { data?: number };
-			return body.data ?? 0;
-		},
-		enabled: !!tanggalMulai && !!tanggalSelesai && tanggalSelesai >= tanggalMulai,
-		staleTime: 60_000,
-	});
+	const hariKerjaQuery = useHariKerjaQuery(tanggalMulai, tanggalSelesai);
 
 	// Sync hasil hitung ke form field jumlahHariKerja (read-only display)
 	useEffect(() => {
@@ -167,42 +146,19 @@ export function PengajuanFormSheet({
 	}, [hariKerjaQuery.data, hariKerjaQuery.isSuccess, setValue]);
 
 	// ── Submit (POST/PUT + csrfToken) ──
-	const saveMutation = useMutation({
-		mutationFn: async (values: FormValues) => {
-			// ponytail: BE minta csrfToken di body; FE tidak punya mekanisme mint —
-			// fetch token dari GET /auth/csrf-token saat submit (endpoint yang tersedia)
-			const csrfRes = await fetch("/api/proxy/auth/csrf-token");
-			if (!csrfRes.ok) throw new Error("Gagal mendapatkan token keamanan");
-			const csrfBody = (await csrfRes.json()) as { data?: string };
-
-			const body = {
-				csrfToken: csrfBody.data ?? "",
-				pegawaiId,
-				jenisCutiId: values.jenisCutiId,
-				subJenisCutiId: values.subJenisCutiId,
-				tanggalMulai: values.tanggalMulai,
-				tanggalSelesai: values.tanggalSelesai,
-				jumlahHariKerja: values.jumlahHariKerja,
-				alasan: values.alasan,
-			};
-			const res = await fetch(`/api/proxy/cuti/pengajuan${editing?.id ? `/${editing.id}` : ""}`, {
-				method: editing?.id ? "PUT" : "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
+	const saveMutationBase = useSaveCutiMutation(pegawaiId, editing);
+	const saveMutation = {
+		...saveMutationBase,
+		mutate: (values: FormValues) => {
+			saveMutationBase.mutate(values, {
+				onSuccess: () => {
+					toast.success(editing ? "Pengajuan cuti diperbarui" : "Pengajuan cuti berhasil dikirim");
+					onOpenChange(false);
+				},
+				onError: (e: Error) => toast.error(e.message),
 			});
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(b, "Gagal menyimpan pengajuan"));
-			}
 		},
-		onSuccess: () => {
-			toast.success(editing ? "Pengajuan cuti diperbarui" : "Pengajuan cuti berhasil dikirim");
-			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() });
-			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
-		},
-		onError: (e: Error) => toast.error(e.message),
-	});
+	};
 
 	return (
 		<Sheet open={open} onOpenChange={(v) => !v && onOpenChange(false)}>

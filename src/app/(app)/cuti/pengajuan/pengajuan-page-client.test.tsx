@@ -25,12 +25,12 @@ function okJson(data: unknown) {
 function mockFetch() {
 	vi.mocked(globalThis.fetch).mockImplementation(async (input: string | URL | Request, init?: RequestInit) => {
 		const s = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);
-		if (s.includes("/cuti/pengajuan") && init?.method === "DELETE") {
+		if (s.includes("/api/proxy/cuti/pengajuan/") && s.includes("/cancel")) {
 			deleteInit = { url: s, init };
 			return okJson({});
 		}
 		// daftar pengajuan — satu PENDING + satu APPROVED
-		if (s.includes("/cuti/pengajuan/9/pegawai")) {
+		if (s.includes("/api/proxy/cuti/pengajuan")) {
 			return okJson({
 				content: [
 					{
@@ -99,6 +99,6 @@ describe("PengajuanPageClient", () => {
 
 		await waitFor(() => expect(deleteInit).not.toBeNull());
 		expect(deleteInit?.url).toContain("/cuti/pengajuan/1");
-		expect(deleteInit?.init?.method).toBe("DELETE");
+		expect(deleteInit?.init?.method).toBe("POST");
 	});
 });

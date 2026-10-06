@@ -1,5 +1,5 @@
 "use client";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
 	Ban,
 	CalendarCheck,
@@ -33,12 +33,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { useCancelCutiMutation, useCutiKuotaByPegawai, useCutiPengajuanList } from "@/hooks/cuti/useCutiPengajuan";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
-import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
+import { fromPage } from "@/lib/paging";
+import { cn, formatDate } from "@/lib/utils";
 import type { CutiKuotaSisa } from "@/types/cuti/kuota";
-import type { CutiPengajuanResponse, PageResultPageCutiPengajuanResponse } from "@/types/cuti/pengajuan";
+import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 import { KlaimFormSheet } from "./klaim-form-sheet";
 import { PengajuanFormSheet } from "./pengajuan-form-sheet";
 
@@ -163,7 +163,7 @@ interface PengajuanPageClientProps {
 export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: PengajuanPageClientProps) {
 	const sp = useSearchParams();
 	const router = useRouter();
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
@@ -195,56 +195,33 @@ export function PengajuanPageClient({ pegawaiId, nama, nipam, jabatan }: Pengaju
 
 	const jenisPengajuanParam = sp.get("jenisPengajuanCuti") ?? "ALL";
 
-	const listQuery = useQuery({
-		// CU-14: queryKey bawa semua param
-		queryKey: cutiKeys.pengajuan.list({ pegawaiId, tahun, page, size, jenisPengajuanParam }),
-		queryFn: async () => {
-			const qs = new URLSearchParams({
-				...toApiParams({ page, size, sortBy: "tanggalMulai", sortDir: "desc" }),
-				tahun: String(tahun),
-			});
-			// CU-31: filter jenisPengajuanCuti dikirim ke backend
-			if (jenisPengajuanParam !== "ALL") qs.set("jenisPengajuanCuti", jenisPengajuanParam);
-			const res = await fetch(`/api/proxy/cuti/pengajuan/${pegawaiId}/pegawai?${qs}`);
-			throwIfNotOk(res, "Gagal memuat pengajuan cuti");
-			const body = (await res.json()) as PageResultPageCutiPengajuanResponse;
-			return body.data;
-		},
-		enabled: pegawaiId != null,
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-		gcTime: 300_000,
+	const listQuery = useCutiPengajuanList({
+		pegawaiId,
+		tahun,
+		page,
+		size,
+		jenisPengajuanCuti: jenisPengajuanParam !== "ALL" ? jenisPengajuanParam : undefined,
 	});
 
-	const kuotaQuery = useQuery({
-		queryKey: cutiKeys.kuota.detail(pegawaiId, tahun),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/cuti/kuota/${pegawaiId}/${tahun}/sisa`);
-			throwIfNotOk(res, "Gagal memuat kuota cuti");
-			const body = (await res.json()) as { data: CutiKuotaSisa };
-			return body.data;
-		},
-		enabled: pegawaiId != null,
-		staleTime: 30_000,
-	});
+	const kuotaQuery = useCutiKuotaByPegawai(pegawaiId, tahun);
 
-	const cancelMutation = useMutation({
-		mutationFn: async (id: number) => {
-			const res = await fetch(`/api/proxy/cuti/pengajuan/${id}`, { method: "DELETE" });
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(b, "Gagal membatalkan pengajuan"));
-			}
+	const cancelMutationBase = useCancelCutiMutation();
+	const cancelMutation = {
+		...cancelMutationBase,
+		mutate: (id: number) => {
+			cancelMutationBase.mutate(
+				{ id },
+				{
+					onSuccess: () => {
+						toast.success("Pengajuan cuti dibatalkan");
+						setCancelRow(null);
+						setCancelError(null);
+					},
+					onError: (e: Error) => setCancelError(e.message),
+				},
+			);
 		},
-		onSuccess: () => {
-			toast.success("Pengajuan cuti dibatalkan");
-			setCancelRow(null);
-			setCancelError(null);
-			qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() });
-			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
-		},
-		onError: (e: Error) => setCancelError(e.message),
-	});
+	};
 
 	const pageView = fromPage(listQuery.data);
 

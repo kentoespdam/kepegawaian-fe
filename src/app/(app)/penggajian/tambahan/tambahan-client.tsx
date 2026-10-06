@@ -1,6 +1,5 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ChevronDown, FileDown, FileSpreadsheet, Loader2, RefreshCw, RotateCcw, Upload } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -27,9 +26,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { STATUS_BADGE, STATUS_LABELS } from "@/config/penggajian/batch-list.config";
-import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
 import { useBatchList } from "@/hooks/penggajian/useBatchList";
 import { useBatchMasterList } from "@/hooks/penggajian/useBatchMasterList";
+import { useRollbackBatch } from "@/hooks/penggajian/useRollbackBatch";
 import { useVerifikasiFilters } from "@/hooks/penggajian/useVerifikasiFilters";
 import type { GajiBatchRootResponse, StatusBatch } from "@/types/penggajian/batch";
 import { UploadPotonganDialog } from "./_components/upload-potongan-dialog";
@@ -45,8 +44,6 @@ export function TambahanClient({ userName, jabatanName }: TambahanClientProps) {
 	const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 	const [rollbackDialogOpen, setRollbackDialogOpen] = useState(false);
 
-	const qc = useQueryClient();
-
 	// Fetch batch for period
 	const { data: batches, isPending: isBatchPending, refetch: refetchBatch } = useBatchList({ periode });
 	const batchList = Array.isArray(batches) ? batches : (batches?.content ?? []);
@@ -61,27 +58,14 @@ export function TambahanClient({ userName, jabatanName }: TambahanClientProps) {
 		refetch: refetchMaster,
 	} = useBatchMasterList(periode, "WAIT_VERIFICATION_PHASE_2");
 
-	const rollbackMutation = useMutation({
-		mutationFn: async () => {
-			const res = await fetch(`/api/proxy/penggajian/batch/master/proses/${batchId}/rollback`, {
-				method: "DELETE",
-			});
-			if (!res.ok) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? `Gagal membatalkan perubahan (${res.status})`);
-			}
-		},
-		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: penggajianKeys.batch.all() });
-			toast.success("Semua perubahan potongan & tambahan berhasil dibatalkan");
+	const rollbackMutation = useRollbackBatch(
+		batchId,
+		() => {
 			refetchBatch();
 			refetchMaster();
-			setRollbackDialogOpen(false);
 		},
-		onError: (err: Error) => {
-			toast.error(err.message || "Gagal membatalkan perubahan");
-		},
-	});
+		() => setRollbackDialogOpen(false),
+	);
 
 	const selectedPegawai = pegawaiList
 		? (pegawaiList.find((p) => p.id === selectedBatchMasterId) ?? pegawaiList[0] ?? null)

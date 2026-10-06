@@ -1,6 +1,6 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckCheck, Filter, Loader2, RotateCcw, Search, X } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { systemKeys } from "@/hooks/keys/system-keys";
+import { useRoleManagement } from "@/hooks/sistem/useRoleManagement";
 import { cn } from "@/lib/utils";
 import type { PrefPermission } from "@/types/system/permissions";
 import type { PrefRole } from "@/types/system/roles";
@@ -36,11 +37,10 @@ export function RolePermissionDialog({
 	allPermissions,
 	isLoadingPermissions = false,
 }: RolePermissionDialogProps) {
-	const qc = useQueryClient();
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
 	const [selectedModule, setSelectedModule] = useState<string>("ALL");
-	const [pendingKeys, setPendingKeys] = useState<Set<string>>(new Set());
+	const [pendingKeys, _setPendingKeys] = useState<Set<string>>(new Set());
 	const [isBatchPending, setIsBatchPending] = useState(false);
 
 	const activePermSet = new Set((role?.permissions ?? []).map((p) => p.name).filter(Boolean) as string[]);
@@ -56,35 +56,8 @@ export function RolePermissionDialog({
 
 	// ── Toggle mutations ──
 
-	const toggleSingleMutation = useMutation({
-		mutationFn: async ({ permName, assign }: { permName: string; assign: boolean }) => {
-			if (!role) return;
-			setPendingKeys((prev) => new Set(prev).add(permName));
-			const res = await fetch(`/api/proxy/system/roles/${role.id}/permissions/${permName}`, {
-				method: assign ? "POST" : "DELETE",
-			});
-			if (!res.ok && res.status !== 409) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? (assign ? "Gagal menetapkan permission" : "Gagal mencabut permission"));
-			}
-		},
-		onSuccess: (_d, { permName, assign }) => {
-			toast.success(
-				assign
-					? `Hak akses ${permName} berhasil diberikan ke role ${role?.id}`
-					: `Hak akses ${permName} berhasil dicabut dari role ${role?.id}`,
-			);
-			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
-		},
-		onError: (e: Error) => toast.error(e.message),
-		onSettled: (_d, _e, { permName }) => {
-			setPendingKeys((prev) => {
-				const next = new Set(prev);
-				next.delete(permName);
-				return next;
-			});
-		},
-	});
+	const qc = useQueryClient();
+	const { toggleSingleMutation } = useRoleManagement(role);
 
 	const handleBatchToggle = async (targetPerms: string[], assign: boolean) => {
 		if (!role || targetPerms.length === 0) return;
@@ -117,7 +90,7 @@ export function RolePermissionDialog({
 
 	const handleTogglePermission = (permCode: string, currentlyActive: boolean) => {
 		if (pendingKeys.has(permCode) || isBatchPending || !role) return;
-		toggleSingleMutation.mutate({ permName: permCode, assign: !currentlyActive });
+		toggleSingleMutation.mutate({ roleId: role.id, permName: permCode, assign: !currentlyActive });
 	};
 
 	if (!role) return null;

@@ -1,16 +1,15 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { KeyRound, Pencil, Plus, Search, Shield, ShieldCheck, Trash2, X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { systemKeys } from "@/hooks/keys/system-keys";
+import { useRoleManagement } from "@/hooks/sistem/useRoleManagement";
 import { useAllPermissions } from "@/hooks/useSystemPermissions";
 import { useAllRoles } from "@/hooks/useSystemRoles";
 import { cn } from "@/lib/utils";
@@ -101,7 +100,7 @@ function RoleFormDialog({
 }
 
 export function RolesClient() {
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 	const rolesQuery = useAllRoles();
 	const permsQuery = useAllPermissions();
 
@@ -120,42 +119,7 @@ export function RolesClient() {
 		return roles.find((r) => r.id === selectedRoleId) ?? null;
 	})();
 
-	const deleteRoleMutation = useMutation({
-		mutationFn: async (roleId: string) => {
-			const res = await fetch(`/api/proxy/system/roles/${roleId}`, { method: "DELETE" });
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal menghapus role");
-			}
-		},
-		onSuccess: () => {
-			toast.success("Role berhasil dihapus");
-			setDeleteRole(null);
-			setDeleteError(null);
-			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
-		},
-		onError: (e: Error) => setDeleteError(e.message),
-	});
-
-	const saveRoleMutation = useMutation({
-		mutationFn: async (data: { id: string; description?: string }) => {
-			const res = await fetch(`/api/proxy/system/roles${roleForm.role ? `/${roleForm.role.id}` : ""}`, {
-				method: roleForm.role ? "PUT" : "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(roleForm.role ? { description: data.description } : data),
-			});
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal menyimpan role");
-			}
-		},
-		onSuccess: () => {
-			toast.success(roleForm.role ? "Role berhasil diperbarui" : "Role baru berhasil dibuat");
-			setRoleForm({ open: false, role: null });
-			qc.invalidateQueries({ queryKey: systemKeys.roles.all() });
-		},
-		onError: (e: Error) => toast.error(e.message),
-	});
+	const { deleteRoleMutation, saveRoleMutation } = useRoleManagement(roleForm.role);
 
 	// Filtered roles based on table search
 	const filteredRoles = (() => {

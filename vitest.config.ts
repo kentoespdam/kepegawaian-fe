@@ -8,7 +8,7 @@ export default defineConfig({
 		},
 	},
 	test: {
-		environment: "node",
+		environment: "jsdom",
 		// ponytail: test jsdom berat (Sheet+Calendar+combobox+debounce) bisa >5s di bawah
 		// beban paralel full suite — timeout default 5s terlalu ketat → flaky timeout.
 		testTimeout: 15_000,

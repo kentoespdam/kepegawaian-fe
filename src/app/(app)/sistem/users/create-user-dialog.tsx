@@ -1,15 +1,12 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { systemKeys } from "@/hooks/keys/system-keys";
+import { useCreateUser } from "@/hooks/sistem/useCreateUser";
 import type { PrefRole } from "@/types/system/roles";
-import type { AuthPostRequest } from "@/types/system/users";
 
 interface CreateUserDialogProps {
 	open: boolean;
@@ -18,32 +15,15 @@ interface CreateUserDialogProps {
 }
 
 export function CreateUserDialog({ open, onOpenChange, allRoles }: CreateUserDialogProps) {
-	const qc = useQueryClient();
 	const [nipam, setNipam] = useState("");
 	const [nama, setNama] = useState("");
 	const [password, setPassword] = useState("");
 	const [roles, setRoles] = useState<Set<string>>(new Set());
 	const [error, setError] = useState<string | null>(null);
 
-	const createUser = useMutation({
-		mutationFn: async (data: AuthPostRequest) => {
-			const res = await fetch("/api/proxy/system/users", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(data),
-			});
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal membuat user");
-			}
-		},
-		onSuccess: () => {
-			toast.success("User dibuat");
-			onOpenChange(false);
-			setError(null);
-			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
-		},
-		onError: (e: Error) => setError(e.message),
+	const createUser = useCreateUser(() => {
+		onOpenChange(false);
+		setError(null);
 	});
 
 	const handleSubmit = () => {

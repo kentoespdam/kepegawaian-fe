@@ -18,10 +18,12 @@ export function useTunjanganResource(jenis?: string, params?: Record<string, str
 	const qc = useQueryClient();
 	const base = penggajianKeys.tunjangan.all();
 	const entity = jenis ? `tunjangan/${jenis}` : undefined;
+	const safeJenis = jenis ?? "";
+	const safeEntity = entity ?? "";
 
 	const list = useQuery<PageGajiTunjanganResponse>({
-		queryKey: penggajianKeys.tunjangan.list(jenis!, params),
-		queryFn: () => penggajianApi.list<PageGajiTunjanganResponse>(entity!, params),
+		queryKey: penggajianKeys.tunjangan.list(safeJenis, params),
+		queryFn: () => penggajianApi.list<PageGajiTunjanganResponse>(safeEntity, params),
 		placeholderData: keepPreviousData,
 		staleTime: 30_000,
 		gcTime: 300_000,
@@ -29,26 +31,26 @@ export function useTunjanganResource(jenis?: string, params?: Record<string, str
 	});
 
 	const listAll = useQuery({
-		queryKey: penggajianKeys.tunjangan.listAll(jenis!),
-		queryFn: () => penggajianApi.listAll<Record<string, unknown>[]>(entity!),
+		queryKey: penggajianKeys.tunjangan.listAll(safeJenis),
+		queryFn: () => penggajianApi.listAll<Record<string, unknown>[]>(safeEntity),
 		staleTime: 300_000,
 		gcTime: 300_000,
 		enabled: !!entity,
 	});
 
 	const create = useMutation({
-		mutationFn: (data: GajiTunjanganResponse) => penggajianApi.create<PageGajiTunjanganResponse>(entity!, data),
+		mutationFn: (data: GajiTunjanganResponse) => penggajianApi.create<PageGajiTunjanganResponse>(safeEntity, data),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 
 	const update = useMutation({
 		mutationFn: ({ id, data }: { id: string; data: GajiTunjanganResponse }) =>
-			penggajianApi.update<PageGajiTunjanganResponse>(entity!, id, data),
+			penggajianApi.update<PageGajiTunjanganResponse>(safeEntity, id, data),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 
 	const remove = useMutation({
-		mutationFn: (id: string) => penggajianApi.remove(entity!, id),
+		mutationFn: (id: string) => penggajianApi.remove(safeEntity, id),
 		onSuccess: () => qc.invalidateQueries({ queryKey: base }),
 	});
 

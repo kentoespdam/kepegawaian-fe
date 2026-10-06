@@ -156,29 +156,39 @@ bunx biome check --write  # Auto-format
 |-------|--------|--------|
 | `master/` | Data referensi (15 CRUD entities: golongan, grade, jabatan, organisasi, profesi, sanksi, level, dll.) | ✅ Lengkap |
 | `kepegawaian/` | Dashboard Pegawai, Data Pegawai (3 tab), Terminasi (2 tab) | ✅ Lengkap |
-| `cuti/` | Pengajuan & saldo cuti | ⏳ Belum |
-| `penggajian/` | Payroll | ⏳ Belum |
-| `laporan/` | Pelaporan/rekap | ⏳ Belum |
-| `sistem/` | Manajemen role, pengaturan | ⏳ Belum |
+| `cuti/` | Pengajuan & saldo cuti | ✅ Lengkap |
+| `penggajian/` | Payroll | ✅ Lengkap |
+| `laporan/` | Pelaporan/rekap | ✅ Lengkap |
+| `sistem/` | Manajemen role, pengaturan | ✅ Lengkap |
 
 ### Layer Pattern
 
 ```
 src/
-├── app/             # Next.js App Router (page = server component by default)
+├── app/             # Next.js App Router (page = server component by default - zero "use client" in page.tsx)
 │   └── (app)/       # Protected layout (sidebar + top bar)
 │       ├── master/  # 15 CRUD pages per entity
 │       ├── kepegawaian/  # Dashboard, Data, Terminasi
-│       ├── profil/  # Profile page + change password
+│       ├── cuti/    # Pengajuan, Persetujuan, Kuota
+│       ├── penggajian/  # Setup, komponen, tambahan
+│       ├── sistem/  # Roles, users
+│       ├── profil/  # Profile page + approval + change password
 │       └── page.tsx # Welcome/dashboard landing
 ├── components/      # Shared UI primitives
-│   ├── ui/          # shadcn/Base UI components
+│   ├── ui/          # shadcn/Base UI components (semantic design tokens)
 │   ├── data-table.tsx, crud-form.tsx  # Shared primitives
 │   └── app-shell.tsx, providers.tsx   # App frame
-├── hooks/           # Custom hooks (useResource, useMasterTable, useFkOptions…)
-├── lib/             # Utilities, auth, API client
+├── hooks/           # Custom domain-isolated hooks
+│   ├── kepegawaian/ # Kepegawaian & pendukung hooks
+│   ├── cuti/        # Cuti hooks & query key factories
+│   ├── penggajian/  # Penggajian batch & setup hooks
+│   ├── sistem/      # System user & role hooks
+│   ├── profil/      # Profile & approval hooks
+│   └── master/      # Master data hooks
+├── lib/             # Utilities, auth, API client & validations
 │   ├── auth/        # Appwrite session, JWT, permissions
 │   ├── api/         # Typed fetch client
+│   ├── validations/ # Consolidated Zod validation schemas (auth, employee, master, etc.)
 │   └── utils.ts, paging.ts
 ├── config/          # Entity configs (typed, per-entity)
 ├── types/           # Generated OpenAPI types

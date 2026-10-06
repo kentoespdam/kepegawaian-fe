@@ -164,7 +164,7 @@ export function KuotaFormSheet({ open, onOpenChange, editing }: KuotaFormSheetPr
 				</SheetHeader>
 				<Separator />
 				<form
-					onSubmit={rhfSubmit((v) => saveMutation.mutate(v))}
+					onSubmit={rhfSubmit((v) => saveMutation.mutate(v as unknown as FormValues))}
 					className="px-4 sm:px-6 pb-4 space-y-3.5 overflow-y-auto flex-1 min-h-0"
 				>
 					{errors.root?.message && (

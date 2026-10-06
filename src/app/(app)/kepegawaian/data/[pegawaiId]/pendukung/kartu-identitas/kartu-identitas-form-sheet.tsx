@@ -53,7 +53,7 @@ interface Props {
 	onClose: () => void;
 }
 
-export function KartuIdentitasFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }: Props) {
+export function KartuIdentitasFormSheet({ pegawaiId: _pegawaiId, nik, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({

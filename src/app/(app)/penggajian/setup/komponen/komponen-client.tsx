@@ -1,6 +1,5 @@
 "use client";
 
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
@@ -9,14 +8,12 @@ import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
-import { penggajianKeys } from "@/hooks/keys/penggajian-keys";
+import { useKomponenSetup } from "@/hooks/penggajian/useKomponenSetup";
 import { useAuth } from "@/hooks/useAuth";
 import { useMasterSearchParams } from "@/hooks/useMasterSearchParams";
-import { penggajianApi } from "@/lib/api/penggajian-client";
 import { hasPermission } from "@/lib/auth/can";
 import { PERMISSION } from "@/lib/auth/permissions";
-import { fromPage, toApiParams } from "@/lib/paging";
-import type { GajiProfilResponse, Page } from "@/types/_shared";
+import { fromPage } from "@/lib/paging";
 import type { GajiKomponenResponse } from "@/types/penggajian/komponen";
 import { KomponenDialog } from "./komponen-dialog";
 import { ProfilDialog } from "./profil-dialog";
@@ -43,7 +40,6 @@ const KOMPONEN_COLUMNS = [
 export function KomponenClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
-	const qc = useQueryClient();
 	const { page, size, sortBy, sortDir, filters, setP, setFilter, resetAll } = useMasterSearchParams(
 		ENTITY,
 		KOMPONEN_BASE,
@@ -63,69 +59,16 @@ export function KomponenClient() {
 	const [editing, setEditing] = useState<GajiKomponenResponse | null>(null);
 	const [_komponenError, setKomponenError] = useState<string | null>(null);
 
-	const profilList = useQuery<GajiProfilResponse[]>({
-		queryKey: penggajianKeys.profil.list(),
-		queryFn: () => penggajianApi.listAll<GajiProfilResponse[]>("profil"),
-		staleTime: 5 * 60_000,
-	});
-
 	const { profilId: _profilId, ...tableFilters } = filters;
 
-	const komponenQueryKey = [
-		...penggajianKeys.all,
-		`${ENTITY}/${selectedProfilId}/profil`,
-		selectedProfilId ? toApiParams({ page, size, sortBy, sortDir, filters: tableFilters }) : undefined,
-	] as const;
-	const komponenList = useQuery<Page<GajiKomponenResponse>>({
-		queryKey: komponenQueryKey,
-		queryFn: () =>
-			penggajianApi.list<Page<GajiKomponenResponse>>(
-				`${ENTITY}/${selectedProfilId}/profil`,
-				toApiParams({ page, size, sortBy, sortDir, filters: tableFilters }),
-			),
-		enabled: !!selectedProfilId,
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-		gcTime: 300_000,
-	});
-
-	const removeKomponen = useMutation({
-		mutationFn: (id: string) => penggajianApi.remove(ENTITY, id),
-		onSuccess: () => qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] }),
-	});
-	const createKomponen = useMutation({
-		mutationFn: (data: Record<string, unknown>) => penggajianApi.create<GajiKomponenResponse>(ENTITY, data),
-		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] });
-			setKomponenDialogOpen(false);
-			qc.invalidateQueries({ queryKey: penggajianKeys.komponen.kode(selectedProfilId) });
-			setEditing(null);
-			toast.success("Komponen berhasil ditambah");
-		},
-		onError: (e: Error) => setKomponenError(e.message ?? "Gagal menambah komponen"),
-	});
-	const updateKomponen = useMutation({
-		mutationFn: ({ id, data }: { id: string; data: Record<string, unknown> }) =>
-			penggajianApi.update<GajiKomponenResponse>(ENTITY, id, data),
-		onSuccess: () => {
-			qc.invalidateQueries({ queryKey: [...penggajianKeys.all, ENTITY] });
-			qc.invalidateQueries({ queryKey: penggajianKeys.komponen.kode(selectedProfilId) });
-			setKomponenDialogOpen(false);
-			setEditing(null);
-			toast.success("Komponen berhasil diperbarui");
-		},
-		onError: (e: Error) => setKomponenError(e.message ?? "Gagal memperbarui komponen"),
-	});
-	const createProfil = useMutation({
-		mutationFn: (data: { nama: string }) => penggajianApi.create<GajiProfilResponse>("profil", data),
-		onSuccess: (created) => {
-			qc.invalidateQueries({ queryKey: penggajianKeys.profil.list() });
-			if (created?.id) handleProfilSelect(created.id);
-			setProfilDialogOpen(false);
-			toast.success("Profil gaji berhasil ditambah");
-		},
-		onError: (e: Error) => toast.error(e.message ?? "Gagal menambah profil"),
-	});
+	const { profilList, komponenList, removeKomponen, createKomponen, updateKomponen, createProfil } = useKomponenSetup(
+		selectedProfilId,
+		tableFilters,
+		page,
+		size,
+		sortBy,
+		sortDir,
+	);
 
 	const profilData = profilList.data ?? [];
 	const komponenPageView = fromPage(komponenList.data);

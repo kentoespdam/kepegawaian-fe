@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CalendarDays } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -10,7 +9,7 @@ import { FieldDate, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { useKlaimCutiMutation } from "@/hooks/cuti/useCutiPengajuan";
 import { formatDate } from "@/lib/utils";
 import type { CutiPengajuanResponse } from "@/types/cuti/pengajuan";
 import type { KlaimFormValues as FormValues } from "./klaim-form-schema";
@@ -24,8 +23,6 @@ interface KlaimFormSheetProps {
 }
 
 export function KlaimFormSheet({ open, onOpenChange, pegawaiId, pengajuan }: KlaimFormSheetProps) {
-	const qc = useQueryClient();
-
 	// CU-25/26: schema divalidasi terhadap rentang pengajuan asal
 	const schema = useMemo(() => klaimFormSchema(pengajuan), [pengajuan]);
 
@@ -55,38 +52,26 @@ export function KlaimFormSheet({ open, onOpenChange, pegawaiId, pengajuan }: Kla
 	}, [open, pengajuan, reset]);
 
 	// CU-25: Submit klaim
-	const klaimMutation = useMutation({
-		mutationFn: async (values: FormValues) => {
-			// ponytail: fetch csrfToken dari endpoint yang sudah ada
-			const csrfRes = await fetch("/api/proxy/auth/csrf-token");
-			if (!csrfRes.ok) throw new Error("Gagal mendapatkan token keamanan");
-			const csrfBody = (await csrfRes.json()) as { data?: string };
-
+	const klaimMutationBase = useKlaimCutiMutation(pegawaiId);
+	const klaimMutation = {
+		...klaimMutationBase,
+		mutate: (values: FormValues) => {
 			const body = {
-				csrfToken: csrfBody.data ?? "",
-				refCutiId: pengajuan.id ?? 0,
-				pegawaiId,
-				listHari: generateListHari(values.tanggalMulai, values.tanggalSelesai),
-				keterangan: values.keterangan || undefined,
+				pengajuanId: pengajuan.id ?? 0,
+				tanggalMulai: values.tanggalMulai,
+				tanggalSelesai: values.tanggalSelesai,
+				jumlahHariKerja: generateListHari(values.tanggalMulai, values.tanggalSelesai).length,
+				alasan: values.keterangan || "",
 			};
-			const res = await fetch("/api/proxy/cuti/pengajuan/klaim", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
+			klaimMutationBase.mutate(body, {
+				onSuccess: () => {
+					toast.success("Klaim cuti berhasil dikirim");
+					onOpenChange(false);
+				},
+				onError: (e: Error) => toast.error(e.message),
 			});
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(b.message ?? "Gagal mengajukan klaim cuti");
-			}
 		},
-		onSuccess: () => {
-			toast.success("Klaim cuti berhasil dikirim");
-			onOpenChange(false);
-			qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() });
-			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
-		},
-		onError: (e: Error) => toast.error(e.message),
-	});
+	};
 
 	return (
 		<Sheet open={open} onOpenChange={(v) => !v && onOpenChange(false)}>

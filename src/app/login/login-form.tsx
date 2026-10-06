@@ -4,18 +4,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin } from "@/hooks/useLogin";
 
-const schema = z.object({
-	email: z.string().min(1, "Email wajib diisi"),
-	password: z.string().min(1, "Password wajib diisi"),
-});
+import { type LoginFormData, loginSchema } from "@/lib/validations/auth.schema";
 
-type Data = z.infer<typeof schema>;
+const schema = loginSchema;
+
+type Data = LoginFormData;
 
 export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 	const [showPassword, setShowPassword] = useState(false);

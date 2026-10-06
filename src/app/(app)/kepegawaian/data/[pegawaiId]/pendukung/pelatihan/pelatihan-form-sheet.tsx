@@ -75,7 +75,7 @@ interface Props {
 	onClose: () => void;
 }
 
-export function PelatihanFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }: Props) {
+export function PelatihanFormSheet({ pegawaiId: _pegawaiId, nik, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({

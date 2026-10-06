@@ -1,6 +1,5 @@
 "use client";
 
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { CalendarDays, CircleCheck, CircleX, Clock, Eye } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -10,11 +9,11 @@ import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { useCutiPersetujuanList } from "@/hooks/cuti/useCutiPersetujuan";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
-import { fromPage, toApiParams } from "@/lib/paging";
-import { cn, formatDate, throwIfNotOk } from "@/lib/utils";
-import type { CutiApprovalChainResponse, PageResultPageCutiApprovalChainResponse } from "@/types/cuti/pengajuan";
+import { fromPage } from "@/lib/paging";
+import { cn, formatDate } from "@/lib/utils";
+import type { CutiApprovalChainResponse } from "@/types/cuti/pengajuan";
 import { DetailApprovalDialog } from "./detail-approval-dialog";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -88,27 +87,14 @@ export function PersetujuanPageClient({ pegawaiId, jabatanId }: PersetujuanPageC
 	const onRwChange = (v: string) => nav({ readWriteStatus: v || undefined, page: "1" });
 	const onReset = () => router.replace(pathname);
 
-	const query = useQuery({
-		// CU-20: approvalCutiStatus wajib (BE 400), readWriteStatus opsional
-		queryKey: cutiKeys.persetujuan.list({ jabatanId, tahun, page, size, statusParam, readWriteStatus }),
-		queryFn: async () => {
-			const params: Record<string, string> = {
-				...toApiParams({ page, size }),
-				tahun: String(tahun),
-				picSaatIniId: String(jabatanId),
-				approvalCutiStatus: statusParam,
-			};
-			if (readWriteStatus) params.readWriteStatus = readWriteStatus;
-			const qs = new URLSearchParams(params).toString();
-			const res = await fetch(`/api/proxy/cuti/pengajuan/approval?${qs}`);
-			throwIfNotOk(res, "Gagal memuat data persetujuan");
-			const body = (await res.json()) as PageResultPageCutiApprovalChainResponse;
-			return body.data;
-		},
-		enabled: pegawaiId != null && jabatanId != null,
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-		gcTime: 300_000,
+	const query = useCutiPersetujuanList({
+		pegawaiId,
+		jabatanId,
+		tahun,
+		page,
+		size,
+		statusParam,
+		readWriteStatus,
 	});
 
 	const pageView = fromPage(query.data);

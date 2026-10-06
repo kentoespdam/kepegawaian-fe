@@ -1,18 +1,17 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { FieldDate, FieldFk, FieldSelect, FieldText, FieldTextarea } from "@/components/field-renderers";
 import { Button } from "@/components/ui/button";
-import { masterKeys } from "@/hooks/keys/master-keys";
+import { useJabatanByOrganisasi } from "@/hooks/kepegawaian/useTambahQueries";
 import { pegawaiKeys } from "@/hooks/keys/pegawai-keys";
 import { useFkOptions } from "@/hooks/useFkOptions";
 import { usePajakOptions, useStatusKerjaOptions, useStatusPegawaiOptions } from "@/hooks/usePegawaiMasterOptions";
-import { api } from "@/lib/api/client";
 import { ENUMS } from "@/lib/enums";
 import { apiErrorMessage } from "@/lib/utils";
 import { type FormValues, schema } from "./schema";
@@ -45,13 +44,7 @@ export function TambahPegawaiForm() {
 	const statusPegawaiOpts = useStatusPegawaiOptions();
 	const statusKerjaOpts = useStatusKerjaOptions();
 
-	// Cascade jabatan by organisasi
-	const jabQuery = useQuery({
-		queryKey: masterKeys.list("jabatan", { organisasiId }),
-		queryFn: () => api.listBy<Record<string, unknown>>("jabatan", "organisasi", String(organisasiId)),
-		enabled: !!organisasiId,
-		staleTime: 300_000,
-	});
+	const jabQuery = useJabatanByOrganisasi(organisasiId);
 	const jabOpts = ((jabQuery.data ?? []) as Record<string, unknown>[]).map((i) => ({
 		value: String(i.id),
 		label: String(i.nama ?? ""),

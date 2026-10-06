@@ -1,6 +1,5 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { Clock, Pencil } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -10,7 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { biodataFormSchema, editFormFields } from "@/config/profil/biodata.config";
-import { dashboardKeys } from "@/hooks/keys/dashboard-keys";
+import { usePegawaiDashboard } from "@/hooks/kepegawaian/usePegawaiDashboard";
 import { ACCORDION_TRIGGER_AFF } from "@/hooks/useDashboardSections";
 import { useSelfBiodataMutation } from "@/hooks/useSelfBiodataMutation";
 import {
@@ -27,7 +26,6 @@ import { ENUMS } from "@/lib/enums";
 import { cn, formatDate, rupiah } from "@/lib/utils";
 import type { BiodataPatchRequest } from "@/types/admin/profil";
 import type { PegawaiResponseDetail } from "@/types/pegawai/pegawai";
-import type { BiodataDashboardResponse } from "@/types/profil/biodata";
 
 export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDetail; nik: string | null }) {
 	const [openValues, setOpenValues] = useState<string[]>(["data-pribadi"]);
@@ -52,18 +50,7 @@ export function SectionLeftPanel({ pegawai, nik }: { pegawai: PegawaiResponseDet
 		}
 	};
 
-	const biodata = useQuery({
-		queryKey: dashboardKeys.biodata(nik),
-		queryFn: async () => {
-			if (!nik) return null;
-			const res = await fetch(`/api/proxy/profil/biodata/${nik}/dashboard`);
-			if (!res.ok) return null;
-			const body = await res.json();
-			return (body.data as BiodataDashboardResponse) ?? null;
-		},
-		enabled: !!nik,
-		staleTime: 60_000,
-	});
+	const biodata = usePegawaiDashboard(nik ?? undefined);
 
 	const d = biodata.data;
 	const nama = pegawai.biodata?.nama ?? d?.nama ?? "-";

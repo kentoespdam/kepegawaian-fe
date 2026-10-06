@@ -63,7 +63,7 @@ interface Props {
 	onClose: () => void;
 }
 
-export function KeluargaFormSheet({ pegawaiId, nik, editingId, isOpen, onClose }: Props) {
+export function KeluargaFormSheet({ pegawaiId: _pegawaiId, nik, editingId, isOpen, onClose }: Props) {
 	const qc = useQueryClient();
 
 	const detailQuery = useQuery({

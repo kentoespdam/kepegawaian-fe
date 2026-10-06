@@ -54,7 +54,7 @@ describe("useBatchAction", () => {
 		global.fetch = mockFetch();
 		const { result } = renderHook(() => useBatchAction("batch-1/verify"), { wrapper });
 
-		await result.current.mutateAsync();
+		await result.current.mutateAsync(undefined);
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/verify", {
 			method: "PATCH",
@@ -85,7 +85,7 @@ describe("useBatchAction", () => {
 		global.fetch = mockFetch();
 		const { result } = renderHook(() => useBatchAction("batch-1/reprocess"), { wrapper });
 
-		await result.current.mutateAsync();
+		await result.current.mutateAsync(undefined);
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/batch-1/reprocess", {
 			method: "PATCH",
@@ -98,7 +98,7 @@ describe("useBatchAction", () => {
 		global.fetch = mockFetch();
 		const { result } = renderHook(() => useBatchAction("master/upload/batch-1"), { wrapper });
 
-		await result.current.mutateAsync();
+		await result.current.mutateAsync(undefined);
 
 		expect(global.fetch).toHaveBeenCalledWith("/api/proxy/penggajian/batch/master/upload/batch-1", {
 			method: "PATCH",
@@ -111,7 +111,7 @@ describe("useBatchAction", () => {
 		global.fetch = mockFetchError(400, "Bad request");
 		const { result } = renderHook(() => useBatchAction("batch-1/verify"), { wrapper });
 
-		await expect(result.current.mutateAsync()).rejects.toThrow("Bad request");
+		await expect(result.current.mutateAsync(undefined)).rejects.toThrow("Bad request");
 	});
 });
 

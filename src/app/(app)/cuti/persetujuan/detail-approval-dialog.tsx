@@ -1,9 +1,8 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { CircleCheck, CircleX, Clock, Eye, History, Loader2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,13 +17,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { useCutiApprovalMutation, useCutiDetailApproval } from "@/hooks/cuti/useCutiPersetujuan";
 import { approvalStatusTone, labelApprovalStatus } from "@/lib/enum-labels";
-import { apiErrorMessage, cn, formatDate, throwIfNotOk } from "@/lib/utils";
-import type { CutiApprovalMiniResponse, PageResultPageCutiApprovalMiniResponse } from "@/types/cuti/approval";
+import { cn, formatDate } from "@/lib/utils";
+import type { CutiApprovalMiniResponse } from "@/types/cuti/approval";
 import type { CutiApprovalChainResponse } from "@/types/cuti/pengajuan";
-
-type ApprovalAction = "APPROVE" | "REJECT";
 
 interface DetailApprovalDialogProps {
 	open: boolean;
@@ -105,18 +102,7 @@ function DetailTab({ row }: { row: CutiApprovalChainResponse }) {
 }
 
 function RiwayatTab({ cutiId }: { cutiId: number }) {
-	const q = useQuery({
-		queryKey: cutiKeys.approvalHistory(cutiId),
-		queryFn: async () => {
-			const res = await fetch(`/api/proxy/cuti/approval/${cutiId}?size=100`);
-			throwIfNotOk(res, "Gagal memuat riwayat approval");
-			const body = (await res.json()) as PageResultPageCutiApprovalMiniResponse;
-			return body.data?.content ?? [];
-		},
-		enabled: cutiId > 0,
-		staleTime: 30_000,
-		gcTime: 300_000,
-	});
+	const q = useCutiDetailApproval(cutiId);
 
 	if (q.isPending) {
 		return (
@@ -172,10 +158,10 @@ export function DetailApprovalDialog({
 	open,
 	onOpenChange,
 	row,
-	pegawaiId,
-	onActionComplete,
+	pegawaiId: _pegawaiId,
+	onActionComplete: _onActionComplete,
 }: DetailApprovalDialogProps) {
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 	const [activeTab, setActiveTab] = useState<"detail" | "riwayat">("detail");
 	const [notes, setNotes] = useState("");
 	const [error, setError] = useState<string | null>(null);
@@ -195,42 +181,7 @@ export function DetailApprovalDialog({
 		onOpenChange(v);
 	};
 
-	const mutate = useMutation({
-		mutationFn: async (action: ApprovalAction) => {
-			if (!row) return;
-			const csrfRes = await fetch("/api/proxy/auth/csrf-token");
-			if (!csrfRes.ok) throw new Error("Gagal mendapatkan token keamanan");
-			const csrfBody = (await csrfRes.json()) as { data?: string };
-			const body = {
-				csrfToken: csrfBody.data ?? "",
-				cutiId: row.refCuti?.id ?? 0,
-				approverId: pegawaiId,
-				approvalLevel: row.approvalLevel ?? 1,
-				approvalStatus: action === "APPROVE" ? "APPROVED" : "REJECTED",
-				notes: notes.trim(),
-			};
-			const res = await fetch("/api/proxy/cuti/approval", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(body),
-			});
-			if (!res.ok) {
-				const b = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(b, "Gagal memproses persetujuan"));
-			}
-		},
-		onSuccess: async (_data, action) => {
-			toast.success(action === "APPROVE" ? "Pengajuan disetujui" : "Pengajuan ditolak");
-			resetState();
-			await Promise.all([
-				qc.invalidateQueries({ queryKey: cutiKeys.persetujuan.all() }),
-				qc.invalidateQueries({ queryKey: cutiKeys.pengajuan.all() }),
-				qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() }),
-			]);
-			onActionComplete();
-		},
-		onError: (e: Error) => setError(e.message),
-	});
+	const mutate = useCutiApprovalMutation();
 
 	if (!row) return null;
 
@@ -302,12 +253,16 @@ export function DetailApprovalDialog({
 									size="sm"
 									className="text-destructive hover:text-destructive hover:border-destructive/50"
 									disabled={mutate.isPending}
-									onClick={() => mutate.mutate("REJECT")}
+									onClick={() => mutate.mutate({ cutiId, action: "REJECT", catatan: notes.trim() })}
 								>
 									<CircleX className="size-3.5 mr-1" />
 									Tolak
 								</Button>
-								<Button size="sm" disabled={mutate.isPending} onClick={() => mutate.mutate("APPROVE")}>
+								<Button
+									size="sm"
+									disabled={mutate.isPending}
+									onClick={() => mutate.mutate({ cutiId, action: "APPROVE", catatan: notes.trim() })}
+								>
 									<CircleCheck className="size-3.5 mr-1" />
 									Setujui
 								</Button>

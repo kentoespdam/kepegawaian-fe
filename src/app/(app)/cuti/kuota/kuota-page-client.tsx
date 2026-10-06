@@ -1,5 +1,5 @@
 "use client";
-import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { FileSpreadsheet, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
@@ -10,11 +10,10 @@ import { DataTablePagination } from "@/components/data-table-pagination";
 import { DataTableToolbar } from "@/components/data-table-toolbar";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { cutiKeys } from "@/hooks/keys/cuti-keys";
+import { useCutiKuotaList, useDeleteKuotaMutation } from "@/hooks/cuti/useCutiKuota";
 import { labelStatus } from "@/lib/enum-labels";
-import { fromPage, toApiParams } from "@/lib/paging";
-import { apiErrorMessage, throwIfNotOk } from "@/lib/utils";
-import type { CutiKuotaPegawaiResponse, CutiKuotaResponse } from "@/types/cuti/kuota";
+import { fromPage } from "@/lib/paging";
+import type { CutiKuotaResponse } from "@/types/cuti/kuota";
 import { KuotaFormSheet } from "./kuota-form-sheet";
 import { KuotaImportDialog } from "./kuota-import-dialog";
 
@@ -25,7 +24,7 @@ const YEAR_OPTIONS = Array.from({ length: 5 }, (_, i) => CURRENT_YEAR - i);
 export function KuotaPageClient() {
 	const sp = useSearchParams();
 	const router = useRouter();
-	const qc = useQueryClient();
+	const _qc = useQueryClient();
 
 	const page = Number(sp.get("page") ?? "1");
 	const size = Number(sp.get("size") ?? "10");
@@ -43,41 +42,16 @@ export function KuotaPageClient() {
 	const [deleting, setDeleting] = useState<CutiKuotaResponse | null>(null);
 	const [deleteError, setDeleteError] = useState<string | null>(null);
 
-	const query = useQuery({
-		// CU-14: queryKey bawa semua param yang mempengaruhi hasil
-		queryKey: cutiKeys.kuota.list({ tahun, nama, nipam, page, size }),
-		queryFn: async () => {
-			const params: Record<string, string> = { ...toApiParams({ page, size }), tahun: String(tahun) };
-			if (nama) params.nama = nama;
-			if (nipam) params.nipam = nipam;
-			const qs = new URLSearchParams(params).toString();
-			const res = await fetch(`/api/proxy/cuti/kuota?${qs}`);
-			throwIfNotOk(res, "Gagal memuat data kuota");
-			const body = (await res.json()) as { data: CutiKuotaPegawaiResponse };
-			return body.data;
-		},
-		placeholderData: keepPreviousData,
-		staleTime: 30_000,
-		gcTime: 300_000,
-	});
+	const query = useCutiKuotaList({ tahun, nama, nipam, page, size });
 
-	const deleteMutation = useMutation({
-		mutationFn: async (id: number) => {
-			const res = await fetch(`/api/proxy/cuti/kuota/${id}`, { method: "DELETE" });
-			if (!res.ok) {
-				const body = await res.json().catch(() => ({}));
-				throw new Error(apiErrorMessage(body, "Gagal menghapus kuota"));
-			}
-		},
-		onSuccess: () => {
+	const deleteMutation = useDeleteKuotaMutation(
+		() => {
 			toast.success("Kuota cuti berhasil dihapus");
 			setDeleting(null);
 			setDeleteError(null);
-			qc.invalidateQueries({ queryKey: cutiKeys.kuota.all() });
 		},
-		// 409 → inline di dialog (bukan toast) — kontrak status (coding-rules §6)
-		onError: (e: Error) => setDeleteError(e.message),
-	});
+		(e) => setDeleteError(e.message),
+	);
 
 	// URL = sumber kebenaran state tabel (tahun, nama, nipam, page, size)
 	const nav = (updates: Record<string, string | undefined>) => {

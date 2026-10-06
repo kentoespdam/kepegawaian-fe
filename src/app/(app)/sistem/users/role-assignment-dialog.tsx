@@ -1,11 +1,9 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { systemKeys } from "@/hooks/keys/system-keys";
+import { useRoleAssignment } from "@/hooks/sistem/useRoleAssignment";
 import type { PrefRole } from "@/types/system/roles";
 import type { UserResponse } from "@/types/system/users";
 
@@ -17,28 +15,9 @@ interface RoleAssignmentDialogProps {
 }
 
 export function RoleAssignmentDialog({ user, allRoles, isLoadingRoles, onClose }: RoleAssignmentDialogProps) {
-	const qc = useQueryClient();
 	const [selectedRoles, setSelectedRoles] = useState<Set<string>>(new Set(user?.prefs?.roles ?? []));
 
-	const assignMutation = useMutation({
-		mutationFn: async ({ userId, roles }: { userId: string; roles: PrefRole[] }) => {
-			const res = await fetch(`/api/proxy/system/users/pref/${userId}`, {
-				method: "PATCH",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(roles),
-			});
-			if (!res.ok) {
-				const body: { message?: string } = await res.json().catch(() => ({}));
-				throw new Error(body.message ?? "Gagal memperbarui role");
-			}
-		},
-		onSuccess: () => {
-			toast.success("Role user diperbarui");
-			onClose();
-			qc.invalidateQueries({ queryKey: systemKeys.users.all() });
-		},
-		onError: (e: Error) => toast.error(e.message),
-	});
+	const { assignMutation } = useRoleAssignment(onClose);
 
 	const handleSave = () => {
 		if (!user?.id) return;
