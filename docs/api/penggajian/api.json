@@ -1650,6 +1650,18 @@
 				}
 			}
 		},
+		"/penggajian/batch/master/{id}/slip-gaji": {
+			"get": {
+				"tags": ["Penggajian — Gaji Batch Master"],
+				"operationId": "downloadSlipGaji",
+				"parameters": [
+					{ "name": "id", "in": "path", "required": true, "schema": { "type": "integer", "format": "int64" } }
+				],
+				"responses": {
+					"200": { "description": "OK", "content": { "*/*": { "schema": { "type": "string", "format": "binary" } } } }
+				}
+			}
+		},
 		"/penggajian/batch/master/template/download/{rootBatchId}": {
 			"get": {
 				"tags": ["Penggajian — Gaji Batch Master"],
@@ -1658,6 +1670,81 @@
 				"parameters": [{ "name": "rootBatchId", "in": "path", "required": true, "schema": { "type": "string" } }],
 				"responses": {
 					"200": { "description": "OK", "content": { "*/*": { "schema": { "type": "string", "format": "binary" } } } }
+				}
+			}
+		},
+		"/penggajian/batch/master/self": {
+			"get": {
+				"tags": ["Penggajian — Gaji Batch Master"],
+				"summary": "Ambil riwayat penggajian milik sendiri (self-service)",
+				"operationId": "getMyGajiBatchMasterHistory",
+				"parameters": [
+					{
+						"name": "periode",
+						"in": "query",
+						"description": "Periode penggajian (opsional, format YYYY-MM)",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"description": "Periode penggajian (opsional, format YYYY-MM)",
+							"example": "2026-06"
+						},
+						"example": "2026-06"
+					},
+					{
+						"name": "search",
+						"in": "query",
+						"description": "Pencarian bebas",
+						"required": false,
+						"schema": { "type": "string", "description": "Pencarian bebas", "example": "Gaji" },
+						"example": "Gaji"
+					},
+					{
+						"name": "status",
+						"in": "query",
+						"description": "Filter status proses gaji minimal",
+						"required": false,
+						"schema": {
+							"type": "string",
+							"description": "Filter status proses gaji minimal",
+							"enum": [
+								"PENDING",
+								"PROSES",
+								"WAIT_VERIFICATION_PHASE_1",
+								"WAIT_VERIFICATION_PHASE_2",
+								"WAIT_APPROVAL",
+								"FINISHED",
+								"FAILED"
+							],
+							"example": "FINISHED"
+						},
+						"example": "FINISHED"
+					},
+					{
+						"name": "page",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "minimum": 0 }
+					},
+					{
+						"name": "size",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "maximum": 100, "minimum": 1 }
+					},
+					{ "name": "sortBy", "in": "query", "required": false, "schema": { "type": "string" } },
+					{
+						"name": "sortDirection",
+						"in": "query",
+						"required": false,
+						"schema": { "type": "string", "pattern": "(?i)asc|desc" }
+					}
+				],
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/PageResultPageGajiBatchMasterResponse" } } }
+					}
 				}
 			}
 		},
@@ -5450,6 +5537,99 @@
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},
+			"PageGajiBatchMasterResponse": {
+				"type": "object",
+				"properties": {
+					"totalElements": { "type": "integer", "format": "int64" },
+					"totalPages": { "type": "integer", "format": "int32" },
+					"size": { "type": "integer", "format": "int32" },
+					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterResponse" } },
+					"number": { "type": "integer", "format": "int32" },
+					"numberOfElements": { "type": "integer", "format": "int32" },
+					"pageable": { "$ref": "#/components/schemas/PageableObject" },
+					"sort": { "$ref": "#/components/schemas/SortObject" },
+					"first": { "type": "boolean" },
+					"last": { "type": "boolean" },
+					"empty": { "type": "boolean" }
+				}
+			},
+			"PageResultPageGajiBatchMasterResponse": {
+				"type": "object",
+				"properties": {
+					"status": { "type": "integer", "format": "int32" },
+					"statusText": {
+						"type": "string",
+						"enum": [
+							"100 CONTINUE",
+							"101 SWITCHING_PROTOCOLS",
+							"102 PROCESSING",
+							"103 EARLY_HINTS",
+							"200 OK",
+							"201 CREATED",
+							"202 ACCEPTED",
+							"203 NON_AUTHORITATIVE_INFORMATION",
+							"204 NO_CONTENT",
+							"205 RESET_CONTENT",
+							"206 PARTIAL_CONTENT",
+							"207 MULTI_STATUS",
+							"208 ALREADY_REPORTED",
+							"226 IM_USED",
+							"300 MULTIPLE_CHOICES",
+							"301 MOVED_PERMANENTLY",
+							"302 FOUND",
+							"303 SEE_OTHER",
+							"304 NOT_MODIFIED",
+							"307 TEMPORARY_REDIRECT",
+							"308 PERMANENT_REDIRECT",
+							"400 BAD_REQUEST",
+							"401 UNAUTHORIZED",
+							"402 PAYMENT_REQUIRED",
+							"403 FORBIDDEN",
+							"404 NOT_FOUND",
+							"405 METHOD_NOT_ALLOWED",
+							"406 NOT_ACCEPTABLE",
+							"407 PROXY_AUTHENTICATION_REQUIRED",
+							"408 REQUEST_TIMEOUT",
+							"409 CONFLICT",
+							"410 GONE",
+							"411 LENGTH_REQUIRED",
+							"412 PRECONDITION_FAILED",
+							"413 CONTENT_TOO_LARGE",
+							"413 PAYLOAD_TOO_LARGE",
+							"414 URI_TOO_LONG",
+							"415 UNSUPPORTED_MEDIA_TYPE",
+							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
+							"417 EXPECTATION_FAILED",
+							"418 I_AM_A_TEAPOT",
+							"421 MISDIRECTED_REQUEST",
+							"422 UNPROCESSABLE_CONTENT",
+							"422 UNPROCESSABLE_ENTITY",
+							"423 LOCKED",
+							"424 FAILED_DEPENDENCY",
+							"425 TOO_EARLY",
+							"426 UPGRADE_REQUIRED",
+							"428 PRECONDITION_REQUIRED",
+							"429 TOO_MANY_REQUESTS",
+							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
+							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
+							"500 INTERNAL_SERVER_ERROR",
+							"501 NOT_IMPLEMENTED",
+							"502 BAD_GATEWAY",
+							"503 SERVICE_UNAVAILABLE",
+							"504 GATEWAY_TIMEOUT",
+							"505 HTTP_VERSION_NOT_SUPPORTED",
+							"506 VARIANT_ALSO_NEGOTIATES",
+							"507 INSUFFICIENT_STORAGE",
+							"508 LOOP_DETECTED",
+							"509 BANDWIDTH_LIMIT_EXCEEDED",
+							"510 NOT_EXTENDED",
+							"511 NETWORK_AUTHENTICATION_REQUIRED"
+						]
+					},
+					"data": { "$ref": "#/components/schemas/PageGajiBatchMasterResponse" },
+					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
 			"GajiBatchMasterProsesResponse": {
 				"type": "object",
 				"properties": {
@@ -5712,99 +5892,6 @@
 					"errors": { "type": "array", "items": { "type": "string" } },
 					"message": { "type": "string" },
 					"data": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterProsesResponse" } },
-					"timestamp": { "type": "string", "format": "date-time" }
-				}
-			},
-			"PageGajiBatchMasterResponse": {
-				"type": "object",
-				"properties": {
-					"totalElements": { "type": "integer", "format": "int64" },
-					"totalPages": { "type": "integer", "format": "int32" },
-					"size": { "type": "integer", "format": "int32" },
-					"content": { "type": "array", "items": { "$ref": "#/components/schemas/GajiBatchMasterResponse" } },
-					"number": { "type": "integer", "format": "int32" },
-					"numberOfElements": { "type": "integer", "format": "int32" },
-					"pageable": { "$ref": "#/components/schemas/PageableObject" },
-					"sort": { "$ref": "#/components/schemas/SortObject" },
-					"first": { "type": "boolean" },
-					"last": { "type": "boolean" },
-					"empty": { "type": "boolean" }
-				}
-			},
-			"PageResultPageGajiBatchMasterResponse": {
-				"type": "object",
-				"properties": {
-					"status": { "type": "integer", "format": "int32" },
-					"statusText": {
-						"type": "string",
-						"enum": [
-							"100 CONTINUE",
-							"101 SWITCHING_PROTOCOLS",
-							"102 PROCESSING",
-							"103 EARLY_HINTS",
-							"200 OK",
-							"201 CREATED",
-							"202 ACCEPTED",
-							"203 NON_AUTHORITATIVE_INFORMATION",
-							"204 NO_CONTENT",
-							"205 RESET_CONTENT",
-							"206 PARTIAL_CONTENT",
-							"207 MULTI_STATUS",
-							"208 ALREADY_REPORTED",
-							"226 IM_USED",
-							"300 MULTIPLE_CHOICES",
-							"301 MOVED_PERMANENTLY",
-							"302 FOUND",
-							"303 SEE_OTHER",
-							"304 NOT_MODIFIED",
-							"307 TEMPORARY_REDIRECT",
-							"308 PERMANENT_REDIRECT",
-							"400 BAD_REQUEST",
-							"401 UNAUTHORIZED",
-							"402 PAYMENT_REQUIRED",
-							"403 FORBIDDEN",
-							"404 NOT_FOUND",
-							"405 METHOD_NOT_ALLOWED",
-							"406 NOT_ACCEPTABLE",
-							"407 PROXY_AUTHENTICATION_REQUIRED",
-							"408 REQUEST_TIMEOUT",
-							"409 CONFLICT",
-							"410 GONE",
-							"411 LENGTH_REQUIRED",
-							"412 PRECONDITION_FAILED",
-							"413 CONTENT_TOO_LARGE",
-							"413 PAYLOAD_TOO_LARGE",
-							"414 URI_TOO_LONG",
-							"415 UNSUPPORTED_MEDIA_TYPE",
-							"416 REQUESTED_RANGE_NOT_SATISFIABLE",
-							"417 EXPECTATION_FAILED",
-							"418 I_AM_A_TEAPOT",
-							"421 MISDIRECTED_REQUEST",
-							"422 UNPROCESSABLE_CONTENT",
-							"422 UNPROCESSABLE_ENTITY",
-							"423 LOCKED",
-							"424 FAILED_DEPENDENCY",
-							"425 TOO_EARLY",
-							"426 UPGRADE_REQUIRED",
-							"428 PRECONDITION_REQUIRED",
-							"429 TOO_MANY_REQUESTS",
-							"431 REQUEST_HEADER_FIELDS_TOO_LARGE",
-							"451 UNAVAILABLE_FOR_LEGAL_REASONS",
-							"500 INTERNAL_SERVER_ERROR",
-							"501 NOT_IMPLEMENTED",
-							"502 BAD_GATEWAY",
-							"503 SERVICE_UNAVAILABLE",
-							"504 GATEWAY_TIMEOUT",
-							"505 HTTP_VERSION_NOT_SUPPORTED",
-							"506 VARIANT_ALSO_NEGOTIATES",
-							"507 INSUFFICIENT_STORAGE",
-							"508 LOOP_DETECTED",
-							"509 BANDWIDTH_LIMIT_EXCEEDED",
-							"510 NOT_EXTENDED",
-							"511 NETWORK_AUTHENTICATION_REQUIRED"
-						]
-					},
-					"data": { "$ref": "#/components/schemas/PageGajiBatchMasterResponse" },
 					"timestamp": { "type": "string", "format": "date-time" }
 				}
 			},

@@ -3,7 +3,17 @@ import { keluargaCrudConfig } from "@/config/profil/keluarga.config";
 import { pelatihanCrudConfig } from "@/config/profil/pelatihan.config";
 import { pendidikanCrudConfig } from "@/config/profil/pendidikan.config";
 import { pengalamanKerjaCrudConfig } from "@/config/profil/pengalaman-kerja.config";
-import { boolStr, hubunganKeluarga, jenisMutasi, jenisSk, rp, spSeverity, t, val } from "@/lib/kepegawaian-formatters";
+import {
+	boolStr,
+	formatPeriode,
+	hubunganKeluarga,
+	jenisMutasi,
+	jenisSk,
+	rp,
+	spSeverity,
+	t,
+	val,
+} from "@/lib/kepegawaian-formatters";
 import { cn, formatDate } from "@/lib/utils";
 import type { SectionConf } from "@/types/kepegawaian/dashboard";
 
@@ -104,20 +114,22 @@ export const SECTIONS: SectionConf[] = [
 	{
 		id: "penggajian",
 		label: "Riwayat Penggajian",
-		buildUrl: (id) => `/api/proxy/penggajian/batch/master/pegawai/${id}`,
+		buildUrl: (_, __, p) => `/api/proxy/penggajian/batch/master/self?${new URLSearchParams(p)}`,
 		columns: [
-			{ id: "periode", header: "Periode", primary: true },
+			{ id: "periode", header: "Periode", primary: true, cell: (r) => formatPeriode(r.periode as string) },
+			{ id: "namaJabatan", header: "Jabatan", cell: (r) => val(r.namaJabatan) },
 			{ id: "gajiPokok", header: "Gaji Pokok", cell: (r) => rp(r.gajiPokok) },
 			{ id: "penghasilanKotor", header: "Penghasilan Kotor", cell: (r) => rp(r.penghasilanKotor) },
 			{ id: "totalPotongan", header: "Potongan", cell: (r) => rp(r.totalPotongan) },
-			{ id: "pajak", header: "Pajak", cell: (r) => rp(r.pajak) },
+			{ id: "pembulatan", header: "Pembulatan", cell: (r) => rp(r.pembulatan) },
+			{ id: "penghasilanBersih", header: "Sub Total", cell: (r) => rp(r.penghasilanBersih) },
+			{ id: "totalAddTambahan", header: "Penghasilan Tambahan", cell: (r) => rp(r.totalAddTambahan) },
 			{
 				id: "penghasilanBersihFinal",
 				header: "Penghasilan Bersih",
 				cell: (r) => <span className="font-semibold text-foreground">{rp(r.penghasilanBersihFinal)}</span>,
 			},
 		],
-		isSingleItem: true,
 	},
 	{
 		id: "sp",

@@ -5,7 +5,7 @@
  * JANGAN diedit manual — jalankan ulang script bila spec berubah.
  *
  * Sumber: docs/api/{modul}/api.json
- * Endpoint : DELETE /penggajian/batch/master/proses/{id}, DELETE /penggajian/batch/master/proses/{rootBatchId}/rollback, DELETE /penggajian/batch/{id}, GET /penggajian/batch, GET /penggajian/batch/master, GET /penggajian/batch/master/download/potongan-gaji/{rootBatchId}, GET /penggajian/batch/master/download/table-gaji/{rootBatchId}, GET /penggajian/batch/master/pegawai/{pegawaiId}, GET /penggajian/batch/master/proses, GET /penggajian/batch/master/proses/{batchMasterId}/master, GET /penggajian/batch/master/proses/{masterId}/master_batch_id/{kode}/kode, GET /penggajian/batch/master/template/download/{rootBatchId}, GET /penggajian/batch/master/{id}, GET /penggajian/batch/potongan-tkk/template/download, GET /penggajian/batch/{periode}/periode/{status}/status, PATCH /penggajian/batch/master/upload/{rootBatchId}, PATCH /penggajian/batch/{id}/reprocess, PATCH /penggajian/batch/{id}/verify, POST /penggajian/batch, POST /penggajian/batch/master/proses
+ * Endpoint : DELETE /penggajian/batch/master/proses/{id}, DELETE /penggajian/batch/master/proses/{rootBatchId}/rollback, DELETE /penggajian/batch/{id}, GET /penggajian/batch, GET /penggajian/batch/master, GET /penggajian/batch/master/download/potongan-gaji/{rootBatchId}, GET /penggajian/batch/master/download/table-gaji/{rootBatchId}, GET /penggajian/batch/master/pegawai/{pegawaiId}, GET /penggajian/batch/master/proses, GET /penggajian/batch/master/proses/{batchMasterId}/master, GET /penggajian/batch/master/proses/{masterId}/master_batch_id/{kode}/kode, GET /penggajian/batch/master/self, GET /penggajian/batch/master/template/download/{rootBatchId}, GET /penggajian/batch/master/{id}, GET /penggajian/batch/master/{id}/slip-gaji, GET /penggajian/batch/potongan-tkk/template/download, GET /penggajian/batch/{periode}/periode/{status}/status, PATCH /penggajian/batch/master/upload/{rootBatchId}, PATCH /penggajian/batch/{id}/reprocess, PATCH /penggajian/batch/{id}/verify, POST /penggajian/batch, POST /penggajian/batch/master/proses
  */
 
 import type { Envelope, Page, PageEnvelope, PageQuery, StatusKawin, StatusKepegawaian, TipeKomponen } from "../_shared";
@@ -161,12 +161,12 @@ export type ListResultGajiBatchMasterResponse = Envelope<GajiBatchMasterResponse
 
 export type SingleResultGajiBatchMasterResponse = Envelope<GajiBatchMasterResponse>;
 
-export type SingleResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse>;
-
-export type ListResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse[]>;
-
 export type PageGajiBatchMasterResponse = Page<GajiBatchMasterResponse>;
 
 export type PageResultPageGajiBatchMasterResponse = PageEnvelope<GajiBatchMasterResponse>;
+
+export type SingleResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse>;
+
+export type ListResultGajiBatchMasterProsesResponse = Envelope<GajiBatchMasterProsesResponse[]>;
 
 export type { DeletedResult, PageableObject, SavedResultLong, SavedResultString, SortObject } from "../_shared";

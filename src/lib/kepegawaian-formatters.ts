@@ -136,3 +136,42 @@ export function fetchSection(
 		};
 	};
 }
+
+/** Format periode (e.g. "2026-03", "202603", "2026-03-01") ke "Maret 2026". */
+export function formatPeriode(periode?: string | null): string {
+	if (!periode) return "-";
+	const clean = periode.trim();
+	// Format YYYY-MM atau YYYYMM atau YYYY-MM-DD
+	let year: number | undefined;
+	let month: number | undefined;
+
+	if (/^\d{4}-\d{2}(-\d{2})?$/.test(clean)) {
+		const parts = clean.split("-");
+		year = Number(parts[0]);
+		month = Number(parts[1]);
+	} else if (/^\d{6}$/.test(clean)) {
+		year = Number(clean.substring(0, 4));
+		month = Number(clean.substring(4, 6));
+	}
+
+	if (!year || !month || !Number.isFinite(year) || !Number.isFinite(month) || month < 1 || month > 12) {
+		return "-";
+	}
+
+	const months = [
+		"Januari",
+		"Februari",
+		"Maret",
+		"April",
+		"Mei",
+		"Juni",
+		"Juli",
+		"Agustus",
+		"September",
+		"Oktober",
+		"November",
+		"Desember",
+	];
+
+	return `${months[month - 1]} ${year}`;
+}
