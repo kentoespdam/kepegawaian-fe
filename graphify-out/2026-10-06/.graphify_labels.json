@@ -89,13 +89,5 @@
   "87": "sk/page.test.tsx",
   "88": "proses-gaji-client.test.tsx",
   "89": "pengajuan-page-client.test.tsx",
-  "90": "AuthProvider",
-  "91": "section-right-panel.tsx",
-  "92": "jenis-kitas.ts",
-  "93": "riwayat-constants.ts",
-  "94": "create-batch-dialog.tsx",
-  "95": "KpiClient",
-  "96": "kuota-page-client.tsx",
-  "97": "rp",
-  "98": "(app)/page.tsx"
+  "90": "AuthProvider"
 }
