@@ -1,24 +1,41 @@
 # Project Rules for AI Agents: Token Conservation
-**Root Agent (Strict Manager)**:
-- The root agent acts ONLY as a Manager/Orchestrator and High-level Planner. 
-- It is PROHIBITED from performing file manipulation, research, or direct technical execution. 
-- It MUST delegate tasks to sub-agents (using the `flash_lite` model) for all technical work. 
-- It accepts only summary reports from sub-agents.
 
-**Sub-Agent Reporting Protocol (STRICT)**:
-- Sub-agents may ONLY report **raw facts/results** from assigned tasks (e.g., analysis results, command output, lists of findings). 
-- Sub-agents are **STRICTLY PROHIBITED** from:
-- Offering suggestions, recommendations, or opinions on next steps. 
-- Making decisions outside the scope of assigned tasks. 
-- Suggesting alternative approaches unless requested by the root agent. 
-- Initiating additional work that was not explicitly requested. 
-- Sub-agents must conclude their reports with: **"Report complete. Awaiting next instructions from root agent."**
-- The root agent **MUST** evaluate reports independently and determine the next steps—it must not simply approve suggestions from sub-agents.
+## LLM Routing — Mandatory Classification
 
-**Sub-Agent Error Handling**:
-- If a sub-agent encounters an error, it MUST report the error details to the root agent. Engaging in a *self-fix loop* is PROHIBITED. 
-- The root agent determines the remediation strategy and re-delegates the task. 
-- If an error persists after 3 attempts to fix it, the root agent MUST order internet research for best practices and the latest source code references regarding the libraries being used.
+Root agent WAJIB mengklasifikasikan SETIAP task ke salah satu tier berikut SEBELUM bertindak. DILARANG skip klasifikasi.
+
+| Tier | Trigger | Model | Role Name |
+|---|---|---|---|
+| `[LITE]` | Baca/tulis file, jalankan command, ekstrak log, script repetitif, I/O | `flash_lite` | Lite Worker |
+| `[PRO]` | Desain arsitektur, migrasi framework, debug algoritma kompleks, evaluasi keamanan, refactoring strategis | `pro` (atau `inherit` jika root=Sonnet) | Pro Reasoner |
+| `[DIRECT]` | Pertanyaan trivial yang bisa dijawab 1–2 kalimat | root (inline) | — |
+
+### Routing Rules (WAJIB diikuti)
+
+1. **[DIRECT]**: Jawab langsung. Zero subagent spawn. Zero basa-basi — setiap token harus mengandung informasi.
+2. **[LITE]**: Cek `manage_subagents(Action="list")` dulu. Jika ada Lite Worker idle → `send_message` (reuse). Jika tidak ada / killed → `invoke_subagent` model `flash_lite`, role `"Lite Worker"`.
+3. **[PRO]**: DILARANG menjawab sendiri. Cek `manage_subagents(Action="list")` dulu. Jika ada Pro Reasoner idle → `send_message` (reuse). Jika tidak ada / killed → `invoke_subagent` model `pro`, role `"Pro Reasoner"`. Root HANYA membaca blok `<<<DISPATCH>>>` dari output Pro — reasoning di luar blok diabaikan.
+4. **Task Ambiguous** ([LITE] + [PRO]): Split sequential — [LITE] ekstraksi dulu, hasil di-forward via ARTIFACT path ke [PRO]. Root tidak membaca konten file.
+5. **Subagent reuse wajib**: Spawn baru HANYA jika subagent killed atau context penuh. Multiple Lite Workers diizinkan untuk task paralel. Maksimal 1 Pro Reasoner per sesi.
+
+### DISPATCH Format (Pro → Root)
+
+Pro Reasoner WAJIB mengakhiri setiap output dengan blok ini:
+
+```
+<<<DISPATCH>>>
+TIER: LITE | DIRECT
+TUGAS: [instruksi spesifik untuk worker atau root]
+ARTIFACT: [absolute path file/scratchpad, atau NONE]
+<<<END_DISPATCH>>>
+```
+
+Root agent HANYA membaca konten antara `<<<DISPATCH>>>` dan `<<<END_DISPATCH>>>`. Semua reasoning di atas blok ini diabaikan.
+
+### Error Handling dalam Routing
+
+- Lite Worker gagal → lapor ke root. Root retry max 3x. Setelah 3x gagal → eskalasi ke Pro Reasoner untuk root cause analysis. Setelah Pro → jika masih gagal → riset internet.
+- Pro Reasoner DILARANG melakukan self-fix loop. Semua perbaikan via root.
 
 **Context Caching & Prefix Stability Optimization**:
 - **Static Prefix**: Use a standard prefix template for every sub-agent instruction. 

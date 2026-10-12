@@ -12,6 +12,7 @@ import type {
 	Envelope,
 	GolonganResponse,
 	JabatanMiniResponse,
+	JenisRiwayatKepegawaian,
 	JenisSk,
 	JenisSpMiniResponse,
 	LampiranSkQuery,
@@ -26,15 +27,6 @@ import type {
 
 /** Jenis aksi kontrak (PERPANJANGAN, PENGANGKATAN, TERMINASI). */
 export type JenisAksiKontrak = "PERPANJANGAN" | "PENGANGKATAN" | "TERMINASI";
-/** Jenis riwayat kepegawaian (PENGANGKATAN_PERTAMA, MUTASI_LOKER). */
-export type JenisRiwayatKepegawaian =
-	| "PENGANGKATAN_PERTAMA"
-	| "MUTASI_LOKER"
-	| "MUTASI_JABATAN"
-	| "MUTASI_GOLONGAN"
-	| "MUTASI_GAJI"
-	| "MUTASI_GAJI_BERKALA"
-	| "TERMINASI";
 
 export interface RiwayatSearchParams extends PageQuery {
 	tahunPensiun?: number; // int32

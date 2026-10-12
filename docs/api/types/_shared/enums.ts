@@ -126,6 +126,15 @@ export type StatusBerhenti =
 	| "DITERIMA"
 	| "DIREKOMENDASIKAN"
 	| "DITOLAK";
+/** Jenis riwayat kepegawaian (PENGANGKATAN_PERTAMA, MUTASI_LOKER). */
+export type JenisRiwayatKepegawaian =
+	| "PENGANGKATAN_PERTAMA"
+	| "MUTASI_LOKER"
+	| "MUTASI_JABATAN"
+	| "MUTASI_GOLONGAN"
+	| "MUTASI_GAJI"
+	| "MUTASI_GAJI_BERKALA"
+	| "TERMINASI";
 /** Tingkat kemampuan keahlian (KURANG, BAIK, CUKUP). */
 export type TingkatKemampuan = "KURANG" | "BAIK" | "CUKUP";
 /** Hubungan keluarga (SUAMI, ISTRI, AYAH, IBU, ANAK, SAUDARA). */

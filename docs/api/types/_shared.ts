@@ -631,3 +631,13 @@ export interface PrefRole {
 	description?: string;
 	permissions?: PrefPermission[];
 }
+
+/** Jenis riwayat kepegawaian (PENGANGKATAN_PERTAMA, MUTASI_LOKER). */
+export type JenisRiwayatKepegawaian =
+	| "PENGANGKATAN_PERTAMA"
+	| "MUTASI_LOKER"
+	| "MUTASI_JABATAN"
+	| "MUTASI_GOLONGAN"
+	| "MUTASI_GAJI"
+	| "MUTASI_GAJI_BERKALA"
+	| "TERMINASI";
