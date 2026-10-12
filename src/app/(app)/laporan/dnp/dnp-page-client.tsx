@@ -6,16 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAsyncReportExport } from "@/hooks/laporan/useAsyncReportExport";
 import { useLaporanDnp } from "@/hooks/laporan/useLaporanDnp";
+import { formatDateDotted } from "@/lib/utils";
 import type { DnpResponse } from "@/types/laporan/kepegawaian";
-
-function formatDate(v?: string): string {
-	if (!v) return "-";
-	try {
-		return new Date(v).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
-	} catch {
-		return String(v);
-	}
-}
 
 export function DnpPageClient() {
 	const { data: list, isLoading, isError, error, refetch } = useLaporanDnp();
@@ -98,11 +90,11 @@ export function DnpPageClient() {
 											<td className="border p-2 text-center font-mono tabular-nums">{item.nipam ?? "-"}</td>
 											<td className="border p-2 text-center">{item.kodeOrganisasi ?? "-"}</td>
 											<td className="border p-2">{item.namaJabatan ?? "-"}</td>
-											<td className="border p-2 text-center">{formatDate(item.tmtJabatan)}</td>
+											<td className="border p-2 text-center">{formatDateDotted(item.tmtJabatan)}</td>
 											<td className="border p-2 text-center">
 												{item.pangkat ? `${item.pangkat} (${item.golongan ?? "-"})` : (item.golongan ?? "-")}
 											</td>
-											<td className="border p-2 text-center">{formatDate(item.tmtGolongan)}</td>
+											<td className="border p-2 text-center">{formatDateDotted(item.tmtGolongan)}</td>
 											<td className="border p-2 text-center tabular-nums">
 												{item.mkgTahun ?? 0} thn {item.mkgBulan ?? 0} bln
 											</td>

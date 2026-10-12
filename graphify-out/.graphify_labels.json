@@ -94,13 +94,10 @@
   "92": "jenis-kitas.ts",
   "93": "riwayat-constants.ts",
   "95": "KpiClient",
-  "96": "kuota-page-client.tsx",
   "98": "(app)/page.tsx",
-  "99": "tambahan.schema.ts",
   "101": "kuota.ts",
   "105": "klaim-form-schema.ts",
   "106": "data-pegawai-client.tsx",
   "107": "edit-gaji-sheet.test.tsx",
-  "109": "edit-profil-sheet.test.tsx",
-  "110": "useMutasiFormQueries.ts"
+  "109": "edit-profil-sheet.test.tsx"
 }

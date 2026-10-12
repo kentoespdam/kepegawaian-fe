@@ -6,16 +6,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAsyncReportExport } from "@/hooks/laporan/useAsyncReportExport";
 import { useLaporanDuk } from "@/hooks/laporan/useLaporanDuk";
+import { formatDateDotted } from "@/lib/utils";
 import type { DukResponse } from "@/types/laporan/kepegawaian";
 
-function formatDate(v?: string): string {
-	if (!v) return "-";
-	try {
-		return new Date(v).toLocaleDateString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric" });
-	} catch {
-		return String(v);
-	}
-}
+const COLUMN_NUMBERS = Array.from({ length: 16 }, (_, i) => i + 1);
 
 export function DukPageClient() {
 	const { data: list, isLoading, isError, error, refetch } = useLaporanDuk();
@@ -79,10 +73,10 @@ export function DukPageClient() {
 										<th rowSpan={2} className="border p-2 w-10">
 											NO
 										</th>
-										<th rowSpan={2} className="border p-2 min-w-[140px] text-left">
+										<th rowSpan={2} className="border p-2 min-w-35 text-left">
 											NAMA
 										</th>
-										<th rowSpan={2} className="border p-2 min-w-[100px]">
+										<th rowSpan={2} className="border p-2 min-w-25">
 											NIPAM
 										</th>
 										<th colSpan={3} className="border p-2">
@@ -118,25 +112,28 @@ export function DukPageClient() {
 										<th className="border p-1.5">TINGKAT</th>
 									</tr>
 									<tr className="bg-muted/30 text-center text-[10px] text-muted-foreground border-b font-mono">
-										{Array.from({ length: 16 }, (_, i) => (
-											<th key={`col-${i + 1}`} className="border p-1">
-												{i + 1}
+										{COLUMN_NUMBERS.map((colNum) => (
+											<th key={colNum} className="border p-1">
+												{colNum}
 											</th>
 										))}
 									</tr>
 								</thead>
 								<tbody>
 									{list.map((item: DukResponse, idx: number) => (
-										<tr key={`${item.nipam ?? "duk"}-${idx}`} className="hover:bg-muted/20 transition-colors">
+										<tr
+											key={`${item.nipam ?? "duk"}-${item.nama ?? ""}`}
+											className="hover:bg-muted/20 transition-colors"
+										>
 											<td className="border p-2 text-center tabular-nums">{idx + 1}</td>
 											<td className="border p-2 font-medium">{item.nama ?? "-"}</td>
 											<td className="border p-2 text-center font-mono tabular-nums">{item.nipam ?? "-"}</td>
 											<td className="border p-2 text-center">{item.golongan ?? "-"}</td>
 											<td className="border p-2">{item.pangkat ?? "-"}</td>
-											<td className="border p-2 text-center">{formatDate(item.tmtGolongan)}</td>
+											<td className="border p-2 text-center">{formatDateDotted(item.tmtGolongan)}</td>
 											<td className="border p-2">{item.namaJabatan ?? "-"}</td>
-											<td className="border p-2 text-center">{formatDate(item.tmtJabatan)}</td>
-											<td className="border p-2 text-center">{formatDate(item.tmtKerja)}</td>
+											<td className="border p-2 text-center">{formatDateDotted(item.tmtJabatan)}</td>
+											<td className="border p-2 text-center">{formatDateDotted(item.tmtKerja)}</td>
 											<td className="border p-2 text-center tabular-nums">{item.mkTahun ?? 0}</td>
 											<td className="border p-2 text-center tabular-nums">{item.mkBulan ?? 0}</td>
 											<td className="border p-2">{item.jurusan ?? "-"}</td>

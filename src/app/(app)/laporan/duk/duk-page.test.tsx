@@ -51,7 +51,7 @@ describe("DukPageClient", () => {
 			isError: false,
 			error: null,
 			refetch: vi.fn(),
-		} as any);
+		} as unknown as ReturnType<typeof useLaporanDuk>);
 
 		render(<DukPageClient />, { wrapper: createWrapper() });
 
