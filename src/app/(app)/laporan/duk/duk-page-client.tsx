@@ -6,7 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAsyncReportExport } from "@/hooks/laporan/useAsyncReportExport";
 import { useLaporanDuk } from "@/hooks/laporan/useLaporanDuk";
-import { formatDateDotted } from "@/lib/utils";
 import type { DukResponse } from "@/types/laporan/kepegawaian";
 
 const COLUMN_NUMBERS = Array.from({ length: 16 }, (_, i) => i + 1);
