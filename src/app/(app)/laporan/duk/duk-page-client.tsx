@@ -66,7 +66,7 @@ export function DukPageClient() {
 							<p className="text-sm">Tidak ada data laporan DUK.</p>
 						</div>
 					) : (
-						<div className="overflow-x-auto">
+						<div className="overflow-x-auto max-h-150">
 							<table className="w-full border-collapse text-xs">
 								<thead>
 									<tr className="bg-muted/70 text-center font-semibold border-b">
@@ -126,21 +126,21 @@ export function DukPageClient() {
 											className="hover:bg-muted/20 transition-colors"
 										>
 											<td className="border p-2 text-center tabular-nums">{idx + 1}</td>
-											<td className="border p-2 font-medium">{item.nama ?? "-"}</td>
+											<td className="border p-2 font-medium whitespace-nowrap">{item.nama ?? "-"}</td>
 											<td className="border p-2 text-center font-mono tabular-nums">{item.nipam ?? "-"}</td>
 											<td className="border p-2 text-center">{item.golongan ?? "-"}</td>
-											<td className="border p-2">{item.pangkat ?? "-"}</td>
-											<td className="border p-2 text-center">{formatDateDotted(item.tmtGolongan)}</td>
-											<td className="border p-2">{item.namaJabatan ?? "-"}</td>
-											<td className="border p-2 text-center">{formatDateDotted(item.tmtJabatan)}</td>
-											<td className="border p-2 text-center">{formatDateDotted(item.tmtKerja)}</td>
+											<td className="border p-2 whitespace-nowrap">{item.pangkat ?? "-"}</td>
+											<td className="border p-2 text-center">{item.tmtGolongan}</td>
+											<td className="border p-2 whitespace-nowrap">{item.namaJabatan ?? "-"}</td>
+											<td className="border p-2 text-center">{item.tmtJabatan}</td>
+											<td className="border p-2 text-center">{item.tmtKerja}</td>
 											<td className="border p-2 text-center tabular-nums">{item.mkTahun ?? 0}</td>
 											<td className="border p-2 text-center tabular-nums">{item.mkBulan ?? 0}</td>
-											<td className="border p-2">{item.jurusan ?? "-"}</td>
+											<td className="border p-2 whitespace-nowrap">{item.jurusan ?? "-"}</td>
 											<td className="border p-2 text-center tabular-nums">{item.tahunLulus ?? "-"}</td>
-											<td className="border p-2 text-center">{item.tingkatPendidikan ?? "-"}</td>
+											<td className="border p-2 text-center whitespace-nowrap">{item.tingkatPendidikan ?? "-"}</td>
 											<td className="border p-2 text-center tabular-nums">{item.usia ?? "-"}</td>
-											<td className="border p-2 text-center">{item.statusPegawai ?? "-"}</td>
+											<td className="border p-2 text-center whitespace-nowrap">{item.statusPegawai ?? "-"}</td>
 										</tr>
 									))}
 								</tbody>
