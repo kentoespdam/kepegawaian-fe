@@ -5,7 +5,13 @@ import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useLaporanDnp } from "@/hooks/laporan/useLaporanDnp";
 import type { DnpResponse } from "@/types/laporan/kepegawaian";
-import { DnpPageClient, formatDnpDate, groupDnpByOrganisasi } from "./dnp-page-client";
+import {
+	DnpPageClient,
+	formatDnpDate,
+	formatOrgGroupName,
+	getOrgSortOrder,
+	groupDnpByOrganisasi,
+} from "./dnp-page-client";
 
 vi.mock("@/hooks/laporan/useLaporanDnp", () => ({
 	useLaporanDnp: vi.fn(),
@@ -46,16 +52,36 @@ describe("formatDnpDate", () => {
 	});
 });
 
+describe("getOrgSortOrder & formatOrgGroupName", () => {
+	it("mengekstrak 2 digit awal untuk sorting", () => {
+		expect(getOrgSortOrder("01 DIREKSI")).toBe(1);
+		expect(getOrgSortOrder("02 SATUAN PENGAWAS INTERN")).toBe(2);
+		expect(getOrgSortOrder("10 BAGIAN UMUM")).toBe(10);
+		expect(getOrgSortOrder("DIREKSI")).toBe(Number.MAX_SAFE_INTEGER);
+	});
+
+	it("menghapus nomor urut 2 digit awal untuk tampilan", () => {
+		expect(formatOrgGroupName("01 DIREKSI")).toBe("DIREKSI");
+		expect(formatOrgGroupName("01 - DIREKSI")).toBe("DIREKSI");
+		expect(formatOrgGroupName("01. DIREKSI")).toBe("DIREKSI");
+		expect(formatOrgGroupName("02 SATUAN PENGAWAS INTERN")).toBe("SATUAN PENGAWAS INTERN");
+		expect(formatOrgGroupName("DIREKSI")).toBe("DIREKSI");
+	});
+});
+
 describe("groupDnpByOrganisasi", () => {
-	it("mengelompokkan data berdasarkan orgGroup dan menghitung groupIndex", () => {
+	it("mengurutkan grup berdasarkan 2 digit awal dan menghapus prefix nomor pada nama grup", () => {
 		const raw: DnpResponse[] = [
-			{ nama: "Dir 1", orgGroup: "DIREKSI", nipam: "101" },
-			{ nama: "Dir 2", orgGroup: "DIREKSI", nipam: "102" },
-			{ nama: "SPI 1", orgGroup: "SATUAN PENGAWAS INTERN", nipam: "201" },
+			{ nama: "SPI 1", orgGroup: "02 SATUAN PENGAWAS INTERN", nipam: "201" },
+			{ nama: "Dir 1", orgGroup: "01 DIREKSI", nipam: "101" },
+			{ nama: "Dir 2", orgGroup: "01 DIREKSI", nipam: "102" },
+			{ nama: "P&P 1", orgGroup: "03 BAGIAN PERENCANAAN & PENGEMBANGAN", nipam: "301" },
 		];
 
 		const groups = groupDnpByOrganisasi(raw);
-		expect(groups).toHaveLength(2);
+		expect(groups).toHaveLength(3);
+
+		// Urutan harus berdasarkan digit awal: 01, 02, 03
 		expect(groups[0].organisasi).toBe("DIREKSI");
 		expect(groups[0].items).toHaveLength(2);
 		expect(groups[0].items[0].groupIndex).toBe(1);
@@ -64,6 +90,10 @@ describe("groupDnpByOrganisasi", () => {
 		expect(groups[1].organisasi).toBe("SATUAN PENGAWAS INTERN");
 		expect(groups[1].items).toHaveLength(1);
 		expect(groups[1].items[0].groupIndex).toBe(1);
+
+		expect(groups[2].organisasi).toBe("BAGIAN PERENCANAAN & PENGEMBANGAN");
+		expect(groups[2].items).toHaveLength(1);
+		expect(groups[2].items[0].groupIndex).toBe(1);
 	});
 
 	it("fallback ke kodeOrganisasi jika orgGroup kosong", () => {
@@ -81,7 +111,7 @@ describe("DnpPageClient", () => {
 				nama: "YOHANES NOVAGA, S.E.",
 				nipam: "771100531",
 				namaJabatan: "Direktur Utama",
-				orgGroup: "DIREKSI",
+				orgGroup: "01 DIREKSI",
 				tmtJabatan: "2026-03-17",
 				pangkat: "-",
 				golongan: "-",
@@ -98,7 +128,7 @@ describe("DnpPageClient", () => {
 				nama: "WIPI SUPRIYANTO, S.T., M.I.Kom.",
 				nipam: "660600242",
 				namaJabatan: "Direktur Teknik",
-				orgGroup: "DIREKSI",
+				orgGroup: "01 DIREKSI",
 				tmtJabatan: "2025-11-10",
 				pangkat: "-",
 				golongan: "-",
@@ -113,7 +143,7 @@ describe("DnpPageClient", () => {
 				nama: "WACHJONO, S.E., Ak., CA.",
 				nipam: "710100239",
 				namaJabatan: "Manajer Satuan Pengawas Intern",
-				orgGroup: "SATUAN PENGAWAS INTERN",
+				orgGroup: "02 SATUAN PENGAWAS INTERN",
 				tmtJabatan: "2025-05-07",
 				pangkat: "Staf Madya Tk. I",
 				golongan: "C.4",

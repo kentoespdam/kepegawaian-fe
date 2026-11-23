@@ -16,7 +16,19 @@ export interface DnpItemWithIndex {
 
 export interface DnpGroup {
 	organisasi: string;
+	sortOrder: number;
 	items: DnpItemWithIndex[];
+}
+
+export function getOrgSortOrder(org: string): number {
+	const match = org.trim().match(/^(\d{1,2})/);
+	return match ? Number.parseInt(match[1], 10) : Number.MAX_SAFE_INTEGER;
+}
+
+export function formatOrgGroupName(org: string): string {
+	const trimmed = org.trim();
+	const cleaned = trimmed.replace(/^\d{1,2}[\s.-]*/, "").trim();
+	return cleaned || trimmed;
 }
 
 export function formatDnpDate(date: unknown): string {
@@ -35,16 +47,19 @@ export function formatDnpDate(date: unknown): string {
 }
 
 export function groupDnpByOrganisasi(list: DnpResponse[]): DnpGroup[] {
-	const groups: DnpGroup[] = [];
 	const groupMap = new Map<string, DnpGroup>();
 
 	for (const item of list) {
-		const org = item.orgGroup?.trim() || item.kodeOrganisasi?.trim() || "LAINNYA";
-		let group = groupMap.get(org);
+		const rawOrg = item.orgGroup?.trim() || item.kodeOrganisasi?.trim() || "LAINNYA";
+		const displayName = formatOrgGroupName(rawOrg);
+		let group = groupMap.get(displayName);
 		if (!group) {
-			group = { organisasi: org, items: [] };
-			groupMap.set(org, group);
-			groups.push(group);
+			group = {
+				organisasi: displayName,
+				sortOrder: getOrgSortOrder(rawOrg),
+				items: [],
+			};
+			groupMap.set(displayName, group);
 		}
 		group.items.push({
 			item,
@@ -52,6 +67,8 @@ export function groupDnpByOrganisasi(list: DnpResponse[]): DnpGroup[] {
 		});
 	}
 
+	const groups = Array.from(groupMap.values());
+	groups.sort((a, b) => a.sortOrder - b.sortOrder);
 	return groups;
 }
 
