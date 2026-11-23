@@ -47,7 +47,7 @@ export function formatDnpDate(date: unknown): string {
 }
 
 export function groupDnpByOrganisasi(list: DnpResponse[]): DnpGroup[] {
-	const groupMap = new Map<string, DnpGroup>();
+	const groupMap = new Map<string, { organisasi: string; sortOrder: number; rawItems: DnpResponse[] }>();
 
 	for (const item of list) {
 		const rawOrg = item.orgGroup?.trim() || item.kodeOrganisasi?.trim() || "LAINNYA";
@@ -57,19 +57,32 @@ export function groupDnpByOrganisasi(list: DnpResponse[]): DnpGroup[] {
 			group = {
 				organisasi: displayName,
 				sortOrder: getOrgSortOrder(rawOrg),
-				items: [],
+				rawItems: [],
 			};
 			groupMap.set(displayName, group);
 		}
-		group.items.push({
-			item,
-			groupIndex: group.items.length + 1,
-		});
+		group.rawItems.push(item);
 	}
 
 	const groups = Array.from(groupMap.values());
 	groups.sort((a, b) => a.sortOrder - b.sortOrder);
-	return groups;
+
+	return groups.map((g) => {
+		const sortedItems = [...g.rawItems].sort((a, b) => {
+			const levelA = a.levelJabatan ?? Number.MAX_SAFE_INTEGER;
+			const levelB = b.levelJabatan ?? Number.MAX_SAFE_INTEGER;
+			return levelA - levelB;
+		});
+
+		return {
+			organisasi: g.organisasi,
+			sortOrder: g.sortOrder,
+			items: sortedItems.map((item, idx) => ({
+				item,
+				groupIndex: idx + 1,
+			})),
+		};
+	});
 }
 
 export function DnpPageClient() {

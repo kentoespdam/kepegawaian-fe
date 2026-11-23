@@ -96,6 +96,23 @@ describe("groupDnpByOrganisasi", () => {
 		expect(groups[2].items[0].groupIndex).toBe(1);
 	});
 
+	it("mengurutkan pegawai dalam setiap grup berdasarkan levelJabatan ascending", () => {
+		const raw: DnpResponse[] = [
+			{ nama: "Staf", orgGroup: "01 DIREKSI", levelJabatan: 3, nipam: "103" },
+			{ nama: "Direktur Utama", orgGroup: "01 DIREKSI", levelJabatan: 1, nipam: "101" },
+			{ nama: "Direktur Teknik", orgGroup: "01 DIREKSI", levelJabatan: 2, nipam: "102" },
+		];
+
+		const groups = groupDnpByOrganisasi(raw);
+		expect(groups).toHaveLength(1);
+		expect(groups[0].items[0].item.nama).toBe("Direktur Utama");
+		expect(groups[0].items[0].groupIndex).toBe(1);
+		expect(groups[0].items[1].item.nama).toBe("Direktur Teknik");
+		expect(groups[0].items[1].groupIndex).toBe(2);
+		expect(groups[0].items[2].item.nama).toBe("Staf");
+		expect(groups[0].items[2].groupIndex).toBe(3);
+	});
+
 	it("fallback ke kodeOrganisasi jika orgGroup kosong", () => {
 		const raw: DnpResponse[] = [{ nama: "Pegawai A", kodeOrganisasi: "ORG-01", nipam: "301" }];
 
