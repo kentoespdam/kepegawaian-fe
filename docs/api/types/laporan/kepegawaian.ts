@@ -229,24 +229,25 @@ export interface DukResponse {
 	jurusan?: string;
 	tahunLulus?: number; // int32
 	tingkatPendidikan?: string;
-	statusPegawai?: string; // byte
+	statusPegawai?: string;
 }
 
 export type SingleResultListDukResponse = Envelope<DukResponse[]>;
 
 export interface DnpResponse {
 	kodeOrganisasi?: string;
+	orgGroup?: string;
 	levelJabatan?: number; // int32
 	nama?: string;
 	nipam?: string;
 	namaJabatan?: string;
-	tmtJabatan?: string;
+	tmtJabatan?: string; // date
 	pangkat?: string;
 	golongan?: string;
-	tmtGolongan?: string;
+	tmtGolongan?: string; // date
 	mkgTahun?: number; // int32
 	mkgBulan?: number; // int32
-	tmtKerja?: string;
+	tmtKerja?: string; // date
 	mkTahun?: number; // int32
 	mkBulan?: number; // int32
 	pendidikan?: string;

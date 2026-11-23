@@ -2011,7 +2011,7 @@
 					"jurusan": { "type": "string" },
 					"tahunLulus": { "type": "integer", "format": "int32" },
 					"tingkatPendidikan": { "type": "string" },
-					"statusPegawai": { "type": "string", "format": "byte" }
+					"statusPegawai": { "type": "string" }
 				}
 			},
 			"SingleResultListDukResponse": {
@@ -2097,17 +2097,18 @@
 				"type": "object",
 				"properties": {
 					"kodeOrganisasi": { "type": "string" },
+					"orgGroup": { "type": "string" },
 					"levelJabatan": { "type": "integer", "format": "int32" },
 					"nama": { "type": "string" },
 					"nipam": { "type": "string" },
 					"namaJabatan": { "type": "string" },
-					"tmtJabatan": { "type": "string" },
+					"tmtJabatan": { "type": "string", "format": "date" },
 					"pangkat": { "type": "string" },
 					"golongan": { "type": "string" },
-					"tmtGolongan": { "type": "string" },
+					"tmtGolongan": { "type": "string", "format": "date" },
 					"mkgTahun": { "type": "integer", "format": "int32" },
 					"mkgBulan": { "type": "integer", "format": "int32" },
-					"tmtKerja": { "type": "string" },
+					"tmtKerja": { "type": "string", "format": "date" },
 					"mkTahun": { "type": "integer", "format": "int32" },
 					"mkBulan": { "type": "integer", "format": "int32" },
 					"pendidikan": { "type": "string" },
