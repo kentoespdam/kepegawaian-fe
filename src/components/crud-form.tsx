@@ -80,6 +80,7 @@ export function CrudForm<TValues extends Record<string, unknown> = Record<string
 								className="min-h-24"
 								{...register(field.name)}
 								placeholder={field.placeholder}
+								aria-invalid={!!err}
 							/>
 						) : field.type === "select" ? (
 							<Select value={String(watch(field.name) ?? "")} onValueChange={(v) => setValue(field.name, v)}>
@@ -110,7 +111,7 @@ export function CrudForm<TValues extends Record<string, unknown> = Record<string
 								className="h-11"
 							/>
 						)}
-						{err && <p className="text-xs text-destructive">{String(err.message ?? "")}</p>}
+						{err && <p className="text-sm text-destructive">{String(err.message ?? "")}</p>}
 					</div>
 				);
 			})}

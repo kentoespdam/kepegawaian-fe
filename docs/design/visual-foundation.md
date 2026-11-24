@@ -10,47 +10,52 @@
 ## 1. Palet & token tema (`src/app/globals.css`)
 
 Semua warna = **token OKLCH** via `@theme` + variabel shadcn. **Dilarang** hex/`oklch(...)`
-literal di dalam komponen. Menambah dark mode nanti = isi satu blok `.dark {}` + pasang
-`next-themes`, **nol perubahan komponen** (CONTEXT §Theming).
+literal di dalam komponen. Light dan dark mode aktif lewat `next-themes`; nilai tema berada di
+`:root` dan `.dark {}` agar perubahan palet tidak memerlukan edit komponen.
 
-**Struktur 60:30:10 "A-refined"** (dioptimalkan ±70% pengguna lansia — lihat `color-rationale.md`):
+**Struktur 60:30:10 "A-refined"** (dioptimalkan ±70% pengguna lansia — lihat `color-rationale.md` dan keputusan palet Evergreen):
 - **60% kanvas** → `--background` off-white hangat.
-- **30% struktur** → `--card/--muted/--secondary` netral hangat; `--border` dinaikkan kontrasnya.
-- **10% aksen** → Tirta Blue `--primary` hanya di tombol primer, item aktif, focus ring.
+- **30% struktur** → kartu terang, `--muted` dan `--secondary` bertingkat, border serta outline input yang terlihat.
+- **10% aksen** → Evergreen `--primary` untuk aksi utama dan fokus; pilihan tabel memakai tint Evergreen.
 
-### 1.1 Token baseline (light) — nilai terkunci CONTEXT §Palette + color-rationale §4
+### 1.1 Token tema (light) — Evergreen dengan surface yang dibedakan
 
 | Token | OKLCH | Peran |
 |---|---|---|
-| `--background` | `oklch(0.99 0.008 85)` | Kanvas 60%, off-white hangat (anti-silau) |
+| `--background` | `oklch(0.94 0.008 85)` | Kanvas hangat |
 | `--foreground` | `oklch(0.22 0.01 260)` | Teks utama — target AAA ≥7:1 |
-| `--card` | `oklch(0.965 0.006 85)` | Permukaan kartu/panel (30%) |
+| `--card` | `oklch(0.995 0.004 85)` | Kartu/panel terang di atas kanvas |
 | `--card-foreground` | `oklch(0.22 0.01 260)` | Teks di atas card |
-| `--popover` | `oklch(0.99 0.008 85)` | Popover/combobox/menu |
+| `--popover` | `oklch(0.995 0.004 85)` | Popover/combobox/menu |
 | `--popover-foreground` | `oklch(0.22 0.01 260)` | Teks popover |
-| `--muted` | `oklch(0.965 0.006 85)` | Latar muted (header tabel, zebra) |
-| `--muted-foreground` | `oklch(0.42 0.01 260)` | Teks sekunder — ≥4.5:1 di SEMUA permukaan (termasuk zebra/hover) |
-| `--secondary` | `oklch(0.965 0.006 85)` | Tombol sekunder (Batal) |
+| `--muted` | `oklch(0.95 0.01 85)` | Header tabel dan panel tenang |
+| `--muted-foreground` | `oklch(0.38 0.01 260)` | Teks sekunder — ≥4.5:1 di semua permukaan |
+| `--secondary` | `oklch(0.91 0.012 85)` | Tombol sekunder (Batal), terlihat beda dari card |
 | `--secondary-foreground` | `oklch(0.22 0.01 260)` | Teks tombol sekunder |
-| `--border` | `oklch(0.86 0.008 85)` | Garis tabel/pemisah — sengaja dinaikkan (hindari pastel-samar) |
-| `--input` | `oklch(0.86 0.008 85)` | Border input |
-| `--ring` | `oklch(0.55 0.13 235)` | Focus ring = Tirta Blue |
-| `--primary` | `oklch(0.55 0.13 235)` | **Tirta Blue** — aksen 10% |
-| `--primary-foreground` | `oklch(0.99 0.008 85)` | Teks putih di atas tombol biru |
+| `--border` | `oklch(0.8 0.012 85)` | Garis tabel dan pemisah |
+| `--input` | `oklch(0.6 0.012 85)` | Batas input yang terbaca sebelum fokus |
+| `--ring` | `oklch(0.48 0.09 158)` | Focus ring Evergreen |
+| `--primary` | `oklch(0.48 0.09 158)` | **Evergreen** — aksi utama |
+| `--primary-foreground` | `oklch(0.99 0.008 95)` | Teks di atas tombol utama |
 | `--destructive` | `oklch(0.52 0.20 25)` | Merah (bahaya/hapus) |
 | `--destructive-foreground` | `oklch(0.99 0.008 85)` | Teks di atas merah |
-| `--success` | `oklch(0.50 0.15 150)` | Hijau (digeser gelap+jenuh agar tak tertukar dengan biru) |
-| `--success-foreground` | `oklch(0.99 0.008 85)` | Teks di atas hijau |
+| `--success` | `oklch(0.52 0.1 195)` | Teal untuk status berhasil, terpisah dari Evergreen |
+| `--success-foreground` | `oklch(0.99 0.008 85)` | Teks di atas teal |
 | `--warning` | `oklch(0.68 0.15 75)` | Amber (peringatan) |
 | `--warning-foreground` | `oklch(0.22 0.01 260)` | Teks gelap di atas amber |
-| `--accent` | `oklch(0.965 0.006 85)` | Hover item menu/list |
+| `--accent` | `oklch(0.91 0.01 85)` | Hover netral |
 | `--accent-foreground` | `oklch(0.22 0.01 260)` | Teks hover |
+| `--row-stripe` | `oklch(0.965 0.006 85)` | Zebra netral |
+| `--row-hover` | `oklch(0.925 0.012 85)` | Hover baris |
+| `--row-selected` | `oklch(0.89 0.035 158)` | Baris terpilih dengan tint Evergreen |
 | `--radius` | `0.5rem` | Radius dasar |
+
+Tema gelap memakai langkah surface yang sama: kanvas `oklch(0.13 0.01 160)`, card `0.22`, popover `0.25`, secondary `0.29`, muted `0.26`; border `0.38`, input `0.56`, dan teks sekunder `0.73`. Nilai light/dark lengkap berada di `src/app/globals.css`.
 
 > **Aturan semantik (WCAG SC 1.4.1):** JANGAN bergantung pada sumbu biru↔hijau (rusak di mata
 > lansia). Setiap status/severity SELALU disertai **ikon + teks/label**, bukan hanya warna.
 
-### 1.2 Skeleton struktur file `globals.css`
+### 1.2 Struktur tema `globals.css`
 
 ```
 @import "tailwindcss";
@@ -65,9 +70,8 @@ literal di dalam komponen. Menambah dark mode nanti = isi satu blok `.dark {}` +
   /* semua token light dari tabel §1.1 */
 }
 
-/* Dark-ready scaffold — SENGAJA KOSONG di rilis 1 (diisi saat dark mode ditambah) */
 .dark {
-  /* TODO: nilai dark — nol perubahan komponen saat diisi */
+  /* pasangan token dark aktif; lihat src/app/globals.css */
 }
 
 @layer base {

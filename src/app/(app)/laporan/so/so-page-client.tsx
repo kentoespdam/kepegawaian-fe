@@ -5,22 +5,12 @@ import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useLaporanSo } from "@/hooks/laporan/useLaporanSo";
+import { SoChartSkeleton } from "./so-page-skeleton";
 
 const OrgChartView = dynamic(() => import("@/components/laporan/org-chart").then((mod) => mod.OrgChartView), {
 	ssr: false,
-	loading: () => (
-		<div className="h-187.5 w-full flex items-center justify-center bg-muted/20 border rounded-xl">
-			<div className="flex flex-col items-center gap-3 text-muted-foreground">
-				<Skeleton className="h-28 w-60 rounded-xl" />
-				<div className="flex gap-4">
-					<Skeleton className="h-28 w-56 rounded-xl" />
-					<Skeleton className="h-28 w-56 rounded-xl" />
-				</div>
-			</div>
-		</div>
-	),
+	loading: () => <SoChartSkeleton />,
 });
 
 export function SoPageClient() {
@@ -31,45 +21,32 @@ export function SoPageClient() {
 	});
 
 	return (
-		<div className="p-6 space-y-4">
-			<div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-				<div>
-					<h1 className="text-2xl font-bold tracking-tight text-foreground">Struktur Organisasi Perusahaan</h1>
-					<p className="text-sm text-muted-foreground">
-						Bagan hierarki jabatan struktural dan persebaran pejabat aktif Perumdam Tirta Satria.
-					</p>
+		<div className="min-w-0 space-y-6 p-4 md:p-6">
+			<div className="flex flex-col justify-between gap-6 xl:flex-row xl:items-end">
+				<div className="space-y-2">
+					<h1 className="text-2xl font-semibold text-foreground">Struktur organisasi</h1>
+					<p className="text-sm text-muted-foreground">Hierarki jabatan dan pejabat aktif Perumdam Tirta Satria</p>
 				</div>
 
-				{/* Filter Kedalaman Level */}
-				<div className="flex items-center gap-2">
-					<label htmlFor="maxLevelSelect" className="text-sm font-medium text-muted-foreground whitespace-nowrap">
-						Kedalaman Struktur:
+				<div className="w-full space-y-2 sm:max-w-sm xl:w-80 xl:shrink-0">
+					<label htmlFor="maxLevelSelect" className="block text-sm font-medium">
+						Tampilkan hingga
 					</label>
 					<select
 						id="maxLevelSelect"
 						value={maxLevel}
 						onChange={(e) => setMaxLevel(Number(e.target.value))}
-						className="h-9 px-3 py-1.5 text-sm bg-background border border-input rounded-md shadow-xs focus:outline-hidden focus:ring-2 focus:ring-ring"
+						className="h-11 w-full cursor-pointer rounded-lg border-2 border-input bg-card px-3 text-sm text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
 					>
-						<option value={2}>Direksi Saja (Level 1–2)</option>
-						<option value={5}>Hingga Manajer (Level 1–5)</option>
-						<option value={6}>Hingga Supervisor (Level 1–6) — Rekomendasi</option>
-						<option value={7}>Seluruh Karyawan & Staf (Level 1–7)</option>
+						<option value={2}>Direksi (level 1–2)</option>
+						<option value={5}>Manajer (level 1–5)</option>
+						<option value={6}>Supervisor (level 1–6)</option>
+						<option value={7}>Seluruh karyawan dan staf (level 1–7)</option>
 					</select>
 				</div>
 			</div>
 
-			{isLoading && (
-				<div className="h-187.5 w-full flex items-center justify-center bg-muted/20 border rounded-xl">
-					<div className="flex flex-col items-center gap-3 text-muted-foreground animate-pulse">
-						<Skeleton className="h-28 w-60 rounded-xl" />
-						<div className="flex gap-4">
-							<Skeleton className="h-28 w-56 rounded-xl" />
-							<Skeleton className="h-28 w-56 rounded-xl" />
-						</div>
-					</div>
-				</div>
-			)}
+			{isLoading && <SoChartSkeleton />}
 
 			{isError && (
 				<Card className="border-destructive/30 bg-destructive/5">
@@ -77,13 +54,13 @@ export function SoPageClient() {
 						<AlertCircle className="w-8 h-8 text-destructive" />
 						<div className="space-y-1">
 							<p className="text-sm font-semibold text-destructive">Gagal memuat data struktur organisasi</p>
-							<p className="text-xs text-muted-foreground">
+							<p className="text-sm text-muted-foreground">
 								{error instanceof Error ? error.message : "Terjadi kesalahan saat memproses data"}
 							</p>
 						</div>
-						<Button variant="outline" size="sm" onClick={() => refetch()} className="gap-1.5 mt-2">
-							<RefreshCw className="w-3.5 h-3.5" />
-							Coba Lagi
+						<Button variant="outline" onClick={() => refetch()} className="mt-2 h-11 gap-2 px-4 transition-colors">
+							<RefreshCw className="size-5" />
+							Coba lagi
 						</Button>
 					</CardContent>
 				</Card>
@@ -92,7 +69,8 @@ export function SoPageClient() {
 			{!isLoading && !isError && (!data || data.length === 0) && (
 				<Card>
 					<CardContent className="flex flex-col items-center justify-center py-16 gap-2 text-center text-muted-foreground">
-						<p className="text-sm font-medium">Tidak ada data struktur organisasi untuk level yang dipilih.</p>
+						<p className="text-base font-medium text-foreground">Belum ada struktur organisasi</p>
+						<p className="text-sm">Coba pilih kedalaman struktur lainnya</p>
 					</CardContent>
 				</Card>
 			)}

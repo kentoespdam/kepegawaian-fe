@@ -23,6 +23,8 @@ declare module "d3-org-chart" {
 	export class OrgChart<T = Record<string, unknown>> {
 		constructor();
 		container(selector: string | HTMLElement): this;
+		svgWidth(width: number): this;
+		svgHeight(height: number): this;
 		data(data: T[]): this;
 		nodeId(accessor: (d: T) => string): this;
 		parentNodeId(accessor: (d: T) => string | null): this;

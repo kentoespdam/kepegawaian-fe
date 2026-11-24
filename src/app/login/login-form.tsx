@@ -31,7 +31,7 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 		<div>
 			<div className="mb-6 space-y-1">
 				<h2 className="text-xl font-bold text-foreground">Masuk ke Akun</h2>
-				<p className="text-xs text-muted-foreground">Masukkan email kedinasan dan password Anda untuk melanjutkan</p>
+				<p className="text-sm text-muted-foreground">Masukkan email kedinasan dan password Anda untuk melanjutkan</p>
 			</div>
 
 			<form
@@ -42,7 +42,7 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 				className="space-y-5"
 			>
 				<div className="space-y-1.5">
-					<Label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+					<Label htmlFor="email" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
 						Username
 					</Label>
 					<Input
@@ -53,12 +53,12 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 						aria-invalid={!!errors.email}
 						{...register("email")}
 					/>
-					{errors.email && <p className="text-xs text-destructive">{errors.email.message}</p>}
+					{errors.email && <p className="text-sm text-destructive">{errors.email.message}</p>}
 				</div>
 
 				<div className="space-y-1.5">
 					<div className="flex items-center justify-between">
-						<Label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+						<Label htmlFor="password" className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
 							Password
 						</Label>
 					</div>
@@ -80,12 +80,12 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 							{showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
 						</button>
 					</div>
-					{errors.password && <p className="text-xs text-destructive">{errors.password.message}</p>}
+					{errors.password && <p className="text-sm text-destructive">{errors.password.message}</p>}
 				</div>
 
 				{login.error && (
 					<div
-						className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-xs text-destructive"
+						className="rounded-lg border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive"
 						role="alert"
 					>
 						{login.error.message}
@@ -106,7 +106,7 @@ export function LoginForm({ defaultDomain }: { defaultDomain: string }) {
 					)}
 				</Button>
 
-				<p className="text-center text-xs text-muted-foreground">
+				<p className="text-center text-sm text-muted-foreground">
 					Mengalami kendala login? Hubungi Administrator SIMPEG
 				</p>
 			</form>

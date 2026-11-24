@@ -57,42 +57,57 @@
 }
 
 :root {
-	/* Kanvas abu terbaca (~#EDEFF2) agar card putih 'mengambang' — elevation JELAS utk audiens 35+. */
-	--background: oklch(0.94 0.005 250);
+	/* Kanvas hangat, card lebih terang, dan kontrol punya permukaan sendiri agar hirarki terbaca. */
+	--background: oklch(0.94 0.008 85);
 	--foreground: oklch(0.22 0.01 260);
-	--card: oklch(1 0 0);
+	--card: oklch(0.995 0.004 85);
 	--card-foreground: oklch(0.22 0.01 260);
-	--popover: oklch(0.99 0.008 95);
+	--popover: oklch(0.995 0.004 85);
 	--popover-foreground: oklch(0.22 0.01 260);
 	--primary: oklch(0.48 0.09 158);
 	--primary-foreground: oklch(0.99 0.008 95);
-	--secondary: oklch(0.965 0.006 85);
+	--secondary: oklch(0.91 0.012 85);
 	--secondary-foreground: oklch(0.22 0.01 260);
-	--muted: oklch(0.965 0.006 85);
-	--muted-foreground: oklch(0.4 0.01 260);
-	--accent: oklch(0.94 0.03 75);
-	--accent-foreground: oklch(0.3 0.06 60);
+	--muted: oklch(0.95 0.01 85);
+	--muted-foreground: oklch(0.38 0.01 260);
+	--accent: oklch(0.91 0.01 85);
+	--accent-foreground: var(--foreground);
 	--destructive: oklch(0.52 0.2 25);
 	--destructive-foreground: oklch(0.99 0.008 85);
 	--success: oklch(0.52 0.1 195);
 	--success-foreground: oklch(0.99 0.008 85);
 	--warning: oklch(0.68 0.15 75);
 	--warning-foreground: oklch(0.22 0.01 260);
-	--border: oklch(0.86 0.008 85);
-	--input: oklch(0.86 0.008 85);
+	/* Warna kategorikal bagan; level juga ditulis pada kartu dan legenda. */
+	--org-level-1: oklch(0.4 0.13 155);
+	--org-level-1-fill: oklch(0.82 0.08 155);
+	--org-level-2: oklch(0.42 0.12 190);
+	--org-level-2-fill: oklch(0.77 0.09 190);
+	--org-level-3: oklch(0.44 0.13 225);
+	--org-level-3-fill: oklch(0.83 0.08 225);
+	--org-level-4: oklch(0.46 0.12 280);
+	--org-level-4-fill: oklch(0.87 0.07 280);
+	--org-level-5: oklch(0.45 0.14 35);
+	--org-level-5-fill: oklch(0.84 0.09 35);
+	--org-level-6: oklch(0.48 0.15 65);
+	--org-level-6-fill: oklch(0.89 0.1 65);
+	--org-level-7: oklch(0.41 0.12 115);
+	--org-level-7-fill: oklch(0.79 0.08 115);
+	--org-connector: oklch(0.37 0.06 158);
+	--border: oklch(0.8 0.012 85);
+	--input: oklch(0.6 0.012 85);
 	--ring: oklch(0.48 0.09 158);
 	--primary-dark: oklch(0.36 0.08 158);
-	/* Zebra: stripe abu-biru netral (~#F4F6F8), hover tint hijau brand (~#EAF3EE). Invariant hover > stripe > base. */
-	--row-stripe: oklch(0.965 0.004 250);
-	--row-hover: oklch(0.95 0.02 158);
-	--row-selected: oklch(0.93 0.04 158);
+	/* Baris tabel berjenjang dari zebra netral ke hover, lalu pilihan Evergreen. */
+	--row-stripe: oklch(0.965 0.006 85);
+	--row-hover: oklch(0.925 0.012 85);
+	--row-selected: oklch(0.89 0.035 158);
 	--radius: 0.5rem;
-	/* Sidebar: netral HANGAT selangkah di bawah card putih (1.00 > sidebar 0.955 > kanvas 0.94).
-	   Border tegas jadi batas zona 30%; item aktif Evergreen pekat agar pop. 60:30:10. */
-	--sidebar: oklch(0.955 0.006 85);
+	/* Sidebar satu tingkat lebih teduh dari kanvas; item aktif memakai tint Evergreen. */
+	--sidebar: oklch(0.92 0.01 85);
 	--sidebar-foreground: oklch(0.3 0.008 260);
-	--sidebar-border: oklch(0.84 0.008 85);
-	--sidebar-accent: oklch(0.92 0.045 158);
+	--sidebar-border: oklch(0.79 0.012 85);
+	--sidebar-accent: oklch(0.87 0.045 158);
 	--sidebar-accent-foreground: oklch(0.22 0.01 260);
 	--sidebar-ring: oklch(0.48 0.09 158);
 }
@@ -100,38 +115,52 @@
 .dark {
 	--background: oklch(0.13 0.01 160);
 	--foreground: oklch(0.93 0.01 100);
-	--card: oklch(0.16 0.01 160);
+	--card: oklch(0.22 0.01 160);
 	--card-foreground: oklch(0.93 0.01 100);
-	--popover: oklch(0.16 0.01 160);
+	--popover: oklch(0.25 0.01 160);
 	--popover-foreground: oklch(0.93 0.01 100);
 	--primary: oklch(0.62 0.09 158);
 	--primary-foreground: oklch(0.13 0.01 160);
-	--secondary: oklch(0.22 0.01 160);
+	--secondary: oklch(0.29 0.01 160);
 	--secondary-foreground: oklch(0.93 0.01 100);
-	--muted: oklch(0.22 0.01 160);
-	--muted-foreground: oklch(0.62 0.01 100);
-	--accent: oklch(0.25 0.03 75);
-	--accent-foreground: oklch(0.93 0.03 75);
+	--muted: oklch(0.26 0.01 160);
+	--muted-foreground: oklch(0.73 0.01 100);
+	--accent: oklch(0.3 0.01 160);
+	--accent-foreground: var(--foreground);
 	--destructive: oklch(0.6 0.2 25);
 	--destructive-foreground: oklch(0.13 0.01 20);
 	--success: oklch(0.62 0.1 195);
 	--success-foreground: oklch(0.13 0.01 160);
 	--warning: oklch(0.72 0.15 75);
 	--warning-foreground: oklch(0.13 0.01 160);
-	--border: oklch(0.28 0.01 160);
-	--input: oklch(0.28 0.01 160);
+	--org-level-1: oklch(0.72 0.13 155);
+	--org-level-1-fill: oklch(0.35 0.07 155);
+	--org-level-2: oklch(0.75 0.13 190);
+	--org-level-2-fill: oklch(0.33 0.08 190);
+	--org-level-3: oklch(0.76 0.14 225);
+	--org-level-3-fill: oklch(0.36 0.08 225);
+	--org-level-4: oklch(0.77 0.13 280);
+	--org-level-4-fill: oklch(0.38 0.08 280);
+	--org-level-5: oklch(0.76 0.14 35);
+	--org-level-5-fill: oklch(0.39 0.08 35);
+	--org-level-6: oklch(0.79 0.14 65);
+	--org-level-6-fill: oklch(0.4 0.09 65);
+	--org-level-7: oklch(0.73 0.13 115);
+	--org-level-7-fill: oklch(0.34 0.07 115);
+	--org-connector: oklch(0.72 0.05 158);
+	--border: oklch(0.38 0.01 160);
+	--input: oklch(0.56 0.01 160);
 	--ring: oklch(0.62 0.09 158);
 	--primary-dark: oklch(0.52 0.09 158);
-	/* Dark: stripe = turunan --muted (0.22), hover = tint primary hijau gelap. Invariant hover > stripe > base. */
-	--row-stripe: oklch(0.2 0.01 160);
-	--row-hover: oklch(0.28 0.03 158);
-	--row-selected: oklch(0.3 0.05 158);
-	/* Sidebar dark: elevasi ringan DI ATAS card (sidebar 0.185 > card 0.16) — pisah dari card,
-	   border tegas jadi batas zona, item aktif Evergreen pop. Mirror fix light. */
-	--sidebar: oklch(0.185 0.012 160);
+	/* Zebra, hover, dan pilihan punya langkah permukaan yang konsisten pada tema gelap. */
+	--row-stripe: oklch(0.25 0.01 160);
+	--row-hover: oklch(0.31 0.012 160);
+	--row-selected: oklch(0.34 0.04 158);
+	/* Sidebar tetap terpisah dari kanvas dan card tanpa glow atau bayangan berwarna. */
+	--sidebar: oklch(0.19 0.01 160);
 	--sidebar-foreground: oklch(0.83 0.01 100);
-	--sidebar-border: oklch(0.34 0.012 160);
-	--sidebar-accent: oklch(0.3 0.045 158);
+	--sidebar-border: oklch(0.38 0.01 160);
+	--sidebar-accent: oklch(0.32 0.045 158);
 	--sidebar-accent-foreground: oklch(0.93 0.01 100);
 	--sidebar-ring: oklch(0.62 0.09 158);
 }
@@ -172,6 +201,12 @@
 	html {
 		@apply font-sans;
 	}
+}
+
+.svg-chart-container path.link {
+	stroke: var(--org-connector);
+	stroke-width: 3.5px;
+	stroke-linecap: round;
 }
 
 @layer components {

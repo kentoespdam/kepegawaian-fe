@@ -10,7 +10,7 @@ describe("sanitizeOrgChartData", () => {
 
 	it("filters out orphan nodes whose parentId does not exist", () => {
 		const raw: SoResponse[] = [
-			{ id: 1, parentId: null, namaJabatan: "Dewas" },
+			{ id: 1, parentId: undefined, namaJabatan: "Dewas" },
 			{ id: 2, parentId: 1, namaJabatan: "Dirut" },
 			{ id: 3, parentId: 2, namaJabatan: "Manajer" },
 			{ id: 36, parentId: 33, namaJabatan: "Ka. Sub Bag (Orphan)" },
@@ -27,7 +27,7 @@ describe("sanitizeOrgChartData", () => {
 
 	it("recursively removes child nodes of orphan parents", () => {
 		const raw: SoResponse[] = [
-			{ id: 1, parentId: null, namaJabatan: "Dewas" },
+			{ id: 1, parentId: undefined, namaJabatan: "Dewas" },
 			{ id: 2, parentId: 1, namaJabatan: "Dirut" },
 			{ id: 36, parentId: 999, namaJabatan: "Orphan Parent" },
 			{ id: 37, parentId: 36, namaJabatan: "Child of Orphan" },
@@ -41,7 +41,7 @@ describe("sanitizeOrgChartData", () => {
 
 	it("sets _expanded to true up to supervisor level (level <= 5)", () => {
 		const raw: SoResponse[] = [
-			{ id: 1, parentId: null, level: 1, namaJabatan: "Dewas" },
+			{ id: 1, parentId: undefined, level: 1, namaJabatan: "Dewas" },
 			{ id: 2, parentId: 1, level: 2, namaJabatan: "Dirut" },
 			{ id: 3, parentId: 2, level: 3, namaJabatan: "Direktur" },
 			{ id: 4, parentId: 3, level: 4, namaJabatan: "Manajer" },
@@ -84,22 +84,22 @@ describe("renderNodeContent", () => {
 
 		expect(html).toContain("Direktur Utama");
 		expect(html).toContain("Budi Santoso");
-		expect(html).toContain("NIPAM: 12345");
-		expect(html).not.toContain("(Jabatan Lowong)");
+		expect(html).toContain("NIPAM 12345");
+		expect(html).not.toContain("Jabatan lowong");
 	});
 
 	it("renders card for vacant position", () => {
 		const html = renderNodeContent({
 			id: 3,
 			namaJabatan: "Supervisor Kosong",
-			namaPegawai: null,
-			nipam: null,
+			namaPegawai: undefined,
+			nipam: undefined,
 			namaOrganisasi: "SUB BAG",
 			isLowong: true,
 		});
 
 		expect(html).toContain("Supervisor Kosong");
-		expect(html).toContain("(Jabatan Lowong)");
+		expect(html).toContain("Jabatan lowong");
 	});
 });
 

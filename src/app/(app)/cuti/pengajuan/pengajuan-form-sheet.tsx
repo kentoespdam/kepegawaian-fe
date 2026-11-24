@@ -254,7 +254,7 @@ export function PengajuanFormSheet({
 								{hariKerjaQuery.isError ? "—" : (hariKerjaQuery.data ?? "—")}
 							</div>
 							{errors.jumlahHariKerja?.message && (
-								<p className="text-xs text-destructive">{errors.jumlahHariKerja.message}</p>
+								<p className="text-sm text-destructive">{errors.jumlahHariKerja.message}</p>
 							)}
 						</div>
 					</div>

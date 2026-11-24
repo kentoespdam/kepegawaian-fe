@@ -4,7 +4,28 @@
   GitNexus info sudah termuat di knowledge.md §14 — jangan duplikasi di sini.
 -->
 @knowledge.md
-> **Autoload**: @[LLM Routing & Token Rules](GEMINI.md)
+> `GEMINI.md` berisi routing khusus Antigravity dan bukan sumber konfigurasi Codex.
+
+## Codex UI Routing
+
+Untuk routing UI di Codex, pilih model berdasarkan jenis pekerjaan; jangan otomatis menyerahkan seluruh task frontend ke `website_ui`/Astra.
+
+| Situasi | Rute |
+|---|---|
+| Koreksi warna, spacing, padding, atau detail visual lokal | Luna langsung |
+| Dashboard/halaman baru dari komponen dan design system existing | `website_ui`/Sol membuat spesifikasi → Root atau Luna mengimplementasikan |
+| UI interaktif kompleks yang perlu iterasi rapat terhadap kode dan screenshot | Sol mengerjakan desain sekaligus coding |
+| Visual direction atau design system premium | Astra desain saja bila Sol tidak memadai |
+| Koreksi detail setelah implementasi | Luna lebih dulu, Sol bila perlu |
+| Masalah frontend yang menyentuh arsitektur sistem atau mandatory trigger lain | `deep_reasoner` |
+
+### Handoff desain saja
+
+Untuk task desain yang tidak memerlukan iterasi langsung terhadap implementasi, Root mengirim satu brief kepada `website_ui` yang mencakup tujuan, batasan, file/komponen relevan, dan design system. Designer boleh membaca file secara terarah tanpa mengubahnya. Designer mengembalikan satu spesifikasi implementasi yang cukup konkret untuk dikerjakan tanpa tebakan: file/komponen sasaran, struktur/layout, perilaku dan state interaksi, responsivitas, token/style, serta kriteria penerimaan. Jika konteks penting tidak tersedia, designer meminta klarifikasi yang spesifik.
+
+Instruksi “jangan edit file” pada agent desain adalah aturan perilaku, bukan pembatasan sandbox. Root tetap bertanggung jawab memberi ruang lingkup yang jelas dan memastikan implementasi dilakukan oleh Root atau Luna setelah spesifikasi siap. Hindari handoff berulang antara designer dan implementer; kecualikan ini bila UI memang membutuhkan iterasi kode/screenshot secara langsung.
+
+Gunakan Astra untuk desain saja hanya ketika tingkat visual premium yang diminta belum tercapai dengan Sol. Jika nama/model agent yang direkomendasikan tidak tersedia, gunakan rute terdekat dengan biaya lebih rendah dan jangan mengarang kemampuan agent.
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence

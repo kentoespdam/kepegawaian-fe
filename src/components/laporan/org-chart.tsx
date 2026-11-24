@@ -41,6 +41,16 @@ export interface OrgChartProps {
 	isLoading?: boolean;
 }
 
+// const orgLevels = [
+// 	{ level: 1, label: "Level 1" },
+// 	{ level: 2, label: "Level 2" },
+// 	{ level: 3, label: "Level 3" },
+// 	{ level: 4, label: "Level 4" },
+// 	{ level: 5, label: "Level 5" },
+// 	{ level: 6, label: "Level 6" },
+// 	{ level: 7, label: "Level 7" },
+// ];
+
 export function OrgChartView({ data, onRefresh, isLoading }: OrgChartProps) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const chartRef = useRef<OrgChart<OrgChartNode> | null>(null);
@@ -61,20 +71,22 @@ export function OrgChartView({ data, onRefresh, isLoading }: OrgChartProps) {
 
 		chart
 			.container(containerRef.current)
+			.svgHeight(640)
 			.data(validData)
 			.nodeId((d) => String(d.id ?? ""))
 			.parentNodeId((d) => (d.parentId !== null && d.parentId !== undefined ? String(d.parentId) : null))
-			.nodeWidth(() => 240)
-			.nodeHeight(() => 110)
-			.childrenMargin(() => 50)
-			.compactMarginBetween(() => 25)
-			.compactMarginPair(() => 50)
-			.neighbourMargin(() => 25)
+			.nodeWidth(() => 304)
+			.nodeHeight(() => 176)
+			.childrenMargin(() => 64)
+			.compactMarginBetween(() => 32)
+			.compactMarginPair(() => 64)
+			.neighbourMargin(() => 32)
 			.imageName("struktur-organisasi-perumdam")
 			.nodeContent((d) => renderNodeContent(d.data))
 			.render();
 
-		chart.fit();
+		const topLevels = chart.getChartState().allNodes.filter(({ data }) => Number(data.level ?? 1) <= 2);
+		chart.fit({ nodes: topLevels });
 
 		return () => {
 			if (containerRef.current) {
@@ -137,130 +149,174 @@ export function OrgChartView({ data, onRefresh, isLoading }: OrgChartProps) {
 	};
 
 	return (
-		<div className="relative w-full h-[750px] bg-muted/20 border rounded-xl overflow-hidden shadow-sm">
-			{/* Floating Toolbar */}
-			<div className="absolute top-4 left-4 z-20 flex flex-wrap gap-2 items-center bg-background/95 backdrop-blur-sm p-2 rounded-lg border shadow-md">
-				<form onSubmit={handleSearch} className="flex items-center gap-1.5">
-					<div className="relative">
-						<Search className="w-4 h-4 absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground" />
-						<Input
-							type="text"
-							placeholder="Cari pejabat / jabatan..."
-							value={searchTerm}
-							onChange={(e) => {
-								setSearchTerm(e.target.value);
-								if (searchError) setSearchError(null);
-							}}
-							className="pl-8 pr-3 h-8 text-sm w-48 md:w-60"
-						/>
+		<section aria-label="Bagan struktur organisasi" className="min-w-0 overflow-hidden rounded-xl border bg-card">
+			<div className="flex flex-col justify-between gap-4 border-b bg-muted/30 p-4 2xl:flex-row 2xl:items-end">
+				<form onSubmit={handleSearch} className="w-full space-y-2 2xl:max-w-md">
+					<label htmlFor="so-search" className="block text-sm font-medium">
+						Cari dalam bagan
+					</label>
+					<div className="flex items-center gap-2">
+						<div className="relative min-w-0 flex-1">
+							<Search
+								aria-hidden="true"
+								className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-muted-foreground"
+							/>
+							<Input
+								id="so-search"
+								type="text"
+								placeholder="Nama, jabatan, atau NIPAM"
+								aria-invalid={Boolean(searchError)}
+								aria-describedby={searchError ? "so-search-error" : undefined}
+								value={searchTerm}
+								onChange={(e) => {
+									setSearchTerm(e.target.value);
+									if (searchError) setSearchError(null);
+								}}
+								className="h-11 w-full border-2 border-input bg-card pl-10 pr-3 text-sm focus-visible:border-primary"
+							/>
+						</div>
+						<Button
+							type="submit"
+							className="h-11 bg-primary px-4 text-primary-foreground transition-colors hover:bg-primary/90"
+						>
+							Cari
+						</Button>
 					</div>
-					<Button type="submit" size="sm" variant="secondary" className="h-8 px-3 text-xs">
-						Cari
-					</Button>
 				</form>
 
-				<div className="h-5 w-px bg-border mx-1" />
-
-				<Button
-					type="button"
-					variant="ghost"
-					size="icon"
-					className="h-8 w-8"
-					onClick={() => chartRef.current?.zoomIn()}
-					title="Perbesar (Zoom In)"
-				>
-					<ZoomIn className="w-4 h-4" />
-				</Button>
-				<Button
-					type="button"
-					variant="ghost"
-					size="icon"
-					className="h-8 w-8"
-					onClick={() => chartRef.current?.zoomOut()}
-					title="Perkecil (Zoom Out)"
-				>
-					<ZoomOut className="w-4 h-4" />
-				</Button>
-				<Button
-					type="button"
-					variant="ghost"
-					size="icon"
-					className="h-8 w-8"
-					onClick={() => chartRef.current?.fit()}
-					title="Reset Tampilan (Fit View)"
-				>
-					<Maximize2 className="w-4 h-4" />
-				</Button>
-
-				{/* Dropdown Menu Ekspor High-Definition */}
-				<DropdownMenu>
-					<DropdownMenuTrigger
-						disabled={isExporting}
-						className="inline-flex items-center justify-center gap-1.5 rounded-md px-2.5 h-8 text-xs font-medium text-foreground hover:bg-muted transition-colors cursor-pointer disabled:pointer-events-none disabled:opacity-50"
-						title="Ekspor Bagan ke PDF / Gambar Resolusi Tinggi"
-					>
-						{isExporting ? (
-							<Loader2 className="w-3.5 h-3.5 animate-spin" />
-						) : (
-							<FileDown className="w-3.5 h-3.5 text-primary" />
-						)}
-						<span>Ekspor</span>
-						<ChevronDown className="w-3 h-3 text-muted-foreground" />
-					</DropdownMenuTrigger>
-					<DropdownMenuContent align="start" className="w-52">
-						<DropdownMenuItem
-							onClick={() => handleExport("pdf", "Dokumen PDF")}
-							className="text-xs gap-2 cursor-pointer"
-						>
-							<FileDown className="w-4 h-4 text-rose-500" />
-							<span>Dokumen PDF (.pdf) — Tajam</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => handleExport("jpeg", "Gambar JPG")}
-							className="text-xs gap-2 cursor-pointer"
-						>
-							<FileImage className="w-4 h-4 text-amber-500" />
-							<span>Gambar JPG (.jpg) — HD</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => handleExport("png", "Gambar PNG")}
-							className="text-xs gap-2 cursor-pointer"
-						>
-							<FileImage className="w-4 h-4 text-sky-500" />
-							<span>Gambar PNG (.png) — HD</span>
-						</DropdownMenuItem>
-						<DropdownMenuItem
-							onClick={() => handleExport("svg", "Vektor SVG")}
-							className="text-xs gap-2 cursor-pointer"
-						>
-							<FileType className="w-4 h-4 text-emerald-500" />
-							<span>Vektor SVG (.svg) — Lossless</span>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-
-				{onRefresh && (
+				<div className="flex flex-wrap items-center gap-2">
 					<Button
 						type="button"
-						variant="ghost"
+						variant="outline"
 						size="icon"
-						className="h-8 w-8"
-						onClick={onRefresh}
-						disabled={isLoading}
-						title="Muat Ulang Data"
+						className="size-11 border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+						onClick={() => chartRef.current?.zoomIn()}
+						title="Perbesar bagan"
+						aria-label="Perbesar bagan"
 					>
-						<RefreshCw className={`w-4 h-4 ${isLoading ? "animate-spin" : ""}`} />
+						<ZoomIn className="size-5" />
 					</Button>
-				)}
+					<Button
+						type="button"
+						variant="outline"
+						size="icon"
+						className="size-11 border-border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+						onClick={() => chartRef.current?.zoomOut()}
+						title="Perkecil bagan"
+						aria-label="Perkecil bagan"
+					>
+						<ZoomOut className="size-5" />
+					</Button>
+					<Button
+						type="button"
+						variant="outline"
+						className="h-11 gap-2 border-border bg-background px-3 text-foreground transition-colors hover:bg-muted"
+						onClick={() => chartRef.current?.fit()}
+						title="Tampilkan seluruh bagan"
+					>
+						<Maximize2 className="size-5" />
+						<span>Pas di layar</span>
+					</Button>
+
+					<DropdownMenu>
+						<DropdownMenuTrigger
+							disabled={isExporting}
+							className="inline-flex h-11 cursor-pointer items-center justify-center gap-2 rounded-lg border-2 border-border bg-background px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring disabled:pointer-events-none disabled:opacity-50"
+							title="Ekspor bagan"
+						>
+							{isExporting ? (
+								<Loader2 className="size-5 animate-spin motion-reduce:animate-none" />
+							) : (
+								<FileDown className="size-5" />
+							)}
+							<span>Ekspor</span>
+							<ChevronDown className="size-4 text-muted-foreground" />
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" className="w-60">
+							<DropdownMenuItem
+								onClick={() => handleExport("pdf", "Dokumen PDF")}
+								className="min-h-11 cursor-pointer gap-2 text-sm"
+							>
+								<FileDown className="size-5" />
+								<span>Dokumen PDF (.pdf)</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => handleExport("jpeg", "Gambar JPG")}
+								className="min-h-11 cursor-pointer gap-2 text-sm"
+							>
+								<FileImage className="size-5" />
+								<span>Gambar JPG (.jpg)</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => handleExport("png", "Gambar PNG")}
+								className="min-h-11 cursor-pointer gap-2 text-sm"
+							>
+								<FileImage className="size-5" />
+								<span>Gambar PNG (.png)</span>
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => handleExport("svg", "Vektor SVG")}
+								className="min-h-11 cursor-pointer gap-2 text-sm"
+							>
+								<FileType className="size-5" />
+								<span>Vektor SVG (.svg)</span>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+
+					{onRefresh && (
+						<Button
+							type="button"
+							variant="ghost"
+							size="icon"
+							className="size-11 transition-colors"
+							onClick={onRefresh}
+							disabled={isLoading}
+							title="Muat ulang data"
+							aria-label="Muat ulang data"
+						>
+							<RefreshCw className={`size-5 ${isLoading ? "animate-spin motion-reduce:animate-none" : ""}`} />
+						</Button>
+					)}
+				</div>
 			</div>
 
 			{searchError && (
-				<div className="absolute top-16 left-4 z-20 px-3 py-1.5 text-xs bg-destructive/10 text-destructive border border-destructive/20 rounded-md shadow">
+				<div id="so-search-error" role="alert" className="border-b bg-destructive/5 px-4 py-3 text-sm text-destructive">
 					{searchError}
 				</div>
 			)}
 
-			<div ref={containerRef} className="w-full h-full cursor-grab active:cursor-grabbing" />
-		</div>
+			<div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 border-b bg-muted/30 px-4 py-3 text-sm text-muted-foreground">
+				<p>Geser bagan untuk menjelajah, gunakan + / − untuk memperbesar atau memperkecil</p>
+				{/* <div className="flex flex-wrap items-center gap-3">
+					<span className="flex min-w-0 items-center gap-2">
+						<span className="flex flex-wrap gap-2">
+							{orgLevels.map(({ level, label }) => (
+								<span
+									key={level}
+									className="inline-flex min-h-9 items-center gap-2 rounded-md border px-2 text-sm font-medium text-foreground"
+									style={{
+										backgroundColor: `var(--org-level-${level}-fill, color-mix(in oklch, var(--org-level-${level}) 36%, var(--card)))`,
+										borderColor: `var(--org-level-${level})`,
+									}}
+								>
+									<span
+										aria-hidden="true"
+										className="size-3 shrink-0 rounded-sm"
+										style={{ backgroundColor: `var(--org-level-${level})` }}
+									/>
+									<span>{label}</span>
+								</span>
+							))}
+						</span>
+					</span>
+				</div> */}
+			</div>
+			<div
+				ref={containerRef}
+				className="h-160 w-full cursor-grab overflow-hidden bg-background active:cursor-grabbing"
+			/>
+		</section>
 	);
 }

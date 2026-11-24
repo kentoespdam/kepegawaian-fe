@@ -3,12 +3,10 @@
  * contrast-gate.mjs — WCAG contrast verifier for OKLCH CSS tokens.
  *
  * Usage:  node scripts/contrast-gate.mjs
- * Input:  reads pairs from stdin or uses built-in globals.css tokens.
+ * Input:  uses the light and dark token values below, mirrored from globals.css.
  *
  * Pure Node, zero dependencies. OKLCH → OKLab → linear sRGB → luminance → ratio.
  */
-"use strict";
-
 // ---- OKLCH → sRGB (per CSS Color 4 spec) ----
 
 function oklchToSrgb([L, C, H]) {
@@ -55,28 +53,31 @@ function parseOklch(str) {
 
 // Tokens from src/app/globals.css :root (Evergreen light)
 const TOKENS = {
-	"--background": parseOklch("oklch(0.99 0.008 95)"),
+	"--background": parseOklch("oklch(0.94 0.008 85)"),
 	"--foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--card": parseOklch("oklch(0.97 0.008 95)"),
+	"--card": parseOklch("oklch(0.995 0.004 85)"),
 	"--card-foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--popover": parseOklch("oklch(0.99 0.008 95)"),
+	"--popover": parseOklch("oklch(0.995 0.004 85)"),
 	"--popover-foreground": parseOklch("oklch(0.22 0.01 260)"),
 	"--primary": parseOklch("oklch(0.48 0.09 158)"),
 	"--primary-foreground": parseOklch("oklch(0.99 0.008 95)"),
-	"--secondary": parseOklch("oklch(0.965 0.006 85)"),
+	"--secondary": parseOklch("oklch(0.91 0.012 85)"),
 	"--secondary-foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--muted": parseOklch("oklch(0.965 0.006 85)"),
-	"--muted-foreground": parseOklch("oklch(0.4 0.01 260)"),
-	"--accent": parseOklch("oklch(0.94 0.03 75)"),
-	"--accent-foreground": parseOklch("oklch(0.3 0.06 60)"),
+	"--muted": parseOklch("oklch(0.95 0.01 85)"),
+	"--muted-foreground": parseOklch("oklch(0.38 0.01 260)"),
+	"--accent": parseOklch("oklch(0.91 0.01 85)"),
+	"--accent-foreground": parseOklch("oklch(0.22 0.01 260)"),
 	"--destructive": parseOklch("oklch(0.52 0.2 25)"),
 	"--destructive-foreground": parseOklch("oklch(0.99 0.008 85)"),
 	"--success": parseOklch("oklch(0.52 0.1 195)"),
 	"--success-foreground": parseOklch("oklch(0.99 0.008 85)"),
 	"--warning": parseOklch("oklch(0.68 0.15 75)"),
 	"--warning-foreground": parseOklch("oklch(0.22 0.01 260)"),
-	"--border": parseOklch("oklch(0.86 0.008 85)"),
-	"--input": parseOklch("oklch(0.86 0.008 85)"),
+	"--border": parseOklch("oklch(0.8 0.012 85)"),
+	"--input": parseOklch("oklch(0.6 0.012 85)"),
+	"--row-stripe": parseOklch("oklch(0.965 0.006 85)"),
+	"--row-hover": parseOklch("oklch(0.925 0.012 85)"),
+	"--row-selected": parseOklch("oklch(0.89 0.035 158)"),
 	"--ring": parseOklch("oklch(0.48 0.09 158)"),
 };
 
@@ -84,26 +85,29 @@ const TOKENS = {
 const DARK_TOKENS = {
 	"--background": parseOklch("oklch(0.13 0.01 160)"),
 	"--foreground": parseOklch("oklch(0.93 0.01 100)"),
-	"--card": parseOklch("oklch(0.16 0.01 160)"),
+	"--card": parseOklch("oklch(0.22 0.01 160)"),
 	"--card-foreground": parseOklch("oklch(0.93 0.01 100)"),
-	"--popover": parseOklch("oklch(0.16 0.01 160)"),
+	"--popover": parseOklch("oklch(0.25 0.01 160)"),
 	"--popover-foreground": parseOklch("oklch(0.93 0.01 100)"),
 	"--primary": parseOklch("oklch(0.62 0.09 158)"),
 	"--primary-foreground": parseOklch("oklch(0.13 0.01 160)"),
-	"--secondary": parseOklch("oklch(0.22 0.01 160)"),
+	"--secondary": parseOklch("oklch(0.29 0.01 160)"),
 	"--secondary-foreground": parseOklch("oklch(0.93 0.01 100)"),
-	"--muted": parseOklch("oklch(0.22 0.01 160)"),
-	"--muted-foreground": parseOklch("oklch(0.62 0.01 100)"),
-	"--accent": parseOklch("oklch(0.25 0.03 75)"),
-	"--accent-foreground": parseOklch("oklch(0.93 0.03 75)"),
+	"--muted": parseOklch("oklch(0.26 0.01 160)"),
+	"--muted-foreground": parseOklch("oklch(0.73 0.01 100)"),
+	"--accent": parseOklch("oklch(0.3 0.01 160)"),
+	"--accent-foreground": parseOklch("oklch(0.93 0.01 100)"),
 	"--destructive": parseOklch("oklch(0.6 0.2 25)"),
 	"--destructive-foreground": parseOklch("oklch(0.13 0.01 20)"),
 	"--success": parseOklch("oklch(0.62 0.1 195)"),
 	"--success-foreground": parseOklch("oklch(0.13 0.01 160)"),
 	"--warning": parseOklch("oklch(0.72 0.15 75)"),
 	"--warning-foreground": parseOklch("oklch(0.13 0.01 160)"),
-	"--border": parseOklch("oklch(0.28 0.01 160)"),
-	"--input": parseOklch("oklch(0.28 0.01 160)"),
+	"--border": parseOklch("oklch(0.38 0.01 160)"),
+	"--input": parseOklch("oklch(0.56 0.01 160)"),
+	"--row-stripe": parseOklch("oklch(0.25 0.01 160)"),
+	"--row-hover": parseOklch("oklch(0.31 0.012 160)"),
+	"--row-selected": parseOklch("oklch(0.34 0.04 158)"),
 	"--ring": parseOklch("oklch(0.62 0.09 158)"),
 };
 
@@ -112,8 +116,13 @@ const PAIRS = [
 	["--foreground", "--background", "body teks di background", 7],
 	["--muted-foreground", "--background", "muted teks di background", 4.5],
 	["--muted-foreground", "--muted", "muted teks di muted bg", 4.5],
+	["--muted-foreground", "--row-stripe", "muted teks di zebra", 4.5],
+	["--muted-foreground", "--row-hover", "muted teks di hover baris", 4.5],
+	["--muted-foreground", "--row-selected", "muted teks di baris terpilih", 4.5],
 	["--primary-foreground", "--primary", "primary teks di primary bg", 4.5],
 	["--secondary-foreground", "--secondary", "secondary teks di secondary bg", 4.5],
+	["--input", "--card", "batas input di atas card", 3],
+	["--input", "--popover", "batas input di atas popover", 3],
 	["--card-foreground", "--card", "card teks di card bg", 7],
 	["--popover-foreground", "--popover", "popover teks di popover bg", 7],
 	["--accent-foreground", "--accent", "accent teks di accent bg", 4.5],
@@ -139,11 +148,9 @@ function checkPair([fgName, bgName, label, minRatio], overrides = {}) {
 	}
 	const ratio = contrastRatio(lFg, lBg);
 	const pass = ratio >= minRatio;
-	const level = ratio >= 7 ? "AAA" : ratio >= 4.5 ? "AA" : "FAIL";
+	const level = ratio >= 7 ? "AAA" : ratio >= 4.5 ? "AA" : pass ? "PASS" : "FAIL";
 	const mark = pass ? "✅" : "❌";
-	console.log(
-		`  ${mark} ${ratio.toFixed(2)}:1  ${level.padEnd(4)}  ${label}  (min ${minRatio}:1)`,
-	);
+	console.log(`  ${mark} ${ratio.toFixed(2)}:1  ${level.padEnd(4)}  ${label}  (min ${minRatio}:1)`);
 	return pass;
 }
 

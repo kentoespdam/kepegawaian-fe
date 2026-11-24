@@ -228,13 +228,13 @@ export function DataTable<T>({
 			<div className={cn(cardCls, "max-h-[75vh] relative p-1", bare && "")}>
 				<div className="overflow-auto flex-1">
 					<table className="w-full caption-bottom text-sm">
-						<thead className="sticky top-0 z-5 bg-muted/80 backdrop-blur-xs border-b border-border/80">
+						<thead className="sticky top-0 z-5 bg-muted border-b border-border">
 							<tr>
 								{columns.map((col) => (
 									<th
 										key={col.id}
 										className={cn(
-											"h-11 px-4 text-left align-middle font-semibold text-[10px] uppercase tracking-[0.18em] text-muted-foreground",
+											"h-11 px-4 text-left align-middle font-semibold text-xs uppercase tracking-wider text-muted-foreground",
 											col.sortable && "cursor-pointer select-none hover:text-foreground",
 										)}
 										onClick={() => col.sortable && onSort?.(col.id)}
@@ -257,9 +257,7 @@ export function DataTable<T>({
 								))}
 								{hasActions && (
 									<th className="h-11 px-4 text-right w-36">
-										<span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-											Aksi
-										</span>
+										<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Aksi</span>
 									</th>
 								)}
 							</tr>

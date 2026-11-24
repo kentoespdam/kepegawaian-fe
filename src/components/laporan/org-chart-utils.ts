@@ -66,8 +66,8 @@ export function sanitizeOrgChartData(rawData: SoResponse[]): OrgChartNode[] {
  */
 export function renderNodeContent(nodeData: OrgChartNode): string {
 	const isVacant = Boolean(nodeData.isLowong);
-	const bgHeader = isVacant ? "#fed7aa" : "#bae6fd";
-	const borderCol = isVacant ? "#f97316" : "#0284c7";
+	const level = Math.max(1, Math.min(7, Math.floor(nodeData.level ?? 1)));
+	const levelColor = `var(--org-level-${level}, var(--primary))`;
 	const namaJabatan = escapeHtml(nodeData.namaJabatan ?? "-");
 	const namaPegawai = escapeHtml(nodeData.namaPegawai ?? "-");
 	const nipam = escapeHtml(nodeData.nipam ?? "-");
@@ -77,52 +77,55 @@ export function renderNodeContent(nodeData: OrgChartNode): string {
 		<div style="
 			width: 100%;
 			height: 100%;
-			background-color: #ffffff;
-			border: 2px solid ${borderCol};
+			box-sizing: border-box;
+			background-color: var(--card, white);
+			border: 1px solid var(--border, lightgray);
+			border-top: 6px solid ${levelColor};
 			border-radius: 8px;
-			box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
 			display: flex;
 			flex-direction: column;
 			overflow: hidden;
-			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+			font-family: var(--font-sans, Arial, sans-serif);
 		">
 			<div style="
-				background-color: ${bgHeader};
-				padding: 6px 8px;
-				text-align: center;
-				font-weight: 700;
-				font-size: 13px;
-				color: #0f172a;
-				border-bottom: 1px solid rgba(0,0,0,0.08);
-				white-space: nowrap;
+			background-color: var(--org-level-${level}-fill, color-mix(in oklch, ${levelColor} 36%, var(--card, white)));
+			padding: 8px 16px;
+				display: flex;
+				flex-direction: column;
+				gap: 4px;
+				border-bottom: 1px solid var(--border, lightgray);
+				height: 40px;
+				box-sizing: border-box;
+				flex-shrink: 0;
 				overflow: hidden;
-				text-overflow: ellipsis;
-			" title="${namaJabatan}">
-				${namaJabatan}
+				align-items: center;
+			">
+				<span style="font-size: 16px; line-height: 20px; font-weight: 600; color: var(--foreground, black); display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden;" title="${namaJabatan}">
+					${namaJabatan}
+				</span>
 			</div>
 			<div style="
 				flex: 1;
 				display: flex;
 				flex-direction: column;
-				align-items: center;
 				justify-content: center;
-				padding: 6px 8px;
-				text-align: center;
-				background-color: #ffffff;
+				gap: 4px;
+				padding: 12px 16px;
+				min-height: 0;
 			">
 				${
 					isVacant
-						? `<span style="font-size: 12px; color: #ea580c; font-weight: 600; font-style: italic;">
-							(Jabatan Lowong)
+						? `<span aria-label="Jabatan lowong" style="font-size: 16px; line-height: 24px; color: var(--muted-foreground, dimgray); font-weight: 500;">
+							-
 						</span>`
-						: `<span style="font-size: 12px; font-weight: 700; color: #1e293b; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${namaPegawai}">
+						: `<span style="font-size: 16px; line-height: 24px; font-weight: 500; color: var(--foreground, black); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${namaPegawai}">
 							${namaPegawai}
 						</span>
-						<span style="font-size: 11px; font-weight: 500; color: #475569; margin-top: 2px; font-variant-numeric: tabular-nums;">
-							NIPAM: ${nipam}
+						<span style="font-size: 14px; line-height: 16px; color: var(--muted-foreground, dimgray); font-variant-numeric: tabular-nums;">
+							NIPAM ${nipam}
 						</span>`
 				}
-				<span style="font-size: 10px; color: #64748b; margin-top: 2px; max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${namaOrganisasi}">
+				<span style="font-size: 14px; line-height: 16px; color: var(--muted-foreground, dimgray); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" title="${namaOrganisasi}">
 					${namaOrganisasi}
 				</span>
 			</div>

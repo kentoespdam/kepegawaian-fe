@@ -41,7 +41,7 @@ export function FieldSelect({
 					))}
 				</SelectContent>
 			</Select>
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 		</div>
 	);
 }
@@ -77,7 +77,7 @@ export function FieldText({
 				placeholder={placeholder}
 				aria-invalid={!!error}
 			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 		</div>
 	);
 }
@@ -107,7 +107,7 @@ export function FieldTextarea({
 				onChange={(e) => onChange(e.target.value)}
 				aria-invalid={!!error}
 			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 		</div>
 	);
 }
@@ -187,7 +187,7 @@ export function FieldDate({
 					/>
 				</PopoverContent>
 			</Popover>
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 		</div>
 	);
 }
@@ -228,7 +228,7 @@ export function FieldFk({
 				loading={loading}
 				invalid={!!error}
 			/>
-			{error && <p className="text-xs text-destructive">{error}</p>}
+			{error && <p className="text-sm text-destructive">{error}</p>}
 		</div>
 	);
 }
