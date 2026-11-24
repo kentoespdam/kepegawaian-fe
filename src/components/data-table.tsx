@@ -230,11 +230,13 @@ export function DataTable<T>({
 					<table className="w-full caption-bottom text-sm">
 						<thead className="sticky top-0 z-5 bg-muted border-b border-border">
 							<tr>
-								{columns.map((col) => (
+								{columns.map((col, i) => (
 									<th
 										key={col.id}
 										className={cn(
 											"h-11 px-4 text-left align-middle font-semibold text-xs uppercase tracking-wider text-muted-foreground",
+											!bare && "first:rounded-tl-xl",
+											!bare && !hasActions && i === columns.length - 1 && "rounded-tr-xl",
 											col.sortable && "cursor-pointer select-none hover:text-foreground",
 										)}
 										onClick={() => col.sortable && onSort?.(col.id)}
@@ -256,7 +258,7 @@ export function DataTable<T>({
 									</th>
 								))}
 								{hasActions && (
-									<th className="h-11 px-4 text-right w-36">
+									<th className={cn("h-11 px-4 text-right w-36", !bare && "last:rounded-tr-xl")}>
 										<span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">Aksi</span>
 									</th>
 								)}
