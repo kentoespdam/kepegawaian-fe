@@ -111,6 +111,7 @@ const MODULES: SidebarModule[] = [
 		entities: [
 			{ id: "duk", label: "Daftar Urut Kepangkatan (DUK)", href: "/laporan/duk", gate: PERMISSION.LAPORAN_READ },
 			{ id: "dnp", label: "Daftar Nominatif Pegawai (DNP)", href: "/laporan/dnp", gate: PERMISSION.LAPORAN_READ },
+			{ id: "so", label: "Struktur Organisasi (SO)", href: "/laporan/so", gate: PERMISSION.LAPORAN_READ },
 		],
 	},
 	{

@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DataTable } from "@/components/data-table";
 import { DataTablePagination } from "@/components/data-table-pagination";
@@ -38,6 +39,7 @@ const biodataColumns = [
 ] as const;
 
 export function DataPegawaiClient() {
+	const router = useRouter();
 	const { permissions } = useAuth();
 	const canWrite = hasPermission(permissions, PERMISSION.PEGAWAI_WRITE);
 	const [editProfilId, setEditProfilId] = useState<string | null>(null);
@@ -91,7 +93,7 @@ export function DataPegawaiClient() {
 								onFilterChange={onFilterChange}
 								onReset={onReset}
 								hasActive={hasActiveFilter}
-								onAddClick={canWrite ? () => nav({ tab, page: "1" }) : undefined}
+								onAddClick={canWrite ? () => router.push("/kepegawaian/data/tambah") : undefined}
 							/>
 						}
 						columns={(isPegawaiTab ? pegawaiColumns : biodataColumns) as never}
@@ -145,8 +147,12 @@ export function DataPegawaiClient() {
 									onRetry={() => ringkasanQuery.refetch()}
 									onEditProfil={canWrite ? () => setEditProfilId(String(selectedId)) : undefined}
 									onEditGaji={canWrite ? () => setEditGajiId(String(selectedId)) : undefined}
-									onRiwayat={() => nav({ tab })}
-									onPendukung={() => nav({ tab })}
+									onRiwayat={
+										selectedId ? () => router.push(`/kepegawaian/data/${selectedId}/riwayat/mutasi`) : undefined
+									}
+									onPendukung={
+										selectedId ? () => router.push(`/kepegawaian/data/${selectedId}/pendukung/pendidikan`) : undefined
+									}
 								/>
 							</div>
 						</div>

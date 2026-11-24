@@ -211,10 +211,28 @@
 				"tags": ["Laporan — Laporan So"],
 				"summary": "lap so",
 				"operationId": "lapSo",
+				"parameters": [
+					{
+						"name": "maxLevel",
+						"in": "query",
+						"description": "Batas level jabatan maksimum",
+						"required": false,
+						"schema": { "type": "integer", "format": "int32", "default": 6 },
+						"example": 6
+					},
+					{
+						"name": "format",
+						"in": "query",
+						"description": "Format penyajian data (flat atau tree)",
+						"required": false,
+						"schema": { "type": "string", "default": "flat" },
+						"example": "flat"
+					}
+				],
 				"responses": {
 					"200": {
 						"description": "OK",
-						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/SingleResultMapStringObject" } } }
+						"content": { "*/*": { "schema": { "$ref": "#/components/schemas/ListResultSoResponse" } } }
 					}
 				}
 			}
@@ -1355,7 +1373,7 @@
 					"persen": { "type": "number", "format": "double" }
 				}
 			},
-			"SingleResultMapStringObject": {
+			"ListResultSoResponse": {
 				"type": "object",
 				"properties": {
 					"status": { "type": "integer", "format": "int32" },
@@ -1430,8 +1448,47 @@
 					},
 					"errors": { "type": "array", "items": { "type": "string" } },
 					"message": { "type": "string" },
-					"data": { "type": "object", "additionalProperties": {} },
+					"data": { "type": "array", "items": { "$ref": "#/components/schemas/SoResponse" } },
 					"timestamp": { "type": "string", "format": "date-time" }
+				}
+			},
+			"SoResponse": {
+				"type": "object",
+				"description": "Data struktur organisasi kepegawaian",
+				"properties": {
+					"id": { "type": "integer", "format": "int64", "description": "ID Jabatan", "example": 1 },
+					"parentId": {
+						"type": "integer",
+						"format": "int64",
+						"description": "ID Jabatan Atasan (null untuk Dewan Pengawas)",
+						"example": null
+					},
+					"kodeJabatan": { "type": "string", "description": "Kode Jabatan", "example": "0" },
+					"namaJabatan": { "type": "string", "description": "Nama Jabatan", "example": "Kepala Dewan Pengawas" },
+					"level": {
+						"type": "integer",
+						"format": "int32",
+						"description": "Level Jabatan (1: Dewas s.d. 6: Supervisor)",
+						"example": 1
+					},
+					"namaPegawai": {
+						"type": "string",
+						"description": "Nama Pejabat Aktif (null jika lowong)",
+						"example": "Drs. H. Suwandi, M.M."
+					},
+					"nipam": { "type": "string", "description": "NIPAM Pejabat Aktif (null jika lowong)", "example": "8901001" },
+					"namaOrganisasi": { "type": "string", "description": "Nama Unit Organisasi", "example": "DEWAN PENGAWAS" },
+					"fotoProfil": { "type": "string", "description": "Path atau URL foto profil", "example": "foto.jpg" },
+					"isLowong": {
+						"type": "boolean",
+						"description": "Status apakah jabatan belum terisi pejabat aktif",
+						"example": false
+					},
+					"children": {
+						"type": "array",
+						"description": "Daftar bawahan langsung (hanya muncul saat format=tree)",
+						"items": { "$ref": "#/components/schemas/SoResponse" }
+					}
 				}
 			},
 			"MutasiResponse": {

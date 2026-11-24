@@ -11,6 +11,8 @@
 import type { Envelope, JenisRiwayatKepegawaian, PageQuery } from "../_shared";
 
 export interface KepegawaianSearchParams extends PageQuery {
+	maxLevel?: number; // int32
+	format?: string;
 	jenis_mutasi?:
 		| "PENGANGKATAN_PERTAMA"
 		| "MUTASI_LOKER"
@@ -130,7 +132,21 @@ export interface StatistikAgamaResponse {
 
 export type SingleResultListStatistikAgamaResponse = Envelope<StatistikAgamaResponse[]>;
 
-export type SingleResultMapStringObject = Envelope<Record<string, unknown>>;
+export interface SoResponse {
+	id?: number; // int64
+	parentId?: number; // int64
+	kodeJabatan?: string;
+	namaJabatan?: string;
+	level?: number; // int32
+	namaPegawai?: string;
+	nipam?: string;
+	namaOrganisasi?: string;
+	fotoProfil?: string;
+	isLowong?: boolean;
+	children?: SoResponse[];
+}
+
+export type ListResultSoResponse = Envelope<SoResponse[]>;
 
 export interface MutasiResponse {
 	jenisMutasi?: JenisRiwayatKepegawaian;

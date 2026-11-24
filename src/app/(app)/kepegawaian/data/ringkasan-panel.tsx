@@ -16,8 +16,8 @@ interface Props {
 	onRetry: () => void;
 	onEditProfil?: () => void;
 	onEditGaji?: () => void;
-	onRiwayat: () => void;
-	onPendukung: () => void;
+	onRiwayat?: () => void;
+	onPendukung?: () => void;
 }
 
 function Field({ label, value }: { label: string; value: string | number | null | undefined }) {
