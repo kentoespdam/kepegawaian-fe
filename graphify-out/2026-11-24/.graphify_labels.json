@@ -1,0 +1,21 @@
+{
+  "1": "jenis-sp.ts",
+  "3": "button.tsx",
+  "13": "cn",
+  "15": "hasPermission",
+  "21": "appwriteSession.ts",
+  "26": "dropdown-menu.tsx",
+  "28": "riwayat.ts",
+  "38": "command.tsx",
+  "45": "cuti/page.test.tsx",
+  "53": "kuota-form-sheet.test.tsx",
+  "57": "data-pegawai-client.tsx",
+  "60": "login-form.tsx",
+  "61": "pengajuan-form-sheet.test.tsx",
+  "63": "terminasi-form-sheet.test.tsx",
+  "70": "kontrak-form-sheet.tsx",
+  "74": "kpi.ts",
+  "86": "session.ts",
+  "105": "klaim-form-schema.ts",
+  "109": "edit-profil-sheet.test.tsx"
+}
