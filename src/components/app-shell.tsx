@@ -14,7 +14,8 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
 	Sidebar,
 	SidebarContent,
@@ -28,6 +29,7 @@ import {
 	SidebarMenuSubButton,
 	SidebarProvider,
 	SidebarTrigger,
+	useSidebar,
 } from "@/components/ui/sidebar";
 import { UserMenu } from "@/components/user-menu";
 import { MASTER_ENTITIES } from "@/config/entities";
@@ -51,6 +53,12 @@ export interface SidebarModule {
 	entities?: SidebarEntity[];
 	subGroups?: SidebarSubGroup[];
 }
+
+type VisibleSidebarSubGroup = SidebarSubGroup & { visibleEntities: SidebarEntity[] };
+type VisibleSidebarModule = SidebarModule & {
+	visibleEntities: SidebarEntity[];
+	visibleSubGroups?: VisibleSidebarSubGroup[];
+};
 
 const MODULES: SidebarModule[] = [
 	{
@@ -214,6 +222,179 @@ export const MODULE_ENTITY_MAP = MODULES.flatMap((m) => {
 	return [...direct, ...fromSubs];
 });
 
+function SidebarEntityLink({
+	entity,
+	pathname,
+	onNavigate,
+}: {
+	entity: SidebarEntity;
+	pathname: string;
+	onNavigate?: () => void;
+}) {
+	const { setOpenMobile } = useSidebar();
+	const href = entityHref(entity);
+	const isActive = pathname === href;
+
+	return (
+		<SidebarMenuSubButton
+			render={<Link href={href} />}
+			isActive={isActive}
+			aria-current={isActive ? "page" : undefined}
+			onClick={() => {
+				setOpenMobile(false);
+				onNavigate?.();
+			}}
+			title={entity.label}
+			className={cn(
+				"h-auto min-h-11 border-l-2 border-transparent pl-2.5 py-2 text-sm leading-snug transition-colors",
+				isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
+			)}
+		>
+			{entity.label}
+		</SidebarMenuSubButton>
+	);
+}
+
+function SidebarModuleNav({
+	module,
+	pathname,
+	active,
+	groupOpen,
+	onToggleGroup,
+	openSubGroups,
+	onToggleSubGroup,
+}: {
+	module: VisibleSidebarModule;
+	pathname: string;
+	active: boolean;
+	groupOpen: boolean;
+	onToggleGroup: () => void;
+	openSubGroups: Set<string>;
+	onToggleSubGroup: (key: string) => void;
+}) {
+	const { state } = useSidebar();
+	const [flyoutOpen, setFlyoutOpen] = useState(false);
+	const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+	const triggerRef = useRef<HTMLButtonElement>(null);
+	const contentRef = useRef<HTMLDivElement>(null);
+	const isCollapsed = state === "collapsed";
+
+	const cancelClose = () => {
+		if (closeTimer.current) clearTimeout(closeTimer.current);
+		closeTimer.current = null;
+	};
+	const closeAfterPointerLeaves = () => {
+		cancelClose();
+		closeTimer.current = setTimeout(() => {
+			const focused = document.activeElement;
+			if (triggerRef.current?.contains(focused) || contentRef.current?.contains(focused)) return;
+			setFlyoutOpen(false);
+		}, 180);
+	};
+	const showFlyout = () => {
+		cancelClose();
+		setFlyoutOpen(true);
+	};
+
+	useEffect(
+		() => () => {
+			if (closeTimer.current) clearTimeout(closeTimer.current);
+		},
+		[],
+	);
+
+	const trigger = (
+		<SidebarMenuButton
+			ref={triggerRef}
+			onClick={isCollapsed ? undefined : onToggleGroup}
+			onPointerEnter={isCollapsed ? showFlyout : undefined}
+			onPointerLeave={isCollapsed ? closeAfterPointerLeaves : undefined}
+			onFocus={isCollapsed ? showFlyout : undefined}
+			aria-label={module.label}
+			aria-expanded={isCollapsed ? flyoutOpen : groupOpen}
+			size="lg"
+			isActive={active}
+			className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto"
+		>
+			<module.icon className="size-5" />
+			<span>{module.label}</span>
+			<ChevronDown
+				className={cn(
+					"ml-auto size-5 transition-transform group-data-[collapsible=icon]:hidden",
+					groupOpen && "rotate-180",
+				)}
+			/>
+		</SidebarMenuButton>
+	);
+
+	return (
+		<>
+			{isCollapsed ? (
+				<Popover open={flyoutOpen} onOpenChange={setFlyoutOpen}>
+					<PopoverTrigger render={trigger} />
+					<PopoverContent
+						ref={contentRef}
+						side="right"
+						align="start"
+						sideOffset={10}
+						onPointerEnter={cancelClose}
+						onPointerLeave={closeAfterPointerLeaves}
+						onFocusCapture={cancelClose}
+						onBlurCapture={closeAfterPointerLeaves}
+						className="max-h-[min(70vh,32rem)] w-80 overflow-y-auto rounded-md border border-sidebar-border bg-sidebar p-2 text-sidebar-foreground shadow-md"
+					>
+						<div className="border-b border-sidebar-border px-2 pb-2 text-sm font-semibold">{module.label}</div>
+						<div className="flex flex-col gap-1 pt-1">
+							{module.visibleEntities.map((entity) => (
+								<SidebarEntityLink
+									key={entity.id}
+									entity={entity}
+									pathname={pathname}
+									onNavigate={() => setFlyoutOpen(false)}
+								/>
+							))}
+							{module.visibleSubGroups?.map((sub) => {
+								const subKey = `${module.id}:${sub.id}`;
+								const subOpen = openSubGroups.has(subKey);
+								return (
+									<div key={sub.id}>
+										<button
+											type="button"
+											onClick={() => onToggleSubGroup(subKey)}
+											aria-expanded={subOpen}
+											className="flex min-h-11 w-full items-center justify-between rounded-md px-2 text-sm font-semibold hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+										>
+											<span className="flex items-center gap-2">
+												<sub.icon className="size-4 shrink-0" />
+												{sub.label}
+											</span>
+											<ChevronDown className={cn("size-4", subOpen && "rotate-180")} />
+										</button>
+										{subOpen && (
+											<div className="flex flex-col gap-1 pl-2">
+												{sub.visibleEntities.map((entity) => (
+													<SidebarEntityLink
+														key={entity.id}
+														entity={entity}
+														pathname={pathname}
+														onNavigate={() => setFlyoutOpen(false)}
+													/>
+												))}
+											</div>
+										)}
+									</div>
+								);
+							})}
+						</div>
+					</PopoverContent>
+				</Popover>
+			) : (
+				trigger
+			)}
+		</>
+	);
+}
+
 export function AppShell({
 	user,
 	roles,
@@ -307,45 +488,20 @@ export function AppShell({
 						{visibleModules.map((mod) => (
 							<SidebarMenu key={mod.id}>
 								<SidebarMenuItem>
-									<SidebarMenuButton
-										onClick={() => toggleGroup(mod.id)}
-										tooltip={mod.label}
-										size="lg"
-										isActive={activeModule?.id === mod.id}
-										aria-expanded={openGroups.has(mod.id)}
-										className="group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:mx-auto"
-									>
-										<mod.icon className="size-5" />
-										<span>{mod.label}</span>
-										<ChevronDown
-											className={cn(
-												"ml-auto size-5 transition-transform group-data-[collapsible=icon]:hidden",
-												openGroups.has(mod.id) && "rotate-180",
-											)}
-										/>
-									</SidebarMenuButton>
+									<SidebarModuleNav
+										module={mod}
+										pathname={pathname}
+										active={activeModule?.id === mod.id}
+										groupOpen={openGroups.has(mod.id)}
+										onToggleGroup={() => toggleGroup(mod.id)}
+										openSubGroups={openSubGroups}
+										onToggleSubGroup={toggleSubGroup}
+									/>
 									{openGroups.has(mod.id) && (
 										<SidebarMenuSub>
-											{mod.visibleEntities.map((entity) => {
-												const href = entityHref(entity);
-												const isActive = pathname === href;
-												return (
-													<SidebarMenuSubButton
-														key={entity.id}
-														render={<Link href={href} />}
-														isActive={isActive}
-														title={entity.label}
-														className={cn(
-															// h-auto: override primitif h-7 — min-h-11 harus jadi FLOOR, bukan tinggi tetap,
-															// agar label multi-baris (mis. "02. Verifikasi Gapok, Tunjangan & Potongan") tidak ter-clip
-															"h-auto min-h-11 border-l-2 border-transparent pl-2.5 py-2 text-sm leading-snug transition-colors",
-															isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
-														)}
-													>
-														{entity.label}
-													</SidebarMenuSubButton>
-												);
-											})}
+											{mod.visibleEntities.map((entity) => (
+												<SidebarEntityLink key={entity.id} entity={entity} pathname={pathname} />
+											))}
 
 											{mod.visibleSubGroups?.map((sub) => {
 												const subKey = `${mod.id}:${sub.id}`;
@@ -369,25 +525,9 @@ export function AppShell({
 														</button>
 														{isOpen && (
 															<div className="flex flex-col gap-1 pl-1.5 pt-0.5">
-																{sub.visibleEntities.map((entity) => {
-																	const href = entityHref(entity);
-																	const isActive = pathname === href;
-																	return (
-																		<SidebarMenuSubButton
-																			key={entity.id}
-																			render={<Link href={href} />}
-																			isActive={isActive}
-																			title={entity.label}
-																			className={cn(
-																				// h-auto: sama seperti di atas — label multi-baris tidak boleh ter-clip
-																				"h-auto min-h-11 border-l-2 border-transparent pl-2.5 py-2 text-sm leading-snug transition-colors",
-																				isActive && "border-l-primary font-semibold bg-primary/10 text-primary",
-																			)}
-																		>
-																			{entity.label}
-																		</SidebarMenuSubButton>
-																	);
-																})}
+																{sub.visibleEntities.map((entity) => (
+																	<SidebarEntityLink key={entity.id} entity={entity} pathname={pathname} />
+																))}
 															</div>
 														)}
 													</div>
@@ -406,23 +546,21 @@ export function AppShell({
 					</SidebarFooter>
 				</Sidebar>
 				<SidebarInset className="min-w-0" id="main-content" tabIndex={-1}>
-					<header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border/80 bg-card/85 backdrop-blur-md px-4 shadow-xs shrink-0">
-						{/* R11: brand accent line — garis identitas tipis di atas topbar */}
-						<div className="absolute top-0 left-0 right-0 h-0.5 bg-linear-to-r from-primary/40 via-primary to-primary/40" />
+					<header className="sticky top-0 z-40 flex h-16 items-center justify-between border-b border-border bg-card px-4 shrink-0">
 						<div className="flex items-center gap-3">
 							<SidebarTrigger />
 							{activeEntity && activeModule ? (
 								<nav aria-label="breadcrumb" className="flex items-center gap-2 text-sm">
-									<span className="text-[10px] uppercase font-semibold tracking-[0.18em] text-muted-foreground">
-										{activeModule.label}
+									<span className="hidden font-medium text-muted-foreground sm:inline">{activeModule.label}</span>
+									<span aria-hidden="true" className="hidden text-muted-foreground sm:inline">
+										/
 									</span>
-									<span className="text-xs text-muted-foreground/60">&rsaquo;</span>
-									<span className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] uppercase font-semibold tracking-[0.18em] text-primary border border-primary/20 shadow-2xs">
+									<span aria-current="page" className="font-semibold text-foreground">
 										{activeEntity.label}
 									</span>
 								</nav>
 							) : (
-								<h1 className="inline-flex items-center rounded-full bg-primary/10 px-3 py-1 text-[10px] uppercase font-semibold tracking-[0.18em] text-primary border border-primary/20 shadow-2xs">
+								<h1 className="text-base font-semibold text-foreground">
 									{pathname === "/" && "Beranda"}
 									{pathname === "/profil" && "Profil"}
 								</h1>
